@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31321.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DevEdu.Db", "DevEdu.Db\DevEdu.Db.sqlproj", "{854E3208-BFEE-450B-9051-3C55D21D9279}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEdu.API", "DevEdu.API\DevEdu.API.csproj", "{3EDE60B7-E789-4279-A72B-E416C9178656}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{854E3208-BFEE-450B-9051-3C55D21D9279}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{854E3208-BFEE-450B-9051-3C55D21D9279}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{854E3208-BFEE-450B-9051-3C55D21D9279}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{854E3208-BFEE-450B-9051-3C55D21D9279}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{854E3208-BFEE-450B-9051-3C55D21D9279}.Release|Any CPU.Build.0 = Release|Any CPU
+		{854E3208-BFEE-450B-9051-3C55D21D9279}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{3EDE60B7-E789-4279-A72B-E416C9178656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EDE60B7-E789-4279-A72B-E416C9178656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EDE60B7-E789-4279-A72B-E416C9178656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EDE60B7-E789-4279-A72B-E416C9178656}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C1D2CA35-341D-4F03-B881-1988DAC533BE}
+	EndGlobalSection
+EndGlobal

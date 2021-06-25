@@ -1,0 +1,22 @@
+﻿CREATE TABLE [Group_Lesson] (
+	Id int NOT NULL Identity,
+	GroupId int NOT NULL,
+	LessonId int NOT NULL,
+  CONSTRAINT [PK_GROUP_LESSON] PRIMARY KEY CLUSTERED
+  (
+  [Id] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+go
+
+ALTER TABLE [Group_Lesson] WITH CHECK ADD CONSTRAINT [Group_Lesson_fk0] FOREIGN KEY ([GroupId]) REFERENCES [Group]([Id])
+ON UPDATE NO ACTION
+GO
+ALTER TABLE [Group_Lesson] CHECK CONSTRAINT [Group_Lesson_fk0]
+GO
+ALTER TABLE [Group_Lesson] WITH CHECK ADD CONSTRAINT [Group_Lesson_fk1] FOREIGN KEY ([LessonId]) REFERENCES [Lesson]([Id])
+ON UPDATE NO ACTION
+GO
+ALTER TABLE [Group_Lesson] CHECK CONSTRAINT [Group_Lesson_fk1]
+GO

@@ -1,0 +1,9 @@
+﻿CREATE TABLE [City] (
+	Id int,
+	Name nvarchar(100) NOT NULL,
+  CONSTRAINT [PK_CITY] PRIMARY KEY CLUSTERED
+  (
+  [Id] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)

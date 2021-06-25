@@ -1,0 +1,19 @@
+﻿CREATE TABLE [Comment] (
+	Id int NOT NULL Identity,
+	UserId int NOT NULL,
+	Text nvarchar(max) NOT NULL,
+	Date datetime NOT NULL,
+	IsDeleted bit NOT NULL DEFAULT '0',
+  CONSTRAINT [PK_COMMENT] PRIMARY KEY CLUSTERED
+  (
+  [Id] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+go
+
+ALTER TABLE [Comment] WITH CHECK ADD CONSTRAINT [Comment_fk0] FOREIGN KEY ([UserId]) REFERENCES [User]([Id])
+ON UPDATE NO ACTION
+GO
+ALTER TABLE [Comment] CHECK CONSTRAINT [Comment_fk0]
+GO

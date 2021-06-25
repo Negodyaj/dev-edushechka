@@ -1,0 +1,23 @@
+﻿CREATE TABLE [Course_Task] (
+	Id int Identity,
+	TaskId int NOT NULL,
+	CourseId int NOT NULL,
+  CONSTRAINT [PK_COURSE_TASK] PRIMARY KEY CLUSTERED
+  (
+  [Id] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+
+go
+
+ALTER TABLE [Course_Task] WITH CHECK ADD CONSTRAINT [Course_Task_fk0] FOREIGN KEY ([TaskId]) REFERENCES [Task]([Id])
+ON UPDATE NO ACTION
+GO
+ALTER TABLE [Course_Task] CHECK CONSTRAINT [Course_Task_fk0]
+GO
+ALTER TABLE [Course_Task] WITH CHECK ADD CONSTRAINT [Course_Task_fk1] FOREIGN KEY ([CourseId]) REFERENCES [Course]([Id])
+ON UPDATE NO ACTION
+GO
+ALTER TABLE [Course_Task] CHECK CONSTRAINT [Course_Task_fk1]
+GO

@@ -1,0 +1,27 @@
+﻿CREATE TABLE [User] (
+	Id int NOT NULL Identity,
+	Name nvarchar(50) NOT NULL,
+	Email nvarchar(50) NOT NULL,
+	Username nvarchar(50) NOT NULL,
+	Password nvarchar(30) NOT NULL,
+	IsDeleted bit NOT NULL DEFAULT '0',
+	RegistrationDate datetime NOT NULL,
+	ContractNumber nvarchar(50) NOT NULL UNIQUE,
+	CityId int NOT NULL,
+	BirthDate date NOT NULL,
+	GitHubAccount nvarchar(50),
+	Photo nvarchar(150) NOT NULL,
+	PhoneNumer nvarchar(12) NOT NULL,
+	ExileDate date,
+  CONSTRAINT [PK_USER] PRIMARY KEY CLUSTERED
+  (
+  [Id] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+  )
+  
+GO
+ALTER TABLE [User] WITH CHECK ADD CONSTRAINT [User_fk0] FOREIGN KEY ([CityId]) REFERENCES [City]([Id])
+ON UPDATE NO ACTION
+GO
+ALTER TABLE [User] CHECK CONSTRAINT [User_fk0]
+GO
