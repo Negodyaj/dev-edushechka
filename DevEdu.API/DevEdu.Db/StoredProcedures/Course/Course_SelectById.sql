@@ -2,4 +2,4 @@
 	@Id int
 AS
 	SELECT * FROM [Course]
-	WHERE ([Id] = @Id)
+	WHERE ([Id] = @Id AND [IsDeleted]=0)

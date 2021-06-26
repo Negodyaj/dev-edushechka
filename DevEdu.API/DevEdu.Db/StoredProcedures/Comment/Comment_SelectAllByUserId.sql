@@ -2,4 +2,4 @@
 	@UserId int
 AS
 	SELECT * FROM [Comment]
-	WHERE ([UserId] = @UserId)
+	WHERE ([UserId] = @UserId AND [IsDeleted]=0)
