@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Group] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	CourseId int NOT NULL,
 	GroupStatusId int NOT NULL,
 	StartDate date NOT NULL,

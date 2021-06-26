@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Payment] (
-	Id int NOT NULL,
+	Id int NOT NULL IDENTITY(1,1),
 	Date datetime NOT NULL,
 	Sum decimal(6,2) NOT NULL,
 	UserId int NOT NULL,

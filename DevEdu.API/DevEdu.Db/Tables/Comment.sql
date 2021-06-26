@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Comment] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	UserId int NOT NULL,
 	Text nvarchar(max) NOT NULL,
 	Date datetime NOT NULL,

@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Tag_Topic] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	TagId int NOT NULL,
 	TopicId int NOT NULL,
   CONSTRAINT [PK_TAG_TOPIC] PRIMARY KEY CLUSTERED
