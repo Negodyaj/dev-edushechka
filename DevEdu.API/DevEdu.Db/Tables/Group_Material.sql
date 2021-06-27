@@ -18,5 +18,7 @@ GO
 ALTER TABLE [Group_Material] WITH CHECK ADD CONSTRAINT [Group_Material_fk1] FOREIGN KEY ([GroupId]) REFERENCES [Group]([Id])
 ON UPDATE NO ACTION
 GO
+ALTER TABLE [Group_Material] WITH CHECK ADD CONSTRAINT [UC_GroupId_MaterialId] UNIQUE ([GroupId], [MaterialId])
+GO
 ALTER TABLE [Group_Material] CHECK CONSTRAINT [Group_Material_fk1]
 GO
