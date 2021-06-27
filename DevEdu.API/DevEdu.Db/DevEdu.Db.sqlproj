@@ -62,6 +62,8 @@
     <Folder Include="StoredProcedures\Group_Material" />
     <Folder Include="StoredProcedures\Tag_Material" />
     <Folder Include="StoredProcedures\Tag_Task" />
+    <Folder Include="StoredProcedures\Topic" />
+    <Folder Include="StoredProcedures\Student_Lesson" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -112,5 +114,17 @@
     <Build Include="StoredProcedures\Tag_Material\Tag_Material_Delete.sql" />
     <Build Include="StoredProcedures\Tag_Task\Tag_Task_Insert.sql" />
     <Build Include="StoredProcedures\Tag_Task\Tag_Task_Delete.sql" />
+    <Build Include="StoredProcedures\Topic\Topic_Delite.sql" />
+    <Build Include="StoredProcedures\Topic\Topic_Insert.sql" />
+    <Build Include="StoredProcedures\Topic\Topic_SellectAll.sql" />
+    <Build Include="StoredProcedures\Topic\Topic_SelectById.sql" />
+    <Build Include="StoredProcedures\Topic\Topic_Update.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_Delete.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_Insert.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SellectByID.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_UpdateIsPresent.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_UpdateAbsenceReason.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_UpdateFeedback.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SellectAll.sql" />
   </ItemGroup>
 </Project>
