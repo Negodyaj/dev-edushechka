@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Course_Task] (
-	Id int Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	TaskId int NOT NULL,
 	CourseId int NOT NULL,
   CONSTRAINT [PK_COURSE_TASK] PRIMARY KEY CLUSTERED

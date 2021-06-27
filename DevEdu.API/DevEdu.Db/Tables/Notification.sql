@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Notification] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	Text nvarchar(max) NOT NULL,
 	UserId int,
 	RoleId int,

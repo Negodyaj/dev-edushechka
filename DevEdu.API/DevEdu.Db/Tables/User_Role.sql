@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [User_Role] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	UserId int NOT NULL,
 	RoleId int NOT NULL,
   CONSTRAINT [PK_USER_ROLE] PRIMARY KEY CLUSTERED

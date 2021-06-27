@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Group_Material] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	MaterialId int NOT NULL,
 	GroupId int NOT NULL,
   CONSTRAINT [PK_GROUP_MATERIAL] PRIMARY KEY CLUSTERED

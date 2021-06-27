@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Student_Lesson] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	UserId int NOT NULL,
 	LessonId int NOT NULL,
 	Feedback nvarchar(500),

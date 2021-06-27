@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Task_Student_Comment] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	TaskStudentId int NOT NULL,
 	CommentId int NOT NULL,
   CONSTRAINT [PK_TASK_STUDENT_COMMENT] PRIMARY KEY CLUSTERED

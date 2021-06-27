@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Lesson] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	Date datetime NOT NULL,
 	TeacherComment nvarchar(500),
 	TeacherId int NOT NULL,

@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Course] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	Name nvarchar(255) NOT NULL UNIQUE,
 	Description nvarchar(max) NOT NULL,
 	IsDeleted bit NOT NULL DEFAULT '0',

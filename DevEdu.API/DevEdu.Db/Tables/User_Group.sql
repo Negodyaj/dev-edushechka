@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [User_Group] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	GroupId int NOT NULL,
 	UserId int NOT NULL,
 	RoleId int NOT NULL,

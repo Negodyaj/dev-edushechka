@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Task_Student] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	TaskId int NOT NULL,
 	StudentId int NOT NULL,
 	StatusId int NOT NULL,

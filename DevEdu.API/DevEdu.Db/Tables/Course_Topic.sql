@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [Course_Topic] (
-	Id int NOT NULL Identity,
+	Id int NOT NULL IDENTITY(1,1),
 	CourseId int NOT NULL,
 	TopicId int NOT NULL,
 	Position int NOT NULL,
