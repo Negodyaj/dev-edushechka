@@ -58,6 +58,8 @@
     <Folder Include="StoredProcedures" />
     <Folder Include="StoredProcedures\Comment" />
     <Folder Include="StoredProcedures\Course" />
+    <Folder Include="StoredProcedures\Group_Lesson" />
+    <Folder Include="StoredProcedures\Group_Material" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -100,9 +102,9 @@
     <Build Include="StoredProcedures\Course\Course_Insert.sql" />
     <Build Include="StoredProcedures\Course\Course_Update.sql" />
     <Build Include="StoredProcedures\Course\Course_Delete.sql" />
-    <Build Include="StoredProcedures\Group_Lesson_Insert.sql" />
-    <Build Include="StoredProcedures\Group_Material_Insert.sql" />
-    <Build Include="StoredProcedures\Group_Material_Delete.sql" />
-    <Build Include="StoredProcedures\Group_Lesson_Delete_1.sql" />
+    <Build Include="StoredProcedures\Group_Lesson\Group_Lesson_Delete_1.sql" />
+    <Build Include="StoredProcedures\Group_Lesson\Group_Lesson_Insert.sql" />
+    <Build Include="StoredProcedures\Group_Material\Group_Material_Delete.sql" />
+    <Build Include="StoredProcedures\Group_Material\Group_Material_Insert.sql" />
   </ItemGroup>
 </Project>
