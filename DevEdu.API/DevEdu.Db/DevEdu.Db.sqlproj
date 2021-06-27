@@ -61,6 +61,7 @@
     <Folder Include="StoredProcedures\Group_Lesson" />
     <Folder Include="StoredProcedures\Group_Material" />
     <Folder Include="StoredProcedures\Tag_Material" />
+    <Folder Include="StoredProcedures\Tag_Task" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -109,5 +110,7 @@
     <Build Include="StoredProcedures\Group_Material\Group_Material_Insert.sql" />
     <Build Include="StoredProcedures\Tag_Material\Tag_Material_Insert.sql" />
     <Build Include="StoredProcedures\Tag_Material\Tag_Material_Delete.sql" />
+    <Build Include="StoredProcedures\Tag_Task\Tag_Task_Insert.sql" />
+    <Build Include="StoredProcedures\Tag_Task\Tag_Task_Delete.sql" />
   </ItemGroup>
 </Project>
