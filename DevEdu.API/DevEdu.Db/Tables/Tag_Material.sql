@@ -20,3 +20,6 @@ ON UPDATE NO ACTION
 GO
 ALTER TABLE [Tag_Material] CHECK CONSTRAINT [Tag_Material_fk1]
 GO
+ALTER TABLE [dbo].[Tag_Material]
+ADD CONSTRAINT UC_TagId_MaterialId UNIQUE(TagId, MaterialId)
+GO
