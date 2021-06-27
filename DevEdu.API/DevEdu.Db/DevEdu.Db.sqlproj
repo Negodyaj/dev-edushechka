@@ -108,5 +108,6 @@
     <Build Include="StoredProcedures\Group_Material\Group_Material_Delete.sql" />
     <Build Include="StoredProcedures\Group_Material\Group_Material_Insert.sql" />
     <Build Include="StoredProcedures\Tag_Material\Tag_Material_Insert.sql" />
+    <Build Include="StoredProcedures\Tag_Material\Tag_Material_Delete.sql" />
   </ItemGroup>
 </Project>
