@@ -72,7 +72,12 @@
     <Folder Include="StoredProcedures\Material" />
     <Folder Include="StoredProcedures\Lesson" />
     <Folder Include="StoredProcedures\Lesson_Comment" />
+<<<<<<< HEAD
     <Folder Include="StoredProcedures\User" />
+=======
+    <Folder Include="StoredProcedures\Tag_Topic" />
+    <Folder Include="StoredProcedures\Task" />
+>>>>>>> Tag_Topic
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -163,10 +168,15 @@
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAll.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectById.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_Update.sql" />
+<<<<<<< HEAD
     <Build Include="StoredProcedures\User\User_SelectAll.sql" />
     <Build Include="StoredProcedures\User\User_SelectById.sql" />
     <Build Include="StoredProcedures\User\User_Insert.sql" />
     <Build Include="StoredProcedures\User\User_Update.sql" />
     <Build Include="StoredProcedures\User\User_DeleteById.sql" />
+=======
+    <Build Include="StoredProcedures\Tag_Topic\Tag_Topic_Delete.sql" />
+    <Build Include="StoredProcedures\Tag_Topic\Tag_Topic_Insert.sql" />
+>>>>>>> Tag_Topic
   </ItemGroup>
 </Project>
