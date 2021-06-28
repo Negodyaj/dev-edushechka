@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[Task_Insert]
+﻿CREATE PROCEDURE dbo.Task_Insert
 	@Name nvarchar(255),
 	@StartDate datetime,
 	@EndDate datetime,
@@ -6,6 +6,6 @@
 	@Links nvarchar(500),
 	@IsRequired bit
 AS
-	INSERT INTO Task ([Name], [StartDate], [EndDate], [Description], [Links], [IsRequired])
+	INSERT INTO dbo.Task (Name, StartDate, EndDate, Description, Links, IsRequired)
 	VALUES (@Name, @StartDate, @EndDate, @Description, @Links, @IsRequired)
 	SELECT @@IDENTITY

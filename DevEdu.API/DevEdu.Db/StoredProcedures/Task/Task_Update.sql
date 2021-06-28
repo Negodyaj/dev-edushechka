@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[Task_Update]
-	@ID int,
+	@Id int,
 	@Name nvarchar(255),
 	@StartDate datetime,
 	@EndDate datetime,
@@ -15,4 +15,4 @@ AS
 	[Description] = @Description,
 	[Links] = @Links,
 	[IsRequired] = @IsRequired
-	Where Id = @ID
+	Where Id = @Id

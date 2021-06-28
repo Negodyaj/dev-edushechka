@@ -1,7 +1,6 @@
-﻿CREATE PROCEDURE [dbo].[Task_SelectById]
-	@ID int
+﻿CREATE PROCEDURE dbo.Task_SelectById
+	@Id int
 AS
-	SELECT * from [dbo].[Task]
+	SELECT Name, StartDate, EndDate, Description, Links, IsRequired from dbo.Task
 	WHERE 
-	IsDeleted = 0 AND
-	Id = @ID
+	Id = @Id

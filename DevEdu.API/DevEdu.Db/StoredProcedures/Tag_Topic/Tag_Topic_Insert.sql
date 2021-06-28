@@ -1,6 +1,6 @@
-﻿CREATE PROCEDURE [dbo].[Tag_Topic_Insert]
+﻿CREATE PROCEDURE dbo.Tag_Topic_Insert
 	@TagId int,
 	@TopicId int
 AS
-	INSERT INTO Tag_Topic ([TagId], [TopicId]) 
+	INSERT INTO dbo.Tag_Topic (TagId, TopicId) 
 	VALUES (@TagId, @TopicId) 
