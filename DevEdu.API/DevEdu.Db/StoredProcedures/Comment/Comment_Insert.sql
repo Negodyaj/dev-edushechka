@@ -1,8 +1,10 @@
 ﻿CREATE PROCEDURE dbo.Comment_Insert
-	@Text nvarchar(max)
+	@UserId int,
+	@Text nvarchar(max),
+	@Date datetime
 AS
 BEGIN
-	INSERT INTO dbo.Comment ([Text])
-	VALUES (@Text)
+	INSERT INTO dbo.Comment (UserId,[Text],[Date])
+	VALUES (@UserId, @Text,GETDATE())
 	SELECT @@IDENTITY
 END

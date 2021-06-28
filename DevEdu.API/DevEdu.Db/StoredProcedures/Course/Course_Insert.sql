@@ -3,7 +3,7 @@
 	@Description nvarchar(max)
 AS
 BEGIN
-	INSERT INTO dbo.Course ([Name],Description)
+	INSERT INTO dbo.Course (Name,Description)
 	VALUES (@Name, @Description)
 	SELECT @@IDENTITY
 END
