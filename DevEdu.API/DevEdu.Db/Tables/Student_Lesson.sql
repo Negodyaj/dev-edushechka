@@ -23,3 +23,5 @@ ON UPDATE NO ACTION
 GO
 ALTER TABLE [Student_Lesson] CHECK CONSTRAINT [Student_Lesson_fk1]
 GO
+
+ALTER TABLE [Student_Lesson] ADD CONSTRAINT UC_UserId_LessonId UNIQUE(UserId, LessonId)
