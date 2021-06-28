@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[User_Update]
+﻿CREATE PROCEDURE dbo.User_Update
 	@Id				int,
 	@Name			nvarchar(50) NULL,
 	@Email			nvarchar(50) NULL,
@@ -12,12 +12,12 @@
 AS
 	UPDATE dbo.[User]
     SET
-		[Name]			= @Name,
-		[Email]			= @Email,
-		[Username]		= @Username,
-		[Password]		= @Password,
-		[CityId]		= @CityId,
-		[GitHubAccount] = @GitHubAccount,
-		[Photo]			= @Photo,
-		[PhoneNumer]	= @PhoneNumer
-    WHERE [Id] = @Id
+		Name			= @Name,
+		Email			= @Email,
+		Username		= @Username,
+		Password		= @Password,
+		CityId			= @CityId,
+		GitHubAccount	= @GitHubAccount,
+		Photo			= @Photo,
+		PhoneNumer		= @PhoneNumer
+    WHERE Id = @Id
