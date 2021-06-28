@@ -66,6 +66,8 @@
     <Folder Include="StoredProcedures\Student_Lesson" />
     <Folder Include="StoredProcedures\Tag" />
     <Folder Include="StoredProcedures\User_Group" />
+    <Folder Include="StoredProcedures\Task_Student_Comment" />
+    <Folder Include="StoredProcedures\Task_Student" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -135,5 +137,12 @@
     <Build Include="StoredProcedures\Tag\Tag_SelectAll.sql" />
     <Build Include="StoredProcedures\Tag\Tag_SelectByID.sql" />
     <Build Include="StoredProcedures\Tag\Tag_Update.sql" />
+    <Build Include="StoredProcedures\Task_Student_Comment\Task_Student_Comment_Insert.sql" />
+    <Build Include="StoredProcedures\Task_Student_Comment\Task_Student_Comment_Delete.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_Insert.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_Delete.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAll.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectByID.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_UpdateAnswer.sql" />
   </ItemGroup>
 </Project>
