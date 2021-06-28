@@ -73,6 +73,8 @@
     <Folder Include="StoredProcedures\Lesson" />
     <Folder Include="StoredProcedures\Lesson_Comment" />
     <Folder Include="StoredProcedures\User" />
+    <Folder Include="StoredProcedures\Tag_Topic" />
+    <Folder Include="StoredProcedures\Task" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -168,5 +170,7 @@
     <Build Include="StoredProcedures\User\User_Insert.sql" />
     <Build Include="StoredProcedures\User\User_Update.sql" />
     <Build Include="StoredProcedures\User\User_DeleteById.sql" />
+    <Build Include="StoredProcedures\Tag_Topic\Tag_Topic_Delete.sql" />
+    <Build Include="StoredProcedures\Tag_Topic\Tag_Topic_Insert.sql" />
   </ItemGroup>
 </Project>
