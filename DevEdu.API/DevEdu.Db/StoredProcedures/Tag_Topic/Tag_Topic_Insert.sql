@@ -4,4 +4,3 @@
 AS
 	INSERT INTO Tag_Topic ([TagId], [TopicId]) 
 	VALUES (@TagId, @TopicId) 
-	SELECT @@IDENTITY

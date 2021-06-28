@@ -2,7 +2,9 @@
     @Id int,
 	@Text nvarchar(max)
 AS
-    UPDATE [Comment]
+BEGIN
+    UPDATE [dbo].[Comment]
     SET
-    [Text] = @Text
+        [Text] = @Text
     WHERE [Id] = @Id
+END

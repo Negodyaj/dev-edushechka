@@ -2,7 +2,6 @@
 @TopicId int,
 @LessonId int
 AS
-INSERT INTO Lesson_Topic (TopicID, ClassId)
+INSERT INTO Lesson_Topic (TopicId, ClassId)
 VALUES (@TopicId, @LessonId)
-SELECT @@IDENTITY
 

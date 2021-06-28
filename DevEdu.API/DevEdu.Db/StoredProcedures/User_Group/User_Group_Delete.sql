@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[User_Group_Delete]
-	@ID int
+	@UserId int,
+	@GroupId int
 AS
 	DELETE [dbo].[User_Group]
-WHERE Id = @ID
+	WHERE UserId = @UserId and GroupId = @GroupId

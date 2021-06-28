@@ -27,5 +27,5 @@ ON UPDATE NO ACTION
 GO
 ALTER TABLE [Task_Student] CHECK CONSTRAINT [Task_Student_fk2]
 GO
-ALTER TABLE [dbo].[Task_Student] ADD CONSTRAINT UC_TaskId_StudentId_StatusId UNIQUE([TaskId], [StudentId], [StatusId])
+ALTER TABLE [dbo].[Task_Student] ADD CONSTRAINT UC_TaskId_StudentId UNIQUE([TaskId], [StudentId])
 GO

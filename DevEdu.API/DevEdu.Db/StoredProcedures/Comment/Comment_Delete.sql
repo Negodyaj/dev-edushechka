@@ -1,7 +1,9 @@
 ﻿CREATE PROCEDURE [dbo].[Comment_Delete]
 	@Id int
 AS
-    UPDATE [Comment]
+BEGIN
+    UPDATE [dbo].[Comment]
     SET
-    [IsDeleted] = 1
+        [IsDeleted] = 1
     WHERE [Id] = @Id
+END

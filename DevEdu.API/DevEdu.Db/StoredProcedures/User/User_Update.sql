@@ -10,7 +10,7 @@
 	@PhoneNumer		nvarchar(12) NULL,
 	@ExileDate		date NULL
 AS
-	UPDATE [User]
+	UPDATE dbo.[User]
     SET
 		[Name]			= @Name,
 		[Email]			= @Email,

@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[User_DeleteById]
+﻿CREATE PROCEDURE [dbo].[User_Delete]
 	@Id int
 AS
     UPDATE [User]

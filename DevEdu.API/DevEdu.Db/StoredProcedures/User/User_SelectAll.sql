@@ -2,3 +2,4 @@
 AS
 	SELECT * 
 	FROM [User]
+	where IsDeleted = 0

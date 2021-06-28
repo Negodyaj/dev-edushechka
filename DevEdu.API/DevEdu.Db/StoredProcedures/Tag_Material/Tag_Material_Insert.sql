@@ -1,7 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[Tag_Material_Insert]
-	@TagID int ,
-	@MaterialID int
+	@TagId int ,
+	@MaterialId int
 AS
-	Insert into [dbo].[Tag_Material] ([TagId],[MaterialID])
-	Values (@TagID, @MaterialID )
-	Select @@IDENTITY
+	Insert into [dbo].[Tag_Material] ([TagId],[MaterialId])
+	Values (@TagId, @MaterialId )

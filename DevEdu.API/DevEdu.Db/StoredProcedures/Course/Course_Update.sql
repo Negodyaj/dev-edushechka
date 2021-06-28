@@ -5,7 +5,7 @@
 AS
     UPDATE [Course]
     SET
-    [Name] = @Name,
-    [Description] = @Description
+        [Name] = @Name,
+        [Description] = @Description
     WHERE [Id] = @Id
 

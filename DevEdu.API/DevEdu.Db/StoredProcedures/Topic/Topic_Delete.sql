@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[Topic_Delite]
+﻿CREATE PROCEDURE [dbo].[Topic_Delete]
 	@Id int
 AS
     UPDATE [Topic]

@@ -1,7 +1,8 @@
-﻿CREATE PROCEDURE [dbo].[Task_Student_SelectByID]
+﻿CREATE PROCEDURE [dbo].[Task_Student_SelectByTaskAndStudent]
 	@TaskId int,
-	@StudentId int,
-	@StatusId int
+	@StudentId int
 AS
- 	SELECT * FROM [Task_Student]
-	WHERE [TaskId] = @TaskId AND [StudentId] = @StudentId AND [StatusId] = @StatusId
+BEGIN
+ 	SELECT * FROM dbo.Task_Student
+	WHERE TaskId = @TaskId AND StudentId = @StudentId
+END

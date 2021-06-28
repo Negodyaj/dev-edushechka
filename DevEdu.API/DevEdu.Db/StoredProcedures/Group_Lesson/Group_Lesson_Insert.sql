@@ -2,9 +2,7 @@
 	@LessonId int,
 	@GroupId int
 AS
-	INSERT [dbo].[Group_Lesson_Insert]
-	OUTPUT INSERTED.ID, INSERTED.GroupId, INSERTED.LessonId
-	VALUES(
-	 @LessonId
-    ,@GroupId
-	)
+BEGIN
+	INSERT dbo.Group_Lesson (LessonId, GroupId)
+	VALUES (@LessonId, @GroupId)
+END

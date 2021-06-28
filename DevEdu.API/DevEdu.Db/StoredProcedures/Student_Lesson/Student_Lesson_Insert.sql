@@ -2,6 +2,7 @@
 	@UserId int,
 	@LessonId int
 AS
+BEGIN
 	INSERT INTO [Student_Lesson] ([UserId],[LessonId])
 	VALUES (@UserId,@LessonId)
-	SELECT @@IDENTITY
+END

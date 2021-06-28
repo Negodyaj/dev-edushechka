@@ -1,5 +1,7 @@
-﻿CREATE PROCEDURE [dbo].[Material_SelectById]
-@MaterialId int
+﻿CREATE PROCEDURE dbo.Material_SelectById
+	@MaterialId int
 AS
-SELECT [Id], [Content] from [Material]
-WHERE [IsDeleted] = 0 AND [Id] = @MaterialId
+BEGIN
+	SELECT Id, Content, IsDeleted from dbo.Material
+	WHERE Id = @MaterialId
+END
