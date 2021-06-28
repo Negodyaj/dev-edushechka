@@ -69,6 +69,7 @@
     <Folder Include="StoredProcedures\Task_Student_Comment" />
     <Folder Include="StoredProcedures\Task_Student" />
     <Folder Include="StoredProcedures\Lesson_Topic" />
+    <Folder Include="StoredProcedures\Material" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -147,5 +148,10 @@
     <Build Include="StoredProcedures\Task_Student\Task_Student_UpdateAnswer.sql" />
     <Build Include="StoredProcedures\Lesson_Topic\Lesson_Topic_Insert.sql" />
     <Build Include="StoredProcedures\Lesson_Topic\Lesson_Topic_Delete.sql" />
+    <Build Include="StoredProcedures\Material\Material_SelectAll.sql" />
+    <Build Include="StoredProcedures\Material\Material_SelectById.sql" />
+    <Build Include="StoredProcedures\Material\Material_Insert.sql" />
+    <Build Include="StoredProcedures\Material\Material_Update.sql" />
+    <Build Include="StoredProcedures\Material\Material_Delete.sql" />
   </ItemGroup>
 </Project>
