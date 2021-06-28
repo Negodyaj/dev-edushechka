@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [dbo].[Comment_Update]
+﻿CREATE PROCEDURE dbo.Comment_Update
     @Id int,
 	@Text nvarchar(max)
 AS
 BEGIN
-    UPDATE [dbo].[Comment]
+    UPDATE dbo.Comment
     SET
         [Text] = @Text
-    WHERE [Id] = @Id
+    WHERE Id = @Id
 END
