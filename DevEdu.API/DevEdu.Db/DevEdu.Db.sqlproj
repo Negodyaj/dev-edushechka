@@ -172,5 +172,10 @@
     <Build Include="StoredProcedures\User\User_DeleteById.sql" />
     <Build Include="StoredProcedures\Tag_Topic\Tag_Topic_Delete.sql" />
     <Build Include="StoredProcedures\Tag_Topic\Tag_Topic_Insert.sql" />
+    <Build Include="StoredProcedures\Task\Task_Delete.sql" />
+    <Build Include="StoredProcedures\Task\Task_Insert.sql" />
+    <Build Include="StoredProcedures\Task\Task_SelectAll.sql" />
+    <Build Include="StoredProcedures\Task\Task_SelectById.sql" />
+    <Build Include="StoredProcedures\Task\Task_Update.sql" />
   </ItemGroup>
 </Project>
