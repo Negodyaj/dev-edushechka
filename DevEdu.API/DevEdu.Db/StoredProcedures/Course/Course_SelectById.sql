@@ -1,5 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[Course_SelectById]
+﻿CREATE PROCEDURE dbo.Course_SelectById
 	@Id int
 AS
-	SELECT * FROM [Course]
-	WHERE ([Id] = @Id AND [IsDeleted]=0)
+BEGIN
+	SELECT 
+	Id, Name, Description, IsDeleted
+	FROM dbo.Course
+	WHERE (Id = @Id)
+END

@@ -1,11 +1,12 @@
-﻿CREATE PROCEDURE [dbo].[Course_Update]
+﻿CREATE PROCEDURE dbo.Course_Update
     @Id int,
     @Name nvarchar(255),
 	@Description nvarchar(max)
 AS
-    UPDATE [Course]
+BEGIN
+    UPDATE dbo.Course
     SET
         [Name] = @Name,
-        [Description] = @Description
-    WHERE [Id] = @Id
-
+        Description = @Description
+    WHERE Id = @Id
+END

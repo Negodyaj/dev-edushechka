@@ -1,5 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[Comment_SelectById]
+﻿CREATE PROCEDURE dbo.Comment_SelectById
 	@Id int
 AS
-	SELECT * FROM [Comment]
-	WHERE ([Id] = @Id AND [IsDeleted]=0)
+BEGIN
+	SELECT 
+	Id, UserId, Text, Date, IsDeleted
+	FROM dbo.Comment
+	WHERE (Id = @Id)
+END
