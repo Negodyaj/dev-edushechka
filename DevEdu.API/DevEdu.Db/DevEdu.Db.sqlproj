@@ -182,5 +182,10 @@
     <Build Include="StoredProcedures\Notification\Notification_SelectAllByUserId.sql" />
     <Build Include="StoredProcedures\Notification\Notification_SelectById.sql" />
     <Build Include="StoredProcedures\Notification\Notification_Update.sql" />
+    <Build Include="StoredProcedures\Payment\Payment_Delete.sql" />
+    <Build Include="StoredProcedures\Payment\Payment_Insert.sql" />
+    <Build Include="StoredProcedures\Payment\Payment_SelectAllByUserId.sql" />
+    <Build Include="StoredProcedures\Payment\Payment_SelectById.sql" />
+    <Build Include="StoredProcedures\Payment\Payment_Update.sql" />
   </ItemGroup>
 </Project>
