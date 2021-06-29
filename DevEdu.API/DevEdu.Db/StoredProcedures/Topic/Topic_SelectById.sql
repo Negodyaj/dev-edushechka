@@ -1,5 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[Topic_SelectById]
+﻿CREATE PROCEDURE dbo.Topic_SelectById
 	@Id int
 AS
-	SELECT * FROM [Topic]
-	WHERE ([Id] = @Id AND [IsDeleted]=0)
+BEGIN
+	SELECT 
+	Id, Name, Duration,IsDeleted 
+	FROM dbo.Topic
+	WHERE (Id = @Id AND IsDeleted=0)
+END
