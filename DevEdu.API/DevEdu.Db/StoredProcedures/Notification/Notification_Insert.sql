@@ -1,6 +1,11 @@
 ﻿CREATE PROCEDURE [dbo].[Notification_Insert]
-	@Text nvarchar(max)
+	@UserId		int,
+	@RoleId		int,
+	@Text		nvarchar(max)
+
 AS
-	INSERT INTO dbo.Notification ([Text], Date) -- add other columns
-	VALUES (@Text, getdate())
+BEGIN
+	INSERT INTO dbo.Notification (Text, Date, UserId, RoleId)
+	VALUES (@Text, getdate(),@UserId,@RoleId)
 	SELECT @@IDENTITY
+END
