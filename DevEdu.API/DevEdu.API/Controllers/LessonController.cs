@@ -39,6 +39,16 @@ namespace DevEdu.API.Controllers
             return $"lessonId {lessonId} commentId {commentId}";
         }
 
+        [HttpDelete("lesson/{lessonId}/topic/{toppicId}")]
+        public string DeleteTopicFromLesson(int lessonId, int toppicId)
+        {
+            return $"lessonId {lessonId} topicId {toppicId}";
+        }
 
+        [HttpPost("lesson/{lessonId}/topic/{toppicId}")]
+        public string AddTopicToLesson(int lessonId, int toppicId)
+        {
+            return $"lessonId {lessonId} topicId {toppicId}";
+        }
     }
 }
