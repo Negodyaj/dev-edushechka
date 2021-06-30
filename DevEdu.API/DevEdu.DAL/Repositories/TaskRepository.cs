@@ -12,7 +12,7 @@ namespace DevEdu.DAL.Repositories
 {
     public class TaskRepository
     {
-        private readonly string connectionString = "Data Source=80.78.240.16;Persist Security Info=True;User ID = student; Pooling=False;MultipleActiveResultSets=False;Connect Timeout = 60; Encrypt=False;TrustServerCertificate=False";
+        public string connectionString = "Data Source=80.78.240.16;Initial Catalog = DevEdu; Persist Security Info=True;User ID = student;Password=qwe!23; Pooling=False;MultipleActiveResultSets=False;Connect Timeout = 60; Encrypt=False;TrustServerCertificate=False";
 
         public TaskRepository()
         {

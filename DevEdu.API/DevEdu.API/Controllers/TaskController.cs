@@ -36,7 +36,7 @@ namespace DevEdu.API.Controllers
             string result = "";
             foreach (var task in taskDtos)
             {
-
+                result += task.Name + ", ";
             }
 
             return result;
