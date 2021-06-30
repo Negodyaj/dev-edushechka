@@ -10,8 +10,10 @@
 	@Photo				nvarchar(150),
 	@PhoneNumer			nvarchar(12)
 AS
+BEGIN
 	INSERT INTO dbo.[User] ([Name],[Email],[Username],[Password],[RegistrationDate],[ContractNumber],[CityId],
 		[BirthDate],[GitHubAccount],[Photo],[PhoneNumer])
 	VALUES (@Name,@Email,@Username,@Password,getdate(),@ContractNumber,@CityId,
 		@BirthDate,@GitHubAccount,@Photo,@PhoneNumer)
 	SELECT @@IDENTITY
+END

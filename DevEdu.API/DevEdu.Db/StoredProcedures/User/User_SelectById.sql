@@ -1,6 +1,7 @@
 ﻿CREATE PROCEDURE dbo.[User_SelectById]
 	@Id int
 AS
+BEGIN
 	SELECT 
 		Name,
 		Email,
@@ -17,3 +18,4 @@ AS
 		ExileDate
 	FROM dbo.[User]
 	WHERE [Id] = @Id
+END

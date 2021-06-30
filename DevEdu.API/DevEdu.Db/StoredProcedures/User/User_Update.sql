@@ -10,6 +10,7 @@
 	@PhoneNumer		nvarchar(12) NULL,
 	@ExileDate		date NULL
 AS
+BEGIN
 	UPDATE dbo.[User]
     SET
 		Name			= @Name,
@@ -21,3 +22,4 @@ AS
 		Photo			= @Photo,
 		PhoneNumer		= @PhoneNumer
     WHERE Id = @Id
+END

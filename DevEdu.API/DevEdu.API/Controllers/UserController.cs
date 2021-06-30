@@ -1,34 +1,43 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DevEdu.API.Models.InputModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DevEdu.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/user")]
     public class UserController : Controller
     {
         public UserController() { }
 
-        // api/user/{userId}/role/2
-        //[HttpPost("{userId}/role/{roleId}")]
-        //public int AddRoleToUser(int userId, int roleId)
-        //{
-        //    return 42;
-        //}
-
-        [HttpPost("User/{UserId}/Role/{RoleId}")]
-        public string AddRoleToUser(int UserId, int RoleId)
+        [HttpPost]
+        public int AddUser([FromBody] UserInputModel model)
         {
-            return $"User {UserId} add  Role Id {RoleId}";
+            return 1;
         }
 
-        [HttpDelete("User/{UserId}/Role/{RoleId}")]
-        public string RemoveRoleToUser(int UserId, int RoleId)
+        [HttpGet("{UserId}")]
+        public string GetUserById(int UserId)
         {
-            return $"User {UserId} remove  Role Id:{RoleId}";
+            return UserId.ToString();
+        }
+
+        [HttpGet("all")]
+        public string GetAllUsers()
+        {
+            return "here's for you all Users";
+        }
+
+        [HttpDelete("{UserId}")]
+        public string DeleteUser(int UserId)
+        {
+            return $"User with number {UserId} is deleted";
+        }
+
+        // api/user/{userId}/role/2
+        [HttpPost("{userId}/role/{roleId}")]
+        public int AddRoleToUser(int userId, int roleId)
+        {
+            return 42;
         }
     }
 }
