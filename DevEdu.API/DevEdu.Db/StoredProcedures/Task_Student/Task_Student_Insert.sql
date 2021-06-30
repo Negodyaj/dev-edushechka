@@ -1,11 +1,11 @@
-﻿CREATE PROCEDURE [dbo].[Task_Student_Insert]
+﻿CREATE PROCEDURE dbo.Task_Student_Insert
 	@TaskId int,
-	@StudentId int
-	-- + Answer
+	@StudentId int,
+	@Answer nvarchar(500)
 AS
 BEGIN
 	DECLARE @Status_ToReview int = 1
-	INSERT INTO Task_Student ([TaskId], [StudentId], [StatusId])
-	VALUES (@TaskId, @StudentId, @Status_ToReview)
+	INSERT INTO dbo.Task_Student (TaskId, StudentId, StatusId, Answer)
+	VALUES (@TaskId, @StudentId, @Status_ToReview, @Answer)
 	SELECT @@IDENTITY
 END

@@ -1,3 +1,5 @@
-﻿CREATE PROCEDURE [dbo].[Task_Student_SelectAll]
+﻿CREATE PROCEDURE dbo.Task_Student_SelectAll
 AS
-	SELECT * FROM [Task_Student]
+BEGIN
+	SELECT Id, TaskId, StudentId, StatusId, Answer FROM dbo.Task_Student
+END

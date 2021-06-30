@@ -152,7 +152,7 @@
     <Build Include="StoredProcedures\Task_Student\Task_Student_Insert.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_Delete.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAll.sql" />
-    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectByID.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectByTaskAndStudent.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_UpdateAnswer.sql" />
     <Build Include="StoredProcedures\Lesson_Topic\Lesson_Topic_Insert.sql" />
     <Build Include="StoredProcedures\Lesson_Topic\Lesson_Topic_Delete.sql" />
@@ -190,6 +190,7 @@
     <Build Include="StoredProcedures\Payment\Payment_SelectAllByUserId.sql" />
     <Build Include="StoredProcedures\Payment\Payment_SelectById.sql" />
     <Build Include="StoredProcedures\Payment\Payment_Update.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_UpdateStatusId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />
