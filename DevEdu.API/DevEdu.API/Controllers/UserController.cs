@@ -21,6 +21,12 @@ namespace DevEdu.API.Controllers
             return UserId.ToString();
         }
 
+        [HttpGet("all")]
+        public string GetAllUsers()
+        {
+            return "here's for you all Users";
+        }
+
         [HttpDelete("{UserId}")]
         public string DeleteUser(int UserId)
         {
