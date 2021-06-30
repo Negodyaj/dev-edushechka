@@ -77,6 +77,9 @@
     <Folder Include="StoredProcedures\Task" />
     <Folder Include="StoredProcedures\Notification" />
     <Folder Include="StoredProcedures\Payment" />
+    <Folder Include="StoredProcedures\Course_Material" />
+    <Folder Include="StoredProcedures\Course_Task" />
+    <Folder Include="StoredProcedures\User_Role" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -187,5 +190,13 @@
     <Build Include="StoredProcedures\Payment\Payment_SelectAllByUserId.sql" />
     <Build Include="StoredProcedures\Payment\Payment_SelectById.sql" />
     <Build Include="StoredProcedures\Payment\Payment_Update.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />
+    <None Include="StoredProcedures\Course_Material\Course_Material_Insert.sql" />
+    <None Include="StoredProcedures\Course_Task\Course_Task_Delete.sql" />
+    <None Include="StoredProcedures\Course_Task\Course_Task_Insert.sql" />
+    <None Include="StoredProcedures\User_Role\User_Role_Insert.sql" />
+    <None Include="StoredProcedures\User_Role\User_Role_Delete.sql" />
   </ItemGroup>
 </Project>
