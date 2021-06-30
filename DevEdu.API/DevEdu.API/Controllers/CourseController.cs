@@ -61,5 +61,29 @@ namespace DevEdu.API.Controllers
         {
             return $"deleted at topic with {topicId} Id tag with {tagId} Id";
         }
+
+        [HttpPost("Course/{CourseId}/Material/{MaterialId}")]
+        public string AddMaterialToCourse(int CourseId, int MaterialId)
+        {
+            return $"Course {CourseId} add  Material Id {MaterialId}";
+        }
+
+        [HttpDelete("Course/{CourseId}/Material/{MaterialId}")]
+        public string RemoveMaterialToCourse(int CourseId, int MaterialId)
+        {
+            return $"Course {CourseId} remove  Material Id:{MaterialId}";
+        }
+
+        [HttpPost("Course/{CourseId}/Task/{TaskId}")]
+        public string AddTaskToCourse(int CourseId, int TaskId)
+        {
+            return $"Course {CourseId} add  Task Id:{TaskId}";
+        }
+
+        [HttpDelete("Course/{CourseId}/Task/{TaskId}")]
+        public string RemoveTaskToCourse(int CourseId, int TaskId)
+        {
+            return $"Course {CourseId} remove  Task Id:{TaskId}";
+        }
     }
 }
