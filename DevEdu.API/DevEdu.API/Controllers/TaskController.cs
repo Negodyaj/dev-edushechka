@@ -31,7 +31,7 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpPut("{taskId}")]
-        public string UodateTask([FromBody] TaskInputModel model, int taskId)
+        public string UpdateTask([FromBody] TaskInputModel model, int taskId)
         {
 
             return $"update task with {taskId} Id";
