@@ -28,15 +28,19 @@ namespace DevEdu.API.Controllers
 
         //  api/Task
         [HttpGet]
-        public List<TaskDto> GetAllTasks()
+        public string GetAllTasks()
         {
             List<TaskDto> taskDtos = new List<TaskDto>();
             TaskRepository taskRepository = new TaskRepository();
             taskDtos = taskRepository.GetTasks();
+            string result = "";
+            foreach (var task in taskDtos)
+            {
 
-            return taskDtos;
+            }
+
+            return result;
         }
-
         // api/task
         [HttpPost]
         public int AddTask([FromBody] TaskInputModel model)
