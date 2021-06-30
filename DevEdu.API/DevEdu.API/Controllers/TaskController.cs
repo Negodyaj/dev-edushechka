@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
 
 namespace DevEdu.API.Controllers
 {
@@ -26,9 +28,13 @@ namespace DevEdu.API.Controllers
 
         //  api/Task
         [HttpGet]
-        public string GetAllTasks()
+        public List<TaskDto> GetAllTasks()
         {
-            return "All Tasks";
+            List<TaskDto> taskDtos = new List<TaskDto>();
+            TaskRepository taskRepository = new TaskRepository();
+            taskDtos = taskRepository.GetTasks();
+
+            return taskDtos;
         }
 
         // api/task
