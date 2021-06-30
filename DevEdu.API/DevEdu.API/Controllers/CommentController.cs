@@ -31,7 +31,7 @@ namespace DevEdu.API.Controllers
 
         //  api/comment
         [HttpPost]
-        public int AddComment([FromBody] CommentInputModel model)
+        public int AddComment([FromBody] CommentAddtInputModel model)
         {
             return 1;
         }
@@ -45,7 +45,7 @@ namespace DevEdu.API.Controllers
 
         //  api/comment/5
         [HttpPut("{id}")]
-        public string UpdateComment(int id, [FromBody] CommentInputModel model)  // split input models
+        public string UpdateComment(int id, [FromBody] CommentUpdatetInputModel model)
         {
             return $"Text comment №{id} change to {model.Text}";
         }

@@ -84,7 +84,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}/comment}
         [HttpPost("{taskId}/student/{studentId}/comment")]
-        public int AddCommentOnStudentAnswer(int taskId, int studentId, [FromBody] CommentInputModel inputModel)
+        public int AddCommentOnStudentAnswer(int taskId, int studentId, [FromBody] CommentAddtInputModel inputModel)
         {
             return taskId;
         }
