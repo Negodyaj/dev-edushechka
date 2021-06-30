@@ -36,18 +36,18 @@ namespace DevEdu.API.Controllers
             return 1;
         }
 
-        //  api/comment/{id}
+        //  api/comment/5
         [HttpDelete("{id}")]
         public void DeleteComment(int id)
         {
 
         }
 
-        //  api/comment/{id}
+        //  api/comment/5
         [HttpPut("{id}")]
-        public string UpdateComment(int id, string textComment)
+        public string UpdateComment(int id, CommentInputModel model)
         {
-            return $"Text comment №{id} change to {textComment}";
+            return $"Text comment №{id} change to {model.Text}";
         }
     }
 }

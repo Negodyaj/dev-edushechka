@@ -21,6 +21,23 @@ namespace DevEdu.API.Controllers
             return $"Date {date} TeacherComment {teacherComment}  TeacherId {teacherId}";
         }
 
+        [HttpDelete("lesson/{id}")]
+        public string DeleteLesson(int id)
+        {
+            return $"id {id}";
+        }
+
+        [HttpPost("lesson-comment/{date}/{teacherComment}/{teacherId}")]
+        public string AddLessonComment(int lessonId, int commentId)
+        {
+            return $"lessonId {lessonId} commentId {commentId}";
+        }
+
+        [HttpDelete("lesson-comment/{id}")]
+        public string DeleteLessonComment(int lessonId, int commentId)
+        {
+            return $"lessonId {lessonId} commentId {commentId}";
+        }
 
 
     }

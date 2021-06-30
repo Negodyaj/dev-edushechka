@@ -36,18 +36,18 @@ namespace DevEdu.API.Controllers
             return 1;
         }
 
-        //  api/course
-        [HttpDelete]
+        //  api/course/5
+        [HttpDelete("{id}")]
         public void DeleteCourse(int id)
         {
 
         }
 
-        //  api/course
-        [HttpPut]
-        public string UpdateCourse(int id, string name, string description)
+        //  api/course/5
+        [HttpPut("{id}")]
+        public string UpdateCourse(int id, CourseInputModel model)
         {
-            return $"Course №{id} change name to {name} and description to {description}";
+            return $"Course №{id} change name to {model.Name} and description to {model.Description}";
         }
 
         [HttpPost("topic/{topicId}/tag/{tagId}")]
