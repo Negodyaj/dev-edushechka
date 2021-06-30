@@ -16,6 +16,13 @@ namespace DevEdu.API.Controllers
             return 1;
         }
 
+        // api/user/userId
+        [HttpPut("{userId}")]
+        public string UpdateUserById(int userId,[FromBody] UserUpdateInputModel model)
+        {
+            return $"update User №{userId} is success";
+        }
+
         // api/user/{userId}
         [HttpGet("{userId}")]
         public string GetUserById(int userId)
