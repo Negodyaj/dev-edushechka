@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevEdu.API.Controllers
@@ -24,9 +25,9 @@ namespace DevEdu.API.Controllers
 
         //  api/comment/by-user/1
         [HttpGet("by-user/{userId}")]
-        public string GetAllComment(int userId)
+        public List<CommentDto> GetAllCommentsByUserId(int userId)
         {
-            return $"All comments by user №{userId}";
+            return new List<CommentDto>();
         }
 
         //  api/comment
