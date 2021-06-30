@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class UserInputModel
+    public class UserInsertInputModel
     {
         [Required]
         public string Name { get; set; }
@@ -20,7 +20,6 @@ namespace DevEdu.API.Models.InputModels
         [Required]
         public DateTime BirthDate { get; set; }
         public string GitHubAccount { get; set; }
-        [Required]
         public string Photo { get; set; }
         [Required]
         public string PhoneNumer { get; set; }

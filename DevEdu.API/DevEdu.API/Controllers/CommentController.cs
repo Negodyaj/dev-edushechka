@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevEdu.API.Controllers
@@ -22,32 +23,32 @@ namespace DevEdu.API.Controllers
             return $"Comment №{id}";
         }
 
-        //  api/comment/all/user/1
-        [HttpGet("all/byUser/{userId}")]
-        public string GetAllComment(int userId)
+        //  api/comment/by-user/1
+        [HttpGet("by-user/{userId}")]
+        public List<CommentDto> GetAllCommentsByUserId(int userId)
         {
-            return $"All comments by user №{userId}";
+            return new List<CommentDto>();
         }
 
         //  api/comment
         [HttpPost]
-        public int AddComment([FromBody] CommentInputModel model)
+        public int AddComment([FromBody] CommentAddtInputModel model)
         {
             return 1;
         }
 
-        //  api/comment/{id}
+        //  api/comment/5
         [HttpDelete("{id}")]
         public void DeleteComment(int id)
         {
 
         }
 
-        //  api/comment/{id}
+        //  api/comment/5
         [HttpPut("{id}")]
-        public string UpdateComment(int id, string textComment)
+        public string UpdateComment(int id, [FromBody] CommentUpdatetInputModel model)
         {
-            return $"Text comment №{id} change to {textComment}";
+            return $"Text comment №{id} change to {model.Text}";
         }
     }
 }
