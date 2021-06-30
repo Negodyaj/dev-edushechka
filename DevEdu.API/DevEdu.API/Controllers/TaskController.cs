@@ -14,31 +14,36 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class TaskController : Controller
     {
+        private TaskRepository taskRepository;
         public TaskController()
         {
-
+            taskRepository = new TaskRepository();
         }
 
         //  api/Task/1
-        [HttpGet("{id}")]
+        [HttpGet("{taskId}")]
         public string GetTask(int taskId)
         {
-            return $"Get task №{taskId}";
+            TaskDto task = new TaskDto();
+            task = taskRepository.GetTaskById(taskId);
+            string result = task.Id + " " + task.Name + " " + task.Description + " " + task.StartDate + " " + task.EndDate
+                             + " " + task.Links + " " + task.IsRequired + " " + task.IsDeleted;
+            return result;
         }
 
         //  api/Task
         [HttpGet]
         public string GetAllTasks()
         {
-            List<TaskDto> taskDtos = new List<TaskDto>();
-            TaskRepository taskRepository = new TaskRepository();
-            taskDtos = taskRepository.GetTasks();
+            //List<TaskDto> taskDtos = new List<TaskDto>();
+            //taskDtos = taskRepository.GetTasks();
             string result = "";
-            foreach (var task in taskDtos)
+            foreach (var task in taskRepository.GetTasks())
             {
-                result += task.Name + ", ";
+                result += task.Id + " " + task.Name + " " + task.Description + " " + task.StartDate + " " + task.EndDate
+                          + " " + task.Links + " " + task.IsRequired + " " + task.IsDeleted;
+                result += "\n";
             }
-
             return result;
         }
         // api/task

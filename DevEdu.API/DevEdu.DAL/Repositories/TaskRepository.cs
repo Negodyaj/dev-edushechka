@@ -18,16 +18,28 @@ namespace DevEdu.DAL.Repositories
         {
 
         }
+        public TaskDto GetTaskById(int id)
+        {
+            TaskDto task = new TaskDto();
+            string query;
+            using (IDbConnection dbConnection = new SqlConnection(connectionString))
+            {
+                query = "exec dbo.Task_SelectById @Id";
+                task = dbConnection.Query<TaskDto>(query, new { id }).FirstOrDefault();
+            }
+            return task;
+        }
+
         public List<TaskDto> GetTasks()
         {
-            List<TaskDto> result = new List<TaskDto>();
+            List<TaskDto> tasks = new List<TaskDto>();
             string query;
             using (IDbConnection dbConnection = new SqlConnection(connectionString))
             {
                 query = "exec dbo.Task_SelectAll";
-                result = dbConnection.Query<TaskDto>(query).AsList<TaskDto>();
+                tasks = dbConnection.Query<TaskDto>(query).AsList<TaskDto>();
             }
-            return result;
+            return tasks;
         }
     }
 }
