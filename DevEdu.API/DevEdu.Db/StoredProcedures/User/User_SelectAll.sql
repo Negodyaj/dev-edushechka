@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE dbo.[User_SelectAll]
 AS
+BEGIN
 	SELECT 
 		Name,
 		Email,
@@ -16,3 +17,4 @@ AS
 		ExileDate
 	FROM dbo.[User]
 	WHERE IsDeleted = 0
+END
