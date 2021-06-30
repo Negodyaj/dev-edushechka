@@ -11,7 +11,7 @@ namespace DevEdu.API.Controllers
 
         // api/user
         [HttpPost]
-        public int AddUser([FromBody] UserInputModel model)
+        public int AddUser([FromBody] UserInsertInputModel model)
         {
             return 1;
         }
