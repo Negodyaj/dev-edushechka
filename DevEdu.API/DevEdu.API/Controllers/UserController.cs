@@ -7,8 +7,6 @@ namespace DevEdu.API.Controllers
     [Route("api/user")]
     public class UserController : Controller
     {
-        UserInputModel model = new UserInputModel();
-
         public UserController() { }
 
         [HttpPost]
@@ -18,10 +16,9 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpGet("{UserId}")]
-        public int GetUserById(int UserId)
+        public string GetUserById(int UserId)
         {
-
-            return UserId;
+            return UserId.ToString();
         }
 
         [HttpDelete("{UserId}")]
@@ -31,22 +28,10 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user/{userId}/role/2
-        //[HttpPost("{userId}/role/{roleId}")]
-        //public int AddRoleToUser(int userId, int roleId)
-        //{
-        //    return 42;
-        //}
-
-        [HttpPost("User/{UserId}/Role/{RoleId}")]
-        public string AddRoleToUser(int UserId, int RoleId)
+        [HttpPost("{userId}/role/{roleId}")]
+        public int AddRoleToUser(int userId, int roleId)
         {
-            return $"User {UserId} add  Role Id {RoleId}";
-        }
-
-        [HttpDelete("User/{UserId}/Role/{RoleId}")]
-        public string RemoveRoleToUser(int UserId, int RoleId)
-        {
-            return $"User {UserId} remove  Role Id:{RoleId}";
+            return 42;
         }
     }
 }
