@@ -1,17 +1,17 @@
 ﻿CREATE TABLE [User] (
 	Id int NOT NULL IDENTITY(1,1),
 	Name nvarchar(50) NOT NULL,
-	Email nvarchar(50) NOT NULL,
+	Email nvarchar(50) NOT NULL,  --
 	Username nvarchar(50) NOT NULL,
 	Password nvarchar(30) NOT NULL,
-	IsDeleted bit NOT NULL DEFAULT '0',
 	RegistrationDate datetime NOT NULL,
 	ContractNumber nvarchar(50) NOT NULL UNIQUE,
 	CityId int NOT NULL,
 	BirthDate date NOT NULL,
 	GitHubAccount nvarchar(50),
-	Photo nvarchar(150) NOT NULL,
+	Photo nvarchar(150),
 	PhoneNumer nvarchar(12) NOT NULL,
+	IsDeleted bit NOT NULL DEFAULT '0',
 	ExileDate date,
   CONSTRAINT [PK_USER] PRIMARY KEY CLUSTERED
   (

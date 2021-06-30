@@ -17,6 +17,7 @@ namespace DevEdu.API.Controllers
 
         }
 
+        // api/task
         [HttpPost]
         public int AddTask([FromBody] TaskInputModel model)
         {
@@ -24,61 +25,68 @@ namespace DevEdu.API.Controllers
             return 1;
         }
 
+        // api/task/{taskId}
         [HttpDelete("{taskId}")]
         public string DeleteTask(int taskId)
         {
             return $"deleted task with {taskId} Id";
         }
 
+        // api/task/{taskId}
         [HttpPut("{taskId}")]
-        public string UpdateTask([FromBody] TaskInputModel model, int taskId)
+        public string UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
 
             return $"update task with {taskId} Id";
         }
 
+        // api/task/{taskId}/tag/{tagId}
         [HttpPost("{taskId}/tag/{tagId}")]
-
-        public int AddTagTask(int taskId, int tagId)
+        public int AddTagToTask(int taskId, int tagId)
         {
             return 1;
         }
 
-        [HttpDelete("{id}")]
-        public string DeleteTagTask( int id)
+        // api/task/{taskId}/tag/{tagId}
+        [HttpDelete("{taskId}/tag/{tagId}")]
+        public string DeleteTagFromTask(int taskId, int tagId)
         {
-            return $"deleted tag task with {id} Id";
+            return $"deleted tag task with {taskId} taskId";
         }
 
-
-        [HttpPost("student/{studentId}/task/{taskId}/task-answer/{taskAnswer}")]
-        public string AddAnswerTaskStudent(int studentId, int taskId, string taskAnswer)
+        // api/task/{taskId}/student/{studentId}
+        [HttpPost("{taskId}/student/{studentId}")]
+        public string AddStudentAnswerOnTask(int taskId, int studentId, string taskAnswer)  // to inputModel
         {
             return $"add answer for task {taskId} id";
         }
 
-        [HttpPut("student/{studentId}/task/{taskId}/task-answer/{taskAnswer}")]
-        public string UpdateAnswerTaskStudent(int studentId, int taskId, string taskAnswer)
+        // api/task/{taskId}/student/{studentId}
+        [HttpPut("{taskId}/student/{studentId}")]  // to inputModel
+        public string UpdateStudentAnswerOnTask(int studentId, int taskId, string taskAnswer)
         {
             return $"update task with {taskId} id by {taskAnswer}";
         }
 
-        [HttpDelete("student/{studentId}/task/{taskId}")]
-        public string DeleteAnswerTaskStudent(int studentId, int taskId)
+        // api/task/{taskId}/student/{studentId}
+        [HttpDelete("{taskId}/student/{studentId}")]
+        public string DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
             return $"deleted answer for task {taskId} id";
         }
 
-        [HttpPost("student/{studentId}/task/{taskId}/task-answer/status-task/{statusId}")]
-        public int AddStatusTaskStudent(int studentId, int taskId, int statusId)
+        // api/task/{taskId}/student/{studentId}/change-status/{statusId}
+        [HttpPut("{taskId}/student/{studentId}/change-status/{statusId}")]
+        public int UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
             return statusId;
         }
 
-        [HttpPut("student/{studentId}/task/{taskId}/task-answer/status-task/{statusId}")]
-        public int UpdateStatusTaskStudent(int studentId, int taskId, int statusId)
+        // api/task/{taskId}/student/{studentId}/comment}
+        [HttpPost("{taskId}/student/{studentId}/comment")]
+        public int AddCommentOnStudentAnswer(int taskId, int studentId, [FromBody] CommentInputModel inputModel)
         {
-            return statusId;
+            return taskId;
         }
     }
 }

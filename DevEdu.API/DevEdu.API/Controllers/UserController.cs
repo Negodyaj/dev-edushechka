@@ -4,36 +4,40 @@ using Microsoft.AspNetCore.Mvc;
 namespace DevEdu.API.Controllers
 {
     [ApiController]
-    [Route("api/user")]
+    [Route("api/[controller]")]
     public class UserController : Controller
     {
         public UserController() { }
 
+        // api/user
         [HttpPost]
         public int AddUser([FromBody] UserInputModel model)
         {
             return 1;
         }
 
-        [HttpGet("{UserId}")]
-        public string GetUserById(int UserId)
+        // api/user/{userId}
+        [HttpGet("{userId}")]
+        public string GetUserById(int userId)
         {
-            return UserId.ToString();
+            return userId.ToString();
         }
 
-        [HttpGet("all")]
+        // api/user
+        [HttpGet]
         public string GetAllUsers()
         {
             return "here's for you all Users";
         }
 
-        [HttpDelete("{UserId}")]
-        public string DeleteUser(int UserId)
+        // api/user/{userId}
+        [HttpDelete("{userId}")]
+        public string DeleteUser(int userId)
         {
-            return $"User with number {UserId} is deleted";
+            return $"User with number {userId} is deleted";
         }
 
-        // api/user/{userId}/role/2
+        // api/user/{userId}/role/{roleId}
         [HttpPost("{userId}/role/{roleId}")]
         public int AddRoleToUser(int userId, int roleId)
         {

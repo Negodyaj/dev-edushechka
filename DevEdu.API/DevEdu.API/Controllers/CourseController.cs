@@ -22,9 +22,9 @@ namespace DevEdu.API.Controllers
             return $"course №{id}";
         }
 
-        //  api/Course/all
-        [HttpGet("all")]
-        public string GetAllCourse()
+        //  api/Course
+        [HttpGet]
+        public string GetAllCourses()
         {
             return "All course";
         }
@@ -45,45 +45,51 @@ namespace DevEdu.API.Controllers
 
         //  api/course/5
         [HttpPut("{id}")]
-        public string UpdateCourse(int id, CourseInputModel model)
+        public string UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             return $"Course №{id} change name to {model.Name} and description to {model.Description}";
         }
 
+        //  api/course/topic/{topicId}/tag/{tagId}
         [HttpPost("topic/{topicId}/tag/{tagId}")]
         public int AddTagToTopic(int topicId, int tagId)
         {
             return topicId;
         }
 
+        //  api/course/topic/{topicId}/tag/{tagId}
         [HttpDelete("topic/{topicId}/tag/{tagId}")]
         public string DeleteTagAtTopic(int topicId, int tagId)
         {
             return $"deleted at topic with {topicId} Id tag with {tagId} Id";
         }
 
-        [HttpPost("Course/{CourseId}/Material/{MaterialId}")]
-        public string AddMaterialToCourse(int CourseId, int MaterialId)
+        //  api/course/{CourseId}/Material/{MaterialId}
+        [HttpPost("{courseId}/material/{materialId}")]
+        public string AddMaterialToCourse(int courseId, int materialId)
         {
-            return $"Course {CourseId} add  Material Id {MaterialId}";
+            return $"Course {courseId} add  Material Id {materialId}";
         }
 
-        [HttpDelete("Course/{CourseId}/Material/{MaterialId}")]
-        public string RemoveMaterialToCourse(int CourseId, int MaterialId)
+        //  api/course/{CourseId}/Material/{MaterialId}
+        [HttpDelete("{courseId}/material/{materialId}")]
+        public string RemoveMaterialFromCourse(int courseId, int materialId)
         {
-            return $"Course {CourseId} remove  Material Id:{MaterialId}";
+            return $"Course {courseId} remove  Material Id:{materialId}";
         }
 
-        [HttpPost("Course/{CourseId}/Task/{TaskId}")]
-        public string AddTaskToCourse(int CourseId, int TaskId)
+        //  api/course/{CourseId}/Task/{TaskId}
+        [HttpPost("{courseId}/task/{taskId}")]
+        public string AddTaskToCourse(int courseId, int taskId)
         {
-            return $"Course {CourseId} add  Task Id:{TaskId}";
+            return $"Course {courseId} add  Task Id:{taskId}";
         }
 
-        [HttpDelete("Course/{CourseId}/Task/{TaskId}")]
-        public string RemoveTaskToCourse(int CourseId, int TaskId)
+        //  api/course/{CourseId}/Task/{TaskId}
+        [HttpDelete("{courseId}/task/{taskId}")]
+        public string RemoveTaskFromCourse(int courseId, int taskId)
         {
-            return $"Course {CourseId} remove  Task Id:{TaskId}";
+            return $"Course {courseId} remove  Task Id:{taskId}";
         }
     }
 }

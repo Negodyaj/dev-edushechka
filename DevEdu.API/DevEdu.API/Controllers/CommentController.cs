@@ -22,8 +22,8 @@ namespace DevEdu.API.Controllers
             return $"Comment №{id}";
         }
 
-        //  api/comment/all/user/1
-        [HttpGet("all/byUser/{userId}")]
+        //  api/comment/by-user/1
+        [HttpGet("by-user/{userId}")]
         public string GetAllComment(int userId)
         {
             return $"All comments by user №{userId}";
@@ -45,7 +45,7 @@ namespace DevEdu.API.Controllers
 
         //  api/comment/5
         [HttpPut("{id}")]
-        public string UpdateComment(int id, CommentInputModel model)
+        public string UpdateComment(int id, [FromBody] CommentInputModel model)  // split input models
         {
             return $"Text comment №{id} change to {model.Text}";
         }

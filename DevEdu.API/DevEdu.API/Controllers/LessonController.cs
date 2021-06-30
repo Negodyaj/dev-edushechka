@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevEdu.API.Models.InputModels;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,40 +16,46 @@ namespace DevEdu.API.Controllers
 
         }
 
-        [HttpPost("lesson/{date}/{teacherComment}/{teacherId}")]
-        public string AddLesson(DateTime date, String teacherComment, int teacherId)
+        // api/lesson
+        [HttpPost]
+        public string AddLesson([FromBody] LessonInputModel inputModel)
         {
-            return $"Date {date} TeacherComment {teacherComment}  TeacherId {teacherId}";
+            return $"Date {inputModel.Date} TeacherComment {inputModel.TeacherComment}  TeacherId {inputModel.TeacherId}";
         }
 
-        [HttpDelete("lesson/{id}")]
+        // api/lesson/{id}
+        [HttpDelete("{id}")]
         public string DeleteLesson(int id)
         {
             return $"id {id}";
         }
 
-        [HttpPost("lesson-comment/{date}/{teacherComment}/{teacherId}")]
+        // api/lesson/{lessonId}/comment/{commentId}
+        [HttpPost("{lessonId}/comment/{commentId}")]
         public string AddLessonComment(int lessonId, int commentId)
         {
             return $"lessonId {lessonId} commentId {commentId}";
         }
 
-        [HttpDelete("lesson-comment/{id}")]
+        // api/lesson/{lessonId}/comment/{commentId}
+        [HttpDelete("{lessonId}/comment/{commentId}")]
         public string DeleteLessonComment(int lessonId, int commentId)
         {
             return $"lessonId {lessonId} commentId {commentId}";
         }
 
-        [HttpDelete("lesson/{lessonId}/topic/{toppicId}")]
-        public string DeleteTopicFromLesson(int lessonId, int toppicId)
+        // api/lesson/{lessonId}/topic/{toppicId}
+        [HttpDelete("{lessonId}/topic/{topicId}")]
+        public string DeleteTopicFromLesson(int lessonId, int topicId)
         {
-            return $"lessonId {lessonId} topicId {toppicId}";
+            return $"lessonId {lessonId} topicId {topicId}";
         }
 
-        [HttpPost("lesson/{lessonId}/topic/{toppicId}")]
-        public string AddTopicToLesson(int lessonId, int toppicId)
+        // api/lesson/{lessonId}/topic/{toppicId}
+        [HttpPost("{lessonId}/topic/{topicId}")]
+        public string AddTopicToLesson(int lessonId, int topicId)
         {
-            return $"lessonId {lessonId} topicId {toppicId}";
+            return $"lessonId {lessonId} topicId {topicId}";
         }
     }
 }

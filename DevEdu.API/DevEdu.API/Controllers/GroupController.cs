@@ -18,16 +18,16 @@ namespace DevEdu.API.Controllers
 
         //  api/Group/5
         [HttpGet("{id}")]
-        public string GetGroup(int id)
+        public string GetGroupById(int id)
         {
             return $"Group №{id}";
         }
 
-        //  api/Group/all
-        [HttpGet("all")]
-        public string GetAllGroup()
+        //  api/Group/
+        [HttpGet]
+        public string GetAllGroups()
         {
-            return "All Group";
+            return "All Groups";
         }
 
         //  api/Group
@@ -38,49 +38,52 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Group
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public void DeleteGroup(int id)
         {
 
         }
 
-        ////  api/Group
-        //[HttpPut]
-        //public string UpdateGroup(int id, int courseId, int groupStatusId, DateTime startDate, string timetable, decimal paymentPerMonth)
-        //{
-        //    return $"Group №{id} change courseId to {courseId} and groupStatusId to {groupStatusId} and startDate to {startDate}" +
-        //           $"and timetable to {timetable} and paymentPerMonth {paymentPerMonth}";
-        //}
-
         //  api/Group
         [HttpPut]
         public string UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
-            return $"Group №{id} change courseId to {model.CourseId} and groupStatusId to {model.GroupStatusId} and startDate to {model.StartDate}" +
-                   $"and timetable to {model.Timetable} and paymentPerMonth {model.PaymentPerMonth}";
+            return $"Group №{id} change courseId to {model.CourseId} and timetable to {model.Timetable} and startDate to {model.StartDate}" +
+                   $"and paymentPerMonth {model.PaymentPerMonth}";
+        }
+
+        //  api/Group/{groupId}/change-status/{statusId}
+        [HttpPut("{groupId}/change-status/{statusId}")]
+        public void ChangeGroupStatus(int groupId, int statusId)
+        {
+
         }
 
         //add group_lesson relation
-        [HttpPost("group-lesson/{lessonId}/{groupId}")]
-        public string AddGroupLessonReference(int lessonId, int groupId)
+        // api/Group/{groupId}/lesson/{lessonId}
+        [HttpPost("{groupId}/lesson/{lessonId}")]
+        public string AddGroupLessonReference(int groupId, int lessonId)
         {
             return (lessonId + groupId).ToString();
         }
-        
-        [HttpDelete("group-lesson/{lessonId}/{groupId}")]
-        public string RemoveGroupLessonReference(int lessonId, int groupId)
+
+        // api/Group/{groupId}/lesson/{lessonId}
+        [HttpDelete("{groupId}/lesson/{lessonId}")]
+        public string RemoveGroupLessonReference(int groupId, int lessonId)
         {
             return (lessonId - groupId).ToString();
         }
 
-        [HttpPost("group-material/{materialId}/{groupId}")]
-        public string AddGroupMaterialIdReference(int materialId, int groupId)
+        // api/Group/{groupId}/material/{materialId}
+        [HttpPost("{groupId}/material/{materialId}")]
+        public string AddGroupMaterialReference(int groupId, int materialId)
         {
             return (materialId + groupId).ToString();
         }
 
-        [HttpDelete("group-material/{materialId}/{groupId}")]
-        public string RemoveGroupMaterialIdReference(int materialId, int groupId)
+        // api/Group/{groupId}/material/{materialId}
+        [HttpDelete("{groupId}/material/{materialId}")]
+        public string RemoveGroupMaterialIdReference(int groupId, int materialId)
         {
             return (materialId - groupId).ToString();
         }
