@@ -17,6 +17,20 @@ namespace DevEdu.API.Controllers
 
         }
 
+        //  api/Task/1
+        [HttpGet("{id}")]
+        public string GetTask(int taskId)
+        {
+            return $"Get task №{taskId}";
+        }
+
+        //  api/Task
+        [HttpGet]
+        public string GetAllTasks()
+        {
+            return "All Tasks";
+        }
+
         // api/task
         [HttpPost]
         public int AddTask([FromBody] TaskInputModel model)
