@@ -2,9 +2,7 @@
 	@Material int,
 	@GroupId int
 AS
-	INSERT [dbo].[Group_Material]
-	OUTPUT INSERTED.ID, INSERTED.GroupId, INSERTED.MaterialId
-	VALUES(
-	 @Material
-    ,@GroupId
-	)
+BEGIN
+	INSERT dbo.Group_Material (MaterialId, GroupId)
+	VALUES(@Material, @GroupId)
+END

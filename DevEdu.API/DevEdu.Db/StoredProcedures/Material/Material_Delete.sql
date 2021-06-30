@@ -1,7 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[Material_Delete]
-@Id int
+﻿CREATE PROCEDURE dbo.Material_Delete
+	@Id int
 AS
-UPDATE [Material]
-SET
-[IsDeleted] = 1
-WHERE [Id] = @Id
+BEGIN
+	UPDATE dbo.Material
+	SET
+		IsDeleted = 1
+	WHERE Id = @Id
+END

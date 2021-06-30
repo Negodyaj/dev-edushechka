@@ -1,6 +1,8 @@
-﻿CREATE PROCEDURE [dbo].[Lesson_Topic_Delete]
-@TopicId int,
-@LessonId int
+﻿CREATE PROCEDURE dbo.Lesson_Topic_Delete
+	@TopicId int,
+	@LessonId int
 AS
-DELETE FROM Lesson_Topic
-WHERE TopicId = @TopicId AND ClassId = @LessonId
+BEGIN
+	DELETE FROM dbo.Lesson_Topic
+	WHERE TopicId = @TopicId AND ClassId = @LessonId
+END

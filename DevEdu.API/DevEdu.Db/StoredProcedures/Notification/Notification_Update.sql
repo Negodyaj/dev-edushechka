@@ -1,8 +1,10 @@
 ﻿CREATE PROCEDURE [dbo].[Notification_Update]
-    @Id int,
-	@Text nvarchar(max)
+    @Id     int,
+	@Text   nvarchar(max)
 AS
-    UPDATE [Notification]
+BEGIN
+    UPDATE dbo.Notification
     SET
     [Text] = @Text
     WHERE [Id] = @Id
+END

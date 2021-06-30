@@ -1,8 +1,8 @@
-﻿CREATE PROCEDURE [dbo].[Notification_Delete]
+﻿CREATE PROCEDURE [dbo].[Payment_Delete]
     @Id     int
 AS
 BEGIN
-    UPDATE dbo.Notification
+    UPDATE dbo.Payment
     SET
     [IsDeleted] = 1
     WHERE [Id] = @Id

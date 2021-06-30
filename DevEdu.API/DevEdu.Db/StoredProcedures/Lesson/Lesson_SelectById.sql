@@ -1,5 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[Lesson_SelectById]
 	@Id int
 AS
-	SELECT * FROM [Lesson]
-	WHERE ([Id] = @Id)
+BEGIN
+	SELECT Date, TeacherComment, TeacherId, IsDeleted FROM dbo.Lesson
+	WHERE (Id = @Id)
+END

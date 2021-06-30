@@ -1,8 +1,10 @@
-﻿CREATE PROCEDURE [dbo].[Material_Update]
+﻿CREATE PROCEDURE dbo.Material_Update
 	@Id int,
 	@Content nvarchar(max)
 AS
-UPDATE [Material]
-SET
-[Content] = @Content
-WHERE [Id] = @Id
+BEGIN
+	UPDATE dbo.Material
+	SET
+		Content = @Content
+	WHERE Id = @Id
+END

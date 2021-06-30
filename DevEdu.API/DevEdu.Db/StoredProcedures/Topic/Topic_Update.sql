@@ -1,10 +1,12 @@
-﻿CREATE PROCEDURE [dbo].[Topic_Update]
+﻿CREATE PROCEDURE dbo.Topic_Update
     @Id int,
     @Name nvarchar(255),
 	@Duration int
 AS
-    UPDATE [Topic]
+BEGIN
+    UPDATE dbo.Topic
     SET
-    [Name] = @Name,
-    [Duration] = @Duration
-    WHERE [Id] = @Id
+    Name = @Name,
+    Duration = @Duration
+    WHERE Id = @Id
+END

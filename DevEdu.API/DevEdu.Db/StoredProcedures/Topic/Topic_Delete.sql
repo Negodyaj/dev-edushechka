@@ -1,7 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[Topic_Delete]
+﻿CREATE PROCEDURE dbo.Topic_Delete
 	@Id int
 AS
-    UPDATE [Topic]
+BEGIN
+    UPDATE dbo.Topic
     SET
-    [IsDeleted] = 1
-    WHERE [Id] = @Id
+    IsDeleted = 1
+    WHERE Id = @Id
+END
