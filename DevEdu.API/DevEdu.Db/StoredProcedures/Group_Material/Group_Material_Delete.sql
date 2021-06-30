@@ -2,6 +2,7 @@
 	@Material int,
 	@GroupId int
 AS
-	DELETE FROM [dbo].[Group_Material]
-	OUTPUT DELETED.Id
+BEGIN
+	DELETE FROM dbo.Group_Material
 	WHERE GroupId = @GroupId AND MaterialId = @Material
+END
