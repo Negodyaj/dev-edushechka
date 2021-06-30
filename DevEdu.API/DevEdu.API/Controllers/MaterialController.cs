@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
+    [ApiController]
+    [Route("api/material")]
     public class MaterialController : Controller
     {
         public MaterialController() { }
@@ -16,5 +18,18 @@ namespace DevEdu.API.Controllers
         {
             return 42;
         }
+
+        [HttpPost("{materialId}/tag/{tagId}")]
+        public int AddTagMaterial(int tagId, int materialId)
+        {
+            return 1;
+        }
+
+        [HttpDelete("{tagMaterialId}")]
+        public string DeleteTagMaterial(int tagMaterialId)
+        {
+            return $"deleted tag material with {tagMaterialId} Id";
+        }
+
     }
 }
