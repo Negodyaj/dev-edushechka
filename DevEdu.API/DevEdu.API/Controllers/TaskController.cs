@@ -49,5 +49,36 @@ namespace DevEdu.API.Controllers
         {
             return $"deleted tag task with {id} Id";
         }
+
+
+        [HttpPost("student/{studentId}/task/{taskId}/task-answer/{taskAnswer}")]
+        public string AddAnswerTaskStudent(int studentId, int taskId, string taskAnswer)
+        {
+            return $"add answer for task {taskId} id";
+        }
+
+        [HttpPut("student/{studentId}/task/{taskId}/task-answer/{taskAnswer}")]
+        public string UpdateAnswerTaskStudent(int studentId, int taskId, string taskAnswer)
+        {
+            return $"update task with {taskId} id by {taskAnswer}";
+        }
+
+        [HttpDelete("student/{studentId}/task/{taskId}")]
+        public string DeleteAnswerTaskStudent(int studentId, int taskId)
+        {
+            return $"deleted answer for task {taskId} id";
+        }
+
+        [HttpPost("student/{studentId}/task/{taskId}/task-answer/status-task/{statusId}")]
+        public int AddStatusTaskStudent(int studentId, int taskId, int statusId)
+        {
+            return statusId;
+        }
+
+        [HttpPut("student/{studentId}/task/{taskId}/task-answer/status-task/{statusId}")]
+        public int UpdateStatusTaskStudent(int studentId, int taskId, int statusId)
+        {
+            return statusId;
+        }
     }
 }
