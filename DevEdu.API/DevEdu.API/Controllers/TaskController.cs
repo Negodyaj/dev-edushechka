@@ -36,5 +36,19 @@ namespace DevEdu.API.Controllers
 
             return $"update task with {taskId} Id";
         }
+
+        [HttpPost]
+
+        public int AddTagTask(int tagId, int taskId)
+        {
+            return 1;
+        }
+
+        [HttpDelete]
+
+        public string DeleteTagTask( int id)
+        {
+            return $"deleted tag task with {id} Id";
+        }
     }
 }
