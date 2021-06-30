@@ -49,7 +49,7 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpPost("{materialId}/tag/{tagId}")]
-        public int AddTagMaterial(int tagId, int materialId)
+        public int AddTagMaterial(int materialId, int tagId)
         {
             return 1;
         }
