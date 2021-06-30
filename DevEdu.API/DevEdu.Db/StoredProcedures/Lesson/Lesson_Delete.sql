@@ -1,7 +1,9 @@
 ﻿CREATE PROCEDURE [dbo].[Lesson_Delete]
 	@Id int
 AS
-    UPDATE [Lesson]
+BEGIN
+    UPDATE dbo.Lesson
     SET
-    [IsDeleted] = 1
-    WHERE [Id] = @Id
+    IsDeleted = 1
+    WHERE Id = @Id
+END

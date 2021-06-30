@@ -4,7 +4,7 @@
 	@TeacherId int
 AS
 BEGIN
-	INSERT INTO [Lesson] ([Date], [TeacherComment], [TeacherId])
+	INSERT INTO dbo.Lesson (Date, TeacherComment, TeacherId)
 	VALUES (@Date, @TeacherComment, @TeacherId)
 	SELECT @@IDENTITY
 END

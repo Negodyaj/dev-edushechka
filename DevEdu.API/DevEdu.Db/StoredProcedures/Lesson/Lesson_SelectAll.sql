@@ -1,4 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[Lesson_SelectAll]
 AS
-	SELECT * FROM [Lesson]
+BEGIN
+	SELECT Id, Date, TeacherComment, TeacherId FROM dbo.Lesson
 	WHERE [IsDeleted] = 0
+END

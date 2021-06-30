@@ -1,9 +1,11 @@
 ﻿CREATE PROCEDURE [dbo].[Lesson_Update]
     @Id int,
-    @TeacherComment nvarchar(255)
-    -- + Date
+    @TeacherComment nvarchar(255),
+    @Date datetime
 AS
-    UPDATE [Lesson]
+BEGIN
+    UPDATE dbo.Lesson
     SET
-    [TeacherComment] = @TeacherComment
-    WHERE [Id] = @Id
+    TeacherComment = @TeacherComment
+    WHERE (Id = @Id and Date = @Date)
+END
