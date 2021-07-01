@@ -34,8 +34,7 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         public int AddComment([FromBody] CommentAddtInputModel model)
         {
-            int id = commentRepository.AddComment(mappersController.MapCommentModelToDto(model));
-            return id;
+            return commentRepository.AddComment(mappersController.MapCommentModelToCommentDto(model));
         }
 
         //  api/comment/5
@@ -49,7 +48,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{id}")]
         public string UpdateComment(int id, [FromBody] CommentUpdatetInputModel model)
         {
-            commentRepository.UpdateComment(id, (mappersController.MapCommentModelToDto(model)));
+            commentRepository.UpdateComment(id, (mappersController.MapCommentModelToCommentDto(model)));
             return $"Text comment №{id} change to {model.Text}";
         }
     }

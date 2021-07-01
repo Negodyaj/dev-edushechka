@@ -1,4 +1,7 @@
-﻿using DevEdu.API.Models.InputModels;
+﻿using System.Collections.Generic;
+using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevEdu.API.Controllers
@@ -7,42 +10,45 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class CourseController : Controller
     {
+        MappersController mappersController = new MappersController();
+        CourseRepository courseRepository = new CourseRepository();
         public CourseController()
         {
         }
 
         //  api/Course/5
         [HttpGet("{id}")]
-        public string GetCourse(int id)
+        public CourseDto GetCourse(int id)
         {
-            return $"course №{id}";
+            return courseRepository.GetCourse(id);
         }
 
         //  api/Course
         [HttpGet]
-        public string GetAllCourses()
+        public List<CourseDto> GetAllCourses()
         {
-            return "All course";
+            return courseRepository.GetCourses();
         }
 
         //  api/course
         [HttpPost]
         public int AddCourse([FromBody] CourseInputModel model)
         {
-            return 1;
+            return courseRepository.AddCourse(mappersController.MapCourseModelToCourseDto(model));
         }
 
         //  api/course/5
         [HttpDelete("{id}")]
         public void DeleteCourse(int id)
         {
-
+            courseRepository.DeleteCourse(id);
         }
 
         //  api/course/5
         [HttpPut("{id}")]
         public string UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
+            courseRepository.UpdateCourse(id,(mappersController.MapCourseModelToCourseDto(model)));
             return $"Course №{id} change name to {model.Name} and description to {model.Description}";
         }
 
