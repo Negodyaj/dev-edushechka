@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevEdu.API.Controllers
@@ -34,7 +35,10 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         public int AddComment([FromBody] CommentAddtInputModel model)
         {
-            return 1;
+            MappersController mappersController=new MappersController();
+            CommentRepository commentRepository = new CommentRepository();
+            int id = commentRepository.AddComment(mappersController.MapCommentModelToDto(model));
+            return id;
         }
 
         //  api/comment/5
