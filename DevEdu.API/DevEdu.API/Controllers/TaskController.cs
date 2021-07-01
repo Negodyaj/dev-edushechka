@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
@@ -24,10 +25,8 @@ namespace DevEdu.API.Controllers
         [HttpGet("{taskId}")]
         public string GetTask(int taskId)
         {
-            TaskDto task = new TaskDto();
-            task = taskRepository.GetTaskById(taskId);
-            string result = task.Id + " " + task.Name + " " + task.Description + " " + task.StartDate + " " + task.EndDate
-                             + " " + task.Links + " " + task.IsRequired + " " + task.IsDeleted;
+            TaskDto task = taskRepository.GetTaskById(taskId);
+            string result = $"{task.Id} {task.Name} {task.Description} {task.StartDate} {task.EndDate} {task.Links} {task.IsRequired} {task.IsDeleted}";
             return result;
         }
 
@@ -35,38 +34,45 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         public string GetAllTasks()
         {
-            //List<TaskDto> taskDtos = new List<TaskDto>();
-            //taskDtos = taskRepository.GetTasks();
             string result = "";
             foreach (var task in taskRepository.GetTasks())
             {
-                result += task.Id + " " + task.Name + " " + task.Description + " " + task.StartDate + " " + task.EndDate
-                          + " " + task.Links + " " + task.IsRequired + " " + task.IsDeleted;
+                result += $"{task.Id} {task.Name} {task.Description} {task.StartDate} {task.EndDate} {task.Links} {task.IsRequired} {task.IsDeleted}";
                 result += "\n";
             }
             return result;
         }
+
         // api/task
         [HttpPost]
-        public int AddTask([FromBody] TaskInputModel model)
+        public string AddTask([FromBody] TaskInputModel model)
         {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<TaskInputModel, TaskDto>());
+            var mapper = new Mapper(config);
+            TaskDto taskDto = mapper.Map<TaskDto>(model);
+            taskRepository.AddTask(taskDto);
+            return $"Добавлено задание {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";
+        }
 
-            return 1;
+
+        // api/task/{taskId}
+        [HttpPut("{taskId}")]
+        public string UpdateTask(int taskId, [FromBody] TaskInputModel model)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<TaskInputModel, TaskDto>());
+            var mapper = new Mapper(config);
+            TaskDto taskDto = mapper.Map<TaskDto>(model);
+            taskDto.Id = taskId;
+            taskRepository.UpdateTask(taskDto);
+            return $"Обновлено задание с Id: {taskDto.Id} {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";
         }
 
         // api/task/{taskId}
         [HttpDelete("{taskId}")]
         public string DeleteTask(int taskId)
         {
-            return $"deleted task with {taskId} Id";
-        }
-
-        // api/task/{taskId}
-        [HttpPut("{taskId}")]
-        public string UpdateTask(int taskId, [FromBody] TaskInputModel model)
-        {
-
-            return $"update task with {taskId} Id";
+            taskRepository.DeleteTask(taskId);
+            return $"Удалено задание {taskId}";
         }
 
         // api/task/{taskId}/tag/{tagId}

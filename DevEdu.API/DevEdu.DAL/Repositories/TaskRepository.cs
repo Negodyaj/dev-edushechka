@@ -24,8 +24,7 @@ namespace DevEdu.DAL.Repositories
             string query;
             using (IDbConnection dbConnection = new SqlConnection(connectionString))
             {
-                query = "exec dbo.Task_SelectById @Id";
-                task = dbConnection.Query<TaskDto>(query, new { id }).FirstOrDefault();
+                task = dbConnection.QuerySingle<TaskDto>("dbo.Task_SelectById", new { id }, commandType: CommandType.StoredProcedure);
             }
             return task;
         }
@@ -36,10 +35,37 @@ namespace DevEdu.DAL.Repositories
             string query;
             using (IDbConnection dbConnection = new SqlConnection(connectionString))
             {
-                query = "exec dbo.Task_SelectAll";
-                tasks = dbConnection.Query<TaskDto>(query).AsList<TaskDto>();
+                tasks = dbConnection.Query<TaskDto>("dbo.Task_SelectAll", commandType: CommandType.StoredProcedure).ToList<TaskDto>();
             }
             return tasks;
+        }
+
+        public int AddTask(TaskDto task)
+        {
+            int taskId = -1;
+            using (IDbConnection dbConnection = new SqlConnection(connectionString))
+            {
+                taskId = dbConnection.QuerySingle<int>("dbo.Task_Insert", new { task.Name, task.StartDate, task.EndDate, task.Description, task.Links, task.IsRequired }, commandType: CommandType.StoredProcedure);
+            }
+            return taskId;
+        }
+
+        public int UpdateTask(TaskDto task)
+        {
+            using (IDbConnection dbConnection = new SqlConnection(connectionString))
+            {
+                dbConnection.QuerySingleOrDefault<int>("dbo.Task_Update", new { task.Id, task.Name, task.StartDate, task.EndDate, task.Description, task.Links, task.IsRequired }, commandType: CommandType.StoredProcedure);
+            }
+            return task.Id;
+        }
+
+        public int DeleteTask(int id)
+        {
+            using (IDbConnection dbConnection = new SqlConnection(connectionString))
+            {
+                dbConnection.QuerySingleOrDefault<int>("dbo.Task_Delete", new { id }, commandType: CommandType.StoredProcedure);
+            }
+            return id;
         }
     }
 }
