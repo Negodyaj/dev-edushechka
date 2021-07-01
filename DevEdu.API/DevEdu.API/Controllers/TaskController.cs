@@ -16,9 +16,11 @@ namespace DevEdu.API.Controllers
     public class TaskController : Controller
     {
         private TaskRepository taskRepository;
+        private MappersController mapperController;
         public TaskController()
         {
             taskRepository = new TaskRepository();
+            mapperController = new MappersController();
         }
 
         //  api/Task/1
@@ -47,9 +49,9 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         public string AddTask([FromBody] TaskInputModel model)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<TaskInputModel, TaskDto>());
-            var mapper = new Mapper(config);
-            TaskDto taskDto = mapper.Map<TaskDto>(model);
+            //var config = new MapperConfiguration(cfg => cfg.CreateMap<TaskInputModel, TaskDto>());
+            //var mapper = new Mapper(config);
+            TaskDto taskDto = mapperController.SingleMapping<TaskInputModel,TaskDto>(model);
             taskRepository.AddTask(taskDto);
             return $"Добавлено задание {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";
         }
@@ -59,9 +61,10 @@ namespace DevEdu.API.Controllers
         [HttpPut("{taskId}")]
         public string UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<TaskInputModel, TaskDto>());
-            var mapper = new Mapper(config);
-            TaskDto taskDto = mapper.Map<TaskDto>(model);
+            //var config = new MapperConfiguration(cfg => cfg.CreateMap<TaskInputModel, TaskDto>());
+            //var mapper = new Mapper(config);
+            //TaskDto taskDto = mapper.Map<TaskDto>(model);
+            TaskDto taskDto = mapperController.SingleMapping<TaskInputModel, TaskDto>(model);
             taskDto.Id = taskId;
             taskRepository.UpdateTask(taskDto);
             return $"Обновлено задание с Id: {taskDto.Id} {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";
