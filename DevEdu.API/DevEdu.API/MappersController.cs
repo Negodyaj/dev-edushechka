@@ -21,8 +21,6 @@ namespace DevEdu.API
         }
         public IEnumerable<U> SeveralMapping<T, U>(IEnumerable<T> from)
         {
-            //Каждый элемент из from выбираем Select и применяем к нему метод (SingleMapping<T, U>)
-            //Далее собираем это в лист .ToList(); //Альтернатива foreach
             return @from.Select(SingleMapping<T, U>).ToList();
         }
     }
