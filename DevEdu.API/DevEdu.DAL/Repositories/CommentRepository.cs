@@ -8,63 +8,57 @@ namespace DevEdu.DAL.Repositories
 {
     public class CommentRepository
     {
-        private string _connection =
+        private static string _connectionString =
             @"Data Source=(localdb)\ProjectsV13;Initial Catalog=DevEdu.Db;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
-        //private string _connection =
+        //private static string _connectionString =
         //    @"Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
+        private IDbConnection _connection = new SqlConnection(_connectionString);
 
         public int AddComment(CommentDto commentDto)
         {
-            int id;
-            string query = "exec dbo.Comment_Insert ";
-            string value = $"N'{commentDto.UserId}', " +
-                           $"N'{commentDto.Text}'";
-            using (IDbConnection connection = new SqlConnection(_connection))
-            {
-                id = connection.QueryFirst<int>(@$"{query}{value}");
-            }
-            return id;
+            return _connection.QuerySingle<int>("dbo.Comment_Insert", new
+                {
+                    commentDto.UserId,
+                    commentDto.Text
+                },
+                commandType: CommandType.StoredProcedure);
         }
 
         public void DeleteComment(int id)
         {
-            string query = $"exec dbo.Comment_Delete {id}";
-            using (IDbConnection connection = new SqlConnection(_connection))
+            _connection.Query("dbo.Comment_Delete", new
             {
-                connection.Query(@$"{query}");
-            }
+                id
+            }, 
+                commandType: CommandType.StoredProcedure);
         }
 
         public CommentDto GetComment(int id)
         {
-            CommentDto commentDto;
-            string query = $"exec dbo.Comment_SelectById {id}";
-            using (IDbConnection connection = new SqlConnection(_connection))
+            return _connection.QuerySingle<CommentDto>("dbo.Comment_SelectById", new
             {
-                commentDto=connection.QueryFirst<CommentDto>(@$"{query}");
-            }
-            return commentDto;
+                id
+            },
+                commandType: CommandType.StoredProcedure);
         }
 
         public List<CommentDto> GetCommentsByUser(int userId)
         {
-            List<CommentDto> commentDtos;
-            string query = $"exec dbo.Comment_SelectAllByUserId {userId}";
-            using (IDbConnection connection = new SqlConnection(_connection))
+            return _connection.Query<CommentDto>("dbo.Comment_SelectAllByUserId", new
             {
-                commentDtos = connection.Query<CommentDto>(@$"{query}").AsList();
-            }
-            return commentDtos;
+                userId
+            },
+                commandType: CommandType.StoredProcedure).AsList();
         }
 
         public void UpdateComment(int id, CommentDto commentDto)
         {
-            string query = $"exec dbo.Comment_Update {id}";
-            string value = $"N'{commentDto.Text}'";
-            using (IDbConnection connection = new SqlConnection(_connection))
-            {
-                connection.Query(@$"{query}{value}");
-            }
+            _connection.Query("dbo.Comment_Update",new
+                {
+                    id,
+                    commentDto.Text
+                },
+                commandType: CommandType.StoredProcedure);
         }
     }
 }

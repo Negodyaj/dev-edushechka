@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
@@ -13,30 +10,30 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class CommentController : Controller
     {
+        MappersController mappersController = new MappersController();
+        CommentRepository commentRepository = new CommentRepository();
         public CommentController()
         {
         }
 
         //  api/comment/5
         [HttpGet("{id}")]
-        public string GetComment(int id)
+        public CommentDto GetComment(int id)
         {
-            return $"Comment №{id}";
+            return commentRepository.GetComment(id);
         }
 
         //  api/comment/by-user/1
         [HttpGet("by-user/{userId}")]
         public List<CommentDto> GetAllCommentsByUserId(int userId)
         {
-            return new List<CommentDto>();
+            return commentRepository.GetCommentsByUser(userId);
         }
 
         //  api/comment
         [HttpPost]
         public int AddComment([FromBody] CommentAddtInputModel model)
         {
-            MappersController mappersController=new MappersController();
-            CommentRepository commentRepository = new CommentRepository();
             int id = commentRepository.AddComment(mappersController.MapCommentModelToDto(model));
             return id;
         }
@@ -45,13 +42,14 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}")]
         public void DeleteComment(int id)
         {
-
+            commentRepository.DeleteComment(id);
         }
 
         //  api/comment/5
         [HttpPut("{id}")]
         public string UpdateComment(int id, [FromBody] CommentUpdatetInputModel model)
         {
+            commentRepository.UpdateComment(id, (mappersController.MapCommentModelToDto(model)));
             return $"Text comment №{id} change to {model.Text}";
         }
     }
