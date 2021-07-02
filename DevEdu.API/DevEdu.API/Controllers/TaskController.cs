@@ -25,32 +25,23 @@ namespace DevEdu.API.Controllers
 
         //  api/Task/1
         [HttpGet("{taskId}")]
-        public string GetTask(int taskId)
+        public TaskDto GetTask(int taskId)
         {
             TaskDto task = taskRepository.GetTaskById(taskId);
-            string result = $"{task.Id} {task.Name} {task.Description} {task.StartDate} {task.EndDate} {task.Links} {task.IsRequired} {task.IsDeleted}";
-            return result;
+            return task;
         }
 
         //  api/Task
         [HttpGet]
-        public string GetAllTasks()
+        public List<TaskDto> GetAllTasks()
         {
-            string result = "";
-            foreach (var task in taskRepository.GetTasks())
-            {
-                result += $"{task.Id} {task.Name} {task.Description} {task.StartDate} {task.EndDate} {task.Links} {task.IsRequired} {task.IsDeleted}";
-                result += "\n";
-            }
-            return result;
+            return taskRepository.GetTasks();
         }
 
         // api/task
         [HttpPost]
         public string AddTask([FromBody] TaskInputModel model)
         {
-            //var config = new MapperConfiguration(cfg => cfg.CreateMap<TaskInputModel, TaskDto>());
-            //var mapper = new Mapper(config);
             TaskDto taskDto = mapperController.SingleMapping<TaskInputModel,TaskDto>(model);
             taskRepository.AddTask(taskDto);
             return $"Добавлено задание {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";
@@ -61,9 +52,6 @@ namespace DevEdu.API.Controllers
         [HttpPut("{taskId}")]
         public string UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
-            //var config = new MapperConfiguration(cfg => cfg.CreateMap<TaskInputModel, TaskDto>());
-            //var mapper = new Mapper(config);
-            //TaskDto taskDto = mapper.Map<TaskDto>(model);
             TaskDto taskDto = mapperController.SingleMapping<TaskInputModel, TaskDto>(model);
             taskDto.Id = taskId;
             taskRepository.UpdateTask(taskDto);
