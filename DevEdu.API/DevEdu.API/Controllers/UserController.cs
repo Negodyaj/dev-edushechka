@@ -1,4 +1,7 @@
-﻿using DevEdu.API.Models.InputModels;
+﻿using AutoMapper;
+using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevEdu.API.Controllers
@@ -7,20 +10,21 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
+        UserRepository user = new UserRepository();
         public UserController() { }
 
         // api/user
         [HttpPost]
         public int AddUser([FromBody] UserInsertInputModel model)
         {
-            return 1;
+            return user.AddUser(MapUserModelToDto(model));
         }
 
         // api/user/userId
         [HttpPut("{userId}")]
-        public string UpdateUserById(int userId,[FromBody] UserUpdateInputModel model)
+        public int UpdateUserById(int userId, [FromBody] UserUpdateInputModel model)
         {
-            return $"update User №{userId} is success";
+            return user.UpdateUser(userId, MapUserModelToDto(model));
         }
 
         // api/user/{userId}
@@ -39,9 +43,9 @@ namespace DevEdu.API.Controllers
 
         // api/user/{userId}
         [HttpDelete("{userId}")]
-        public string DeleteUser(int userId)
+        public int DeleteUser(int userId)
         {
-            return $"User with number {userId} is deleted";
+            return user.DeleteUser(userId);
         }
 
         // api/user/{userId}/role/{roleId}
@@ -49,6 +53,19 @@ namespace DevEdu.API.Controllers
         public int AddRoleToUser(int userId, int roleId)
         {
             return 42;
+        }
+
+        private UserDto MapUserModelToDto(UserInsertInputModel model)
+        {
+            Mapper mapper = new Mapper(new MapperConfiguration(
+                cfg => cfg.CreateMap<UserInsertInputModel, UserDto>()));
+            return mapper.Map<UserDto>(model);
+        }
+        private UserDto MapUserModelToDto(UserUpdateInputModel model)
+        {
+            Mapper mapper = new Mapper(new MapperConfiguration(
+                cfg => cfg.CreateMap<UserUpdateInputModel, UserDto>()));
+            return mapper.Map<UserDto>(model);
         }
     }
 }
