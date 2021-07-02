@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[Tag_SelectByID]
 	@ID int
 AS
-	SELECT * from [dbo].[Tag]
+	SELECT Id, Name 
+	from [dbo].[Tag]
 	WHERE 
-	IsDeleted = 0 AND
 	Id = @ID

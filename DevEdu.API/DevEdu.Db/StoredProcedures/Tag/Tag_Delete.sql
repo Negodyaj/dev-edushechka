@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[Tag_SoftDelete]
+﻿CREATE PROCEDURE [dbo].[Tag_Delete]
 	@ID int
 AS
 	UPDATE [Tag] 
