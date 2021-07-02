@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Repositories;
 
 namespace DevEdu.API.Controllers
 {
@@ -62,30 +63,30 @@ namespace DevEdu.API.Controllers
         //add group_lesson relation
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpPost("{groupId}/lesson/{lessonId}")]
-        public string AddGroupLessonReference(int groupId, int lessonId)
+        public void AddGroupLessonReference(int groupId, int lessonId)
         {
-            return (lessonId + groupId).ToString();
+             GroupRepository.AddGroupLesson(groupId,  lessonId);
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
-        public string RemoveGroupLessonReference(int groupId, int lessonId)
+        public void RemoveGroupLessonReference(int groupId, int lessonId)
         {
-            return (lessonId - groupId).ToString();
+            GroupRepository.RemoveGroupLesson(groupId, lessonId);
         }
 
         // api/Group/{groupId}/material/{materialId}
         [HttpPost("{groupId}/material/{materialId}")]
-        public string AddGroupMaterialReference(int groupId, int materialId)
+        public void AddGroupMaterialReference(int groupId, int materialId)
         {
-            return (materialId + groupId).ToString();
+            GroupRepository.AddGroupMaterial(groupId, materialId);
         }
 
         // api/Group/{groupId}/material/{materialId}
         [HttpDelete("{groupId}/material/{materialId}")]
-        public string RemoveGroupMaterialIdReference(int groupId, int materialId)
+        public void RemoveGroupMaterialIdReference(int groupId, int materialId)
         {
-            return (materialId - groupId).ToString();
+            GroupRepository.RemoveGroupMaterial(groupId, materialId);
         }
     }
 }
