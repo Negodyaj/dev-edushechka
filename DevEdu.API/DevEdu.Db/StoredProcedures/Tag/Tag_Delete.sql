@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[Tag_Delete]
-	@ID int
+	@Id int
 AS
 	UPDATE [Tag] 
 	SET 
 	IsDeleted = 1
-	Where Id = @ID
+	Where Id = @Id

@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[Tag_SelectByID]
-	@ID int
+	@Id int
 AS
 	SELECT Id, Name 
 	from [dbo].[Tag]
 	WHERE 
-	Id = @ID
+	Id = @Id
