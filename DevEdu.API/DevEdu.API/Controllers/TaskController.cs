@@ -15,44 +15,35 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class TaskController : Controller
     {
-        private TaskRepository taskRepository;
-        private MappersController mapperController;
+        private TaskRepository _taskRepository;
+        private MappersController _mapperController;
         public TaskController()
         {
-            taskRepository = new TaskRepository();
-            mapperController = new MappersController();
+            _taskRepository = new TaskRepository();
+            _mapperController = new MappersController();
         }
 
         //  api/Task/1
         [HttpGet("{taskId}")]
         public string GetTask(int taskId)
         {
-            TaskDto task = taskRepository.GetTaskById(taskId);
-            string result = $"{task.Id} {task.Name} {task.Description} {task.StartDate} {task.EndDate} {task.Links} {task.IsRequired} {task.IsDeleted}";
-            return result;
+            TaskDto task = _taskRepository.GetTaskById(taskId);
+            return task;
         }
 
         //  api/Task
         [HttpGet]
         public string GetAllTasks()
         {
-            string result = "";
-            foreach (var task in taskRepository.GetTasks())
-            {
-                result += $"{task.Id} {task.Name} {task.Description} {task.StartDate} {task.EndDate} {task.Links} {task.IsRequired} {task.IsDeleted}";
-                result += "\n";
-            }
-            return result;
+            return _taskRepository.GetTasks();
         }
 
         // api/task
         [HttpPost]
         public string AddTask([FromBody] TaskInputModel model)
         {
-            //var config = new MapperConfiguration(cfg => cfg.CreateMap<TaskInputModel, TaskDto>());
-            //var mapper = new Mapper(config);
-            TaskDto taskDto = mapperController.SingleMapping<TaskInputModel,TaskDto>(model);
-            taskRepository.AddTask(taskDto);
+            TaskDto taskDto = _mapperController.SingleMapping<TaskInputModel,TaskDto>(model);
+            _taskRepository.AddTask(taskDto);
             return $"Добавлено задание {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";
         }
 
@@ -61,12 +52,9 @@ namespace DevEdu.API.Controllers
         [HttpPut("{taskId}")]
         public string UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
-            //var config = new MapperConfiguration(cfg => cfg.CreateMap<TaskInputModel, TaskDto>());
-            //var mapper = new Mapper(config);
-            //TaskDto taskDto = mapper.Map<TaskDto>(model);
-            TaskDto taskDto = mapperController.SingleMapping<TaskInputModel, TaskDto>(model);
+            TaskDto taskDto = _mapperController.SingleMapping<TaskInputModel, TaskDto>(model);
             taskDto.Id = taskId;
-            taskRepository.UpdateTask(taskDto);
+            _taskRepository.UpdateTask(taskDto);
             return $"Обновлено задание с Id: {taskDto.Id} {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";
         }
 
@@ -74,7 +62,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{taskId}")]
         public string DeleteTask(int taskId)
         {
-            taskRepository.DeleteTask(taskId);
+            _taskRepository.DeleteTask(taskId);
             return $"Удалено задание {taskId}";
         }
 

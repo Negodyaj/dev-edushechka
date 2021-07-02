@@ -12,10 +12,10 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class CourseController : Controller
     {
-        private CourseRepository courseRepository;
+        private CourseRepository _courseRepository;
         public CourseController()
         {
-            courseRepository = new CourseRepository();
+            _courseRepository = new CourseRepository();
         }
 
         //  api/Course/5
@@ -57,7 +57,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("topic/{topicId}/tag/{tagId}")]
         public string AddTagToTopic(int topicId, int tagId)
         {
-            courseRepository.AddTagToTopic(topicId, tagId);
+            _courseRepository.AddTagToTopic(topicId, tagId);
             return $"add to topic with {topicId} Id tag with {tagId} Id";
         }
 
@@ -65,7 +65,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("topic/{topicId}/tag/{tagId}")]
         public string DeleteTagAtTopic(int topicId, int tagId)
         {
-            courseRepository.DeleteTagFromTopic(topicId, tagId);
+            _courseRepository.DeleteTagFromTopic(topicId, tagId);
             return $"deleted at topic with {topicId} Id tag with {tagId} Id";
         }
 
