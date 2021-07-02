@@ -35,9 +35,9 @@ namespace DevEdu.DAL.Repositories
             return _connection.QuerySingle<MaterialDto>("dbo.Material_SelectById @Id", new { id }, commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateMaterial(MaterialDto material)
+        public void UpdateMaterial(int id, MaterialDto material)
         {
-            _connection.Query("dbo.Material_Update @Id, @Content", new { material.Id, material.Content}, commandType: CommandType.StoredProcedure);
+            _connection.Query("dbo.Material_Update @Id, @Content", new { id, material.Content}, commandType: CommandType.StoredProcedure);
         }
 
         public void DeleteMaterial(int id)

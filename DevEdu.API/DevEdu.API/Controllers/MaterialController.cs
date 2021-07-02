@@ -1,4 +1,7 @@
-﻿using DevEdu.API.Models.InputModels;
+﻿using DevEdu.API.Mappers;
+using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,41 +14,48 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class MaterialController : Controller
     {
-        public MaterialController() { }
+        private MaterialRepository _repository;
+        private ModelToDtoMapper _mapper;
+
+        public MaterialController() 
+        {
+            _repository = new MaterialRepository();
+            _mapper = new ModelToDtoMapper();
+        }
 
         // api/material
         [HttpPost]
         public int AddMaterial([FromBody] MaterialInputModel materialModel)
         {
-            return 42;
+            return _repository.AddMaterial(_mapper.MapMaterial(materialModel));
         }
 
         // api/material
         [HttpGet]
-        public string GetAllMaterials()
+        public List<MaterialDto> GetAllMaterials()
         {
-            return "all materials";
+            return _repository.GetAllMaterials() ;
         }
 
         // api/material/5
         [HttpGet("{id}")]
-        public string GetMaterial(int id)
+        public MaterialDto GetMaterial(int id)
         {
-            return $"material with id {id}";
+            return _repository.GetMaterialById(id);
         }
 
         // api/material
-        [HttpPut]
-        public string UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)
+        [HttpPut] 
+        public void UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
         {
-            return $"updated material with id {id}";
+            _repository.UpdateMaterial(id, _mapper.MapMaterial(materialModel));
         }
 
         // api/material/5
         [HttpDelete("{id}")]
-        public string DeleteMaterial(int id)
+        public void DeleteMaterial(int id)
         {
-            return $"deleted material with id {id}";
+            _repository.DeleteMaterial(id);
         }
 
         // api/material/{materialId}/tag/{tagId}
