@@ -27,7 +27,7 @@ namespace DevEdu.API.Controllers
         [HttpGet("{taskId}")]
         public TaskDto GetTask(int taskId)
         {
-            TaskDto task = taskRepository.GetTaskById(taskId);
+            TaskDto task = _taskRepository.GetTaskById(taskId);
             return task;
         }
 
@@ -35,15 +35,15 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         public List<TaskDto> GetAllTasks()
         {
-            return taskRepository.GetTasks();
+            return _taskRepository.GetTasks();
         }
 
         // api/task
         [HttpPost]
         public string AddTask([FromBody] TaskInputModel model)
         {
-            TaskDto taskDto = mapperController.SingleMapping<TaskInputModel,TaskDto>(model);
-            taskRepository.AddTask(taskDto);
+            TaskDto taskDto = _mapperController.SingleMapping<TaskInputModel,TaskDto>(model);
+            _taskRepository.AddTask(taskDto);
             return $"Добавлено задание {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";
         }
 
@@ -52,7 +52,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{taskId}")]
         public string UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
-            TaskDto taskDto = mapperController.SingleMapping<TaskInputModel, TaskDto>(model);
+            TaskDto taskDto = _mapperController.SingleMapping<TaskInputModel, TaskDto>(model);
             taskDto.Id = taskId;
             _taskRepository.UpdateTask(taskDto);
             return $"Обновлено задание с Id: {taskDto.Id} {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";

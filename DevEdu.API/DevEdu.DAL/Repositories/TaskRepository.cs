@@ -23,17 +23,13 @@ namespace DevEdu.DAL.Repositories
         }
         public TaskDto GetTaskById(int id)
         {
-            TaskDto task = new TaskDto();
-            string query; 
-            task = _connection.QuerySingle<TaskDto>("dbo.Task_SelectById", new { id }, commandType: CommandType.StoredProcedure);
+            TaskDto task = _connection.QuerySingle<TaskDto>("dbo.Task_SelectById", new { id }, commandType: CommandType.StoredProcedure);
             return task;
         }
 
         public List<TaskDto> GetTasks()
         {
-            List<TaskDto> tasks = new List<TaskDto>();
-            string query;
-            tasks = _connection.Query<TaskDto>("dbo.Task_SelectAll", commandType: CommandType.StoredProcedure).ToList<TaskDto>();
+            List<TaskDto> tasks = _connection.Query<TaskDto>("dbo.Task_SelectAll", commandType: CommandType.StoredProcedure).ToList<TaskDto>();
             return tasks;
         }
 
