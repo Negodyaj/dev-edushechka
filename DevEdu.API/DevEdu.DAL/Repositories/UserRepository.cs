@@ -19,7 +19,9 @@ namespace DevEdu.DAL.Repositories
 
         public int AddUser(UserDto user)
         {
-            return _connection.QueryFirst<int>("dbo.User_Insert", new
+            return _connection.QuerySingle<int>(
+                "dbo.User_Insert", 
+                new
             {
                 user.Name,
                 user.Email,
@@ -37,41 +39,50 @@ namespace DevEdu.DAL.Repositories
 
         public UserDto SelectUserById(int id)
         {
-            return _connection.QueryFirst<UserDto>("dbo.User_SelectById",
+            return _connection.QuerySingle<UserDto>(
+                "dbo.User_SelectById",
                 id,
             commandType: CommandType.StoredProcedure);
         }
 
         public List<UserDto> SelectUsers()
         {
-            return _connection.Query<UserDto>("dbo.User_SelectAll",
-            commandType: CommandType.StoredProcedure).
-            AsList<UserDto>();
+            return _connection
+                .Query<UserDto>(
+                "dbo.User_SelectAll",
+            commandType: CommandType.StoredProcedure)
+                .AsList<UserDto>();
         }
 
-        public int UpdateUser(int id, UserDto user)
+        public void UpdateUser(int id, UserDto user)
         {
-            return _connection.QueryFirst<int>("dbo.User_Update", new
-            {
-                id,
-                user.Name,
-                user.Username,
-                user.CityId,
-                user.GitHubAccount,
-                user.Photo,
-                user.PhoneNumer
+            _connection.Execute(
+                "dbo.User_Update",
+                new
+                {
+                    id,
+                    user.Name,
+                    user.Username,
+                    user.CityId,
+                    user.GitHubAccount,
+                    user.Photo,
+                    user.PhoneNumer
 
-            },
-            commandType: CommandType.StoredProcedure);
+                },
+            commandType: CommandType.StoredProcedure
+            );
         }
 
-        public int DeleteUser(int id)
+        public void DeleteUser(int id)
         {
-            return _connection.QueryFirst<int>("dbo.User_Delete", new
-            {
-                id,
-            },
-            commandType: CommandType.StoredProcedure);
+            _connection.Execute(
+                "dbo.User_Delete",
+                new
+                {
+                    id,
+                },
+            commandType: CommandType.StoredProcedure
+            );
         }
     }
 }

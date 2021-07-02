@@ -22,9 +22,9 @@ namespace DevEdu.API.Controllers
 
         // api/user/userId
         [HttpPut("{userId}")]
-        public int UpdateUserById(int userId, [FromBody] UserUpdateInputModel model)
+        public void UpdateUserById(int userId, [FromBody] UserUpdateInputModel model)
         {
-            return user.UpdateUser(userId, MapUserModelToDto(model));
+            user.UpdateUser(userId, MapUserModelToDto(model));
         }
 
         // api/user/{userId}
@@ -43,9 +43,9 @@ namespace DevEdu.API.Controllers
 
         // api/user/{userId}
         [HttpDelete("{userId}")]
-        public int DeleteUser(int userId)
+        public void DeleteUser(int userId)
         {
-            return user.DeleteUser(userId);
+            user.DeleteUser(userId);
         }
 
         // api/user/{userId}/role/{roleId}
