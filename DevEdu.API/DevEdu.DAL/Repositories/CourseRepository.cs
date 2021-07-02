@@ -15,22 +15,28 @@ namespace DevEdu.DAL.Repositories
             "Data Source=80.78.240.16;Initial Catalog = DevEdu; Persist Security Info=True;User ID = student;Password=qwe!23;" +
             " Pooling=False;MultipleActiveResultSets=False;Connect Timeout = 60; Encrypt=False;TrustServerCertificate=False";
         private IDbConnection _connection = new SqlConnection(_connectionString);
-        public void AddTagToTopic(int tagId, int topicId)
+
+        public CourseRepository()
         {
-            _connection.Query("dbo.Tag_Topic_Insert", new
+                
+        }
+
+        public void AddTagToTopic(int topicId, int tagId)
+        {
+            _connection.Query("dbo.Tag_Topic_Insert", new 
                 {
-                    tagId,
-                    topicId
+                    topicId, 
+                    tagId
                 },
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void DeleteTagFromTopic(int tagId, int topicId)
+        public void DeleteTagFromTopic(int topicId, int tagId)
         {
             _connection.Query("dbo.Tag_Topic_Delete", new
                 {
-                    tagId,
-                    topicId
+                    topicId,
+                    tagId
                 },
                 commandType: CommandType.StoredProcedure);
         }
