@@ -1,5 +1,6 @@
 ﻿using DevEdu.API.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
+using DevEdu.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,10 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class LessonController : Controller
     {
+        private LessonRepository _repository;
         public LessonController()
         {
-
+            _repository = new LessonRepository();
         }
 
         // api/lesson
@@ -46,16 +48,16 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/topic/{toppicId}
         [HttpDelete("{lessonId}/topic/{topicId}")]
-        public string DeleteTopicFromLesson(int lessonId, int topicId)
+        public void DeleteTopicFromLesson(int lessonId, int topicId)
         {
-            return $"lessonId {lessonId} topicId {topicId}";
+            _repository.DeleteTopicFromLesson(lessonId, topicId);
         }
 
         // api/lesson/{lessonId}/topic/{toppicId}
         [HttpPost("{lessonId}/topic/{topicId}")]
-        public string AddTopicToLesson(int lessonId, int topicId)
+        public void AddTopicToLesson(int lessonId, int topicId)
         {
-            return $"lessonId {lessonId} topicId {topicId}";
+            _repository.AddTopicToLesson(lessonId, topicId);
         }
 
 

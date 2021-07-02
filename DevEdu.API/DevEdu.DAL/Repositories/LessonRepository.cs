@@ -7,7 +7,7 @@ using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
-    class LessonRepository
+    public class LessonRepository
     {
         string connectionString = "Data Source=80.78.240.16;Initial Catalog = DevEdu; Persist Security Info=True;User ID = student;Password=qwe!23; Pooling=False;MultipleActiveResultSets=False;Connect Timeout = 60; Encrypt=False;TrustServerCertificate=False";
 
@@ -54,9 +54,17 @@ namespace DevEdu.DAL.Repositories
             }, 
             commandType: CommandType.StoredProcedure);
         }
-        
 
-        
+        public void AddTopicToLesson(int lessonId, int topicId)
+        {
+            _connection.Query("dbo.Lesson_Topic_Insert", new { lessonId, topicId });
+        }
+
+
+        public void DeleteTopicFromLesson(int lessonId, int topicId)
+        {
+            _connection.Query("dbo.Lesson_Topic_Delete", new { lessonId, topicId });
+        }
     }
 }
 
