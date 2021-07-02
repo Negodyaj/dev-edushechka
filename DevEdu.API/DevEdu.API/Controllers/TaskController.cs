@@ -16,11 +16,11 @@ namespace DevEdu.API.Controllers
     public class TaskController : Controller
     {
         private TaskRepository _taskRepository;
-        private MappersController _mapperController;
+        private MyMapper _mapper;
         public TaskController()
         {
             _taskRepository = new TaskRepository();
-            _mapperController = new MappersController();
+            _mapper = new MyMapper();
         }
 
         //  api/Task/1
@@ -42,7 +42,7 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         public string AddTask([FromBody] TaskInputModel model)
         {
-            TaskDto taskDto = _mapperController.SingleMapping<TaskInputModel,TaskDto>(model);
+            TaskDto taskDto = _mapper.SingleMapping<TaskInputModel,TaskDto>(model);
             _taskRepository.AddTask(taskDto);
             return $"Добавлено задание {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";
         }
@@ -52,7 +52,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{taskId}")]
         public string UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
-            TaskDto taskDto = _mapperController.SingleMapping<TaskInputModel, TaskDto>(model);
+            TaskDto taskDto = _mapper.SingleMapping<TaskInputModel, TaskDto>(model);
             taskDto.Id = taskId;
             _taskRepository.UpdateTask(taskDto);
             return $"Обновлено задание с Id: {taskDto.Id} {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";

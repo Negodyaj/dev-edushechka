@@ -8,9 +8,9 @@ using DevEdu.DAL.Models;
 
 namespace DevEdu.API
 {
-    public class MappersController
+    public class MyMapper
     {
-        public MappersController()
+        public MyMapper()
         {
         }
         public U SingleMapping<T, U>(T model)
@@ -18,10 +18,6 @@ namespace DevEdu.API
             var config = new MapperConfiguration(cfg => cfg.CreateMap<T, U>());
             var mapper = new Mapper(config);
             return mapper.Map<U>(model);
-        }
-        public IEnumerable<U> SeveralMapping<T, U>(IEnumerable<T> from)
-        {
-            return @from.Select(SingleMapping<T, U>).ToList();
         }
     }
 }
