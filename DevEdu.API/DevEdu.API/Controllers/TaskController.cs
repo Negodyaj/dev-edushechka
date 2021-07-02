@@ -70,23 +70,23 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpPost("{taskId}/student/{studentId}")]
-        public string AddStudentAnswerOnTask(int taskId, int studentId, string taskAnswer)  // to inputModel
+        public string AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel studentResponse)
         {
-            return $"add answer for task {taskId} id";
+            return $"Add answer {studentResponse.Answer} for task id {taskId} and student id {studentId}.";
         }
 
         // api/task/{taskId}/student/{studentId}
-        [HttpPut("{taskId}/student/{studentId}")]  // to inputModel
-        public string UpdateStudentAnswerOnTask(int studentId, int taskId, string taskAnswer)
+        [HttpPut("{taskId}/student/{studentId}")]
+        public string UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel studentResponse)
         {
-            return $"update task with {taskId} id by {taskAnswer}";
+            return $"Update task with {taskId} id and student id {studentId} by {studentResponse.Answer}.";
         }
 
         // api/task/{taskId}/student/{studentId}
         [HttpDelete("{taskId}/student/{studentId}")]
         public string DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
-            return $"deleted answer for task {taskId} id";
+            return $"Deleted answer for task {taskId} id.";
         }
 
         // api/task/{taskId}/student/{studentId}/change-status/{statusId}
