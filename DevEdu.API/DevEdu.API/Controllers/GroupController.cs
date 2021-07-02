@@ -13,8 +13,10 @@ namespace DevEdu.API.Controllers
     [ApiController]
     public class GroupController : Controller
     {
+        private GroupRepository groupRepository;
         public GroupController()
         {
+            groupRepository = new GroupRepository();
         }
 
         //  api/Group/5
@@ -65,28 +67,28 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/lesson/{lessonId}")]
         public void AddGroupLessonReference(int groupId, int lessonId)
         {
-             GroupRepository.AddGroupLesson(groupId,  lessonId);
+             groupRepository.AddGroupLesson(groupId,  lessonId);
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
         public void RemoveGroupLessonReference(int groupId, int lessonId)
         {
-            GroupRepository.RemoveGroupLesson(groupId, lessonId);
+            groupRepository.RemoveGroupLesson(groupId, lessonId);
         }
 
         // api/Group/{groupId}/material/{materialId}
         [HttpPost("{groupId}/material/{materialId}")]
         public void AddGroupMaterialReference(int groupId, int materialId)
         {
-            GroupRepository.AddGroupMaterial(groupId, materialId);
+            groupRepository.AddGroupMaterial(groupId, materialId);
         }
 
         // api/Group/{groupId}/material/{materialId}
         [HttpDelete("{groupId}/material/{materialId}")]
         public void RemoveGroupMaterialIdReference(int groupId, int materialId)
         {
-            GroupRepository.RemoveGroupMaterial(groupId, materialId);
+            groupRepository.RemoveGroupMaterial(groupId, materialId);
         }
     }
 }
