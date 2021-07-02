@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[User_Insert]
+﻿CREATE PROCEDURE dbo.User_Insert
 	@Name				nvarchar(50),
 	@Email				nvarchar(50),
 	@Username			nvarchar(50),

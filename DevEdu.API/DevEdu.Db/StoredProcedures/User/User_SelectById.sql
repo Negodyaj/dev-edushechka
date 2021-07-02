@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.[User_SelectById]
+﻿CREATE PROCEDURE dbo.User_SelectById
 	@Id int
 AS
 BEGIN
