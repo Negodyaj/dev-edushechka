@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
@@ -10,45 +11,49 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class CourseController : Controller
     {
-        MappersController mappersController = new MappersController();
-        CourseRepository courseRepository = new CourseRepository();
-        public CourseController()
+        private readonly IMapper _mapper;
+        private readonly ICourseRepository _courseRepository;
+        public CourseController(IMapper mapper, ICourseRepository courseRepository)
         {
+            _courseRepository = courseRepository;
+            _mapper = mapper;
         }
 
         //  api/Course/5
         [HttpGet("{id}")]
         public CourseDto GetCourse(int id)
         {
-            return courseRepository.GetCourse(id);
+            return _courseRepository.GetCourse(id);
         }
 
         //  api/Course
         [HttpGet]
         public List<CourseDto> GetAllCourses()
         {
-            return courseRepository.GetCourses();
+            return _courseRepository.GetCourses();
         }
 
         //  api/course
         [HttpPost]
         public int AddCourse([FromBody] CourseInputModel model)
         {
-            return courseRepository.AddCourse(mappersController.MapCourseModelToCourseDto(model));
+            var dto = _mapper.Map<CourseDto>(model);
+            return _courseRepository.AddCourse(dto);
         }
 
         //  api/course/5
         [HttpDelete("{id}")]
         public void DeleteCourse(int id)
         {
-            courseRepository.DeleteCourse(id);
+            _courseRepository.DeleteCourse(id);
         }
 
         //  api/course/5
         [HttpPut("{id}")]
         public string UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
-            courseRepository.UpdateCourse(id,(mappersController.MapCourseModelToCourseDto(model)));
+            var dto = _mapper.Map<CourseDto>(model);
+            _courseRepository.UpdateCourse(id, dto);
             return $"Course №{id} change name to {model.Name} and description to {model.Description}";
         }
 
