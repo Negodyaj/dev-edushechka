@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Dapper;
 using DevEdu.DAL.Models;
 
@@ -46,7 +47,7 @@ namespace DevEdu.DAL.Repositories
                     new { userId },
                     commandType: CommandType.StoredProcedure
                 )
-                .AsList();
+                .ToList();
         }
 
         public void UpdateComment(int id, CommentDto commentDto)

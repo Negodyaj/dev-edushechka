@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Dapper;
 using DevEdu.DAL.Models;
 
@@ -45,7 +46,7 @@ namespace DevEdu.DAL.Repositories
                     "dbo.Course_SelectAll",
                     commandType: CommandType.StoredProcedure
                 )
-                .AsList();
+                .ToList();
         }
 
         public void UpdateCourse(int id, CourseDto courseDto)
