@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,12 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class CourseController : Controller
     {
-        private CourseRepository _courseRepository;
-        public CourseController()
+        private readonly IMapper _mapper;
+        private readonly ICourseRepository _courseRepository;
+        public CourseController(IMapper mapper, ICourseRepository courseRepository)
         {
-            _courseRepository = new CourseRepository();
+            _courseRepository = courseRepository;
+            _mapper = mapper;
         }
 
         //  api/Course/5

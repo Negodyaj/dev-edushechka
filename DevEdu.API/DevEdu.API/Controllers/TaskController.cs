@@ -15,12 +15,13 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class TaskController : Controller
     {
-        private TaskRepository _taskRepository;
-        private MyMapper _mapper;
-        public TaskController()
+        private readonly IMapper _mapper;
+        private readonly ITaskRepository _taskRepository;
+        
+        public TaskController(IMapper mapper, ITaskRepository taskRepository)
         {
-            _taskRepository = new TaskRepository();
-            _mapper = new MyMapper();
+            _taskRepository = taskRepository;
+            _mapper = mapper;
         }
 
         //  api/Task/1
@@ -35,35 +36,33 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         public List<TaskDto> GetAllTasks()
         {
-            return _taskRepository.GetTasks();
+            List<TaskDto> taskDtos = _taskRepository.GetTasks();
+            return taskDtos;
         }
 
         // api/task
         [HttpPost]
-        public string AddTask([FromBody] TaskInputModel model)
+        public int AddTask([FromBody] TaskInputModel model)
         {
-            TaskDto taskDto = _mapper.SingleMapping<TaskInputModel,TaskDto>(model);
-            _taskRepository.AddTask(taskDto);
-            return $"Добавлено задание {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";
+            TaskDto taskDto = _mapper.Map<TaskDto>(model);
+            return _taskRepository.AddTask(taskDto);
         }
 
 
         // api/task/{taskId}
         [HttpPut("{taskId}")]
-        public string UpdateTask(int taskId, [FromBody] TaskInputModel model)
+        public void UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
-            TaskDto taskDto = _mapper.SingleMapping<TaskInputModel, TaskDto>(model);
+            TaskDto taskDto = _mapper.Map<TaskDto>(model);
             taskDto.Id = taskId;
             _taskRepository.UpdateTask(taskDto);
-            return $"Обновлено задание с Id: {taskDto.Id} {taskDto.Name} {taskDto.Description} {taskDto.StartDate} {taskDto.EndDate} {taskDto.Links} {taskDto.IsRequired}";
         }
 
         // api/task/{taskId}
         [HttpDelete("{taskId}")]
-        public string DeleteTask(int taskId)
+        public void DeleteTask(int taskId)
         {
             _taskRepository.DeleteTask(taskId);
-            return $"Удалено задание {taskId}";
         }
 
         // api/task/{taskId}/tag/{tagId}
