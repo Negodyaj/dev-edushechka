@@ -10,7 +10,8 @@ namespace DevEdu.API.Models.InputModels
     {        
             [Required]
             public string Name { get; set; }
-            public string Duration { get; set; }
+            [Required]
+            public int Duration { get; set; }
        
     }
 }

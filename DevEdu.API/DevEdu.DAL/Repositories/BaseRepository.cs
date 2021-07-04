@@ -10,11 +10,6 @@ namespace DevEdu.DAL.Repositories
 
         protected IDbConnection _connection;
 
-        protected BaseRepository()
-        {
-            _connection = new SqlConnection(ConnectionString);
-           
-    
-    }
+
     }
 }

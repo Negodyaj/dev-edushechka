@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Configuration
 {
@@ -13,7 +14,7 @@ namespace DevEdu.API.Configuration
 
         private void CreateMappingToDto()
         {
-            CreateMap<TaskInputModel, TopicDto>();
+            CreateMap<TopicInputModel, TopicDto>();
          
         }
 

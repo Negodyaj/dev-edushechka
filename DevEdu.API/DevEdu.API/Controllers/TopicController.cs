@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Repositories;
+using AutoMapper;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
 {
@@ -22,36 +25,38 @@ namespace DevEdu.API.Controllers
 
         //  api/Course/5
         [HttpGet("{id}")]
-        public string GetTopicById(int id)
+        public TopicDto GetTopicById(int id)
         {
-            return $"{id}";
+            return _topicRepository.GetTopic(id);
         }
 
         [HttpGet("all")]
-        public string GetAllTopic()
+        public List<TopicDto> GetAllTopic()
         {
-            return "All topic";
+            return _topicRepository.GetAllTopic();
         }
 
         //  api/course
         [HttpPost]
         public int AddTopic([FromBody] TopicInputModel model)
         {
-            return 1;
+            var dto = _mapper.Map<TopicDto>(model);
+            return _topicRepository.AddTopic(dto);
         }
 
         //  api/course
         [HttpDelete]
-        public string DeleteTopic(int id)
+        public void DeleteTopic(int id)
         {
-            return "Delete topic";
+            _topicRepository.DeleteTopic(id);
         }
 
         //  api/course
         [HttpPut]
-        public string UpdateTopic(int id, string name, string duration)
+        public void UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
-            return "Update topic";
+            var dto = _mapper.Map<TopicDto>(model);
+            _topicRepository.UpdateTopic(id, dto);
         }
 
         
