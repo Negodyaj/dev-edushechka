@@ -3,6 +3,7 @@ using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Controllers
 {
@@ -10,42 +11,49 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        UserRepository user = new UserRepository();
-        public UserController() { }
+        UserRepository _userRepository;
+        private readonly IMapper _mapper;
+
+        public UserController(Mapper mapper) {
+            _mapper = mapper;
+            _userRepository = new UserRepository();
+        }
 
         // api/user
         [HttpPost]
         public int AddUser([FromBody] UserInsertInputModel model)
         {
-            return user.AddUser(MapUserModelToDto(model));
+            var dto = _mapper.Map<UserDto>(model);
+            return _userRepository.AddUser(dto);
         }
 
         // api/user/userId
         [HttpPut("{userId}")]
         public void UpdateUserById(int userId, [FromBody] UserUpdateInputModel model)
         {
-            user.UpdateUser(userId, MapUserModelToDto(model));
+            var dto = _mapper.Map<UserDto>(model);
+            _userRepository.UpdateUser(userId, dto);
         }
 
         // api/user/{userId}
         [HttpGet("{userId}")]
-        public string GetUserById(int userId)
+        public UserDto GetUserById(int userId)
         {
-            return userId.ToString();
+            return _userRepository.SelectUserById(userId);
         }
 
         // api/user
         [HttpGet]
-        public string GetAllUsers()
+        public List<UserDto> GetAllUsers()
         {
-            return "here's for you all Users";
+            return _userRepository.SelectUsers();
         }
 
         // api/user/{userId}
         [HttpDelete("{userId}")]
         public void DeleteUser(int userId)
         {
-            user.DeleteUser(userId);
+            _userRepository.DeleteUser(userId);
         }
 
         // api/user/{userId}/role/{roleId}
@@ -53,19 +61,6 @@ namespace DevEdu.API.Controllers
         public int AddRoleToUser(int userId, int roleId)
         {
             return 42;
-        }
-
-        private UserDto MapUserModelToDto(UserInsertInputModel model)
-        {
-            Mapper mapper = new Mapper(new MapperConfiguration(
-                cfg => cfg.CreateMap<UserInsertInputModel, UserDto>()));
-            return mapper.Map<UserDto>(model);
-        }
-        private UserDto MapUserModelToDto(UserUpdateInputModel model)
-        {
-            Mapper mapper = new Mapper(new MapperConfiguration(
-                cfg => cfg.CreateMap<UserUpdateInputModel, UserDto>()));
-            return mapper.Map<UserDto>(model);
         }
     }
 }
