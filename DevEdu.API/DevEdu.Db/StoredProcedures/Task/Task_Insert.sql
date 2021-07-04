@@ -7,7 +7,19 @@
 	@IsRequired bit
 AS
 BEGIN
-	INSERT INTO dbo.Task (Name, StartDate, EndDate, Description, Links, IsRequired)
-	VALUES (@Name, @StartDate, @EndDate, @Description, @Links, @IsRequired)
+	INSERT INTO dbo.Task (
+		Name,
+		StartDate,
+		EndDate,
+		Description,
+		Links,
+		IsRequired)
+	VALUES (
+		@Name, 
+		@StartDate,
+		@EndDate,
+		@Description,
+		@Links, 
+		@IsRequired)
 	SELECT @@IDENTITY
 END

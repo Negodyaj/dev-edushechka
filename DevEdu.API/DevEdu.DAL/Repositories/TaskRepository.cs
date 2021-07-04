@@ -18,8 +18,9 @@ namespace DevEdu.DAL.Repositories
         }
         public TaskDto GetTaskById(int id)
         {
-            TaskDto task = _connection.QuerySingle<TaskDto>(
-                "dbo.Task_SelectById",
+            string query = "dbo.Task_SelectById";
+            TaskDto task = _connection.QuerySingleOrDefault<TaskDto>(
+                query,
                 new { id },
                 commandType: CommandType.StoredProcedure
                 );
@@ -28,8 +29,9 @@ namespace DevEdu.DAL.Repositories
 
         public List<TaskDto> GetTasks()
         {
+            string query = "dbo.Task_SelectAll";
             List<TaskDto> tasks = _connection.Query<TaskDto>(
-                "dbo.Task_SelectAll",
+                query,
                 commandType: CommandType.StoredProcedure
                 )
                 .ToList<TaskDto>();
@@ -38,9 +40,9 @@ namespace DevEdu.DAL.Repositories
 
         public int AddTask(TaskDto task)
         {
-            int taskId = -1;
-            taskId = _connection.QuerySingle<int>(
-                "dbo.Task_Insert",
+            string query = "dbo.Task_Insert";
+            int taskId = _connection.QuerySingle<int>(
+                query,
                 new
                 {
                     task.Name,
@@ -57,8 +59,9 @@ namespace DevEdu.DAL.Repositories
 
         public void UpdateTask(TaskDto task)
         {
+            string query = "dbo.Task_Update";
             _connection.Execute(
-                "dbo.Task_Update",
+                query,
                 new
                 {
                     task.Id,
@@ -75,8 +78,9 @@ namespace DevEdu.DAL.Repositories
 
         public void DeleteTask(int id)
         {
+            string query = "dbo.Task_Delete";
             _connection.Execute(
-                "dbo.Task_Delete",
+                query,
                 new { id },
                 commandType: CommandType.StoredProcedure
                 );

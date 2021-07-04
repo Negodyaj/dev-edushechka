@@ -18,8 +18,9 @@ namespace DevEdu.DAL.Repositories
 
         public void AddTagToTopic(int topicId, int tagId)
         {
+            string query = "dbo.Tag_Topic_Insert";
             _connection.Query(
-                "dbo.Tag_Topic_Insert",
+                query,
                 new 
                 {
                     topicId, 
@@ -31,8 +32,9 @@ namespace DevEdu.DAL.Repositories
 
         public void DeleteTagFromTopic(int topicId, int tagId)
         {
+            string query = "dbo.Tag_Topic_Delete";
             _connection.Query(
-                "dbo.Tag_Topic_Delete",
+                query,
                 new
                 {
                     topicId,

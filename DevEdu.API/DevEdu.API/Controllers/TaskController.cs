@@ -28,7 +28,7 @@ namespace DevEdu.API.Controllers
         [HttpGet("{taskId}")]
         public TaskDto GetTask(int taskId)
         {
-            TaskDto task = _taskRepository.GetTaskById(taskId);
+            var task = _taskRepository.GetTaskById(taskId);
             return task;
         }
 
@@ -36,7 +36,7 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         public List<TaskDto> GetAllTasks()
         {
-            List<TaskDto> taskDtos = _taskRepository.GetTasks();
+            var taskDtos = _taskRepository.GetTasks();
             return taskDtos;
         }
 
@@ -44,7 +44,7 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         public int AddTask([FromBody] TaskInputModel model)
         {
-            TaskDto taskDto = _mapper.Map<TaskDto>(model);
+            var taskDto = _mapper.Map<TaskDto>(model);
             return _taskRepository.AddTask(taskDto);
         }
 

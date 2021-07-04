@@ -2,7 +2,15 @@
 	@Id int
 AS
 BEGIN
-	SELECT Id, Name, StartDate, EndDate, Description, Links, IsRequired from dbo.Task
+	SELECT
+		Id,
+		Name,
+		StartDate,
+		EndDate,
+		Description,
+		Links,
+		IsRequired
+	From dbo.Task
 	WHERE 
 	Id = @Id
 END
