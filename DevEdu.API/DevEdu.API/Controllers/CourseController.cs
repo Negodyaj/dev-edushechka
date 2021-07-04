@@ -53,7 +53,8 @@ namespace DevEdu.API.Controllers
         public string UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            _courseRepository.UpdateCourse(id, dto);
+            dto.Id = id;
+            _courseRepository.UpdateCourse(dto);
             return $"Course №{id} change name to {model.Name} and description to {model.Description}";
         }
 

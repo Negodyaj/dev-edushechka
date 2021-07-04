@@ -2,10 +2,8 @@
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class CommentAddtInputModel
+    public class CommentUpdateInputModel
     {
-        [Required]
-        public int UserId { get; set; }
         [Required]
         public string Text { get; set; }
     }

@@ -13,6 +13,6 @@ namespace DevEdu.DAL.Repositories
 
         public List<CommentDto> GetCommentsByUser(int userId);
 
-        public void UpdateComment(int id, CommentDto commentDto);
+        public void UpdateComment(CommentDto commentDto);
     }
 }

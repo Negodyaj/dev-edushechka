@@ -8,10 +8,19 @@ namespace DevEdu.DAL.Repositories
 {
     public class CourseRepository : BaseRepository, ICourseRepository
     {
+        public CourseRepository()
+        {
+            _insertProcedure = "dbo.Course_Insert";
+            _deleteProcedure = "dbo.Course_Delete";
+            _selectByIdProcedure = "dbo.Course_SelectById";
+            _selectAllProcedure = "dbo.Course_SelectAll";
+            _updateProcedure = "dbo.Course_Update";
+        }
+
         public int AddCourse(CourseDto courseDto)
         {
             return _connection.QuerySingle<int>(
-                "dbo.Course_Insert",
+                _insertProcedure,
                 new
                 {
                     courseDto.Name,
@@ -24,7 +33,7 @@ namespace DevEdu.DAL.Repositories
         public void DeleteCourse(int id)
         {
             _connection.Execute(
-                "dbo.Course_Delete",
+                _deleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -33,7 +42,7 @@ namespace DevEdu.DAL.Repositories
         public CourseDto GetCourse(int id)
         {
             return _connection.QuerySingleOrDefault<CourseDto>(
-                "dbo.Course_SelectById",
+                _selectByIdProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -43,19 +52,19 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<CourseDto>(
-                    "dbo.Course_SelectAll",
+                    _selectAllProcedure,
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
         }
 
-        public void UpdateCourse(int id, CourseDto courseDto)
+        public void UpdateCourse(CourseDto courseDto)
         {
             _connection.Execute(
-                "dbo.Course_Update",
+                _updateProcedure,
                 new
                 {
-                    id,
+                    courseDto.Id,
                     courseDto.Name,
                     courseDto.Description
                 },

@@ -9,6 +9,6 @@ namespace DevEdu.DAL.Repositories
         void DeleteCourse(int id);
         CourseDto GetCourse(int id);
         List<CourseDto> GetCourses();
-        void UpdateCourse(int id, CourseDto courseDto);
+        void UpdateCourse(CourseDto courseDto);
     }
 }

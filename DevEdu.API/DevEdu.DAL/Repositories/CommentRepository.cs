@@ -8,10 +8,19 @@ namespace DevEdu.DAL.Repositories
 {
     public class CommentRepository : BaseRepository, ICommentRepository
     {
+        public CommentRepository()
+        {
+            _insertProcedure = "dbo.Comment_Insert";
+            _deleteProcedure = "dbo.Comment_Delete";
+            _selectByIdProcedure = "dbo.Comment_SelectById";
+            _selectAllProcedure = "dbo.Comment_SelectAllByUserId";
+            _updateProcedure = "dbo.Comment_Update";
+        }
+
         public int AddComment(CommentDto commentDto)
         {
             return _connection.QuerySingle<int>(
-                "dbo.Comment_Insert",
+                _insertProcedure,
                 new
                 {
                     commentDto.UserId,
@@ -24,7 +33,7 @@ namespace DevEdu.DAL.Repositories
         public void DeleteComment(int id)
         {
             _connection.Execute(
-                "dbo.Comment_Delete",
+                _deleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -32,8 +41,8 @@ namespace DevEdu.DAL.Repositories
 
         public CommentDto GetComment(int id)
         {
-            return _connection.QuerySingle<CommentDto>(
-                "dbo.Comment_SelectById",
+            return _connection.QuerySingleOrDefault<CommentDto>(
+                _selectByIdProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -43,20 +52,20 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<CommentDto>(
-                    "dbo.Comment_SelectAllByUserId",
+                    _selectAllProcedure,
                     new { userId },
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
         }
 
-        public void UpdateComment(int id, CommentDto commentDto)
+        public void UpdateComment(CommentDto commentDto)
         {
             _connection.Execute(
-                "dbo.Comment_Update",
+                _updateProcedure,
                 new
                 {
-                    id,
+                    commentDto.Id,
                     commentDto.Text
                 },
                 commandType: CommandType.StoredProcedure
