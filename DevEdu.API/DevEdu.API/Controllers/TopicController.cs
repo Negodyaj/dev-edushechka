@@ -11,10 +11,13 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class TopicController : Controller
     {
+        private readonly ITopicRepository _topicRepository;
+        private readonly IMapper _mapper;
 
-        public TopicController()
+        public TopicController(IMapper mapper, ITopicRepository topicRepository)
         {
-
+            _topicRepository = topicRepository;
+            _mapper = mapper;
         }
 
         //  api/Course/5
