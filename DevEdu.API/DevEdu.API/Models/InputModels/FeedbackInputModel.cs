@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class CommentAddtInputModel
+    public class FeedbackInputModel
     {
         [Required]
-        public int UserId { get; set; }
-        [Required]
-        public string Text { get; set; }
+        public string Feedback { get; set; }
     }
 }
