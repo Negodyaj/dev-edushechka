@@ -7,16 +7,16 @@ namespace DevEdu.DAL.Repositories
 {
     public class UserRoleRepository : BaseRepository, IUserRoleRepository
     {
-        public UserRoleRepository()
-        {
-            _insertProcedure = "dbo.User_Role_Insert";
-            _deleteProcedure = "dbo.User_Role_Delete";
-        }
+
+        private const string _userRoleAddProcedure = "dbo.User_Role_Insert";
+        private const string _userRoleDeleteProcedure = "dbo.User_Role_Delete";
+
+        public UserRoleRepository() { }
 
         public int AddUserRole(int userId, int roleId)
         {
             return _connection.QuerySingle<int>(
-                _insertProcedure,
+                _userRoleAddProcedure,
                 new
                 {
                     userId,
@@ -28,7 +28,7 @@ namespace DevEdu.DAL.Repositories
         public void DeleteUserRole(int userId, int roleId)
         {
             _connection.Execute(
-                _deleteProcedure,
+                _userRoleDeleteProcedure,
                 new
                 {
                     userId,

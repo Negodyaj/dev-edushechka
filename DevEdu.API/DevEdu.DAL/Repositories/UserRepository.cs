@@ -8,19 +8,18 @@ namespace DevEdu.DAL.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
-        public UserRepository()
-        {
-            _insertProcedure = "dbo.User_Insert";
-            _selectByIdProcedure = "dbo.User_SelectById";
-            _selectAllProcedure = "dbo.User_SelectAll";
-            _updateProcedure = "dbo.User_Update";
-            _deleteProcedure = "dbo.User_Delete";
-        }
+        private const string _userAddProcedure = "dbo.User_Insert";
+        private const string _userSelectByIdProcedure = "dbo.User_SelectById";
+        private const string _userSelectAllProcedure = "dbo.User_SelectAll";
+        private const string _userUpdateProcedure = "dbo.User_Update";
+        private const string _userDeleteProcedure = "dbo.User_Delete";
+
+        public UserRepository() { }
 
         public int AddUser(UserDto user)
         {
             return _connection.QuerySingle<int>(
-               _insertProcedure,
+               _userAddProcedure,
                 new
                 {
                     user.Name,
@@ -40,7 +39,7 @@ namespace DevEdu.DAL.Repositories
         public UserDto SelectUserById(int id)
         {
             return _connection.QuerySingleOrDefault<UserDto>(
-                _selectByIdProcedure,
+                _userSelectByIdProcedure,
                 id,
             commandType: CommandType.StoredProcedure);
         }
@@ -49,7 +48,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<UserDto>(
-                _selectAllProcedure,
+                _userSelectAllProcedure,
             commandType: CommandType.StoredProcedure)
                 .ToList();
         }
@@ -57,7 +56,7 @@ namespace DevEdu.DAL.Repositories
         public void UpdateUser(UserDto user)
         {
             _connection.Execute(
-                _updateProcedure,
+                _userUpdateProcedure,
                 new
                 {
                     user.Id,
@@ -75,7 +74,7 @@ namespace DevEdu.DAL.Repositories
         public void DeleteUser(int id)
         {
             _connection.Execute(
-                _deleteProcedure,
+                _userDeleteProcedure,
                 new
                 {
                     id,
