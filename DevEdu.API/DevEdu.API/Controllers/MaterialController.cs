@@ -1,12 +1,9 @@
-﻿using DevEdu.API.Mappers;
+﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -14,27 +11,28 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class MaterialController : Controller
     {
-        private MaterialRepository _repository;
-        private ModelToDtoMapper _mapper;
+        private readonly IMaterialRepository _repository;
+        private readonly IMapper _mapper;
 
-        public MaterialController() 
+        public MaterialController(IMapper mapper, IMaterialRepository repository) 
         {
-            _repository = new MaterialRepository();
-            _mapper = new ModelToDtoMapper();
+            _repository = repository;
+            _mapper = mapper;
         }
 
         // api/material
         [HttpPost]
         public int AddMaterial([FromBody] MaterialInputModel materialModel)
         {
-            return _repository.AddMaterial(_mapper.MapMaterial(materialModel));
+            var dto = _mapper.Map<MaterialDto>(materialModel);
+            return _repository.AddMaterial(dto);
         }
 
         // api/material
         [HttpGet]
         public List<MaterialDto> GetAllMaterials()
         {
-            return _repository.GetAllMaterials() ;
+            return _repository.GetAllMaterials();
         }
 
         // api/material/5
@@ -44,11 +42,13 @@ namespace DevEdu.API.Controllers
             return _repository.GetMaterialById(id);
         }
 
-        // api/material
-        [HttpPut] 
+        // api/material/5
+        [HttpPut("{id}")] 
         public void UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
         {
-            _repository.UpdateMaterial(id, _mapper.MapMaterial(materialModel));
+            var dto = _mapper.Map<MaterialDto>(materialModel);
+            dto.Id = id;
+            _repository.UpdateMaterial(dto);
         }
 
         // api/material/5
@@ -60,16 +60,16 @@ namespace DevEdu.API.Controllers
 
         // api/material/{materialId}/tag/{tagId}
         [HttpPost("{materialId}/tag/{tagId}")]
-        public int AddTagToMaterial(int materialId, int tagId)
+        public void AddTagToMaterial(int materialId, int tagId)
         {
-            return 1;
+            _repository.AddTagToMaterial(materialId, tagId);
         }
 
         // api/material/{materialId}/tag/{tagId}
         [HttpDelete("{materialId}/tag/{tagId}")]
-        public string DeleteTagFromMaterial(int materialId, int tagId)
+        public void DeleteTagFromMaterial(int materialId, int tagId)
         {
-            return $"deleted tag material with {materialId} materialId";
+            _repository.DeleteTagFromMaterial(materialId, tagId);
         }
 
     }
