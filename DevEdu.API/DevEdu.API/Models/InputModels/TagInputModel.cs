@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class TagUpdateInputModel
+    public class TagInputModel
     {
-        [Required]
-        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
     }

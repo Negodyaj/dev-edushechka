@@ -18,8 +18,7 @@ namespace DevEdu.API.Configuration
 
         private void CreateMappingToDto()
         {
-            CreateMap<TagInsertInputModel, TagDto>();
-            CreateMap<TagUpdateInputModel, TagDto>();
+            CreateMap<TagInputModel, TagDto>();
         }
         private void CreateMappingFromDto()
         {

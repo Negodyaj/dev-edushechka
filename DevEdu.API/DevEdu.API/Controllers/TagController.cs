@@ -22,9 +22,9 @@ namespace DevEdu.API.Controllers
 
         // api/tag
         [HttpPost]
-        public int AddTag([FromBody] TagInsertInputModel model)
+        public int AddTag([FromBody] TagInputModel model)
         {
-            TagDto dto = _mapper.Map< TagDto>(model);            
+            var dto = _mapper.Map< TagDto>(model);            
             return _repository.AddTag(dto);
         }
 
@@ -35,11 +35,12 @@ namespace DevEdu.API.Controllers
             _repository.DeleteTag(id);
         }
 
-        // api/tag
-        [HttpPut]
-        public void UpdateTag([FromBody] TagUpdateInputModel model)
+        // api/tag/1
+        [HttpPut("{id}")]
+        public void UpdateTag(int id, [FromBody] TagInputModel model)
         {
-            TagDto dto = _mapper.Map<TagDto>(model);
+            var dto = _mapper.Map<TagDto>(model);
+            dto.Id = id;
             _repository.UpdateTag(dto);
         }
 
@@ -52,7 +53,7 @@ namespace DevEdu.API.Controllers
 
         // api/tag/1
         [HttpGet("{id}")]
-        public TagDto GetAllTags(int id) // change return type to outputModel
+        public TagDto GetTagById(int id) // change return type to outputModel
         {
             return _repository.SelectTagById(id);
         }

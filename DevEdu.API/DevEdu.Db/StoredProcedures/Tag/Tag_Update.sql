@@ -2,7 +2,9 @@
 	@Id int,
 	@Name nvarchar(50)
 AS
-	UPDATE [Tag] 
+BEGIN
+	UPDATE [dbo].[Tag] 
 	SET 
 	Name = @Name
 	Where Id = @Id
+END

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
-    public class TagRepository: BaseRepository
+    public class TagRepository : BaseRepository, ITagRepository 
     {
         public int AddTag(TagDto tagDto)
         {
