@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Data;
+using Dapper;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
-    public class UserRepository
+    public class UserRepository : BaseRepository
     {
     }
 }
