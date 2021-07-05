@@ -5,10 +5,15 @@ namespace DevEdu.DAL.Repositories
 {
     public class GroupRepository : BaseRepository, IGroupRepository
     {
+        private const string _groupMaterialInsertReferenceProcedure = "dbo.Group_Material_Insert";
+        private const string _groupMaterialDeleteReferenceProcedure = "dbo.Group_Material_Delete";
+
+        public GroupRepository() { }
+
         public void AddGroupMaterialReference(int materialId, int groupId)
         {
             _connection.Execute(
-                "dbo.Group_Material_Insert",
+                _groupMaterialInsertReferenceProcedure,
                 new
                 {
                     materialId,
@@ -18,10 +23,10 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void RemoveGroupMaterialReference(int materialId, int groupId)
+        public void DeleteGroupMaterialReference(int materialId, int groupId)
         {
             _connection.Execute(
-                "dbo.Group_Material_Delete",
+                _groupMaterialDeleteReferenceProcedure,
                 new
                 {
                     materialId,

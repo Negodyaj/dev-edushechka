@@ -87,7 +87,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{groupId}/material/{materialId}")]
         public string RemoveGroupMaterialReference(int materialId, int groupId)
         {
-            _groupRepository.RemoveGroupMaterialReference(materialId,groupId);
+            _groupRepository.DeleteGroupMaterialReference(materialId,groupId);
             return $"Material №{materialId} remove from group {groupId}";
         }
     }

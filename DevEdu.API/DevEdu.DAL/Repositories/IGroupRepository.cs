@@ -3,6 +3,6 @@
     public interface IGroupRepository
     {
         void AddGroupMaterialReference(int materialId, int groupId);
-        void RemoveGroupMaterialReference(int materialId, int groupId);
+        void DeleteGroupMaterialReference(int materialId, int groupId);
     }
 }
