@@ -9,30 +9,15 @@ using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
-    public class User_GroupRepository
+    public class User_GroupRepository: BaseRepository
     {
-        private IDbConnection _dbConnection;
-        public string ConnectionString { get; set; }
-        public User_GroupRepository()
-        {
-            ConnectionString = "Data Source=80.78.240.16;Initial Catalog = DevEdu; Persist Security Info=True;" +
-                                                       "User ID = student;Password=qwe!23; Pooling=False;MultipleActiveResultSets=False;Connect Timeout = 60;" +
-                                                       "Encrypt=False;TrustServerCertificate=False"; //get from json/singleton?
-
-            _dbConnection = new SqlConnection(ConnectionString);
-        }
-
         public void AddTag(int groupId, int userId, int roleId)
         {
-            string query = "exec [dbo].[User_Group_Insert]";
-
-            _dbConnection.Query(query, new { groupId, userId, roleId }, commandType: CommandType.StoredProcedure);
+            _dbConnection.Execute("[dbo].[User_Group_Insert]", new { groupId, userId, roleId }, commandType: CommandType.StoredProcedure);
         }
         public void DeleteTag(int userId, int groupId)
         {
-            string query = "exec [dbo].[Tag_Delete]";
-
-            _dbConnection.Query(query, new { userId, groupId }, commandType: CommandType.StoredProcedure);
+            _dbConnection.Execute("[dbo].[Tag_Delete]", new { userId, groupId }, commandType: CommandType.StoredProcedure);
         }
     }
 }
