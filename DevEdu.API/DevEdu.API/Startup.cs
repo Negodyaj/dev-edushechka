@@ -1,3 +1,4 @@
+using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,7 +27,8 @@ namespace DevEdu.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            AddRepositoriesServises(services);
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -54,6 +56,11 @@ namespace DevEdu.API
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void AddRepositoriesServises(IServiceCollection services)
+        {
+            services.AddScoped<TagRepository>();
         }
     }
 }
