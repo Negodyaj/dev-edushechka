@@ -72,7 +72,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpPut("{taskId}/student/{studentId}")]  // to inputModel
-        public string UpdateStudentAnswerOnTask(int studentId, int taskId, string taskAnswer)
+        public string UpdateStudentAnswerOnTask(int taskId, int studentId, string taskAnswer)
         {
             return $"update task with {taskId} id by {taskAnswer}";
         }

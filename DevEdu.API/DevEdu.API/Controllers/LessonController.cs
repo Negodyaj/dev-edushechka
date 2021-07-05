@@ -56,35 +56,35 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/user/{userId}
         [HttpPost("{lessonId}/user/{userId}")]
-        public string AddStudenToLesson(int userId, int lessonId)
+        public string AddStudenToLesson(int lessonId, int userId)
         {
             return $"userId {userId} lessonId {lessonId} ";
         }
 
         // api/lesson/{lessonId}/user/{userId}
         [HttpDelete("{lessonId}/user/{userId}")]
-        public string DeleteStudentFromLesson(int userId, int lessonId)
+        public string DeleteStudentFromLesson(int lessonId, int userId)
         {
             return $"userId {userId} lessonId {lessonId} ";
         }
 
         // api/lesson/{lessonId}/user/{userId}/feedback
         [HttpPut("{lessonId}/user/{userId}/feedback")]
-        public string UpdateStudentFeedbackForLesson(int userId, int lessonId, [FromBody] FeedbackInputModel inputModel)
+        public string UpdateStudentFeedbackForLesson(int lessonId, int userId, [FromBody] FeedbackInputModel inputModel)
         {
             return $"userId {userId} lessonId {lessonId}, feedback {inputModel.Feedback}  ";
         }
 
         // api/lesson/{lessonId}/user/{userId}/absenceReason
         [HttpPut("{lessonId}/user/{userId}/absenceReason ")]
-        public string UpdateStudentAbsenceReasonOnLesson(int userId, int lessonId, [FromBody] AbsenceReasonInputModel inputModel)
+        public string UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, [FromBody] AbsenceReasonInputModel inputModel)
         {
             return $"userId {userId} lessonId {lessonId},absenceReason {inputModel.AbsenceReason}  ";
         }
 
         // api/lesson/{lessonId}/user/{userId}/attendance
         [HttpPut("{lessonId}/user/{userId}/attendance ")] 
-        public string UpdateStudentAttendanceOnLesson(int userId, int lessonId, [FromBody] AttendanceInputModel inputModel)
+        public string UpdateStudentAttendanceOnLesson(int lessonId, int userId, [FromBody] AttendanceInputModel inputModel)
         {
             return $"userId {userId} lessonId {lessonId},isPresent {inputModel.IsPresent} ";
         }
