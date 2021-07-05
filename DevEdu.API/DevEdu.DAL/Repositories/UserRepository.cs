@@ -1,46 +1,46 @@
 ﻿using DevEdu.DAL.Models;
 using Dapper;
 using System.Data;
-using System.Data.SqlClient;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace DevEdu.DAL.Repositories
 {
-    public class UserRepository
+    public class UserRepository : BaseRepository, IUserRepository
     {
-        string connectionString = "Data Source=80.78.240.16;Initial Catalog = DevEdu; Persist Security Info=True;User ID = student;Password=qwe!23; Pooling=False;MultipleActiveResultSets=False;Connect Timeout = 60; Encrypt=False;TrustServerCertificate=False";
-
-        private readonly IDbConnection _connection;
-
         public UserRepository()
         {
-            _connection = new SqlConnection(connectionString);
+            _insertProcedure = "dbo.User_Insert";
+            _selectByIdProcedure = "dbo.User_SelectById";
+            _selectAllProcedure = "dbo.User_SelectAll";
+            _updateProcedure = "dbo.User_Update";
+            _deleteProcedure = "dbo.User_Delete";
         }
 
         public int AddUser(UserDto user)
         {
             return _connection.QuerySingle<int>(
-                "dbo.User_Insert", 
+               _insertProcedure,
                 new
-            {
-                user.Name,
-                user.Email,
-                user.Username,
-                user.Password,
-                user.ContractNumber,
-                user.CityId,
-                user.BirthDate,
-                user.GitHubAccount,
-                user.Photo,
-                user.PhoneNumer
-            },
+                {
+                    user.Name,
+                    user.Email,
+                    user.Username,
+                    user.Password,
+                    user.ContractNumber,
+                    user.CityId,
+                    user.BirthDate,
+                    user.GitHubAccount,
+                    user.Photo,
+                    user.PhoneNumer
+                },
             commandType: CommandType.StoredProcedure);
         }
 
         public UserDto SelectUserById(int id)
         {
-            return _connection.QuerySingle<UserDto>(
-                "dbo.User_SelectById",
+            return _connection.QuerySingleOrDefault<UserDto>(
+                _selectByIdProcedure,
                 id,
             commandType: CommandType.StoredProcedure);
         }
@@ -49,25 +49,24 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<UserDto>(
-                "dbo.User_SelectAll",
+                _selectAllProcedure,
             commandType: CommandType.StoredProcedure)
-                .AsList<UserDto>();
+                .ToList();
         }
 
-        public void UpdateUser(int id, UserDto user)
+        public void UpdateUser(UserDto user)
         {
             _connection.Execute(
-                "dbo.User_Update",
+                _updateProcedure,
                 new
                 {
-                    id,
+                    user.Id,
                     user.Name,
                     user.Username,
                     user.CityId,
                     user.GitHubAccount,
                     user.Photo,
                     user.PhoneNumer
-
                 },
             commandType: CommandType.StoredProcedure
             );
@@ -76,7 +75,7 @@ namespace DevEdu.DAL.Repositories
         public void DeleteUser(int id)
         {
             _connection.Execute(
-                "dbo.User_Delete",
+                _deleteProcedure,
                 new
                 {
                     id,

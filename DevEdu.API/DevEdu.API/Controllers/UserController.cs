@@ -11,10 +11,12 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
+
         UserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public UserController(Mapper mapper) {
+        public UserController(IMapper mapper)
+        {
             _mapper = mapper;
             _userRepository = new UserRepository();
         }
@@ -29,10 +31,10 @@ namespace DevEdu.API.Controllers
 
         // api/user/userId
         [HttpPut("{userId}")]
-        public void UpdateUserById(int userId, [FromBody] UserUpdateInputModel model)
+        public void UpdateUserById([FromBody] UserUpdateInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);
-            _userRepository.UpdateUser(userId, dto);
+            _userRepository.UpdateUser(dto);
         }
 
         // api/user/{userId}

@@ -23,17 +23,9 @@ namespace DevEdu.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
-            //var mapperConfig = new MapperConfiguration(mc =>
-            //{
-            //    mc.AddProfile(new MapperProfile());
-            //});
 
-            //IMapper mapper = mapperConfig.CreateMapper();
-            //services.AddSingleton(mapper);
+            services.AddScoped<IUserRepository, UserRepository>();
 
-            services.AddMvc();
-
-            services.AddScoped<UserRepository>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
