@@ -13,12 +13,14 @@ namespace DevEdu.API.Controllers
     {
 
         UserRepository _userRepository;
+        UserRoleRepository _userRoleRepository;
         private readonly IMapper _mapper;
 
         public UserController(IMapper mapper)
         {
             _mapper = mapper;
             _userRepository = new UserRepository();
+            _userRoleRepository = new UserRoleRepository();
         }
 
         // api/user
@@ -62,7 +64,14 @@ namespace DevEdu.API.Controllers
         [HttpPost("{userId}/role/{roleId}")]
         public int AddRoleToUser(int userId, int roleId)
         {
-            return 42;
+            return _userRoleRepository.AddUserRole(userId, roleId);
+        }
+
+        // api/user/{userId}/role/{roleId}
+        [HttpDelete("{userId}/role/{roleId}")]
+        public void DeleteRoleFromUser(int userId, int roleId)
+        {
+            _userRoleRepository.DeleteUserRole(userId, roleId);
         }
     }
 }

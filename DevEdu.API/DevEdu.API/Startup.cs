@@ -25,6 +25,7 @@ namespace DevEdu.API
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
