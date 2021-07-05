@@ -1,3 +1,4 @@
+using DevEdu.Business.Servicies;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +26,8 @@ namespace DevEdu.API
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+
+            services.AddScoped<ICommentService, CommentService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
