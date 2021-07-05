@@ -1,3 +1,4 @@
+using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -57,7 +58,7 @@ namespace DevEdu.API
         }
         private void AddReppositoriesServises(IServiceCollection services)
         {
-            services.AddScoped
+            services.AddScoped<User_GroupRepository>();
         }
     }
 }

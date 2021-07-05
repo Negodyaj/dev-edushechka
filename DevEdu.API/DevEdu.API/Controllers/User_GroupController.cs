@@ -15,14 +15,14 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/user_group/group/1/user/2/role/1
-        [HttpPost("group/{groupid}/user/{userid}/role/{roleid}")]
+        [HttpPost("group/{groupId}/user/{userId}/role/{roleId}")]
         public void AddUser_Group(int groupId, int userId, int roleId)
         {
             _repository.AddTag(groupId, userId, roleId);
         }
 
         //  api/user_group/group/1/user/2
-        [HttpDelete("group/{groupid}/user/{userid}")]
+        [HttpDelete("group/{groupId}/user/{userId}")]
         public void DeleteUser_Group(int groupId, int userId)
         {
             _repository.DeleteTag(userId, groupId);
