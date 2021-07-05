@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class StudentLessonUpdateIsPresentInputModel
+    public class FeedbackInputModel
     {
         [Required]
-         public string IsPresent { get; set; }
-
+        public string Feedback { get; set; }
     }
 }
