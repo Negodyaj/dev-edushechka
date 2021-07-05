@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class StudentLessonUpdateAbsenceReasonInputModel
+    public class AbsenceReasonInputModel
     {
         [Required]
         public string AbsenceReason { get; set; }

@@ -8,16 +8,20 @@ namespace DevEdu.API.Configuration
     {
         public MapperProfile()
         {
-            MapModelToDto();
-            MapDtoToModel();
+            CreateMappingToDto();
+            CreateMappingFromDto();
         }
 
-        private void MapModelToDto()
-        {
+        private void CreateMappingToDto()
+        { 
+            CreateMap<CourseInputModel, CourseDto>();
+            CreateMap<CommentAddInputModel, CommentDto>();
+            CreateMap<CommentUpdateInputModel, CommentDto>();
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
         }
-        private void MapDtoToModel()
+
+        private void CreateMappingFromDto()
         {
 
         }
