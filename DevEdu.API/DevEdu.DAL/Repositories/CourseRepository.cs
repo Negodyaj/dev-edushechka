@@ -8,16 +8,20 @@ namespace DevEdu.DAL.Repositories
 {
     public class CourseRepository : BaseRepository, ICourseRepository
     {
+        // todo: rename it
         private const string _insertProcedure = "dbo.Course_Insert";
         private const string _deleteProcedure = "dbo.Course_Delete";
         private const string _selectByIdProcedure = "dbo.Course_SelectById";
         private const string _selectAllProcedure = "dbo.Course_SelectAll";
         private const string _updateProcedure = "dbo.Course_Update";
-        //public CourseRepository();
+
+        public CourseRepository()
+        {
+        }
 
         public int AddCourse(CourseDto courseDto)
         {
-            return _connection.QuerySingleOrDefault<int>(
+            return _connection.QuerySingle<int>(
                 _insertProcedure,
                 new
                 {

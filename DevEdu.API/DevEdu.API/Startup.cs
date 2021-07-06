@@ -1,3 +1,5 @@
+using DevEdu.Business.Servicies;
+using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
-using DevEdu.DAL.Repositories;
 
 namespace DevEdu.API
 {
@@ -23,6 +24,11 @@ namespace DevEdu.API
         {
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
+
+            services.AddScoped<ICommentService, CommentService>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

@@ -1,6 +1,6 @@
 ﻿namespace DevEdu.DAL.Repositories
 {
-    public class UserRepository
+    public class UserRepository : BaseRepository
     {
     }
 }

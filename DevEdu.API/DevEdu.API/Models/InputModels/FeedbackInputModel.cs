@@ -2,9 +2,9 @@
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class StudentLessonUpdateAbsenceReasonInputModel
+    public class FeedbackInputModel
     {
         [Required]
-        public string AbsenceReason { get; set; }
+        public string Feedback { get; set; }
     }
 }
