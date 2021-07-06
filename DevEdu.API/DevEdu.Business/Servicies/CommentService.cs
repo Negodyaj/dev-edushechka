@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Models;
+﻿using System.Collections.Generic;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.Servicies
@@ -13,6 +14,12 @@ namespace DevEdu.Business.Servicies
         }
 
         public CommentDto GetComment(int id) => _commentRepository.GetComment(id);
+
+        public List<CommentDto> GetCommentsByUserId(int userId) => _commentRepository.GetCommentsByUserId(userId);
+
+        public int AddComment(CommentDto dto) => _commentRepository.AddComment(dto);
+
+        public void DeleteComment(int id) => _commentRepository.DeleteComment(id);
 
         public void UpdateComment(int id, CommentDto dto)
         {
