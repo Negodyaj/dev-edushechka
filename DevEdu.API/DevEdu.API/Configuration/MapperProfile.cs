@@ -20,6 +20,7 @@ namespace DevEdu.API.Configuration
             CreateMap<TaskInputModel, TaskDto>();
             CreateMap<CourseInputModel, CourseDto>().ReverseMap();
             CreateMap<GroupInputModel, GroupDto>().ReverseMap();
+            CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
         }
 
         private void CreateMappingFromDto()

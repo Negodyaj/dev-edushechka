@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
-using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.DAL.Repositories;
+using DevEdu.DAL.Models;
+using AutoMapper;
 
 namespace DevEdu.API.Controllers
 {
@@ -13,11 +14,13 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ITaskRepository _taskRepository;
+        private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
         
-        public TaskController(IMapper mapper, ITaskRepository taskRepository)
+        public TaskController(IMapper mapper, ITaskRepository taskRepository, IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
         {
-            _taskRepository = taskRepository;
             _mapper = mapper;
+            _taskRepository = taskRepository;
+            _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
         }
 
         //  api/Task/1
@@ -77,29 +80,44 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpPost("{taskId}/student/{studentId}")]
-        public string AddStudentAnswerOnTask(int taskId, int studentId, string taskAnswer)  // to inputModel
+        public void AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
-            return $"add answer for task {taskId} id";
+            var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
+            taskAnswerDto.TaskId = taskId;
+            taskAnswerDto.StudentId = studentId;
+
+            _studentAnswerOnTaskRepository.AddStudentAnswerOnTask(taskAnswerDto);
+
         }
 
         // api/task/{taskId}/student/{studentId}
-        [HttpPut("{taskId}/student/{studentId}")]  // to inputModel
-        public string UpdateStudentAnswerOnTask(int studentId, int taskId, string taskAnswer)
+        [HttpPut("{taskId}/student/{studentId}")]
+        public int UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
-            return $"update task with {taskId} id by {taskAnswer}";
+            var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
+            taskAnswerDto.TaskId = taskId;
+            taskAnswerDto.StudentId = studentId;
+
+            _studentAnswerOnTaskRepository.UpdateStudentAnswerOnTask(taskAnswerDto);
+
+            return taskId;
         }
 
         // api/task/{taskId}/student/{studentId}
         [HttpDelete("{taskId}/student/{studentId}")]
         public string DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
-            return $"deleted answer for task {taskId} id";
+            _studentAnswerOnTaskRepository.DeleteStudentAnswerOnTask(taskId, studentId);
+
+            return $"Deleted answer for task {taskId} id.";
         }
 
         // api/task/{taskId}/student/{studentId}/change-status/{statusId}
         [HttpPut("{taskId}/student/{studentId}/change-status/{statusId}")]
         public int UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
+            _studentAnswerOnTaskRepository.UpdateStatusAnswerOnTask(taskId, studentId, statusId);
+
             return statusId;
         }
 
@@ -107,6 +125,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{taskId}/student/{studentId}/comment")]
         public int AddCommentOnStudentAnswer(int taskId, int studentId, [FromBody] CommentAddInputModel inputModel)
         {
+
             return taskId;
         }
     }
