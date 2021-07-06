@@ -12,15 +12,20 @@ namespace DevEdu.DAL.Repositories
 {
     public class TaskRepository : BaseRepository, ITaskRepository
     {
+        private const string _taskAddProcedure = "dbo.Task_Insert";
+        private const string _taskDeleteProcedure = "dbo.Task_Delete";
+        private const string _taskSelectByIdProcedure = "dbo.Task_SelectById";
+        private const string _taskSelectAlldProcedure = "dbo.Task_SelectAll";
+        private const string _taskUpdateProcedure = "dbo.Task_Update";
+
         public TaskRepository()
         {
 
         }
         public TaskDto GetTaskById(int id)
         {
-            string query = "dbo.Task_SelectById";
             TaskDto task = _connection.QuerySingleOrDefault<TaskDto>(
-                query,
+                _taskSelectByIdProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
                 );
@@ -29,9 +34,8 @@ namespace DevEdu.DAL.Repositories
 
         public List<TaskDto> GetTasks()
         {
-            string query = "dbo.Task_SelectAll";
             List<TaskDto> tasks = _connection.Query<TaskDto>(
-                query,
+                    _taskSelectAlldProcedure,
                 commandType: CommandType.StoredProcedure
                 )
                 .ToList<TaskDto>();
@@ -40,9 +44,8 @@ namespace DevEdu.DAL.Repositories
 
         public int AddTask(TaskDto task)
         {
-            string query = "dbo.Task_Insert";
             int taskId = _connection.QuerySingle<int>(
-                query,
+                _taskAddProcedure,
                 new
                 {
                     task.Name,
@@ -59,9 +62,8 @@ namespace DevEdu.DAL.Repositories
 
         public void UpdateTask(TaskDto task)
         {
-            string query = "dbo.Task_Update";
             _connection.Execute(
-                query,
+                _taskUpdateProcedure,
                 new
                 {
                     task.Id,
@@ -78,9 +80,8 @@ namespace DevEdu.DAL.Repositories
 
         public void DeleteTask(int id)
         {
-            string query = "dbo.Task_Delete";
             _connection.Execute(
-                query,
+                _taskDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
                 );

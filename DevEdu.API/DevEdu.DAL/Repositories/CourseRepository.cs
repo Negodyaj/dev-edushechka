@@ -14,6 +14,8 @@ namespace DevEdu.DAL.Repositories
         private const string _selectByIdProcedure = "dbo.Course_SelectById";
         private const string _selectAllProcedure = "dbo.Course_SelectAll";
         private const string _updateProcedure = "dbo.Course_Update";
+        private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
+        private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
 
         public CourseRepository()
         {
@@ -76,9 +78,8 @@ namespace DevEdu.DAL.Repositories
         
         public void AddTagToTopic(int topicId, int tagId)
         {
-            string query = "dbo.Tag_Topic_Insert";
             _connection.Query(
-                query,
+                _tagToTopicAddProcedure,
                 new 
                 {
                     topicId, 
@@ -90,9 +91,8 @@ namespace DevEdu.DAL.Repositories
 
         public void DeleteTagFromTopic(int topicId, int tagId)
         {
-            string query = "dbo.Tag_Topic_Delete";
             _connection.Query(
-                query,
+                _tagFromTopicDeleteProcedure,
                 new
                 {
                     topicId,
