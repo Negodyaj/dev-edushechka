@@ -15,6 +15,14 @@ namespace DevEdu.DAL.Repositories
         private const string _selectAllProcedure = "dbo.Course_SelectAll";
         private const string _updateProcedure = "dbo.Course_Update";
 
+        private const string _сourseTaskInsertProcedure = "dbo.Course_Task_Insert";
+        private const string _сourseTaskDeleteProcedure = "dbo.Course_Task_Delete";
+
+
+
+
+
+
         public CourseRepository()
         {
         }
@@ -69,6 +77,32 @@ namespace DevEdu.DAL.Repositories
                     courseDto.Id,
                     courseDto.Name,
                     courseDto.Description
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public void AddTaskFromCourse(int courseId, int taskId)
+        {
+            _connection.Execute(
+                _сourseTaskInsertProcedure,
+                new
+                {
+                    taskId,
+                    courseId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public void DeleteTaskFromCourse(int courseId, int taskId)
+        {
+            _connection.Execute(
+                _сourseTaskDeleteProcedure,
+                new
+                {
+                    taskId,
+                    courseId
                 },
                 commandType: CommandType.StoredProcedure
             );
