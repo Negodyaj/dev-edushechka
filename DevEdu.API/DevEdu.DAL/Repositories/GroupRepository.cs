@@ -4,9 +4,14 @@ using DevEdu.DAL.Repositories;
 
 public class GroupRepository : BaseRepository, IGroupRepository
 {
+    public const string _insertGroupLesson = "dbo.Group_Lesson_Insert";
+    public const string _deleteGroupLesson = "dbo.Group_Lesson_Delete";
+    public const string _insertGroupMaterial = "dbo.Group_Material_Insert";
+    public const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
+
     public  void AddGroupLesson(int groupId, int lessonId)
     {
-        _connection.Execute("[dbo].[Group_Lesson_Insert]", new
+       _connection.Execute(_insertGroupLesson, new
             {
                 groupId,
                 lessonId
@@ -16,7 +21,7 @@ public class GroupRepository : BaseRepository, IGroupRepository
 
     public void RemoveGroupLesson(int groupId, int lessonId)
     {
-        _connection.Execute("dbo.Group_Lesson_Delete", new
+        _connection.Execute(_deleteGroupLesson, new
             {
             groupId,
             lessonId
@@ -27,7 +32,7 @@ public class GroupRepository : BaseRepository, IGroupRepository
     public void AddGroupMaterialReference(int materialId, int groupId)
     {
         _connection.Execute(
-            "dbo.Group_Material_Insert",
+            _insertGroupMaterial,
             new
             {
                 materialId,
@@ -40,7 +45,7 @@ public class GroupRepository : BaseRepository, IGroupRepository
     public void RemoveGroupMaterialReference(int materialId, int groupId)
     {
         _connection.Execute(
-            "dbo.Group_Material_Delete",
+            _deleteGroupMaterial,
             new
             {
                 materialId,
