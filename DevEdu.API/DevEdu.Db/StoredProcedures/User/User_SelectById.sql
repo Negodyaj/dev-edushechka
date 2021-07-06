@@ -3,7 +3,9 @@
 AS
 BEGIN
 	SELECT 
-		Name,
+		Id,
+		FisrtName,
+		LastName,
 		Email,
 		Username,
 		Password,
@@ -17,5 +19,5 @@ BEGIN
 		PhoneNumer,
 		ExileDate
 	FROM dbo.[User]
-	WHERE [Id] = @Id
+	WHERE Id = @Id
 END

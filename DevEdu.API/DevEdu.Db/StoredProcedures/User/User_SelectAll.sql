@@ -2,7 +2,8 @@
 AS
 BEGIN
 	SELECT 
-		Name,
+		FisrtName,
+		LastName,
 		Email,
 		Username,
 		Password,

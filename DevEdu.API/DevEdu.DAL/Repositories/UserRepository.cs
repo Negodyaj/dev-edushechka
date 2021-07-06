@@ -22,7 +22,8 @@ namespace DevEdu.DAL.Repositories
                _userAddProcedure,
                 new
                 {
-                    user.Name,
+                    user.FisrtName,
+                    user.LastName,
                     user.Email,
                     user.Username,
                     user.Password,
@@ -40,7 +41,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection.QuerySingleOrDefault<UserDto>(
                 _userSelectByIdProcedure,
-                id,
+                new { id },
             commandType: CommandType.StoredProcedure);
         }
 
@@ -60,7 +61,8 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     user.Id,
-                    user.Name,
+                    user.FisrtName,
+                    user.LastName,
                     user.Username,
                     user.CityId,
                     user.GitHubAccount,
@@ -75,10 +77,7 @@ namespace DevEdu.DAL.Repositories
         {
             _connection.Execute(
                 _userDeleteProcedure,
-                new
-                {
-                    id,
-                },
+                new { id },
             commandType: CommandType.StoredProcedure
             );
         }
