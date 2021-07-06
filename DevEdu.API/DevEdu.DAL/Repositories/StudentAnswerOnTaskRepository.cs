@@ -11,28 +11,36 @@ namespace DevEdu.DAL.Repositories
 {
     public class StudentAnswerOnTaskRepository : BaseRepository, IStudentAnswerOnTaskRepository
     {
+        private const string _taskStudentDelete = "dbo.Task_Student_Delete";
+        private const string _taskStudentInsert = "dbo.Task_Student_Insert";
+        private const string _taskStudentSelectAll = "dbo.Task_Student_SelectAll";
+        private const string _taskStudentSelectByTaskAndStudent = "dbo.Task_Student_SelectByTaskAndStudent";
+        private const string _taskStudentUpdateAnswer = "dbo.Task_Student_UpdateAnswer";
+        private const string _taskStudentUpdateStatusId = "dbo.Task_Student_UpdateStatusId";
+
+
         public StudentAnswerOnTaskRepository()
         {
 
         }
 
-        public void DeleteStudentAnswerOnTaskDto(StudentAnswerOnTaskDto studentResponse)
+        public void DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
             _dbconnection.Execute(
-                "dbo.Task_Student_Delete",
+                _taskStudentDelete,
                 new
                 {
-                    studentResponse.TaskId,
-                    studentResponse.StudentId
+                    taskId,
+                    studentId
                 },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public string AddStudentAnswerOnTaskDto(StudentAnswerOnTaskDto studentResponse)
+        public void AddStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse)
         {
-            return _dbconnection.QuerySingle<string>(
-                "dbo.Task_Student_Insert",
+            _dbconnection.QuerySingle<string>(
+                _taskStudentInsert,
                 new
                 {
                     studentResponse.Answer
@@ -41,19 +49,19 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public List<StudentAnswerOnTaskDto> GetAllStudentAnswerOnTaskDto()
+        public List<StudentAnswerOnTaskDto> GetAllStudentAnswerOnTask()
         {
             return _dbconnection.Query<StudentAnswerOnTaskDto>(
-                "dbo.Task_Student_SelectAll",
+                _taskStudentSelectAll,
                 commandType: CommandType.StoredProcedure
                 )
                 .ToList();
         }
 
-        public List<StudentAnswerOnTaskDto> GetStudentAnswerByTaskIdAndStudentIdOnTaskDto(StudentAnswerOnTaskDto studentResponse)
+        public List<StudentAnswerOnTaskDto> GetStudentAnswerByTaskIdAndStudentIdOnTask(StudentAnswerOnTaskDto studentResponse)
         {
             return _dbconnection.Query<StudentAnswerOnTaskDto>(
-                "dbo.Task_Student_SelectByTaskAndStudent",
+                _taskStudentSelectByTaskAndStudent,
                 new
                 {
                     studentResponse.TaskId,
@@ -64,10 +72,10 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public void UpdateStudentAnswerOnTaskDto(StudentAnswerOnTaskDto studentResponse)
+        public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse)
         {
             _dbconnection.Query<StudentAnswerOnTaskDto>(
-                "dbo.Task_Student_UpdateAnswer",
+                _taskStudentUpdateAnswer,
                 new
                 {
                     studentResponse.TaskId,
@@ -78,18 +86,19 @@ namespace DevEdu.DAL.Repositories
                 );
         }
 
-        public void UpdateStatusAnswerOnTaskDto(StudentAnswerOnTaskDto studentResponse)
+        public void UpdateStatusAnswerOnTask(int taskId, int studentId, int statusId)
         {
             _dbconnection.Query<StudentAnswerOnTaskDto>(
-                "dbo.Task_Student_UpdateStatusId",
+                _taskStudentUpdateStatusId,
                 new
                 {
-                    studentResponse.TaskId,
-                    studentResponse.StudentId,
-                    studentResponse.StatusId
+                    taskId,
+                    studentId,
+                    statusId
                 },
                 commandType: CommandType.StoredProcedure
                 );
         }
+
     }
 }

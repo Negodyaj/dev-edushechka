@@ -80,52 +80,43 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpPost("{taskId}/student/{studentId}")]
-        public string AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel studentResponse)
+        public void AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
-            var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(studentResponse);
+            var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
             taskAnswerDto.TaskId = taskId;
             taskAnswerDto.StudentId = studentId;
 
-            return _studentAnswerOnTaskRepository.AddStudentAnswerOnTaskDto(taskAnswerDto);
+            _studentAnswerOnTaskRepository.AddStudentAnswerOnTask(taskAnswerDto);
 
         }
 
         // api/task/{taskId}/student/{studentId}
         [HttpPut("{taskId}/student/{studentId}")]
-        public int UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel studentResponse)
+        public int UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
-            var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(studentResponse);
+            var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
             taskAnswerDto.TaskId = taskId;
             taskAnswerDto.StudentId = studentId;
 
-            _studentAnswerOnTaskRepository.UpdateStudentAnswerOnTaskDto(taskAnswerDto);
+            _studentAnswerOnTaskRepository.UpdateStudentAnswerOnTask(taskAnswerDto);
 
             return taskId;
         }
 
         // api/task/{taskId}/student/{studentId}
         [HttpDelete("{taskId}/student/{studentId}")]
-        public string DeleteStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskDto studentResponse)
+        public string DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
-            var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(studentResponse);
-            taskAnswerDto.TaskId = taskId;
-            taskAnswerDto.StudentId = studentId;
-
-            _studentAnswerOnTaskRepository.DeleteStudentAnswerOnTaskDto(studentResponse);
+            _studentAnswerOnTaskRepository.DeleteStudentAnswerOnTask(taskId, studentId);
 
             return $"Deleted answer for task {taskId} id.";
         }
 
         // api/task/{taskId}/student/{studentId}/change-status/{statusId}
         [HttpPut("{taskId}/student/{studentId}/change-status/{statusId}")]
-        public int UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId, [FromBody] StudentAnswerOnTaskDto studentResponse)
+        public int UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
-            var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(studentResponse);
-            taskAnswerDto.TaskId = taskId;
-            taskAnswerDto.StudentId = studentId;
-            taskAnswerDto.StatusId = statusId;
-
-            _studentAnswerOnTaskRepository.UpdateStatusAnswerOnTaskDto(studentResponse);
+            _studentAnswerOnTaskRepository.UpdateStatusAnswerOnTask(taskId, studentId, statusId);
 
             return statusId;
         }
@@ -134,6 +125,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{taskId}/student/{studentId}/comment")]
         public int AddCommentOnStudentAnswer(int taskId, int studentId, [FromBody] CommentAddtInputModel inputModel)
         {
+
             return taskId;
         }
     }

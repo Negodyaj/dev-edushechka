@@ -5,11 +5,12 @@ namespace DevEdu.DAL.Repositories
 {
     public interface IStudentAnswerOnTaskRepository
     {
-        string AddStudentAnswerOnTaskDto(StudentAnswerOnTaskDto studentResponse);
-        void DeleteStudentAnswerOnTaskDto(StudentAnswerOnTaskDto studentResponse);
-        List<StudentAnswerOnTaskDto> GetAllStudentAnswerOnTaskDto();
-        List<StudentAnswerOnTaskDto> GetStudentAnswerByTaskIdAndStudentIdOnTaskDto(StudentAnswerOnTaskDto studentResponse);
-        void UpdateStatusAnswerOnTaskDto(StudentAnswerOnTaskDto studentResponse);
-        void UpdateStudentAnswerOnTaskDto(StudentAnswerOnTaskDto studentResponse);
+        void AddStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse);
+        void DeleteStudentAnswerOnTask(int taskId, int studentId);
+        List<StudentAnswerOnTaskDto> GetAllStudentAnswerOnTask();
+        List<StudentAnswerOnTaskDto> GetStudentAnswerByTaskIdAndStudentIdOnTask(StudentAnswerOnTaskDto studentResponse);
+        void UpdateStatusAnswerOnTask(int taskId, int studentId, int statusId);
+        void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse);
+
     }
 }
