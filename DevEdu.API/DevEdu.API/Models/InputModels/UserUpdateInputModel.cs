@@ -17,6 +17,6 @@ namespace DevEdu.API.Models.InputModels
         [Required]
         public string Photo { get; set; }
         [Required]
-        public string PhoneNumer { get; set; }
+        public string PhoneNumber { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DevEdu.DAL.Models;
 
-namespace DevEdu.Business.Servicies
+namespace DevEdu.Business.Services
 {
     public interface ICommentService
     {

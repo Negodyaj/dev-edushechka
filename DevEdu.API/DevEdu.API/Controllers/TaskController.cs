@@ -4,7 +4,6 @@ using DevEdu.API.Models.InputModels;
 using System.Collections.Generic;
 using DevEdu.DAL.Repositories;
 using DevEdu.DAL.Models;
-using AutoMapper;
 
 namespace DevEdu.API.Controllers
 {

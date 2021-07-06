@@ -40,14 +40,14 @@ namespace DevEdu.API.Controllers
             return $"lessonId {lessonId} commentId {commentId}";
         }
 
-        // api/lesson/{lessonId}/topic/{toppicId}
+        // api/lesson/{lessonId}/topic/{topicId}
         [HttpDelete("{lessonId}/topic/{topicId}")]
         public string DeleteTopicFromLesson(int lessonId, int topicId)
         {
             return $"lessonId {lessonId} topicId {topicId}";
         }
 
-        // api/lesson/{lessonId}/topic/{toppicId}
+        // api/lesson/{lessonId}/topic/{topicId}
         [HttpPost("{lessonId}/topic/{topicId}")]
         public string AddTopicToLesson(int lessonId, int topicId)
         {
@@ -56,7 +56,7 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/user/{userId}
         [HttpPost("{lessonId}/user/{userId}")]
-        public string AddStudenToLesson(int userId, int lessonId)
+        public string AddStudentToLesson(int userId, int lessonId)
         {
             return $"userId {userId} lessonId {lessonId} ";
         }

@@ -2,7 +2,7 @@
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 
-namespace DevEdu.Business.Servicies
+namespace DevEdu.Business.Services
 {
     public class CommentService : ICommentService
     {
