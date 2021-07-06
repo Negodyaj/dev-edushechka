@@ -60,15 +60,17 @@ namespace DevEdu.API.Controllers
 
         //  api/course/topic/{topicId}/tag/{tagId}
         [HttpPost("topic/{topicId}/tag/{tagId}")]
-        public int AddTagToTopic(int topicId, int tagId)
+        public string AddTagToTopic(int topicId, int tagId)
         {
-            return topicId;
+            _courseRepository.AddTagToTopic(topicId, tagId);
+            return $"add to topic with {topicId} Id tag with {tagId} Id";
         }
 
         //  api/course/topic/{topicId}/tag/{tagId}
         [HttpDelete("topic/{topicId}/tag/{tagId}")]
         public string DeleteTagAtTopic(int topicId, int tagId)
         {
+            _courseRepository.DeleteTagFromTopic(topicId, tagId);
             return $"deleted at topic with {topicId} Id tag with {tagId} Id";
         }
 
