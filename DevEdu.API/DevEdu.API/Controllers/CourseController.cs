@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using DevEdu.API.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
+using DevEdu.DAL.Repositories;
+using AutoMapper;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
 {
@@ -11,8 +14,15 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class CourseController : Controller
     {
-        public CourseController()
+        CourseRepository _courseRepository;
+        TopicRepository _topicRepository;
+
+        private readonly IMapper _mapper;
+        public CourseController(IMapper mapper)
         {
+            _mapper = mapper;
+            _courseRepository = new CourseRepository();
+            _topicRepository = new TopicRepository();
         }
 
         //  api/Course/5
@@ -90,6 +100,25 @@ namespace DevEdu.API.Controllers
         public string RemoveTaskFromCourse(int courseId, int taskId)
         {
             return $"Course {courseId} remove  Task Id:{taskId}";
+        }
+        // api/course/{courseId}/topic/{topicId}
+        [HttpPost("{courseId}/topic/{topicId}")]
+        public string AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
+        {
+            var dto = _mapper.Map<CourseTopicDto>(inputModel);
+            dto.Course = new CourseDto { Id = courseId };
+            dto.Topic = new TopicDto { Id = topicId };
+
+            _topicRepository.AddTopicToCourse(dto);
+            return $"Topic Id:{topicId} added in course Id:{courseId} on {inputModel.Position} position";
+
+        }
+        // api/course/{courseId}/topic/{topicId}
+        [HttpDelete("{courseId}/topic/{topicId}")]
+        public string DeleteTopicFromCourse(int courseId, int topicId)
+        {
+            _topicRepository.DeleteTopicFromCourse(courseId, topicId);
+            return $"Topic Id:{topicId} deleted from course Id:{courseId}";
         }
     }
 }
