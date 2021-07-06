@@ -53,7 +53,8 @@ namespace DevEdu.API.Controllers
         public string UpdateNotification(int id, [FromBody] NotificationUpdateInputModel model)
         {
             var dto = _mapper.Map<NotificationDto>(model);
-            _notificationRepository.UpdateNotification(id, dto);
+            dto.Id = id;
+            _notificationRepository.UpdateNotification(dto);
             return $"Text notification №{id} change to {model.Text}";
         }
     }
