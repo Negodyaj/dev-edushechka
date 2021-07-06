@@ -7,10 +7,11 @@ namespace DevEdu.DAL.Repositories
     {
         int AddMaterial(MaterialDto material);
         void AddTagToMaterial(int materialId, int tagId);
-        void DeleteMaterial(int id);
-        void DeleteTagFromMaterial(int materialId, int tagId);
+        int DeleteMaterial(int id, bool isDeleted);
+        int DeleteTagFromMaterial(int materialId, int tagId);
         List<MaterialDto> GetAllMaterials();
         MaterialDto GetMaterialById(int id);
-        void UpdateMaterial(MaterialDto material);
+        int UpdateMaterial(MaterialDto material);
+        List<MaterialDto> GetMaterialsByTagId(int tagId);
     }
 }

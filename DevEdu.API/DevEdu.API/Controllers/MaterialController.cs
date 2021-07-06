@@ -51,11 +51,11 @@ namespace DevEdu.API.Controllers
             _repository.UpdateMaterial(dto);
         }
 
-        // api/material/5
-        [HttpDelete("{id}")]
-        public void DeleteMaterial(int id)
+        // api/material/5/isDeleted/True
+        [HttpDelete("{id}/isDeleted/{isDeleted}")]
+        public void DeleteMaterial(int id, bool isDeleted)
         {
-            _repository.DeleteMaterial(id);
+            _repository.DeleteMaterial(id, isDeleted);
         }
 
         // api/material/{materialId}/tag/{tagId}
@@ -70,6 +70,13 @@ namespace DevEdu.API.Controllers
         public void DeleteTagFromMaterial(int materialId, int tagId)
         {
             _repository.DeleteTagFromMaterial(materialId, tagId);
+        }
+
+        // api/material/by-tag/1
+        [HttpGet("by-tag/{tagId}")]
+        public List<MaterialDto> GetMaterialsByTagId(int tagId)
+        {
+            return _repository.GetMaterialsByTagId(tagId);
         }
 
     }

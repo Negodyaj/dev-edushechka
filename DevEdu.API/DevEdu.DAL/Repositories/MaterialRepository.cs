@@ -8,6 +8,15 @@ namespace DevEdu.DAL.Repositories
 {
     public class MaterialRepository : BaseRepository, IMaterialRepository
     {
+        private const string _addMaterial = "dbo.Material_Insert";
+        private const string _getAllMaterials = "dbo.Material_SelectAll";
+        private const string _getMaterialById = "dbo.Material_SelectById";
+        private const string _updateMaterial = "dbo.Material_Update";
+        private const string _deleteMaterial = "dbo.Material_Delete";
+        private const string _addTagToMaterial = "dbo.Material_Tag_Insert";
+        private const string _deleteTagFromMaterial = "dbo.Material_Tag_Delete";
+        private const string _getMaterialsByTagId = "dbo.Material_SelectAllByTagId";
+
         public MaterialRepository()
         {
 
@@ -15,9 +24,8 @@ namespace DevEdu.DAL.Repositories
 
         public int AddMaterial(MaterialDto material)
         {
-            _query = "dbo.Material_Insert";
             return _connection.QuerySingle<int>(
-                _query,
+                _addMaterial,
                 new { material.Content },
                 commandType: CommandType.StoredProcedure
             );
@@ -25,10 +33,9 @@ namespace DevEdu.DAL.Repositories
 
         public List<MaterialDto> GetAllMaterials()
         {
-            _query = "dbo.Material_SelectAll";
             return _connection
                 .Query<MaterialDto>(
-                    _query,
+                    _getAllMaterials,
                     commandType: CommandType.StoredProcedure
                 ).
                 ToList();
@@ -36,19 +43,17 @@ namespace DevEdu.DAL.Repositories
 
         public MaterialDto GetMaterialById(int id)
         {
-            _query = "dbo.Material_SelectById";
             return _connection.QuerySingleOrDefault<MaterialDto>(
-                _query,
+                _getMaterialById,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public void UpdateMaterial(MaterialDto material)
+        public int UpdateMaterial(MaterialDto material)
         {
-            _query = "dbo.Material_Update";
-            _connection.Execute(
-                _query,
+            return _connection.Execute(
+                _updateMaterial,
                 new
                 {
                     material.Id,
@@ -58,21 +63,23 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteMaterial(int id)
+        public int DeleteMaterial(int id, bool isDeleted)
         {
-            _query = "dbo.Material_Delete";
-            _connection.Execute(
-                _query,
-                new { id },
+            return _connection.Execute(
+                _deleteMaterial,
+                new 
+                { 
+                    id,
+                    isDeleted
+                },
                 commandType: CommandType.StoredProcedure
             );
         }
 
         public void AddTagToMaterial(int materialId, int tagId)
         {
-            _query = "dbo.Tag_Material_Insert";
             _connection.Execute(
-                _query,
+                _addTagToMaterial,
                 new
                 {
                     materialId,
@@ -82,11 +89,10 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteTagFromMaterial(int materialId, int tagId)
+        public int DeleteTagFromMaterial(int materialId, int tagId)
         {
-            _query = "dbo.Tag_Material_Delete";
-            _connection.Execute(
-                _query,
+            return _connection.Execute(
+                _deleteTagFromMaterial,
                 new
                 {
                     materialId,
@@ -94,6 +100,17 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             );
+        }
+
+        public List<MaterialDto> GetMaterialsByTagId(int tagId)
+        {
+            return _connection
+                .Query<MaterialDto>(
+                    _getMaterialsByTagId,
+                    new { tagId },
+                    commandType: CommandType.StoredProcedure
+                ).
+                ToList();
         }
     }
 }
