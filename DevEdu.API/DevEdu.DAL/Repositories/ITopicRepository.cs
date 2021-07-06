@@ -7,7 +7,7 @@ namespace DevEdu.DAL.Repositories
     {
         int AddTopic(TopicDto topicDto);
         void DeleteTopic(int id);
-        List<TopicDto> GetAllTopic();
+        List<TopicDto> GetAllTopics();
         TopicDto GetTopic(int id);
         void UpdateTopic(int id, TopicDto topicDto);
     }

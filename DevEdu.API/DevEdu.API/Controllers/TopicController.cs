@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Repositories;
 using AutoMapper;
@@ -23,20 +20,20 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
         }
 
-        //  api/Course/5
+        //  api/topic/{id}
         [HttpGet("{id}")]
         public TopicDto GetTopicById(int id)
         {
             return _topicRepository.GetTopic(id);
         }
 
-        [HttpGet("all")]
-        public List<TopicDto> GetAllTopic()
+        [HttpGet]
+        public List<TopicDto> GetAllTopics()
         {
-            return _topicRepository.GetAllTopic();
+            return _topicRepository.GetAllTopics();
         }
 
-        //  api/course
+        //  api/topic
         [HttpPost]
         public int AddTopic([FromBody] TopicInputModel model)
         {
@@ -44,22 +41,19 @@ namespace DevEdu.API.Controllers
             return _topicRepository.AddTopic(dto);
         }
 
-        //  api/course
-        [HttpDelete]
+        //  api/topic/{id}
+        [HttpDelete("{id}")]
         public void DeleteTopic(int id)
         {
             _topicRepository.DeleteTopic(id);
         }
 
-        //  api/course
-        [HttpPut]
+        //  api/topic/{id}
+        [HttpPut("{id}")]
         public void UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
             var dto = _mapper.Map<TopicDto>(model);
             _topicRepository.UpdateTopic(id, dto);
-        }
-
-        
-
+        }      
     }
 }
