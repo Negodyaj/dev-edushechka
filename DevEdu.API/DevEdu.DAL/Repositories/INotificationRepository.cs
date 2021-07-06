@@ -14,6 +14,6 @@ namespace DevEdu.DAL.Repositories
 
         public List<NotificationDto> GetNotificationsByUser(int userId);
 
-        public void UpdateNotification(int id, NotificationDto notificationDto);
+        public void UpdateNotification(NotificationDto notificationDto);
     }
 }

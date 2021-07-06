@@ -49,13 +49,13 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public void UpdateNotification(int id, NotificationDto notificationDto)
+        public void UpdateNotification( NotificationDto notificationDto)
         {
             _connection.Execute(
                 "dbo.Notification_Update",
                 new
                 {
-                    id,
+                    notificationDto.Id,
                     notificationDto.Text
                 },
                 commandType: CommandType.StoredProcedure
