@@ -95,7 +95,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
         public void AddUserToGroup(int groupId, int userId, int roleId)
         {
-            _groupRepository.AddUser_Group(groupId, userId, roleId);
+            _groupRepository.AddUserToGroup(groupId, userId, roleId);
         }
 
         //  api/group/1/user/2
