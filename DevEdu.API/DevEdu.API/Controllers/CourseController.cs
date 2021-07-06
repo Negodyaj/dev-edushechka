@@ -15,8 +15,8 @@ namespace DevEdu.API.Controllers
         private readonly ICourseRepository _courseRepository;
         public CourseController(IMapper mapper, ICourseRepository courseRepository)
         {
-            _courseRepository = courseRepository;
             _mapper = mapper;
+            _courseRepository = courseRepository;
         }
 
         //  api/Course/5

@@ -47,7 +47,7 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public List<CommentDto> GetCommentsByUser(int userId)
+        public List<CommentDto> GetCommentsByUserId(int userId)
         {
             return _connection
                 .Query<CommentDto>(

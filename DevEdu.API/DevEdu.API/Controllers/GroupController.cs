@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using DevEdu.API.Models.InputModels;
+using DevEdu.Business.Servicies;
 using DevEdu.DAL.Repositories;
 
 namespace DevEdu.API.Controllers
@@ -10,11 +11,11 @@ namespace DevEdu.API.Controllers
     public class GroupController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IGroupRepository _groupRepository;
-        public GroupController(IMapper mapper, IGroupRepository groupRepository)
+        private readonly IGroupService _groupService;
+        public GroupController(IMapper mapper, IGroupService groupService)
         {
-            _groupRepository = groupRepository;
             _mapper = mapper;
+            _groupService = groupService;
         }
 
         //  api/Group/5
@@ -79,7 +80,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/material/{materialId}")]
         public string AddGroupMaterialReference(int materialId, int groupId)
         {
-            _groupRepository.AddGroupMaterialReference(materialId, groupId);
+            _groupService.AddGroupMaterialReference(materialId,groupId);
             return $"Material №{materialId} add to group {groupId}";
         }
 
@@ -87,7 +88,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{groupId}/material/{materialId}")]
         public string RemoveGroupMaterialReference(int materialId, int groupId)
         {
-            _groupRepository.RemoveGroupMaterialReference(materialId, groupId);
+            _groupService.RemoveGroupMaterialReference(materialId,groupId);
             return $"Material №{materialId} remove from group {groupId}";
         }
     }
