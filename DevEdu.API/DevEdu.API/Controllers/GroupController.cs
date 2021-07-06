@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Repositories;
 
 namespace DevEdu.API.Controllers
 {
@@ -7,10 +9,12 @@ namespace DevEdu.API.Controllers
     [ApiController]
     public class GroupController : Controller
     {
-        private GroupRepository _groupRepository;
-        public GroupController()
+        private readonly IMapper _mapper;
+        private readonly IGroupRepository _groupRepository;
+        public GroupController(IMapper mapper, IGroupRepository groupRepository)
         {
-            _groupRepository = new GroupRepository();
+            _groupRepository = groupRepository;
+            _mapper = mapper;
         }
 
         //  api/Group/5
@@ -71,5 +75,20 @@ namespace DevEdu.API.Controllers
             _groupRepository.RemoveGroupLesson(groupId, lessonId);
         }
 
+        // api/Group/{groupId}/material/{materialId}
+        [HttpPost("{groupId}/material/{materialId}")]
+        public string AddGroupMaterialReference(int materialId, int groupId)
+        {
+            _groupRepository.AddGroupMaterialReference(materialId, groupId);
+            return $"Material №{materialId} add to group {groupId}";
+        }
+
+        // api/Group/{groupId}/material/{materialId}
+        [HttpDelete("{groupId}/material/{materialId}")]
+        public string RemoveGroupMaterialReference(int materialId, int groupId)
+        {
+            _groupRepository.RemoveGroupMaterialReference(materialId, groupId);
+            return $"Material №{materialId} remove from group {groupId}";
+        }
     }
 }

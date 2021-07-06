@@ -8,7 +8,8 @@ namespace DevEdu.API.Configuration
     {
         public MapperProfile()
         {
-            CreateMap<CourseInputModel, CourseDto>();
+            CreateMap<CourseInputModel, CourseDto>().ReverseMap();
+            CreateMap<GroupInputModel, GroupDto>().ReverseMap();
         }
     }
 }

@@ -4,5 +4,7 @@
     {
         void AddGroupLesson(int groupId, int lessonId);
         void RemoveGroupLesson(int groupId, int lessonId);
+        public void AddGroupMaterialReference(int materialId, int groupId);
+        public void RemoveGroupMaterialReference(int materialId, int groupId);
     }
 }
