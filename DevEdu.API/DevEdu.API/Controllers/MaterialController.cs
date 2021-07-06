@@ -1,4 +1,5 @@
 ﻿using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,11 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class MaterialController : Controller
     {
-        public MaterialController() { }
+        TagRepository _tagRepository;
+        public MaterialController()
+        {
+            _tagRepository = new TagRepository();
+        }
 
         // api/material
         [HttpPost]
@@ -52,6 +57,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{materialId}/tag/{tagId}")]
         public int AddTagToMaterial(int materialId, int tagId)
         {
+            _tagRepository.InsertTagToTagMaterial(materialId, tagId);
             return 1;
         }
 
@@ -59,6 +65,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{materialId}/tag/{tagId}")]
         public string DeleteTagFromMaterial(int materialId, int tagId)
         {
+            _tagRepository.DeleteTagFromTagMaterial(materialId, tagId);
             return $"deleted tag material with {materialId} materialId";
         }
 
