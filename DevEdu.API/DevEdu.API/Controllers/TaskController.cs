@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Controllers
 {
@@ -7,46 +11,54 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class TaskController : Controller
     {
-        public TaskController()
+        private readonly IMapper _mapper;
+        private readonly ITaskRepository _taskRepository;
+        
+        public TaskController(IMapper mapper, ITaskRepository taskRepository)
         {
-
+            _taskRepository = taskRepository;
+            _mapper = mapper;
         }
 
         //  api/Task/1
-        [HttpGet("{id}")]
-        public string GetTask(int taskId)
+        [HttpGet("{taskId}")]
+        public TaskDto GetTask(int taskId)
         {
-            return $"Get task №{taskId}";
+            var task = _taskRepository.GetTaskById(taskId);
+            return task;
         }
 
         //  api/Task
         [HttpGet]
-        public string GetAllTasks()
+        public List<TaskDto> GetAllTasks()
         {
-            return "All Tasks";
+            var taskDtos = _taskRepository.GetTasks();
+            return taskDtos;
         }
 
         // api/task
         [HttpPost]
         public int AddTask([FromBody] TaskInputModel model)
         {
+            var taskDto = _mapper.Map<TaskDto>(model);
+            return _taskRepository.AddTask(taskDto);
+        }
 
-            return 1;
+
+        // api/task/{taskId}
+        [HttpPut("{taskId}")]
+        public void UpdateTask(int taskId, [FromBody] TaskInputModel model)
+        {
+            TaskDto taskDto = _mapper.Map<TaskDto>(model);
+            taskDto.Id = taskId;
+            _taskRepository.UpdateTask(taskDto);
         }
 
         // api/task/{taskId}
         [HttpDelete("{taskId}")]
-        public string DeleteTask(int taskId)
+        public void DeleteTask(int taskId)
         {
-            return $"deleted task with {taskId} Id";
-        }
-
-        // api/task/{taskId}
-        [HttpPut("{taskId}")]
-        public string UpdateTask(int taskId, [FromBody] TaskInputModel model)
-        {
-
-            return $"update task with {taskId} Id";
+            _taskRepository.DeleteTask(taskId);
         }
 
         // api/task/{taskId}/tag/{tagId}

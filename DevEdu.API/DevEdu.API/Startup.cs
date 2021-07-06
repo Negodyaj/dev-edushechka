@@ -23,6 +23,7 @@ namespace DevEdu.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
