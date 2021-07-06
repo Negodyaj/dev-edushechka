@@ -2,9 +2,8 @@
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class MaterialInputModel
+    public class CommentAddInputModel
     {
-        [Required]
-        public string Content { get; set; }
+
     }
 }

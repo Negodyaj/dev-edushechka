@@ -9,5 +9,6 @@ namespace DevEdu.DAL.Models
         public List<CourseTopicDto> CourseTopics { get; set; }
         public List<MaterialDto> Materials { get; set; }
         public List<GroupDto> Groups { get; set; }
+        public List<TaskDto> Tasks { get; set; }
     }
 }

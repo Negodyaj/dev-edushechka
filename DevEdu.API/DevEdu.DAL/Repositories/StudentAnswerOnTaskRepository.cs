@@ -26,7 +26,7 @@ namespace DevEdu.DAL.Repositories
 
         public void DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
-            _dbconnection.Execute(
+            _connection.Execute(
                 _taskStudentDelete,
                 new
                 {
@@ -39,7 +39,7 @@ namespace DevEdu.DAL.Repositories
 
         public void AddStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse)
         {
-            _dbconnection.QuerySingle<string>(
+            _connection.QuerySingle<string>(
                 _taskStudentInsert,
                 new
                 {
@@ -51,7 +51,7 @@ namespace DevEdu.DAL.Repositories
 
         public List<StudentAnswerOnTaskDto> GetAllStudentAnswerOnTask()
         {
-            return _dbconnection.Query<StudentAnswerOnTaskDto>(
+            return _connection.Query<StudentAnswerOnTaskDto>(
                 _taskStudentSelectAll,
                 commandType: CommandType.StoredProcedure
                 )
@@ -60,7 +60,7 @@ namespace DevEdu.DAL.Repositories
 
         public List<StudentAnswerOnTaskDto> GetStudentAnswerByTaskIdAndStudentIdOnTask(StudentAnswerOnTaskDto studentResponse)
         {
-            return _dbconnection.Query<StudentAnswerOnTaskDto>(
+            return _connection.Query<StudentAnswerOnTaskDto>(
                 _taskStudentSelectByTaskAndStudent,
                 new
                 {
@@ -74,7 +74,7 @@ namespace DevEdu.DAL.Repositories
 
         public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse)
         {
-            _dbconnection.Query<StudentAnswerOnTaskDto>(
+            _connection.Query<StudentAnswerOnTaskDto>(
                 _taskStudentUpdateAnswer,
                 new
                 {
@@ -88,7 +88,7 @@ namespace DevEdu.DAL.Repositories
 
         public void UpdateStatusAnswerOnTask(int taskId, int studentId, int statusId)
         {
-            _dbconnection.Query<StudentAnswerOnTaskDto>(
+            _connection.Query<StudentAnswerOnTaskDto>(
                 _taskStudentUpdateStatusId,
                 new
                 {

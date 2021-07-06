@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DevEdu.API.Configuration
 {
-    public class MapperProfile: Profile
+    public class MapperProfile : Profile
     {
         public MapperProfile()
         {
@@ -17,7 +13,12 @@ namespace DevEdu.API.Configuration
         }
 
         private void CreateMappingToDto()
-        {
+        { 
+            CreateMap<CourseInputModel, CourseDto>();
+            CreateMap<CommentAddInputModel, CommentDto>();
+            CreateMap<CommentUpdateInputModel, CommentDto>();
+            CreateMap<CourseInputModel, CourseDto>().ReverseMap();
+            CreateMap<GroupInputModel, GroupDto>().ReverseMap();
             CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
         }
 

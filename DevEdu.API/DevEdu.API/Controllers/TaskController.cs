@@ -1,9 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using DevEdu.API.Models.InputModels;
 using System.Collections.Generic;
 using DevEdu.DAL.Repositories;
@@ -123,7 +118,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}/comment}
         [HttpPost("{taskId}/student/{studentId}/comment")]
-        public int AddCommentOnStudentAnswer(int taskId, int studentId, [FromBody] CommentAddtInputModel inputModel)
+        public int AddCommentOnStudentAnswer(int taskId, int studentId, [FromBody] CommentAddInputModel inputModel)
         {
 
             return taskId;
