@@ -29,6 +29,8 @@ namespace DevEdu.API
             services.AddScoped<IGroupRepository, GroupRepository>();
 
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ICourseService, CourseService>(); 
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

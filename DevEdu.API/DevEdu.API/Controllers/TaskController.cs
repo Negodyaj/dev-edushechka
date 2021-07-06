@@ -4,6 +4,7 @@ using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.Business.Servicies;
 
 namespace DevEdu.API.Controllers
 {
@@ -12,11 +13,11 @@ namespace DevEdu.API.Controllers
     public class TaskController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ITaskRepository _taskRepository;
+        private readonly ITaskService _taskService;
         
-        public TaskController(IMapper mapper, ITaskRepository taskRepository)
+        public TaskController(IMapper mapper, ITaskService taskService)
         {
-            _taskRepository = taskRepository;
+            _taskService = taskService;
             _mapper = mapper;
         }
 
@@ -24,15 +25,15 @@ namespace DevEdu.API.Controllers
         [HttpGet("{taskId}")]
         public TaskDto GetTask(int taskId)
         {
-            var task = _taskRepository.GetTaskById(taskId);
-            return task;
+            var taskDto = _taskService.GetTaskById(taskId);
+            return taskDto;
         }
 
         //  api/Task
         [HttpGet]
         public List<TaskDto> GetAllTasks()
         {
-            var taskDtos = _taskRepository.GetTasks();
+            var taskDtos = _taskService.GetTasks();
             return taskDtos;
         }
 
@@ -41,7 +42,7 @@ namespace DevEdu.API.Controllers
         public int AddTask([FromBody] TaskInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
-            return _taskRepository.AddTask(taskDto);
+            return _taskService.AddTask(taskDto);
         }
 
 
@@ -50,15 +51,14 @@ namespace DevEdu.API.Controllers
         public void UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
-            taskDto.Id = taskId;
-            _taskRepository.UpdateTask(taskDto);
+            _taskService.UpdateTask(taskId, taskDto);
         }
 
         // api/task/{taskId}
         [HttpDelete("{taskId}")]
         public void DeleteTask(int taskId)
         {
-            _taskRepository.DeleteTask(taskId);
+            _taskService.DeleteTask(taskId);
         }
 
         // api/task/{taskId}/tag/{tagId}

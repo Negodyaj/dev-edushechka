@@ -42,37 +42,37 @@ namespace DevEdu.DAL.Repositories
             return tasks;
         }
 
-        public int AddTask(TaskDto task)
+        public int AddTask(TaskDto taskDto)
         {
             int taskId = _connection.QuerySingle<int>(
                 _taskAddProcedure,
                 new
                 {
-                    task.Name,
-                    task.StartDate,
-                    task.EndDate,
-                    task.Description,
-                    task.Links,
-                    task.IsRequired
+                    taskDto.Name,
+                    taskDto.StartDate,
+                    taskDto.EndDate,
+                    taskDto.Description,
+                    taskDto.Links,
+                    taskDto.IsRequired
                 },
                 commandType: CommandType.StoredProcedure
                 );
             return taskId;
         }
 
-        public void UpdateTask(TaskDto task)
+        public void UpdateTask(TaskDto taskDto)
         {
             _connection.Execute(
                 _taskUpdateProcedure,
                 new
                 {
-                    task.Id,
-                    task.Name,
-                    task.StartDate,
-                    task.EndDate,
-                    task.Description,
-                    task.Links,
-                    task.IsRequired
+                    taskDto.Id,
+                    taskDto.Name,
+                    taskDto.StartDate,
+                    taskDto.EndDate,
+                    taskDto.Description,
+                    taskDto.Links,
+                    taskDto.IsRequired
                 },
                 commandType: CommandType.StoredProcedure
             );
