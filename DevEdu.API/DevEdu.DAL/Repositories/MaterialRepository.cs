@@ -8,14 +8,14 @@ namespace DevEdu.DAL.Repositories
 {
     public class MaterialRepository : BaseRepository, IMaterialRepository
     {
-        private const string _addMaterial = "dbo.Material_Insert";
-        private const string _getAllMaterials = "dbo.Material_SelectAll";
-        private const string _getMaterialById = "dbo.Material_SelectById";
-        private const string _updateMaterial = "dbo.Material_Update";
-        private const string _deleteMaterial = "dbo.Material_Delete";
-        private const string _addTagToMaterial = "dbo.Material_Tag_Insert";
-        private const string _deleteTagFromMaterial = "dbo.Material_Tag_Delete";
-        private const string _getMaterialsByTagId = "dbo.Material_SelectAllByTagId";
+        private const string _materialAddProcedure = "dbo.Material_Insert";
+        private const string _materialSelectAllProcedure = "dbo.Material_SelectAll";
+        private const string _materialSelectByIdProcedure = "dbo.Material_SelectById";
+        private const string _materialUpdateProcedure = "dbo.Material_Update";
+        private const string _materialDeleteProcedure = "dbo.Material_Delete";
+        private const string _addTagToMaterialProcedure = "dbo.Material_Tag_Insert";
+        private const string _deleteTagFromMaterialProcedure = "dbo.Material_Tag_Delete";
+        private const string _materialSelectAllByTagIdProcedure = "dbo.Material_SelectAllByTagId";
 
         public MaterialRepository()
         {
@@ -25,7 +25,7 @@ namespace DevEdu.DAL.Repositories
         public int AddMaterial(MaterialDto material)
         {
             return _connection.QuerySingle<int>(
-                _addMaterial,
+                _materialAddProcedure,
                 new { material.Content },
                 commandType: CommandType.StoredProcedure
             );
@@ -35,7 +35,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<MaterialDto>(
-                    _getAllMaterials,
+                    _materialSelectAllProcedure,
                     commandType: CommandType.StoredProcedure
                 ).
                 ToList();
@@ -44,7 +44,7 @@ namespace DevEdu.DAL.Repositories
         public MaterialDto GetMaterialById(int id)
         {
             return _connection.QuerySingleOrDefault<MaterialDto>(
-                _getMaterialById,
+                _materialSelectByIdProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -53,7 +53,7 @@ namespace DevEdu.DAL.Repositories
         public int UpdateMaterial(MaterialDto material)
         {
             return _connection.Execute(
-                _updateMaterial,
+                _materialUpdateProcedure,
                 new
                 {
                     material.Id,
@@ -66,7 +66,7 @@ namespace DevEdu.DAL.Repositories
         public int DeleteMaterial(int id, bool isDeleted)
         {
             return _connection.Execute(
-                _deleteMaterial,
+                _materialDeleteProcedure,
                 new 
                 { 
                     id,
@@ -79,7 +79,7 @@ namespace DevEdu.DAL.Repositories
         public void AddTagToMaterial(int materialId, int tagId)
         {
             _connection.Execute(
-                _addTagToMaterial,
+                _addTagToMaterialProcedure,
                 new
                 {
                     materialId,
@@ -92,7 +92,7 @@ namespace DevEdu.DAL.Repositories
         public int DeleteTagFromMaterial(int materialId, int tagId)
         {
             return _connection.Execute(
-                _deleteTagFromMaterial,
+                _deleteTagFromMaterialProcedure,
                 new
                 {
                     materialId,
@@ -106,7 +106,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<MaterialDto>(
-                    _getMaterialsByTagId,
+                    _materialSelectAllByTagIdProcedure,
                     new { tagId },
                     commandType: CommandType.StoredProcedure
                 ).
