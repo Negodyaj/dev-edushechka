@@ -9,24 +9,28 @@ namespace DevEdu.DAL.Repositories
         private const string _userGroupDeleteProcedure = "[dbo].[Tag_Delete]";
         public int AddUserToGroup(int groupId, int userId, int roleId)
         {
-            return _connection.Execute(_userGroupInsertProcedure,
-                new 
-                { 
-                    groupId, 
-                    userId, 
-                    roleId 
-                }, 
-                commandType: CommandType.StoredProcedure);
+            return _connection.Execute(
+                        _userGroupInsertProcedure,
+                        new 
+                        { 
+                            groupId, 
+                            userId, 
+                            roleId 
+                        }, 
+                        commandType: CommandType.StoredProcedure
+                   );
         }
         public int DeleteUserFromGroup(int userId, int groupId)
         {
-            return _connection.Execute(_userGroupDeleteProcedure, 
-                new 
-                { 
-                    userId, 
-                    groupId 
-                }, 
-                commandType: CommandType.StoredProcedure);
+            return _connection.Execute(
+                        _userGroupDeleteProcedure, 
+                        new 
+                        { 
+                            userId, 
+                            groupId 
+                        }, 
+                        commandType: CommandType.StoredProcedure
+                   );
         }
         public void AddGroupMaterialReference(int materialId, int groupId)
         {
