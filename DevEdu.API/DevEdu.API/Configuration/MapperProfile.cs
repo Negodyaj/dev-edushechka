@@ -23,6 +23,7 @@ namespace DevEdu.API.Configuration
             CreateMap<NotificationAddInputModel, NotificationDto>();
             CreateMap<NotificationUpdateInputModel, NotificationDto>();
             CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
+            CreateMap<LessonInputModel, LessonDto>();
             CreateMap<TagInputModel, TagDto>();
             CreateMap<TaskInputModel, TaskDto>();
             CreateMap<TopicInputModel, TopicDto>();
