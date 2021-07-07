@@ -5,12 +5,19 @@ using Dapper;
 using DevEdu.DAL.Models;
 namespace DevEdu.DAL.Repositories
 {
+
+
     public class NotificationRepository : BaseRepository, INotificationRepository
     {
+        private const string _notificationInsertProcedure =             "dbo.Notification_Insert";
+        private const string _notificationDeleteProcedure =             "dbo.Notification_Delete";
+        private const string _notificationSelectByIdProcedure =         "dbo.Notification_SelectById";
+        private const string _notificationSelectAllByUserProcedure =    "dbo.Notification_SelectAllByUserId";
+        private const string _notificationUpdateProcedure =             "dbo.Notification_Update";
         public int AddNotification(NotificationDto notificationDto)
         {
             return _connection.QuerySingle<int>(
-                "dbo.Notification_Insert",
+                _notificationInsertProcedure,
                 new
                 {
                     notificationDto.UserId,
@@ -23,7 +30,7 @@ namespace DevEdu.DAL.Repositories
         public void DeleteNotification(int id)
         {
             _connection.Execute(
-                "dbo.Notification_Delete",
+                _notificationDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -32,7 +39,7 @@ namespace DevEdu.DAL.Repositories
         public NotificationDto GetNotification(int id)
         {
             return _connection.QuerySingle<NotificationDto>(
-                "dbo.Notification_SelectById",
+                _notificationSelectByIdProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -42,7 +49,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<NotificationDto>(
-                    "dbo.Notification_SelectAllByUserId",
+                    _notificationSelectAllByUserProcedure,
                     new { userId },
                     commandType: CommandType.StoredProcedure
                 )
@@ -52,7 +59,7 @@ namespace DevEdu.DAL.Repositories
         public void UpdateNotification( NotificationDto notificationDto)
         {
             _connection.Execute(
-                "dbo.Notification_Update",
+                _notificationUpdateProcedure,
                 new
                 {
                     notificationDto.Id,
