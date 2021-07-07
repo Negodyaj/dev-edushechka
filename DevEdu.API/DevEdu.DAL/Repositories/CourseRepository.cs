@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
@@ -45,11 +46,36 @@ namespace DevEdu.DAL.Repositories
 
         public CourseDto GetCourse(int id)
         {
-            return _connection.QuerySingleOrDefault<CourseDto>(
+            return _connection.Query<CourseDto, TopicDto, MaterialDto, TaskDto, GroupDto, CourseDto>(
                 _selectByIdProcedure,
+                (course, topic, material, task, group) =>
+                {
+                    if (course.Topics == null)
+                        course.Topics = new List<TopicDto> {topic};
+                    else
+                        course.Topics.Add(topic);
+
+                    if (course.Materials == null)
+                        course.Materials = new List<MaterialDto> { material };
+                    else
+                        course.Materials.Add(material);
+
+                    if (course.Tasks == null)
+                        course.Tasks = new List<TaskDto> { task };
+                    else
+                        course.Tasks.Add(task);
+
+                    if (course.Groups == null)
+                        course.Groups = new List<GroupDto> { group };
+                    else
+                        course.Groups.Add(group);
+
+                    return course;
+                },
                 new { id },
+                splitOn: "Id",
                 commandType: CommandType.StoredProcedure
-            );
+            ).FirstOrDefault();
         }
 
         public List<CourseDto> GetCourses()
