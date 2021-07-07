@@ -14,6 +14,7 @@ namespace DevEdu.DAL.Models
         public string Password { get; set; }
         public DateTime RegistrationDate { get; set; }
         public string ContractNumber { get; set; }
+        public int CityId { get; set; }
         public DateTime BirthDate { get; set; }
         public string GitHubAccount { get; set; }
         public string Photo { get; set; }

@@ -12,10 +12,12 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IGroupService _groupService;
-        public GroupController(IMapper mapper, IGroupService groupService)
+        private readonly IGroupRepository _groupRepository;
+        public GroupController(IMapper mapper, IGroupService groupService, IGroupRepository groupRepository)
         {
             _mapper = mapper;
             _groupService = groupService;
+            _groupRepository = groupRepository;
         }
 
         //  api/Group/5
