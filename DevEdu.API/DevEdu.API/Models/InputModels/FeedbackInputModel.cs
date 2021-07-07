@@ -4,7 +4,7 @@ namespace DevEdu.API.Models.InputModels
 {
     public class FeedbackInputModel
     {
-        [Required]
+        [Required(ErrorMessage = FeedbackRequired)]
         public string Feedback { get; set; }
     }
 }
