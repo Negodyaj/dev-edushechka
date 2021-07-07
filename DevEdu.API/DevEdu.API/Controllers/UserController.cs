@@ -11,14 +11,13 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-
-        UserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
 
-        public UserController(IMapper mapper)
+        public UserController(IMapper mapper, IUserRepository userRepository)
         {
             _mapper = mapper;
-            _userRepository = new UserRepository();
+            _userRepository = userRepository;
         }
 
         // api/user
