@@ -17,6 +17,11 @@ namespace DevEdu.API.Configuration
             CreateMap<CourseInputModel, CourseDto>();
             CreateMap<CommentAddInputModel, CommentDto>();
             CreateMap<CommentUpdateInputModel, CommentDto>();
+            CreateMap<TaskInputModel, TaskDto>();
+            CreateMap<TopicInputModel, TopicDto>();
+            CreateMap<CourseInputModel, CourseDto>().ReverseMap();
+            CreateMap<GroupInputModel, GroupDto>().ReverseMap();
+            CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
         }
