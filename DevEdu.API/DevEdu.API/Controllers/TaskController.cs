@@ -14,7 +14,8 @@ namespace DevEdu.API.Controllers
         private readonly IMapper _mapper;
         private readonly ITaskRepository _taskRepository;
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
-        private readonly ICommentOnStudentAnswerRepository _commentOnStudentAnswerRepository;
+
+        private readonly ICommentRepository _commentRepository;
         
         public TaskController(IMapper mapper, ITaskRepository taskRepository, IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
         {
@@ -125,8 +126,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("{taskId}/student/{studentId}/comment")]
         public int AddCommentOnStudentAnswer(int taskId, int studentId, [FromBody] CommentAddInputModel inputModel)
         {
-            var commentOnStudentAnswer = _mapper.Map<CommentOnStudentAnswerDto>(inputModel);
-            _commentOnStudentAnswerRepository.AddCommentOnStudentAnswer(taskId, studentId, commentOnStudentAnswer);
+            var commentDto = _mapper.Map<CommentDto>(inputModel);
+            int commentId = _commentRepository.AddComment(commentDto);
+            _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskId, studentId, commentId);
 
             return taskId;
         }
