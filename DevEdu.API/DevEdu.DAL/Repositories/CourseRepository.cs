@@ -8,13 +8,17 @@ namespace DevEdu.DAL.Repositories
 {
     public class CourseRepository : BaseRepository, ICourseRepository
     {
+        // todo: rename it
+        private const string _insertProcedure = "dbo.Course_Insert";
+        private const string _deleteProcedure = "dbo.Course_Delete";
+        private const string _selectByIdProcedure = "dbo.Course_SelectById";
+        private const string _selectAllProcedure = "dbo.Course_SelectAll";
+        private const string _updateProcedure = "dbo.Course_Update";
+        private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
+        private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
+
         public CourseRepository()
         {
-            _insertProcedure = "dbo.Course_Insert";
-            _deleteProcedure = "dbo.Course_Delete";
-            _selectByIdProcedure = "dbo.Course_SelectById";
-            _selectAllProcedure = "dbo.Course_SelectAll";
-            _updateProcedure = "dbo.Course_Update";
         }
 
         public int AddCourse(CourseDto courseDto)
@@ -70,6 +74,32 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             );
+        }
+        
+        public void AddTagToTopic(int topicId, int tagId)
+        {
+            _connection.Query(
+                _tagToTopicAddProcedure,
+                new 
+                {
+                    topicId, 
+                    tagId
+                },
+                commandType: CommandType.StoredProcedure
+                );
+        }
+
+        public void DeleteTagFromTopic(int topicId, int tagId)
+        {
+            _connection.Query(
+                _tagFromTopicDeleteProcedure,
+                new
+                {
+                    topicId,
+                    tagId
+                },
+                commandType: CommandType.StoredProcedure
+                );
         }
     }
 }

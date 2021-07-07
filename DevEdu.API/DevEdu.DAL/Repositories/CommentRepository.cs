@@ -8,19 +8,18 @@ namespace DevEdu.DAL.Repositories
 {
     public class CommentRepository : BaseRepository, ICommentRepository
     {
-        public CommentRepository()
-        {
-            _insertProcedure = "dbo.Comment_Insert";
-            _deleteProcedure = "dbo.Comment_Delete";
-            _selectByIdProcedure = "dbo.Comment_SelectById";
-            _selectAllProcedure = "dbo.Comment_SelectAllByUserId";
-            _updateProcedure = "dbo.Comment_Update";
-        }
+        private const string _commentAddProcedure = "dbo.Comment_Insert";
+        private const string _commentDeleteProcedure = "dbo.Comment_Delete";
+        private const string _commentSelectByIdProcedure = "dbo.Comment_SelectById";
+        private const string _commentSelectAllByUserIdProcedure = "dbo.Comment_SelectAllByUserId";
+        private const string _commentUpdateProcedure = "dbo.Comment_Update";
+
+        public CommentRepository() { }
 
         public int AddComment(CommentDto commentDto)
         {
             return _connection.QuerySingle<int>(
-                _insertProcedure,
+                _commentAddProcedure,
                 new
                 {
                     commentDto.UserId,
@@ -33,7 +32,7 @@ namespace DevEdu.DAL.Repositories
         public void DeleteComment(int id)
         {
             _connection.Execute(
-                _deleteProcedure,
+                _commentDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -42,7 +41,7 @@ namespace DevEdu.DAL.Repositories
         public CommentDto GetComment(int id)
         {
             return _connection.QuerySingleOrDefault<CommentDto>(
-                _selectByIdProcedure,
+                _commentSelectByIdProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -52,7 +51,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<CommentDto>(
-                    _selectAllProcedure,
+                    _commentSelectAllByUserIdProcedure,
                     new { userId },
                     commandType: CommandType.StoredProcedure
                 )
@@ -62,7 +61,7 @@ namespace DevEdu.DAL.Repositories
         public void UpdateComment(CommentDto commentDto)
         {
             _connection.Execute(
-                _updateProcedure,
+                _commentUpdateProcedure,
                 new
                 {
                     commentDto.Id,

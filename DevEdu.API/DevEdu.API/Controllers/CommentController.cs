@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.Business.Servicies;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,14 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class CommentController : Controller
     {
+        private readonly ICommentService _commentService;
+
         private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;
-        public CommentController(IMapper mapper, ICommentRepository commentRepository)
+        public CommentController(IMapper mapper, ICommentRepository commentRepository, ICommentService commentSevice)
         {
             _commentRepository = commentRepository;
+            _commentService = commentSevice;
             _mapper = mapper;
         }
 
@@ -23,7 +27,7 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         public CommentDto GetComment(int id)
         {
-            return _commentRepository.GetComment(id);
+            return _commentService.GetComment(id);
         }
 
         //  api/comment/by-user/1
@@ -53,8 +57,7 @@ namespace DevEdu.API.Controllers
         public string UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
         {
             var dto = _mapper.Map<CommentDto>(model);
-            dto.Id = id;
-            _commentRepository.UpdateComment(dto);
+            _commentService.UpdateComment(id, dto);
             return $"Text comment №{id} change to {model.Text}";
         }
     }
