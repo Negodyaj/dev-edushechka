@@ -77,7 +77,7 @@ namespace DevEdu.API.Controllers
 
         // api/Group/{groupId}/material/{materialId}
         [HttpPost("{groupId}/material/{materialId}")]
-        public string AddGroupMaterialReference(int materialId, int groupId)
+        public string AddGroupMaterialReference(int groupId, int materialId)
         {
             _groupRepository.AddGroupMaterialReference(materialId, groupId);
             return $"Material №{materialId} add to group {groupId}";
@@ -85,10 +85,24 @@ namespace DevEdu.API.Controllers
 
         // api/Group/{groupId}/material/{materialId}
         [HttpDelete("{groupId}/material/{materialId}")]
-        public string RemoveGroupMaterialReference(int materialId, int groupId)
+        public string RemoveGroupMaterialReference(int groupId, int materialId)
         {
             _groupRepository.RemoveGroupMaterialReference(materialId, groupId);
             return $"Material №{materialId} remove from group {groupId}";
+        }
+
+        //  api/group/1/user/2/role/1
+        [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
+        public void AddUserToGroup(int groupId, int userId, int roleId)
+        {
+            _groupRepository.AddUserToGroup(groupId, userId, roleId);
+        }
+
+        //  api/group/1/user/2
+        [HttpDelete("{groupId}/user/{userId}")]
+        public void DeleteUserFromGroup(int groupId, int userId)
+        {
+            _groupRepository.DeleteUserFromGroup(userId, groupId);
         }
     }
 }
