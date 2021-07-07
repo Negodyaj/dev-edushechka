@@ -2,8 +2,10 @@
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
@@ -46,6 +48,8 @@ namespace DevEdu.API.Controllers
 
         // api/tag
         [HttpGet]
+        [Description("Returns the list of all tags")]
+        [ProducesResponseType(typeof(TagDto), StatusCodes.Status200OK)]
         public List<TagDto> GetAllTags() // change return type to outputModel
         {
              return _repository.SelectAllTags();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Configuration
@@ -11,14 +12,13 @@ namespace DevEdu.API.Configuration
             CreateMappingToDto();
             CreateMappingFromDto();
         }
-        private void CreateMappingToDto()
 
+        private void CreateMappingToDto()
         { 
             CreateMap<CourseInputModel, CourseDto>();
             CreateMap<CommentAddInputModel, CommentDto>();
             CreateMap<CommentUpdateInputModel, CommentDto>();
-            CreateMap<CourseInputModel, CourseDto>().ReverseMap();
-            CreateMap<GroupInputModel, GroupDto>().ReverseMap();
+            CreateMap<GroupInputModel, GroupDto>();
             CreateMap<MaterialInputModel, MaterialDto>();
             CreateMap<NotificationAddInputModel, NotificationDto>();
             CreateMap<NotificationUpdateInputModel, NotificationDto>();
@@ -33,7 +33,7 @@ namespace DevEdu.API.Configuration
 
         private void CreateMappingFromDto()
         {
-
+            CreateMap<CourseDto, CourseInfoOutputModel>();
         }
     }
 }
