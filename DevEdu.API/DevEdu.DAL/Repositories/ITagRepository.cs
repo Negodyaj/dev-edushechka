@@ -1,10 +1,14 @@
-﻿namespace DevEdu.DAL.Repositories
+﻿using DevEdu.DAL.Models;
+using System.Collections.Generic;
+
+namespace DevEdu.DAL.Repositories
 {
     public interface ITagRepository
     {
-        void DeleteTagFromMaterial(int materialId, int tagId);
-        void DeleteTagFromTagTask(int taskId, int tagId);
-        int AddTagToMaterial(int materialId, int tagId);
-        int AddTagToTagTask(int taskId, int tagId);
+        int AddTag(TagDto tagDto);
+        int DeleteTag(int id);
+        List<TagDto> SelectAllTags();
+        TagDto SelectTagById(int id);
+        int UpdateTag(TagDto tagDto);
     }
 }

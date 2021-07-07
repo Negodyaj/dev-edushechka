@@ -8,21 +8,20 @@ namespace DevEdu.DAL.Repositories
 {
     public class CourseRepository : BaseRepository, ICourseRepository
     {
-        private const string _insertProcedure = "dbo.Course_Insert";
-        private const string _deleteProcedure = "dbo.Course_Delete";
-        private const string _selectByIdProcedure = "dbo.Course_SelectById";
-        private const string _selectAllProcedure = "dbo.Course_SelectAll";
-        private const string _updateProcedure = "dbo.Course_Update";
-        
-        public CourseRepository()
-        {
-            
-        }
+        private const string _courseAddProcedure = "dbo.Course_Insert";
+        private const string _courseDeleteProcedure = "dbo.Course_Delete";
+        private const string _courseSelectByIdProcedure = "dbo.Course_SelectById";
+        private const string _courseSelectAllProcedure = "dbo.Course_SelectAll";
+        private const string _courseUpdateProcedure = "dbo.Course_Update";
+        private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
+        private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
+
+        public CourseRepository() { }
 
         public int AddCourse(CourseDto courseDto)
         {
             return _connection.QuerySingle<int>(
-                _insertProcedure,
+                _courseAddProcedure,
                 new
                 {
                     courseDto.Name,
@@ -35,7 +34,7 @@ namespace DevEdu.DAL.Repositories
         public void DeleteCourse(int id)
         {
             _connection.Execute(
-                _deleteProcedure,
+                _courseDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -44,7 +43,7 @@ namespace DevEdu.DAL.Repositories
         public CourseDto GetCourse(int id)
         {
             return _connection.QuerySingleOrDefault<CourseDto>(
-                _selectByIdProcedure,
+                _courseSelectByIdProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -54,7 +53,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<CourseDto>(
-                    _selectAllProcedure,
+                    _courseSelectAllProcedure,
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
@@ -63,7 +62,7 @@ namespace DevEdu.DAL.Repositories
         public void UpdateCourse(CourseDto courseDto)
         {
             _connection.Execute(
-                _updateProcedure,
+                _courseUpdateProcedure,
                 new
                 {
                     courseDto.Id,
@@ -72,6 +71,32 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             );
+        }
+        
+        public void AddTagToTopic(int topicId, int tagId)
+        {
+            _connection.Query(
+                _tagToTopicAddProcedure,
+                new 
+                {
+                    topicId, 
+                    tagId
+                },
+                commandType: CommandType.StoredProcedure
+                );
+        }
+
+        public void DeleteTagFromTopic(int topicId, int tagId)
+        {
+            _connection.Query(
+                _tagFromTopicDeleteProcedure,
+                new
+                {
+                    topicId,
+                    tagId
+                },
+                commandType: CommandType.StoredProcedure
+                );
         }
     }
 }

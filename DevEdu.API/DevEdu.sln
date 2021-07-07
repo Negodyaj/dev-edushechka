@@ -7,7 +7,9 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DevEdu.Db", "DevEdu.Db\DevE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEdu.API", "DevEdu.API\DevEdu.API.csproj", "{3EDE60B7-E789-4279-A72B-E416C9178656}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEdu.DAL", "DevEdu.DAL\DevEdu.DAL.csproj", "{8792CAB0-58A2-4F9F-ADB5-2BE94B76D577}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEdu.DAL", "DevEdu.DAL\DevEdu.DAL.csproj", "{8792CAB0-58A2-4F9F-ADB5-2BE94B76D577}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEdu.Business", "DevEdu.Business\DevEdu.Business.csproj", "{E46DE434-9A9B-4FA6-880E-64873889410B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{8792CAB0-58A2-4F9F-ADB5-2BE94B76D577}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8792CAB0-58A2-4F9F-ADB5-2BE94B76D577}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8792CAB0-58A2-4F9F-ADB5-2BE94B76D577}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E46DE434-9A9B-4FA6-880E-64873889410B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E46DE434-9A9B-4FA6-880E-64873889410B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E46DE434-9A9B-4FA6-880E-64873889410B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E46DE434-9A9B-4FA6-880E-64873889410B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

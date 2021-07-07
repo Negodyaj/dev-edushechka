@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Configuration
@@ -15,15 +12,29 @@ namespace DevEdu.API.Configuration
             CreateMappingToDto();
             CreateMappingFromDto();
         }
+
         private void CreateMappingToDto()
-        {
+        { 
             CreateMap<CourseInputModel, CourseDto>();
             CreateMap<CourseTopicInputModel, CourseTopicDto>();
+            CreateMap<CommentAddInputModel, CommentDto>();
+            CreateMap<CommentUpdateInputModel, CommentDto>();
+            CreateMap<GroupInputModel, GroupDto>();
+            CreateMap<MaterialInputModel, MaterialDto>();
+            CreateMap<NotificationAddInputModel, NotificationDto>();
+            CreateMap<NotificationUpdateInputModel, NotificationDto>();
+            CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
+            CreateMap<LessonInputModel, LessonDto>();
+            CreateMap<TagInputModel, TagDto>();
+            CreateMap<TaskInputModel, TaskDto>();
+            CreateMap<TopicInputModel, TopicDto>();
+            CreateMap<UserInsertInputModel, UserDto>();
+            CreateMap<UserUpdateInputModel, UserDto>();
         }
+
         private void CreateMappingFromDto()
         {
-            CreateMap<CourseDto, CourseInputModel>();
-            CreateMap<CourseTopicDto, CourseTopicInputModel>();
+            CreateMap<CourseDto, CourseInfoOutputModel>();
         }
     }
 }

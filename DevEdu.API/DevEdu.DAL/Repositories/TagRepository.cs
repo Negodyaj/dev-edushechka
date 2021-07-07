@@ -1,53 +1,66 @@
-﻿using System;
+﻿using Dapper;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
-
 
 namespace DevEdu.DAL.Repositories
 {
     public class TagRepository : BaseRepository, ITagRepository
     {
-        private const string _tagMaterialAddProcedure = "[dbo].[Tag_Material_Insert]";
-        private const string _tagMaterialDeleteProcedure = "[dbo].[Tag_Material_Delete]";
-        private const string _tagTaskAddProcedure = "[dbo].[Tag_Task_Insert]";
-        private const string _tagTaskDeleteProcedure = "[dbo].[Tag_Task_Delete]";
-        public int AddTagToMaterial(int materialId, int tagId)
+        private const string _tagInsertProcedure = "dbo.Tag_Insert";
+        private const string _tagDeleteProcedure = "dbo.Tag_Delete";
+        private const string _tagSelectAllProcedure = "dbo.Tag_SelectAll";
+        private const string _tagSelectByIDProcedure = "dbo.Tag_SelectByID";
+        private const string _tagUpdateProcedure = "dbo.Tag_Update";
+
+        public int AddTag(TagDto tagDto)
         {
-            return _connection
-                .QuerySingle(
-                _tagMaterialAddProcedure,
-                new { tagId, materialId },
+            return _connection.QuerySingleOrDefault<int>(
+                _tagInsertProcedure,
+                new { tagDto.Name },
                 commandType: CommandType.StoredProcedure
-                );
+            );
         }
-        public void DeleteTagFromMaterial(int materialId, int tagId)
+
+        public int DeleteTag(int id)
         {
-            _connection
-                .Execute(_tagMaterialDeleteProcedure,
-                new { tagId, materialId },
+            return _connection.Execute(
+                _tagDeleteProcedure,
+                new { id },
                 commandType: CommandType.StoredProcedure
-                );
+            );
         }
-        public int AddTagToTagTask(int taskId, int tagId)
+
+        public List<TagDto> SelectAllTags()
         {
-            return _connection
-                .QuerySingle(_tagTaskAddProcedure,
-                new { tagId, taskId },
+            return _connection.Query<TagDto>(
+                _tagSelectAllProcedure,
                 commandType: CommandType.StoredProcedure
-                );
+            )
+            .ToList();
         }
-        public void DeleteTagFromTagTask(int taskId, int tagId)
+
+        public TagDto SelectTagById(int id)
         {
-            _connection
-                .Execute(_tagTaskDeleteProcedure,
-                new { tagId, taskId },
+            return _connection.QuerySingleOrDefault<TagDto>(
+                _tagSelectByIDProcedure,
+                new { id },
                 commandType: CommandType.StoredProcedure
-                );
+            );
+        }
+
+        public int UpdateTag(TagDto tagDto)
+        {
+            return _connection.Execute(
+                _tagUpdateProcedure,
+                new 
+                { 
+                    tagDto.Id,
+                    tagDto.Name
+                },
+                commandType: CommandType.StoredProcedure
+            );
         }
     }
 }

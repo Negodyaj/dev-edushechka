@@ -1,7 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[Tag_SoftDelete]
-	@ID int
+﻿CREATE PROCEDURE [dbo].[Tag_Delete]
+	@Id int
 AS
-	UPDATE [Tag] 
+BEGIN
+	UPDATE [dbo].[Tag] 
 	SET 
 	IsDeleted = 1
-	Where Id = @ID
+	Where Id = @Id
+END
