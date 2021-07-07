@@ -18,7 +18,6 @@ namespace DevEdu.DAL.Repositories
         private const string _taskStudentUpdateAnswer = "dbo.Task_Student_UpdateAnswer";
         private const string _taskStudentUpdateStatusId = "dbo.Task_Student_UpdateStatusId";
 
-
         public StudentAnswerOnTaskRepository()
         {
 

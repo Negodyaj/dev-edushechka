@@ -74,7 +74,6 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-
         public List<LessonDto> SelectAllLessons()
         {
             return _connection

@@ -3,10 +3,9 @@ using System.Data;
 using System.Linq;
 using Dapper;
 using DevEdu.DAL.Models;
+
 namespace DevEdu.DAL.Repositories
 {
-
-
     public class NotificationRepository : BaseRepository, INotificationRepository
     {
         private const string _notificationInsertProcedure =             "dbo.Notification_Insert";
