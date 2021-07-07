@@ -1,7 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[Tag_Material_Delete]
+﻿CREATE PROCEDURE dbo.Material_Tag_Delete
 	@TagId int ,
 	@MaterialId int
 AS
-	Delete from [dbo].[Tag_Material]
+BEGIN
+	Delete from dbo.Tag_Material
 	Where TagId = @TagId and MaterialId = @MaterialId
+END
 
