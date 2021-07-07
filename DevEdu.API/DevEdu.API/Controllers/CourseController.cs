@@ -14,15 +14,15 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class CourseController : Controller
     {
-        CourseRepository _courseRepository;
-        TopicRepository _topicRepository;
 
         private readonly IMapper _mapper;
-        public CourseController(IMapper mapper)
+        private readonly ICourseRepository _courseRepository;
+        private readonly ITopicRepository _topicRepository;
+        public CourseController(IMapper mapper, ICourseRepository courseRepository, ITopicRepository topicRepository )
         {
             _mapper = mapper;
-            _courseRepository = new CourseRepository();
-            _topicRepository = new TopicRepository();
+            _courseRepository = courseRepository;
+            _topicRepository = topicRepository;
         }
 
         //  api/Course/5

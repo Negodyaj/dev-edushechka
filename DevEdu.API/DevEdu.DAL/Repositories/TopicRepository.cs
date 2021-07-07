@@ -9,20 +9,22 @@ using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
-    public class TopicRepository : BaseRepository
+    public class TopicRepository : BaseRepository, ITopicRepository
     {
+        private const string _addTopicToCourseProcedure = "[dbo].[Course_Topic_Insert]";
+        private const string _deleteTopicToCourseProcedure = "[dbo].[Course_Topic_Delete]";
         public int AddTopicToCourse(CourseTopicDto dto)
         {
             return _connection.QuerySingle<int>(
-                "[dbo].[Course_Topic_Insert]",
-                new { CourseId = dto.Course.Id, TopicId = dto.Topic.Id, dto.Position},
+                _addTopicToCourseProcedure,
+                new { CourseId = dto.Course.Id, TopicId = dto.Topic.Id, dto.Position },
                 commandType: CommandType.StoredProcedure
                 );
         }
         public void DeleteTopicFromCourse(int courseId, int topicId)
         {
             _connection.Execute(
-                "[dbo].[Course_Topic_Delete]",
+                _deleteTopicToCourseProcedure,
                 new { courseId, topicId },
                 commandType: CommandType.StoredProcedure
                 );

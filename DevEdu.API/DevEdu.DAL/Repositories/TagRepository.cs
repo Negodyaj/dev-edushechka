@@ -10,29 +10,33 @@ using Dapper;
 
 namespace DevEdu.DAL.Repositories
 {
-    public class TagRepository : BaseRepository
+    public class TagRepository : BaseRepository, ITagRepository
     {
-        public int InsertTagToTagMaterial(int materialId, int tagId)
+        private const string _tagMaterialAddProcedure = "[dbo].[Tag_Material_Insert]";
+        private const string _tagMaterialDeleteProcedure = "[dbo].[Tag_Material_Delete]";
+        private const string _tagTaskAddProcedure = "[dbo].[Tag_Task_Insert]";
+        private const string _tagTaskDeleteProcedure = "[dbo].[Tag_Task_Delete]";
+        public int AddTagToMaterial(int materialId, int tagId)
         {
             return _connection
                 .QuerySingle(
-                "[dbo].[Tag_Material_Insert]",
-                new { tagId , materialId }, 
+                _tagMaterialAddProcedure,
+                new { tagId, materialId },
                 commandType: CommandType.StoredProcedure
                 );
         }
-        public void DeleteTagFromTagMaterial(int materialId, int tagId)
+        public void DeleteTagFromMaterial(int materialId, int tagId)
         {
             _connection
-                .Execute("[dbo].[Tag_Material_Delete]",
-                new { tagId , materialId}, 
+                .Execute(_tagMaterialDeleteProcedure,
+                new { tagId, materialId },
                 commandType: CommandType.StoredProcedure
                 );
         }
-        public int InsertTagToTagTask(int taskId, int tagId)
+        public int AddTagToTagTask(int taskId, int tagId)
         {
             return _connection
-                .QuerySingle("[dbo].[Tag_Task_Insert]",
+                .QuerySingle(_tagTaskAddProcedure,
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure
                 );
@@ -40,7 +44,7 @@ namespace DevEdu.DAL.Repositories
         public void DeleteTagFromTagTask(int taskId, int tagId)
         {
             _connection
-                .Execute("[Tag_Task_Delete]", 
+                .Execute(_tagTaskDeleteProcedure,
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure
                 );

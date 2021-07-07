@@ -12,10 +12,10 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class MaterialController : Controller
     {
-        TagRepository _tagRepository;
-        public MaterialController()
+        private readonly ITagRepository _tagRepository;
+        public MaterialController(ITagRepository tagRepository)
         {
-            _tagRepository = new TagRepository();
+            _tagRepository = tagRepository;
         }
 
         // api/material
@@ -57,7 +57,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{materialId}/tag/{tagId}")]
         public int AddTagToMaterial(int materialId, int tagId)
         {
-            _tagRepository.InsertTagToTagMaterial(materialId, tagId);
+            _tagRepository.AddTagToMaterial(materialId, tagId);
             return 1;
         }
 
@@ -65,7 +65,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{materialId}/tag/{tagId}")]
         public string DeleteTagFromMaterial(int materialId, int tagId)
         {
-            _tagRepository.DeleteTagFromTagMaterial(materialId, tagId);
+            _tagRepository.DeleteTagFromMaterial(materialId, tagId);
             return $"deleted tag material with {materialId} materialId";
         }
 

@@ -1,3 +1,4 @@
+using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +28,9 @@ namespace DevEdu.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<ITopicRepository,TopicRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
