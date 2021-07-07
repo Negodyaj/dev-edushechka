@@ -3,7 +3,9 @@
 AS
 BEGIN
 	SELECT 
-		Name,
+		FirstName,
+		LastName,
+		Patronymic,
 		Email,
 		Username,
 		Password,
@@ -14,7 +16,7 @@ BEGIN
 		BirthDate,
 		GitHubAccount,
 		Photo,
-		PhoneNumer,
+		PhoneNumber,
 		ExileDate
 	FROM dbo.[User]
 	WHERE [Id] = @Id
