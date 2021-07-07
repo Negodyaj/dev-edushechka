@@ -4,5 +4,6 @@
 AS	
 BEGIN
 	DELETE FROM dbo.User_Role
-	WHERE  UserId=@UserId AND RoleId=@RoleId
+	WHERE	UserId=@UserId AND
+			RoleId=@RoleId
 END

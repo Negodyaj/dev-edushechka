@@ -128,8 +128,6 @@
     <Build Include="StoredProcedures\Group_Lesson\Group_Lesson_Insert.sql" />
     <Build Include="StoredProcedures\Group_Material\Group_Material_Delete.sql" />
     <Build Include="StoredProcedures\Group_Material\Group_Material_Insert.sql" />
-    <Build Include="StoredProcedures\Tag_Material\Tag_Material_Insert.sql" />
-    <Build Include="StoredProcedures\Tag_Material\Tag_Material_Delete.sql" />
     <Build Include="StoredProcedures\Tag_Task\Tag_Task_Insert.sql" />
     <Build Include="StoredProcedures\Tag_Task\Tag_Task_Delete.sql" />
     <Build Include="StoredProcedures\Topic\Topic_Delete.sql" />
@@ -200,6 +198,9 @@
     <Build Include="StoredProcedures\Group\Group_SelectAll.sql" />
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_Delete.sql" />
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_Insert.sql" />
+    <Build Include="StoredProcedures\Tag_Material\Material_Tag_Delete.sql" />
+    <Build Include="StoredProcedures\Tag_Material\Material_Tag_Insert.sql" />
+    <Build Include="StoredProcedures\Material\Material_SelectAllByTagId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />
