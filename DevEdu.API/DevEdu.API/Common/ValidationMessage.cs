@@ -20,5 +20,6 @@
         public const string PhotoRequired = "Photo must be provided";
         public const string WrongFormatPhotoRequired = "Photo must be provided";
         public const string PhoneNumerRequired = "PhoneNumer must be provided";
+        public const string NameRequired = "Name must be provided";
     }
 }
