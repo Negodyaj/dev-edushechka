@@ -1,8 +1,10 @@
-﻿CREATE PROCEDURE dbo.[User_SelectAll]
+﻿CREATE PROCEDURE dbo.User_SelectAll
 AS
 BEGIN
 	SELECT 
-		Name,
+		FisrtName,
+		LastName,
+		Patronymic,
 		Email,
 		Username,
 		Password,

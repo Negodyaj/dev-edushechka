@@ -1,5 +1,7 @@
-using DevEdu.Business.Servicies;
+using AutoMapper;
+using DevEdu.API.Configuration;
 using DevEdu.DAL.Repositories;
+using DevEdu.Business.Servicies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +29,7 @@ namespace DevEdu.API
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IStudentAnswerOnTaskRepository, StudentAnswerOnTaskRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
