@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
 
+
 namespace DevEdu.API
 {
     public class Startup
@@ -29,7 +30,7 @@ namespace DevEdu.API
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ILessonRepository, LessonRepository>();
-
+            services.AddScoped<ITopicRepository, TopicRepository>();
             services.AddScoped<ICommentService, CommentService>();
 
             services.AddControllers();
