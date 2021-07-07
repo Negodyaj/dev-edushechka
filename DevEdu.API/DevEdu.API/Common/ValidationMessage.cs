@@ -5,5 +5,6 @@
         public const string FirstNameRequired = "FirstName must be provided";
         public const string EmailRequired = "Email must be provided";
         public const string WrongEmailFormat = "You've got to use the correct email format";
+        public const string TextRequired = "Comment cannot be empty";
     }
 }
