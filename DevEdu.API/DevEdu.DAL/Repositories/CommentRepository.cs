@@ -23,7 +23,7 @@ namespace DevEdu.DAL.Repositories
                 _commentAddProcedure,
                 new
                 {
-                    commentDto.UserId,
+                    userId = commentDto.User.Id,
                     commentDto.Text
                 },
                 commandType: CommandType.StoredProcedure

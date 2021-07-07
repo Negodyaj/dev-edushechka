@@ -4,7 +4,6 @@ AS
 BEGIN
 	SELECT 
 		c.Id,
-		c.UserId,
 		c.Text,
 		c.Date,
 		c.IsDeleted,
