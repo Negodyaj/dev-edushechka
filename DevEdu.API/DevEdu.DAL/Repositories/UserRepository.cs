@@ -14,6 +14,9 @@ namespace DevEdu.DAL.Repositories
         private const string _userUpdateProcedure = "dbo.User_Update";
         private const string _userDeleteProcedure = "dbo.User_Delete";
 
+        private const string _userRoleAddProcedure = "dbo.User_Role_Insert";
+        private const string _userRoleDeleteProcedure = "dbo.User_Role_Delete";
+
         public UserRepository() { }
 
         public int AddUser(UserDto user)
@@ -81,5 +84,30 @@ namespace DevEdu.DAL.Repositories
             commandType: CommandType.StoredProcedure
             );
         }
+
+        public int AddUserRole(int userId, int roleId)
+        {
+            return _connection.QuerySingle<int>(
+                _userRoleAddProcedure,
+                new
+                {
+                    userId,
+                    roleId
+                },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public void DeleteUserRole(int userId, int roleId)
+        {
+            _connection.Execute(
+                _userRoleDeleteProcedure,
+                new
+                {
+                    userId,
+                    roleId
+                },
+                commandType: CommandType.StoredProcedure);
+        }
+
     }
 }

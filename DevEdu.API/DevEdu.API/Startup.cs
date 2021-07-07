@@ -26,7 +26,6 @@ namespace DevEdu.API
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
