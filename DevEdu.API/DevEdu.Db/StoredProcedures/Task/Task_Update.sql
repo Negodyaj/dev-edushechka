@@ -7,6 +7,7 @@
 	@Links nvarchar(500),
 	@IsRequired bit
 AS
+BEGIN
 	UPDATE [Task] 
 	SET 
 	[Name] = @Name,
@@ -16,3 +17,4 @@ AS
 	[Links] = @Links,
 	[IsRequired] = @IsRequired
 	Where Id = @Id
+END
