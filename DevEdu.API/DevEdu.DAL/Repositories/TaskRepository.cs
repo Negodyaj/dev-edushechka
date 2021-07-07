@@ -13,11 +13,14 @@ namespace DevEdu.DAL.Repositories
         private const string _taskSelectByIdProcedure = "dbo.Task_SelectById";
         private const string _taskSelectAlldProcedure = "dbo.Task_SelectAll";
         private const string _taskUpdateProcedure = "dbo.Task_Update";
+        private const string _tagTaskAddProcedure = "dbo.Tag_Task_Insert";
+        private const string _tagTaskDeleteProcedure = "dbo.Tag_Task_Delete";
 
         public TaskRepository()
         {
 
         }
+
         public TaskDto GetTaskById(int id)
         {
             TaskDto task = _connection.QuerySingleOrDefault<TaskDto>(
@@ -79,6 +82,24 @@ namespace DevEdu.DAL.Repositories
             _connection.Execute(
                 _taskDeleteProcedure,
                 new { id },
+                commandType: CommandType.StoredProcedure
+                );
+        }
+
+        public int AddTagToTagTask(int taskId, int tagId)
+        {
+            return _connection
+                .QuerySingle(_tagTaskAddProcedure,
+                new { tagId, taskId },
+                commandType: CommandType.StoredProcedure
+                );
+        }
+
+        public void DeleteTagFromTask(int taskId, int tagId)
+        {
+            _connection
+                .Execute(_tagTaskDeleteProcedure,
+                new { tagId, taskId },
                 commandType: CommandType.StoredProcedure
                 );
         }

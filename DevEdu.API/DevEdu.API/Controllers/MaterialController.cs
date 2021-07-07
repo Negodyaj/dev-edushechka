@@ -1,5 +1,9 @@
-﻿using DevEdu.API.Models.InputModels;
+﻿using AutoMapper;
+using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Controllers
 {
@@ -7,55 +11,72 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class MaterialController : Controller
     {
-        public MaterialController() { }
+        private readonly IMapper _mapper;
+        private readonly IMaterialRepository _repository;
+
+        public MaterialController(IMapper mapper, IMaterialRepository repository) 
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
 
         // api/material
         [HttpPost]
         public int AddMaterial([FromBody] MaterialInputModel materialModel)
         {
-            return 42;
+            var dto = _mapper.Map<MaterialDto>(materialModel);
+            return _repository.AddMaterial(dto);
         }
 
         // api/material
         [HttpGet]
-        public string GetAllMaterials()
+        public List<MaterialDto> GetAllMaterials()
         {
-            return "all materials";
+            return _repository.GetAllMaterials();
         }
 
         // api/material/5
         [HttpGet("{id}")]
-        public string GetMaterial(int id)
+        public MaterialDto GetMaterial(int id)
         {
-            return $"material with id {id}";
-        }
-
-        // api/material
-        [HttpPut]
-        public string UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)
-        {
-            return $"updated material with id {id}";
+            return _repository.GetMaterialById(id);
         }
 
         // api/material/5
-        [HttpDelete("{id}")]
-        public string DeleteMaterial(int id)
+        [HttpPut("{id}")] 
+        public void UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
         {
-            return $"deleted material with id {id}";
+            var dto = _mapper.Map<MaterialDto>(materialModel);
+            dto.Id = id;
+            _repository.UpdateMaterial(dto);
+        }
+
+        // api/material/5/isDeleted/True
+        [HttpDelete("{id}/isDeleted/{isDeleted}")]
+        public void DeleteMaterial(int id, bool isDeleted)
+        {
+            _repository.DeleteMaterial(id, isDeleted);
         }
 
         // api/material/{materialId}/tag/{tagId}
         [HttpPost("{materialId}/tag/{tagId}")]
-        public int AddTagToMaterial(int materialId, int tagId)
+        public void AddTagToMaterial(int materialId, int tagId)
         {
-            return 1;
+            _repository.AddTagToMaterial(materialId, tagId);
         }
 
         // api/material/{materialId}/tag/{tagId}
         [HttpDelete("{materialId}/tag/{tagId}")]
-        public string DeleteTagFromMaterial(int materialId, int tagId)
+        public void DeleteTagFromMaterial(int materialId, int tagId)
         {
-            return $"deleted tag material with {materialId} materialId";
+            _repository.DeleteTagFromMaterial(materialId, tagId);
+        }
+
+        // api/material/by-tag/1
+        [HttpGet("by-tag/{tagId}")]
+        public List<MaterialDto> GetMaterialsByTagId(int tagId)
+        {
+            return _repository.GetMaterialsByTagId(tagId);
         }
 
     }
