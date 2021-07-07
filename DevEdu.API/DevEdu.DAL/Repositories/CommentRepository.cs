@@ -8,17 +8,18 @@ namespace DevEdu.DAL.Repositories
 {
     public class CommentRepository : BaseRepository, ICommentRepository
     {
-        private const string _commentInsertProcedure = "dbo.Comment_Insert";
+        private const string _commentAddProcedure = "dbo.Comment_Insert";
         private const string _commentDeleteProcedure = "dbo.Comment_Delete";
         private const string _commentSelectByIdProcedure = "dbo.Comment_SelectById";
-        private const string _commentSelectAllByUserProcedure = "dbo.Comment_SelectAllByUserId";
+        private const string _commentSelectAllByUserIdProcedure = "dbo.Comment_SelectAllByUserId";
         private const string _commentUpdateProcedure = "dbo.Comment_Update";
+
         public CommentRepository() { }
 
         public int AddComment(CommentDto commentDto)
         {
             return _connection.QuerySingle<int>(
-                _commentInsertProcedure,
+                _commentAddProcedure,
                 new
                 {
                     commentDto.UserId,
@@ -50,7 +51,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<CommentDto>(
-                    _commentSelectAllByUserProcedure,
+                    _commentSelectAllByUserIdProcedure,
                     new { userId },
                     commandType: CommandType.StoredProcedure
                 )

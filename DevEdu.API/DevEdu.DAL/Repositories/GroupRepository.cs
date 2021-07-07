@@ -5,15 +5,44 @@ namespace DevEdu.DAL.Repositories
 {
     public class GroupRepository : BaseRepository, IGroupRepository
     {
-        private const string _groupMaterialInsertReferenceProcedure = "dbo.Group_Material_Insert";
-        private const string _groupMaterialDeleteReferenceProcedure = "dbo.Group_Material_Delete";
+        private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
+        private const string _userGroupDeleteProcedure = "dbo.Tag_Delete";
+        private const string _insertGroupLesson = "dbo.Group_Lesson_Insert";
+        private const string _deleteGroupLesson = "dbo.Group_Lesson_Delete";
+        private const string _insertGroupMaterial = "dbo.Group_Material_Insert";
+        private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
 
-        public GroupRepository() { }
+        public void AddGroupLesson(int groupId, int lessonId)
+        {
+            _connection.Execute(
+                _insertGroupLesson,
+                new
+                {
+                    groupId,
+                    lessonId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+
+        public void RemoveGroupLesson(int groupId, int lessonId)
+        {
+            _connection.Execute(
+                _deleteGroupLesson,
+                new
+                {
+                    groupId,
+                    lessonId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
 
         public void AddGroupMaterialReference(int materialId, int groupId)
         {
             _connection.Execute(
-                _groupMaterialInsertReferenceProcedure,
+                _insertGroupMaterial,
                 new
                 {
                     materialId,
@@ -23,13 +52,40 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteGroupMaterialReference(int materialId, int groupId)
+        public void RemoveGroupMaterialReference(int materialId, int groupId)
         {
             _connection.Execute(
-                _groupMaterialDeleteReferenceProcedure,
+                _deleteGroupMaterial,
                 new
                 {
                     materialId,
+                    groupId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public int AddUserToGroup(int groupId, int userId, int roleId)
+        {
+            return _connection.Execute(
+                _userGroupInsertProcedure,
+                new
+                {
+                    groupId,
+                    userId,
+                    roleId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public int DeleteUserFromGroup(int userId, int groupId)
+        {
+            return _connection.Execute(
+                _userGroupDeleteProcedure,
+                new
+                {
+                    userId,
                     groupId
                 },
                 commandType: CommandType.StoredProcedure

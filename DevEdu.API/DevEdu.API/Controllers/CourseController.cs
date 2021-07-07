@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -28,9 +30,11 @@ namespace DevEdu.API.Controllers
 
         //  api/Course
         [HttpGet]
-        public List<CourseDto> GetAllCourses()
+        [Description("Get all courses with topics")]
+        public List<CourseInfoOutputModel> GetAllCourses()
         {
-            return _courseRepository.GetCourses();
+            var courses = _courseRepository.GetCourses();
+            return _mapper.Map<List<CourseInfoOutputModel>>(courses);
         }
 
         //  api/course
@@ -60,15 +64,17 @@ namespace DevEdu.API.Controllers
 
         //  api/course/topic/{topicId}/tag/{tagId}
         [HttpPost("topic/{topicId}/tag/{tagId}")]
-        public int AddTagToTopic(int topicId, int tagId)
+        public string AddTagToTopic(int topicId, int tagId)
         {
-            return topicId;
+            _courseRepository.AddTagToTopic(topicId, tagId);
+            return $"add to topic with {topicId} Id tag with {tagId} Id";
         }
 
         //  api/course/topic/{topicId}/tag/{tagId}
         [HttpDelete("topic/{topicId}/tag/{tagId}")]
         public string DeleteTagAtTopic(int topicId, int tagId)
         {
+            _courseRepository.DeleteTagFromTopic(topicId, tagId);
             return $"deleted at topic with {topicId} Id tag with {tagId} Id";
         }
 
