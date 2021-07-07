@@ -1,22 +1,38 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
 {
     public class UserUpdateInputModel
     {
-        [Required]
+        [Required(ErrorMessage = IdRequired)]
+        [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatIdRequired)]
         public int Id { get; set; }
-        [Required]
-        public string Name { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = FirstNameRequired)]
+        public string FisrtName { get; set; }
+
+        [Required(ErrorMessage = LastNameRequired)]
+        public string LastName { get; set; }
+
+        [Required(ErrorMessage = PatronymicRequired)]
+        public string Patronymic { get; set; }
+
+        [Required(ErrorMessage = UsernameRequired)]
         public string Username { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = CityIdRequired)]
+        [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatCityIdRequired)]
         public int? CityId { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = GitHubAccountRequired)]
         public string GitHubAccount { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = PhotoRequired)]
+        [Url]
         public string Photo { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = PhoneNumerRequired)]
         public string PhoneNumer { get; set; }
     }
 }
