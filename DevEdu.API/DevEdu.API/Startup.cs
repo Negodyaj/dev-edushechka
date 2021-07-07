@@ -34,6 +34,7 @@ namespace DevEdu.API
             services.AddScoped<ITopicRepository, TopicRepository>();
             
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IMaterialService, MaterialService>();
 
             services.AddControllers();
 
