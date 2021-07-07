@@ -5,11 +5,11 @@ namespace DevEdu.DAL.Repositories
 {
     public class GroupRepository : BaseRepository, IGroupRepository
     {
-        private const string _user_GroupInsertProcedure = "[dbo].[User_Group_Insert]";
-        private const string _user_GroupDeleteProcedure = "[dbo].[Tag_Delete]";
-        public void AddUserToGroup(int groupId, int userId, int roleId)
+        private const string _userGroupInsertProcedure = "[dbo].[User_Group_Insert]";
+        private const string _userGroupDeleteProcedure = "[dbo].[Tag_Delete]";
+        public int AddUserToGroup(int groupId, int userId, int roleId)
         {
-            _connection.Execute(_user_GroupInsertProcedure,
+            return _connection.Execute(_userGroupInsertProcedure,
                 new 
                 { 
                     groupId, 
@@ -18,9 +18,9 @@ namespace DevEdu.DAL.Repositories
                 }, 
                 commandType: CommandType.StoredProcedure);
         }
-        public void DeleteUserFromGroup(int userId, int groupId)
+        public int DeleteUserFromGroup(int userId, int groupId)
         {
-            _connection.Execute(_user_GroupDeleteProcedure, 
+            return _connection.Execute(_userGroupDeleteProcedure, 
                 new 
                 { 
                     userId, 
