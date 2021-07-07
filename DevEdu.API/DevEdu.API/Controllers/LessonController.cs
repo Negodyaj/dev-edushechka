@@ -37,9 +37,9 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/comment/{commentId}
         [HttpPost("{lessonId}/comment/{commentId}")]
-        public string AddLessonComment(int lessonId, int commentId)
+        public void AddLessonComment(int lessonId, int commentId)
         {
-            return _lessonRepository.AddCommentToLesson(lessonId, commentId).ToString();
+            _lessonRepository.AddCommentToLesson(lessonId, commentId);
         }
 
         // api/lesson/{lessonId}/comment/{commentId}

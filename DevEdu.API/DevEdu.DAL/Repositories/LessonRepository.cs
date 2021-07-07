@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using DevEdu.DAL.Models;
+using System.Linq;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -13,6 +14,7 @@ namespace DevEdu.DAL.Repositories
         private const string _lessonDeleteProcedure = "dbo.Lesson_Delete";
         private const string _lessonSelectAllProcedure = "dbo.Lesson_SelectAll";
         private const string _lessonSelectByIdProcedure = "dbo.Lesson_SelectById";
+        private const string _lessonUpdateProcedure = "dbo.Lesson_Update";
 
         private const string _commentAddToLessonProcedure = "dbo.Lesson_Comment_Insert";
         private const string _commentDeleteFromLessonProcedure = "dbo.Lesson_Comment_Delete";
@@ -89,7 +91,7 @@ namespace DevEdu.DAL.Repositories
                     _lessonSelectAllProcedure,
                     commandType: CommandType.StoredProcedure
                 )
-                .AsList<LessonDto>();
+                .ToList();
         }
 
         public LessonDto SelectLessonById(int id)
@@ -104,7 +106,7 @@ namespace DevEdu.DAL.Repositories
         public int UpdateLesson(int id, String commentDto, DateTime date)
         {
             return _connection.QuerySingleOrDefault<int>(
-                "dbo.Lesson_Update",
+                _lessonUpdateProcedure,
                 new
                 {
                     id,
