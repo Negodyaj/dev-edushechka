@@ -27,6 +27,7 @@ namespace DevEdu.DAL.Repositories
                 {
                     user.FisrtName,
                     user.LastName,
+                    user.Patronymic,
                     user.Email,
                     user.Username,
                     user.Password,
@@ -66,6 +67,7 @@ namespace DevEdu.DAL.Repositories
                     user.Id,
                     user.FisrtName,
                     user.LastName,
+                    user.Patronymic,
                     user.Username,
                     user.CityId,
                     user.GitHubAccount,

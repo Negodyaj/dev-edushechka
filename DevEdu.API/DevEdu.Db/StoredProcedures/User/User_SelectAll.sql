@@ -4,6 +4,7 @@ BEGIN
 	SELECT 
 		FisrtName,
 		LastName,
+		Patronymic,
 		Email,
 		Username,
 		Password,

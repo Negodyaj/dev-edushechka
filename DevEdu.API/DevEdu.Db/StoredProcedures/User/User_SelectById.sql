@@ -6,6 +6,7 @@ BEGIN
 		Id,
 		FisrtName,
 		LastName,
+		Patronymic,
 		Email,
 		Username,
 		Password,

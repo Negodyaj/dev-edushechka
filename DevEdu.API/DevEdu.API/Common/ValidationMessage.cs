@@ -6,6 +6,7 @@
         public const string WrongFormatIdRequired = "Id must be provided";
         public const string FirstNameRequired = "FirstName must be provided";
         public const string LastNameRequired = "LastName must be provided";
+        public const string PatronymicRequired = "Patronymic must be provided";
         public const string EmailRequired = "Email must be provided";
         public const string WrongFormatEmailFormat = "Email must be provided";
         public const string UsernameRequired = "Username must be provided";

@@ -2,7 +2,8 @@
 	Id					int NOT NULL IDENTITY(1,1),
 	FisrtName			nvarchar(50) NOT NULL,
 	LastName			nvarchar(50) NOT NULL,
-	Email				nvarchar(50) NOT NULL,  --
+	Patronymic 			nvarchar(50) NOT NULL,
+	Email				nvarchar(50) NOT NULL, 
 	Username			nvarchar(50) NOT NULL,
 	Password			nvarchar(30) NOT NULL,
 	RegistrationDate	datetime NOT NULL,

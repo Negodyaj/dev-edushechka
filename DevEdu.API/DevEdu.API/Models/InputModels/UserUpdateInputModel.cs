@@ -15,6 +15,9 @@ namespace DevEdu.API.Models.InputModels
         [Required(ErrorMessage = LastNameRequired)]
         public string LastName { get; set; }
 
+        [Required(ErrorMessage = PatronymicRequired)]
+        public string Patronymic { get; set; }
+
         [Required(ErrorMessage = UsernameRequired)]
         public string Username { get; set; }
 
