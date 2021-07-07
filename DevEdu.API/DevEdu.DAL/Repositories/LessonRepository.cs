@@ -17,7 +17,7 @@ namespace DevEdu.DAL.Repositories
         {
         }
 
-        public void AddStudenToLesson(int lessonId, int userId)
+        public void AddStudentToLesson(int lessonId, int userId)
         {
             _connection.Execute(
             _lessonInsertProcedure,

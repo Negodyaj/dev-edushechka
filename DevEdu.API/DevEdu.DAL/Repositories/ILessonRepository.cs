@@ -4,7 +4,7 @@ namespace DevEdu.DAL.Repositories
 {
     public interface ILessonRepository
     {
-        void AddStudenToLesson(int lessonId, int userId);
+        void AddStudentToLesson(int lessonId, int userId);
         void DeleteStudentFromLesson(int lessonId, int userId);
         void UpdateStudentAbsenceReasonOnLesson(StudentLessonDto studentLessonDto);
         void UpdateStudentAttendanceOnLesson(StudentLessonDto studentLessonDto);

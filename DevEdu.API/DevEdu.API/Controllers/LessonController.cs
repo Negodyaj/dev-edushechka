@@ -64,7 +64,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{lessonId}/user/{userId}")]
         public void AddStudenToLesson(int lessonId, int userId )
         {
-            _lessonRepository.AddStudenToLesson(lessonId, userId);
+            _lessonRepository.AddStudentToLesson(lessonId, userId);
         }
 
         // api/lesson/{lessonId}/user/{userId}
