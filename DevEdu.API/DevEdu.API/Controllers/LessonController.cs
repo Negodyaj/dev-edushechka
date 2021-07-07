@@ -1,10 +1,6 @@
-﻿using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
 using DevEdu.DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -60,42 +56,37 @@ namespace DevEdu.API.Controllers
             _repository.AddTopicToLesson(lessonId, topicId);
         }
 
-
-
-
-        // api/lesson/userId/{userId}/lessonId/{lessonId} 
-        [HttpPost("userId/{userId}/lessonId/{lessonId} ")]
+        // api/lesson/{lessonId}/user/{userId}
+        [HttpPost("{lessonId}/user/{userId}")]
         public string AddStudenToLesson(int userId, int lessonId)
         {
             return $"userId {userId} lessonId {lessonId} ";
         }
 
-
-           // api/lesson/userId/{userId}/lessonId/{lessonId} 
-        [HttpDelete("userId/{userId}/lessonId/{lessonId} ")]
-        public string DeleteStodentFromLesson(int userId, int lessonId)
+        // api/lesson/{lessonId}/user/{userId}
+        [HttpDelete("{lessonId}/user/{userId}")]
+        public string DeleteStudentFromLesson(int userId, int lessonId)
         {
             return $"userId {userId} lessonId {lessonId} ";
         }
 
-
-        // api/lesson/userId/{userId}/lessonId/{lessonId}/feedback 
-        [HttpPut("userId/{userId}/lessonId/{lessonId}/feedback ")]
-        public string UpdateFeedbackOfStudenLesson(int userId, int lessonId, [FromBody] StudentLessonUpdateFeedbackInputModel inputModel)
+        // api/lesson/{lessonId}/user/{userId}/feedback
+        [HttpPut("{lessonId}/user/{userId}/feedback")]
+        public string UpdateStudentFeedbackForLesson(int userId, int lessonId, [FromBody] FeedbackInputModel inputModel)
         {
             return $"userId {userId} lessonId {lessonId}, feedback {inputModel.Feedback}  ";
         }
 
-        // api/lesson/userId/{userId}/lessonId/{lessonId}/absenceReason
-        [HttpPut("userId/{userId}/lessonId/{lessonId}/absenceReason ")]
-        public string UpdateAbsenceReasonOfStudenLesson(int userId, int lessonId, [FromBody] StudentLessonUpdateAbsenceReasonInputModel inputModel)
+        // api/lesson/{lessonId}/user/{userId}/absenceReason
+        [HttpPut("{lessonId}/user/{userId}/absenceReason ")]
+        public string UpdateStudentAbsenceReasonOnLesson(int userId, int lessonId, [FromBody] AbsenceReasonInputModel inputModel)
         {
             return $"userId {userId} lessonId {lessonId},absenceReason {inputModel.AbsenceReason}  ";
         }
 
-        // api/lesson/userId/{userId}/lessonId/{lessonId}/isPresent
-        [HttpPut("userId/{userId}/lessonId/{lessonId}/isPresent ")] 
-        public string UpdateIsPresentOfStudenLesson(int userId, int lessonId, [FromBody] StudentLessonUpdateIsPresentInputModel inputModel)
+        // api/lesson/{lessonId}/user/{userId}/attendance
+        [HttpPut("{lessonId}/user/{userId}/attendance ")] 
+        public string UpdateStudentAttendanceOnLesson(int userId, int lessonId, [FromBody] AttendanceInputModel inputModel)
         {
             return $"userId {userId} lessonId {lessonId},isPresent {inputModel.IsPresent} ";
         }

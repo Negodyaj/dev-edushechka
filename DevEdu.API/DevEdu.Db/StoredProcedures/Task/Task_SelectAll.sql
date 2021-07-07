@@ -1,4 +1,14 @@
 ﻿CREATE PROCEDURE dbo.Task_SelectAll
 AS
-	SELECT Name, StartDate, EndDate, Description, Links, IsRequired from dbo.Task
+BEGIN
+	SELECT 
+		Id,
+		Name,
+		StartDate,
+		EndDate,
+		Description, 
+		Links,
+		IsRequired 
+	From dbo.Task
 	WHERE IsDeleted = 0
+END
