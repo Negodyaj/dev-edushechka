@@ -16,6 +16,7 @@ namespace DevEdu.API.Configuration
         private void CreateMappingToDto()
         { 
             CreateMap<CourseInputModel, CourseDto>();
+            CreateMap<CourseTopicInputModel, CourseTopicDto>();
             CreateMap<CommentAddInputModel, CommentDto>();
             CreateMap<CommentUpdateInputModel, CommentDto>();
             CreateMap<GroupInputModel, GroupDto>();

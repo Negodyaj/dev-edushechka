@@ -67,13 +67,14 @@ namespace DevEdu.API.Controllers
         [HttpPost("{taskId}/tag/{tagId}")]
         public int AddTagToTask(int taskId, int tagId)
         {
-            return 1;
+            return _taskRepository.AddTagToTagTask(taskId, tagId);
         }
 
         // api/task/{taskId}/tag/{tagId}
         [HttpDelete("{taskId}/tag/{tagId}")]
         public string DeleteTagFromTask(int taskId, int tagId)
         {
+            _taskRepository.DeleteTagFromTask(taskId, tagId);
             return $"deleted tag task with {taskId} taskId";
         }
 
