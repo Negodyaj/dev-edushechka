@@ -51,10 +51,6 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddTopicToLesson(int lessonId, int topicId)
-        {
-            _connection.Query("dbo.Lesson_Topic_Insert", new { lessonId, topicId });
-        }
 
         public void DeleteCommentFromLesson(int lessonId, int commentId)
         {
@@ -78,11 +74,6 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-
-        public void DeleteTopicFromLesson(int lessonId, int topicId)
-        {
-            _connection.Query("dbo.Lesson_Topic_Delete", new { lessonId, topicId });
-        }
 
         public List<LessonDto> SelectAllLessons()
         {
