@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
-    public class TagRepository : BaseRepository, ITagRepository 
+    public class TagRepository : BaseRepository, ITagRepository
     {
         private const string _tagInsertProcedure = "[dbo].[Tag_Insert]";
         private const string _tagDeleteProcedure = "[dbo].[Tag_Delete]";
@@ -19,28 +19,48 @@ namespace DevEdu.DAL.Repositories
         private const string _tagUpdateProcedure = "[dbo].[Tag_Update]";
         public int AddTag(TagDto tagDto)
         {
-            return _connection.QuerySingleOrDefault<int>(_tagInsertProcedure, new { tagDto.Name }, commandType: CommandType.StoredProcedure);
+            return _connection.QuerySingleOrDefault<int>(
+                        _tagInsertProcedure,
+                        new { tagDto.Name },
+                        commandType: CommandType.StoredProcedure
+                   );
         }
-        public void DeleteTag(int id)
+        public int DeleteTag(int id)
         {
-            _connection.Execute(_tagDeleteProcedure, new { id }, commandType: CommandType.StoredProcedure);
+            return _connection.Execute(
+                      _tagDeleteProcedure,
+                      new { id },
+                      commandType: CommandType.StoredProcedure
+                   );
         }
         public List<TagDto> SelectAllTags()
         {
-            List<TagDto> tagDtos = _connection.Query<TagDto>(_tagSelectAllProcedure, commandType: CommandType.StoredProcedure).ToList();
-
-            return tagDtos;
+            return _connection.Query<TagDto>(
+                        _tagSelectAllProcedure,
+                        commandType: CommandType.StoredProcedure
+                   )
+                   .ToList();
         }
 
         public TagDto SelectTagById(int id)
         {
-            TagDto tagDto = _connection.QuerySingleOrDefault<TagDto>(_tagSelectByIDProcedure, new { id }, commandType: CommandType.StoredProcedure);
-
-            return tagDto;
+            return _connection.QuerySingleOrDefault<TagDto>(
+                        _tagSelectByIDProcedure,
+                        new { id },
+                        commandType: CommandType.StoredProcedure
+                   );
         }
-        public void UpdateTag(TagDto tagDto)
+        public int UpdateTag(TagDto tagDto)
         {
-            _connection.Execute(_tagUpdateProcedure, new { tagDto.Id, tagDto.Name }, commandType: CommandType.StoredProcedure);
+            return _connection.Execute(
+                        _tagUpdateProcedure,
+                        new 
+                        { 
+                            tagDto.Id,
+                            tagDto.Name
+                        },
+                        commandType: CommandType.StoredProcedure
+                   );
         }
     }
 }

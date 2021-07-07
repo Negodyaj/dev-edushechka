@@ -12,9 +12,11 @@ namespace DevEdu.DAL.Models
 
         public override bool Equals(object obj)
         {
-           return obj is TagDto tagDto &&
-                  Id == tagDto.Id &&
-                  Name == tagDto.Name;
+
+            return obj != null &&
+              obj is TagDto tagDto &&
+              Id == tagDto.Id &&
+              Name == tagDto.Name;
         }
     }
 }
