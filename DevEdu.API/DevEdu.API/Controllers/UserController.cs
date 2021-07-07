@@ -1,5 +1,9 @@
-﻿using DevEdu.API.Models.InputModels;
+﻿using AutoMapper;
+using DevEdu.API.Models.InputModels;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Controllers
 {
@@ -7,48 +11,64 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        public UserController() { }
+        private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
+
+        public UserController(IMapper mapper, IUserRepository userRepository)
+        {
+            _mapper = mapper;
+            _userRepository = userRepository;
+        }
 
         // api/user
         [HttpPost]
         public int AddUser([FromBody] UserInsertInputModel model)
         {
-            return 1;
+            var dto = _mapper.Map<UserDto>(model);
+            return _userRepository.AddUser(dto);
         }
 
         // api/user/userId
         [HttpPut("{userId}")]
-        public string UpdateUserById(int userId,[FromBody] UserUpdateInputModel model)
+        public void UpdateUserById([FromBody] UserUpdateInputModel model)
         {
-            return $"update User №{userId} is success";
+            var dto = _mapper.Map<UserDto>(model);
+            _userRepository.UpdateUser(dto);
         }
 
         // api/user/{userId}
         [HttpGet("{userId}")]
-        public string GetUserById(int userId)
+        public UserDto GetUserById(int userId)
         {
-            return userId.ToString();
+            return _userRepository.SelectUserById(userId);
         }
 
         // api/user
         [HttpGet]
-        public string GetAllUsers()
+        public List<UserDto> GetAllUsers()
         {
-            return "here's for you all Users";
+            return _userRepository.SelectUsers();
         }
 
         // api/user/{userId}
         [HttpDelete("{userId}")]
-        public string DeleteUser(int userId)
+        public void DeleteUser(int userId)
         {
-            return $"User with number {userId} is deleted";
+            _userRepository.DeleteUser(userId);
         }
 
         // api/user/{userId}/role/{roleId}
         [HttpPost("{userId}/role/{roleId}")]
         public int AddRoleToUser(int userId, int roleId)
         {
-            return 42;
+            return _userRepository.AddUserRole(userId, roleId);
+        }
+
+        // api/user/{userId}/role/{roleId}
+        [HttpDelete("{userId}/role/{roleId}")]
+        public void DeleteRoleFromUser(int userId, int roleId)
+        {
+            _userRepository.DeleteUserRole(userId, roleId);
         }
     }
 }

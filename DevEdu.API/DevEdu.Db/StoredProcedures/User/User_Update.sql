@@ -1,6 +1,8 @@
 ﻿CREATE PROCEDURE dbo.User_Update
 	@Id				int,
-	@Name			nvarchar(50) NULL,
+	@FisrtName		nvarchar(50) NULL,
+	@LastName		nvarchar(50) NULL,
+	@Patronymic		nvarchar(50) NULL,
 	@Username		nvarchar(50) NULL,
 	@CityId			int NULL,
 	@GitHubAccount	nvarchar(50) NULL,
@@ -10,7 +12,9 @@ AS
 BEGIN
 	UPDATE dbo.[User]
     SET
-		Name			= @Name,
+		FisrtName		= @FisrtName,
+		LastName		= @LastName,
+		Patronymic		= @Patronymic,
 		Username		= @Username,
 		CityId			= @CityId,
 		GitHubAccount	= @GitHubAccount,

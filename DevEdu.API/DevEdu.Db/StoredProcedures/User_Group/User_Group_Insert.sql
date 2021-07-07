@@ -3,5 +3,7 @@
 	@UserId int,
 	@RoleId int
 AS
-	INSERT INTO User_Group (GroupId, UserId, RoleId)
+BEGIN
+	INSERT INTO [dbo].[User_Group] (GroupId, UserId, RoleId)
 	VALUES (@GroupId, @UserId, @RoleId)
+END

@@ -1,5 +1,7 @@
-﻿CREATE PROCEDURE [dbo].[User_Insert]
-	@Name				nvarchar(50),
+﻿CREATE PROCEDURE dbo.User_Insert
+	@FisrtName			nvarchar(50),
+	@LastName			nvarchar(50),
+	@Patronymic 		nvarchar(50),
 	@Email				nvarchar(50),
 	@Username			nvarchar(50),
 	@Password			nvarchar(30),
@@ -11,9 +13,9 @@
 	@PhoneNumer			nvarchar(12)
 AS
 BEGIN
-	INSERT INTO dbo.[User] ([Name],[Email],[Username],[Password],[RegistrationDate],[ContractNumber],[CityId],
+	INSERT INTO dbo.[User] ([FisrtName],[LastName],[Patronymic],[Email],[Username],[Password],[RegistrationDate],[ContractNumber],[CityId],
 		[BirthDate],[GitHubAccount],[Photo],[PhoneNumer])
-	VALUES (@Name,@Email,@Username,@Password,getdate(),@ContractNumber,@CityId,
+	VALUES (@FisrtName,@LastName,@Patronymic,@Email,@Username,@Password,getdate(),@ContractNumber,@CityId,
 		@BirthDate,@GitHubAccount,@Photo,@PhoneNumer)
 	SELECT @@IDENTITY
 END
