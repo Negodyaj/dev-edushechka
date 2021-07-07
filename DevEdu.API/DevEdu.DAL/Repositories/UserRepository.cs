@@ -25,7 +25,7 @@ namespace DevEdu.DAL.Repositories
                _userAddProcedure,
                 new
                 {
-                    user.FisrtName,
+                    user.FirstName,
                     user.LastName,
                     user.Patronymic,
                     user.Email,
@@ -36,7 +36,7 @@ namespace DevEdu.DAL.Repositories
                     user.BirthDate,
                     user.GitHubAccount,
                     user.Photo,
-                    user.PhoneNumer
+                    user.PhoneNumber
                 },
             commandType: CommandType.StoredProcedure);
         }
@@ -65,14 +65,14 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     user.Id,
-                    user.FisrtName,
+                    user.FirstName,
                     user.LastName,
                     user.Patronymic,
                     user.Username,
                     user.CityId,
                     user.GitHubAccount,
                     user.Photo,
-                    user.PhoneNumer
+                    user.PhoneNumber
                 },
             commandType: CommandType.StoredProcedure
             );

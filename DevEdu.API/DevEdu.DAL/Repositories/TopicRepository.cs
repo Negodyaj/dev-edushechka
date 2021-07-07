@@ -15,9 +15,7 @@ namespace DevEdu.DAL.Repositories
         private const string _topicSelectAllProcedure = "dbo.Topic_SelectAll";
         private const string _topicUpdateProcedure = "dbo.Topic_Update";       
 
-        TopicRepository()
-        {
-        }
+        public TopicRepository() { }
 
         public int AddTopic(TopicDto topicDto)
         {
