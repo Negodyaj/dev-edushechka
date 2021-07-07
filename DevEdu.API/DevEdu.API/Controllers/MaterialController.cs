@@ -1,14 +1,10 @@
 ﻿using DevEdu.API.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
     [ApiController]
-    [Route("api/material")]
+    [Route("api/[controller]")]
     public class MaterialController : Controller
     {
         public MaterialController() { }
@@ -20,8 +16,8 @@ namespace DevEdu.API.Controllers
             return 42;
         }
 
-        // api/material/all
-        [HttpGet("all")]
+        // api/material
+        [HttpGet]
         public string GetAllMaterials()
         {
             return "all materials";
@@ -48,16 +44,18 @@ namespace DevEdu.API.Controllers
             return $"deleted material with id {id}";
         }
 
+        // api/material/{materialId}/tag/{tagId}
         [HttpPost("{materialId}/tag/{tagId}")]
-        public int AddTagMaterial(int tagId, int materialId)
+        public int AddTagToMaterial(int materialId, int tagId)
         {
             return 1;
         }
 
-        [HttpDelete("{tagMaterialId}")]
-        public string DeleteTagMaterial(int tagMaterialId)
+        // api/material/{materialId}/tag/{tagId}
+        [HttpDelete("{materialId}/tag/{tagId}")]
+        public string DeleteTagFromMaterial(int materialId, int tagId)
         {
-            return $"deleted tag material with {tagMaterialId} Id";
+            return $"deleted tag material with {materialId} materialId";
         }
 
     }

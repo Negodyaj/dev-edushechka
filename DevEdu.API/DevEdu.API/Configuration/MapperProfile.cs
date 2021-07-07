@@ -13,9 +13,15 @@ namespace DevEdu.API.Configuration
         }
 
         private void CreateMappingToDto()
-        {
+        { 
+            CreateMap<CourseInputModel, CourseDto>();
+            CreateMap<CommentAddInputModel, CommentDto>();
+            CreateMap<CommentUpdateInputModel, CommentDto>();
+            CreateMap<TaskInputModel, TaskDto>();
             CreateMap<TopicInputModel, TopicDto>();
-         
+            CreateMap<CourseInputModel, CourseDto>().ReverseMap();
+            CreateMap<GroupInputModel, GroupDto>().ReverseMap();
+            CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
         }
 
         private void CreateMappingFromDto()

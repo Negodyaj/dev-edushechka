@@ -4,6 +4,7 @@ AS
 BEGIN
     UPDATE dbo.[User]
     SET
-        IsDeleted = 1
+        IsDeleted = 1,
+        ExileDate = getdate()
     WHERE Id = @Id
 END

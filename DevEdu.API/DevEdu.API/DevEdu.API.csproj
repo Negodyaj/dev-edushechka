@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DevEdu.Business\DevEdu.Business.csproj" />
     <ProjectReference Include="..\DevEdu.DAL\DevEdu.DAL.csproj" />
   </ItemGroup>
 

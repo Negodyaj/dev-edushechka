@@ -15,7 +15,6 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         public int AddTag([FromBody] TagInputModel model)
         {
-
             return 42;
         }
     }
