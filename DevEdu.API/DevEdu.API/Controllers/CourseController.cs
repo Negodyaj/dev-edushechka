@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -28,9 +30,11 @@ namespace DevEdu.API.Controllers
 
         //  api/Course
         [HttpGet]
-        public List<CourseDto> GetAllCourses()
+        [Description("Get all courses with topics")]
+        public List<CourseInfoOutputModel> GetAllCourses()
         {
-            return _courseRepository.GetCourses();
+            var courses = _courseRepository.GetCourses();
+            return _mapper.Map<List<CourseInfoOutputModel>>(courses);
         }
 
         //  api/course

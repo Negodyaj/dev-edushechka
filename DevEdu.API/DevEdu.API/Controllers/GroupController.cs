@@ -89,5 +89,19 @@ namespace DevEdu.API.Controllers
         {
             return _groupService.RemoveGroupMaterialReference(materialId,groupId);
         }
+
+        //  api/group/1/user/2/role/1
+        [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
+        public void AddUserToGroup(int groupId, int userId, int roleId)
+        {
+            _groupRepository.AddUserToGroup(groupId, userId, roleId);
+        }
+
+        //  api/group/1/user/2
+        [HttpDelete("{groupId}/user/{userId}")]
+        public void DeleteUserFromGroup(int groupId, int userId)
+        {
+            _groupRepository.DeleteUserFromGroup(userId, groupId);
+        }
     }
 }

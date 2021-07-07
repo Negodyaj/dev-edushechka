@@ -2,7 +2,7 @@
 	@Id				int,
 	@FirstName		nvarchar(50) NULL,
 	@LastName		nvarchar(50) NULL,
-	@Patronymic 		nvarchar(50) NULL,
+	@Patronymic		nvarchar(50) NULL,
 	@Username		nvarchar(50) NULL,
 	@CityId			int NULL,
 	@GitHubAccount	nvarchar(50) NULL,
@@ -14,7 +14,7 @@ BEGIN
     SET
 		FirstName		= @FirstName,
 		LastName		= @LastName,
-		Patronymic 		= @Patronymic,
+		Patronymic		= @Patronymic,
 		Username		= @Username,
 		CityId			= @CityId,
 		GitHubAccount	= @GitHubAccount,
