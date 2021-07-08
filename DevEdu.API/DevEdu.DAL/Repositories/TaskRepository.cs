@@ -23,11 +23,27 @@ namespace DevEdu.DAL.Repositories
 
         public TaskDto GetTaskById(int id)
         {
-            TaskDto task = _connection.QuerySingleOrDefault<TaskDto>(
+            TaskDto task = default;
+            _connection.Query<TaskDto, TagDto, TaskDto>(
                 _taskSelectByIdProcedure,
-                new { id },
-                commandType: CommandType.StoredProcedure
-                );
+                (taskDto, TagDto) =>
+                {
+                    if (task == null)
+                    {
+                        task = taskDto;
+                        task.Tags = new List<TagDto> {TagDto};
+                    }
+                    else
+                    {
+                        task.Tags.Add(TagDto);
+                    }
+
+                    return taskDto;
+                },
+                new {id},
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure)
+                .FirstOrDefault();
             return task;
         }
 
@@ -51,7 +67,8 @@ namespace DevEdu.DAL.Repositories
                     taskDtoEntry.Tags.Add(TagDto);
                     return taskDtoEntry;
                 },
-                splitOn: "Id")
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure)
                 .Distinct()
                 .ToList<TaskDto>();
             return list;
