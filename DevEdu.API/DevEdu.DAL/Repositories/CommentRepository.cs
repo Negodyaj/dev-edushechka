@@ -66,7 +66,7 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
         }
 
-        public List<CommentDto> GetCommentsByUserId(int userId)
+        public List<CommentDto> GetCommentsByUser(int userId)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
 
