@@ -2,12 +2,13 @@
 using System.ComponentModel;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using DevEdu.DAL.Repositories;
 using AutoMapper;
+using DevEdu.API.Models.OutputModels;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
@@ -18,12 +19,15 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ICourseRepository _courseRepository;
+        private readonly ICourseService _courseService;
         private readonly ITopicRepository _topicRepository;
         
-        public CourseController(IMapper mapper, ICourseRepository courseRepository, ITopicRepository topicRepository )
+        public CourseController(IMapper mapper, ICourseRepository courseRepository, ITopicRepository topicRepository, ICourseService courseService)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
+            _courseService = courseService;
+            _mapper = mapper;
             _topicRepository = topicRepository;
         }
 
@@ -72,7 +76,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("topic/{topicId}/tag/{tagId}")]
         public string AddTagToTopic(int topicId, int tagId)
         {
-            _courseRepository.AddTagToTopic(topicId, tagId);
+            _courseService.AddTagToTopic(topicId, tagId);
             return $"add to topic with {topicId} Id tag with {tagId} Id";
         }
 
@@ -80,7 +84,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("topic/{topicId}/tag/{tagId}")]
         public string DeleteTagAtTopic(int topicId, int tagId)
         {
-            _courseRepository.DeleteTagFromTopic(topicId, tagId);
+            _courseService.DeleteTagFromTopic(topicId, tagId);
             return $"deleted at topic with {topicId} Id tag with {tagId} Id";
         }
 

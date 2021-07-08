@@ -8,7 +8,12 @@
         public const string LastNameRequired = "LastName must be provided";
         public const string PatronymicRequired = "Patronymic must be provided";
         public const string EmailRequired = "Email must be provided";
-        public const string WrongFormatEmailFormat = "Email must be provided";
+        public const string WrongEmailFormat = "You've got to use the correct email format";
+        public const string NameRequired = "Name must be provided";
+        public const string StartDateRequired = "StartDate must be provided";
+        public const string EndDateRequired = "EndDate must be provided";
+        public const string DescriptionRequired = "Description must be provided";
+        public const string IsRequiredErrorMessge = "IsRequired must be Provided";
         public const string UsernameRequired = "Username must be provided";
         public const string PasswordRequired = "Password must be provided";
         public const string WrongFormatPasswordRequired = "Password must be provided";

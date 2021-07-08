@@ -11,5 +11,5 @@ BEGIN
 	FROM dbo.Material m
 		left join dbo.Tag_Material tm on tm.MaterialId = m.Id
 		left join dbo.Tag t on t.Id = tm.TagId
-	WHERE m.Id = @MaterialId
+	WHERE m.Id = @Id
 END

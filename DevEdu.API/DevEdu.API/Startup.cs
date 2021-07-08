@@ -1,5 +1,5 @@
 using DevEdu.DAL.Repositories;
-using DevEdu.Business.Servicies;
+using DevEdu.Business.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -32,9 +32,10 @@ namespace DevEdu.API
             services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
-            
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IMaterialService, MaterialService>();
+            services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ICourseService, CourseService>(); 
 
             services.AddControllers();
 
