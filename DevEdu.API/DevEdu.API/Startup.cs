@@ -33,6 +33,7 @@ namespace DevEdu.API
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
             
             services.AddScoped<ICommentService, CommentService>();
 
