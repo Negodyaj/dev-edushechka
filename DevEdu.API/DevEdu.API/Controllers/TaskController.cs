@@ -122,15 +122,15 @@ namespace DevEdu.API.Controllers
             return statusId;
         }
 
-        // api/task/{taskId}/student/{studentId}/comment}
-        [HttpPost("{taskId}/student/{studentId}/comment")]
-        public int AddCommentOnStudentAnswer(int taskId, int studentId, [FromBody] CommentAddInputModel inputModel)
+        // api/task/answer/{taskStudentId}/comment}
+        [HttpPost("answer/{taskStudentId}/comment")]
+        public int AddCommentOnStudentAnswer(int taskstudentId, [FromBody] CommentAddInputModel inputModel)
         {
             var commentDto = _mapper.Map<CommentDto>(inputModel);
             int commentId = _commentRepository.AddComment(commentDto);
-            _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskId, studentId, commentId);
+            _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskstudentId, commentId);
 
-            return taskId;
+            return taskstudentId;
         }
     }
 }
