@@ -10,5 +10,7 @@ namespace DevEdu.DAL.Repositories
         int AddTask(TaskDto task);
         void UpdateTask(TaskDto task);
         void DeleteTask(int id);
+        int AddTagToTagTask(int taskId, int tagId);
+        void DeleteTagFromTask(int taskId, int tagId);
     }
 }

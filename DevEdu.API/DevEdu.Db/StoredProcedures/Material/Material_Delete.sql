@@ -1,9 +1,10 @@
 ﻿CREATE PROCEDURE dbo.Material_Delete
-	@Id int
+	@Id int,
+	@IsDeleted bit
 AS
 BEGIN
 	UPDATE dbo.Material
 	SET
-		IsDeleted = 1
+		IsDeleted = @IsDeleted
 	WHERE Id = @Id
 END
