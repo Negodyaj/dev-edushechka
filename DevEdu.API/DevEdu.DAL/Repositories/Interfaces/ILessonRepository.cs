@@ -13,5 +13,12 @@ namespace DevEdu.DAL.Repositories
         List<LessonDto> SelectAllLessons();
         LessonDto SelectLessonById(int id);
         int UpdateLesson(int id, string commentDto, DateTime date);
+        int DeleteTopicFromLesson(int lessonId, int topicId);
+        void AddTopicToLesson(int lessonId, int topicId);
+        void AddStudentToLesson(int lessonId, int userId);
+        void DeleteStudentFromLesson(int lessonId, int userId);
+        void UpdateStudentAbsenceReasonOnLesson(StudentLessonDto studentLessonDto);
+        void UpdateStudentAttendanceOnLesson(StudentLessonDto studentLessonDto);
+        void UpdateStudentFeedbackForLesson(StudentLessonDto studentLessonDto);
     }
 }

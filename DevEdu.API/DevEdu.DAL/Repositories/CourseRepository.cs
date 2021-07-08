@@ -16,9 +16,7 @@ namespace DevEdu.DAL.Repositories
         private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
         private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
 
-        public CourseRepository()
-        {
-        }
+        public CourseRepository() { }
 
         public int AddCourse(CourseDto courseDto)
         {

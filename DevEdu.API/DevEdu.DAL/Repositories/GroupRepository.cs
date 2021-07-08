@@ -9,8 +9,8 @@ namespace DevEdu.DAL.Repositories
         private const string _userGroupDeleteProcedure = "dbo.Tag_Delete";
         private const string _insertGroupLesson = "dbo.Group_Lesson_Insert";
         private const string _deleteGroupLesson = "dbo.Group_Lesson_Delete";
-        private const string _groupMaterialInsertProcedure = "dbo.Group_Material_Insert";
-        private const string _groupMaterialDeleteProcedure = "dbo.Group_Material_Delete";
+        private const string _insertGroupMaterial = "dbo.Group_Material_Insert";
+        private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
 
         public void AddGroupLesson(int groupId, int lessonId)
         {
@@ -25,6 +25,7 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
+
         public void RemoveGroupLesson(int groupId, int lessonId)
         {
             _connection.Execute(
@@ -38,10 +39,10 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int AddGroupMaterialReference(int materialId, int groupId)
+        public void AddGroupMaterialReference(int materialId, int groupId)
         {
-            return _connection.Execute(
-                _groupMaterialInsertProcedure,
+            _connection.Execute(
+                _insertGroupMaterial,
                 new
                 {
                     materialId,
@@ -51,10 +52,10 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int RemoveGroupMaterialReference(int materialId, int groupId)
+        public void RemoveGroupMaterialReference(int materialId, int groupId)
         {
-            return _connection.Execute(
-                _groupMaterialDeleteProcedure,
+            _connection.Execute(
+                _deleteGroupMaterial,
                 new
                 {
                     materialId,
@@ -63,6 +64,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
+
         public int AddUserToGroup(int groupId, int userId, int roleId)
         {
             return _connection.Execute(
@@ -76,6 +78,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
+
         public int DeleteUserFromGroup(int userId, int groupId)
         {
             return _connection.Execute(

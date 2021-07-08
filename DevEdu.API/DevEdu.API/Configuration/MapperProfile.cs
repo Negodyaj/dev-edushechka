@@ -15,10 +15,14 @@ namespace DevEdu.API.Configuration
 
         private void CreateMappingToDto()
         { 
+            CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
+            CreateMap<AttendanceInputModel, StudentLessonDto>();
             CreateMap<CourseInputModel, CourseDto>();
+            CreateMap<CourseTopicInputModel, CourseTopicDto>();
             CreateMap<CommentAddInputModel, CommentDto>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }));
             CreateMap<CommentUpdateInputModel, CommentDto>();
+            CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<GroupInputModel, GroupDto>();
             CreateMap<MaterialInputModel, MaterialDto>();
             CreateMap<NotificationAddInputModel, NotificationDto>();

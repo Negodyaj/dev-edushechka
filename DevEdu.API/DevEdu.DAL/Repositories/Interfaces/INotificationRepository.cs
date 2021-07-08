@@ -1,19 +1,14 @@
 ﻿using System.Collections.Generic;
 using DevEdu.DAL.Models;
 
-
 namespace DevEdu.DAL.Repositories
 {
     public interface INotificationRepository
     {
-        int AddNotification(NotificationDto notificationDto);
-
-        void DeleteNotification(int id);
-
-        NotificationDto GetNotification(int id);
-
-        List<NotificationDto> GetNotificationsByUser(int userId);
-
-        void UpdateNotification(NotificationDto notificationDto);
+        public int AddNotification(NotificationDto notificationDto);
+        public void DeleteNotification(int id);
+        public NotificationDto GetNotification(int id);
+        public List<NotificationDto> GetNotificationsByUser(int userId);
+        public void UpdateNotification(NotificationDto notificationDto);
     }
 }
