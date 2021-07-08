@@ -2,7 +2,7 @@
 AS
 BEGIN
 	SELECT 
-		FisrtName,
+		FirstName,
 		LastName,
 		Patronymic,
 		Email,
@@ -15,7 +15,7 @@ BEGIN
 		BirthDate,
 		GitHubAccount,
 		Photo,
-		PhoneNumer,
+		PhoneNumber,
 		ExileDate
 	FROM dbo.[User]
 	WHERE IsDeleted = 0

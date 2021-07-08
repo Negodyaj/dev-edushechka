@@ -10,7 +10,7 @@ namespace DevEdu.API.Models.InputModels
         public int Id { get; set; }
 
         [Required(ErrorMessage = FirstNameRequired)]
-        public string FisrtName { get; set; }
+        public string FirstName { get; set; }
 
         [Required(ErrorMessage = LastNameRequired)]
         public string LastName { get; set; }
@@ -32,7 +32,7 @@ namespace DevEdu.API.Models.InputModels
         [Url]
         public string Photo { get; set; }
 
-        [Required(ErrorMessage = PhoneNumerRequired)]
-        public string PhoneNumer { get; set; }
+        [Required(ErrorMessage = PhoneNumberRequired)]
+        public string PhoneNumber { get; set; }
     }
 }

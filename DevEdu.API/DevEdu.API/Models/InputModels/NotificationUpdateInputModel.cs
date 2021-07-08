@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class TopicInputModel
+    public class NotificationUpdateInputModel
     {
         [Required]
-        public string Name { get; set; }
-        [Required]
-        public int Duration { get; set; }
-
+        public string Text { get; set; }
     }
 }

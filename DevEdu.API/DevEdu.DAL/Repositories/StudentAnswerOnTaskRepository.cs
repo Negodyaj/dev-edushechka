@@ -20,7 +20,6 @@ namespace DevEdu.DAL.Repositories
 
         private const string _taskStudentCommentInsert = "dbo.Task_Student_Comment_Insert";
 
-
         public StudentAnswerOnTaskRepository()
         {
 

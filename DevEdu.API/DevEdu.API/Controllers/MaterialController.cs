@@ -11,8 +11,8 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class MaterialController : Controller
     {
-        private readonly IMaterialRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IMaterialRepository _repository;
 
         public MaterialController(IMapper mapper, IMaterialRepository repository) 
         {

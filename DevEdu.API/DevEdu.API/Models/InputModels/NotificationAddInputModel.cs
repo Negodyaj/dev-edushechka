@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class TopicInputModel
+    public class NotificationAddInputModel
     {
         [Required]
-        public string Name { get; set; }
+        public int UserId { get; set; }
         [Required]
-        public int Duration { get; set; }
-
+        public string Text { get; set; }
     }
 }
