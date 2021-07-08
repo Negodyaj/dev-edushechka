@@ -17,6 +17,8 @@ namespace DevEdu.DAL.Repositories
 
         private const string _commentAddToLessonProcedure = "dbo.Lesson_Comment_Insert";
         private const string _commentDeleteFromLessonProcedure = "dbo.Lesson_Comment_Delete";
+        private const string _topicAddToLessonProcedure = "dbo.Lesson_Topic_Insert";
+        private const string _topicDeleteFromLessonProcedure = "dbo.Lesson_Topic_Delete";
         
         private const string _studentLessonInsertProcedure = "dbo.Student_Lesson_Insert";
         private const string _studentLessonDeleteProcedure = "dbo.Student_Lesson_Delete";
@@ -107,6 +109,32 @@ namespace DevEdu.DAL.Repositories
                     id,
                     commentDto,
                     date
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public void AddTopicToLesson(int lessonId, int topicId)
+        {
+            _connection.Execute(
+                _topicAddToLessonProcedure,
+                new
+                {
+                    lessonId,
+                    topicId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public int DeleteTopicFromLesson(int lessonId, int topicId)
+        {
+            return _connection.Execute(
+                _topicDeleteFromLessonProcedure,
+                new
+                {
+                    lessonId,
+                    topicId
                 },
                 commandType: CommandType.StoredProcedure
             );
