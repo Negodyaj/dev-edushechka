@@ -18,6 +18,8 @@ namespace DevEdu.DAL.Repositories
         private const string _taskStudentUpdateAnswer = "dbo.Task_Student_UpdateAnswer";
         private const string _taskStudentUpdateStatusId = "dbo.Task_Student_UpdateStatusId";
 
+        private const string _taskStudentCommentInsert = "dbo.Task_Student_Comment_Insert";
+
         public StudentAnswerOnTaskRepository()
         {
 
@@ -99,5 +101,17 @@ namespace DevEdu.DAL.Repositories
                 );
         }
 
+        public void AddCommentOnStudentAnswer(int taskstudentId, int commentId)
+        {
+            _connection.QuerySingle<int>(
+                _taskStudentCommentInsert,
+                new
+                {
+                    taskstudentId,
+                    commentId
+                },
+                commandType: CommandType.StoredProcedure
+           );
+        }
     }
 }

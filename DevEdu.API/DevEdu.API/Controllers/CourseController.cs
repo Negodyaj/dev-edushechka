@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using DevEdu.DAL.Repositories;
 using AutoMapper;
 using DevEdu.API.Models.OutputModels;
-using DevEdu.Business.Servicies;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers

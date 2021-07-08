@@ -4,9 +4,7 @@ using DevEdu.API.Models.InputModels;
 using System.Collections.Generic;
 using DevEdu.DAL.Repositories;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
-using System.Collections.Generic;
-using DevEdu.Business.Servicies;
+using DevEdu.Business.Services;
 
 namespace DevEdu.API.Controllers
 {
@@ -18,13 +16,20 @@ namespace DevEdu.API.Controllers
         private readonly ITaskService _taskService;
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
         private readonly ITaskRepository _taskRepository;
+        private readonly ICommentRepository _commentRepository;
 
-        public TaskController(IMapper mapper, ITaskService taskService, IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, ITaskRepository taskRepository)
+        public TaskController(
+            IMapper mapper, 
+            ITaskService taskService, 
+            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, 
+            ITaskRepository taskRepository,
+            ICommentRepository commentRepository)
         {
             _taskService = taskService;
             _mapper = mapper;
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
             _taskRepository = taskRepository;
+            _commentRepository = commentRepository;
         }
 
         //  api/Task/1
@@ -125,12 +130,15 @@ namespace DevEdu.API.Controllers
             return statusId;
         }
 
-        // api/task/{taskId}/student/{studentId}/comment}
-        [HttpPost("{taskId}/student/{studentId}/comment")]
-        public int AddCommentOnStudentAnswer(int taskId, int studentId, [FromBody] CommentAddInputModel inputModel)
+        // api/task/answer/{taskStudentId}/comment}
+        [HttpPost("answer/{taskStudentId}/comment")]
+        public int AddCommentOnStudentAnswer(int taskstudentId, [FromBody] CommentAddInputModel inputModel)
         {
+            var commentDto = _mapper.Map<CommentDto>(inputModel);
+            int commentId = _commentRepository.AddComment(commentDto);
+            _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskstudentId, commentId);
 
-            return taskId;
+            return taskstudentId;
         }
     }
 }
