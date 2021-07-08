@@ -23,14 +23,14 @@ namespace DevEdu.API.Models.InputModels
         public string Username { get; set; }
 
         [Required(ErrorMessage = PasswordRequired)]
-        [MinLength(8, ErrorMessage = WrongFormatPasswordRequired)]
+        [MinLength(8, ErrorMessage = WrongFormatPassword)]
         public string Password { get; set; }
 
         [Required(ErrorMessage = ContractNumberRequired)]
         public string ContractNumber { get; set; }
 
         [Required(ErrorMessage = CityIdRequired)]
-        [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatCityIdRequired)]
+        [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatCityId)]
         public int CityId { get; set; }
 
         [Required(ErrorMessage = BirthDateRequired)]
@@ -38,7 +38,7 @@ namespace DevEdu.API.Models.InputModels
 
         public string GitHubAccount { get; set; }
 
-        [Url(ErrorMessage = WrongFormatPhotoRequired)]
+        [Url(ErrorMessage = WrongFormatPhoto)]
         public string Photo { get; set; }
 
         [Required(ErrorMessage = PhoneNumberRequired)]
