@@ -33,6 +33,8 @@ namespace DevEdu.API
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ICourseService, CourseService>(); 
 
             services.AddControllers();
 
