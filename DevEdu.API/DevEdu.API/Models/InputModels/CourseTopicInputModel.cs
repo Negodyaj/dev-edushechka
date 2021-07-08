@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class TopicInputModel
+    public class CourseTopicInputModel
     {
         [Required]
-        public string Name { get; set; }
-        [Required]
-        public int Duration { get; set; }
+        public int Position { get; set; }
 
     }
 }

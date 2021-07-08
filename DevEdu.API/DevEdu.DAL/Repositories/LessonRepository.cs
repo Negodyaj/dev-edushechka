@@ -2,7 +2,6 @@
 using Dapper;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using DevEdu.DAL.Models;
 using System.Linq;
 
@@ -20,6 +19,12 @@ namespace DevEdu.DAL.Repositories
         private const string _commentDeleteFromLessonProcedure = "dbo.Lesson_Comment_Delete";
         private const string _topicAddToLessonProcedure = "dbo.Lesson_Topic_Insert";
         private const string _topicDeleteFromLessonProcedure = "dbo.Lesson_Topic_Delete";
+        
+        private const string _studentLessonInsertProcedure = "dbo.Student_Lesson_Insert";
+        private const string _studentLessonDeleteProcedure = "dbo.Student_Lesson_Delete";
+        private const string _updateFeedbackProcedure = "dbo.Student_Lesson_UpdateFeedback";
+        private const string _updateAbsenceReasonProcedure = "dbo.Student_Lesson_UpdateAbsenceReason";
+        private const string _updateIsPresentProcedure = "dbo.Student_Lesson_UpdateIsPresent";
 
         public LessonRepository()
         {
@@ -75,7 +80,6 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
-
 
         public List<LessonDto> SelectAllLessons()
         {
@@ -135,7 +139,72 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
+        
+        
+
+        public void AddStudentToLesson(int lessonId, int userId)
+        {
+            _connection.Execute(
+            _studentLessonInsertProcedure,
+             new
+             {
+                 lessonId,
+                 userId
+             },
+             commandType: CommandType.StoredProcedure
+         );
+        }
+
+        public void DeleteStudentFromLesson(int lessonId, int userId)
+        {
+            _connection.Execute(
+            _studentLessonDeleteProcedure,
+             new
+             {
+                 lessonId,
+                 userId
+             },
+             commandType: CommandType.StoredProcedure
+         );
+        }
+
+        public void UpdateStudentFeedbackForLesson(StudentLessonDto studentLessonDto)
+        {
+            _connection.Execute(
+            _updateFeedbackProcedure,
+             new
+             {
+                 studentLessonDto.LessonId,
+                 studentLessonDto.UserId
+             },
+             commandType: CommandType.StoredProcedure
+         );
+        }
+
+        public void UpdateStudentAbsenceReasonOnLesson(StudentLessonDto studentLessonDto)
+        {
+            _connection.Execute(
+            _updateAbsenceReasonProcedure,
+             new
+             {
+                 studentLessonDto.LessonId,
+                 studentLessonDto.UserId
+             },
+             commandType: CommandType.StoredProcedure
+         );
+        }
+
+        public void UpdateStudentAttendanceOnLesson(StudentLessonDto studentLessonDto)
+        {
+            _connection.Execute(
+            _updateIsPresentProcedure,
+             new
+             {
+                 studentLessonDto.LessonId,
+                 studentLessonDto.UserId
+             },
+             commandType: CommandType.StoredProcedure
+         );
+        }
     }
 }
-
-
