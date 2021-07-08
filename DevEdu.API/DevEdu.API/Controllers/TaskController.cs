@@ -16,12 +16,15 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ITaskService _taskService;
-        
-        public TaskController(IMapper mapper, ITaskService taskService)
+        private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
+        private readonly ITaskRepository _taskRepository;
+
+        public TaskController(IMapper mapper, ITaskService taskService, IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, ITaskRepository taskRepository)
         {
             _taskService = taskService;
             _mapper = mapper;
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
+            _taskRepository = taskRepository;
         }
 
         //  api/Task/1

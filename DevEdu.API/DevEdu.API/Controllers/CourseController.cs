@@ -7,6 +7,8 @@ using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using DevEdu.DAL.Repositories;
 using AutoMapper;
+using DevEdu.API.Models.OutputModels;
+using DevEdu.Business.Servicies;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
@@ -20,7 +22,7 @@ namespace DevEdu.API.Controllers
         private readonly ICourseService _courseService;
         private readonly ITopicRepository _topicRepository;
         
-        public CourseController(IMapper mapper, ICourseRepository courseRepository, ITopicRepository topicRepository )
+        public CourseController(IMapper mapper, ICourseRepository courseRepository, ITopicRepository topicRepository, ICourseService courseService)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;

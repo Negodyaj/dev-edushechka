@@ -33,12 +33,28 @@ namespace DevEdu.DAL.Repositories
 
         public List<TaskDto> GetTasks()
         {
-            List<TaskDto> tasks = _connection.Query<TaskDto>(
+            var taskDictionary = new Dictionary<int, TaskDto>();
+
+
+            var list = _connection.Query<TaskDto, TagDto, TaskDto>(
                     _taskSelectAlldProcedure,
-                commandType: CommandType.StoredProcedure
-                )
+                (taskDto, TagDto) =>
+                {
+                    TaskDto taskDtoEntry;
+
+                    if (!taskDictionary.TryGetValue(taskDto.Id, out taskDtoEntry))
+                    {
+                        taskDtoEntry = taskDto;
+                        taskDtoEntry.Tags = new List<TagDto>();
+                        taskDictionary.Add(taskDtoEntry.Id, taskDtoEntry);
+                    }
+                    taskDtoEntry.Tags.Add(TagDto);
+                    return taskDtoEntry;
+                },
+                splitOn: "Id")
+                .Distinct()
                 .ToList<TaskDto>();
-            return tasks;
+            return list;
         }
 
         public int AddTask(TaskDto taskDto)
