@@ -68,14 +68,14 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/lesson/{lessonId}")]
         public void AddGroupLessonReference(int groupId, int lessonId)
         {
-            
+            _groupRepository.AddGroupLesson(groupId, lessonId);
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
         public void RemoveGroupLessonReference(int groupId, int lessonId)
         {
-            
+            _groupRepository.RemoveGroupLesson(groupId, lessonId);
         }
 
         // api/Group/{groupId}/material/{materialId}
