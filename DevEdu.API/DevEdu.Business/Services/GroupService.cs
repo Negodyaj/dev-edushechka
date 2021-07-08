@@ -10,8 +10,8 @@ namespace DevEdu.Business.Services
             _groupRepository = groupRepository;
         }
 
-        public int AddGroupMaterialReference(int materialId, int groupId) => _groupRepository.AddGroupMaterialReference(materialId, groupId);
+        public int AddGroupMaterialReference(int groupId, int materialId) => _groupRepository.AddGroupMaterialReference(groupId, materialId);
 
-        public int RemoveGroupMaterialReference(int materialId, int groupId) => _groupRepository.RemoveGroupMaterialReference(materialId, groupId);
+        public int RemoveGroupMaterialReference(int groupId, int materialId) => _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
     }
 }

@@ -80,16 +80,16 @@ namespace DevEdu.API.Controllers
 
         // api/Group/{groupId}/material/{materialId}
         [HttpPost("{groupId}/material/{materialId}")]
-        public int AddGroupMaterialReference(int materialId, int groupId)
+        public int AddGroupMaterialReference(int groupId, int materialId)
         {
-            return _groupService.AddGroupMaterialReference(materialId,groupId);
+            return _groupService.AddGroupMaterialReference(groupId, materialId);
         }
 
         // api/Group/{groupId}/material/{materialId}
         [HttpDelete("{groupId}/material/{materialId}")]
-        public int RemoveGroupMaterialReference(int materialId, int groupId)
+        public int RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            return _groupService.RemoveGroupMaterialReference(materialId,groupId);
+            return _groupService.RemoveGroupMaterialReference(groupId, materialId);
         }
 
         //  api/group/1/user/2/role/1

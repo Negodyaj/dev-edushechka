@@ -2,7 +2,7 @@
 {
     public interface IGroupService
     {
-        int AddGroupMaterialReference(int materialId, int groupId);
-        int RemoveGroupMaterialReference(int materialId, int groupId);
+        int AddGroupMaterialReference(int groupId, int materialId);
+        int RemoveGroupMaterialReference(int groupId, int materialId);
     }
 }

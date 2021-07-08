@@ -16,7 +16,7 @@ namespace DevEdu.API.Models.InputModels
         public string Description { get; set; }
         [Required(ErrorMessage = DescriptionRequired)]
         public string Links { get; set; }
-        [Required(ErrorMessage = IsRequiredErrorMessge)]
+        [Required(ErrorMessage = IsRequiredErrorMessage)]
         public bool IsRequired { get; set; }
     }
 }
