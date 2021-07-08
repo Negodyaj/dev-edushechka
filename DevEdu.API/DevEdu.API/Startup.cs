@@ -1,5 +1,5 @@
 using DevEdu.DAL.Repositories;
-using DevEdu.Business.Servicies;
+using DevEdu.Business.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
