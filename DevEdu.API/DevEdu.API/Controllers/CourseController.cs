@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
-using DevEdu.Business.Servicies;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using DevEdu.DAL.Repositories;
+using AutoMapper;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
 {
@@ -15,11 +18,15 @@ namespace DevEdu.API.Controllers
         private readonly IMapper _mapper;
         private readonly ICourseRepository _courseRepository;
         private readonly ICourseService _courseService;
-        public CourseController(IMapper mapper, ICourseRepository courseRepository, ICourseService courseService)
+        private readonly ITopicRepository _topicRepository;
+        
+        public CourseController(IMapper mapper, ICourseRepository courseRepository, ITopicRepository topicRepository )
         {
+            _mapper = mapper;
             _courseRepository = courseRepository;
             _courseService = courseService;
             _mapper = mapper;
+            _topicRepository = topicRepository;
         }
 
         //  api/Course/5
@@ -31,9 +38,11 @@ namespace DevEdu.API.Controllers
 
         //  api/Course
         [HttpGet]
-        public List<CourseDto> GetAllCourses()
+        [Description("Get all courses with topics")]
+        public List<CourseInfoOutputModel> GetAllCourses()
         {
-            return _courseRepository.GetCourses();
+            var courses = _courseRepository.GetCourses();
+            return _mapper.Map<List<CourseInfoOutputModel>>(courses);
         }
 
         //  api/course
@@ -103,6 +112,25 @@ namespace DevEdu.API.Controllers
         public string RemoveTaskFromCourse(int courseId, int taskId)
         {
             return $"Course {courseId} remove  Task Id:{taskId}";
+        }
+        // api/course/{courseId}/topic/{topicId}
+        [HttpPost("{courseId}/topic/{topicId}")]
+        public string AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
+        {
+            var dto = _mapper.Map<CourseTopicDto>(inputModel);
+            dto.Course = new CourseDto { Id = courseId };
+            dto.Topic = new TopicDto { Id = topicId };
+
+            _topicRepository.AddTopicToCourse(dto);
+            return $"Topic Id:{topicId} added in course Id:{courseId} on {inputModel.Position} position";
+
+        }
+        // api/course/{courseId}/topic/{topicId}
+        [HttpDelete("{courseId}/topic/{topicId}")]
+        public string DeleteTopicFromCourse(int courseId, int topicId)
+        {
+            _topicRepository.DeleteTopicFromCourse(courseId, topicId);
+            return $"Topic Id:{topicId} deleted from course Id:{courseId}";
         }
     }
 }

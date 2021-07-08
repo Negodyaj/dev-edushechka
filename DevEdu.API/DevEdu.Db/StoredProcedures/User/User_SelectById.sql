@@ -1,9 +1,12 @@
-﻿CREATE PROCEDURE dbo.[User_SelectById]
+﻿CREATE PROCEDURE dbo.User_SelectById
 	@Id int
 AS
 BEGIN
 	SELECT 
-		Name,
+		Id,
+		FirstName,
+		LastName,
+		Patronymic,
 		Email,
 		Username,
 		Password,
@@ -14,8 +17,8 @@ BEGIN
 		BirthDate,
 		GitHubAccount,
 		Photo,
-		PhoneNumer,
+		PhoneNumber,
 		ExileDate
 	FROM dbo.[User]
-	WHERE [Id] = @Id
+	WHERE Id = @Id
 END
