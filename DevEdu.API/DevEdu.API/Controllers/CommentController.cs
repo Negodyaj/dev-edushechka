@@ -3,7 +3,6 @@ using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevEdu.API.Controllers
@@ -12,15 +11,12 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class CommentController : Controller
     {
-        private readonly ICommentService _commentService;
-
-        private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;
-        public CommentController(IMapper mapper, ICommentRepository commentRepository, ICommentService commentSevice)
+        private readonly ICommentService _commentService;
+        public CommentController(IMapper mapper, ICommentService commentService)
         {
-            _commentRepository = commentRepository;
-            _commentService = commentSevice;
             _mapper = mapper;
+            _commentService = commentService;
         }
 
         //  api/comment/5
@@ -32,9 +28,9 @@ namespace DevEdu.API.Controllers
 
         //  api/comment/by-user/1
         [HttpGet("by-user/{userId}")]
-        public List<CommentDto> GetAllCommentsByUserId(int userId)
+        public List<CommentDto> GetCommentsByUserId(int userId)
         {
-            return _commentRepository.GetCommentsByUser(userId);
+            return _commentService.GetCommentsByUserId(userId);
         }
 
         //  api/comment
@@ -42,14 +38,14 @@ namespace DevEdu.API.Controllers
         public int AddComment([FromBody] CommentAddInputModel model)
         {
             var dto = _mapper.Map<CommentDto>(model);
-            return _commentRepository.AddComment(dto);
+            return _commentService.AddComment(dto);
         }
 
         //  api/comment/5
         [HttpDelete("{id}")]
         public void DeleteComment(int id)
         {
-            _commentRepository.DeleteComment(id);
+            _commentService.DeleteComment(id);
         }
 
         //  api/comment/5

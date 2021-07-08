@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.DAL.Models
 {
@@ -18,6 +20,9 @@ namespace DevEdu.DAL.Models
         public string Photo { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime ExileDate { get; set; }
+        public City City { get; set; }
+        public List<Role> Roles { get; set; }
+
 
         public override bool Equals(object obj)
         {

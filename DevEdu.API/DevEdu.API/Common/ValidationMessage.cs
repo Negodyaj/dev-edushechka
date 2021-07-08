@@ -13,7 +13,7 @@
         public const string StartDateRequired = "StartDate must be provided";
         public const string EndDateRequired = "EndDate must be provided";
         public const string DescriptionRequired = "Description must be provided";
-        public const string IsRequiredErrorMessge = "IsRequired must be Provided";
+        public const string IsRequiredErrorMessage = "IsRequired must be Provided";
         public const string UsernameRequired = "Username must be provided";
         public const string PasswordRequired = "Password must be provided";
         public const string WrongFormatPasswordRequired = "Password must be provided";
@@ -26,5 +26,7 @@
         public const string WrongFormatPhotoRequired = "Photo must be provided";
         public const string PhoneNumberRequired = "PhoneNumber must be provided";
         public const string ContentRequired = "Content must be provided";
+        public const string TextRequired = "Comment cannot be empty";
+        public const string UserIdRequired = "UserId cannot be empty";
     }
 }
