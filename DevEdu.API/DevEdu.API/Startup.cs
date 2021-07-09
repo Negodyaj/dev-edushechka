@@ -37,6 +37,8 @@ namespace DevEdu.API
             services.AddScoped<IMaterialService, MaterialService>();
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ICourseService, CourseService>(); 
+            services.AddScoped<ILessonService, LessonService>();
+
 
             services.AddControllers();
 

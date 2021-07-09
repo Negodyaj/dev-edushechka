@@ -1,8 +1,11 @@
 using DevEdu.API.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
-using DevEdu.DAL.Repositories;
 using AutoMapper;
 using DevEdu.DAL.Models;
+using DevEdu.Business.Servicies;
+using System;
+using DevEdu.DAL.Repositories;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Controllers
 {
@@ -11,12 +14,12 @@ namespace DevEdu.API.Controllers
     public class LessonController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ILessonRepository _lessonRepository;
+        private readonly ILessonService _lessonService;
 
-        public LessonController(IMapper mapper, ILessonRepository lessonRepository)
+        public LessonController(IMapper mapper, ILessonService lessonService)
         {
             _mapper = mapper;
-            _lessonRepository = lessonRepository;
+            _lessonService = lessonService;
         }
 
         // api/lesson
@@ -24,33 +27,63 @@ namespace DevEdu.API.Controllers
         public string AddLesson([FromBody] LessonInputModel inputModel)
         {
             var dto = _mapper.Map<LessonDto>(inputModel);
-            return _lessonRepository.AddLesson(dto).ToString();
+            return _lessonService.AddLesson(dto).ToString();
         }
 
         // api/lesson/{id}
         [HttpDelete("{id}")]
         public string DeleteLesson(int id)
         {
-            _lessonRepository.DeleteLesson(id);
+            _lessonService.DeleteLesson(id);
             return $"id {id}";
         }
+
+        // api/lesson/{id}/{commentDto}/{date}
+        [HttpPut("{id}/{commentDto}/{date}")]
+        public string UpdateLesson(int id, String comment, DateTime date)
+        {
+            _lessonService.UpdateLesson(id, comment, date);
+            return $"id {id}";
+        }
+
+        // api/lesson/{id}
+        [HttpGet("{id}")]
+        public string GetLessonById(int id)
+        {
+            _lessonService.SelectLessonById(id);
+            return $"id {id}";
+        }
+
+        // api/lesson
+        [HttpGet]
+        public string GetAllLessons()
+        {
+            _lessonService.SelectAllLessons();
+            return $"all lessons";
+        }
+
 
         // api/lesson/{lessonId}/comment/{commentId}
         [HttpPost("{lessonId}/comment/{commentId}")]
         public void AddLessonComment(int lessonId, int commentId)
         {
-            _lessonRepository.AddCommentToLesson(lessonId, commentId);
+            _lessonService.AddCommentToLesson(lessonId, commentId);
         }
 
         // api/lesson/{lessonId}/comment/{commentId}
         [HttpDelete("{lessonId}/comment/{commentId}")]
         public string DeleteLessonComment(int lessonId, int commentId)
         {
-            _lessonRepository.DeleteCommentFromLesson(lessonId, commentId);
+            _lessonService.DeleteCommentFromLesson(lessonId, commentId);
             return $"lessonId {lessonId} commentId {commentId}";
         }
 
+<<<<<<< Updated upstream
         // api/lesson/{lessonId}/topic/{topicId}
+=======
+
+        // api/lesson/{lessonId}/topic/{toppicId}
+>>>>>>> Stashed changes
         [HttpDelete("{lessonId}/topic/{topicId}")]
         public void DeleteTopicFromLesson(int lessonId, int topicId)
         {

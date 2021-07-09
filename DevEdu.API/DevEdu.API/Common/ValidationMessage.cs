@@ -28,5 +28,8 @@
         public const string ContentRequired = "Content must be provided";
         public const string TextRequired = "Comment cannot be empty";
         public const string UserIdRequired = "UserId cannot be empty";
+        public const string DateRequired = "Date must be provided";
+        public const string TeacherCommentRequired = "TeacherComment must be provided";
+        public const string TeacherIdRequired = "TeacherId must be provided";
     }
 }
