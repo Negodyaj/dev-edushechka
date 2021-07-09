@@ -22,8 +22,6 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
             _lessonService = lessonService;
             _lessonRepository = lessonRepository;
-
-            List<LessonDto> list = _lessonRepository.SelectAllLessons();
         }
 
         // api/lesson
