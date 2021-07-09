@@ -47,32 +47,26 @@ namespace DevEdu.DAL.Repositories
         public CourseDto GetCourse(int id)
         {
             CourseDto result = default;
-            return _connection.Query<CourseDto, TopicDto, MaterialDto, TaskDto, GroupDto, CourseDto>(
+            _connection.Query<CourseDto, GroupDto, CourseDto>(
                 _selectByIdProcedure,
-                (course, topic, material, task, group) =>
+                (course, group) =>
                 {
                     if (result == null)
                     {
                         result = course;
-                        result.Topics = new List<TopicDto> {topic};
-                        result.Materials = new List<MaterialDto> {material};
-                        result.Tasks = new List<TaskDto> {task};
                         result.Groups = new List<GroupDto> {group};
                     }
                     else
                     {
-                        result.Topics.Add(topic);
-                        result.Materials.Add(material);
-                        result.Tasks.Add(task);
                         result.Groups.Add(group);
                     }
-                    return course;
+                    return result;
                 },
                 new { id },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
             ).FirstOrDefault();
-            return result;
+                return result;
         }
 
         public List<CourseDto> GetCourses()
