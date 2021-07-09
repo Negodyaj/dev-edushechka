@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DevEdu.API.Models.InputModels;
 using DevEdu.Business.Servicies;
+using DevEdu.DAL.Repositories;
 
 namespace DevEdu.API.Controllers
 {
@@ -11,9 +12,11 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IGroupService _groupService;
-        public GroupController(IMapper mapper, IGroupService groupService)
+        private readonly IGroupRepository _groupRepository;
+        public GroupController(IMapper mapper, IGroupService groupService, IGroupRepository groupRepository)
         {
             _groupService = groupService;
+            _groupRepository = groupRepository;
             _mapper = mapper;
         }
 
@@ -65,21 +68,21 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/lesson/{lessonId}")]
         public void AddGroupLessonReference(int groupId, int lessonId)
         {
-            //_groupService.AddGroupLesson(groupId,  lessonId);
+            _groupRepository.AddGroupLesson(groupId,  lessonId);
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
         public void RemoveGroupLessonReference(int groupId, int lessonId)
         {
-            //_groupService.RemoveGroupLesson(groupId, lessonId);
+            _groupRepository.RemoveGroupLesson(groupId, lessonId);
         }
 
         // api/Group/{groupId}/material/{materialId}
         [HttpPost("{groupId}/material/{materialId}")]
         public string AddGroupMaterialReference(int groupId, int materialId)
         {
-            //_groupService.AddGroupMaterialReference(materialId, groupId);
+            _groupRepository.AddGroupMaterialReference(materialId, groupId);
             return $"Material №{materialId} add to group {groupId}";
         }
 
@@ -87,7 +90,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{groupId}/material/{materialId}")]
         public string RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            //_groupService.RemoveGroupMaterialReference(materialId, groupId);
+            _groupRepository.RemoveGroupMaterialReference(materialId, groupId);
             return $"Material №{materialId} remove from group {groupId}";
         }
 
