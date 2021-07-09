@@ -10,7 +10,7 @@
 	@BirthDate			date,
 	@GitHubAccount		nvarchar(50) NULL,
 	@Photo				nvarchar(150),
-	@PhoneNumber			nvarchar(12)
+	@PhoneNumber		nvarchar(12)
 AS
 BEGIN
 	INSERT INTO dbo.[User] ([FirstName],[LastName],[Patronymic],[Email],[Username],[Password],[RegistrationDate],[ContractNumber],[CityId],

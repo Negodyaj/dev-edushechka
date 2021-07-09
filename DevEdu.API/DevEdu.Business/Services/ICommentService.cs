@@ -8,7 +8,7 @@ namespace DevEdu.Business.Services
         CommentDto GetComment(int id);
         List<CommentDto> GetCommentsByUserId(int userId);
         int AddComment(CommentDto dto);
-        void DeleteComment(int id);
-        void UpdateComment(int id, CommentDto dto);
+        int DeleteComment(int id);
+        int UpdateComment(int id, CommentDto dto);
     }
 }

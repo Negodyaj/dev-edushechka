@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
@@ -30,9 +31,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteComment(int id)
+        public int DeleteComment(int id)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 _commentDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
@@ -71,21 +72,23 @@ namespace DevEdu.DAL.Repositories
             var commentDictionary = new Dictionary<int, CommentDto>();
 
             return _connection
-                .Query<CommentDto, UserDto, City, Role, CommentDto>(
+                .Query<CommentDto, UserDto, Role, CommentDto>(
                     _commentSelectAllByUserIdProcedure,
-                    (comment, user, city, role) =>
+                    (comment, user, role) =>
                     {
                         CommentDto result;
                         if (!commentDictionary.TryGetValue(comment.Id,out result))
                         {
                             result = comment;
                             result.User = user;
-                            result.User.City = city;
                             result.User.Roles = new List<Role> { role };
                             commentDictionary.Add(comment.Id,result);
                         }
-
-                        result.User.Roles.Add(role);
+                        else
+                        {
+                            result.User.Roles.Add(role);
+                        }
+                        
                         return result;
                     },
                     new { userId },
@@ -96,9 +99,9 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public void UpdateComment(CommentDto commentDto)
+        public int UpdateComment(CommentDto commentDto)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 _commentUpdateProcedure,
                 new
                 {

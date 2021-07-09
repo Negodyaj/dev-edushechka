@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevEdu.API.Controllers
@@ -21,20 +24,30 @@ namespace DevEdu.API.Controllers
 
         //  api/comment/5
         [HttpGet("{id}")]
-        public CommentDto GetComment(int id)
+        [Description("Return comment by id")]
+        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
+        public CommentInfoOutputModel GetComment(int id)
         {
-            return _commentService.GetComment(id);
+            var dto = _commentService.GetComment(id);
+            var output = _mapper.Map<CommentInfoOutputModel>(dto);
+            return output;
         }
 
         //  api/comment/by-user/1
         [HttpGet("by-user/{userId}")]
-        public List<CommentDto> GetCommentsByUserId(int userId)
+        [Description("Return comments by user")]
+        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
+        public List<CommentInfoOutputModel> GetCommentsByUserId(int userId)
         {
-            return _commentService.GetCommentsByUserId(userId);
+            var dto = _commentService.GetCommentsByUserId(userId);
+            var output = _mapper.Map<List<CommentInfoOutputModel>>(dto);
+            return output;
         }
 
         //  api/comment
         [HttpPost]
+        [Description("Add new comment")]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         public int AddComment([FromBody] CommentAddInputModel model)
         {
             var dto = _mapper.Map<CommentDto>(model);
@@ -43,18 +56,21 @@ namespace DevEdu.API.Controllers
 
         //  api/comment/5
         [HttpDelete("{id}")]
-        public void DeleteComment(int id)
+        [Description("Delete comment by id")]
+        [ProducesResponseType(typeof(int), StatusCodes.Status202Accepted)]
+        public int DeleteComment(int id)
         {
-            _commentService.DeleteComment(id);
+            return _commentService.DeleteComment(id);
         }
 
         //  api/comment/5
         [HttpPut("{id}")]
-        public string UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
+        [Description("Update comment by id")]
+        [ProducesResponseType(typeof(int), StatusCodes.Status202Accepted)]
+        public int UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
         {
             var dto = _mapper.Map<CommentDto>(model);
-            _commentService.UpdateComment(id, dto);
-            return $"Text comment №{id} change to {model.Text}";
+            return _commentService.UpdateComment(id, dto);
         }
     }
 }

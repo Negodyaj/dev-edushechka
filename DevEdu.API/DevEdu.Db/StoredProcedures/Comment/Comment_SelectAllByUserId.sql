@@ -5,12 +5,12 @@ BEGIN
 	SELECT 
 		c.Id,
 		c.Text,
-		c.Date,
+		convert(varchar(15), [Date], 104) as [Date],
 		c.IsDeleted,
 		u.Id,
 		u.FirstName,
 		u.LastName,
-		u.GitHubAccount,
+		u.Email,
 		u.Photo,
 		ur.RoleId as id
 	FROM dbo.Comment c

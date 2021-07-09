@@ -5,11 +5,8 @@ using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using DevEdu.DAL.Repositories;
-using AutoMapper;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
-using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
 {
