@@ -1,4 +1,4 @@
-﻿CREATE PROCDURE  dbo.Course_Task_Delete
+﻿CREATE PROCEDURE  dbo.Course_Task_Delete
 	@CourseId int,
 	@TaskId int
 AS	
