@@ -46,36 +46,33 @@ namespace DevEdu.DAL.Repositories
 
         public CourseDto GetCourse(int id)
         {
+            CourseDto result = default;
             return _connection.Query<CourseDto, TopicDto, MaterialDto, TaskDto, GroupDto, CourseDto>(
                 _selectByIdProcedure,
                 (course, topic, material, task, group) =>
                 {
-                    if (course.Topics == null)
-                        course.Topics = new List<TopicDto> {topic};
+                    if (result == null)
+                    {
+                        result = course;
+                        result.Topics = new List<TopicDto> {topic};
+                        result.Materials = new List<MaterialDto> {material};
+                        result.Tasks = new List<TaskDto> {task};
+                        result.Groups = new List<GroupDto> {group};
+                    }
                     else
-                        course.Topics.Add(topic);
-
-                    if (course.Materials == null)
-                        course.Materials = new List<MaterialDto> { material };
-                    else
-                        course.Materials.Add(material);
-
-                    if (course.Tasks == null)
-                        course.Tasks = new List<TaskDto> { task };
-                    else
-                        course.Tasks.Add(task);
-
-                    if (course.Groups == null)
-                        course.Groups = new List<GroupDto> { group };
-                    else
-                        course.Groups.Add(group);
-
+                    {
+                        result.Topics.Add(topic);
+                        result.Materials.Add(material);
+                        result.Tasks.Add(task);
+                        result.Groups.Add(group);
+                    }
                     return course;
                 },
                 new { id },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
             ).FirstOrDefault();
+            return result;
         }
 
         public List<CourseDto> GetCourses()

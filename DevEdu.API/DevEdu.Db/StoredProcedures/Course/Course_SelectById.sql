@@ -9,6 +9,7 @@ BEGIN
       ,C.IsDeleted
 	  ,T.Id
 	  ,T.Name
+	  ,CT.Position
 	  ,M.Id
 	  ,M.Content
 	  ,TS.Id
@@ -26,6 +27,6 @@ BEGIN
   LEFT JOIN Course_Task CTS WITH (NOLOCK) ON CTS.CourseId = C.Id
   LEFT JOIN Task TS WITH (NOLOCK) ON TS.Id =  CTS.TaskId
 
-  LEFT JOIN [Group] G WITH (NOLOCK) ON G.CourseId = C.Id
-	WHERE (Id = @Id)
+  LEFT JOIN [Group] G WITH (NOLOCK) ON C.Id = G.CourseId
+	WHERE (C.Id = @Id)
 END
