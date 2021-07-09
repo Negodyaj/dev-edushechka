@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using DevEdu.DAL.Repositories;
 using AutoMapper;
 using DevEdu.DAL.Models;
+using DevEdu.Business.Services;
 
 namespace DevEdu.API.Controllers
 {
@@ -19,12 +20,13 @@ namespace DevEdu.API.Controllers
         private readonly IMapper _mapper;
         private readonly ICourseRepository _courseRepository;
         private readonly ITopicRepository _topicRepository;
+        private readonly ICourseService _courseService;
         
-        public CourseController(IMapper mapper, ICourseRepository courseRepository, ITopicRepository topicRepository )
+
+        public CourseController(IMapper mapper, ICourseService courseService, ITopicRepository topicRepository )
         {
             _mapper = mapper;
-            _courseRepository = courseRepository;
-            _topicRepository = topicRepository;
+            _courseService = courseService;
         }
 
         //  api/Course/5
@@ -119,7 +121,7 @@ namespace DevEdu.API.Controllers
             dto.Course = new CourseDto { Id = courseId };
             dto.Topic = new TopicDto { Id = topicId };
 
-            _topicRepository.AddTopicToCourse(dto);
+            _courseService.AddTopicToCourse(dto);
             return $"Topic Id:{topicId} added in course Id:{courseId} on {inputModel.Position} position";
 
         }
@@ -127,7 +129,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{courseId}/topic/{topicId}")]
         public string DeleteTopicFromCourse(int courseId, int topicId)
         {
-            _topicRepository.DeleteTopicFromCourse(courseId, topicId);
+            _courseService.DeleteTopicFromCourse(courseId, topicId);
             return $"Topic Id:{topicId} deleted from course Id:{courseId}";
         }
     }

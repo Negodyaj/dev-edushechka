@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,11 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IMaterialRepository _repository;
+        private readonly IMaterialService _materialService;
 
-        public MaterialController(IMapper mapper, IMaterialRepository repository) 
+        public MaterialController(IMapper mapper, IMaterialService materialService) 
         {
-            _repository = repository;
+            _materialService = materialService;
             _mapper = mapper;
         }
 
@@ -62,14 +64,14 @@ namespace DevEdu.API.Controllers
         [HttpPost("{materialId}/tag/{tagId}")]
         public void AddTagToMaterial(int materialId, int tagId)
         {
-            _repository.AddTagToMaterial(materialId, tagId);
+            _materialService.AddTagToMaterial(materialId, tagId);
         }
 
         // api/material/{materialId}/tag/{tagId}
         [HttpDelete("{materialId}/tag/{tagId}")]
         public void DeleteTagFromMaterial(int materialId, int tagId)
         {
-            _repository.DeleteTagFromMaterial(materialId, tagId);
+            _materialService.DeleteTagFromMaterial(materialId, tagId);
         }
 
         // api/material/by-tag/1
