@@ -7,7 +7,7 @@ namespace DevEdu.API.Models.InputModels
     public class UserInsertInputModel
     {
         [Required(ErrorMessage = FirstNameRequired)]
-        public string FisrtName { get; set; }
+        public string FirstName { get; set; }
 
         [Required(ErrorMessage = LastNameRequired)]
         public string LastName { get; set; }
@@ -16,7 +16,7 @@ namespace DevEdu.API.Models.InputModels
         public string Patronymic { get; set; }
 
         [Required(ErrorMessage = EmailRequired)]
-        [EmailAddress(ErrorMessage = WrongFormatEmailFormat)]
+        [EmailAddress(ErrorMessage = WrongEmailFormat)]
         public string Email { get; set; }
 
         [Required(ErrorMessage = UsernameRequired)]
@@ -41,7 +41,7 @@ namespace DevEdu.API.Models.InputModels
         [Url(ErrorMessage = WrongFormatPhotoRequired)]
         public string Photo { get; set; }
 
-        [Required(ErrorMessage = PhoneNumerRequired)]
-        public string PhoneNumer { get; set; }
+        [Required(ErrorMessage = PhoneNumberRequired)]
+        public string PhoneNumber { get; set; }
     }
 }

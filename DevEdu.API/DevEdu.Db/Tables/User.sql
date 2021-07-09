@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [User] (
 	Id					int NOT NULL IDENTITY(1,1),
-	FisrtName			nvarchar(50) NOT NULL,
+	FirstName			nvarchar(50) NOT NULL,
 	LastName			nvarchar(50) NOT NULL,
 	Patronymic 			nvarchar(50) NOT NULL,
 	Email				nvarchar(50) NOT NULL, 
@@ -12,7 +12,7 @@
 	BirthDate			date NOT NULL,
 	GitHubAccount		nvarchar(50),
 	Photo				nvarchar(150),
-	PhoneNumer			nvarchar(12) NOT NULL,
+	PhoneNumber			nvarchar(12) NOT NULL,
 	IsDeleted			bit NOT NULL DEFAULT '0',
 	ExileDate			date,
   CONSTRAINT [PK_USER] PRIMARY KEY CLUSTERED

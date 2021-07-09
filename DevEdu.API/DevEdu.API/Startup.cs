@@ -1,14 +1,10 @@
-using AutoMapper;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
-using DevEdu.Business.Servicies;
-using DevEdu.API.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-
 
 namespace DevEdu.API
 {
@@ -33,17 +29,23 @@ namespace DevEdu.API
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
-            
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<IMaterialService, MaterialService>();
+            services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ICourseService, CourseService>(); 
+            services.AddScoped<ILessonService, LessonService>();
+
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DevEdu.API", Version = "v1" });
+
+            services.AddSwaggerDocument(settings => {
+                settings.Title = "DevEdu Education API";
+                settings.Version = "v8";
             });
         }
 
@@ -53,8 +55,8 @@ namespace DevEdu.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DevEdu.API v1"));
+                app.UseOpenApi();
+                app.UseSwaggerUi3();
             }
 
             app.UseHttpsRedirection();

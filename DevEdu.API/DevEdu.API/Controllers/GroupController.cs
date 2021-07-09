@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using DevEdu.API.Models.InputModels;
-using DevEdu.Business.Servicies;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 
 namespace DevEdu.API.Controllers
@@ -17,7 +17,6 @@ namespace DevEdu.API.Controllers
         {
             _groupService = groupService;
             _groupRepository = groupRepository;
-            _mapper = mapper;
         }
 
         //  api/Group/5
@@ -68,7 +67,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/lesson/{lessonId}")]
         public void AddGroupLessonReference(int groupId, int lessonId)
         {
-            _groupRepository.AddGroupLesson(groupId,  lessonId);
+            _groupRepository.AddGroupLesson(groupId, lessonId);
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
@@ -80,18 +79,16 @@ namespace DevEdu.API.Controllers
 
         // api/Group/{groupId}/material/{materialId}
         [HttpPost("{groupId}/material/{materialId}")]
-        public string AddGroupMaterialReference(int groupId, int materialId)
+        public int AddGroupMaterialReference(int groupId, int materialId)
         {
-            _groupRepository.AddGroupMaterialReference(materialId, groupId);
-            return $"Material №{materialId} add to group {groupId}";
+            return _groupService.AddGroupMaterialReference(groupId, materialId);
         }
 
         // api/Group/{groupId}/material/{materialId}
         [HttpDelete("{groupId}/material/{materialId}")]
-        public string RemoveGroupMaterialReference(int groupId, int materialId)
+        public int RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            _groupRepository.RemoveGroupMaterialReference(materialId, groupId);
-            return $"Material №{materialId} remove from group {groupId}";
+            return _groupService.RemoveGroupMaterialReference(groupId, materialId);
         }
 
         //  api/group/1/user/2/role/1
