@@ -2,10 +2,10 @@ using DevEdu.API.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using DevEdu.DAL.Models;
-using DevEdu.Business.Servicies;
 using System;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.Business.Services;
 
 namespace DevEdu.API.Controllers
 {
@@ -15,11 +15,15 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ILessonService _lessonService;
+        private readonly ILessonRepository _lessonRepository;
 
-        public LessonController(IMapper mapper, ILessonService lessonService)
+        public LessonController(IMapper mapper, ILessonService lessonService, ILessonRepository lessonRepository)
         {
             _mapper = mapper;
             _lessonService = lessonService;
+            _lessonRepository = lessonRepository;
+
+            List<LessonDto> list = _lessonRepository.SelectAllLessons();
         }
 
         // api/lesson
@@ -78,12 +82,7 @@ namespace DevEdu.API.Controllers
             return $"lessonId {lessonId} commentId {commentId}";
         }
 
-<<<<<<< Updated upstream
-        // api/lesson/{lessonId}/topic/{topicId}
-=======
-
         // api/lesson/{lessonId}/topic/{toppicId}
->>>>>>> Stashed changes
         [HttpDelete("{lessonId}/topic/{topicId}")]
         public void DeleteTopicFromLesson(int lessonId, int topicId)
         {

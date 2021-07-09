@@ -96,10 +96,11 @@ namespace DevEdu.DAL.Repositories
                         {
                             lessonDtoEntry = lesson;
 
+                            lessonDtoEntry.TeacherDto = teacher;
                             lessonDtoEntry.CommentDtos = new List<CommentDto>();
-                            lesson.TopicDtos = new List<TopicDto> ();
-                            lesson.GroupDtos = new List<GroupDto> ();
-                            lesson.StudentDtos = new List<UserDto> ();
+                            lessonDtoEntry.TopicDtos = new List<TopicDto> ();
+                            lessonDtoEntry.GroupDtos = new List<GroupDto> ();
+                            lessonDtoEntry.StudentDtos = new List<UserDto> ();
                             lessonDictionary.Add(lesson.Id, lessonDtoEntry);
                         }
                         if (comment != null)
