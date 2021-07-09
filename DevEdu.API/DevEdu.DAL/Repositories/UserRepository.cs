@@ -34,7 +34,7 @@ namespace DevEdu.DAL.Repositories
                     user.Username,
                     user.Password,
                     user.ContractNumber,
-                    user.CityId,
+                    user.City,
                     user.BirthDate,
                     user.GitHubAccount,
                     user.Photo,
@@ -71,7 +71,7 @@ namespace DevEdu.DAL.Repositories
                     user.LastName,
                     user.Patronymic,
                     user.Username,
-                    user.CityId,
+                    user.City,
                     user.GitHubAccount,
                     user.Photo,
                     user.PhoneNumber
