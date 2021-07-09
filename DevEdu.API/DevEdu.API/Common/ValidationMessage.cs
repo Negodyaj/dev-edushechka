@@ -26,5 +26,8 @@
         public const string WrongFormatPhotoRequired = "Photo must be provided";
         public const string PhoneNumberRequired = "PhoneNumber must be provided";
         public const string WrongFormatEmailFormat = "Email must be provided";
+        public const string StudentAnswerRequired = "Answer of student must be provided";
+        public const string CommentUserIdRequired = "UserId of comment must be provided";
+        public const string CommentTextRequired = "Text of comment must be provided";
     }
 }
