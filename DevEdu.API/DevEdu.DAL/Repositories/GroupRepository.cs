@@ -5,26 +5,87 @@ namespace DevEdu.DAL.Repositories
 {
     public class GroupRepository : BaseRepository, IGroupRepository
     {
-        public void AddGroupMaterialReference(int materialId, int groupId)
+        private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
+        private const string _userGroupDeleteProcedure = "dbo.Tag_Delete";
+        private const string _insertGroupLesson = "dbo.Group_Lesson_Insert";
+        private const string _deleteGroupLesson = "dbo.Group_Lesson_Delete";
+        private const string _insertGroupMaterial = "dbo.Group_Material_Insert";
+        private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
+
+        public void AddGroupLesson(int groupId, int lessonId)
         {
             _connection.Execute(
-                "dbo.Group_Material_Insert",
+                _insertGroupLesson,
                 new
                 {
-                    materialId,
-                    groupId
+                    groupId,
+                    lessonId
                 },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public void RemoveGroupMaterialReference(int materialId, int groupId)
+
+        public void RemoveGroupLesson(int groupId, int lessonId)
         {
             _connection.Execute(
-                "dbo.Group_Material_Delete",
+                _deleteGroupLesson,
                 new
                 {
-                    materialId,
+                    groupId,
+                    lessonId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public int AddGroupMaterialReference(int groupId, int materialId)
+        {
+            return _connection.Execute(
+                _insertGroupMaterial,
+                new
+                {
+                    groupId,
+                    materialId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public int RemoveGroupMaterialReference(int groupId, int materialId)
+        {
+            return _connection.Execute(
+                _deleteGroupMaterial,
+                new
+                {
+                    groupId,
+                    materialId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public int AddUserToGroup(int groupId, int userId, int roleId)
+        {
+            return _connection.Execute(
+                _userGroupInsertProcedure,
+                new
+                {
+                    groupId,
+                    userId,
+                    roleId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public int DeleteUserFromGroup(int userId, int groupId)
+        {
+            return _connection.Execute(
+                _userGroupDeleteProcedure,
+                new
+                {
+                    userId,
                     groupId
                 },
                 commandType: CommandType.StoredProcedure

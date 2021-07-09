@@ -1,6 +1,20 @@
 ﻿CREATE PROCEDURE dbo.Task_SelectById
 	@Id int
 AS
-	SELECT Name, StartDate, EndDate, Description, Links, IsRequired from dbo.Task
+BEGIN
+	SELECT
+		t.Id,
+		t.Name,
+		t.StartDate,
+		t.EndDate,
+		t.Description,
+		t.Links,
+		t.IsRequired,
+		tg.Id,
+		tg.Name
+	From dbo.Task t
+		left join dbo.Tag_Task tgt on tgt.TaskId = t.Id
+		left join dbo.Tag tg on tg.Id = tgt.TagId
 	WHERE 
-	Id = @Id
+	t.Id = @Id
+END

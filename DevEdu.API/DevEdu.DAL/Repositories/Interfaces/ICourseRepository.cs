@@ -1,5 +1,5 @@
-﻿using DevEdu.DAL.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -10,6 +10,8 @@ namespace DevEdu.DAL.Repositories
         CourseDto GetCourse(int id);
         List<CourseDto> GetCourses();
         void UpdateCourse(CourseDto courseDto);
+        void AddTagToTopic(int topicId, int tagId);
+        void DeleteTagFromTopic(int topicId, int tagId);
         void AddTaskToCourse(int courseId, int taskId);
         void DeleteTaskFromCourse(int courseId, int taskId);
     }
