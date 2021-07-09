@@ -3,9 +3,10 @@
 As
 Begin
 	Select 
-		ct.TopicId,
+		ct.Id,
 		ct.Position,
-		t.Name as TopicName,
+		t.Id,
+		t.Name,
 		t.Duration
 	From dbo.Course_Topic ct
 		inner join dbo.Topic t on t.Id = ct.TopicId 
