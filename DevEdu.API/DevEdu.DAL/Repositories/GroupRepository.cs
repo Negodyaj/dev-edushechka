@@ -25,7 +25,6 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-
         public void RemoveGroupLesson(int groupId, int lessonId)
         {
             _connection.Execute(
@@ -91,5 +90,5 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
-    }
+    }    
 }

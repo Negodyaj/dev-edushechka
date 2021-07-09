@@ -103,6 +103,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{courseId}/task/{taskId}")]
         public string AddTaskToCourse(int courseId, int taskId)
         {
+            _courseRepository.AddTaskToCourse(courseId, taskId);
             return $"Course {courseId} add  Task Id:{taskId}";
         }
 
@@ -110,6 +111,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{courseId}/task/{taskId}")]
         public string RemoveTaskFromCourse(int courseId, int taskId)
         {
+            _courseRepository.DeleteTaskFromCourse(courseId, taskId);
             return $"Course {courseId} remove  Task Id:{taskId}";
         }
         // api/course/{courseId}/topic/{topicId}

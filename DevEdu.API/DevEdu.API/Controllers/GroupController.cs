@@ -15,7 +15,6 @@ namespace DevEdu.API.Controllers
         private readonly IGroupRepository _groupRepository;
         public GroupController(IMapper mapper, IGroupService groupService, IGroupRepository groupRepository)
         {
-            _mapper = mapper;
             _groupService = groupService;
             _groupRepository = groupRepository;
         }
@@ -94,16 +93,10 @@ namespace DevEdu.API.Controllers
 
         //  api/group/1/user/2/role/1
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
-        public void AddUserToGroup(int groupId, int userId, int roleId)
-        {
-            _groupRepository.AddUserToGroup(groupId, userId, roleId);
-        }
+        public void AddUserToGroup(int groupId, int userId, int roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
 
         //  api/group/1/user/2
         [HttpDelete("{groupId}/user/{userId}")]
-        public void DeleteUserFromGroup(int groupId, int userId)
-        {
-            _groupRepository.DeleteUserFromGroup(userId, groupId);
-        }
+        public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
     }
 }
