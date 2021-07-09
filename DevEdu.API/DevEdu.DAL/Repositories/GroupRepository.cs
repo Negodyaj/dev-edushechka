@@ -25,19 +25,6 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-    public void RemoveGroupLesson(int groupId, int lessonId)
-    {
-        _connection.Execute(
-            _deleteGroupLesson, 
-            new
-            {
-                groupId,
-                lessonId
-            },
-            commandType: CommandType.StoredProcedure
-        );
-    }
-
         public void RemoveGroupLesson(int groupId, int lessonId)
         {
             _connection.Execute(
@@ -103,30 +90,5 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
-    }
-    public int AddUserToGroup(int groupId, int userId, int roleId)
-    {
-        return _connection.Execute(
-            _userGroupInsertProcedure,
-            new
-            {
-                groupId,
-                userId,
-                roleId
-            },
-            commandType: CommandType.StoredProcedure
-        );
-    }
-    public int DeleteUserFromGroup(int userId, int groupId)
-    {
-        return _connection.Execute(
-            _userGroupDeleteProcedure,
-            new
-            {
-                userId,
-                groupId
-            },
-            commandType: CommandType.StoredProcedure
-        );
-    }
+    }    
 }

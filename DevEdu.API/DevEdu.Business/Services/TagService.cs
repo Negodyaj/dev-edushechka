@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevEdu.Business.Servicies
+namespace DevEdu.Business.Services
 {
     public class TagService : ITagService
     {
