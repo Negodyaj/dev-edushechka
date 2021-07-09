@@ -4,7 +4,7 @@ namespace DevEdu.Business.Services
 {
     public interface ICourseService
     {
-        void AddTopicToCourse(CourseTopicDto dto);
+        void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
         void DeleteTopicFromCourse(int courseId, int topicId);
     }
 }

@@ -17,8 +17,10 @@ namespace DevEdu.Business.Services
             _topicRepository = topicRepository;
         }
 
-        public void AddTopicToCourse(CourseTopicDto dto)
+        public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {
+            dto.Course = new CourseDto { Id = courseId };
+            dto.Topic = new TopicDto { Id = topicId };
             _topicRepository.AddTopicToCourse(dto);
         }
         public void DeleteTopicFromCourse(int courseId, int topicId)
