@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Globalization;
+using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
@@ -7,6 +9,7 @@ namespace DevEdu.API.Configuration
 {
     public class MapperProfile : Profile
     {
+        CultureInfo cultureRu = CultureInfo.CreateSpecificCulture("ru-RU");
         public MapperProfile()
         {
             CreateMappingToDto();
@@ -30,7 +33,9 @@ namespace DevEdu.API.Configuration
             CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
             CreateMap<LessonInputModel, LessonDto>();
             CreateMap<TagInputModel, TagDto>();
-            CreateMap<TaskInputModel, TaskDto>();
+            CreateMap<TaskInputModel, TaskDto>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.Parse(src.StartDate)))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.Parse(src.EndDate)));
             CreateMap<TopicInputModel, TopicDto>();
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
@@ -39,6 +44,11 @@ namespace DevEdu.API.Configuration
         private void CreateMappingFromDto()
         {
             CreateMap<CourseDto, CourseInfoOutputModel>();
+            CreateMap<TaskDto, TaskInfoOutputModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString("d", cultureRu)))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString("d", cultureRu))); ;
+            CreateMap<TagDto, TagInfoOutputModel>();
+            CreateMap<StudentAnswerOnTaskDto, StudentAnswerOnTaskInfoOutputModel>();
         }
     }
 }

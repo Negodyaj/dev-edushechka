@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using DevEdu.DAL.Models;
+
+namespace DevEdu.API.Models.OutputModels
+{
+    public class TaskInfoWithCoursesOutputModel : TaskInfoOutputModel
+    {
+        public List<CourseInfoOutputModel> Courses { get; set; }
+        [DefaultValue(false)]
+        public bool IsDeleted { get; set; }
+    }
+}

@@ -2,9 +2,12 @@
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using System.Collections.Generic;
+using System.ComponentModel;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Repositories;
 using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
 {
@@ -42,10 +45,12 @@ namespace DevEdu.API.Controllers
 
         //  api/Task
         [HttpGet]
-        public List<TaskDto> GetAllTasks()
+        [Description("Get all tasks with tags")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
+        public List<TaskInfoOutputModel> GetAllTasks()
         {
             var taskDtos = _taskService.GetTasks();
-            return taskDtos;
+            return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
         }
 
         // api/task
@@ -89,7 +94,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpPost("{taskId}/student/{studentId}")]
-        public void AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
+        public void AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskOutputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
             taskAnswerDto.TaskId = taskId;
@@ -101,7 +106,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpPut("{taskId}/student/{studentId}")]
-        public int UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
+        public int UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskOutputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
             taskAnswerDto.TaskId = taskId;

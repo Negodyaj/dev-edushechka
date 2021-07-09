@@ -10,6 +10,7 @@ using AutoMapper;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
 {
@@ -41,6 +42,7 @@ namespace DevEdu.API.Controllers
         //  api/Course
         [HttpGet]
         [Description("Get all courses with topics")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CourseInfoOutputModel>))]
         public List<CourseInfoOutputModel> GetAllCourses()
         {
             var courses = _courseRepository.GetCourses();

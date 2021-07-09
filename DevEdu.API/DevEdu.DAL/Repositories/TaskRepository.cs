@@ -51,7 +51,6 @@ namespace DevEdu.DAL.Repositories
         {
             var taskDictionary = new Dictionary<int, TaskDto>();
 
-
             var list = _connection.Query<TaskDto, TagDto, TaskDto>(
                     _taskSelectAlldProcedure,
                 (taskDto, TagDto) =>
