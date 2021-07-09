@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DevEdu.DAL.Enums;
+
 
 namespace DevEdu.DAL.Models
 {
-   public class NotificationDto : BaseDto
+    public class NotificationDto : BaseDto
     {
-        public int UserId { get; set; }
         public string Text { get; set; }
+        public UserDto User { get; set; }
+        public Role Role { get; set; } 
     }
 }

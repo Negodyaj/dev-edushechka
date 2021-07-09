@@ -30,7 +30,7 @@ namespace DevEdu.API.Controllers
         [HttpGet("by-user/{userId}")]
         public List<NotificationDto> GetAllNotificationsByUserId(int userId)
         {
-            return _notificationRepository.GetNotificationsByUser(userId);
+            return _notificationRepository.GetNotificationsByUserId(userId);
         }
 
         //  api/notification
