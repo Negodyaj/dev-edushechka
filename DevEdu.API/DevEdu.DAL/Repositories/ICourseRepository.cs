@@ -12,5 +12,6 @@ namespace DevEdu.DAL.Repositories
         void UpdateCourse(CourseDto courseDto);
         void AddTagToTopic(int topicId, int tagId);
         void DeleteTagFromTopic(int topicId, int tagId);
+        List<CourseTopicDto> SelectAllTopicByCourseId(int courseId);
     }
 }

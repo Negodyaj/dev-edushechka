@@ -130,5 +130,13 @@ namespace DevEdu.API.Controllers
             _courseService.DeleteTopicFromCourse(courseId, topicId);
             return $"Topic Id:{topicId} deleted from course Id:{courseId}";
         }
+        [HttpGet("{courseId}/topic")]
+        public List<CourseTopicOutputModel> SelectAllTopicByCourseId(int courseId)
+        {
+            var list = _courseService.SelectAllTopicByCourseId(courseId);
+            return _mapper.Map<List<CourseTopicOutputModel>>(list);
+            
+        }
+
     }
 }

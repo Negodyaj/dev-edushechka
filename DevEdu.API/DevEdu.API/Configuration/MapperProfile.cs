@@ -38,6 +38,8 @@ namespace DevEdu.API.Configuration
         private void CreateMappingFromDto()
         {
             CreateMap<CourseDto, CourseInfoOutputModel>();
+            CreateMap<CourseTopicDto, CourseTopicOutputModel>();
+
         }
     }
 }

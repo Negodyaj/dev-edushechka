@@ -1,4 +1,5 @@
 ﻿using DevEdu.DAL.Models;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
 {
@@ -6,5 +7,6 @@ namespace DevEdu.Business.Services
     {
         void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
         void DeleteTopicFromCourse(int courseId, int topicId);
+        List<CourseTopicDto> SelectAllTopicByCourseId(int courseId);
     }
 }
