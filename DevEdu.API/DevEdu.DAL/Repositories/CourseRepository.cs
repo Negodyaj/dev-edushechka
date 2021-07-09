@@ -82,7 +82,7 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddTaskFromCourse(int courseId, int taskId)
+        public void AddTaskToCourse(int courseId, int taskId)
         {
             _connection.Execute(
                 _сourseTaskInsertProcedure,

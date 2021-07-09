@@ -10,7 +10,7 @@ namespace DevEdu.DAL.Repositories
         CourseDto GetCourse(int id);
         List<CourseDto> GetCourses();
         void UpdateCourse(CourseDto courseDto);
-        void AddTaskFromCourse(int courseId, int taskId);
+        void AddTaskToCourse(int courseId, int taskId);
         void DeleteTaskFromCourse(int courseId, int taskId);
     }
 }
