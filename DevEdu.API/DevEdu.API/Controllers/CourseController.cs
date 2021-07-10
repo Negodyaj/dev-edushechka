@@ -76,16 +76,16 @@ namespace DevEdu.API.Controllers
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpPost("{courseId}/material/{materialId}")]
-        public string AddMaterialToCourse(int courseId, int materialId)
+        public void AddMaterialToCourse(int courseId, int materialId)
         {
-            return $"Course {courseId} add  Material Id {materialId}";
+            _courseRepository.AddCourseMaterialReference(courseId, materialId);
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpDelete("{courseId}/material/{materialId}")]
-        public string RemoveMaterialFromCourse(int courseId, int materialId)
+        public void RemoveMaterialFromCourse(int courseId, int materialId)
         {
-            return $"Course {courseId} remove  Material Id:{materialId}";
+            _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
         }
 
         //  api/course/{CourseId}/Task/{TaskId}

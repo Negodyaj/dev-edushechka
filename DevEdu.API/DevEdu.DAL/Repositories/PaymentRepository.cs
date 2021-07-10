@@ -4,10 +4,12 @@ using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using DevEdu.DAL.Enums;
+
 
 namespace DevEdu.DAL.Repositories
 {
-    public class PaymentRepository : BaseRepository, IPaymentRepository
+    public class PaymentRepository : BaseRepository, IPaymentRepository     
     {
         private const string _paymentAddProcedure = "dbo.Payment_Insert";
         private const string _paymentDeleteProcedure = "dbo.Payment_Delete";
@@ -23,10 +25,8 @@ namespace DevEdu.DAL.Repositories
                 _paymentAddProcedure,
                 new
                 {
-                    paymentDto.Data,
                     paymentDto.Summ,
-                    paymentDto.UserId,
-                    paymentDto.IsPaid,
+                    paymentDto.User,
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -43,21 +43,51 @@ namespace DevEdu.DAL.Repositories
 
         public PaymentDto GetPayment(int id)
         {
-            return _connection.QuerySingleOrDefault<PaymentDto>(
+            PaymentDto result = default;
+            return _connection
+                .Query<PaymentDto, UserDto, PaymentDto>(
                 _paymentSelectByIdProcedure,
+                (payment, user) =>
+                {
+                    if (result == null)
+                    {
+                        result = payment;
+                        result.User = user;
+                    }
+                    return result;
+                },
                 new { id },
-                commandType: CommandType.StoredProcedure
-            );
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+            )
+            .FirstOrDefault();
         }
 
         public List<PaymentDto> GetPaymentsByUser(int userId)
         {
+            var paymentDictionary = new Dictionary<int, PaymentDto>();
+
             return _connection
-                .Query<PaymentDto>(
+                .Query<PaymentDto, UserDto, PaymentDto>(
                     _paymentAllByUserIdProcedure,
+                    (payment, user) =>
+                    {
+                        PaymentDto result;
+
+                        if (!paymentDictionary.TryGetValue(payment.Id, out result))
+                        {
+                            result = payment;
+                            result.User = user;
+                            paymentDictionary.Add(payment.Id, result);
+                        }
+
+                        return result;
+                    },
                     new { userId },
+                    splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
+                .Distinct()
                 .ToList();
         }
 
@@ -67,10 +97,8 @@ namespace DevEdu.DAL.Repositories
                 _paymentUpdateProcedure,
                 new
                 {
-                    paymentDto.Data,
                     paymentDto.Summ,
-                    paymentDto.UserId,
-                    paymentDto.IsPaid
+                    paymentDto.User,
                 },
                 commandType: CommandType.StoredProcedure
             );

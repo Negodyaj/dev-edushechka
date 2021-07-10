@@ -24,6 +24,7 @@ namespace DevEdu.API.Configuration
             CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
+            CreateMap<PaymentInputModel, PaymentDto>();
         }
 
         private void CreateMappingFromDto()

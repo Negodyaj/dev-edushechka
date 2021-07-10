@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEdu.API", "DevEdu.API\De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEdu.DAL", "DevEdu.DAL\DevEdu.DAL.csproj", "{8792CAB0-58A2-4F9F-ADB5-2BE94B76D577}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEdu.Business", "DevEdu.Business\DevEdu.Business.csproj", "{E46DE434-9A9B-4FA6-880E-64873889410B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEdu.Business", "DevEdu.Business\DevEdu.Business.csproj", "{E46DE434-9A9B-4FA6-880E-64873889410B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

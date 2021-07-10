@@ -16,6 +16,8 @@ namespace DevEdu.DAL.Repositories
         private const string _updateProcedure = "dbo.Course_Update";
         private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
         private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
+        private const string _insertCourseMaterial = "dbo.Course_Material_Insert";
+        private const string _deleteCourseMaterial = "dbo.Course_Material_Delete";
 
         public CourseRepository()
         {
@@ -75,14 +77,14 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
-        
+
         public void AddTagToTopic(int topicId, int tagId)
         {
             _connection.Query(
                 _tagToTopicAddProcedure,
-                new 
+                new
                 {
-                    topicId, 
+                    topicId,
                     tagId
                 },
                 commandType: CommandType.StoredProcedure
@@ -100,6 +102,32 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
                 );
+        }
+
+        public int AddCourseMaterialReference(int courseId, int materialId)
+        {
+            return _connection.Execute(
+                _insertCourseMaterial,
+                new
+                {
+                    courseId,
+                    materialId
+                },
+                commandType: CommandType.StoredProcedure
+                );
+        }
+
+        public int RemoveCourseMaterialReference(int courseId, int materialId)
+        {
+            return _connection.Execute(
+                _deleteCourseMaterial,
+                new
+                {
+                    courseId,
+                    materialId
+                },
+                commandType: CommandType.StoredProcedure
+            );
         }
     }
 }

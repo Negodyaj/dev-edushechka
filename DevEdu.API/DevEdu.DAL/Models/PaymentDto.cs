@@ -8,9 +8,9 @@ namespace DevEdu.DAL.Models
 {
     public class PaymentDto:BaseDto
     {
-        public DateTime Data { get; set; }
+        public DateTime Date { get; set; }
         public int Summ { get; set; }
-        public int UserId { get; set; }
+        public UserDto User { get; set; }
         public bool IsPaid { get; set; }
 
     }
