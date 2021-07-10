@@ -116,6 +116,7 @@ namespace DevEdu.API.Controllers
         }
         // api/course/{courseId}/topic/{topicId}
         [HttpPost("{courseId}/topic/{topicId}")]
+        [Description("Add topic to course")]
         public string AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
         {
             var dto = _mapper.Map<CourseTopicDto>(inputModel);
@@ -126,12 +127,14 @@ namespace DevEdu.API.Controllers
         }
         // api/course/{courseId}/topic/{topicId}
         [HttpDelete("{courseId}/topic/{topicId}")]
+        [Description("Delete topic from course")]
         public string DeleteTopicFromCourse(int courseId, int topicId)
         {
             _courseService.DeleteTopicFromCourse(courseId, topicId);
             return $"Topic Id:{topicId} deleted from course Id:{courseId}";
         }
         [HttpGet("{courseId}/topic")]
+        [Description("Get all topics by course id ")]
         public List<CourseTopicOutputModel> SelectAllTopicByCourseId(int courseId)
         {
             var list = _courseService.SelectAllTopicByCourseId(courseId);

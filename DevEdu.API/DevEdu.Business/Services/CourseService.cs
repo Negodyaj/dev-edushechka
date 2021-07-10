@@ -32,7 +32,7 @@ namespace DevEdu.Business.Services
 
         public List<CourseTopicDto> SelectAllTopicByCourseId(int courseId)
         {
-            var list = _courseRepository.SelectAllTopicByCourseId(courseId);
+            var list = _courseRepository.SelectAllTopicsByCourseId(courseId);
             return list;
         }
     }

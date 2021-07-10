@@ -15,7 +15,7 @@ namespace DevEdu.DAL.Repositories
         private const string _courseUpdateProcedure = "dbo.Course_Update";
         private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
         private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
-        private const string _selectAllTopicByCourseIdProcedure = "[dbo].[Course_Topic_SelectAllByCourseId]";
+        private const string _selectAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_SelectAllByCourseId]";
 
         public CourseRepository() { }
 
@@ -99,11 +99,11 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 );
         }
-        public List<CourseTopicDto> SelectAllTopicByCourseId(int courseId)
+        public List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId)
         {
             return _connection
                 .Query<CourseTopicDto,TopicDto, CourseTopicDto>(
-                _selectAllTopicByCourseIdProcedure,
+                _selectAllTopicsByCourseIdProcedure,
                 (courseTopicDto, topicDto) =>
                 {
                     courseTopicDto.Topic = topicDto;
