@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Models.OutputModels

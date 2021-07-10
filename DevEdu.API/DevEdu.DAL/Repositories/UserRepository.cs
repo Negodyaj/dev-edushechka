@@ -4,8 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Collections.Generic;
 
-
-
 namespace DevEdu.DAL.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository

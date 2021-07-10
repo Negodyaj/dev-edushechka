@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
+﻿using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.Services
 {

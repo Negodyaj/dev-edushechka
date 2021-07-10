@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DevEdu.API.Models.OutputModels
+﻿namespace DevEdu.API.Models.OutputModels
 {
     public class CommentInfoOutputModel
     {

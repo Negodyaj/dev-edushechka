@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
@@ -77,18 +76,18 @@ namespace DevEdu.DAL.Repositories
                     (comment, user, role) =>
                     {
                         CommentDto result;
-                        if (!commentDictionary.TryGetValue(comment.Id,out result))
+                        if (!commentDictionary.TryGetValue(comment.Id, out result))
                         {
                             result = comment;
                             result.User = user;
                             result.User.Roles = new List<Role> { role };
-                            commentDictionary.Add(comment.Id,result);
+                            commentDictionary.Add(comment.Id, result);
                         }
                         else
                         {
                             result.User.Roles.Add(role);
                         }
-                        
+
                         return result;
                     },
                     new { userId },

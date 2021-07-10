@@ -16,6 +16,7 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ICommentService _commentService;
+
         public CommentController(IMapper mapper, ICommentService commentService)
         {
             _mapper = mapper;
@@ -57,7 +58,7 @@ namespace DevEdu.API.Controllers
         //  api/comment/5
         [HttpDelete("{id}")]
         [Description("Delete comment by id")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public int DeleteComment(int id)
         {
             return _commentService.DeleteComment(id);
@@ -66,7 +67,7 @@ namespace DevEdu.API.Controllers
         //  api/comment/5
         [HttpPut("{id}")]
         [Description("Update comment by id")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public int UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
         {
             var dto = _mapper.Map<CommentDto>(model);

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DevEdu.DAL.Models
+﻿namespace DevEdu.DAL.Models
 {
     public class CommentDto : BaseDto
     {
