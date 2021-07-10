@@ -10,6 +10,7 @@ using DevEdu.DAL.Repositories;
 using AutoMapper;
 using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
+using System.Linq;
 
 namespace DevEdu.API.Controllers
 {
@@ -134,6 +135,7 @@ namespace DevEdu.API.Controllers
         public List<CourseTopicOutputModel> SelectAllTopicByCourseId(int courseId)
         {
             var list = _courseService.SelectAllTopicByCourseId(courseId);
+            
             return _mapper.Map<List<CourseTopicOutputModel>>(list);
             
         }

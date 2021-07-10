@@ -8,6 +8,6 @@ namespace DevEdu.DAL.Models
         public int Position { get; set; }
         public CourseDto Course { get; set; }
         public TopicDto Topic { get; set; }
-        //public List<TopicDto> Topics { get; set; }
+        
     }
 }

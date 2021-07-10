@@ -107,6 +107,7 @@ namespace DevEdu.DAL.Repositories
                 (courseTopicDto, topicDto) =>
                 {
                     courseTopicDto.Topic = topicDto;
+                    courseTopicDto.Course = new CourseDto() { Id = courseId };
                     return courseTopicDto;
                 },
                 new {courseId},
