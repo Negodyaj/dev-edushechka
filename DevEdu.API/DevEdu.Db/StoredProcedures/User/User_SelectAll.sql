@@ -2,17 +2,15 @@
 AS
 BEGIN
 	SELECT 
+		u.Id,
 		u.FirstName,
 		u.LastName,
 		u.Email,
 		u.IsDeleted,
-		u.RegistrationDate,
-		u.ContractNumber,
 		u.Photo,
-		u.PhoneNumber,
-		c.Id,
-		c.Name
+		u.CityId as Id,
+		ur.RoleId as Id
 	FROM dbo.[User] u
-	left join dbo.[City] c on u.CityId=c.Id
+	inner join dbo.User_Role ur on ur.UserId = u.Id
 	WHERE IsDeleted = 0
 END

@@ -20,6 +20,6 @@ BEGIN
 		u.CityId as id,
 		ur.RoleId as id
 	FROM dbo.[User] u 
-	inner join dbo.User_Role ur on ur.Id = u.Id
+	inner join dbo.User_Role ur on ur.UserId = u.Id
 	WHERE u.Id = @Id
 END
