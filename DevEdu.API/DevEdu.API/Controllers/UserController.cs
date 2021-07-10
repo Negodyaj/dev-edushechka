@@ -46,7 +46,7 @@ namespace DevEdu.API.Controllers
 
         // api/user
         [HttpGet]
-        public List<UserDto> GetAllUsers()
+        public Dictionary<int, UserDto> GetAllUsers()
         {
             return _userService.SelectUsers();
         }

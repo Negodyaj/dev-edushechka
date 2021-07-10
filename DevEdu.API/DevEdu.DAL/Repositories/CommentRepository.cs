@@ -80,7 +80,7 @@ namespace DevEdu.DAL.Repositories
                         {
                             result = comment;
                             result.User = user;
-                            result.User.City = city;
+                            result.User.CityId = city;
                             result.User.Roles = new List<Role> { role };
                             commentDictionary.Add(comment.Id,result);
                         }

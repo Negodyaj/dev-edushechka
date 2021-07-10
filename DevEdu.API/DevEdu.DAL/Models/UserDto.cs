@@ -19,7 +19,7 @@ namespace DevEdu.DAL.Models
         public string Photo { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime ExileDate { get; set; }
-        public City City { get; set; }
+        public City CityId { get; set; }
         public List<Role> Roles { get; set; }
 
         public override bool Equals(object obj)
@@ -40,7 +40,7 @@ namespace DevEdu.DAL.Models
                    Photo == dto.Photo &&
                    PhoneNumber == dto.PhoneNumber &&
                    ExileDate == dto.ExileDate &&
-                   City == dto.City &&
+                   CityId == dto.CityId &&
                    EqualityComparer<List<Role>>.Default.Equals(Roles, dto.Roles);
         }
 
@@ -62,7 +62,7 @@ namespace DevEdu.DAL.Models
             hash.Add(Photo);
             hash.Add(PhoneNumber);
             hash.Add(ExileDate);
-            hash.Add(City);
+            hash.Add(CityId);
             hash.Add(Roles);
             return hash.ToHashCode();
         }
