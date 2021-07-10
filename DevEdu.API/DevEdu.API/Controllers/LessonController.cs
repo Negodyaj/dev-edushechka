@@ -84,14 +84,14 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{lessonId}/topic/{topicId}")]
         public void DeleteTopicFromLesson(int lessonId, int topicId)
         {
-            _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
+            _lessonService.DeleteTopicFromLesson(lessonId, topicId);
         }
 
         // api/lesson/{lessonId}/topic/{topicId}
         [HttpPost("{lessonId}/topic/{topicId}")]
         public void AddTopicToLesson(int lessonId, int topicId)
         {
-            _lessonRepository.AddTopicToLesson(lessonId, topicId);
+            _lessonService.AddTopicToLesson(lessonId, topicId);
         }
 
         // api/lesson/{lessonId}/user/{userId}
