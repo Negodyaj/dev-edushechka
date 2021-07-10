@@ -4,6 +4,7 @@ using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Repositories;
 using AutoMapper;
 using DevEdu.DAL.Models;
+using DevEdu.Business.Servicies;
 
 namespace DevEdu.API.Controllers
 {
@@ -12,11 +13,13 @@ namespace DevEdu.API.Controllers
     public class TopicController : Controller
     {
         private readonly ITopicRepository _topicRepository;
+        private readonly ITopicService _topicService;
         private readonly IMapper _mapper;
 
-        public TopicController(IMapper mapper, ITopicRepository topicRepository)
+        public TopicController(IMapper mapper, ITopicRepository topicRepository, ITopicService topicService)
         {
             _topicRepository = topicRepository;
+            _topicService = topicService;
             _mapper = mapper;
         }
 
@@ -24,13 +27,13 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         public TopicDto GetTopicById(int id)
         {
-            return _topicRepository.GetTopic(id);
+            return _topicService.GetTopic(id);
         }
 
         [HttpGet]
         public List<TopicDto> GetAllTopics()
         {
-            return _topicRepository.GetAllTopics();
+            return _topicService.GetAllTopics();
         }
 
         //  api/topic
@@ -38,14 +41,14 @@ namespace DevEdu.API.Controllers
         public int AddTopic([FromBody] TopicInputModel model)
         {
             var dto = _mapper.Map<TopicDto>(model);
-            return _topicRepository.AddTopic(dto);
+            return _topicService.AddTopic(dto);
         }
 
         //  api/topic/{id}
         [HttpDelete("{id}")]
         public void DeleteTopic(int id)
         {
-            _topicRepository.DeleteTopic(id);
+            _topicService.DeleteTopic(id);
         }
 
         //  api/topic/{id}
@@ -53,7 +56,8 @@ namespace DevEdu.API.Controllers
         public void UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
             var dto = _mapper.Map<TopicDto>(model);
-            _topicRepository.UpdateTopic(id, dto);
+           
+            _topicService.UpdateTopic(id, dto);
         }      
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using Dapper;
 using DevEdu.DAL.Models;
 
@@ -58,13 +57,13 @@ namespace DevEdu.DAL.Repositories
               .AsList();
         }
 
-        public void UpdateTopic(int id, TopicDto topicDto)       
+        public void UpdateTopic(TopicDto topicDto)       
         {
             _connection.Execute(
                 _topicUpdateProcedure,
                 new
                 {
-                    id,
+                    topicDto.Id,
                     topicDto.Name,
                     topicDto.Duration
                 },

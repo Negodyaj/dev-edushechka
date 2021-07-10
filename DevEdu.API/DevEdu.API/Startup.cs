@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using DevEdu.Business.Services;
 
 namespace DevEdu.API
 {
@@ -34,6 +35,8 @@ namespace DevEdu.API
             services.AddScoped<ITopicRepository, TopicRepository>();
             
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<ILessonService, LessonService>();
 
             services.AddControllers();
 

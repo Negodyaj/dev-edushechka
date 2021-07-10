@@ -1,14 +1,14 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
-namespace DevEdu.DAL.Repositories
+namespace DevEdu.Business.Servicies
 {
-    public interface ITopicRepository
+    public interface ITopicService
     {
         int AddTopic(TopicDto topicDto);
         void DeleteTopic(int id);
         List<TopicDto> GetAllTopics();
         TopicDto GetTopic(int id);
-        void UpdateTopic(TopicDto topicDto);
+        void UpdateTopic(int id, TopicDto topicDto);
     }
 }
