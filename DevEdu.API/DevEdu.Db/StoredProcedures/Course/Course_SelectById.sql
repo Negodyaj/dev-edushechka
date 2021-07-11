@@ -7,8 +7,9 @@ BEGIN
       ,C.Name
       ,C.Description
       ,C.IsDeleted
-	  ,G.Timetable
 	  ,G.Id
+	  ,G.Timetable
+	  
 
   FROM [DevEdu].[dbo].[Course] C WITH (NOLOCK)
 
