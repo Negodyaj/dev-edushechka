@@ -27,42 +27,43 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         public string AddLesson([FromBody] LessonInputModel inputModel)
         {
-            return $"Date {inputModel.Date} TeacherComment {inputModel.TeacherComment}  TeacherId {inputModel.TeacherId}";
+            var dto = _mapper.Map<LessonDto>(inputModel);
+            return _lessonRepository.AddLesson(dto).ToString();
         }
 
         // api/lesson/{id}
         [HttpDelete("{id}")]
-        public string DeleteLesson(int id)
+        public void DeleteLesson(int id)
         {
-            return $"id {id}";
+            _lessonService.DeleteLesson(id);
         }
 
         // api/lesson/{lessonId}/comment/{commentId}
         [HttpPost("{lessonId}/comment/{commentId}")]
-        public string AddLessonComment(int lessonId, int commentId)
+        public void AddLessonComment(int lessonId, int commentId)
         {
-            return $"lessonId {lessonId} commentId {commentId}";
+            _lessonService.AddCommentToLesson(lessonId, commentId);
         }
 
         // api/lesson/{lessonId}/comment/{commentId}
         [HttpDelete("{lessonId}/comment/{commentId}")]
-        public string DeleteLessonComment(int lessonId, int commentId)
+        public void DeleteLessonComment(int lessonId, int commentId)
         {
-            return $"lessonId {lessonId} commentId {commentId}";
+            _lessonService.DeleteCommentFromLesson(lessonId, commentId);
         }
 
         // api/lesson/{lessonId}/topic/{toppicId}
         [HttpDelete("{lessonId}/topic/{topicId}")]
-        public string DeleteTopicFromLesson(int lessonId, int topicId)
+        public void DeleteTopicFromLesson(int lessonId, int topicId)
         {
-            return $"lessonId {lessonId} topicId {topicId}";
+            _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
         }
 
         // api/lesson/{lessonId}/topic/{toppicId}
         [HttpPost("{lessonId}/topic/{topicId}")]
-        public string AddTopicToLesson(int lessonId, int topicId)
+        public void AddTopicToLesson(int lessonId, int topicId)
         {
-            return $"lessonId {lessonId} topicId {topicId}";
+            _lessonRepository.AddTopicToLesson(lessonId, topicId);
         }
 
         // api/lesson/{lessonId}/user/{userId}
