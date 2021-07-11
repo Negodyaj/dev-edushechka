@@ -138,7 +138,7 @@ namespace DevEdu.API.Controllers
         [Description("Get all topics by course id ")]
         public List<CourseTopicOutputModel> SelectAllTopicsByCourseId(int courseId)
         {
-            var list = _courseService.SelectAllTopicByCourseId(courseId);
+            var list = _courseService.SelectAllTopicsByCourseId(courseId);
             
             return _mapper.Map<List<CourseTopicOutputModel>>(list);
             
