@@ -68,35 +68,34 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
         }
 
-        public Dictionary<int, UserDto> SelectUsers()
+        public List<UserDto> SelectUsers()
         {
             var UserDictionary = new Dictionary<int, UserDto>();
 
-            _connection
-               .Query<UserDto, City, Role, UserDto>(
-               _userSelectAllProcedure,
-               (user, city, role) =>
-               {
-                   UserDto result;
+            return _connection
+                .Query<UserDto, City, Role, UserDto>(
+                _userSelectAllProcedure,
+                (user, city, role) =>
+                {
+                    UserDto result;
 
-                   if (!UserDictionary.TryGetValue(user.Id, out result))
-                   {
-                       result = user;
-                       result.CityId = city;
-                       result.Roles = new List<Role>();
-                       UserDictionary.Add(user.Id, result);
-                   }
-                   else
-                   {
-                       result.Roles.Add(role);
-                   }
-                   return result;
-               },
-               splitOn: "Id",
-           commandType: CommandType.StoredProcedure)
-               .Distinct()
-               .ToList();
-            return UserDictionary;
+                    if (!UserDictionary.TryGetValue(user.Id, out result))
+                    {
+                        result = user;
+                        result.CityId = city;
+                        result.Roles = new List<Role>();
+                        UserDictionary.Add(user.Id, result);
+                    }
+                    else
+                    {
+                        result.Roles.Add(role);
+                    }
+                    return result;
+                },
+                splitOn: "Id",
+            commandType: CommandType.StoredProcedure)
+                .Distinct()
+                .ToList();
         }
 
         public void UpdateUser(UserDto user)

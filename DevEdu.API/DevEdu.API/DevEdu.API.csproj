@@ -15,4 +15,8 @@
     <ProjectReference Include="..\DevEdu.DAL\DevEdu.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\OutputModels\User\" />
+  </ItemGroup>
+
 </Project>

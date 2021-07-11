@@ -17,7 +17,7 @@ namespace DevEdu.Business.Servicies
 
         public UserDto SelectUserById(int id) => _userRepository.SelectUserById(id);
 
-        public Dictionary<int, UserDto> SelectUsers() => _userRepository.SelectUsers();
+        public List<UserDto> SelectUsers() => _userRepository.SelectUsers();
 
         public void UpdateUser(UserDto dto) => _userRepository.UpdateUser(dto);
 
