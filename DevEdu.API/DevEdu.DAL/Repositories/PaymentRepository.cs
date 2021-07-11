@@ -24,7 +24,9 @@ namespace DevEdu.DAL.Repositories
             return _connection.QuerySingle<int>(
                 _paymentAddProcedure,
                 new
-                {
+                {   
+
+                    paymentDto.Date,
                     paymentDto.Summ,
                     paymentDto.User,
                 },
@@ -97,8 +99,9 @@ namespace DevEdu.DAL.Repositories
                 _paymentUpdateProcedure,
                 new
                 {
+                    paymentDto.Date,
                     paymentDto.Summ,
-                    paymentDto.User,
+                    paymentDto.User
                 },
                 commandType: CommandType.StoredProcedure
             );

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.Business.Servicies;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ICourseRepository _courseRepository;
+        private readonly ICourseService _courseService;
         public CourseController(IMapper mapper, ICourseRepository courseRepository)
         {
             _courseRepository = courseRepository;
@@ -78,14 +80,14 @@ namespace DevEdu.API.Controllers
         [HttpPost("{courseId}/material/{materialId}")]
         public void AddMaterialToCourse(int courseId, int materialId)
         {
-            _courseRepository.AddCourseMaterialReference(courseId, materialId);
+            _courseService.AddCourseMaterialReference(courseId, materialId);
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpDelete("{courseId}/material/{materialId}")]
         public void RemoveMaterialFromCourse(int courseId, int materialId)
         {
-            _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
+            _courseService.RemoveCourseMaterialReference(courseId, materialId);
         }
 
         //  api/course/{CourseId}/Task/{TaskId}

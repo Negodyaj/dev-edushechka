@@ -28,9 +28,9 @@ namespace DevEdu.API.Controllers
             return _paymentService.GetPayment(id);
         }
 
-        //  api/payment/by-user/1
-        [HttpGet("by-user/{userId}")]
-        public List<PaymentDto> GetPaymentByUserId(int userId)
+        //  api/payment/user/1
+        [HttpGet("user/{userId}")]
+        public List<PaymentDto> SelectAllPaymentsByUserId(int userId)
         {
             return _paymentService.GetPaymentByUserId(userId);
         }
