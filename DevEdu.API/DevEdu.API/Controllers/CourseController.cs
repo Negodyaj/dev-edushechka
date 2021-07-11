@@ -2,15 +2,11 @@
 using System.ComponentModel;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using DevEdu.DAL.Repositories;
-using AutoMapper;
-using DevEdu.DAL.Models;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
-using System.Linq;
 
 namespace DevEdu.API.Controllers
 {
@@ -20,14 +16,17 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ICourseRepository _courseRepository;
-        private readonly ITopicRepository _topicRepository;
         private readonly ICourseService _courseService;
         
-
-        public CourseController(IMapper mapper, ICourseService courseService, ITopicRepository topicRepository )
+        public CourseController(
+            IMapper mapper, 
+            ICourseRepository courseRepository,
+            ICourseService courseService)
         {
             _mapper = mapper;
+            _courseRepository = courseRepository;
             _courseService = courseService;
+            _mapper = mapper;
         }
 
         //  api/Course/5
@@ -75,7 +74,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("topic/{topicId}/tag/{tagId}")]
         public string AddTagToTopic(int topicId, int tagId)
         {
-            _courseRepository.AddTagToTopic(topicId, tagId);
+            _courseService.AddTagToTopic(topicId, tagId);
             return $"add to topic with {topicId} Id tag with {tagId} Id";
         }
 
@@ -83,7 +82,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("topic/{topicId}/tag/{tagId}")]
         public string DeleteTagAtTopic(int topicId, int tagId)
         {
-            _courseRepository.DeleteTagFromTopic(topicId, tagId);
+            _courseService.DeleteTagFromTopic(topicId, tagId);
             return $"deleted at topic with {topicId} Id tag with {tagId} Id";
         }
 
@@ -105,6 +104,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{courseId}/task/{taskId}")]
         public string AddTaskToCourse(int courseId, int taskId)
         {
+            _courseRepository.AddTaskToCourse(courseId, taskId);
             return $"Course {courseId} add  Task Id:{taskId}";
         }
 
@@ -112,6 +112,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{courseId}/task/{taskId}")]
         public string RemoveTaskFromCourse(int courseId, int taskId)
         {
+            _courseRepository.DeleteTaskFromCourse(courseId, taskId);
             return $"Course {courseId} remove  Task Id:{taskId}";
         }
         // api/course/{courseId}/topic/{topicId}

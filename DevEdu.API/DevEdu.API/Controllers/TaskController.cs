@@ -4,6 +4,7 @@ using DevEdu.API.Models.InputModels;
 using System.Collections.Generic;
 using DevEdu.DAL.Repositories;
 using DevEdu.DAL.Models;
+using DevEdu.Business.Services;
 
 namespace DevEdu.API.Controllers
 {
@@ -12,29 +13,38 @@ namespace DevEdu.API.Controllers
     public class TaskController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ITaskRepository _taskRepository;
+        private readonly ITaskService _taskService;
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
-        
-        public TaskController(IMapper mapper, ITaskRepository taskRepository, IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
+        private readonly ITaskRepository _taskRepository;
+        private readonly ICommentRepository _commentRepository;
+
+        public TaskController(
+            IMapper mapper, 
+            ITaskService taskService, 
+            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, 
+            ITaskRepository taskRepository,
+            ICommentRepository commentRepository)
         {
+            _taskService = taskService;
             _mapper = mapper;
-            _taskRepository = taskRepository;
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
+            _taskRepository = taskRepository;
+            _commentRepository = commentRepository;
         }
 
         //  api/Task/1
         [HttpGet("{taskId}")]
         public TaskDto GetTask(int taskId)
         {
-            var task = _taskRepository.GetTaskById(taskId);
-            return task;
+            var taskDto = _taskService.GetTaskById(taskId);
+            return taskDto;
         }
 
         //  api/Task
         [HttpGet]
         public List<TaskDto> GetAllTasks()
         {
-            var taskDtos = _taskRepository.GetTasks();
+            var taskDtos = _taskService.GetTasks();
             return taskDtos;
         }
 
@@ -43,7 +53,7 @@ namespace DevEdu.API.Controllers
         public int AddTask([FromBody] TaskInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
-            return _taskRepository.AddTask(taskDto);
+            return _taskService.AddTask(taskDto);
         }
 
 
@@ -52,15 +62,14 @@ namespace DevEdu.API.Controllers
         public void UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
-            taskDto.Id = taskId;
-            _taskRepository.UpdateTask(taskDto);
+            _taskService.UpdateTask(taskId, taskDto);
         }
 
         // api/task/{taskId}
         [HttpDelete("{taskId}")]
         public void DeleteTask(int taskId)
         {
-            _taskRepository.DeleteTask(taskId);
+            _taskService.DeleteTask(taskId);
         }
 
         // api/task/{taskId}/tag/{tagId}
@@ -121,12 +130,15 @@ namespace DevEdu.API.Controllers
             return statusId;
         }
 
-        // api/task/{taskId}/student/{studentId}/comment}
-        [HttpPost("{taskId}/student/{studentId}/comment")]
-        public int AddCommentOnStudentAnswer(int taskId, int studentId, [FromBody] CommentAddInputModel inputModel)
+        // api/task/answer/{taskStudentId}/comment}
+        [HttpPost("answer/{taskStudentId}/comment")]
+        public int AddCommentOnStudentAnswer(int taskstudentId, [FromBody] CommentAddInputModel inputModel)
         {
+            var commentDto = _mapper.Map<CommentDto>(inputModel);
+            int commentId = _commentRepository.AddComment(commentDto);
+            _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskstudentId, commentId);
 
-            return taskId;
+            return taskstudentId;
         }
     }
 }

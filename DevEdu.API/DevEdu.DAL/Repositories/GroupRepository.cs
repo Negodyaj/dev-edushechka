@@ -25,7 +25,6 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-
         public void RemoveGroupLesson(int groupId, int lessonId)
         {
             _connection.Execute(
@@ -39,27 +38,27 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddGroupMaterialReference(int materialId, int groupId)
+        public int AddGroupMaterialReference(int groupId, int materialId)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 _insertGroupMaterial,
                 new
                 {
-                    materialId,
-                    groupId
+                    groupId,
+                    materialId
                 },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public void RemoveGroupMaterialReference(int materialId, int groupId)
+        public int RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 _deleteGroupMaterial,
                 new
                 {
-                    materialId,
-                    groupId
+                    groupId,
+                    materialId
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -91,5 +90,5 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
-    }
+    }    
 }

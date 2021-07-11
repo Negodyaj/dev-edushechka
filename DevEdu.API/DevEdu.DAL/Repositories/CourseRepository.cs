@@ -17,7 +17,12 @@ namespace DevEdu.DAL.Repositories
         private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
         private const string _selectAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_SelectAllByCourseId]";
 
-        public CourseRepository() { }
+        private const string _сourseTaskInsertProcedure = "dbo.Course_Task_Insert";
+        private const string _сourseTaskDeleteProcedure = "dbo.Course_Task_Delete";
+
+        public CourseRepository()
+        {
+        }
 
         public int AddCourse(CourseDto courseDto)
         {
@@ -99,22 +104,49 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 );
         }
+
+        public void AddTaskToCourse(int courseId, int taskId)
+        {
+            _connection.Execute(
+                _сourseTaskInsertProcedure,
+                new
+                {
+                    taskId,
+                    courseId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public void DeleteTaskFromCourse(int courseId, int taskId)
+        {
+            _connection.Execute(
+                _сourseTaskDeleteProcedure,
+                new
+                {
+                    taskId,
+                    courseId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
         public List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId)
         {
             return _connection
                 .Query<CourseTopicDto,TopicDto, CourseTopicDto>(
-                _selectAllTopicsByCourseIdProcedure,
-                (courseTopicDto, topicDto) =>
-                {
-                    courseTopicDto.Topic = topicDto;
-                    courseTopicDto.Course = new CourseDto() { Id = courseId };
-                    return courseTopicDto;
-                },
-                new {courseId},
-                splitOn: "id",
-                commandType: CommandType.StoredProcedure
-                ).ToList();
-
+                    _selectAllTopicsByCourseIdProcedure,
+                    (courseTopicDto, topicDto) =>
+                    {
+                        courseTopicDto.Topic = topicDto;
+                        courseTopicDto.Course = new CourseDto() { Id = courseId };
+                        return courseTopicDto;
+                    },
+                    new {courseId},
+                    splitOn: "id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
         }
     }
 }

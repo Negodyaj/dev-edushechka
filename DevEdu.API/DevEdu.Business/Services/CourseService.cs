@@ -3,22 +3,24 @@ using DevEdu.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
+using System.Text;
 
 namespace DevEdu.Business.Services
 {
     public class CourseService : ICourseService
     {
-        private readonly ITopicRepository _topicRepository;
         private readonly ICourseRepository _courseRepository;
+        private readonly ITopicRepository _topicRepository;
         public CourseService(ITopicRepository topicRepository, ICourseRepository courseRepository)
         {
             _topicRepository = topicRepository;
             _courseRepository = courseRepository;
         }
 
+        public void AddTagToTopic(int topicId, int tagId) => _courseRepository.AddTagToTopic(topicId, tagId);
+
+        public void DeleteTagFromTopic(int topicId, int tagId) => _courseRepository.DeleteTagFromTopic(topicId, tagId);
         public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {
             dto.Course = new CourseDto { Id = courseId };

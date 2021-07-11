@@ -201,6 +201,7 @@
     <Build Include="StoredProcedures\Tag_Material\Material_Tag_Delete.sql" />
     <Build Include="StoredProcedures\Tag_Material\Material_Tag_Insert.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectAllByTagId.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_GetIdByTaskAndStudent.sql" />
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_SelectAllByCourseId.sql" />
   </ItemGroup>
   <ItemGroup>

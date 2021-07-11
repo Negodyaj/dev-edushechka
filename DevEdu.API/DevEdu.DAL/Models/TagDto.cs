@@ -18,5 +18,14 @@ namespace DevEdu.DAL.Models
               Id == tagDto.Id &&
               Name == tagDto.Name;
         }
+
+        public override int GetHashCode()
+        {
+            var hashCode = new HashCode();
+            hashCode.Add(base.GetHashCode());
+            hashCode.Add(Id);
+            hashCode.Add(Name);
+            return hashCode.ToHashCode();
+        }
     }
 }

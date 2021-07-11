@@ -1,9 +1,6 @@
-﻿using DevEdu.DAL.Repositories;
-using System;
+﻿using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -15,14 +12,29 @@ namespace DevEdu.Business.Services
         {
             _materialRepository = materialRepository;
         }
-        public void AddTagToMaterial(int materialId, int tagId)
+
+        public List<MaterialDto> GetAllMaterials() => _materialRepository.GetAllMaterials();
+
+        public MaterialDto GetMaterialById(int id) => _materialRepository.GetMaterialById(id);
+
+        public int AddMaterial(MaterialDto dto) => _materialRepository.AddMaterial(dto);
+
+        public void UpdateMaterial(int id, MaterialDto dto)
         {
-            _materialRepository.AddTagToMaterial(materialId, tagId);
-        }
-        public void DeleteTagFromMaterial(int materialId, int tagId)
-        {
-            _materialRepository.DeleteTagFromMaterial(materialId, tagId);
+            dto.Id = id;
+            _materialRepository.UpdateMaterial(dto);
         }
 
+        public void DeleteMaterial(int id, bool isDeleted) => 
+            _materialRepository.DeleteMaterial(id, isDeleted);
+
+        public void AddTagToMaterial(int materialId, int tagId) => 
+            _materialRepository.AddTagToMaterial(materialId, tagId);
+
+        public void DeleteTagFromMaterial(int materialId, int tagId) => 
+            _materialRepository.DeleteTagFromMaterial(materialId, tagId);
+
+        public List<MaterialDto> GetMaterialsByTagId(int tagId) => 
+            _materialRepository.GetMaterialsByTagId(tagId);
     }
 }
