@@ -3,6 +3,6 @@
 	@TaskId int
 AS	
 BEGIN
-	INSERT INTO dbo.Course_Task (CorseId, TaskId)
-	Values (@TagId, @TaskId)  
+	INSERT INTO dbo.Course_Task (CourseId, TaskId)
+	Values (@CourseId, @TaskId)  
 END

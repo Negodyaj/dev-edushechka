@@ -8,23 +8,40 @@ namespace DevEdu.API.Models.InputModels
     {
         [Required(ErrorMessage = FirstNameRequired)]
         public string FirstName { get; set; }
+
+        [Required(ErrorMessage = LastNameRequired)]
+        public string LastName { get; set; }
+
+        [Required(ErrorMessage = PatronymicRequired)]
+        public string Patronymic { get; set; }
+
         [Required(ErrorMessage = EmailRequired)]
         [EmailAddress(ErrorMessage = WrongEmailFormat)]
         public string Email { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = UsernameRequired)]
         public string Username { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = PasswordRequired)]
+        [MinLength(8, ErrorMessage = WrongFormatPasswordRequired)]
         public string Password { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = ContractNumberRequired)]
         public string ContractNumber { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = CityIdRequired)]
+        [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatCityIdRequired)]
         public int CityId { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = BirthDateRequired)]
         public DateTime BirthDate { get; set; }
+
         public string GitHubAccount { get; set; }
-        [Url]
+
+        [Url(ErrorMessage = WrongFormatPhotoRequired)]
         public string Photo { get; set; }
-        [Required]
-        public string PhoneNumer { get; set; }
+
+        [Required(ErrorMessage = PhoneNumberRequired)]
+        public string PhoneNumber { get; set; }
     }
 }

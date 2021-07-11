@@ -1,8 +1,19 @@
-﻿namespace DevEdu.DAL.Models
+﻿using System;
+
+namespace DevEdu.DAL.Models
 {
     public class CommentDto : BaseDto
     {
-        public int UserId { get; set; }
         public string Text { get; set; }
+        public UserDto User { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is CommentDto dto &&
+                   Id == dto.Id &&
+                   //   IsDeleted == dto.IsDeleted &&
+                   User == dto.User &&
+                   Text == dto.Text;
+        }
     }
 }
