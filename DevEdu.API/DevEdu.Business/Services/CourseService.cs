@@ -32,7 +32,7 @@ namespace DevEdu.Business.Services
             _topicRepository.DeleteTopicFromCourse(courseId, topicId);
         }
 
-        public List<CourseTopicDto> SelectAllTopicByCourseId(int courseId)
+        public List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId)
         {
             var list = _courseRepository.SelectAllTopicsByCourseId(courseId);
             return list;
