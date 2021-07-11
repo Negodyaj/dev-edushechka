@@ -19,6 +19,13 @@ namespace DevEdu.Business.Services
 
         public TaskDto GetTaskById(int id) => _taskRepository.GetTaskById(id);
 
+        public TaskDto GetTaskWithCoursesById(int id)
+        {
+            var taskDto = _taskRepository.GetTaskById(id);
+            taskDto.Courses = _taskRepository.GetCoursesToTaskById(id);
+            return taskDto;
+        }
+
         public List<TaskDto> GetTasks() => _taskRepository.GetTasks();
 
         public int AddTask(TaskDto taskDto) => _taskRepository.AddTask(taskDto);

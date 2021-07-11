@@ -6,6 +6,7 @@ namespace DevEdu.Business.Services
     public interface ITaskService
     {
         TaskDto GetTaskById(int id);
+        TaskDto GetTaskWithCoursesById(int id);
         List<TaskDto> GetTasks();
         int AddTask(TaskDto taskDto);
         void UpdateTask(int id, TaskDto taskDto);

@@ -11,6 +11,7 @@ namespace DevEdu.DAL.Repositories
         private const string _taskAddProcedure = "dbo.Task_Insert";
         private const string _taskDeleteProcedure = "dbo.Task_Delete";
         private const string _taskSelectByIdProcedure = "dbo.Task_SelectById";
+        private const string _taskSelectCoursesByIdProcedure = "dbo.Task_SelectCoursesById";
         private const string _taskSelectAlldProcedure = "dbo.Task_SelectAll";
         private const string _taskUpdateProcedure = "dbo.Task_Update";
         private const string _tagTaskAddProcedure = "dbo.Tag_Task_Insert";
@@ -45,6 +46,26 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();
             return task;
+        }
+
+        public List<CourseDto> GetCoursesToTaskById(int id)
+        {
+            return _connection.Query<CourseDto>(
+                    _taskSelectCoursesByIdProcedure,
+                    new { id },
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+
+        public List<StudentAnswerOnTaskDto> GetCoursesToTaskById(int id)
+        {
+            return _connection.Query<CourseDto>(
+                    _taskSelectCoursesByIdProcedure,
+                    new { id },
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
         }
 
         public List<TaskDto> GetTasks()

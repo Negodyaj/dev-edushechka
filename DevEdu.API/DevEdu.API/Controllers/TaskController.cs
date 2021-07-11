@@ -37,17 +37,28 @@ namespace DevEdu.API.Controllers
 
         //  api/Task/1
         [HttpGet("{taskId}")]
-        public TaskDto GetTask(int taskId)
+        [Description("Get task by Id with tags")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
+        public TaskInfoOutputModel GetTaskWithTags(int taskId)
         {
             var taskDto = _taskService.GetTaskById(taskId);
-            return taskDto;
+            return _mapper.Map<TaskInfoOutputModel>(taskDto);
+        }
+
+        [HttpGet("{taskId}/courses")]
+        [Description("Get task by Id with tags and courses")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
+        public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
+        {
+            var taskDto = _taskService.GetTaskWithCoursesById(taskId);
+            return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
         }
 
         //  api/Task
         [HttpGet]
         [Description("Get all tasks with tags")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
-        public List<TaskInfoOutputModel> GetAllTasks()
+        public List<TaskInfoOutputModel> GetAllTasksWithTags()
         {
             var taskDtos = _taskService.GetTasks();
             return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
@@ -94,7 +105,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpPost("{taskId}/student/{studentId}")]
-        public void AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskOutputModel inputModel)
+        public void AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
             taskAnswerDto.TaskId = taskId;
@@ -106,7 +117,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpPut("{taskId}/student/{studentId}")]
-        public int UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskOutputModel inputModel)
+        public int UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
             taskAnswerDto.TaskId = taskId;
