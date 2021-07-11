@@ -69,13 +69,14 @@ namespace DevEdu.DAL.Repositories
         public List<CommentDto> GetCommentsByUser(int userId)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
+            CommentDto result;
 
             return _connection
                 .Query<CommentDto, UserDto, Role, CommentDto>(
                     _commentSelectAllByUserIdProcedure,
                     (comment, user, role) =>
                     {
-                        CommentDto result;
+                        
                         if (!commentDictionary.TryGetValue(comment.Id, out result))
                         {
                             result = comment;
