@@ -1,10 +1,6 @@
 ﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Text;
 
 namespace DevEdu.Business.Services
 {
@@ -16,6 +12,17 @@ namespace DevEdu.Business.Services
         {
             _topicRepository = topicRepository;
             _courseRepository = courseRepository;
+        }
+
+        public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
+        public void DeleteCourse(int id) => _courseRepository.GetCourse(id);
+        public CourseDto GetCourse(int id) => _courseRepository.GetCourse(id);
+        public List<CourseDto> GetCourses() => _courseRepository.GetCourses();
+
+        public void UpdateCourse(int id, CourseDto courseDto)
+        {
+            courseDto.Id = id;
+            _courseRepository.UpdateCourse(courseDto);
         }
 
         public void AddTagToTopic(int topicId, int tagId) => _courseRepository.AddTagToTopic(topicId, tagId);
