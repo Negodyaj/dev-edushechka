@@ -19,16 +19,11 @@ namespace DevEdu.API.Controllers
         private readonly IGroupService _groupService;
         private readonly IGroupRepository _groupRepository;
 
-        public GroupController
-        (
-            IMapper mapper,
-            IGroupService groupService,
-            IGroupRepository groupRepository
-        )
+        public GroupController(IMapper mapper, IGroupService service, IGroupRepository repository)
         {
             _mapper = mapper;
-            _groupService = groupService;
-            _groupRepository = groupRepository;
+            _groupService = service;
+            _groupRepository = repository;
         }
 
         //  api/Group/5
@@ -59,6 +54,7 @@ namespace DevEdu.API.Controllers
 
         //  api/Group
         [HttpDelete("{id}")]
+        [Description("Delete Group by Id")]
         public void DeleteGroup(int id)
         {
             _groupService.DeleteGroup(id);
@@ -66,11 +62,11 @@ namespace DevEdu.API.Controllers
 
         //  api/Group
         [HttpPut]
+        [Description("Update Group")]
         public GroupDto UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
             var dto = _mapper.Map<GroupDto>(model);
-            dto.Id = id;
-            return _groupService.UpdateGroup(dto);
+            return _groupService.UpdateGroup(id, dto);
         }
 
         //  api/Group/{groupId}/change-status/{statusId}

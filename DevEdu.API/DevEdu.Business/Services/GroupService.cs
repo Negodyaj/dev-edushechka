@@ -20,7 +20,7 @@ namespace DevEdu.Business.Services
 
         public List<GroupDto> GetGroups() => _groupRepository.GetGroups();
 
-        public GroupDto UpdateGroup(GroupDto groupDto) => _groupRepository.UpdateGroup(groupDto);
+        public GroupDto UpdateGroup(int id, GroupDto groupDto) => _groupRepository.UpdateGroup(id, groupDto);
 
         public int AddGroupMaterialReference(int groupId, int materialId) => _groupRepository.AddGroupMaterialReference(groupId, materialId);
 

@@ -83,14 +83,14 @@ namespace DevEdu.DAL.Repositories
             .ToList();
         }
 
-        public GroupDto UpdateGroup(GroupDto groupDto)
+        public GroupDto UpdateGroup(int id, GroupDto groupDto)
         {
             return _connection.QuerySingle<GroupDto>
             (
                 _groupUpdateByIdProcedure,
                 new
                 {
-                    groupDto.Id,
+                    id,
                     groupDto.Course,
                     groupDto.GroupStatusId,
                     groupDto.StartDate,
