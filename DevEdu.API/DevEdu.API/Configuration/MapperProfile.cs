@@ -24,7 +24,8 @@ namespace DevEdu.API.Configuration
             CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
-            CreateMap<PaymentInputModel, PaymentDto>();
+            CreateMap<PaymentInputModel, PaymentDto>()
+             .ForMember(dest => dest.User, opt => opt.MapFrom(src => new PaymentDto { Id = src.User }));
         }
 
         private void CreateMappingFromDto()

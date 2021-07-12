@@ -6,7 +6,7 @@ namespace DevEdu.DAL.Repositories
     public abstract class BaseRepository
     {
         protected const string _connectionString =
-            @"Data Source=localdb;Initial Catalog = DevEdu; Persist Security Info=True;User ID = student;Password=qwe!23;";
+            @"Data Source=80.78.240.16;Initial Catalog = DevEdu; Persist Security Info=True;User ID = student;Password=qwe!23;";
 
         protected IDbConnection _connection;
 
