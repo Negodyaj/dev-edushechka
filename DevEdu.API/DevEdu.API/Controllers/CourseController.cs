@@ -84,7 +84,7 @@ namespace DevEdu.API.Controllers
 
         //  api/course/topic/{topicId}/tag/{tagId}
         [HttpDelete("topic/{topicId}/tag/{tagId}")]
-        public string DeleteTagAtTopic(int topicId, int tagId)
+        public string DeleteTagFromTopic(int topicId, int tagId)
         {
             _courseService.DeleteTagFromTopic(topicId, tagId);
             return $"deleted at topic with {topicId} Id tag with {tagId} Id";
