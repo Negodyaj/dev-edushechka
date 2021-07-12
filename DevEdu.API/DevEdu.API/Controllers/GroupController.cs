@@ -6,6 +6,8 @@ using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using DevEdu.DAL.Models;
+using DevEdu.API.Models.OutputModels;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Controllers
 {
@@ -31,16 +33,19 @@ namespace DevEdu.API.Controllers
 
         //  api/Group/5
         [HttpGet("{id}")]
+        [Description("Get Group")]
         public GroupDto GetGroupById(int id)
         {
-            return new GroupDto();
+            return _groupService.GetGroup(id);
         }
 
         //  api/Group/
         [HttpGet]
-        public string GetAllGroups()
+        [Description("Get all Groups")]
+        public List<GroupInfoOutputModel> GetAllGroups()
         {
-            return "All Groups";
+            var dto = _groupRepository.GetGroups();
+            return _mapper.Map<List<GroupInfoOutputModel>>(dto);
         }
 
         //  api/Group
@@ -56,15 +61,16 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}")]
         public void DeleteGroup(int id)
         {
-
+            _groupService.DeleteGroup(id);
         }
 
         //  api/Group
         [HttpPut]
-        public string UpdateGroup(int id, [FromBody] GroupInputModel model)
+        public GroupDto UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
-            model
             var dto = _mapper.Map<GroupDto>(model);
+            dto.Id = id;
+            return _groupService.UpdateGroup(dto);
         }
 
         //  api/Group/{groupId}/change-status/{statusId}

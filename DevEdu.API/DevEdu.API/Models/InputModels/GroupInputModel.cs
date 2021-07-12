@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevEdu.DAL.Enums;
+using System;
 using System.ComponentModel.DataAnnotations;
 using static DevEdu.API.Common.ValidationMessage;
 
@@ -9,7 +10,7 @@ namespace DevEdu.API.Models.InputModels
         [Required]
         public int CourseId { get; set; }
         [Required(ErrorMessage = GroupStatusIdRequired)]
-        public int GroupStatusId { get; set; }
+        public GroupStatus GroupStatusId { get; set; }
         [Required(ErrorMessage = DateRequired)]
         public DateTime StartDate { get; set; }
         [Required(ErrorMessage = TimetableRequired)]
