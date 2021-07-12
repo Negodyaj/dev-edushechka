@@ -33,7 +33,7 @@ namespace DevEdu.DAL.Repositories
                     user.Username,
                     user.Password,
                     user.ContractNumber,
-                    user.CityId,
+                    user.City,
                     user.BirthDate,
                     user.GitHubAccount,
                     user.Photo,
@@ -53,7 +53,7 @@ namespace DevEdu.DAL.Repositories
                     if (result == null)
                     {
                         result = user;
-                        result.CityId = city;
+                        result.City = city;
                         result.Roles = new List<Role> { role };
                     }
                     else
@@ -77,25 +77,24 @@ namespace DevEdu.DAL.Repositories
                 _userSelectAllProcedure,
                 (user, city, role) =>
                 {
-                    UserDto result;
+                    UserDto userEnrty;
 
-                    if (!UserDictionary.TryGetValue(user.Id, out result))
+                    if (!UserDictionary.TryGetValue(user.Id, out userEnrty))
                     {
-                        result = user;
-                        result.CityId = city;
-                        result.Roles = new List<Role>();
-                        UserDictionary.Add(user.Id, result);
+                        userEnrty = user;
+                        userEnrty.City = city;
+                        userEnrty.Roles = new List<Role>();
+                        UserDictionary.Add(user.Id, userEnrty);
                     }
-                    else
-                    {
-                        result.Roles.Add(role);
-                    }
-                    return result;
+
+                    userEnrty.Roles.Add(role);
+
+                    return userEnrty;
                 },
                 splitOn: "Id",
             commandType: CommandType.StoredProcedure)
-                .Distinct()
-                .ToList();
+                .Distinct<UserDto>()
+                .ToList<UserDto>();
         }
 
         public void UpdateUser(UserDto user)
@@ -109,7 +108,7 @@ namespace DevEdu.DAL.Repositories
                     user.LastName,
                     user.Patronymic,
                     user.Username,
-                    user.CityId,
+                    user.City,
                     user.GitHubAccount,
                     user.Photo,
                     user.PhoneNumber
