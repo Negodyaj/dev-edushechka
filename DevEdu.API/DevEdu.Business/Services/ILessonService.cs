@@ -13,5 +13,7 @@ namespace DevEdu.Business.Services
         List<LessonDto> SelectAllLessons();
         LessonDto SelectLessonById(int id);
         void UpdateLesson(int id, LessonDto lessonDto);
+        void DeleteTopicFromLesson(int lessonId, int topicId);
+        void AddTopicToLesson(int lessonId, int topicId);
     }
 }

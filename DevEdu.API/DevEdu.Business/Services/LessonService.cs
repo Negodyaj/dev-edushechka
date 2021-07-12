@@ -31,6 +31,10 @@ namespace DevEdu.Business.Services
             lessonDto.Id = id;
             _lessonRepository.UpdateLesson(lessonDto);
         }
-        
+        public void DeleteTopicFromLesson(int lessonId, int topicId) => 
+            _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
+
+        public void AddTopicToLesson(int lessonId, int topicId) => 
+            _lessonRepository.AddTopicToLesson(lessonId, topicId);
     }
 }

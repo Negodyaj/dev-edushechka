@@ -4,5 +4,5 @@
 AS
 BEGIN
 	DELETE FROM dbo.Lesson_Topic
-	WHERE TopicId = @TopicId AND ClassId = @LessonId
+	WHERE TopicId = @TopicId AND LessonId = @LessonId
 END
