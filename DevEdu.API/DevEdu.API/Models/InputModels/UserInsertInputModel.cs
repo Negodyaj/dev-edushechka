@@ -34,7 +34,7 @@ namespace DevEdu.API.Models.InputModels
         public int CityId { get; set; }
 
         [Required(ErrorMessage = BirthDateRequired)]
-        public DateTime BirthDate { get; set; }
+        public string BirthDate { get; set; }
 
         public string GitHubAccount { get; set; }
 
