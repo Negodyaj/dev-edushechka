@@ -13,7 +13,7 @@
 	@PhoneNumber		nvarchar(12)
 AS
 BEGIN
-	INSERT INTO dbo.[User] ([FirstName],[LastName],[Patronymic],[Email],[Username],[Password],[RegistrationDate],[ContractNumber],[CityId],
+	INSERT INTO dbo.[User]  ([FirstName],[LastName],[Patronymic],[Email],[Username],[Password],[RegistrationDate],[ContractNumber],[CityId],
 		[BirthDate],[GitHubAccount],[Photo],[PhoneNumber])
 	VALUES (@FirstName,@LastName,@Patronymic,@Email,@Username,@Password,getdate(),@ContractNumber,@CityId,
 		@BirthDate,@GitHubAccount,@Photo,@PhoneNumber)

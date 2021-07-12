@@ -9,47 +9,32 @@ namespace DevEdu.Business.Services
     {
         private readonly ILessonRepository _lessonRepository;
 
-
         public LessonService(ILessonRepository lessonRepository)
         {
             _lessonRepository = lessonRepository;
         }
+        
+        public void AddCommentToLesson(int lessonId, int commentId) => _lessonRepository.AddCommentToLesson(lessonId, commentId);
 
-        public int AddCommentToLesson(int lessonId, int commentId)
+        public int AddLesson(LessonDto lessonDto) => _lessonRepository.AddLesson(lessonDto);
+
+        public void DeleteCommentFromLesson(int lessonId, int commentId) => _lessonRepository.DeleteCommentFromLesson(lessonId, commentId);
+
+        public void DeleteLesson(int id) => _lessonRepository.DeleteLesson(id);
+
+        public List<LessonDto> SelectAllLessons() => _lessonRepository.SelectAllLessons();
+
+        public LessonDto SelectLessonById(int id) => _lessonRepository.SelectLessonById(id);
+
+        public void UpdateLesson(int id, LessonDto lessonDto)
         {
-            return _lessonRepository.AddCommentToLesson(lessonId, commentId);
+            lessonDto.Id = id;
+            _lessonRepository.UpdateLesson(lessonDto);
         }
+        public void DeleteTopicFromLesson(int lessonId, int topicId) => 
+            _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
 
-        public int AddLesson(LessonDto lessonDto)
-        {
-            return _lessonRepository.AddLesson(lessonDto);
-        }
-
-
-        public void DeleteCommentFromLesson(int lessonId, int commentId)
-        {
-            _lessonRepository.DeleteCommentFromLesson(lessonId, commentId);
-        }
-
-        public void DeleteLesson(int id)
-        {
-            _lessonRepository.DeleteLesson(id);
-        }
-
-
-        public List<LessonDto> SelectAllLessons()
-        {
-            return _lessonRepository.SelectAllLessons();
-        }
-
-        public LessonDto SelectLessonById(int id)
-        {
-            return _lessonRepository.SelectLessonById(id);
-        }
-
-        public int UpdateLesson(int id, String commentTeacher, DateTime date)
-        {
-            return _lessonRepository.UpdateLesson(id, commentTeacher, date);
-        }
+        public void AddTopicToLesson(int lessonId, int topicId) => 
+            _lessonRepository.AddTopicToLesson(lessonId, topicId);
     }
 }

@@ -3,7 +3,7 @@
     public static class ValidationMessage
     {
         public const string IdRequired = "Id must be provided";
-        public const string WrongFormatIdRequired = "Id must be provided";
+        public const string WrongFormatId = "Id must be integer from 1 to int.MaxValue";
         public const string FirstNameRequired = "FirstName must be provided";
         public const string LastNameRequired = "LastName must be provided";
         public const string PatronymicRequired = "Patronymic must be provided";
@@ -16,15 +16,16 @@
         public const string IsRequiredErrorMessage = "IsRequired must be Provided";
         public const string UsernameRequired = "Username must be provided";
         public const string PasswordRequired = "Password must be provided";
-        public const string WrongFormatPasswordRequired = "Password must be provided";
+        public const string WrongFormatPassword = "Password must contain at least 8 characters";
         public const string ContractNumberRequired = "ContractNumber must be provided";
         public const string CityIdRequired = "CityId must be provided";
-        public const string WrongFormatCityIdRequired = "CityId must be provided";
+        public const string WrongFormatCityId = "CityId must be integer from 1 to int.MaxValue";
         public const string BirthDateRequired = "BirthDate must be provided";
         public const string GitHubAccountRequired = "GitHubAccount must be provided";
         public const string PhotoRequired = "Photo must be provided";
-        public const string WrongFormatPhotoRequired = "Photo must be provided";
+        public const string WrongFormatPhoto = "Photo must be Url";
         public const string PhoneNumberRequired = "PhoneNumber must be provided";
+        public const string PositionRequired = "Position must be provided";
         public const string ContentRequired = "Content must be provided";
         public const string TextRequired = "Comment cannot be empty";
         public const string UserIdRequired = "UserId cannot be empty";

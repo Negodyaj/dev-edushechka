@@ -34,34 +34,31 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{id}
         [HttpDelete("{id}")]
-        public string DeleteLesson(int id)
+        public void DeleteLesson(int id)
         {
             _lessonService.DeleteLesson(id);
-            return $"id {id}";
         }
 
-        // api/lesson/{id}/{commentDto}/{date}
-        [HttpPut("{id}/{commentDto}/{date}")]
-        public string UpdateLesson(int id, String comment, DateTime date)
+        // api/lesson/{id}
+        [HttpPut("{id}")]
+        public void UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
         {
-            _lessonService.UpdateLesson(id, comment, date);
-            return $"id {id}";
+            var dto = _mapper.Map<LessonDto>(updateModel);
+            _lessonService.UpdateLesson(id, dto);
         }
 
         // api/lesson/{id}
         [HttpGet("{id}")]
-        public string GetLessonById(int id)
+        public LessonDto GetLessonById(int id)
         {
-            _lessonService.SelectLessonById(id);
-            return $"id {id}";
+            return _lessonService.SelectLessonById(id);
         }
 
         // api/lesson
         [HttpGet]
-        public string GetAllLessons()
+        public List<LessonDto> GetAllLessons()
         {
-            _lessonService.SelectAllLessons();
-            return $"all lessons";
+            return _lessonService.SelectAllLessons();
         }
 
 
@@ -84,14 +81,14 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{lessonId}/topic/{topicId}")]
         public void DeleteTopicFromLesson(int lessonId, int topicId)
         {
-            _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
+            _lessonService.DeleteTopicFromLesson(lessonId, topicId);
         }
 
         // api/lesson/{lessonId}/topic/{topicId}
         [HttpPost("{lessonId}/topic/{topicId}")]
         public void AddTopicToLesson(int lessonId, int topicId)
         {
-            _lessonRepository.AddTopicToLesson(lessonId, topicId);
+            _lessonService.AddTopicToLesson(lessonId, topicId);
         }
 
         // api/lesson/{lessonId}/user/{userId}
