@@ -116,6 +116,7 @@ namespace DevEdu.API.Controllers
         }
         // api/course/{courseId}/topic/{topicId}
         [HttpPost("{courseId}/topic/{topicId}")]
+        [ProducesResponseType(200, Type = typeof(string))]
         [Description("Add topic to course")]
         public string AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
         {
@@ -128,6 +129,7 @@ namespace DevEdu.API.Controllers
         // api/course/{courseId}/topic/{topicId}
         [HttpDelete("{courseId}/topic/{topicId}")]
         [Description("Delete topic from course")]
+        [ProducesResponseType(200, Type = typeof(string))]
         public string DeleteTopicFromCourse(int courseId, int topicId)
         {
             _courseService.DeleteTopicFromCourse(courseId, topicId);
@@ -135,6 +137,7 @@ namespace DevEdu.API.Controllers
         }
         [HttpGet("{courseId}/topics")]
         [Description("Get all topics by course id ")]
+        [ProducesResponseType(200)]
         public List<CourseTopicOutputModel> SelectAllTopicsByCourseId(int courseId)
         {
             var list = _courseService.SelectAllTopicsByCourseId(courseId);
