@@ -10,7 +10,7 @@ BEGIN
 		u.Id,
 		u.FirstName,
 		u.LastName,
-		u.GitHubAccount,
+		u.Email,
 		u.Photo,
 		ur.RoleId as id
 	FROM dbo.Comment c
