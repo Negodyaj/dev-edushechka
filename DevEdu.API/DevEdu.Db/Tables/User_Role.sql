@@ -6,7 +6,6 @@
   (
   [Id] ASC
   ) WITH (IGNORE_DUP_KEY = OFF)
-
 )
 go
 
