@@ -2,21 +2,15 @@
 AS
 BEGIN
 	SELECT 
-		FirstName,
-		LastName,
-		Patronymic,
-		Email,
-		Username,
-		Password,
-		IsDeleted,
-		RegistrationDate,
-		ContractNumber,
-		CityId,
-		BirthDate,
-		GitHubAccount,
-		Photo,
-		PhoneNumber,
-		ExileDate
-	FROM dbo.[User]
+		u.Id,
+		u.FirstName,
+		u.LastName,
+		u.Email,
+		u.IsDeleted,
+		u.Photo,
+		u.CityId as Id,
+		ur.RoleId as Id
+	FROM dbo.[User] u
+	inner join dbo.User_Role ur on ur.UserId = u.Id
 	WHERE IsDeleted = 0
 END
