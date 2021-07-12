@@ -58,6 +58,7 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString("d", cultureRu)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString("d", cultureRu)));
             CreateMap<TagDto, TagInfoOutputModel>();
+            CreateMap<StudentAnswerOnTaskForTaskDto, StudentAnswerOnTaskInfoOutputModel>();
             CreateMap<StudentAnswerOnTaskDto, StudentAnswerOnTaskInfoOutputModel>();
         }
     }

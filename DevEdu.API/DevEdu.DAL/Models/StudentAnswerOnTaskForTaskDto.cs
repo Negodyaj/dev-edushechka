@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DevEdu.API.Models.OutputModels
+﻿namespace DevEdu.DAL.Models
 {
-    public class StudentAnswerOnTaskInfoOutputModel
+    public class StudentAnswerOnTaskForTaskDto : BaseDto
     {
-        public int Id { get; set; }
         public string StudentFirstName { get; set; }
         public string StudentLastName { get; set; }
         public string Status { get; set; }

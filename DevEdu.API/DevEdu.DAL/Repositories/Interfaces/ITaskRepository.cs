@@ -7,6 +7,7 @@ namespace DevEdu.DAL.Repositories
     {
         TaskDto GetTaskById(int id);
         List<CourseDto> GetCoursesToTaskById(int id);
+        List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskById(int id);
         List<TaskDto> GetTasks();
         int AddTask(TaskDto task);
         void UpdateTask(TaskDto task);

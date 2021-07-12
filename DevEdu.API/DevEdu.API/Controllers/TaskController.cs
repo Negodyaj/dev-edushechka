@@ -45,6 +45,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
         }
 
+        //  api/Task/courses
         [HttpGet("{taskId}/courses")]
         [Description("Get task by Id with tags and courses")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
@@ -52,6 +53,32 @@ namespace DevEdu.API.Controllers
         {
             var taskDto = _taskService.GetTaskWithCoursesById(taskId);
             return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
+        }
+
+        //  api/Task/answers
+        [HttpGet("{taskId}/answers")]
+        [Description("Get task by Id with tags and answers")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithAnswersOutputModel))]
+        public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
+        {
+            var taskDto = _taskService.GetTaskWithAnswersById(taskId);
+            var taskOutput = _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
+            var answers = _mapper.Map<List<StudentAnswerOnTaskInfoOutputModel>>(taskDto.StudentAnswers);
+            taskOutput.Answers = answers;
+            return taskOutput;
+        }
+
+        //  api/Task/coursesandanswers
+        [HttpGet("{taskId}/coursesandanswers")]
+        [Description("Get task by Id with tags, courses and answers")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesAndAnswersOutputModel))]
+        public TaskInfoWithCoursesAndAnswersOutputModel GetTaskWithTagsCoursesAndAnswers(int taskId)
+        {
+            var taskDto = _taskService.GetTaskWithCoursesAndAnswersById(taskId);
+            var taskOutput = _mapper.Map<TaskInfoWithCoursesAndAnswersOutputModel>(taskDto);
+            var answers = _mapper.Map<List<StudentAnswerOnTaskInfoOutputModel>>(taskDto.StudentAnswers);
+            taskOutput.Answers = answers;
+            return taskOutput;
         }
 
         //  api/Task

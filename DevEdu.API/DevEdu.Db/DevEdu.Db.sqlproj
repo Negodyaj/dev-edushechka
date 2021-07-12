@@ -203,6 +203,7 @@
     <Build Include="StoredProcedures\Material\Material_SelectAllByTagId.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_GetIdByTaskAndStudent.sql" />
     <Build Include="StoredProcedures\Task\Task_SelectCoursesById.sql" />
+    <Build Include="StoredProcedures\Task\Task_SelectAnswersById.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />
