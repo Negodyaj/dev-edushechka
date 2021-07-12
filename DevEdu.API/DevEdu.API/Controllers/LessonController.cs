@@ -89,7 +89,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{lessonId}/user/{userId}/absenceReason
-        [HttpPut("{lessonId}/user/{userId}/absenceReason ")]
+        [HttpPut("{lessonId}/user/{userId}/absenceReason")]
         public void UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, [FromBody] AbsenceReasonInputModel model)
         {
             var dto = _mapper.Map<StudentLessonDto>(model);          
@@ -97,7 +97,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{lessonId}/user/{userId}/attendance
-        [HttpPut("{lessonId}/user/{userId}/attendance ")]
+        [HttpPut("{lessonId}/user/{userId}/attendance")]
         public void UpdateStudentAttendanceOnLesson(int lessonId, int userId, [FromBody] AttendanceInputModel model)
         {
             var dto = _mapper.Map<StudentLessonDto>(model);           

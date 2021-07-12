@@ -56,22 +56,22 @@ namespace DevEdu.Business.Services
         }
         public void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
-            studentLessonDto.Lesson.Id = lessonId;
-            studentLessonDto.User.Id = userId;
+            studentLessonDto.Lesson = new LessonDto { Id = lessonId };
+            studentLessonDto.User = new UserDto { Id = userId };
             _lessonRepository.UpdateStudentFeedbackForLesson(studentLessonDto);
         }
 
         public void UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
-            studentLessonDto.Lesson.Id = lessonId;
-            studentLessonDto.User.Id = userId;
+            studentLessonDto.Lesson = new LessonDto { Id = lessonId };
+            studentLessonDto.User = new UserDto { Id = userId };
             _lessonRepository.UpdateStudentAbsenceReasonOnLesson(studentLessonDto);
         }
 
         public void UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
-            studentLessonDto.Lesson.Id = lessonId;
-            studentLessonDto.User.Id = userId;
+            studentLessonDto.Lesson = new LessonDto { Id = lessonId };
+            studentLessonDto.User = new UserDto { Id = userId };
             _lessonRepository.UpdateStudentAttendanceOnLesson(studentLessonDto);
         }
     }
