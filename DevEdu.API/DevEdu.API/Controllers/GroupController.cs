@@ -5,6 +5,7 @@ using DevEdu.API.Models.InputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
 {
@@ -16,7 +17,12 @@ namespace DevEdu.API.Controllers
         private readonly IGroupService _groupService;
         private readonly IGroupRepository _groupRepository;
 
-        public GroupController(IMapper mapper, IGroupService groupService, IGroupRepository groupRepository)
+        public GroupController
+        (
+            IMapper mapper,
+            IGroupService groupService,
+            IGroupRepository groupRepository
+        )
         {
             _mapper = mapper;
             _groupService = groupService;
@@ -25,9 +31,9 @@ namespace DevEdu.API.Controllers
 
         //  api/Group/5
         [HttpGet("{id}")]
-        public string GetGroupById(int id)
+        public GroupDto GetGroupById(int id)
         {
-            return $"Group №{id}";
+            return new GroupDto();
         }
 
         //  api/Group/
@@ -39,9 +45,11 @@ namespace DevEdu.API.Controllers
 
         //  api/Group
         [HttpPost]
-        public int AddGroup([FromBody] GroupInputModel model)
+        [Description("Create new Group")]
+        public GroupDto AddGroup([FromBody] GroupInputModel model)
         {
-            return 1;
+            var dto = _mapper.Map<GroupDto>(model);
+            return _groupService.AddGroup(dto);
         }
 
         //  api/Group
@@ -55,8 +63,8 @@ namespace DevEdu.API.Controllers
         [HttpPut]
         public string UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
-            return $"Group №{id} change courseId to {model.CourseId} and timetable to {model.Timetable} and startDate to {model.StartDate}" +
-                   $"and paymentPerMonth {model.PaymentPerMonth}";
+            model
+            var dto = _mapper.Map<GroupDto>(model);
         }
 
         //  api/Group/{groupId}/change-status/{statusId}

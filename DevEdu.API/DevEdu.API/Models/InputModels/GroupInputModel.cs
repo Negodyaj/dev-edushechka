@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
 {
@@ -7,8 +8,13 @@ namespace DevEdu.API.Models.InputModels
     {
         [Required]
         public int CourseId { get; set; }
+        [Required(ErrorMessage = GroupStatusIdRequired)]
+        public int GroupStatusId { get; set; }
+        [Required(ErrorMessage = DateRequired)]
         public DateTime StartDate { get; set; }
+        [Required(ErrorMessage = TimetableRequired)]
         public string Timetable { get; set; }
+        [Required(ErrorMessage = PaymentPerMonthRequired)]
         public decimal PaymentPerMonth { get; set; }
     }
 }

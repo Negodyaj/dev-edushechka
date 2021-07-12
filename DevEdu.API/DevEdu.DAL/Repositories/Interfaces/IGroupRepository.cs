@@ -1,7 +1,15 @@
-﻿namespace DevEdu.DAL.Repositories
+﻿using DevEdu.DAL.Models;
+using System.Collections.Generic;
+
+namespace DevEdu.DAL.Repositories
 {
     public interface IGroupRepository
     {
+        GroupDto AddGroup(GroupDto groupDto);
+        void DeleteGroup(int id);
+        GroupDto GetGroup(int id);
+        List<GroupDto> GetGroups();
+        GroupDto UpdateGroup(GroupDto groupDto);
         int AddUserToGroup(int groupId, int userId, int roleId);
         int DeleteUserFromGroup(int userId, int groupId);
         void AddGroupLesson(int groupId, int lessonId);

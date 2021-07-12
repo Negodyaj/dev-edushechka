@@ -32,5 +32,8 @@
         public const string DateRequired = "Date must be provided";
         public const string TeacherCommentRequired = "TeacherComment must be provided";
         public const string TeacherIdRequired = "TeacherId must be provided";
+        public const string GroupStatusIdRequired = "GroupStatusId must be provided";
+        public const string TimetableRequired = "Timetable must be provided";
+        public const string PaymentPerMonthRequired = "PaymentPerMonth must be provided";
     }
 }

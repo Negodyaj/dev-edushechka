@@ -1,4 +1,6 @@
-﻿using DevEdu.DAL.Repositories;
+﻿using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
 {
@@ -9,6 +11,16 @@ namespace DevEdu.Business.Services
         {
             _groupRepository = groupRepository;
         }
+
+        public GroupDto AddGroup(GroupDto groupDto) => _groupRepository.AddGroup(groupDto);
+
+        public void DeleteGroup(int id) => _groupRepository.DeleteGroup(id);
+
+        public GroupDto GetGroup(int id) => _groupRepository.GetGroup(id);
+
+        public List<GroupDto> GetGroups() => _groupRepository.GetGroups();
+
+        public GroupDto UpdateGroup(GroupDto groupDto) => _groupRepository.UpdateGroup(groupDto);
 
         public int AddGroupMaterialReference(int groupId, int materialId) => _groupRepository.AddGroupMaterialReference(groupId, materialId);
 
