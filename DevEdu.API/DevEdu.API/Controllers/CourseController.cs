@@ -76,6 +76,7 @@ namespace DevEdu.API.Controllers
 
         //  api/course/topic/{topicId}/tag/{tagId}
         [HttpPost("topic/{topicId}/tag/{tagId}")]
+        [Description("Add Tag To Topic")]
         public string AddTagToTopic(int topicId, int tagId)
         {
             _courseService.AddTagToTopic(topicId, tagId);
@@ -84,6 +85,7 @@ namespace DevEdu.API.Controllers
 
         //  api/course/topic/{topicId}/tag/{tagId}
         [HttpDelete("topic/{topicId}/tag/{tagId}")]
+        [Description("Delete Tag From Topic")]
         public string DeleteTagFromTopic(int topicId, int tagId)
         {
             _courseService.DeleteTagFromTopic(topicId, tagId);
