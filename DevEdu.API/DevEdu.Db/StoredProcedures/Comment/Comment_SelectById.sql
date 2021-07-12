@@ -5,7 +5,7 @@ BEGIN
 	SELECT 
 		c.Id,
 		c.Text,
-		convert(varchar(15), [Date], 104) as [Date],
+		c.Date,
 		c.IsDeleted,
 		u.Id,
 		u.FirstName,
