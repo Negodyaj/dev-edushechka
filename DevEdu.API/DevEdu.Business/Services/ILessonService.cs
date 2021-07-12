@@ -6,13 +6,13 @@ namespace DevEdu.Business.Services
 {
     public interface ILessonService
     {
-        int AddCommentToLesson(int lessonId, int commentId);
+        void AddCommentToLesson(int lessonId, int commentId);
         int AddLesson(LessonDto lessonDto);
         void DeleteCommentFromLesson(int lessonId, int commentId);
         void DeleteLesson(int id);
         List<LessonDto> SelectAllLessons();
         LessonDto SelectLessonById(int id);
-        int UpdateLesson(int id, string commentDto, DateTime date);
+        void UpdateLesson(int id, LessonDto lessonDto);
         void DeleteTopicFromLesson(int lessonId, int topicId);
         void AddTopicToLesson(int lessonId, int topicId);
     }

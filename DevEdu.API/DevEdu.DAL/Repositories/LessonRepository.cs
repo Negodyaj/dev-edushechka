@@ -31,9 +31,9 @@ namespace DevEdu.DAL.Repositories
 
         }
 
-        public int AddCommentToLesson(int lessonId, int commentId)
+        public void AddCommentToLesson(int lessonId, int commentId)
         {
-            return _connection.QueryFirst<int>(
+            _connection.QueryFirst<int>(
                 _commentAddToLessonProcedure,
                 new
                 {
@@ -50,9 +50,9 @@ namespace DevEdu.DAL.Repositories
                _lessonAddProcedure,
                 new
                 {
-                    lessonDto.Date,
-                    lessonDto.TeacherComment,
-                    lessonDto.TeacherDto
+                    Date = lessonDto.Date,
+                    TeacherComment = lessonDto.TeacherComment,
+                    TeacherId = lessonDto.Teacher.Id
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -83,98 +83,28 @@ namespace DevEdu.DAL.Repositories
 
         public List<LessonDto> SelectAllLessons()
         {
-            var lessonDictionary = new Dictionary<int, LessonDto>();
-
-            var  list = _connection
-                .Query<LessonDto, UserDto, CommentDto, TopicDto, GroupDto, UserDto, LessonDto>(
+            return _connection
+                .Query<LessonDto, UserDto, LessonDto>(
                     _lessonSelectAllProcedure,
-                    (lesson, teacher, comment, topic, group, student) =>
+                    (lesson, teacher) =>
                     {
-                        LessonDto lessonDtoEntry;
-
-                        if (!lessonDictionary.TryGetValue(lesson.Id, out lessonDtoEntry))
-                        {
-                            lessonDtoEntry = lesson;
-
-                            lessonDtoEntry.TeacherDto = teacher;
-                            lessonDtoEntry.CommentDtos = new List<CommentDto>();
-                            lessonDtoEntry.TopicDtos = new List<TopicDto> ();
-                            lessonDtoEntry.GroupDtos = new List<GroupDto> ();
-                            lessonDtoEntry.StudentDtos = new List<UserDto> ();
-                            lessonDictionary.Add(lesson.Id, lessonDtoEntry);
-                        }
-                        if (comment != null)
-                        {
-                            if (!lessonDtoEntry.CommentDtos.Contains(comment))
-                            {
-                                lessonDtoEntry.CommentDtos.Add(comment);
-                            }
-                        }
-                        if (!lessonDtoEntry.TopicDtos.Contains(topic))
-                        {
-                            lessonDtoEntry.TopicDtos.Add(topic);
-                        }
-                        if (!lessonDtoEntry.GroupDtos.Contains(group))
-                        {
-                            lessonDtoEntry.GroupDtos.Add(group);
-                        }
-                        if (!lessonDtoEntry.StudentDtos.Contains(student))
-                        {
-                            lessonDtoEntry.StudentDtos.Add(student);
-                        }
-
-                        return lessonDtoEntry;
+                        lesson.Teacher = teacher;                        
+                        return lesson;
                     },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
-                .Distinct()
                 .ToList();
-
-            return list;
         }
 
         public LessonDto SelectLessonById(int id)
         {
-            LessonDto result = default;
             return _connection
-                .Query<LessonDto, UserDto, CommentDto, TopicDto, GroupDto, UserDto, LessonDto>(
+                .Query<LessonDto, UserDto, LessonDto>(
                     _lessonSelectByIdProcedure,
-                    (lesson, teacher, comment, topic, group, student)=>
+                    (lesson, teacher)=>
                     {
-                        if (result == null)
-                        {
-                            result = lesson;
-                            result.TeacherDto = teacher;
-                            if (comment != null)
-                            {
-                                result.CommentDtos = new List<CommentDto> { comment };
-                            }
-
-                            result.TopicDtos = new List<TopicDto> { topic };
-                            result.GroupDtos = new List<GroupDto> { group };
-                            result.StudentDtos = new List<UserDto> { student };
-                        }
-                        else
-                        {
-                            if(comment != null)
-                            {
-                                if (!result.CommentDtos.Contains(comment))
-                                {
-                                    result.CommentDtos.Add(comment);
-                                }
-                            }
-                            if (!result.TopicDtos.Contains(topic))
-                            {
-                                result.TopicDtos.Add(topic);
-                            }
-                            if (!result.GroupDtos.Contains(group)) {
-                                result.GroupDtos.Add(group);
-                            }
-                            if (!result.StudentDtos.Contains(student)) {
-                                result.StudentDtos.Add(student);
-                            }
-                        }
+                        lesson.Teacher = teacher;
                         return lesson;
                     },
                     new { id },
@@ -182,19 +112,17 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure
                 )
                 .FirstOrDefault();
-
-            return result;
         }
 
-        public int UpdateLesson(int id, String commentTeacher, DateTime date)
+        public void UpdateLesson(LessonDto lessonDto)
         {
-            return _connection.QuerySingleOrDefault<int>(
+             _connection.QuerySingleOrDefault<int>(
                 _lessonUpdateProcedure,
                 new
                 {
-                    id,
-                    commentTeacher,
-                    date
+                    lessonDto.Id,
+                    lessonDto.TeacherComment,
+                    lessonDto.Date
                 },
                 commandType: CommandType.StoredProcedure
             );
