@@ -10,7 +10,7 @@ namespace DevEdu.DAL.Models
     {
 
         public DateTime Date { get; set; }
-        public int Summ { get; set; }
+        public int Sum { get; set; }
         public UserDto User { get; set; }
         public bool IsPaid { get; set; }
 
@@ -20,14 +20,14 @@ namespace DevEdu.DAL.Models
                    Id == dto.Id &&
                    IsDeleted == dto.IsDeleted &&
                    Date == dto.Date &&
-                   Summ == dto.Summ &&
+                   Sum == dto.Sum &&
                    EqualityComparer<UserDto>.Default.Equals(User, dto.User) &&
                    IsPaid == dto.IsPaid;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, IsDeleted, Date, Summ, User, IsPaid);
+            return HashCode.Combine(Id, IsDeleted, Date, Sum, User, IsPaid);
         }
     }
 }

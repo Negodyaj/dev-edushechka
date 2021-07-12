@@ -78,14 +78,14 @@ namespace DevEdu.API.Controllers
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpPost("{courseId}/material/{materialId}")]
-        public void AddMaterialToCourse(int courseId, int materialId)
+        public void AddCourseMaterialReference(int courseId, int materialId)
         {
             _courseService.AddCourseMaterialReference(courseId, materialId);
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpDelete("{courseId}/material/{materialId}")]
-        public void RemoveMaterialFromCourse(int courseId, int materialId)
+        public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
             _courseService.RemoveCourseMaterialReference(courseId, materialId);
         }

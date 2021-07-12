@@ -13,7 +13,7 @@ namespace DevEdu.API.Configuration
         }
 
         private void CreateMappingToDto()
-        { 
+        {
             CreateMap<CourseInputModel, CourseDto>();
             CreateMap<CommentAddInputModel, CommentDto>();
             CreateMap<CommentUpdateInputModel, CommentDto>();
@@ -25,12 +25,11 @@ namespace DevEdu.API.Configuration
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
             CreateMap<PaymentInputModel, PaymentDto>()
-             .ForMember(dest => dest.User, opt => opt.MapFrom(src => new PaymentDto { Id = src.User }));
+             .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto {Id=src.UserId }));
         }
 
         private void CreateMappingFromDto()
         {
-
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[Payment_Update]
-	@Date		datetime,
+	@Date		Datetime,
+    @UserId int,
     @Id     int,
 	@IsPaid bit,
     @Sum decimal(6,2)
@@ -8,6 +9,7 @@ BEGIN
     UPDATE dbo.Payment
         SET
         Date = @Date,
+        UserId=@UserId,
         IsPaid = @IsPaid,
         [Sum] = @Sum
     WHERE [Id] = @Id

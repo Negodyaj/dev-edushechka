@@ -14,7 +14,7 @@ namespace DevEdu.DAL.Repositories
         private const string _paymentAddProcedure = "dbo.Payment_Insert";
         private const string _paymentDeleteProcedure = "dbo.Payment_Delete";
         private const string _paymentSelectByIdProcedure = "dbo.Payment_SelectById";
-        private const string _paymentAllByUserIdProcedure = "dbo.Payment_Insert";
+        private const string _paymentAllByUserIdProcedure = "dbo.Payment_SelectAllByUserId";
         private const string _paymentUpdateProcedure = "dbo.Payment_Update";
 
         public PaymentRepository() { }
@@ -25,9 +25,9 @@ namespace DevEdu.DAL.Repositories
                 _paymentAddProcedure,
                 new
                 {
+                    userId=paymentDto.User.Id,
                     paymentDto.Date,
-                    paymentDto.Summ,
-                    paymentDto.User,
+                    paymentDto.Sum,
                     paymentDto.IsPaid
                 },
                 commandType: CommandType.StoredProcedure
@@ -53,13 +53,13 @@ namespace DevEdu.DAL.Repositories
                 {
                     if (result == null)
                     {
+
                         result = payment;
                         result.User = user;
                     }
                     return result;
-                },
-                new { id },
-                    splitOn: "Id",
+                }, new { id},
+                splitOn:"Name",
                     commandType: CommandType.StoredProcedure
             )
             .FirstOrDefault();
@@ -100,7 +100,7 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     paymentDto.Date,
-                    paymentDto.Summ,
+                    paymentDto.Sum,
                     paymentDto.User,
                     paymentDto.IsPaid
                 },

@@ -15,6 +15,6 @@ BEGIN
 		u.GitHubAccount,
 		u.Photo
 	FROM dbo.Payment p
-		left join dbo.[User] u on u.Id=p.UserId
+		inner join [User] u on u.Id=p.UserId
 	WHERE (p.UserId=@UserId AND p.IsDeleted=0)
 END

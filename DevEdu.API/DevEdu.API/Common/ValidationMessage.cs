@@ -22,5 +22,7 @@
         public const string PhoneNumerRequired = "PhoneNumer must be provided";
         public const string DateRequired = "Date must be provided";
         public const string SummRequired = "Summ must be provided";
+        public const string UserIdRequired = "UserId cannot be empty";
+        public const string IsPaidRequired = "IsPaid cannot be empty";
     }
 }
