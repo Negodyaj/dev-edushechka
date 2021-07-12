@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
@@ -15,6 +16,7 @@ namespace DevEdu.DAL.Repositories
         private const string _courseUpdateProcedure = "dbo.Course_Update";
         private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
         private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
+        private const string _selectAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_SelectAllByCourseId]";
 
         private const string _сourseTaskInsertProcedure = "dbo.Course_Task_Insert";
         private const string _сourseTaskDeleteProcedure = "dbo.Course_Task_Delete";
@@ -47,11 +49,28 @@ namespace DevEdu.DAL.Repositories
 
         public CourseDto GetCourse(int id)
         {
-            return _connection.QuerySingleOrDefault<CourseDto>(
+            CourseDto result = default;
+            _connection.Query<CourseDto, GroupDto, CourseDto>(
                 _courseSelectByIdProcedure,
+                (course, group) =>
+                {
+                    if (result == null)
+                    {
+                        result = course;
+                        result.Groups = new List<GroupDto> {group};
+                    }
+                    else
+                    {
+                        result.Groups.Add(group);
+                    }
+                    return result;
+                },
                 new { id },
+                splitOn: "Id",
                 commandType: CommandType.StoredProcedure
-            );
+                )
+                .FirstOrDefault();
+            return result;
         }
 
         public List<CourseDto> GetCourses()
@@ -128,6 +147,24 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             );
+        }
+
+        public List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId)
+        {
+            return _connection
+                .Query<CourseTopicDto,TopicDto, CourseTopicDto>(
+                    _selectAllTopicsByCourseIdProcedure,
+                    (courseTopicDto, topicDto) =>
+                    {
+                        courseTopicDto.Topic = topicDto;
+                        courseTopicDto.Course = new CourseDto() { Id = courseId };
+                        return courseTopicDto;
+                    },
+                    new {courseId},
+                    splitOn: "id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
         }
     }
 }

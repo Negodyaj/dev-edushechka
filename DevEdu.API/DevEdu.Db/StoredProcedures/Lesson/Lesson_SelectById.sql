@@ -51,7 +51,7 @@ BEGIN
 		inner join dbo.[User] u on l.TeacherId = u.Id  
 		left outer join dbo.Lesson_Comment ls on l.Id = ls.LessonId
 		left outer join dbo.Comment c on ls.CommentId = c.Id
-		inner join dbo.Lesson_Topic lt on l.Id = lt.ClassId
+		inner join dbo.Lesson_Topic lt on l.Id = lt.LessonId
 		inner join dbo.Topic t on t.Id = lt.TopicId
 		inner join dbo.Group_Lesson gl on l.Id = gl.LessonId
 		inner join dbo.[Group] g on gl.GroupId = g.Id
