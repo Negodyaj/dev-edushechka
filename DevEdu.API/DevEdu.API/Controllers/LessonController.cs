@@ -6,6 +6,9 @@ using System;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using DevEdu.Business.Services;
+using System.ComponentModel;
+using Microsoft.AspNetCore.Http;
+using DevEdu.API.Models.OutputModels;
 
 namespace DevEdu.API.Controllers
 {
@@ -26,14 +29,18 @@ namespace DevEdu.API.Controllers
 
         // api/lesson
         [HttpPost]
-        public string AddLesson([FromBody] LessonInputModel inputModel)
+        [Description("Add a lesson.")]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        public int AddLesson([FromBody] LessonInputModel inputModel)
         {
             var dto = _mapper.Map<LessonDto>(inputModel);
-            return _lessonService.AddLesson(dto).ToString();
+            return _lessonService.AddLesson(dto);
         }
 
         // api/lesson/{id}
         [HttpDelete("{id}")]
+        [Description("Delete the lesson by id.")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteLesson(int id)
         {
             _lessonService.DeleteLesson(id);
@@ -41,6 +48,8 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{id}
         [HttpPut("{id}")]
+        [Description("Update the lesson by id.")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public void UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
         {
             var dto = _mapper.Map<LessonDto>(updateModel);
@@ -49,21 +58,58 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{id}
         [HttpGet("{id}")]
-        public LessonDto GetLessonById(int id)
+        [Description("Get the lesson by id.")]
+        [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status200OK)]
+        public LessonInfoOutputModel GetLessonById(int id)
         {
-            return _lessonService.SelectLessonById(id);
+            var dto = _lessonService.SelectLessonById(id);
+            return _mapper.Map<LessonInfoOutputModel>(dto);
         }
 
         // api/lesson
         [HttpGet]
-        public List<LessonDto> GetAllLessons()
+        [Description("Get all lessons.")]
+        [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status200OK)]
+        public List<LessonInfoOutputModel> GetAllLessons()
         {
-            return _lessonService.SelectAllLessons();
+            var dto = _lessonService.SelectAllLessons();
+            return  _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
+        // api/lesson
+        [HttpGet]
+        [Description("Get all lessons with topics.")]
+        [ProducesResponseType(typeof(LessonInfoWithTopicsOutputModel), StatusCodes.Status200OK)]
+        public List<LessonInfoWithTopicsOutputModel> GetAllLessonsWithTopics()
+        {
+            var dto = _lessonService.SelectAllLessons();
+            return _mapper.Map<List<LessonInfoWithTopicsOutputModel>>(dto);
+        }
+
+        // api/lesson
+        [HttpGet]
+        [Description("Get all lessons with groups.")]
+        [ProducesResponseType(typeof(LessonInfoWithGroupsOutputModel), StatusCodes.Status200OK)]
+        public List<LessonInfoWithGroupsOutputModel> GetAllLessonsWithGroups()
+        {
+            var dto = _lessonService.SelectAllLessons();
+            return _mapper.Map<List<LessonInfoWithGroupsOutputModel>>(dto);
+        }
+
+        // api/lesson
+        [HttpGet]
+        [Description("Get all lessons with students and comments.")]
+        [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
+        public List<LessonInfoWithStudentsAndCommentsOutputModel> GetAllLessonsWithStudentsAndComments()
+        {
+            var dto = _lessonService.SelectAllLessons();
+            return _mapper.Map<List<LessonInfoWithStudentsAndCommentsOutputModel>>(dto);
+        }
 
         // api/lesson/{lessonId}/comment/{commentId}
         [HttpPost("{lessonId}/comment/{commentId}")]
+        [Description("Add a lesson's comment.")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public void AddLessonComment(int lessonId, int commentId)
         {
             _lessonService.AddCommentToLesson(lessonId, commentId);
@@ -71,6 +117,8 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/comment/{commentId}
         [HttpDelete("{lessonId}/comment/{commentId}")]
+        [Description("Delete the lesson's comment.")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public string DeleteLessonComment(int lessonId, int commentId)
         {
             _lessonService.DeleteCommentFromLesson(lessonId, commentId);
