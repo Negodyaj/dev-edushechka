@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using AutoMapper;
+﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
@@ -17,7 +15,7 @@ namespace DevEdu.API.Configuration
         }
 
         private void CreateMappingToDto()
-        { 
+        {
             CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
             CreateMap<AttendanceInputModel, StudentLessonDto>();
             CreateMap<CourseInputModel, CourseDto>();
@@ -37,8 +35,10 @@ namespace DevEdu.API.Configuration
             CreateMap<TagInputModel, TagDto>();
             CreateMap<TaskInputModel, TaskDto>();
             CreateMap<TopicInputModel, TopicDto>();
-            CreateMap<UserInsertInputModel, UserDto>();
+            CreateMap<UserInsertInputModel, UserDto>()
+                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate));
             CreateMap<UserUpdateInputModel, UserDto>();
+
         }
 
         private void CreateMappingFromDto()
@@ -48,7 +48,11 @@ namespace DevEdu.API.Configuration
             CreateMap<CommentDto, CommentInfoOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
-            CreateMap<UserDto, UserInfoOutputModel>();
+            CreateMap<UserDto, UserInfoOutPutModel>();
+            CreateMap<UserDto, UserFullInfoOutPutModel>()
+                .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src => src.RegistrationDate.ToShortDateString()))
+                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToShortDateString()))
+                .ForMember(dest => dest.ExileDate, opt => opt.MapFrom(src => src.ExileDate.ToShortDateString()));
         }
     }
 }
