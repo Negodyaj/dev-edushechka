@@ -6,15 +6,14 @@ BEGIN
 	n.Id, 
 	n.Text,
 	n.Date,
+	n.RoleId,
 	n.IsDeleted,
 	u.Id,
 	u.FirstName,
 	u.LastName,
 	u.GitHubAccount,
-	u.Photo,
-	ur.RoleId as id
+	u.Photo
 	FROM dbo.Notification n
 		inner join [User] u on u.Id=n.UserId
-		inner join User_Role ur on ur.UserId=u.Id
 	WHERE (n.Id = @Id)
 END

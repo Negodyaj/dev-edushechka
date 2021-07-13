@@ -12,7 +12,7 @@ namespace DevEdu.DAL.Repositories
         private const string _notificationInsertProcedure =             "dbo.Notification_Insert";
         private const string _notificationDeleteProcedure =             "dbo.Notification_Delete";
         private const string _notificationSelectByIdProcedure =         "dbo.Notification_SelectById";
-        private const string _notificationSelectAllByUserIdProcedure =    "dbo.Notification_SelectAllByUserId";
+        private const string _notificationSelectAllByUserIdProcedure =  "dbo.Notification_SelectAllByUserId";
         private const string _notificationUpdateProcedure =             "dbo.Notification_Update";
         public int AddNotification(NotificationDto notificationDto)
         {
@@ -21,7 +21,9 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     userId = notificationDto.User.Id,
-                    notificationDto.Text
+                    notificationDto.Text,
+                    notificationDto.Role
+
                 },
                 commandType: CommandType.StoredProcedure
             );
