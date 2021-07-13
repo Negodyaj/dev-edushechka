@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Servicies;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -39,16 +39,18 @@ namespace DevEdu.API.Controllers
 
         // api/user/{userId}
         [HttpGet("{userId}")]
-        public UserDto GetUserById(int userId)
+        public UserFullInfoOutPutModel GetUserById(int userId)
         {
-            return _userService.SelectUserById(userId);
+            var dto = _userService.SelectUserById(userId);
+            return _mapper.Map<UserFullInfoOutPutModel>(dto);
         }
 
         // api/user
         [HttpGet]
-        public List<UserDto> GetAllUsers()
+        public List<UserInfoOutPutModel> GetAllUsers()
         {
-            return _userService.SelectUsers();
+            var listDto = _userService.SelectUsers();
+            return _mapper.Map<List<UserInfoOutPutModel>>(listDto);
         }
 
         // api/user/{userId}
