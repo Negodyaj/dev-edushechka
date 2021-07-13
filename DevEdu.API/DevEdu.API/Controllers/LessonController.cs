@@ -6,6 +6,8 @@ using System;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using DevEdu.Business.Services;
+using System.ComponentModel;
+using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
 {
@@ -82,6 +84,8 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/topic/{toppicId}
         [HttpDelete("{lessonId}/topic/{topicId}")]
+        [Description("Deletes topic from lesson")]
+        [ProducesResponseType(typeof(LessonDto), StatusCodes.Status200OK)]
         public void DeleteTopicFromLesson(int lessonId, int topicId)
         {
             _lessonService.DeleteTopicFromLesson(lessonId, topicId);
@@ -89,6 +93,8 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/topic/{topicId}
         [HttpPost("{lessonId}/topic/{topicId}")]
+        [Description("Adds topic to lesson")]
+        [ProducesResponseType(typeof(LessonDto), StatusCodes.Status200OK)]
         public void AddTopicToLesson(int lessonId, int topicId)
         {
             _lessonService.AddTopicToLesson(lessonId, topicId);
