@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace DevEdu.API.Models.OutputModels.User
+namespace DevEdu.API.Models.OutputModels
 {
-    public class UserFullInfoOutPutModel: UserInfoOutPutModel
+    public class UserFullInfoOutPutModel : UserInfoOutPutModel
     {
         public string Username { get; set; }
         public string RegistrationDate { get; set; }
