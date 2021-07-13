@@ -3,10 +3,10 @@ using System.ComponentModel;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Repositories;
 
 namespace DevEdu.API.Controllers
 {
@@ -33,7 +33,7 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         public CourseDto GetCourse(int id)
         {
-            return _courseRepository.GetCourse(id);
+            return _courseService.GetCourse(id);
         }
 
         //  api/Course
@@ -50,14 +50,14 @@ namespace DevEdu.API.Controllers
         public int AddCourse([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            return _courseRepository.AddCourse(dto);
+            return _courseService.AddCourse(dto);
         }
 
         //  api/course/5
         [HttpDelete("{id}")]
         public void DeleteCourse(int id)
         {
-            _courseRepository.DeleteCourse(id);
+            _courseService.DeleteCourse(id);
         }
 
         //  api/course/5
@@ -65,8 +65,7 @@ namespace DevEdu.API.Controllers
         public string UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            dto.Id = id;
-            _courseRepository.UpdateCourse(dto);
+            _courseService.UpdateCourse(id, dto);
             return $"Course №{id} change name to {model.Name} and description to {model.Description}";
         }
 

@@ -8,18 +8,11 @@ namespace DevEdu.DAL.Models
     {
         public DateTime Date { get; set; }
         public String TeacherComment { get; set; }
-        public UserDto TeacherDto { get; set; }
-        public List<CommentDto> CommentDtos { get; set; }
-        public List<TopicDto> TopicDtos { get; set; }
-        public List<GroupDto> GroupDtos { get; set; }
-        public List<UserDto> StudentDtos { get; set; }
+        public UserDto Teacher { get; set; }
+        public List<CommentDto> Comments { get; set; }
+        public List<TopicDto> Topics { get; set; }
+        public List<GroupDto> Groups { get; set; }
+        public List<UserDto> Students { get; set; }
 
-        public void Distinct()
-        {
-            CommentDtos = CommentDtos.Distinct().ToList();
-            TopicDtos = TopicDtos.Distinct().ToList();
-            GroupDtos = GroupDtos.Distinct().ToList();
-            StudentDtos = StudentDtos.Distinct().ToList();                        
-        }
     }
 }
