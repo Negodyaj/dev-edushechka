@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using Dapper;
 using DevEdu.DAL.Models;
 using System.Linq;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -50,27 +51,66 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public List<StudentAnswerOnTaskDto> GetAllStudentAnswerOnTask()
+        public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask()
         {
-            return _connection.Query<StudentAnswerOnTaskDto>(
+            var studentStudentDictionary = new Dictionary<int, StudentAnswerOnTaskDto>();
+
+            return _connection
+                .Query<StudentAnswerOnTaskDto, TaskStatus, StudentAnswerOnTaskDto>(
                 _taskStudentSelectAll,
+                (studentAnswer, taskStatus) =>
+                {
+                    StudentAnswerOnTaskDto studentAnswerEntry;
+
+                    if (!studentStudentDictionary.TryGetValue(studentAnswer.Id, out studentAnswerEntry))
+                    {
+                        studentAnswerEntry = studentAnswer;
+                        studentAnswer.TaskStatus = taskStatus;
+                        studentStudentDictionary.Add(studentAnswer.Id, studentAnswerEntry);
+                    }
+
+                    return studentAnswerEntry;
+                },
+                splitOn: "Id",
                 commandType: CommandType.StoredProcedure
                 )
+                .Distinct()
                 .ToList();
         }
 
-        public List<StudentAnswerOnTaskDto> GetStudentAnswerByTaskIdAndStudentIdOnTask(StudentAnswerOnTaskDto studentResponse)
+        public StudentAnswerOnTaskDto GetStudentAnswerByTaskIdAndStudentIdOnTask(int taskId, int studentId)
         {
-            return _connection.Query<StudentAnswerOnTaskDto>(
+            StudentAnswerOnTaskDto result = default;
+
+            _connection.
+                Query<StudentAnswerOnTaskDto, CommentDto, TaskStatus, StudentAnswerOnTaskDto>(
                 _taskStudentSelectByTaskAndStudent,
+                (studentAnswer, comment, taskStatus) =>
+                {
+                    if(result == null)
+                    {
+                        result = studentAnswer;
+                        result.Comments = new List<CommentDto> { comment };
+                        result.TaskStatus = taskStatus;
+                    }
+                    else
+                    {
+                        result.Comments.Add(comment);
+                    }
+
+                    return studentAnswer;
+                },
                 new
                 {
-                    studentResponse.TaskId,
-                    studentResponse.StudentId
+                    taskId,
+                    studentId
                 },
+                splitOn: "Id",
                 commandType: CommandType.StoredProcedure
-                )
-                .ToList();
+             )
+             .FirstOrDefault();
+
+            return result;
         }
 
         public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse)

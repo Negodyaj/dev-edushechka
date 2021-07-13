@@ -35,6 +35,7 @@ namespace DevEdu.API
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ICourseService, CourseService>(); 
+            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>(); 
 
             services.AddControllers();
 

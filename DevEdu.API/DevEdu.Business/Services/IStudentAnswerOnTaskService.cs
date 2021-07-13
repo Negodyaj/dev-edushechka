@@ -1,9 +1,9 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
-namespace DevEdu.DAL.Repositories
+namespace DevEdu.Business.Services
 {
-    public interface IStudentAnswerOnTaskRepository
+    public interface IStudentAnswerOnTaskService
     {
         void AddStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse);
         void DeleteStudentAnswerOnTask(int taskId, int studentId);
@@ -12,6 +12,5 @@ namespace DevEdu.DAL.Repositories
         void UpdateStatusAnswerOnTask(int taskId, int studentId, int statusId);
         void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse);
         void AddCommentOnStudentAnswer(int taskstudentId, int commentId);
-
     }
 }
