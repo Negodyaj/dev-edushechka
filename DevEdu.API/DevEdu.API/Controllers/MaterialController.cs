@@ -2,6 +2,7 @@
 using DevEdu.API.Models.InputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -60,20 +61,22 @@ namespace DevEdu.API.Controllers
 
         // api/material/{materialId}/tag/{tagId}
         [HttpPost("{materialId}/tag/{tagId}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [Description("Add tag to material")]
-        public void AddTagToMaterial(int materialId, int tagId)
+        public string AddTagToMaterial(int materialId, int tagId)
         {
             _materialService.AddTagToMaterial(materialId, tagId);
+            return $"Tag id: {tagId} added for material id: {materialId}";
         }
 
         // api/material/{materialId}/tag/{tagId}
         [HttpDelete("{materialId}/tag/{tagId}")]
         [Description("Delete tag from material")]
-        [ProducesResponseType(200)]
-        public void DeleteTagFromMaterial(int materialId, int tagId)
+        [ProducesResponseType(typeof(string),StatusCodes.Status204NoContent)]
+        public string DeleteTagFromMaterial(int materialId, int tagId)
         {
             _materialService.DeleteTagFromMaterial(materialId, tagId);
+            return $"Tag id: {tagId} deleted from material id: {materialId}";
         }
 
         // api/material/by-tag/1
