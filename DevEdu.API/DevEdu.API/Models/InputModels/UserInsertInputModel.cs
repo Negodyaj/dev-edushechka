@@ -31,7 +31,7 @@ namespace DevEdu.API.Models.InputModels
 
         [Required(ErrorMessage = CityIdRequired)]
         [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatCityId)]
-        public int CityId { get; set; }
+        public int City { get; set; }
 
         [Required(ErrorMessage = BirthDateRequired)]
         public string BirthDate { get; set; }

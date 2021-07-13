@@ -33,7 +33,7 @@ namespace DevEdu.DAL.Repositories
                     user.Username,
                     user.Password,
                     user.ContractNumber,
-                    user.City,
+                    CityId = (int)user.City,
                     user.BirthDate,
                     user.GitHubAccount,
                     user.Photo,
@@ -108,7 +108,7 @@ namespace DevEdu.DAL.Repositories
                     user.LastName,
                     user.Patronymic,
                     user.Username,
-                    user.City,
+                    CityId = (int)user.City,
                     user.GitHubAccount,
                     user.Photo,
                     user.PhoneNumber
