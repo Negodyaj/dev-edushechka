@@ -19,12 +19,12 @@ namespace DevEdu.Business.Services
 
         public int AddComment(CommentDto dto) => _commentRepository.AddComment(dto);
 
-        public void DeleteComment(int id) => _commentRepository.DeleteComment(id);
+        public int DeleteComment(int id) => _commentRepository.DeleteComment(id);
 
-        public void UpdateComment(int id, CommentDto dto)
+        public int UpdateComment(int id, CommentDto dto)
         {
             dto.Id = id;
-            _commentRepository.UpdateComment(dto);
+            return _commentRepository.UpdateComment(dto);
         }
     }
 }
