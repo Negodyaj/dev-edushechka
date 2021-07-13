@@ -6,5 +6,6 @@ namespace DevEdu.DAL.Models
     {
         public string Content { get; set; }
         public List<TagDto> Tags { get; set; }
+        public List<CourseDto> Courses { get; set; }
     }
 }

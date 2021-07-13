@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
@@ -36,18 +37,20 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         [Description("Returns all materials with tags")]
         [ProducesResponseType(typeof(MaterialDto), StatusCodes.Status200OK)]
-        public List<MaterialDto> GetAllMaterials()
+        public List<MaterialInfoWithTagsOutputModel> GetAllMaterials()
         {
-            return _materialService.GetAllMaterials();
+            var dto = _materialService.GetAllMaterials();
+            return _mapper.Map<List<MaterialInfoWithTagsOutputModel>>(dto);
         }
 
         // api/material/5
         [HttpGet("{id}")]
-        [Description("Returns material by id with tags")]
+        [Description("Returns material by id with tags and courses")]
         [ProducesResponseType(typeof(MaterialDto), StatusCodes.Status200OK)]
-        public MaterialDto GetMaterial(int id)
+        public MaterialInfoWithTagsAndCoursesOutputModel GetMaterial(int id)
         {
-            return _materialService.GetMaterialById(id);
+            var dto = _materialService.GetMaterialById(id);
+            return _mapper.Map<MaterialInfoWithTagsAndCoursesOutputModel>(dto);
         }
 
         // api/material/5
@@ -91,9 +94,10 @@ namespace DevEdu.API.Controllers
         [HttpGet("by-tag/{tagId}")]
         [Description("Returns materials by tag id")]
         [ProducesResponseType(typeof(MaterialDto), StatusCodes.Status200OK)]
-        public List<MaterialDto> GetMaterialsByTagId(int tagId)
+        public List <MaterialInfoOutputModel> GetMaterialsByTagId(int tagId)
         {
-            return _materialService.GetMaterialsByTagId(tagId);
+            var dto = _materialService.GetMaterialsByTagId(tagId);
+            return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
         }
 
     }
