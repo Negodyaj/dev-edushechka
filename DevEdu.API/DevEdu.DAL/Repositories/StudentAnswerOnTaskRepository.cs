@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Text;
-using System.Data.SqlClient;
 using Dapper;
 using DevEdu.DAL.Models;
 using System.Linq;
@@ -17,6 +14,8 @@ namespace DevEdu.DAL.Repositories
         private const string _taskStudentSelectByTaskAndStudent = "dbo.Task_Student_SelectByTaskAndStudent";
         private const string _taskStudentUpdateAnswer = "dbo.Task_Student_UpdateAnswer";
         private const string _taskStudentUpdateStatusId = "dbo.Task_Student_UpdateStatusId";
+
+        private const string _taskStudentCommentInsert = "dbo.Task_Student_Comment_Insert";
 
         public StudentAnswerOnTaskRepository()
         {
@@ -99,5 +98,17 @@ namespace DevEdu.DAL.Repositories
                 );
         }
 
+        public void AddCommentOnStudentAnswer(int taskstudentId, int commentId)
+        {
+            _connection.QuerySingle<int>(
+                _taskStudentCommentInsert,
+                new
+                {
+                    taskstudentId,
+                    commentId
+                },
+                commandType: CommandType.StoredProcedure
+           );
+        }
     }
 }

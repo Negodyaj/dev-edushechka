@@ -2,13 +2,11 @@
 using System.ComponentModel;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using DevEdu.API.Models.OutputModels;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
-using AutoMapper;
-using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
 {
@@ -18,20 +16,24 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ICourseRepository _courseRepository;
-        private readonly ITopicRepository _topicRepository;
+        private readonly ICourseService _courseService;
         
-        public CourseController(IMapper mapper, ICourseRepository courseRepository, ITopicRepository topicRepository )
+        public CourseController(
+            IMapper mapper, 
+            ICourseRepository courseRepository,
+            ICourseService courseService)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
-            _topicRepository = topicRepository;
+            _courseService = courseService;
+            _mapper = mapper;
         }
 
         //  api/Course/5
         [HttpGet("{id}")]
         public CourseDto GetCourse(int id)
         {
-            return _courseRepository.GetCourse(id);
+            return _courseService.GetCourse(id);
         }
 
         //  api/Course
@@ -48,14 +50,14 @@ namespace DevEdu.API.Controllers
         public int AddCourse([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            return _courseRepository.AddCourse(dto);
+            return _courseService.AddCourse(dto);
         }
 
         //  api/course/5
         [HttpDelete("{id}")]
         public void DeleteCourse(int id)
         {
-            _courseRepository.DeleteCourse(id);
+            _courseService.DeleteCourse(id);
         }
 
         //  api/course/5
@@ -63,8 +65,7 @@ namespace DevEdu.API.Controllers
         public string UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            dto.Id = id;
-            _courseRepository.UpdateCourse(dto);
+            _courseService.UpdateCourse(id, dto);
             return $"Course №{id} change name to {model.Name} and description to {model.Description}";
         }
 
@@ -72,7 +73,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("topic/{topicId}/tag/{tagId}")]
         public string AddTagToTopic(int topicId, int tagId)
         {
-            _courseRepository.AddTagToTopic(topicId, tagId);
+            _courseService.AddTagToTopic(topicId, tagId);
             return $"add to topic with {topicId} Id tag with {tagId} Id";
         }
 
@@ -80,7 +81,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("topic/{topicId}/tag/{tagId}")]
         public string DeleteTagAtTopic(int topicId, int tagId)
         {
-            _courseRepository.DeleteTagFromTopic(topicId, tagId);
+            _courseService.DeleteTagFromTopic(topicId, tagId);
             return $"deleted at topic with {topicId} Id tag with {tagId} Id";
         }
 
@@ -102,6 +103,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{courseId}/task/{taskId}")]
         public string AddTaskToCourse(int courseId, int taskId)
         {
+            _courseRepository.AddTaskToCourse(courseId, taskId);
             return $"Course {courseId} add  Task Id:{taskId}";
         }
 
@@ -109,26 +111,37 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{courseId}/task/{taskId}")]
         public string RemoveTaskFromCourse(int courseId, int taskId)
         {
+            _courseRepository.DeleteTaskFromCourse(courseId, taskId);
             return $"Course {courseId} remove  Task Id:{taskId}";
         }
         // api/course/{courseId}/topic/{topicId}
         [HttpPost("{courseId}/topic/{topicId}")]
+        [Description("Add topic to course")]
         public string AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
         {
             var dto = _mapper.Map<CourseTopicDto>(inputModel);
-            dto.Course = new CourseDto { Id = courseId };
-            dto.Topic = new TopicDto { Id = topicId };
 
-            _topicRepository.AddTopicToCourse(dto);
+            _courseService.AddTopicToCourse(courseId, topicId, dto);
             return $"Topic Id:{topicId} added in course Id:{courseId} on {inputModel.Position} position";
 
         }
         // api/course/{courseId}/topic/{topicId}
         [HttpDelete("{courseId}/topic/{topicId}")]
+        [Description("Delete topic from course")]
         public string DeleteTopicFromCourse(int courseId, int topicId)
         {
-            _topicRepository.DeleteTopicFromCourse(courseId, topicId);
+            _courseService.DeleteTopicFromCourse(courseId, topicId);
             return $"Topic Id:{topicId} deleted from course Id:{courseId}";
         }
+        [HttpGet("{courseId}/topics")]
+        [Description("Get all topics by course id ")]
+        public List<CourseTopicOutputModel> SelectAllTopicsByCourseId(int courseId)
+        {
+            var list = _courseService.SelectAllTopicsByCourseId(courseId);
+            
+            return _mapper.Map<List<CourseTopicOutputModel>>(list);
+            
+        }
+
     }
 }

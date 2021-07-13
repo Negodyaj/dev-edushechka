@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Models
 {
@@ -17,6 +13,15 @@ namespace DevEdu.DAL.Models
               obj is TagDto tagDto &&
               Id == tagDto.Id &&
               Name == tagDto.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = new HashCode();
+            hashCode.Add(base.GetHashCode());
+            hashCode.Add(Id);
+            hashCode.Add(Name);
+            return hashCode.ToHashCode();
         }
     }
 }

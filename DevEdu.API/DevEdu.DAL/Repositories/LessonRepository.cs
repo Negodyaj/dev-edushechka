@@ -31,9 +31,9 @@ namespace DevEdu.DAL.Repositories
 
         }
 
-        public int AddCommentToLesson(int lessonId, int commentId)
+        public void AddCommentToLesson(int lessonId, int commentId)
         {
-            return _connection.QueryFirst<int>(
+            _connection.QueryFirst<int>(
                 _commentAddToLessonProcedure,
                 new
                 {
@@ -50,9 +50,9 @@ namespace DevEdu.DAL.Repositories
                _lessonAddProcedure,
                 new
                 {
-                    lessonDto.Date,
-                    lessonDto.TeacherComment,
-                    lessonDto.TeacherId
+                    Date = lessonDto.Date,
+                    TeacherComment = lessonDto.TeacherComment,
+                    TeacherId = lessonDto.Teacher.Id
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -84,8 +84,14 @@ namespace DevEdu.DAL.Repositories
         public List<LessonDto> SelectAllLessons()
         {
             return _connection
-                .Query<LessonDto>(
+                .Query<LessonDto, UserDto, LessonDto>(
                     _lessonSelectAllProcedure,
+                    (lesson, teacher) =>
+                    {
+                        lesson.Teacher = teacher;                        
+                        return lesson;
+                    },
+                    splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
@@ -93,22 +99,30 @@ namespace DevEdu.DAL.Repositories
 
         public LessonDto SelectLessonById(int id)
         {
-            return _connection.QuerySingleOrDefault<LessonDto>(
-                _lessonSelectByIdProcedure,
-                new { id },
-                commandType: CommandType.StoredProcedure
-            );
+            return _connection
+                .Query<LessonDto, UserDto, LessonDto>(
+                    _lessonSelectByIdProcedure,
+                    (lesson, teacher)=>
+                    {
+                        lesson.Teacher = teacher;
+                        return lesson;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .FirstOrDefault();
         }
 
-        public int UpdateLesson(int id, String commentDto, DateTime date)
+        public void UpdateLesson(LessonDto lessonDto)
         {
-            return _connection.QuerySingleOrDefault<int>(
+             _connection.QuerySingleOrDefault<int>(
                 _lessonUpdateProcedure,
                 new
                 {
-                    id,
-                    commentDto,
-                    date
+                    lessonDto.Id,
+                    lessonDto.TeacherComment,
+                    lessonDto.Date
                 },
                 commandType: CommandType.StoredProcedure
             );

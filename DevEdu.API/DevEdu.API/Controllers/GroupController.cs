@@ -1,7 +1,10 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using DevEdu.API.Models.InputModels;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
+using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
 {
@@ -10,11 +13,14 @@ namespace DevEdu.API.Controllers
     public class GroupController : Controller
     {
         private readonly IMapper _mapper;
+        private readonly IGroupService _groupService;
         private readonly IGroupRepository _groupRepository;
-        public GroupController(IMapper mapper, IGroupRepository groupRepository)
+
+        public GroupController(IMapper mapper, IGroupService groupService, IGroupRepository groupRepository)
         {
-            _groupRepository = groupRepository;
             _mapper = mapper;
+            _groupService = groupService;
+            _groupRepository = groupRepository;
         }
 
         //  api/Group/5
@@ -65,7 +71,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/lesson/{lessonId}")]
         public void AddGroupLessonReference(int groupId, int lessonId)
         {
-            _groupRepository.AddGroupLesson(groupId,  lessonId);
+            _groupRepository.AddGroupLesson(groupId, lessonId);
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
@@ -77,32 +83,28 @@ namespace DevEdu.API.Controllers
 
         // api/Group/{groupId}/material/{materialId}
         [HttpPost("{groupId}/material/{materialId}")]
-        public string AddGroupMaterialReference(int groupId, int materialId)
+        [Description("Add material to groop")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public int AddGroupMaterialReference(int groupId, int materialId)
         {
-            _groupRepository.AddGroupMaterialReference(materialId, groupId);
-            return $"Material №{materialId} add to group {groupId}";
+            return _groupService.AddGroupMaterialReference(groupId, materialId);
         }
 
         // api/Group/{groupId}/material/{materialId}
         [HttpDelete("{groupId}/material/{materialId}")]
-        public string RemoveGroupMaterialReference(int groupId, int materialId)
+        [Description("Remove material from groop")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public int RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            _groupRepository.RemoveGroupMaterialReference(materialId, groupId);
-            return $"Material №{materialId} remove from group {groupId}";
+            return _groupService.RemoveGroupMaterialReference(groupId, materialId);
         }
 
         //  api/group/1/user/2/role/1
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
-        public void AddUserToGroup(int groupId, int userId, int roleId)
-        {
-            _groupRepository.AddUserToGroup(groupId, userId, roleId);
-        }
+        public void AddUserToGroup(int groupId, int userId, int roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
 
         //  api/group/1/user/2
         [HttpDelete("{groupId}/user/{userId}")]
-        public void DeleteUserFromGroup(int groupId, int userId)
-        {
-            _groupRepository.DeleteUserFromGroup(userId, groupId);
-        }
+        public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
     }
 }

@@ -3,8 +3,7 @@ using Dapper;
 using System.Data;
 using System.Linq;
 using System.Collections.Generic;
-
-
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -34,7 +33,7 @@ namespace DevEdu.DAL.Repositories
                     user.Username,
                     user.Password,
                     user.ContractNumber,
-                    user.CityId,
+                    user.City,
                     user.BirthDate,
                     user.GitHubAccount,
                     user.Photo,
@@ -45,19 +44,57 @@ namespace DevEdu.DAL.Repositories
 
         public UserDto SelectUserById(int id)
         {
-            return _connection.QuerySingleOrDefault<UserDto>(
+            UserDto result = default;
+            return _connection
+                .Query<UserDto, City, Role, UserDto>(
                 _userSelectByIdProcedure,
+                (user, city, role) =>
+                {
+                    if (result == null)
+                    {
+                        result = user;
+                        result.City = city;
+                        result.Roles = new List<Role> { role };
+                    }
+                    else
+                    {
+                        result.Roles.Add(role);
+                    }
+                    return result;
+                },
                 new { id },
-            commandType: CommandType.StoredProcedure);
+                splitOn: "id",
+            commandType: CommandType.StoredProcedure)
+                .FirstOrDefault();
         }
 
         public List<UserDto> SelectUsers()
         {
+            var UserDictionary = new Dictionary<int, UserDto>();
+
             return _connection
-                .Query<UserDto>(
+                .Query<UserDto, City, Role, UserDto>(
                 _userSelectAllProcedure,
+                (user, city, role) =>
+                {
+                    UserDto userEnrty;
+
+                    if (!UserDictionary.TryGetValue(user.Id, out userEnrty))
+                    {
+                        userEnrty = user;
+                        userEnrty.City = city;
+                        userEnrty.Roles = new List<Role>();
+                        UserDictionary.Add(user.Id, userEnrty);
+                    }
+
+                    userEnrty.Roles.Add(role);
+
+                    return userEnrty;
+                },
+                splitOn: "Id",
             commandType: CommandType.StoredProcedure)
-                .ToList();
+                .Distinct<UserDto>()
+                .ToList<UserDto>();
         }
 
         public void UpdateUser(UserDto user)
@@ -71,7 +108,7 @@ namespace DevEdu.DAL.Repositories
                     user.LastName,
                     user.Patronymic,
                     user.Username,
-                    user.CityId,
+                    user.City,
                     user.GitHubAccount,
                     user.Photo,
                     user.PhoneNumber
@@ -91,7 +128,7 @@ namespace DevEdu.DAL.Repositories
 
         public int AddUserRole(int userId, int roleId)
         {
-            return _connection.QuerySingle<int>(
+            return _connection.QuerySingleOrDefault<int>(
                 _userRoleAddProcedure,
                 new
                 {
@@ -112,6 +149,5 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure);
         }
-
     }
 }
