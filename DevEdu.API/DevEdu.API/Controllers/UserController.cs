@@ -36,11 +36,12 @@ namespace DevEdu.API.Controllers
         // api/user/userId
         [HttpPut("{userId}")]
         [Description("Update user")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public void UpdateUserById([FromBody] UserUpdateInputModel model)
+        [ProducesResponseType(typeof(UserUpdateInfoOutPutModel), StatusCodes.Status200OK)]
+        public UserUpdateInfoOutPutModel UpdateUserById([FromBody] UserUpdateInputModel model)
         {
-            var dto = _mapper.Map<UserDto>(model);
-            _userService.UpdateUser(dto);
+            var dtoEntry = _mapper.Map<UserDto>(model);
+            var dtoresult = _userService.UpdateUser(dtoEntry);
+            return _mapper.Map<UserUpdateInfoOutPutModel>(dtoresult);
         }
 
         // api/user/{userId}
