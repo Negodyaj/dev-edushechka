@@ -232,8 +232,31 @@ namespace DevEdu.Business.Tests.Services
             Assert.Fail();
         }
 
+        [TestCase(0)]
+        [TestCase(-10)]
+        [TestCase(-int.MaxValue)]
+        public void DeleteUser_WrongValue_Exception(int userId)
+        {
+            //Given
+            _userRepoMock.Setup(x => x.DeleteUser(userId))
+                .Throws(new Exception());
+
+            //When
+            try
+            {
+                _userService.DeleteUser(userId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+
+            //Then
+            Assert.Fail();
+        }
+
         [Test]
-        public void AddUserRole_IntUserIdAndRoleId_ReturnIntRecord()
+        public void AddRoleToUser_IntUserIdAndRoleId_ReturnIntRecord()
         {
             //Given
             var expectedUserRoleId = 24;
@@ -252,7 +275,7 @@ namespace DevEdu.Business.Tests.Services
         [TestCase(0,1)]
         [TestCase(1,0)]
         [TestCase(-int.MaxValue,-int.MaxValue)]
-        public void AddUserRole_WrongValue_Exception(int userId,int roleId)
+        public void AddRoleToUser_WrongValue_Exception(int userId,int roleId)
         {
             //Given
             _userRepoMock.Setup(x => x.AddUserRole(userId, roleId))
@@ -262,6 +285,29 @@ namespace DevEdu.Business.Tests.Services
             try
             {
                 _userService.AddUserRole(userId, roleId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+
+            //Then
+            Assert.Fail();
+        }
+
+        [TestCase(0, 1)]
+        [TestCase(1, 0)]
+        [TestCase(-int.MaxValue, -int.MaxValue)]
+        public void DeleteUserRole_WrongValue_Exception(int userId, int roleId)
+        {
+            //Given
+            _userRepoMock.Setup(x => x.DeleteUserRole(userId, roleId))
+                .Throws(new Exception());
+
+            //When
+            try
+            {
+                _userService.DeleteUserRole(userId, roleId);
             }
             catch
             {
