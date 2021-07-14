@@ -26,11 +26,12 @@ namespace DevEdu.API.Controllers
         // api/material
         [HttpPost]
         [Description("Add material")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
-        public int AddMaterial([FromBody] MaterialInputModel materialModel)
+        [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status201Created)]
+        public MaterialInfoOutputModel AddMaterial([FromBody] MaterialInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            return _materialService.AddMaterial(dto);
+            int id = _materialService.AddMaterial(dto);
+            return GetMaterialInfoOutputModelById(id);
         }
 
         // api/material
@@ -61,8 +62,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             _materialService.UpdateMaterial(id, dto);
-            dto = _materialService.GetMaterialById(id);
-            return _mapper.Map<MaterialInfoOutputModel>(dto);
+            return GetMaterialInfoOutputModelById(id);
         }
 
         // api/material/5/isDeleted/True
@@ -96,6 +96,12 @@ namespace DevEdu.API.Controllers
         {
             var dto = _materialService.GetMaterialsByTagId(tagId);
             return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
+        }
+
+        private MaterialInfoOutputModel GetMaterialInfoOutputModelById(int id)
+        {
+            var dto = _materialService.GetMaterialById(id);
+            return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
     }
