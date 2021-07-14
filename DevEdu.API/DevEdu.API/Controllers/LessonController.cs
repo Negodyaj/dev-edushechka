@@ -76,8 +76,8 @@ namespace DevEdu.API.Controllers
             return  _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
-        // api/lesson
-        [HttpGet]
+        // api/lesson/with-topics
+        [HttpGet("with-topics")]
         [Description("Get all lessons with topics.")]
         [ProducesResponseType(typeof(LessonInfoWithTopicsOutputModel), StatusCodes.Status200OK)]
         public List<LessonInfoWithTopicsOutputModel> GetAllLessonsWithTopics()
@@ -86,8 +86,8 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<LessonInfoWithTopicsOutputModel>>(dto);
         }
 
-        // api/lesson
-        [HttpGet]
+        // api/lesson/with-groups
+        [HttpGet("with-groups")]
         [Description("Get all lessons with groups.")]
         [ProducesResponseType(typeof(LessonInfoWithGroupsOutputModel), StatusCodes.Status200OK)]
         public List<LessonInfoWithGroupsOutputModel> GetAllLessonsWithGroups()
@@ -96,8 +96,8 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<LessonInfoWithGroupsOutputModel>>(dto);
         }
 
-        // api/lesson
-        [HttpGet]
+        // api/lesson/with-students-comments
+        [HttpGet("with-students-comments")]
         [Description("Get all lessons with students and comments.")]
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
         public List<LessonInfoWithStudentsAndCommentsOutputModel> GetAllLessonsWithStudentsAndComments()

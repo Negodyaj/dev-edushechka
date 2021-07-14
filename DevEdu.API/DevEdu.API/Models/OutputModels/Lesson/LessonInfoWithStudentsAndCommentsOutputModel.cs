@@ -6,8 +6,8 @@ namespace DevEdu.API.Models.OutputModels
 {
     public class LessonInfoWithStudentsAndCommentsOutputModel : LessonInfoOutputModel
     {
-        List<CommentInfoOutputModel> Comments { get; set; }
-        List<UserInfoOutputModel> Students { get; set; }
+        public List<CommentInfoOutputModel> Comments { get; set; }
+        public List<UserInfoOutputModel> Students { get; set; }
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
     }
