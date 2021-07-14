@@ -1,5 +1,4 @@
-﻿using DevEdu.API.Models.OutputModels;
-using DevEdu.Business.Services;
+﻿using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
@@ -22,7 +21,7 @@ namespace DevEdu.Business.Tests.Group
         public void AddGroup(GroupDto dto, GroupDto expectedDto, GroupDto expected)
         {
             //Given
-            _mock.Setup(mock => mock.AddGroup(It.IsAny<GroupDto>())).Returns(expectedDto);
+            _mock.Setup(mock => mock.AddGroup(dto)).Returns(expectedDto).Verifiable();
 
             var _service = new GroupService(_mock.Object);
             

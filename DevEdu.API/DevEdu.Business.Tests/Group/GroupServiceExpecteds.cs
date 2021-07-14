@@ -1,5 +1,7 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests.Group
 {
@@ -9,15 +11,57 @@ namespace DevEdu.Business.Tests.Group
         {
             yield return new object[]
             {
-                new GroupDto{Id = 1 },
-                new GroupDto{Id = 1 },
-                new GroupDto{Id = 1 }
-            };
-            yield return new object[]
-            {
-                new GroupDto{Id = 2 },
-                new GroupDto{Id = 2 },
-                new GroupDto{Id = 2 }
+                new GroupDto
+                {
+                    Id = 1, 
+                    Course = new CourseDto
+                    { 
+                        Id = 1,
+                        Name = "www",
+                        Description = "w",
+                        Groups = new List<GroupDto>(),
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Active,
+                    StartDate = System.DateTime.MaxValue,
+                    Timetable = "rrr",
+                    PaymentPerMonth = 1,
+                    IsDeleted = false
+                },
+                new GroupDto
+                {
+                    Id = 1,
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "www",
+                        Description = "w",
+                        Groups = new List<GroupDto>(),
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Active,
+                    StartDate = System.DateTime.MaxValue,
+                    Timetable = "rrr",
+                    PaymentPerMonth = 1,
+                    IsDeleted = false
+                },
+                new GroupDto
+                {
+                    Id = 1,
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "www",
+                        Description = "w",
+                        Groups = new List<GroupDto>(),
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Active,
+                    StartDate = System.DateTime.MaxValue,
+                    Timetable = "rrr",
+                    PaymentPerMonth = 1,
+                    IsDeleted = false
+                }
             };
         }
         

@@ -92,7 +92,7 @@ namespace DevEdu.DAL.Repositories
                 {
                     id,
                     groupDto.Course,
-                    groupDto.GroupStatusId,
+                    groupDto.GroupStatus,
                     groupDto.StartDate,
                     groupDto.Timetable,
                     groupDto.PaymentPerMonth
