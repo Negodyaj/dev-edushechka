@@ -27,31 +27,31 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         [Description("Return Group by id")]
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
-        public GroupInfoOutputModel GetGroup(int id)
+        public GroupOutputModel GetGroup(int id)
         {
             var dto = _groupService.GetGroup(id);
-            return _mapper.Map<GroupInfoOutputModel>(dto);           
+            return _mapper.Map<GroupOutputModel>(dto);           
         }
 
         //  api/Group/
         [HttpGet]
         [Description("Get all Groups")]
-        [ProducesResponseType(typeof(List<GroupInfoOutputModel>), StatusCodes.Status200OK)]
-        public List<GroupInfoOutputModel> GetAllGroups()
+        [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
+        public List<GroupOutputModel> GetAllGroups()
         {
             var dto = _groupService.GetGroups();
-            return _mapper.Map<List<GroupInfoOutputModel>>(dto);
+            return _mapper.Map<List<GroupOutputModel>>(dto);
         }
 
         //  api/Group
         [HttpPost]
         [Description("Add new Group")]
-        [ProducesResponseType(typeof(GroupInfoOutputModel), StatusCodes.Status201Created)]
-        public GroupInfoOutputModel AddGroup([FromBody] GroupInputModel model)
+        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status201Created)]
+        public GroupOutputModel AddGroup([FromBody] GroupInputModel model)
         {
             var dto = _mapper.Map<GroupDto>(model);
             var result = _groupService.AddGroup(dto);
-            return _mapper.Map<GroupInfoOutputModel>(result);
+            return _mapper.Map<GroupOutputModel>(result);
         }
 
         //  api/Group
@@ -67,11 +67,11 @@ namespace DevEdu.API.Controllers
         [HttpPut]
         [Description("Update Group by id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public GroupInfoOutputModel UpdateGroup(int id, [FromBody] GroupInputModel model)
+        public GroupOutputModel UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
             var dto = _mapper.Map<GroupDto>(model);
             var result = _groupService.UpdateGroup(id, dto);
-            return _mapper.Map<GroupInfoOutputModel>(result);
+            return _mapper.Map<GroupOutputModel>(result);
         }
 
         //  api/Group/{groupId}/change-status/{statusId}
