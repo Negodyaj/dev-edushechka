@@ -82,6 +82,8 @@
     <Folder Include="StoredProcedures\User_Role" />
     <Folder Include="StoredProcedures\Group" />
     <Folder Include="StoredProcedures\Course_Topic" />
+    <Folder Include="StoredProcedures\RaitingType" />
+    <Folder Include="StoredProcedures\StudentRaiting" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -205,6 +207,18 @@
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_SelectAllByCourseId.sql" />
     <Build Include="StoredProcedures\User_Role\User_Role_Insert.sql" />
     <Build Include="StoredProcedures\User_Role\User_Role_Delete.sql" />
+    <Build Include="Tables\RaitingType.sql" />
+    <Build Include="Tables\StudentRaiting.sql" />
+    <Build Include="StoredProcedures\RaitingType\RaitingType_Insert.sql" />
+    <Build Include="StoredProcedures\RaitingType\RaitingType_Delete.sql" />
+    <Build Include="StoredProcedures\RaitingType\RaitingType_SelectAll.sql" />
+    <Build Include="StoredProcedures\RaitingType\RaitingType_SelectById.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Insert.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Delete.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectAll.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectById.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectByUserId.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Update.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />

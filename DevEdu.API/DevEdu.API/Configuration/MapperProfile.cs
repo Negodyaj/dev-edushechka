@@ -44,6 +44,7 @@ namespace DevEdu.API.Configuration
             CreateMap<TopicDto, TopicOutputModel>();
 
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
+            CreateMap<TagDto, TagOutputModel>();
 
         }
     }

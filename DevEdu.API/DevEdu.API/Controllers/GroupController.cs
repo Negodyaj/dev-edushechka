@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using DevEdu.API.Models.InputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
@@ -93,10 +95,14 @@ namespace DevEdu.API.Controllers
 
         //  api/group/1/user/2/role/1
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
+        [Description("Add user to group")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void AddUserToGroup(int groupId, int userId, int roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
 
         //  api/group/1/user/2
         [HttpDelete("{groupId}/user/{userId}")]
+        [Description("Delete user from group")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
     }
 }
