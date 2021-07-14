@@ -96,7 +96,7 @@ namespace DevEdu.Business.Tests.Services
         }
 
         [Test]
-        public void SelectUsers_NoEntryes_ReturnListUserDto()
+        public void SelectUsers_NoEntries_ReturnListUserDto()
         {
             //Given
             var expectedListUserDto = new List<UserDto>
