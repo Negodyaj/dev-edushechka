@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using AutoMapper;
+﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
@@ -44,7 +42,8 @@ namespace DevEdu.API.Configuration
         private void CreateMappingFromDto()
         {
             CreateMap<CourseDto, CourseInfoOutputModel>();
-            CreateMap<GroupDto, GroupInfoOutputModel>();
+            CreateMap<GroupDto, GroupInfoOutputModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<TopicDto, TopicOutputModel>();
             CreateMap<CommentDto, CommentInfoOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));

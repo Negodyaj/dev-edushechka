@@ -3,7 +3,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using DevEdu.API.Models.InputModels;
 using DevEdu.Business.Services;
-using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using DevEdu.DAL.Models;
 using DevEdu.API.Models.OutputModels;
@@ -17,44 +16,48 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IGroupService _groupService;
-        private readonly IGroupRepository _groupRepository;
 
-        public GroupController(IMapper mapper, IGroupService service, IGroupRepository repository)
+        public GroupController(IMapper mapper, IGroupService service)
         {
             _mapper = mapper;
             _groupService = service;
-            _groupRepository = repository;
         }
 
         //  api/Group/5
         [HttpGet("{id}")]
-        [Description("Get Group")]
-        public GroupDto GetGroupById(int id)
+        [Description("Return Group by id")]
+        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
+        public GroupInfoOutputModel GetGroup(int id)
         {
-            return _groupService.GetGroup(id);
+            var dto = _groupService.GetGroup(id);
+            return _mapper.Map<GroupInfoOutputModel>(dto);           
         }
 
         //  api/Group/
         [HttpGet]
         [Description("Get all Groups")]
+        [ProducesResponseType(typeof(List<GroupInfoOutputModel>), StatusCodes.Status200OK)]
         public List<GroupInfoOutputModel> GetAllGroups()
         {
-            var dto = _groupRepository.GetGroups();
+            var dto = _groupService.GetGroups();
             return _mapper.Map<List<GroupInfoOutputModel>>(dto);
         }
 
         //  api/Group
         [HttpPost]
-        [Description("Create new Group")]
-        public GroupDto AddGroup([FromBody] GroupInputModel model)
+        [Description("Add new Group")]
+        [ProducesResponseType(typeof(GroupInfoOutputModel), StatusCodes.Status201Created)]
+        public GroupInfoOutputModel AddGroup([FromBody] GroupInputModel model)
         {
             var dto = _mapper.Map<GroupDto>(model);
-            return _groupService.AddGroup(dto);
+            var result = _groupService.AddGroup(dto);
+            return _mapper.Map<GroupInfoOutputModel>(result);
         }
 
         //  api/Group
         [HttpDelete("{id}")]
         [Description("Delete Group by Id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public void DeleteGroup(int id)
         {
             _groupService.DeleteGroup(id);
@@ -62,15 +65,19 @@ namespace DevEdu.API.Controllers
 
         //  api/Group
         [HttpPut]
-        [Description("Update Group")]
-        public GroupDto UpdateGroup(int id, [FromBody] GroupInputModel model)
+        [Description("Update Group by id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public GroupInfoOutputModel UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
             var dto = _mapper.Map<GroupDto>(model);
-            return _groupService.UpdateGroup(id, dto);
+            var result = _groupService.UpdateGroup(id, dto);
+            return _mapper.Map<GroupInfoOutputModel>(result);
         }
 
         //  api/Group/{groupId}/change-status/{statusId}
         [HttpPut("{groupId}/change-status/{statusId}")]
+        [Description("Change group status by id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public void ChangeGroupStatus(int groupId, int statusId)
         {
 
@@ -79,21 +86,25 @@ namespace DevEdu.API.Controllers
         //add group_lesson relation
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpPost("{groupId}/lesson/{lessonId}")]
+        [Description("Add group lesson reference")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public void AddGroupLessonReference(int groupId, int lessonId)
         {
-            _groupRepository.AddGroupLesson(groupId, lessonId);
+            _groupService.AddGroupLesson(groupId, lessonId);
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
+        [Description("Delete group lesson reference")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public void RemoveGroupLessonReference(int groupId, int lessonId)
         {
-            _groupRepository.RemoveGroupLesson(groupId, lessonId);
+            _groupService.RemoveGroupLesson(groupId, lessonId);
         }
 
         // api/Group/{groupId}/material/{materialId}
         [HttpPost("{groupId}/material/{materialId}")]
-        [Description("Add material to groop")]
+        [Description("Add material to group")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public int AddGroupMaterialReference(int groupId, int materialId)
         {
@@ -102,7 +113,7 @@ namespace DevEdu.API.Controllers
 
         // api/Group/{groupId}/material/{materialId}
         [HttpDelete("{groupId}/material/{materialId}")]
-        [Description("Remove material from groop")]
+        [Description("Remove material from group")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public int RemoveGroupMaterialReference(int groupId, int materialId)
         {
@@ -111,10 +122,14 @@ namespace DevEdu.API.Controllers
 
         //  api/group/1/user/2/role/1
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
+        [Description("Add user to group")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public void AddUserToGroup(int groupId, int userId, int roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
 
         //  api/group/1/user/2
         [HttpDelete("{groupId}/user/{userId}")]
+        [Description("Remove user from group")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
     }
 }

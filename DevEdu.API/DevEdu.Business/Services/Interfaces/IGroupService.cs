@@ -10,6 +10,8 @@ namespace DevEdu.Business.Services
         GroupDto GetGroup(int id);
         List<GroupDto> GetGroups();
         GroupDto UpdateGroup(int id, GroupDto groupDto);
+        void AddGroupLesson(int groupId, int lessonId);
+        void RemoveGroupLesson(int groupId, int lessonId);
         int AddGroupMaterialReference(int groupId, int materialId);
         int RemoveGroupMaterialReference(int groupId, int materialId);
         void AddUserToGroup(int groupId, int userId, int roleId);

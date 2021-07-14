@@ -20,6 +20,10 @@ namespace DevEdu.Business.Services
 
         public List<GroupDto> GetGroups() => _groupRepository.GetGroups();
 
+        public void AddGroupLesson(int groupId, int lessonId) => _groupRepository.AddGroupLesson(groupId, lessonId);
+
+        public void RemoveGroupLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupLesson(groupId, lessonId);
+
         public GroupDto UpdateGroup(int id, GroupDto groupDto) => _groupRepository.UpdateGroup(id, groupDto);
 
         public int AddGroupMaterialReference(int groupId, int materialId) => _groupRepository.AddGroupMaterialReference(groupId, materialId);
