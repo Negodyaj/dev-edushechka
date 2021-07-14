@@ -39,7 +39,7 @@ namespace DevEdu.API.Controllers
 
         //  api/Course
         [HttpGet]
-        [Description("Get all courses with topics")]
+        [Description("Get all courses with groups")]
         public List<CourseInfoOutputModel> GetAllCourses()
         {
             var courses = _courseRepository.GetCourses();

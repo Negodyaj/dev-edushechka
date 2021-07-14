@@ -2,6 +2,6 @@
 {
     public class GroupDto : BaseDto
     {
-        public CourseDto Course { get; set; }
+        public string Timetable { get; set; }
     }
 }

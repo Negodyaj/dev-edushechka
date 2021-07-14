@@ -50,7 +50,8 @@ namespace DevEdu.DAL.Repositories
         public CourseDto GetCourse(int id)
         {
             CourseDto result = default;
-            _connection.Query<CourseDto, GroupDto, CourseDto>(
+            return _connection
+                .Query<CourseDto, GroupDto, CourseDto>(
                 _courseSelectByIdProcedure,
                 (course, group) =>
                 {
@@ -70,7 +71,6 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 )
                 .FirstOrDefault();
-            return result;
         }
 
         public List<CourseDto> GetCourses()

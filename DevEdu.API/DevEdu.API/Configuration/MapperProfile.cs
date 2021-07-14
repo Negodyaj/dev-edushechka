@@ -52,6 +52,7 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
             CreateMap<UserDto, UserInfoOutputModel>();
+
         }
     }
 }
