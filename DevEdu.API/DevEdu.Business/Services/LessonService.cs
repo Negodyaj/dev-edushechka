@@ -2,9 +2,6 @@
 using DevEdu.DAL.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -12,47 +9,75 @@ namespace DevEdu.Business.Services
     {
         private readonly ILessonRepository _lessonRepository;
 
-
         public LessonService(ILessonRepository lessonRepository)
         {
             _lessonRepository = lessonRepository;
         }
+        
+        public void AddCommentToLesson(int lessonId, int commentId) => _lessonRepository.AddCommentToLesson(lessonId, commentId);
 
-        public int AddCommentToLesson(int lessonId, int commentId)
+        public int AddLesson(LessonDto lessonDto) => _lessonRepository.AddLesson(lessonDto);
+
+        public void DeleteCommentFromLesson(int lessonId, int commentId) => _lessonRepository.DeleteCommentFromLesson(lessonId, commentId);
+
+        public void DeleteLesson(int id) => _lessonRepository.DeleteLesson(id);
+
+        public List<LessonDto> SelectAllLessons() => _lessonRepository.SelectAllLessons();
+
+        public LessonDto SelectLessonById(int id) => _lessonRepository.SelectLessonById(id);
+
+        public void UpdateLesson(int id, LessonDto lessonDto)
         {
-            return _lessonRepository.AddCommentToLesson(lessonId, commentId);
+            lessonDto.Id = id;
+            _lessonRepository.UpdateLesson(lessonDto);
+        }
+        public void DeleteTopicFromLesson(int lessonId, int topicId) => 
+            _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
+
+        public void AddTopicToLesson(int lessonId, int topicId) => 
+            _lessonRepository.AddTopicToLesson(lessonId, topicId);
+
+        public void AddStudentToLesson(int lessonId, int userId)
+        {
+            var studentLessonDto =
+               new StudentLessonDto
+               {
+                   User = new UserDto { Id = userId },
+                   Lesson = new LessonDto { Id = lessonId }
+               };
+            _lessonRepository.AddStudentToLesson(studentLessonDto);
         }
 
-        public int AddLesson(LessonDto lessonDto)
+        public void DeleteStudentFromLesson(int lessonId, int userId)
         {
-            return _lessonRepository.AddLesson(lessonDto);
+            var studentLessonDto =
+                new StudentLessonDto
+                {
+                    User = new UserDto { Id = userId },
+                    Lesson = new LessonDto { Id = lessonId }
+                };
+            _lessonRepository.DeleteStudentFromLesson(studentLessonDto);
         }
 
-
-        public void DeleteCommentFromLesson(int lessonId, int commentId)
+        public void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
-            _lessonRepository.DeleteCommentFromLesson(lessonId, commentId);
+            studentLessonDto.Lesson = new LessonDto { Id = lessonId };
+            studentLessonDto.User = new UserDto { Id = userId };
+            _lessonRepository.UpdateStudentFeedbackForLesson(studentLessonDto);
         }
 
-        public void DeleteLesson(int id)
+        public void UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
-            _lessonRepository.DeleteLesson(id);
+            studentLessonDto.Lesson = new LessonDto { Id = lessonId };
+            studentLessonDto.User = new UserDto { Id = userId };
+            _lessonRepository.UpdateStudentAbsenceReasonOnLesson(studentLessonDto);
         }
 
-
-        public List<LessonDto> SelectAllLessons()
+        public void UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
-            return _lessonRepository.SelectAllLessons();
-        }
-
-        public LessonDto SelectLessonById(int id)
-        {
-            return _lessonRepository.SelectLessonById(id);
-        }
-
-        public int UpdateLesson(int id, String commentTeacher, DateTime date)
-        {
-            return _lessonRepository.UpdateLesson(id, commentTeacher, date);
+            studentLessonDto.Lesson = new LessonDto { Id = lessonId };
+            studentLessonDto.User = new UserDto { Id = userId };
+            _lessonRepository.UpdateStudentAttendanceOnLesson(studentLessonDto);
         }
     }
 }

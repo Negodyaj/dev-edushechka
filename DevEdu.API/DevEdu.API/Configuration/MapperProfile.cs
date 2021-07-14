@@ -9,6 +9,7 @@ namespace DevEdu.API.Configuration
 {
     public class MapperProfile : Profile
     {
+        private readonly string _dateFormat = "dd.MM.yyyy";
         CultureInfo cultureRu = CultureInfo.CreateSpecificCulture("ru-RU");
         public MapperProfile()
         {
@@ -31,7 +32,9 @@ namespace DevEdu.API.Configuration
             CreateMap<NotificationAddInputModel, NotificationDto>();
             CreateMap<NotificationUpdateInputModel, NotificationDto>();
             CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
-            CreateMap<LessonInputModel, LessonDto>();
+            CreateMap<LessonInputModel, LessonDto>()
+                .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => new UserDto { Id = src.TeacherId}));
+            CreateMap<LessonUpdateInputModel, LessonDto>();
             CreateMap<TagInputModel, TagDto>();
             CreateMap<TaskInputModel, TaskDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.Parse(src.StartDate)))
@@ -39,11 +42,19 @@ namespace DevEdu.API.Configuration
             CreateMap<TopicInputModel, TopicDto>();
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
+            CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
+            CreateMap<AttendanceInputModel, StudentLessonDto>();
+            CreateMap<FeedbackInputModel, StudentLessonDto>();
         }
 
         private void CreateMappingFromDto()
         {
             CreateMap<CourseDto, CourseInfoOutputModel>();
+            CreateMap<TopicDto, TopicOutputModel>();
+            CreateMap<CommentDto, CommentInfoOutputModel>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
+            CreateMap<CourseTopicDto, CourseTopicOutputModel>();
+            CreateMap<UserDto, UserInfoOutputModel>();
             CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<TaskDto, TaskInfoOutputModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString("d", cultureRu)))

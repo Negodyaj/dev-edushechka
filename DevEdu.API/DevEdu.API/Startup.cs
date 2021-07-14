@@ -1,10 +1,12 @@
 using DevEdu.Business.Services;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using DevEdu.Business.Services;
 
 namespace DevEdu.API
 {
@@ -37,9 +39,15 @@ namespace DevEdu.API
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IMaterialService, MaterialService>();
             services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICourseService, CourseService>(); 
             services.AddScoped<ILessonService, LessonService>();
+            services.AddScoped<ITopicService, TopicService>();
 
+
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IMaterialService, MaterialService>();
 
             services.AddControllers();
 

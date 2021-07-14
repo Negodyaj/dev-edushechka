@@ -1,11 +1,10 @@
-using DevEdu.API.Models.InputModels;
-using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using DevEdu.DAL.Models;
-using System;
-using DevEdu.DAL.Repositories;
-using System.Collections.Generic;
+using DevEdu.API.Models.InputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Controllers
 {
@@ -17,11 +16,12 @@ namespace DevEdu.API.Controllers
         private readonly ILessonService _lessonService;
         private readonly ILessonRepository _lessonRepository;
 
-        public LessonController(IMapper mapper, ILessonService lessonService, ILessonRepository lessonRepository)
+        public LessonController(IMapper mapper, ILessonRepository lessonRepository, ILessonService lessonService)
         {
-            _mapper = mapper;
-            _lessonService = lessonService;
             _lessonRepository = lessonRepository;
+            _lessonService = lessonService;
+            
+            _mapper = mapper;
         }
 
         // api/lesson
@@ -34,34 +34,31 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{id}
         [HttpDelete("{id}")]
-        public string DeleteLesson(int id)
+        public void DeleteLesson(int id)
         {
             _lessonService.DeleteLesson(id);
-            return $"id {id}";
         }
 
-        // api/lesson/{id}/{commentDto}/{date}
-        [HttpPut("{id}/{commentDto}/{date}")]
-        public string UpdateLesson(int id, String comment, DateTime date)
+        // api/lesson/{id}
+        [HttpPut("{id}")]
+        public void UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
         {
-            _lessonService.UpdateLesson(id, comment, date);
-            return $"id {id}";
+            var dto = _mapper.Map<LessonDto>(updateModel);
+            _lessonService.UpdateLesson(id, dto);
         }
 
         // api/lesson/{id}
         [HttpGet("{id}")]
-        public string GetLessonById(int id)
+        public LessonDto GetLessonById(int id)
         {
-            _lessonService.SelectLessonById(id);
-            return $"id {id}";
+            return _lessonService.SelectLessonById(id);
         }
 
         // api/lesson
         [HttpGet]
-        public string GetAllLessons()
+        public List<LessonDto> GetAllLessons()
         {
-            _lessonService.SelectAllLessons();
-            return $"all lessons";
+            return _lessonService.SelectAllLessons();
         }
 
 
@@ -74,10 +71,9 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/comment/{commentId}
         [HttpDelete("{lessonId}/comment/{commentId}")]
-        public string DeleteLessonComment(int lessonId, int commentId)
+        public void DeleteLessonComment(int lessonId, int commentId)
         {
             _lessonService.DeleteCommentFromLesson(lessonId, commentId);
-            return $"lessonId {lessonId} commentId {commentId}";
         }
 
         // api/lesson/{lessonId}/topic/{toppicId}
@@ -98,44 +94,38 @@ namespace DevEdu.API.Controllers
         [HttpPost("{lessonId}/user/{userId}")]
         public void AddStudentToLesson(int lessonId, int userId )
         {
-            _lessonRepository.AddStudentToLesson(lessonId, userId);
+            _lessonService.AddStudentToLesson(lessonId, userId);
         }
 
         // api/lesson/{lessonId}/user/{userId}
         [HttpDelete("{lessonId}/user/{userId}")]
         public void DeleteStudentFromLesson(int lessonId, int userId)
-        {
-            _lessonRepository.DeleteStudentFromLesson(lessonId, userId); ;
+        {        
+            _lessonService.DeleteStudentFromLesson(lessonId, userId); 
         }
 
         // api/lesson/{lessonId}/user/{userId}/feedback
         [HttpPut("{lessonId}/user/{userId}/feedback")]
-        public void UpdateStudentFeedbackForLesson(int lessonId,int userId,  [FromBody] FeedbackInputModel model)
+        public void UpdateStudentFeedbackForLesson(int lessonId, int userId, [FromBody] FeedbackInputModel model)
         {
-            var dto = _mapper.Map<StudentLessonDto>(model);
-            dto.LessonId = lessonId;
-            dto.UserId = userId;
-            _lessonRepository.UpdateStudentFeedbackForLesson(dto); 
+            var dto = _mapper.Map<StudentLessonDto>(model);          
+            _lessonService.UpdateStudentFeedbackForLesson(lessonId, userId,dto);
         }
 
         // api/lesson/{lessonId}/user/{userId}/absenceReason
-        [HttpPut("{lessonId}/user/{userId}/absenceReason ")]
-        public void UpdateStudentAbsenceReasonOnLesson(int lessonId,int userId, [FromBody] AbsenceReasonInputModel model)
+        [HttpPut("{lessonId}/user/{userId}/absenceReason")]
+        public void UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, [FromBody] AbsenceReasonInputModel model)
         {
-            var dto = _mapper.Map<StudentLessonDto>(model);
-            dto.LessonId = lessonId;
-            dto.UserId = userId;
-            _lessonRepository.UpdateStudentAbsenceReasonOnLesson(dto);
+            var dto = _mapper.Map<StudentLessonDto>(model);          
+            _lessonService.UpdateStudentAbsenceReasonOnLesson(lessonId, userId, dto);
         }
 
         // api/lesson/{lessonId}/user/{userId}/attendance
-        [HttpPut("{lessonId}/user/{userId}/attendance ")] 
+        [HttpPut("{lessonId}/user/{userId}/attendance")]
         public void UpdateStudentAttendanceOnLesson(int lessonId, int userId, [FromBody] AttendanceInputModel model)
         {
-            var dto = _mapper.Map<StudentLessonDto>(model);
-            dto.LessonId = lessonId;
-            dto.UserId = userId;
-            _lessonRepository.UpdateStudentAttendanceOnLesson(dto); 
+            var dto = _mapper.Map<StudentLessonDto>(model);           
+            _lessonService.UpdateStudentAttendanceOnLesson(lessonId, userId, dto);
         }
     }
 }

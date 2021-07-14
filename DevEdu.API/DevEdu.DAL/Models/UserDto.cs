@@ -14,7 +14,6 @@ namespace DevEdu.DAL.Models
         public string Password { get; set; }
         public DateTime RegistrationDate { get; set; }
         public string ContractNumber { get; set; }
-        public int CityId { get; set; }
         public DateTime BirthDate { get; set; }
         public string GitHubAccount { get; set; }
         public string Photo { get; set; }
@@ -23,22 +22,49 @@ namespace DevEdu.DAL.Models
         public City City { get; set; }
         public List<Role> Roles { get; set; }
 
-
         public override bool Equals(object obj)
         {
-            var item = obj as UserDto;
-
-            if (item == null)
-            {
-                return false;
-            }
-
-            return this.Id.Equals(item.Id);
+            return obj is UserDto dto &&
+                   Id == dto.Id &&
+                   IsDeleted == dto.IsDeleted &&
+                   FirstName == dto.FirstName &&
+                   LastName == dto.LastName &&
+                   Patronymic == dto.Patronymic &&
+                   Email == dto.Email &&
+                   Username == dto.Username &&
+                   Password == dto.Password &&
+                   RegistrationDate == dto.RegistrationDate &&
+                   ContractNumber == dto.ContractNumber &&
+                   BirthDate == dto.BirthDate &&
+                   GitHubAccount == dto.GitHubAccount &&
+                   Photo == dto.Photo &&
+                   PhoneNumber == dto.PhoneNumber &&
+                   ExileDate == dto.ExileDate &&
+                   City == dto.City &&
+                   EqualityComparer<List<Role>>.Default.Equals(Roles, dto.Roles);
         }
 
         public override int GetHashCode()
         {
-            return this.Id.GetHashCode();
+            HashCode hash = new HashCode();
+            hash.Add(Id);
+            hash.Add(IsDeleted);
+            hash.Add(FirstName);
+            hash.Add(LastName);
+            hash.Add(Patronymic);
+            hash.Add(Email);
+            hash.Add(Username);
+            hash.Add(Password);
+            hash.Add(RegistrationDate);
+            hash.Add(ContractNumber);
+            hash.Add(BirthDate);
+            hash.Add(GitHubAccount);
+            hash.Add(Photo);
+            hash.Add(PhoneNumber);
+            hash.Add(ExileDate);
+            hash.Add(City);
+            hash.Add(Roles);
+            return hash.ToHashCode();
         }
     }
 }

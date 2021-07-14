@@ -5,10 +5,10 @@ namespace DevEdu.DAL.Repositories
 {
     public interface ICommentRepository
     {
-        public int AddComment(CommentDto commentDto);
-        public void DeleteComment(int id);
-        public CommentDto GetComment(int id);
-        public List<CommentDto> GetCommentsByUser(int userId);
-        public void UpdateComment(CommentDto commentDto);
+        int AddComment(CommentDto commentDto);
+        int DeleteComment(int id);
+        CommentDto GetComment(int id);
+        List<CommentDto> GetCommentsByUser(int userId);
+        int UpdateComment(CommentDto commentDto);
     }
 }
