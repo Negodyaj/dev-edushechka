@@ -7,7 +7,7 @@ namespace DevEdu.API.Configuration
 {
     public class MapperProfile : Profile
     {
-        private readonly string _dateFormat = "dd.MM.yyyy";
+        private const string _dateFormat = "dd.MM.yyyy";
         public MapperProfile()
         {
             CreateMappingToDto();
@@ -30,16 +30,14 @@ namespace DevEdu.API.Configuration
             CreateMap<NotificationUpdateInputModel, NotificationDto>();
             CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
             CreateMap<LessonInputModel, LessonDto>()
-                .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => new UserDto { Id = src.TeacherId}));
+                .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => new UserDto { Id = src.TeacherId }));
             CreateMap<LessonUpdateInputModel, LessonDto>();
             CreateMap<TagInputModel, TagDto>();
             CreateMap<TaskInputModel, TaskDto>();
             CreateMap<TopicInputModel, TopicDto>();
-            CreateMap<UserInsertInputModel, UserDto>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate));
+            CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>()
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.CityId));
-
         }
 
         private void CreateMappingFromDto()
@@ -51,9 +49,9 @@ namespace DevEdu.API.Configuration
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
             CreateMap<UserDto, UserInfoOutPutModel>();
             CreateMap<UserDto, UserFullInfoOutPutModel>()
-                .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src => src.RegistrationDate.ToShortDateString()))
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToShortDateString()))
-                .ForMember(dest => dest.ExileDate, opt => opt.MapFrom(src => src.ExileDate.ToShortDateString()));
+                .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src => src.RegistrationDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.ExileDate, opt => opt.MapFrom(src => src.ExileDate.ToString(_dateFormat)));
             CreateMap<UserDto, UserUpdateInfoOutPutModel>();
         }
     }
