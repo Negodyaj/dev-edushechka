@@ -9,8 +9,10 @@ namespace DevEdu.API.Models.InputModels
         [Required(ErrorMessage = NameRequired)]
         public string Name { get; set; }
         [Required(ErrorMessage = StartDateRequired)]
+        [DateStringFormat(ErrorMessage = "StartDate must be in date format")]
         public string StartDate  { get; set; }
         [Required(ErrorMessage = EndDateRequired)]
+        [DateStringFormat(ErrorMessage = "EndDate must be in date format")]
         public string EndDate  { get; set; }
         [Required(ErrorMessage = NameRequired)]
         public string Description { get; set; }

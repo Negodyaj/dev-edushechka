@@ -10,7 +10,5 @@ namespace DevEdu.API.Models.OutputModels
     public class TaskInfoWithAnswersOutputModel : TaskInfoOutputModel
     {
         public List<StudentAnswerOnTaskInfoOutputModel> Answers { get; set; }
-        [DefaultValue(false)]
-        public bool IsDeleted { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace DevEdu.API.Configuration
 {
     public class MapperProfile : Profile
     {
-        private readonly string _dateFormat = "dd.MM.yyyy";
+        private const string _dateFormat = "dd.MM.yyyy";
         CultureInfo cultureRu = CultureInfo.CreateSpecificCulture("ru-RU");
         public MapperProfile()
         {
@@ -37,8 +37,8 @@ namespace DevEdu.API.Configuration
             CreateMap<LessonUpdateInputModel, LessonDto>();
             CreateMap<TagInputModel, TagDto>();
             CreateMap<TaskInputModel, TaskDto>()
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.Parse(src.StartDate)))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.Parse(src.EndDate)));
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.Parse(src.StartDate, cultureRu)))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.Parse(src.EndDate, cultureRu)));
             CreateMap<TopicInputModel, TopicDto>();
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();

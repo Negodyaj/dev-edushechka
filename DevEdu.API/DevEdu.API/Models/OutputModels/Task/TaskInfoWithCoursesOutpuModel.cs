@@ -10,7 +10,5 @@ namespace DevEdu.API.Models.OutputModels
     public class TaskInfoWithCoursesOutputModel : TaskInfoOutputModel
     {
         public List<CourseInfoShortOutputModel> Courses { get; set; }
-        [DefaultValue(false)]
-        public bool IsDeleted { get; set; }
     }
 }

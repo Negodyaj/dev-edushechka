@@ -11,7 +11,5 @@ namespace DevEdu.API.Models.OutputModels
     {
         public List<CourseInfoOutputModel> Courses { get; set; }
         public List<StudentAnswerOnTaskInfoOutputModel> Answers { get; set; }
-        [DefaultValue(false)]
-        public bool IsDeleted { get; set; }
     }
 }
