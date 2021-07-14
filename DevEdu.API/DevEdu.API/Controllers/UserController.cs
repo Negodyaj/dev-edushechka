@@ -26,7 +26,7 @@ namespace DevEdu.API.Controllers
         // api/user
         [HttpPost]
         [Description("Add new user")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         public int AddUser([FromBody] UserInsertInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);
@@ -76,7 +76,7 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}/role/{roleId}
         [HttpPost("{userId}/role/{roleId}")]
         [Description("Add new role to user")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         public int AddRoleToUser(int userId, int roleId)
         {
             return _userService.AddUserRole(userId, roleId);
