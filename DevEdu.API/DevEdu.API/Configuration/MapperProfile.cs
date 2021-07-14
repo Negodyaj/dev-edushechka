@@ -37,7 +37,8 @@ namespace DevEdu.API.Configuration
             CreateMap<TopicInputModel, TopicDto>();
             CreateMap<UserInsertInputModel, UserDto>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate));
-            CreateMap<UserUpdateInputModel, UserDto>();
+            CreateMap<UserUpdateInputModel, UserDto>()
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.CityId));
 
         }
 
@@ -53,6 +54,7 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src => src.RegistrationDate.ToShortDateString()))
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToShortDateString()))
                 .ForMember(dest => dest.ExileDate, opt => opt.MapFrom(src => src.ExileDate.ToShortDateString()));
+            CreateMap<UserDto, UserUpdateInfoOutPutModel>();
         }
     }
 }
