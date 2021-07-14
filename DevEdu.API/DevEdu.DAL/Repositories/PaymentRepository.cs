@@ -1,11 +1,9 @@
-﻿
-using Dapper;
-using DevEdu.DAL.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Dapper;
 using DevEdu.DAL.Enums;
-
+using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -58,8 +56,9 @@ namespace DevEdu.DAL.Repositories
                         result.User = user;
                     }
                     return result;
-                }, new { id},
-                splitOn:"Name",
+                }, 
+                new { id},
+                splitOn:"Id",
                     commandType: CommandType.StoredProcedure
             )
             .FirstOrDefault();
@@ -101,7 +100,7 @@ namespace DevEdu.DAL.Repositories
                 {
                     paymentDto.Date,
                     paymentDto.Sum,
-                    paymentDto.User,
+                    paymentDto.User.Id,
                     paymentDto.IsPaid
                 },
                 commandType: CommandType.StoredProcedure
