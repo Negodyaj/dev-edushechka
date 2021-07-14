@@ -1,7 +1,8 @@
 ﻿using System.Data;
 using Dapper;
+using System.Collections.Generic;
 using DevEdu.DAL.Models;
-
+using System.Linq;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -18,11 +19,11 @@ namespace DevEdu.DAL.Repositories
         private const string _topicAddToLessonProcedure = "dbo.Lesson_Topic_Insert";
         private const string _topicDeleteFromLessonProcedure = "dbo.Lesson_Topic_Delete";
 
-        private const string _addStudentToLesson = "dbo.Student_Lesson_Insert";
-        private const string _deleteStudentFromLesson = "dbo.Student_Lesson_Delete";
-        private const string _lessonUpdateFeedbackProcedure = "dbo.Student_Lesson_UpdateFeedback";
-        private const string _lessonUpdateAbsenceReasonProcedure = "dbo.Student_Lesson_UpdateAbsenceReason";
-        private const string _lessonUpdateIsPresentProcedure = "dbo.Student_Lesson_UpdateIsPresent";
+        private const string _studentLessonInsertProcedure = "dbo.Student_Lesson_Insert";
+        private const string _studentLessonDeleteProcedure = "dbo.Student_Lesson_Delete";
+        private const string _updateFeedbackProcedure = "dbo.Student_Lesson_UpdateFeedback";
+        private const string _updateAbsenceReasonProcedure = "dbo.Student_Lesson_UpdateAbsenceReason";
+        private const string _updateIsPresentProcedure = "dbo.Student_Lesson_UpdateIsPresent";
 
         public LessonRepository()
         {
@@ -31,12 +32,12 @@ namespace DevEdu.DAL.Repositories
         public int AddLesson(LessonDto lessonDto)
         {
             return _connection.QueryFirst<int>(
-               _lessonAddProcedure,
+                _lessonAddProcedure,
                 new
                 {
                     lessonDto.Date,
                     lessonDto.TeacherComment,
-                    lessonDto.TeacherDto
+                    lessonDto.Teacher.Id
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -51,9 +52,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int AddCommentToLesson(int lessonId, int commentId)
+        public void AddCommentToLesson(int lessonId, int commentId)
         {
-            return _connection.QueryFirst<int>(
+            _connection.QueryFirst<int>(
                 _commentAddToLessonProcedure,
                 new
                 {
@@ -102,76 +103,119 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-
-
-        public void AddStudentToLesson(StudentLessonDto studentLessonDto)
+        public List<LessonDto> SelectAllLessons()
         {
-            _connection.Execute(
-            _addStudentToLesson,
-             new
-             {
-                 LessonId = studentLessonDto.Lesson.Id,
-                 UserId = studentLessonDto.User.Id
-             },
-             commandType: CommandType.StoredProcedure
-         );
+            return _connection
+                .Query<LessonDto, UserDto, LessonDto>(
+                    _lessonSelectAllProcedure,
+                    (lesson, teacher) =>
+                    {
+                        lesson.Teacher = teacher;
+                        return lesson;
+                    },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
         }
 
-        public void DeleteStudentFromLesson(StudentLessonDto studentLessonDto)
+        public LessonDto SelectLessonById(int id)
+        {
+            return _connection
+                .Query<LessonDto, UserDto, LessonDto>(
+                    _lessonSelectByIdProcedure,
+                    (lesson, teacher) =>
+                    {
+                        lesson.Teacher = teacher;
+                        return lesson;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .FirstOrDefault();
+        }
+
+        public void UpdateLesson(LessonDto lessonDto)
+        {
+            _connection.QuerySingleOrDefault<int>(
+               _lessonUpdateProcedure,
+               new
+               {
+                   lessonDto.Id,
+                   lessonDto.TeacherComment,
+                   lessonDto.Date
+               },
+               commandType: CommandType.StoredProcedure
+           );
+        }
+
+        public void AddStudentToLesson(StudentLessonDto dto)
         {
             _connection.Execute(
-            _deleteStudentFromLesson,
-             new
-             {
+                _studentLessonInsertProcedure,
+                 new
+                 {
+                     LessonId = dto.Lesson.Id,
+                     UserId = dto.User.Id
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
+        }
 
-                 LessonId = studentLessonDto.Lesson.Id,
-                 UserId = studentLessonDto.User.Id
-             },
-             commandType: CommandType.StoredProcedure
-         );
+        public void DeleteStudentFromLesson(StudentLessonDto dto)
+        {
+            _connection.Execute(
+                _studentLessonDeleteProcedure,
+                 new
+                 {
+                     LessonId = dto.Lesson.Id,
+                     UserId = dto.User.Id
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
         public void UpdateStudentFeedbackForLesson(StudentLessonDto studentLessonDto)
         {
             _connection.Execute(
-            _lessonUpdateFeedbackProcedure,
-             new
-             {
-                 studentLessonDto.Feedback,
-                 LessonId = studentLessonDto.Lesson.Id,
-                 UserId = studentLessonDto.User.Id
-             },
-             commandType: CommandType.StoredProcedure
-         );
+                _updateFeedbackProcedure,
+                 new
+                 {
+                     studentLessonDto.Feedback,
+                     LessonId = studentLessonDto.Lesson.Id,
+                     UserId = studentLessonDto.User.Id
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
         public void UpdateStudentAbsenceReasonOnLesson(StudentLessonDto studentLessonDto)
         {
             _connection.Execute(
-            _lessonUpdateAbsenceReasonProcedure,
-             new
-             {
-                 studentLessonDto.AbsenceReason,
-                 LessonId = studentLessonDto.Lesson.Id,
-                 UserId = studentLessonDto.User.Id
-             },
-             commandType: CommandType.StoredProcedure
-         );
+                _updateAbsenceReasonProcedure,
+                 new
+                 {
+                     studentLessonDto.AbsenceReason,
+                     LessonId = studentLessonDto.Lesson.Id,
+                     UserId = studentLessonDto.User.Id
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
         public void UpdateStudentAttendanceOnLesson(StudentLessonDto studentLessonDto)
         {
             _connection.Execute(
-            _lessonUpdateIsPresentProcedure,
-             new
-             {
-                 studentLessonDto.IsPresent,
-                 LessonId = studentLessonDto.Lesson.Id,
-                 UserId = studentLessonDto.User.Id
-             },
-             commandType: CommandType.StoredProcedure
-         );
+                _updateIsPresentProcedure,
+                 new
+                 {
+                     studentLessonDto.IsPresent,
+                     LessonId = studentLessonDto.Lesson.Id,
+                     UserId = studentLessonDto.User.Id
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
         }
     }
 }
-

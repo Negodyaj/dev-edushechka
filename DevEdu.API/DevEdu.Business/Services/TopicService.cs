@@ -2,7 +2,7 @@
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 
-namespace DevEdu.Business.Servicies
+namespace DevEdu.Business.Services
 {
          public class TopicService : ITopicService
     {

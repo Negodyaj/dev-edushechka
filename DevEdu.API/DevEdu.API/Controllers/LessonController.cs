@@ -4,6 +4,7 @@ using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Controllers
 {
@@ -12,8 +13,8 @@ namespace DevEdu.API.Controllers
     public class LessonController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ILessonRepository _lessonRepository;
         private readonly ILessonService _lessonService;
+        private readonly ILessonRepository _lessonRepository;
 
         public LessonController(IMapper mapper, ILessonRepository lessonRepository, ILessonService lessonService)
         {
@@ -28,7 +29,7 @@ namespace DevEdu.API.Controllers
         public string AddLesson([FromBody] LessonInputModel inputModel)
         {
             var dto = _mapper.Map<LessonDto>(inputModel);
-            return _lessonRepository.AddLesson(dto).ToString();
+            return _lessonService.AddLesson(dto).ToString();
         }
 
         // api/lesson/{id}
@@ -37,6 +38,29 @@ namespace DevEdu.API.Controllers
         {
             _lessonService.DeleteLesson(id);
         }
+
+        // api/lesson/{id}
+        [HttpPut("{id}")]
+        public void UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
+        {
+            var dto = _mapper.Map<LessonDto>(updateModel);
+            _lessonService.UpdateLesson(id, dto);
+        }
+
+        // api/lesson/{id}
+        [HttpGet("{id}")]
+        public LessonDto GetLessonById(int id)
+        {
+            return _lessonService.SelectLessonById(id);
+        }
+
+        // api/lesson
+        [HttpGet]
+        public List<LessonDto> GetAllLessons()
+        {
+            return _lessonService.SelectAllLessons();
+        }
+
 
         // api/lesson/{lessonId}/comment/{commentId}
         [HttpPost("{lessonId}/comment/{commentId}")]
@@ -59,7 +83,7 @@ namespace DevEdu.API.Controllers
             _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
         }
 
-        // api/lesson/{lessonId}/topic/{toppicId}
+        // api/lesson/{lessonId}/topic/{topicId}
         [HttpPost("{lessonId}/topic/{topicId}")]
         public void AddTopicToLesson(int lessonId, int topicId)
         {
@@ -68,7 +92,7 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/user/{userId}
         [HttpPost("{lessonId}/user/{userId}")]
-        public void AddStudenToLesson(int lessonId, int userId)
+        public void AddStudentToLesson(int lessonId, int userId )
         {
             _lessonService.AddStudentToLesson(lessonId, userId);
         }

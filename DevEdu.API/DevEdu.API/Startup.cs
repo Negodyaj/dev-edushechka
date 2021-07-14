@@ -1,5 +1,6 @@
+using DevEdu.Business.Services;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
-using DevEdu.Business.Servicies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,10 +34,20 @@ namespace DevEdu.API
             services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
-            
             services.AddScoped<ICommentService, CommentService>();
-            services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<IMaterialService, MaterialService>();
+            services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICourseService, CourseService>(); 
             services.AddScoped<ILessonService, LessonService>();
+            services.AddScoped<ITopicService, TopicService>();
+
+
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IMaterialService, MaterialService>();
 
             services.AddControllers();
 

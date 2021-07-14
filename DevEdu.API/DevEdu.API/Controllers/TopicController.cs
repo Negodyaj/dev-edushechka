@@ -4,7 +4,7 @@ using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Repositories;
 using AutoMapper;
 using DevEdu.DAL.Models;
-using DevEdu.Business.Servicies;
+using DevEdu.Business.Services;
 
 namespace DevEdu.API.Controllers
 {

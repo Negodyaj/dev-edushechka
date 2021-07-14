@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
@@ -13,12 +11,12 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class TagController : Controller
     {
-        private TagRepository _repository;
-
+        private readonly ITagService _service;
         private readonly IMapper _mapper;
-        public TagController(IMapper mapper, TagRepository repository)
+
+        public TagController(IMapper mapper, ITagService service)
         {
-            _repository = repository;
+            _service = service;
             _mapper = mapper;
         }
 
@@ -27,15 +25,12 @@ namespace DevEdu.API.Controllers
         public int AddTag([FromBody] TagInputModel model)
         {
             var dto = _mapper.Map< TagDto>(model);            
-            return _repository.AddTag(dto);
+            return _service.AddTag(dto);
         }
 
         // api/tag/1
         [HttpDelete("{id}")]
-        public void DeleteTag(int id)
-        {
-            _repository.DeleteTag(id);
-        }
+        public void DeleteTag(int id) => _service.DeleteTag(id);
 
         // api/tag/1
         [HttpPut("{id}")]
@@ -43,23 +38,15 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<TagDto>(model);
             dto.Id = id;
-            _repository.UpdateTag(dto);
+            _service.UpdateTag(dto);
         }
 
         // api/tag
         [HttpGet]
-        [Description("Returns the list of all tags")]
-        [ProducesResponseType(typeof(TagDto), StatusCodes.Status200OK)]
-        public List<TagDto> GetAllTags() // change return type to outputModel
-        {
-             return _repository.SelectAllTags();
-        }
+        public List<TagDto> GetAllTags() => _service.GetAllTags(); // change return type to outputModel
 
         // api/tag/1
         [HttpGet("{id}")]
-        public TagDto GetTagById(int id) // change return type to outputModel
-        {
-            return _repository.SelectTagById(id);
-        }
+        public TagDto GetTagById(int id) => _service.GetTagById(id); // change return type to outputModel
     }
 }
