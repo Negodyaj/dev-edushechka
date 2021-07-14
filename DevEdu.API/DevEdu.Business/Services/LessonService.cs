@@ -36,5 +36,48 @@ namespace DevEdu.Business.Services
 
         public void AddTopicToLesson(int lessonId, int topicId) => 
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
+
+        public void AddStudentToLesson(int lessonId, int userId)
+        {
+            var studentLessonDto =
+               new StudentLessonDto
+               {
+                   User = new UserDto { Id = userId },
+                   Lesson = new LessonDto { Id = lessonId }
+               };
+            _lessonRepository.AddStudentToLesson(studentLessonDto);
+        }
+
+        public void DeleteStudentFromLesson(int lessonId, int userId)
+        {
+            var studentLessonDto =
+                new StudentLessonDto
+                {
+                    User = new UserDto { Id = userId },
+                    Lesson = new LessonDto { Id = lessonId }
+                };
+            _lessonRepository.DeleteStudentFromLesson(studentLessonDto);
+        }
+
+        public void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
+        {
+            studentLessonDto.Lesson = new LessonDto { Id = lessonId };
+            studentLessonDto.User = new UserDto { Id = userId };
+            _lessonRepository.UpdateStudentFeedbackForLesson(studentLessonDto);
+        }
+
+        public void UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
+        {
+            studentLessonDto.Lesson = new LessonDto { Id = lessonId };
+            studentLessonDto.User = new UserDto { Id = userId };
+            _lessonRepository.UpdateStudentAbsenceReasonOnLesson(studentLessonDto);
+        }
+
+        public void UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
+        {
+            studentLessonDto.Lesson = new LessonDto { Id = lessonId };
+            studentLessonDto.User = new UserDto { Id = userId };
+            _lessonRepository.UpdateStudentAttendanceOnLesson(studentLessonDto);
+        }
     }
 }

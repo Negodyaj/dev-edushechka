@@ -37,6 +37,9 @@ namespace DevEdu.API.Configuration
             CreateMap<TopicInputModel, TopicDto>();
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
+            CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
+            CreateMap<AttendanceInputModel, StudentLessonDto>();
+            CreateMap<FeedbackInputModel, StudentLessonDto>();
         }
 
         private void CreateMappingFromDto()
