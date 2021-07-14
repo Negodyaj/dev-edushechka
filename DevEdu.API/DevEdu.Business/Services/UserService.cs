@@ -13,13 +13,31 @@ namespace DevEdu.Business.Servicies
             _userRepository = userRepository;
         }
 
-        public int AddUser(UserDto dto) => _userRepository.AddUser(dto);
+        public int AddUser(UserDto dto)
+        {
+           var addedUserId = _userRepository.AddUser(dto);
+            
+            if(dto.Roles == null || dto.Roles.Count == 0)
+            {
+                return addedUserId;
+            }
+
+            foreach(var role in dto.Roles)
+            {
+                AddUserRole(addedUserId, (int)role);
+            }
+            return addedUserId;
+        }
 
         public UserDto SelectUserById(int id) => _userRepository.SelectUserById(id);
 
         public List<UserDto> SelectUsers() => _userRepository.SelectUsers();
 
-        public UserDto UpdateUser(UserDto dto) => _userRepository.UpdateUser(dto);
+        public UserDto UpdateUser(UserDto dto)
+        {
+            _userRepository.UpdateUser(dto);
+            return _userRepository.SelectUserById(dto.Id);
+        }
 
         public void DeleteUser(int id) => _userRepository.DeleteUser(id);
 

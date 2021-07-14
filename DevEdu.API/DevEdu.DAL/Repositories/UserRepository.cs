@@ -97,7 +97,7 @@ namespace DevEdu.DAL.Repositories
                 .ToList<UserDto>();
         }
 
-        public UserDto UpdateUser(UserDto user)
+        public void UpdateUser(UserDto user)
         {
             _connection.Execute(
                 _userUpdateProcedure,
@@ -115,7 +115,6 @@ namespace DevEdu.DAL.Repositories
                 },
             commandType: CommandType.StoredProcedure
             );
-            return SelectUserById(user.Id);
         }
 
         public void DeleteUser(int id)

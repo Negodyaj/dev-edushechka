@@ -11,6 +11,6 @@ namespace DevEdu.DAL.Repositories
         void DeleteUserRole(int userId, int roleId);
         UserDto SelectUserById(int id);
         List<UserDto> SelectUsers();
-        UserDto UpdateUser(UserDto user);
+        void UpdateUser(UserDto user);
     }
 }
