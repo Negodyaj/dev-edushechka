@@ -37,7 +37,7 @@ namespace DevEdu.API.Controllers
         // api/material
         [HttpGet]
         [Description("Get all materials with tags")]
-        [ProducesResponseType(typeof(MaterialInfoWithTagsOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<MaterialInfoWithTagsOutputModel>), StatusCodes.Status200OK)]
         public List<MaterialInfoWithTagsOutputModel> GetAllMaterials()
         {
             var dto = _materialService.GetAllMaterials();
@@ -91,7 +91,7 @@ namespace DevEdu.API.Controllers
         // api/material/by-tag/1
         [HttpGet("by-tag/{tagId}")]
         [Description("Get materials by tag id")]
-        [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
         public List<MaterialInfoOutputModel> GetMaterialsByTagId(int tagId)
         {
             var dto = _materialService.GetMaterialsByTagId(tagId);
