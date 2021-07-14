@@ -59,7 +59,7 @@ namespace DevEdu.DAL.Repositories
                     }
                     return result;
                 }, new { id},
-                splitOn:"Name",
+                splitOn:"Id",
                     commandType: CommandType.StoredProcedure
             )
             .FirstOrDefault();
@@ -101,7 +101,7 @@ namespace DevEdu.DAL.Repositories
                 {
                     paymentDto.Date,
                     paymentDto.Sum,
-                    paymentDto.User,
+                    paymentDto.User.Id,
                     paymentDto.IsPaid
                 },
                 commandType: CommandType.StoredProcedure

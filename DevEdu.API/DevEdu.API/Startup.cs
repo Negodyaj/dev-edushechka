@@ -1,5 +1,3 @@
-using AutoMapper;
-using DevEdu.API.Configuration;
 using DevEdu.DAL.Repositories;
 using DevEdu.Business.Servicies;
 using Microsoft.AspNetCore.Builder;
@@ -7,8 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using AutoMapper;
 
 
 namespace DevEdu.API
@@ -38,9 +34,11 @@ namespace DevEdu.API
             services.AddScoped<ICommentService, CommentService>();
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DevEdu.API", Version = "v1" });
+            services.AddControllers();
+
+            services.AddSwaggerDocument(settings => {
+                settings.Title = "DevEdu Education API";
+                settings.Version = "v8";
             });
         }
 
@@ -50,8 +48,8 @@ namespace DevEdu.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DevEdu.API v1"));
+                app.UseOpenApi();
+                app.UseSwaggerUi3();
             }
 
             app.UseHttpsRedirection();
