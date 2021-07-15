@@ -1,4 +1,7 @@
-﻿namespace DevEdu.DAL.Repositories
+﻿using System.Collections.Generic;
+using DevEdu.DAL.Models;
+
+namespace DevEdu.DAL.Repositories
 {
     public interface IGroupRepository
     {
@@ -8,5 +11,10 @@
         void RemoveGroupLesson(int groupId, int lessonId);
         int AddGroupMaterialReference(int groupId, int materialId);
         int RemoveGroupMaterialReference(int groupId, int materialId);
+        int AddTaskToGroup(GroupTaskDto groupTaskDto);
+        void DeleteTaskFromGroup(int groupId, int taskId);
+        List<GroupTaskDto> GetTaskGroupByGroupId(int groupId);
+        GroupTaskDto GetGroupTask(int groupId, int taskId);
+        GroupTaskDto UpdateGroupTask(GroupTaskDto groupTaskDto);
     }
 }

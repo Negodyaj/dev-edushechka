@@ -6,8 +6,6 @@ namespace DevEdu.DAL.Models
     public class TaskDto : BaseDto
     {
         public string Name { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
         public string Description { get; set; }
         public string Links { get; set; }
         public bool IsRequired { get; set; }
@@ -26,8 +24,6 @@ namespace DevEdu.DAL.Models
             return actual != null
                    && Id == actual.Id
                    && Name == actual.Name
-                   && StartDate == actual.StartDate
-                   && EndDate == actual.EndDate
                    && Description == actual.Description
                    && Links == actual.Links
                    && IsRequired == actual.IsRequired;
@@ -39,8 +35,6 @@ namespace DevEdu.DAL.Models
             hashCode.Add(base.GetHashCode());
             hashCode.Add(Id);
             hashCode.Add(Name);
-            hashCode.Add(StartDate);
-            hashCode.Add(EndDate);
             hashCode.Add(Description);
             hashCode.Add(Links);
             hashCode.Add(IsRequired);

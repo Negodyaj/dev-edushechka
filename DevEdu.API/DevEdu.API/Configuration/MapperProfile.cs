@@ -27,6 +27,7 @@ namespace DevEdu.API.Configuration
             CreateMap<CommentUpdateInputModel, CommentDto>();
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<GroupInputModel, GroupDto>();
+            CreateMap<GroupTaskInputModel, GroupTaskDto>();
             CreateMap<MaterialInputModel, MaterialDto>();
             CreateMap<NotificationAddInputModel, NotificationDto>();
             CreateMap<NotificationUpdateInputModel, NotificationDto>();
@@ -49,6 +50,11 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
             CreateMap<UserDto, UserInfoOutputModel>();
+            CreateMap<GroupTaskDto, GroupTaskInfoWithGroupOutputModel>();
+            CreateMap<GroupTaskDto, GroupTaskInfoOutputModel>();
+            CreateMap<GroupDto, GroupOutputMiniModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
+            CreateMap<TaskDto, TaskInfoOutputMiniModel>();
         }
     }
 }

@@ -81,8 +81,6 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     taskDto.Name,
-                    taskDto.StartDate,
-                    taskDto.EndDate,
                     taskDto.Description,
                     taskDto.Links,
                     taskDto.IsRequired
@@ -100,8 +98,6 @@ namespace DevEdu.DAL.Repositories
                 {
                     taskDto.Id,
                     taskDto.Name,
-                    taskDto.StartDate,
-                    taskDto.EndDate,
                     taskDto.Description,
                     taskDto.Links,
                     taskDto.IsRequired
