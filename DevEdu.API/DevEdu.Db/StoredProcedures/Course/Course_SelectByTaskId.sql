@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.Task_SelectCoursesByTaskId
+﻿CREATE PROCEDURE dbo.Course_SelectByTaskId
 	@Id int
 AS
 BEGIN

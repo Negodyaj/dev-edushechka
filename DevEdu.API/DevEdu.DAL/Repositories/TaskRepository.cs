@@ -11,8 +11,6 @@ namespace DevEdu.DAL.Repositories
         private const string _taskAddProcedure = "dbo.Task_Insert";
         private const string _taskDeleteProcedure = "dbo.Task_Delete";
         private const string _taskSelectByIdProcedure = "dbo.Task_SelectById";
-        private const string _taskSelectCoursesByTaskIdProcedure = "dbo.Task_SelectCoursesByTaskId";
-        private const string _taskSelectAnswersByTaskIdProcedure = "dbo.Task_SelectAnswersByTaskId";
         private const string _taskSelectAlldProcedure = "dbo.Task_SelectAll";
         private const string _taskUpdateProcedure = "dbo.Task_Update";
         private const string _tagTaskAddProcedure = "dbo.Tag_Task_Insert";
@@ -47,33 +45,6 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();
             return task;
-        }
-
-        public List<CourseDto> GetCoursesToTaskByTaskId(int id)
-        {
-            return _connection.Query<CourseDto>(
-                    _taskSelectCoursesByTaskIdProcedure,
-                    new { id },
-                    commandType: CommandType.StoredProcedure
-                )
-                .ToList();
-        }
-
-        public List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskByTaskId(int id)
-        {
-            return _connection.Query<StudentAnswerOnTaskForTaskDto, UserDto, StudentAnswerOnTaskForTaskDto>(
-                    _taskSelectAnswersByTaskIdProcedure,
-                    (answerDto, userDto) =>
-                    {
-                        StudentAnswerOnTaskForTaskDto answerEntry;
-                        answerEntry = answerDto;
-                        answerEntry.Student = userDto;
-                        return answerEntry;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure)
-                .ToList();
         }
 
         public List<TaskDto> GetTasks()

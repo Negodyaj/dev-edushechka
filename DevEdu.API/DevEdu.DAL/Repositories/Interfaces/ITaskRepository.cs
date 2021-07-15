@@ -6,8 +6,6 @@ namespace DevEdu.DAL.Repositories
     public interface ITaskRepository
     {
         TaskDto GetTaskById(int id);
-        List<CourseDto> GetCoursesToTaskByTaskId(int id);
-        List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskByTaskId(int id);
         List<TaskDto> GetTasks();
         int AddTask(TaskDto task);
         void UpdateTask(TaskDto task);
