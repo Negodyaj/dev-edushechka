@@ -8,8 +8,6 @@ namespace DevEdu.API.Models.OutputModels
 {
     public class LessonInfoWithGroupsOutputModel : LessonInfoOutputModel
     {
-        public List<LessonInfoOutputModel> Groups { get; set; }
-        [DefaultValue(false)]
-        public bool IsDeleted { get; set; }
+        public List<LessonGroupOutputModel> Groups { get; set; }
     }
 }

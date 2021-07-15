@@ -26,11 +26,18 @@ namespace DevEdu.Business.Services
 
         public LessonDto SelectLessonById(int id) => _lessonRepository.SelectLessonById(id);
 
-        public void UpdateLesson(int id, LessonDto lessonDto)
+        public void UpdateTeacherCommentOfLesson(int id, LessonDto lessonDto)
         {
             lessonDto.Id = id;
-            _lessonRepository.UpdateLesson(lessonDto);
+            _lessonRepository.UpdateTeacherCommentOfLesson(lessonDto);
         }
+
+        public void UpdateLinkToRecordOfLesson(int id, LessonDto lessonDto)
+        {
+            lessonDto.Id = id;
+            _lessonRepository.UpdateTeacherCommentOfLesson(lessonDto);
+        }
+
         public void DeleteTopicFromLesson(int lessonId, int topicId) => 
             _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
 

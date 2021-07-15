@@ -9,8 +9,13 @@ BEGIN
 		u.FirstName,
 		u.LastName,
 		u.Email,
-		u.Photo
+		u.Photo,
+		t.Id,
+		t.Name
 	FROM dbo.Lesson as l
 		inner join dbo.[User] u on l.TeacherId = u.Id  
+
+		inner join dbo.Lesson_Topic lt on l.Id = lt.LessonId
+		inner join dbo.Topic t on t.Id = lt.Id
 	WHERE l.IsDeleted = 0
 END
