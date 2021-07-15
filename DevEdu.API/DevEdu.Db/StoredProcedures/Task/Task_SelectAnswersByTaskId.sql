@@ -11,10 +11,9 @@ SELECT
 		u.LastName,
 		u.Email,
 		u.Photo
-	From dbo.Task t
-		left join dbo.Task_Student ts on ts.TaskId = t.Id
+	From dbo.Task_Student ts
 		left join dbo.[User] u on u.Id = ts.StudentId
 		left join dbo.TaskStatus tss on tss.Id = ts.StatusId
 	WHERE 
-	t.Id = @Id
+	ts.TaskId = @Id
 END

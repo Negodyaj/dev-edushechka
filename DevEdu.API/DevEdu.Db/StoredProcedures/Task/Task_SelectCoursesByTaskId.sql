@@ -7,9 +7,8 @@ BEGIN
 		c.Name,
 		c.Description,
 		c.IsDeleted
-	From dbo.Task t
-		left join dbo.Course_Task ct on ct.TaskId = t.Id
+	From dbo.Course_Task ct
 		left join dbo.Course c on c.Id = ct.CourseId
 	WHERE 
-	t.Id = @Id
+	ct.TaskId = @Id
 END
