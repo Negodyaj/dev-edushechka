@@ -17,7 +17,8 @@ namespace DevEdu.DAL.Repositories
         private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
         private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
         private const string _selectAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_SelectAllByCourseId]";
-        private const string _updateCourseTopics = "[dbo].[Course_Topic_Update]";
+        private const string _updateCourseTopicsProcedure = "[dbo].[Course_Topic_Update]";
+        private const string _deleteAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_DeleteAllTopicsByCourseId]";
 
         private const string _сourseTaskInsertProcedure = "dbo.Course_Task_Insert";
         private const string _сourseTaskDeleteProcedure = "dbo.Course_Task_Delete";
@@ -172,7 +173,7 @@ namespace DevEdu.DAL.Repositories
             foreach (var topic in topics)
             {
                 _connection.Query(
-                    _updateCourseTopics,
+                    _updateCourseTopicsProcedure,
                     new
                     {
                         courseId,
@@ -183,6 +184,13 @@ namespace DevEdu.DAL.Repositories
                );
             }
         }
-
+        public void DeleteAllTopicsByCourseId(int courseId)
+        {
+            _connection.Execute(
+                _deleteAllTopicsByCourseIdProcedure,
+                new { courseId },
+                commandType: CommandType.StoredProcedure
+                );
+        }
     }
 }

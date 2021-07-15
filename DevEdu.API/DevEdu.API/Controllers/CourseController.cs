@@ -157,6 +157,15 @@ namespace DevEdu.API.Controllers
             return "updated";
 
         }
+        // api/course/{courseId}/topics-delete
+        [HttpDelete("{courseId}/topics-delete")]
+        [Description("Delete all topics by course id")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+        public string DeleteAllTopicsByCourseId(int courseId)
+        {
+            _courseService.DeleteAllTopicsByCourseId(courseId);
+            return $"All topics deleted from course id: {courseId}";
+        }
 
     }
 }

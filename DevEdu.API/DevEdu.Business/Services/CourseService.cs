@@ -33,7 +33,7 @@ namespace DevEdu.Business.Services
         public void DeleteTagFromTopic(int topicId, int tagId) => _courseRepository.DeleteTagFromTopic(topicId, tagId);
         public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {
-            dto.Course = new CourseDto { Id = courseId };
+            dto.Course = SetIdToCourseDto(courseId, dto.Course);
             dto.Topic = new TopicDto { Id = topicId };
             _topicRepository.AddTopicToCourse(dto);
         }
@@ -49,16 +49,47 @@ namespace DevEdu.Business.Services
         }
         public void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
         {
-            if(topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
+            CheckUniquenessPositions(topics);
+            var topicsInDatabase = _courseRepository.SelectAllTopicsByCourseId(courseId);
+            if (((topics.Count > topicsInDatabase.Count) || (topics.Count < topicsInDatabase.Count)) && topicsInDatabase.Count!=0)
+            {
+                DeleteAllTopicsByCourseId(courseId);
+                AddTopicsFromNewList(courseId, topics);
+            }
+            else if( topicsInDatabase.Count == 0)
+            {
+                AddTopicsFromNewList(courseId, topics);
+            }
+            else
+            {
+                foreach (var topic in topics)
+                {
+                    topic.Course = SetIdToCourseDto(courseId, topic.Course);
+                }
+                _courseRepository.UpdateCourseTopicsByCourseId(courseId, topics);
+            }
+        }
+        public void DeleteAllTopicsByCourseId(int courseId)
+        {
+            _courseRepository.DeleteAllTopicsByCourseId(courseId);
+        }
+        private void AddTopicsFromNewList(int courseId, List<CourseTopicDto> topics)
+        {
+            foreach (var topic in topics)
+            {
+                AddTopicToCourse(courseId, topic.Topic.Id, topic);
+            }
+        }
+        private void CheckUniquenessPositions(List<CourseTopicDto> topics)
+        {
+            if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
                 throw new Exception("the same positions of topics in the course");
             }
-            foreach (var topic in topics)
-            {
-                topic.Course = new CourseDto() { Id = courseId };
-            }
-
-            _courseRepository.UpdateCourseTopicsByCourseId(courseId, topics);
+        }
+        private CourseDto SetIdToCourseDto(int courseId, CourseDto dto)
+        {
+            return dto = new CourseDto() { Id = courseId };
         }
     }
 }
