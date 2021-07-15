@@ -205,6 +205,7 @@
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_SelectAllByCourseId.sql" />
     <Build Include="StoredProcedures\User_Role\User_Role_Insert.sql" />
     <Build Include="StoredProcedures\User_Role\User_Role_Delete.sql" />
+    <Build Include="StoredProcedures\Course_Topic\Course_Topic_Update.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />

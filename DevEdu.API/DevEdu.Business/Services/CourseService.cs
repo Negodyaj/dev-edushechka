@@ -1,6 +1,9 @@
 ﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+
 
 namespace DevEdu.Business.Services
 {
@@ -43,6 +46,19 @@ namespace DevEdu.Business.Services
         {
             var list = _courseRepository.SelectAllTopicsByCourseId(courseId);
             return list;
+        }
+        public void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
+        {
+            if(topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
+            {
+                throw new Exception("the same positions of topics in the course");
+            }
+            foreach (var topic in topics)
+            {
+                topic.Course = new CourseDto() { Id = courseId };
+            }
+
+            _courseRepository.UpdateCourseTopicsByCourseId(courseId, topics);
         }
     }
 }

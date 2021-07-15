@@ -15,5 +15,6 @@ namespace DevEdu.Business.Services
         List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId);
         void AddTagToTopic(int topicId, int tagId);
         void DeleteTagFromTopic(int topicId, int tagId);
+        void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics);
     }
 }
