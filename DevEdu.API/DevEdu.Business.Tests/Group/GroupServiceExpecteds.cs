@@ -19,7 +19,7 @@ namespace DevEdu.Business.Tests.Group
                         Id = 1,
                         Name = "www",
                         Description = "w",
-                        Groups = new List<GroupDto>(),
+                        Groups = null,
                         IsDeleted = false
                     },
                     GroupStatus = GroupStatus.Active,
@@ -44,34 +44,7 @@ namespace DevEdu.Business.Tests.Group
                     Timetable = "rrr",
                     PaymentPerMonth = 1,
                     IsDeleted = false
-                },
-                new GroupDto
-                {
-                    Id = 1,
-                    Course = new CourseDto
-                    {
-                        Id = 1,
-                        Name = "www",
-                        Description = "w",
-                        Groups = new List<GroupDto>(),
-                        IsDeleted = false
-                    },
-                    GroupStatus = GroupStatus.Active,
-                    StartDate = System.DateTime.MaxValue,
-                    Timetable = "rrr",
-                    PaymentPerMonth = 1,
-                    IsDeleted = false
-                }
-            };
-        }
-        
-        public static IEnumerable DeleteGroup()
-        {
-            yield return new object[]
-            {
-            };
-            yield return new object[]
-            {
+                }                
             };
         }
         
@@ -86,26 +59,6 @@ namespace DevEdu.Business.Tests.Group
         }
 
         public static IEnumerable GetGroups()
-        {
-            yield return new object[]
-            {
-            };
-            yield return new object[]
-            {
-            };
-        }
-
-        public static IEnumerable AddGroupLesson()
-        {
-            yield return new object[]
-            {
-            };
-            yield return new object[]
-            {
-            };
-        }
-
-        public static IEnumerable RemoveGroupLesson()
         {
             yield return new object[]
             {
@@ -136,26 +89,6 @@ namespace DevEdu.Business.Tests.Group
         }
 
         public static IEnumerable RemoveGroupMaterialReference()
-        {
-            yield return new object[]
-            {
-            };
-            yield return new object[]
-            {
-            };
-        }
-
-        public static IEnumerable AddUserToGroup()
-        {
-            yield return new object[]
-            {
-            };
-            yield return new object[]
-            {
-            };
-        }
-
-        public static IEnumerable DeleteUserFromGroup()
         {
             yield return new object[]
             {
