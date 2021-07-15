@@ -93,19 +93,24 @@ namespace DevEdu.API.Controllers
 
         // api/task
         [HttpPost]
-        public int AddTask([FromBody] TaskInputModel model)
+        [Description("AddTaskToDataBase")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public TaskInfoOutputModel AddTask([FromBody] TaskInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
-            return _taskService.AddTask(taskDto);
+            return _mapper.Map<TaskInfoOutputModel>(_taskService.GetTaskById(_taskService.AddTask(taskDto)));
         }
 
 
         // api/task/{taskId}
         [HttpPut("{taskId}")]
-        public void UpdateTask(int taskId, [FromBody] TaskInputModel model)
+        [Description("UpdateTaskWithSelectedId")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
             _taskService.UpdateTask(taskId, taskDto);
+            return _mapper.Map<TaskInfoOutputModel>(_taskService.GetTaskById(taskId));
         }
 
         // api/task/{taskId}

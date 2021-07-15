@@ -18,22 +18,22 @@ namespace DevEdu.Business.Services
         public TaskDto GetTaskWithCoursesById(int id)
         {
             var taskDto = _taskRepository.GetTaskById(id);
-            taskDto.Courses = _taskRepository.GetCoursesToTaskById(id);
+            taskDto.Courses = _taskRepository.GetCoursesToTaskByTaskId(id);
             return taskDto;
         }
 
         public TaskDto GetTaskWithAnswersById(int id)
         {
             var taskDto = _taskRepository.GetTaskById(id);
-            taskDto.StudentAnswers = _taskRepository.GetStudentAnswersToTaskById(id);
+            taskDto.StudentAnswers = _taskRepository.GetStudentAnswersToTaskByTaskId(id);
             return taskDto;
         }
 
         public TaskDto GetTaskWithCoursesAndAnswersById(int id)
         {
             var taskDto = _taskRepository.GetTaskById(id);
-            taskDto.Courses = _taskRepository.GetCoursesToTaskById(id);
-            taskDto.StudentAnswers = _taskRepository.GetStudentAnswersToTaskById(id);
+            taskDto.Courses = _taskRepository.GetCoursesToTaskByTaskId(id);
+            taskDto.StudentAnswers = _taskRepository.GetStudentAnswersToTaskByTaskId(id);
             return taskDto;
         }
 

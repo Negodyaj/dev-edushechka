@@ -22,5 +22,9 @@ namespace DevEdu.Business.Services
         public List<TagDto> GetAllTags() => _repository.SelectAllTags();
 
         public TagDto GetTagById(int id) => _repository.SelectTagById(id);
+
+        public int AddTagToTopic(int topicId, int tagId) => _repository.AddTagToTopic(topicId, tagId);
+
+        public int DeleteTagFromTopic(int topicId, int tagId) => _repository.DeleteTagFromTopic(topicId, tagId);
     }
 }

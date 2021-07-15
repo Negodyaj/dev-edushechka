@@ -72,24 +72,6 @@ namespace DevEdu.API.Controllers
             return $"Course №{id} change name to {model.Name} and description to {model.Description}";
         }
 
-        //  api/course/topic/{topicId}/tag/{tagId}
-        [HttpPost("topic/{topicId}/tag/{tagId}")]
-        [Description("Add Tag To Topic")]
-        public string AddTagToTopic(int topicId, int tagId)
-        {
-            _courseService.AddTagToTopic(topicId, tagId);
-            return $"add to topic with {topicId} Id tag with {tagId} Id";
-        }
-
-        //  api/course/topic/{topicId}/tag/{tagId}
-        [HttpDelete("topic/{topicId}/tag/{tagId}")]
-        [Description("Delete Tag From Topic")]
-        public string DeleteTagFromTopic(int topicId, int tagId)
-        {
-            _courseService.DeleteTagFromTopic(topicId, tagId);
-            return $"deleted at topic with {topicId} Id tag with {tagId} Id";
-        }
-
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpPost("{courseId}/material/{materialId}")]
         public string AddMaterialToCourse(int courseId, int materialId)

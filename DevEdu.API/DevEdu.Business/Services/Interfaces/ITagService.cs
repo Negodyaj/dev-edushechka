@@ -10,5 +10,7 @@ namespace DevEdu.Business.Services
         List<TagDto> GetAllTags();
         TagDto GetTagById(int id);
         void UpdateTag(TagDto dto);
+        int AddTagToTopic(int topicId, int tagId);
+        int DeleteTagFromTopic(int topicId, int tagId);
     }
 }

@@ -10,7 +10,6 @@ namespace DevEdu.API.Configuration
     public class MapperProfile : Profile
     {
         private const string _dateFormat = "dd.MM.yyyy";
-        CultureInfo cultureRu = CultureInfo.CreateSpecificCulture("ru-RU");
         public MapperProfile()
         {
             CreateMappingToDto();
@@ -36,9 +35,7 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => new UserDto { Id = src.TeacherId}));
             CreateMap<LessonUpdateInputModel, LessonDto>();
             CreateMap<TagInputModel, TagDto>();
-            CreateMap<TaskInputModel, TaskDto>()
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.Parse(src.StartDate, cultureRu)))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.Parse(src.EndDate, cultureRu)));
+            CreateMap<TaskInputModel, TaskDto>();
             CreateMap<TopicInputModel, TopicDto>();
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
@@ -55,19 +52,12 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
             CreateMap<UserDto, UserInfoOutputModel>();
+            CreateMap<UserDto, UserInfoShortOutputModel>(); 
             CreateMap<CourseDto, CourseInfoShortOutputModel>();
-            CreateMap<TaskDto, TaskInfoOutputModel>()
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString("d", cultureRu)))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString("d", cultureRu)));
-            CreateMap<TaskDto, TaskInfoWithCoursesOutputModel>()
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString("d", cultureRu)))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString("d", cultureRu)));
-            CreateMap<TaskDto, TaskInfoWithCoursesAndAnswersOutputModel>()
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString("d", cultureRu)))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString("d", cultureRu)));
-            CreateMap<TaskDto, TaskInfoWithAnswersOutputModel>()
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString("d", cultureRu)))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString("d", cultureRu)));
+            CreateMap<TaskDto, TaskInfoOutputModel>();
+            CreateMap<TaskDto, TaskInfoWithCoursesOutputModel>();
+            CreateMap<TaskDto, TaskInfoWithCoursesAndAnswersOutputModel>();
+            CreateMap<TaskDto, TaskInfoWithAnswersOutputModel>();
             CreateMap<TagDto, TagInfoOutputModel>();
             CreateMap<StudentAnswerOnTaskForTaskDto, StudentAnswerOnTaskInfoOutputModel>();
             CreateMap<StudentAnswerOnTaskDto, StudentAnswerOnTaskInfoOutputModel>();

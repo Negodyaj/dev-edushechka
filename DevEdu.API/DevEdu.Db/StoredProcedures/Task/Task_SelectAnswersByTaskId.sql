@@ -1,13 +1,16 @@
-﻿CREATE PROCEDURE dbo.Task_SelectAnswersById
+﻿CREATE PROCEDURE dbo.Task_SelectAnswersByTaskId
 	@Id int
 AS
 BEGIN
 SELECT
 		ts.Id,
-		u.FirstName as StudentFirstName,
-		u.LastName as StudentLastName,
 		tss.Name as Status,
-		ts.Answer
+		ts.Answer,
+		u.Id,
+		u.FirstName,
+		u.LastName,
+		u.Email,
+		u.Photo
 	From dbo.Task t
 		left join dbo.Task_Student ts on ts.TaskId = t.Id
 		left join dbo.[User] u on u.Id = ts.StudentId

@@ -11,8 +11,8 @@ namespace DevEdu.DAL.Repositories
         private const string _taskAddProcedure = "dbo.Task_Insert";
         private const string _taskDeleteProcedure = "dbo.Task_Delete";
         private const string _taskSelectByIdProcedure = "dbo.Task_SelectById";
-        private const string _taskSelectCoursesByIdProcedure = "dbo.Task_SelectCoursesById";
-        private const string _taskSelectAnswersByIdProcedure = "dbo.Task_SelectAnswersById";
+        private const string _taskSelectCoursesByTaskIdProcedure = "dbo.Task_SelectCoursesByTaskId";
+        private const string _taskSelectAnswersByTaskIdProcedure = "dbo.Task_SelectAnswersByTaskId";
         private const string _taskSelectAlldProcedure = "dbo.Task_SelectAll";
         private const string _taskUpdateProcedure = "dbo.Task_Update";
         private const string _tagTaskAddProcedure = "dbo.Tag_Task_Insert";
@@ -49,23 +49,30 @@ namespace DevEdu.DAL.Repositories
             return task;
         }
 
-        public List<CourseDto> GetCoursesToTaskById(int id)
+        public List<CourseDto> GetCoursesToTaskByTaskId(int id)
         {
             return _connection.Query<CourseDto>(
-                    _taskSelectCoursesByIdProcedure,
+                    _taskSelectCoursesByTaskIdProcedure,
                     new { id },
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
         }
 
-        public List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskById(int id)
+        public List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskByTaskId(int id)
         {
-            return _connection.Query<StudentAnswerOnTaskForTaskDto>(
-                    _taskSelectAnswersByIdProcedure,
+            return _connection.Query<StudentAnswerOnTaskForTaskDto, UserDto, StudentAnswerOnTaskForTaskDto>(
+                    _taskSelectAnswersByTaskIdProcedure,
+                    (answerDto, userDto) =>
+                    {
+                        StudentAnswerOnTaskForTaskDto answerEntry;
+                        answerEntry = answerDto;
+                        answerEntry.Student = userDto;
+                        return answerEntry;
+                    },
                     new { id },
-                    commandType: CommandType.StoredProcedure
-                )
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure)
                 .ToList();
         }
 
@@ -102,8 +109,6 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     taskDto.Name,
-                    taskDto.StartDate,
-                    taskDto.EndDate,
                     taskDto.Description,
                     taskDto.Links,
                     taskDto.IsRequired
@@ -121,8 +126,6 @@ namespace DevEdu.DAL.Repositories
                 {
                     taskDto.Id,
                     taskDto.Name,
-                    taskDto.StartDate,
-                    taskDto.EndDate,
                     taskDto.Description,
                     taskDto.Links,
                     taskDto.IsRequired

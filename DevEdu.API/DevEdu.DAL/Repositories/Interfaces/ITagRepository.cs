@@ -10,5 +10,7 @@ namespace DevEdu.DAL.Repositories
         List<TagDto> SelectAllTags();
         TagDto SelectTagById(int id);
         int UpdateTag(TagDto tagDto);
+        int AddTagToTopic(int topicId, int tagId);
+        int DeleteTagFromTopic(int topicId, int tagId);
     }
 }
