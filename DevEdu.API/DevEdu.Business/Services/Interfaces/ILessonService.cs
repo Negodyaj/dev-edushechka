@@ -17,8 +17,8 @@ namespace DevEdu.Business.Services
         void AddTopicToLesson(int lessonId, int topicId);
         void AddStudentToLesson(int lessonId, int userId);
         void DeleteStudentFromLesson(int lessonId, int userId);
-        void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
         void UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
         void UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
+        void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
     }
 }
