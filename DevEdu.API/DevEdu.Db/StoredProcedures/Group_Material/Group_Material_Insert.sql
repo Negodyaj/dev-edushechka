@@ -1,8 +1,8 @@
 ﻿CREATE PROCEDURE dbo.Group_Material_Insert
-	@MaterialId int,
-	@GroupId int
+	@GroupId		int,
+	@MaterialId		int
 AS
 BEGIN
-	INSERT dbo.Group_Material (MaterialId, GroupId)
-	VALUES(@MaterialId, @GroupId)
+	INSERT dbo.Group_Material (GroupId, MaterialId)
+	VALUES(@GroupId, @MaterialId)
 END

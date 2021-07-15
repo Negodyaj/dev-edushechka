@@ -58,13 +58,13 @@ namespace DevEdu.DAL.Repositories
               .AsList();
         }
 
-        public void UpdateTopic(int id, TopicDto topicDto)       
+        public void UpdateTopic(TopicDto topicDto)       
         {
             _connection.Execute(
                 _topicUpdateProcedure,
                 new
                 {
-                    id,
+                    topicDto.Id,
                     topicDto.Name,
                     topicDto.Duration
                 },

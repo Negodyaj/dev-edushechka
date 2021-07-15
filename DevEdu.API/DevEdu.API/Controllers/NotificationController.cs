@@ -13,6 +13,7 @@ namespace DevEdu.API.Controllers
     {
         private readonly INotificationRepository _notificationRepository;
         private readonly IMapper _mapper;
+
         public NotificationController(IMapper mapper, INotificationRepository notificationRepository)
         {
             _notificationRepository = notificationRepository;

@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Globalization;
+using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
@@ -7,6 +9,7 @@ namespace DevEdu.API.Configuration
 {
     public class MapperProfile : Profile
     {
+        private readonly string _dateFormat = "dd.MM.yyyy";
         public MapperProfile()
         {
             CreateMappingToDto();
@@ -36,6 +39,9 @@ namespace DevEdu.API.Configuration
             CreateMap<TopicInputModel, TopicDto>();
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
+            CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
+            CreateMap<AttendanceInputModel, StudentLessonDto>();
+            CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<StudentRaitingInputModel, StudentRaitingDto>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }));
         }
@@ -44,11 +50,12 @@ namespace DevEdu.API.Configuration
         {
             CreateMap<CourseDto, CourseInfoOutputModel>();
             CreateMap<TopicDto, TopicOutputModel>();
-
+            CreateMap<CommentDto, CommentInfoOutputModel>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
+            CreateMap<UserDto, UserInfoOutputModel>();
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<StudentRaitingDto, StudentRaitingOutputModel>();
-
         }
     }
 }
