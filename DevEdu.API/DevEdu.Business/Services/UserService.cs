@@ -41,7 +41,7 @@ namespace DevEdu.Business.Servicies
 
         public void DeleteUser(int id) => _userRepository.DeleteUser(id);
 
-        public int AddUserRole(int userId, int roleId) => _userRepository.AddUserRole(userId, roleId);
+        public void AddUserRole(int userId, int roleId) => _userRepository.AddUserRole(userId, roleId);
 
         public void DeleteUserRole(int userId, int roleId) => _userRepository.DeleteUserRole(userId, roleId);
     }

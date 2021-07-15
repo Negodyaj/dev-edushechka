@@ -23,7 +23,7 @@ namespace DevEdu.DAL.Repositories
         public int AddUser(UserDto user)
         {
             return _connection.QuerySingle<int>(
-               _userAddProcedure,
+                _userAddProcedure,
                 new
                 {
                     user.FirstName,
@@ -39,7 +39,7 @@ namespace DevEdu.DAL.Repositories
                     user.Photo,
                     user.PhoneNumber
                 },
-            commandType: CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure);
         }
 
         public UserDto SelectUserById(int id)
@@ -64,7 +64,7 @@ namespace DevEdu.DAL.Repositories
                 },
                 new { id },
                 splitOn: "id",
-            commandType: CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();
         }
 
@@ -92,7 +92,7 @@ namespace DevEdu.DAL.Repositories
                     return userEnrty;
                 },
                 splitOn: "Id",
-            commandType: CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure)
                 .Distinct<UserDto>()
                 .ToList<UserDto>();
         }
@@ -113,8 +113,7 @@ namespace DevEdu.DAL.Repositories
                     user.Photo,
                     user.PhoneNumber
                 },
-            commandType: CommandType.StoredProcedure
-            );
+                commandType: CommandType.StoredProcedure);
         }
 
         public void DeleteUser(int id)
@@ -122,13 +121,12 @@ namespace DevEdu.DAL.Repositories
             _connection.Execute(
                 _userDeleteProcedure,
                 new { id },
-            commandType: CommandType.StoredProcedure
-            );
+                commandType: CommandType.StoredProcedure);
         }
 
-        public int AddUserRole(int userId, int roleId)
+        public void AddUserRole(int userId, int roleId)
         {
-            return _connection.QuerySingleOrDefault<int>(
+            _connection.QuerySingleOrDefault<int>(
                 _userRoleAddProcedure,
                 new
                 {

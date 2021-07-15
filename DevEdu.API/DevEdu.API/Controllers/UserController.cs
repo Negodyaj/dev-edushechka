@@ -77,9 +77,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("{userId}/role/{roleId}")]
         [Description("Add new role to user")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-        public int AddRoleToUser(int userId, int roleId)
+        public void AddRoleToUser(int userId, int roleId)
         {
-            return _userService.AddUserRole(userId, roleId);
+            _userService.AddUserRole(userId, roleId);
         }
 
         // api/user/{userId}/role/{roleId}
