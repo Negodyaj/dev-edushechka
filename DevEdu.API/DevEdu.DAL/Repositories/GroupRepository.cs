@@ -30,6 +30,7 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     groupDto.Id,
+                    groupDto.Name,
                     groupDto.Course
                 },
                 commandType: CommandType.StoredProcedure
@@ -91,6 +92,7 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     id,
+                    groupDto.Name,
                     groupDto.Course,
                     groupDto.GroupStatus,
                     groupDto.StartDate,

@@ -7,6 +7,8 @@ namespace DevEdu.API.Models.InputModels
 {
     public class GroupInputModel
     {
+        [Required(ErrorMessage = NameRequired)]
+        public string Name { get; set; }
         [Required]
         public int CourseId { get; set; }
         [Required(ErrorMessage = GroupStatusIdRequired)]

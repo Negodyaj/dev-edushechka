@@ -7,6 +7,7 @@ namespace DevEdu.API.Models.OutputModels
     public class GroupOutputModel
     {
         public int Id { get; set; }
+        public string Name { get; set; }
         public CourseDto Course { get; set; }
         public GroupStatus GroupStatus { get; set; }
         public DateTime StartDate { get; set; }

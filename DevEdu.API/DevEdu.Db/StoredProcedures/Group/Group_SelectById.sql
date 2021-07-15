@@ -4,6 +4,7 @@ AS
 BEGIN
 	SELECT 
 		G.Id,
+		G.[Name],
 		G.CourseId,
 		G.GroupStatusId,
 		G.StartDate,

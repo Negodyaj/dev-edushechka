@@ -2,7 +2,7 @@
 AS
 BEGIN
 	SELECT 
-	Id, CourseId, GroupStatusId, StartDate, Timetable, PaymentPerMonth
+	Id, [Name], CourseId, GroupStatusId, StartDate, Timetable, PaymentPerMonth
 	FROM dbo.[Group]
 	WHERE (IsDeleted=0)
 END
