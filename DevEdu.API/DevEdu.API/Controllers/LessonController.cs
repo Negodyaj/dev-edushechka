@@ -49,7 +49,7 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{id}
         [HttpPut("{id}")]
-        [Description("Update the lesson's teacher comment.")]
+        [Description("Update the lesson's teacher comment and link to record.")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public LessonInfoOutputModel UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
         {

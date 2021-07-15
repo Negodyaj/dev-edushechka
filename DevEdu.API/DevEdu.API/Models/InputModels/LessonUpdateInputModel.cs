@@ -9,6 +9,10 @@ namespace DevEdu.API.Models.InputModels
         [Required(ErrorMessage = TeacherCommentRequired)]
         public string TeacherComment { get; set; }
 
+        [Required(ErrorMessage = LinkToRecordIdRequired)]
+        [Url]
+        public String LinkToRecord { get; set; }
+
         [Required(ErrorMessage = DateRequired)]
         public DateTime Date { get; set; }
     }

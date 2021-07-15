@@ -167,7 +167,7 @@
     <Build Include="StoredProcedures\Lesson\Lesson_Insert.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAll.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectById.sql" />
-    <Build Include="StoredProcedures\Lesson\Lesson_UpdateTeacherComment.sql" />
+    <Build Include="StoredProcedures\Lesson\Lesson_Update.sql" />
     <Build Include="StoredProcedures\User\User_SelectAll.sql" />
     <Build Include="StoredProcedures\User\User_SelectById.sql" />
     <Build Include="StoredProcedures\User\User_Insert.sql" />
@@ -205,7 +205,6 @@
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_SelectAllByCourseId.sql" />
     <Build Include="StoredProcedures\User_Role\User_Role_Insert.sql" />
     <Build Include="StoredProcedures\User_Role\User_Role_Delete.sql" />
-    <Build Include="StoredProcedures\Lesson\Lesson_UpdateLinkToRecord.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_Comments_SelectById.sql" />
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonId.sql" />
   </ItemGroup>

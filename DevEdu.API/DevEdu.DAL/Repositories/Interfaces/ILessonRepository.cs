@@ -12,8 +12,7 @@ namespace DevEdu.DAL.Repositories
         void DeleteLesson(int id);
         List<LessonDto> SelectAllLessons();
         LessonDto SelectLessonById(int id);
-        public void UpdateTeacherCommentOfLesson(LessonDto lessonDto);
-        public void UpdateLinkToRecordOfLesson(LessonDto lessonDto);
+        public void UpdateLesson(LessonDto lessonDto);
         int DeleteTopicFromLesson(int lessonId, int topicId);
         void AddTopicToLesson(int lessonId, int topicId);
         void AddStudentToLesson(int lessonId, int userId);

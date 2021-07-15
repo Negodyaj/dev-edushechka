@@ -8,9 +8,15 @@ namespace DevEdu.API.Models.InputModels
     {
         [Required(ErrorMessage = DateRequired)]
         public DateTime Date { get; set; }
+
         [Required(ErrorMessage = TeacherCommentRequired)]
         public string TeacherComment { get; set; }
+
         [Required(ErrorMessage = TeacherIdRequired)]
         public int TeacherId { get; set; }
+
+        [Required(ErrorMessage = LinkToRecordIdRequired)]
+        [Url]
+        public String LinkToRecord { get; set; }
     }
 }

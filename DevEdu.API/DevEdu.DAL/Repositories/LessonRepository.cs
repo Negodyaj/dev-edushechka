@@ -13,9 +13,7 @@ namespace DevEdu.DAL.Repositories
         private const string _lessonDeleteProcedure = "dbo.Lesson_Delete";
         private const string _lessonSelectAllProcedure = "dbo.Lesson_SelectAll";
         private const string _lessonSelectByIdProcedure = "dbo.Lesson_SelectById";
-        private const string _lessonTeacherCommentUpdateProcedure = "dbo.Lesson_UpdateTeacherComment";
-        private const string _lessonLinkToRecordUpdateProcedure = "dbo.Lesson_UpdateTeacherComment";
-        private const string _lessonWithCommentsAndStudentsByIdProcedure = "dbo.Lesson_Students_Comments_SelectById";
+        private const string _lessonUpdateProcedure = "dbo.Lesson_Update";
 
         private const string _commentAddToLessonProcedure = "dbo.Lesson_Comment_Insert";
         private const string _commentDeleteFromLessonProcedure = "dbo.Lesson_Comment_Delete";
@@ -182,32 +180,19 @@ namespace DevEdu.DAL.Repositories
                 .ToList();            
         }
 
-        public void UpdateTeacherCommentOfLesson(LessonDto lessonDto)
+        public void UpdateLesson(LessonDto lessonDto)
         {
              _connection.QuerySingleOrDefault<int>(
-                _lessonTeacherCommentUpdateProcedure,
+                _lessonUpdateProcedure,
                 new
                 {
                     lessonDto.Id,
                     lessonDto.TeacherComment,
+                    lessonDto.LinkToRecord,
                     lessonDto.Date
                 },
                 commandType: CommandType.StoredProcedure
             );
-        }
-
-        public void UpdateLinkToRecordOfLesson(LessonDto lessonDto)
-        {
-            _connection.QuerySingleOrDefault<int>(
-               _lessonLinkToRecordUpdateProcedure,
-               new
-               {
-                   lessonDto.Id,
-                   lessonDto.LinkToRecord,
-                   lessonDto.Date
-               },
-               commandType: CommandType.StoredProcedure
-           );
         }
 
         public void AddTopicToLesson(int lessonId, int topicId)
