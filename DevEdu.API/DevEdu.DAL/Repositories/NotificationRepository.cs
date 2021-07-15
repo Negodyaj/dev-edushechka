@@ -42,20 +42,14 @@ namespace DevEdu.DAL.Repositories
         {
             NotificationDto result = default;
             return _connection
-                .Query<NotificationDto, UserDto, Role, NotificationDto>(
+                .Query<NotificationDto, Role ,UserDto, NotificationDto >(
                     _notificationSelectByIdProcedure,
-                    (notification, user, role) =>
+                    (notification, role, user) =>
                     {
-                        if (result == null)
-                        {
-                            result = notification;
-                            result.User = user;
-                            result.User.Roles = new List<Role> { role };
-                        }
-                        else
-                        {
-                            result.User.Roles.Add(role);
-                        }
+                        result = notification;
+                        result.Role = role;
+                        result.User = user;
+                        
                         return result;
                     },
                     new { id },
@@ -67,31 +61,25 @@ namespace DevEdu.DAL.Repositories
 
         public List<NotificationDto> GetNotificationsByUserId(int userId)
         {
-            var notificationDictionary = new Dictionary<int, NotificationDto>();
 
             return _connection
-                .Query<NotificationDto, UserDto, City, Role, NotificationDto>(
+                .Query<NotificationDto, Role, UserDto, NotificationDto>(
                     _notificationSelectAllByUserIdProcedure,
-                    (notification, user, city, role) =>
+                    (notification, role, user) =>
                     {
                         NotificationDto result;
-                        if (!notificationDictionary.TryGetValue(notification.Id, out result))
                         {
                             result = notification;
+                            result.Role = role;
                             result.User = user;
-                          //  result.User.City = city;
-                            result.User.Roles = new List<Role> { role };
-                            notificationDictionary.Add(notification.Id, result);
                         }
 
-                        result.User.Roles.Add(role);
                         return result;
                     },
                     new { userId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
-                .Distinct()
                 .ToList();
         }
 
