@@ -1,9 +1,8 @@
 using NUnit.Framework;
-using Moq;
 
 namespace DevEdu.Business.Tests
 {
-    public class TaskServiceTests
+    public class TopicServiceTests
     {
         [SetUp]
         public void Setup()
