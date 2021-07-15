@@ -54,7 +54,7 @@ namespace DevEdu.API.Controllers
         // api/tag
         [HttpGet]
         [Description("Get all tags from database")]
-        [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<TagOutputModel>), StatusCodes.Status200OK)]
         public List<TagOutputModel> GetAllTags()
         {
             List<TagDto> queryResult = _service.GetAllTags();

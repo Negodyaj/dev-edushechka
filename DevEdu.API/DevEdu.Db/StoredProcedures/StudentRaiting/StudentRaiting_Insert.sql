@@ -1,10 +1,12 @@
 ﻿CREATE PROCEDURE dbo.StudentRaiting_Insert
 	@UserID int,
+	@GroupId int,
 	@RaitingTypeID int,
-	@Raiting int
+	@Raiting int,
+	@ReportingPeriodNumber int
 AS
 BEGIN
-	INSERT INTO dbo.StudentRaiting (UserID, RaitingTypeID, Raiting)
-	VALUES (@UserID, @RaitingTypeID, @Raiting)
+	INSERT INTO dbo.StudentRaiting (UserID, GroupId, RaitingTypeID, Raiting, ReportingPeriodNumber)
+	VALUES (@UserID, @GroupId, @RaitingTypeID, @Raiting, @ReportingPeriodNumber)
 	SELECT @@IDENTITY
 END

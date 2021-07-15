@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 
 namespace DevEdu.API.Models.OutputModels
 {
-    public class RaitingOutputModel
+    public class StudentRaitingOutputModel
     {
         public int Id { get; set; }
         public int UserId { get; set; } // change to UserOutputModel
+        public int GroupId { get; set; } // change to GroupOutputModel
         public RaitingTypeOutputModel RaitingType { get; set; }
         public int Raiting { get; set; }
+        public int ReportingPeriodNumber { get; set; }
     }
 }

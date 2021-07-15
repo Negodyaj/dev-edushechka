@@ -231,4 +231,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="DevEdu.Db.refactorlog" />
+  </ItemGroup>
 </Project>
