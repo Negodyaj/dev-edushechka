@@ -44,7 +44,7 @@ namespace DevEdu.API
             services.AddScoped<ICourseService, CourseService>(); 
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ITopicService, TopicService>();
-
+            services.AddScoped<INotificationService, NotificationService>();
 
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<IMaterialService, MaterialService>();

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Services
 {
-    class NotificationService : INotificationService
+    public  class NotificationService : INotificationService
     {
         private readonly INotificationRepository _notificationRepository;
 
@@ -17,7 +18,10 @@ namespace DevEdu.Business.Services
 
         public List<NotificationDto> GetNotificationsByUserId(int userId) => _notificationRepository.GetNotificationsByUserId(userId);
 
-        public int AddNotification(NotificationDto dto) => _notificationRepository.AddNotification(dto);
+        public int AddNotification( NotificationDto dto)
+        {
+           return  _notificationRepository.AddNotification(dto);
+        }
 
         public void DeleteNotification(int id) => _notificationRepository.DeleteNotification(id);
 

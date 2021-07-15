@@ -8,7 +8,7 @@ BEGIN
 	n.Date,
 	n.RoleId,
 	n.IsDeleted,
-	u.Id,
+	u.Id as UserId,
 	u.FirstName,
 	u.LastName,
 	u.GitHubAccount,

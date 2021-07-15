@@ -21,8 +21,8 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     userId = notificationDto.User.Id,
-                    notificationDto.Text,
-                    notificationDto.Role
+                    roleId = notificationDto.Role,
+                    notificationDto.Text
 
                 },
                 commandType: CommandType.StoredProcedure
@@ -79,7 +79,7 @@ namespace DevEdu.DAL.Repositories
                         {
                             result = notification;
                             result.User = user;
-                            result.User.City = city;
+                          //  result.User.City = city;
                             result.User.Roles = new List<Role> { role };
                             notificationDictionary.Add(notification.Id, result);
                         }

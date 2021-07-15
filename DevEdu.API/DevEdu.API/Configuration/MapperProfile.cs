@@ -28,7 +28,9 @@ namespace DevEdu.API.Configuration
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<GroupInputModel, GroupDto>();
             CreateMap<MaterialInputModel, MaterialDto>();
-            CreateMap<NotificationAddInputModel, NotificationDto>();
+            CreateMap<NotificationAddInputModel, NotificationDto>()
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }))
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src =>src.RoleId));
             CreateMap<NotificationUpdateInputModel, NotificationDto>();
             CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
             CreateMap<LessonInputModel, LessonDto>()

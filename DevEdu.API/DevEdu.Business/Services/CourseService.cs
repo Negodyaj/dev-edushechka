@@ -44,5 +44,11 @@ namespace DevEdu.Business.Services
             var list = _courseRepository.SelectAllTopicsByCourseId(courseId);
             return list;
         }
+
+        public void DeleteTaskFromCourse(int courseId, int taskId) =>
+            _courseRepository.DeleteTaskFromCourse(courseId, taskId);
+
+        public void AddTaskToCourse(int courseId, int taskId) =>
+            _courseRepository.AddTaskToCourse(courseId, taskId);
     }
 }
