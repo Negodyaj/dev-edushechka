@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
-    public class RaitingRepository : BaseRepository
+    public class RaitingRepository : BaseRepository, IRaitingRepository
     {
         private const string _studentRaitingInsertProcedure = "dbo.StudentRaiting_Insert";
         private const string _studentRaitingDeleteProcedure = "dbo.StudentRaiting_Delete";
@@ -22,14 +22,17 @@ namespace DevEdu.DAL.Repositories
         public int AddStudentRaiting(StudentRaitingDto studentRaitingDto)
         {
             var UserId = studentRaitingDto.User.Id;
+            var GroupId = studentRaitingDto.Group.Id;
             var raitingTypeId = studentRaitingDto.RaitingType.Id;
             return _connection.QuerySingleOrDefault<int>(
                 _studentRaitingInsertProcedure,
                 new
                 {
                     UserId,
+                    GroupId,
                     raitingTypeId,
-                    studentRaitingDto.Raiting
+                    studentRaitingDto.Raiting,
+                    studentRaitingDto.ReportingPeriodNumber
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -46,80 +49,63 @@ namespace DevEdu.DAL.Repositories
 
         public List<StudentRaitingDto> SelectAllStudentRaitings()
         {
-            Dictionary<int, StudentRaitingDto> result = new Dictionary<int, StudentRaitingDto>();
-            _connection.Query<StudentRaitingDto, RaitingTypeDto, UserDto, Role, StudentRaitingDto>
+            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, StudentRaitingDto>
                 (
                 _studentRaitingSelectAllProcedure,
-                (studentRaiting, raitingType, user, role) =>
+                (studentRaiting, group, raitingType, user) =>
                 {
-                    if (result.TryAdd(studentRaiting.Id, studentRaiting))
-                    {
-                        studentRaiting.RaitingType = raitingType;
-                        studentRaiting.User = user;
-                        user.Roles = new List<Role> { role };
-                    }
-                    else result[studentRaiting.Id].User.Roles.Add(role);
+                    studentRaiting.RaitingType = raitingType;
+                    studentRaiting.User = user;
+                    studentRaiting.Group = group;
                     return studentRaiting;
                 },
                 commandType: CommandType.StoredProcedure
-                );
-            return result.Values.ToList();
+                )
+                .ToList();
         }
 
         public StudentRaitingDto SelectStudentRaitingById(int id)
         {
-            StudentRaitingDto result = default;
-            _connection.Query<StudentRaitingDto, RaitingTypeDto, UserDto, Role, StudentRaitingDto>
+            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, StudentRaitingDto>
                 (
                 _studentRaitingSelectByIDProcedure,
-                (studentRaiting, raitingType, user, role) =>
+                (studentRaiting, group, raitingType, user) =>
                 {
-                    if (result == null)
-                    {
-                        result = studentRaiting;
-                        result.RaitingType = raitingType;
-                        result.User = user;
-                        user.Roles = new List<Role> { role };
-                    }
-                    else result.User.Roles.Add(role);
+                    studentRaiting.RaitingType = raitingType;
+                    studentRaiting.User = user;
+                    studentRaiting.Group = group;
                     return studentRaiting;
                 },
                 new { id },
                 commandType: CommandType.StoredProcedure
-                );
-            return result;
+                )
+                .FirstOrDefault();
         }
 
-        public StudentRaitingDto SelectStudentRaitingByUserId(int userId)
+        public List<StudentRaitingDto> SelectStudentRaitingByUserId(int userId)
         {
-            StudentRaitingDto result = default;
-            _connection.Query<StudentRaitingDto, RaitingTypeDto, UserDto, Role, StudentRaitingDto>
+            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, StudentRaitingDto>
                 (
                 _studentRaitingSelectByUserIdProcedure,
-                (studentRaiting, raitingType, user, role) =>
+                (studentRaiting, group, raitingType, user) =>
                 {
-                    if (result == null)
-                    {
-                        result = studentRaiting;
-                        result.RaitingType = raitingType;
-                        result.User = user;
-                        user.Roles = new List<Role> { role };
-                    }
-                    else result.User.Roles.Add(role);
+                    studentRaiting.RaitingType = raitingType;
+                    studentRaiting.User = user;
+                    studentRaiting.Group = group;
                     return studentRaiting;
                 },
                 new { userId },
                 commandType: CommandType.StoredProcedure
-                );
-            return result;
+                )
+                .ToList();
         }
 
         public void UpdateStudentRaiting(StudentRaitingDto studentRaitingDto)
         {
             _connection.Execute(
                 _studentRaitingUpdateProcedure,
-                new 
-                { 
+                new
+                {
                     studentRaitingDto.Id,
                     studentRaitingDto.Raiting
                 },
