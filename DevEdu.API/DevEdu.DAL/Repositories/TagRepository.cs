@@ -14,8 +14,7 @@ namespace DevEdu.DAL.Repositories
         private const string _tagSelectByIDProcedure = "dbo.Tag_SelectByID";
         private const string _tagUpdateProcedure = "dbo.Tag_Update";
 
-        private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
-        private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
+
 
         public int AddTag(TagDto tagDto)
         {
@@ -61,32 +60,6 @@ namespace DevEdu.DAL.Repositories
                 { 
                     tagDto.Id,
                     tagDto.Name
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
-
-        public int AddTagToTopic(int topicId, int tagId)
-        {
-            return _connection.Execute(
-                _tagToTopicAddProcedure,
-                new
-                {
-                    topicId,
-                    tagId
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
-
-        public int DeleteTagFromTopic(int topicId, int tagId)
-        {
-            return _connection.Execute(
-                _tagFromTopicDeleteProcedure,
-                new
-                {
-                    topicId,
-                    tagId
                 },
                 commandType: CommandType.StoredProcedure
             );

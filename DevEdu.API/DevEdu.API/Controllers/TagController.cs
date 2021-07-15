@@ -50,23 +50,5 @@ namespace DevEdu.API.Controllers
         // api/tag/1
         [HttpGet("{id}")]
         public TagDto GetTagById(int id) => _service.GetTagById(id); // change return type to outputModel
-
-        //  api/tag/topic/{topicId}/tag/{tagId}
-        [HttpPost("topic/{topicId}/tag/{tagId}")]
-        [Description("Add Tag To Topic")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public int AddTagToTopic(int topicId, int tagId)
-        {
-            return _service.AddTagToTopic(topicId, tagId);
-        }
-
-        //  api/tag/topic/{topicId}/tag/{tagId}
-        [HttpDelete("topic/{topicId}/tag/{tagId}")]
-        [Description("Delete Tag From Topic")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public int DeleteTagFromTopic(int topicId, int tagId)
-        {
-            return _service.DeleteTagFromTopic(topicId, tagId);
-        }
     }
 }

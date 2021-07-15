@@ -26,5 +26,9 @@ namespace DevEdu.Business.Services
             topicDto.Id = id;
             _topicRepository.UpdateTopic(topicDto);
         }
+
+        public int AddTagToTopic(int topicId, int tagId) => _topicRepository.AddTagToTopic(topicId, tagId);
+
+        public int DeleteTagFromTopic(int topicId, int tagId) => _topicRepository.DeleteTagFromTopic(topicId, tagId);
     }
 }
