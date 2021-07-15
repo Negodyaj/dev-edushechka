@@ -38,7 +38,7 @@ namespace DevEdu.API.Controllers
         //  api/Task/1
         [HttpGet("{taskId}")]
         [Description("Get task by Id with tags")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public TaskInfoOutputModel GetTaskWithTags(int taskId)
         {
             var taskDto = _taskService.GetTaskById(taskId);
@@ -115,6 +115,8 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}
         [HttpDelete("{taskId}")]
+        [Description("DeleteTaskWithSelectedId")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTask(int taskId)
         {
             _taskService.DeleteTask(taskId);
