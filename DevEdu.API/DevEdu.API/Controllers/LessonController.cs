@@ -59,6 +59,26 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<LessonInfoOutputModel>(output);
         }
 
+        // api/lesson/groupId/{id}
+        [HttpGet("/groupId/{id}")]
+        [Description("Get all lessons by groupId.")]
+        [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
+        public List<LessonInfoOutputModel> GetAllLessonsByGroupId(int id)
+        {
+            var dto = _lessonService.SelectAllLessonsByGroupId(id);
+            return  _mapper.Map<List<LessonInfoOutputModel>>(dto);
+        }
+
+        // api/lesson/teacherId/{id}
+        [HttpGet("/teacherId/{id}")]
+        [Description("Get all lessons by teacherId.")]
+        [ProducesResponseType(typeof(List<LessonInfoWithCourseOutputModel>), StatusCodes.Status200OK)]
+        public List<LessonInfoWithCourseOutputModel> GetAllLessonsByTeacherId(int id)
+        {
+            var dto = _lessonService.SelectAllLessonsByTeacherId(id);
+            return _mapper.Map<List<LessonInfoWithCourseOutputModel>>(dto);
+        }
+
         // api/lesson/{id}
         [HttpGet("{id}")]
         [Description("Get the lesson by id.")]
@@ -69,24 +89,14 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<LessonInfoOutputModel>(dto);
         }
 
-        // api/lesson
-        [HttpGet]
-        [Description("Get all lessons.")]
-        [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
-        public List<LessonInfoOutputModel> GetAllLessons()
+        // api/lesson/with-comments/{id}
+        [HttpGet("with-comments/{id}")]
+        [Description("Get the lesson with comments by id.")]
+        [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
+        public LessonInfoWithCommentsOutputModel GetAllLessonsWithComments(int id)
         {
-            var dto = _lessonService.SelectAllLessons();
-            return  _mapper.Map<List<LessonInfoOutputModel>>(dto);
-        }
-
-        // api/lesson/with-groups/{id}
-        [HttpGet("with-groups/{id}")]
-        [Description("Get the lesson with groups by id.")]
-        [ProducesResponseType(typeof(LessonInfoWithGroupsOutputModel), StatusCodes.Status200OK)]
-        public LessonInfoWithGroupsOutputModel GetAllLessonsWithGroups(int id)
-        {
-            var dto = _lessonService.SelectLessonById(id);
-            return _mapper.Map<LessonInfoWithGroupsOutputModel>(dto);
+            var dto = _lessonService.SelectLessonWithCommentsById(id);
+            return _mapper.Map<LessonInfoWithCommentsOutputModel>(dto);
         }
 
         // api/lesson/with-students-comments/{id}
@@ -95,7 +105,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
         public LessonInfoWithStudentsAndCommentsOutputModel GetAllLessonsWithStudentsAndComments(int id)
         {
-            var dto = _lessonService.SelectLessonById(id);
+            var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(id);
             return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel> (dto);
         }
 

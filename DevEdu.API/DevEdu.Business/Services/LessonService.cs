@@ -22,9 +22,15 @@ namespace DevEdu.Business.Services
 
         public void DeleteLesson(int id) => _lessonRepository.DeleteLesson(id);
 
-        public List<LessonDto> SelectAllLessons() => _lessonRepository.SelectAllLessons();
+        public List<LessonDto> SelectAllLessonsByGroupId(int id) => _lessonRepository.SelectAllLessonsByGroupId(id);
+
+        public List<LessonDto> SelectAllLessonsByTeacherId(int id) => _lessonRepository.SelectAllLessonsByTeacherId(id);
 
         public LessonDto SelectLessonById(int id) => _lessonRepository.SelectLessonById(id);
+
+        public LessonDto SelectLessonWithCommentsById(int id) => _lessonRepository.SelectLessonWithCommentsById(id);
+
+        public LessonDto SelectLessonWithCommentsAndStudentsById(int id) => _lessonRepository.SelectLessonWithCommentsAndStudentsById(id);
 
         public void UpdateLesson(int id, LessonDto lessonDto)
         {

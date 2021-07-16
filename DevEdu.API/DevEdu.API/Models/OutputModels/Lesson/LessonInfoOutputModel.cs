@@ -10,6 +10,7 @@ namespace DevEdu.API.Models.OutputModels
         public DateTime Date { get; set; }
         public String TeacherComment { get; set; }
         public UserInfoOutputModel Teacher { get; set; }
+        public String LinkToRecord { get; set; }
         public List<TopicOutputModel> Topics {get; set;}
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
