@@ -243,7 +243,6 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        //change UserId  to UserDto
         public List<StudentLessonDto> SelectStudentsLessonByLessonId(int lessonId)
         {
             return _connection
@@ -251,7 +250,7 @@ namespace DevEdu.DAL.Repositories
                     "[dbo].[Student_Lesson_SelectByLessonId]",
                     (studentLesson, user) =>
                     {
-                        studentLesson.UserId = user.Id;
+                        studentLesson.User = user;
                         return studentLesson;
                     },
                     new { lessonId },
