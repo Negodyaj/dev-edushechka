@@ -41,13 +41,17 @@ namespace DevEdu.API.Controllers
         public void DeleteStudentRaiting(int id) => _service.DeleteStudentRaiting(id);
 
         // api/raiting/1
-        [HttpPut("{id}")]
+        [HttpPut("{id}/raiting/{newRaiting}/reportingPeriodNumber/{newReportingPeriodNumber}")]
         [Description("Update StudentRaiting in database and return updated StudentRaiting")]
         [ProducesResponseType(typeof(StudentRaitingOutputModel), StatusCodes.Status200OK)]
-        public StudentRaitingOutputModel UpdateStudentRaiting(int id, [FromBody] StudentRaitingInputModel model)
+        public StudentRaitingOutputModel UpdateStudentRaiting(int id, int newRaiting, int newReportingPeriodNumber)
         {
-            var dto = _mapper.Map<StudentRaitingDto>(model);
-            dto.Id = id;
+            var dto = new StudentRaitingDto 
+            { 
+                Id = id ,
+                Raiting = newRaiting ,
+                ReportingPeriodNumber = newReportingPeriodNumber 
+            };
             _service.UpdateStudentRaiting(dto);
             return GetStudentRaitingById(id);
         }
@@ -76,9 +80,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("user/{userid}")]
         [Description("Get StudentRaitings from database by UserID")]
         [ProducesResponseType(typeof(List<StudentRaitingOutputModel>), StatusCodes.Status200OK)]
-        public List<StudentRaitingOutputModel> GetStudentRaitingByUserId(int id)
+        public List<StudentRaitingOutputModel> GetStudentRaitingByUserId(int userid)
         {
-            var queryResult = _service.GetStudentRaitingByUserId(id);
+            var queryResult = _service.GetStudentRaitingByUserId(userid);
             return _mapper.Map<List<StudentRaitingOutputModel>>(queryResult);
         }
     }

@@ -107,7 +107,8 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     studentRaitingDto.Id,
-                    studentRaitingDto.Raiting
+                    studentRaitingDto.Raiting,
+                    studentRaitingDto.ReportingPeriodNumber
                 },
                 commandType: CommandType.StoredProcedure
             );

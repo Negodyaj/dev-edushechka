@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[StudentRaiting]
 (
-	[Id] INT NOT NULL, 
+	[Id] INT NOT NULL IDENTITY(1,1), 
     [UserID] INT NOT NULL, 
     [GroupId] INT NOT NULL, 
     [RaitingTypeID] INT NOT NULL, 

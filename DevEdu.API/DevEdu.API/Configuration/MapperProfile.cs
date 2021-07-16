@@ -44,7 +44,8 @@ namespace DevEdu.API.Configuration
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<StudentRaitingInputModel, StudentRaitingDto>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }))
-                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => new GroupDto { Id = src.GroupId }));
+                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => new GroupDto { Id = src.GroupId }))
+                .ForMember(dest => dest.RaitingType, opt => opt.MapFrom(src => new RaitingTypeDto { Id = src.RaitingTypeId }));
         }
 
         private void CreateMappingFromDto()
@@ -64,7 +65,7 @@ namespace DevEdu.API.Configuration
                     Weight = src.RaitingType.Weight 
                 }
                 ))
-                .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserInfoOutputModel
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => new StudentInfoOutputModel
                 {
                     Id = src.User.Id,
                     FirstName = src.User.FirstName,
