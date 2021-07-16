@@ -13,4 +13,9 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DevEdu.Business\DevEdu.Business.csproj" />
+    <ProjectReference Include="..\DevEdu.DAL\DevEdu.DAL.csproj" />
+  </ItemGroup>
+
 </Project>

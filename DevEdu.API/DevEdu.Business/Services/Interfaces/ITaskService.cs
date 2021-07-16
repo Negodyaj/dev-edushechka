@@ -11,7 +11,9 @@ namespace DevEdu.Business.Services
         public TaskDto GetTaskWithCoursesAndAnswersById(int id);
         List<TaskDto> GetTasks();
         int AddTask(TaskDto taskDto);
-        void UpdateTask(int id, TaskDto taskDto);
+        public TaskDto UpdateTask(TaskDto taskDto);
         void DeleteTask(int id);
+        public int AddTagToTask(int taskId, int tagId);
+        public void DeleteTagFromTask(int taskId, int tagId);
     }
 }

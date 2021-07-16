@@ -109,8 +109,8 @@ namespace DevEdu.API.Controllers
         public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
-            _taskService.UpdateTask(taskId, taskDto);
-            return _mapper.Map<TaskInfoOutputModel>(_taskService.GetTaskById(taskId));
+            taskDto.Id = taskId;
+            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto));
         }
 
         // api/task/{taskId}
@@ -124,17 +124,20 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/tag/{tagId}
         [HttpPost("{taskId}/tag/{tagId}")]
-        public int AddTagToTask(int taskId, int tagId)
+        [Description("AddTagToTask")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public void AddTagToTask(int taskId, int tagId)
         {
-            return _taskRepository.AddTagToTagTask(taskId, tagId);
+            _taskService.AddTagToTask(taskId, tagId);
         }
 
         // api/task/{taskId}/tag/{tagId}
         [HttpDelete("{taskId}/tag/{tagId}")]
-        public string DeleteTagFromTask(int taskId, int tagId)
+        [Description("DeletTagFromTask")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public void DeleteTagFromTask(int taskId, int tagId)
         {
-            _taskRepository.DeleteTagFromTask(taskId, tagId);
-            return $"deleted tag task with {taskId} taskId";
+            _taskService.DeleteTagFromTask(taskId, tagId);
         }
 
         // api/task/{taskId}/student/{studentId}

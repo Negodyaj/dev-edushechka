@@ -114,7 +114,7 @@ namespace DevEdu.DAL.Repositories
                 );
         }
 
-        public int AddTagToTagTask(int taskId, int tagId)
+        public int AddTagToTask(int taskId, int tagId)
         {
             return _connection
                 .QuerySingle(_tagTaskAddProcedure,

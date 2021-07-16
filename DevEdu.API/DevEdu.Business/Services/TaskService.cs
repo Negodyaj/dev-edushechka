@@ -43,14 +43,26 @@ namespace DevEdu.Business.Services
 
         public List<TaskDto> GetTasks() => _taskRepository.GetTasks();
 
-        public int AddTask(TaskDto taskDto) => _taskRepository.AddTask(taskDto);
-
-        public void UpdateTask(int id, TaskDto taskDto)
+        public int AddTask(TaskDto taskDto)
         {
-            taskDto.Id = id;
+            var taskId = _taskRepository.AddTask(taskDto);
+            if (taskDto.Tags == null || taskDto.Tags.Count == 0)
+                return taskId;
+
+            taskDto.Tags.ForEach(tag => AddTagToTask(taskId, tag.Id));
+            return taskId;
+        }
+
+        public TaskDto UpdateTask(TaskDto taskDto)
+        {
             _taskRepository.UpdateTask(taskDto);
+            return _taskRepository.GetTaskById(taskDto.Id);
         }
 
         public void DeleteTask(int id) => _taskRepository.DeleteTask(id);
+
+        public int AddTagToTask(int taskId, int tagId) => _taskRepository.AddTagToTask(taskId, tagId);
+
+        public void DeleteTagFromTask(int taskId, int tagId) => _taskRepository.DeleteTagFromTask(taskId, tagId);
     }
 }
