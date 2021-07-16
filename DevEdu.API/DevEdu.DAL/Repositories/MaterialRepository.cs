@@ -16,6 +16,7 @@ namespace DevEdu.DAL.Repositories
         private const string _addTagToMaterialProcedure = "dbo.Material_Tag_Insert";
         private const string _deleteTagFromMaterialProcedure = "dbo.Material_Tag_Delete";
         private const string _materialSelectAllByTagIdProcedure = "dbo.Material_SelectAllByTagId";
+        private const string _materialSelectAllByCourseIdProcedure = "dbo.Material_SelectByCourseId";
 
         public MaterialRepository()
         {
@@ -144,6 +145,17 @@ namespace DevEdu.DAL.Repositories
                 .Query<MaterialDto>(
                     _materialSelectAllByTagIdProcedure,
                     new { tagId },
+                    commandType: CommandType.StoredProcedure
+                ).
+                ToList();
+        }
+
+        public List<MaterialDto> GetMaterialsByCourseId(int courseId)
+        {
+            return _connection
+                .Query<MaterialDto>(
+                    _materialSelectAllByCourseIdProcedure,
+                    new { courseId },
                     commandType: CommandType.StoredProcedure
                 ).
                 ToList();

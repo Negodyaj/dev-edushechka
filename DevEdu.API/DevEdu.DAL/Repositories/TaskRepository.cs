@@ -47,27 +47,14 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
             return task;
         }
-        public List<TaskDto> GetTaskByCourseId(int id)
+        public List<TaskDto> GetTaskByCourseId(int courseId)
         {
            var taskList = new List<TaskDto>();
-            _connection.Query<TaskDto>(
+            return _connection.Query<TaskDto>(
                     _taskSelectByCourseIdProcedure,
-                    (taskDto) =>
-                    {
-                        TaskDto taskDtoEntry;
-
-                        if (!taskList.TryGetValue(taskDto.Id, out taskDtoEntry))
-                        {
-                            taskDtoEntry = taskDto;
-                            taskList.Add(taskDtoEntry.Id, taskDtoEntry);
-                        }
-                        return taskDtoEntry;
-                    },
-                    new { id },
-                    splitOn: "Id",
+                    new { courseId },
                     commandType: CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return task;
+                .ToList();
         }
         public List<TaskDto> GetTasks()
         {

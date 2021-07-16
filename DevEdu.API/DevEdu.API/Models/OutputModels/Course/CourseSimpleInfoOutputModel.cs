@@ -3,7 +3,7 @@ using DevEdu.API.Models.OutputModels.Group;
 
 namespace DevEdu.API.Models.OutputModels
 {
-    public class CourseInfoOutputModel
+    public class CourseSimpleInfoOutputModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
