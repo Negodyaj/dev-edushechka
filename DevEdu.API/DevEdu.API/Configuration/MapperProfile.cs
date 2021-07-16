@@ -43,7 +43,8 @@ namespace DevEdu.API.Configuration
             CreateMap<AttendanceInputModel, StudentLessonDto>();
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<StudentRaitingInputModel, StudentRaitingDto>()
-                .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }));
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }))
+                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => new GroupDto { Id = src.GroupId }));
         }
 
         private void CreateMappingFromDto()
@@ -55,7 +56,24 @@ namespace DevEdu.API.Configuration
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
             CreateMap<UserDto, UserInfoOutputModel>();
             CreateMap<TagDto, TagOutputModel>();
-            CreateMap<StudentRaitingDto, StudentRaitingOutputModel>();
+            CreateMap<StudentRaitingDto, StudentRaitingOutputModel>()
+                .ForMember(dest => dest.RaitingType, opt => opt.MapFrom(src => new RaitingTypeOutputModel 
+                { 
+                    Id = src.RaitingType.Id,
+                    Name = src.RaitingType.Name,
+                    Weight = src.RaitingType.Weight 
+                }
+                ))
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserInfoOutputModel
+                {
+                    Id = src.User.Id,
+                    FirstName = src.User.FirstName,
+                    LastName = src.User.LastName,
+                    Email = src.User.Email,
+                    Photo = src.User.Photo
+                }
+                ));
+            CreateMap<RaitingTypeDto, RaitingTypeOutputModel>();
         }
     }
 }

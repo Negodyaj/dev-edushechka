@@ -1,12 +1,10 @@
 using DevEdu.Business.Services;
-using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using DevEdu.Business.Services;
 
 namespace DevEdu.API
 {
