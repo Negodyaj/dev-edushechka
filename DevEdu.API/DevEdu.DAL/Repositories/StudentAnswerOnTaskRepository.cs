@@ -16,6 +16,7 @@ namespace DevEdu.DAL.Repositories
         private const string _taskStudentUpdateStatusId = "dbo.Task_Student_UpdateStatusId";
 
         private const string _taskStudentCommentInsert = "dbo.Task_Student_Comment_Insert";
+        private const string _task_Student_SelectByTaskIdProcedure = "dbo.Task_Student_SelectByTaskId";
 
         public StudentAnswerOnTaskRepository()
         {
@@ -110,5 +111,23 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
            );
         }
+
+        public List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskByTaskId(int id)
+        {
+            return _connection.Query<StudentAnswerOnTaskForTaskDto, UserDto, StudentAnswerOnTaskForTaskDto>(
+                    _task_Student_SelectByTaskIdProcedure,
+                    (answerDto, userDto) =>
+                    {
+                        StudentAnswerOnTaskForTaskDto answerEntry;
+                        answerEntry = answerDto;
+                        answerEntry.Student = userDto;
+                        return answerEntry;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure)
+                .ToList();
+        }
+
     }
 }

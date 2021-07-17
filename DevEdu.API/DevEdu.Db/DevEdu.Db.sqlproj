@@ -204,6 +204,8 @@
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_SelectAllByCourseId.sql" />
     <Build Include="StoredProcedures\User_Role\User_Role_Insert.sql" />
     <Build Include="StoredProcedures\User_Role\User_Role_Delete.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectByTaskId.sql" />
+    <Build Include="StoredProcedures\Course\Course_SelectByTaskId.sql" />
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonId.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByGroupId.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByTeacherId.sql" />

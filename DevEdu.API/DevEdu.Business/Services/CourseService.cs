@@ -25,9 +25,6 @@ namespace DevEdu.Business.Services
             _courseRepository.UpdateCourse(courseDto);
         }
 
-        public void AddTagToTopic(int topicId, int tagId) => _courseRepository.AddTagToTopic(topicId, tagId);
-
-        public void DeleteTagFromTopic(int topicId, int tagId) => _courseRepository.DeleteTagFromTopic(topicId, tagId);
         public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {
             dto.Course = new CourseDto { Id = courseId };

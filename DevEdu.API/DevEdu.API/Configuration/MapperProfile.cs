@@ -9,7 +9,7 @@ namespace DevEdu.API.Configuration
 {
     public class MapperProfile : Profile
     {
-        private readonly string _dateFormat = "dd.MM.yyyy";
+        private const string _dateFormat = "dd.MM.yyyy";
         public MapperProfile()
         {
             CreateMappingToDto();
@@ -54,6 +54,15 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
             CreateMap<UserDto, UserInfoOutputModel>();
+            CreateMap<UserDto, UserInfoShortOutputModel>(); 
+            CreateMap<CourseDto, CourseInfoShortOutputModel>();
+            CreateMap<TaskDto, TaskInfoOutputModel>();
+            CreateMap<TaskDto, TaskInfoWithCoursesOutputModel>();
+            CreateMap<TaskDto, TaskInfoWithCoursesAndAnswersOutputModel>();
+            CreateMap<TaskDto, TaskInfoWithAnswersOutputModel>();
+            CreateMap<TagDto, TagInfoOutputModel>();
+            CreateMap<StudentAnswerOnTaskForTaskDto, StudentAnswerOnTaskInfoOutputModel>();
+            CreateMap<StudentAnswerOnTaskDto, StudentAnswerOnTaskInfoOutputModel>();
             CreateMap<LessonDto, LessonInfoOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<LessonDto, LessonInfoWithCourseOutputModel>()
