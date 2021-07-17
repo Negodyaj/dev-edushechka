@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
+using Microsoft.AspNetCore.Http;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
 {
@@ -39,6 +41,7 @@ namespace DevEdu.API.Controllers
         //  api/Course
         [HttpGet]
         [Description("Get all courses with topics")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CourseInfoOutputModel>))]
         public List<CourseInfoOutputModel> GetAllCourses()
         {
             var courses = _courseRepository.GetCourses();
@@ -67,22 +70,6 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<CourseDto>(model);
             _courseService.UpdateCourse(id, dto);
             return $"Course №{id} change name to {model.Name} and description to {model.Description}";
-        }
-
-        //  api/course/topic/{topicId}/tag/{tagId}
-        [HttpPost("topic/{topicId}/tag/{tagId}")]
-        public string AddTagToTopic(int topicId, int tagId)
-        {
-            _courseService.AddTagToTopic(topicId, tagId);
-            return $"add to topic with {topicId} Id tag with {tagId} Id";
-        }
-
-        //  api/course/topic/{topicId}/tag/{tagId}
-        [HttpDelete("topic/{topicId}/tag/{tagId}")]
-        public string DeleteTagAtTopic(int topicId, int tagId)
-        {
-            _courseService.DeleteTagFromTopic(topicId, tagId);
-            return $"deleted at topic with {topicId} Id tag with {tagId} Id";
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
@@ -116,6 +103,7 @@ namespace DevEdu.API.Controllers
         }
         // api/course/{courseId}/topic/{topicId}
         [HttpPost("{courseId}/topic/{topicId}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [Description("Add topic to course")]
         public string AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
         {
@@ -128,6 +116,7 @@ namespace DevEdu.API.Controllers
         // api/course/{courseId}/topic/{topicId}
         [HttpDelete("{courseId}/topic/{topicId}")]
         [Description("Delete topic from course")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public string DeleteTopicFromCourse(int courseId, int topicId)
         {
             _courseService.DeleteTopicFromCourse(courseId, topicId);
@@ -135,6 +124,7 @@ namespace DevEdu.API.Controllers
         }
         [HttpGet("{courseId}/topics")]
         [Description("Get all topics by course id ")]
+        [ProducesResponseType(typeof(List<CourseTopicOutputModel>),StatusCodes.Status200OK)]
         public List<CourseTopicOutputModel> SelectAllTopicsByCourseId(int courseId)
         {
             var list = _courseService.SelectAllTopicsByCourseId(courseId);

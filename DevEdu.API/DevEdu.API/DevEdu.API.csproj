@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\OutputModels\User\**" />
+    <Content Remove="Models\OutputModels\User\**" />
+    <EmbeddedResource Remove="Models\OutputModels\User\**" />
+    <None Remove="Models\OutputModels\User\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.11.3" />
@@ -13,10 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DevEdu.Business\DevEdu.Business.csproj" />
     <ProjectReference Include="..\DevEdu.DAL\DevEdu.DAL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\OutputModels\User\" />
   </ItemGroup>
 
 </Project>

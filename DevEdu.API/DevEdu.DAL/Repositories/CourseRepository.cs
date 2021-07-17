@@ -14,12 +14,12 @@ namespace DevEdu.DAL.Repositories
         private const string _courseSelectByIdProcedure = "dbo.Course_SelectById";
         private const string _courseSelectAllProcedure = "dbo.Course_SelectAll";
         private const string _courseUpdateProcedure = "dbo.Course_Update";
-        private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
-        private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
         private const string _selectAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_SelectAllByCourseId]";
 
         private const string _сourseTaskInsertProcedure = "dbo.Course_Task_Insert";
         private const string _сourseTaskDeleteProcedure = "dbo.Course_Task_Delete";
+
+        private const string _courseSelectByTaskIdProcedure = "dbo.Course_SelectByTaskId";
 
         public CourseRepository()
         {
@@ -96,32 +96,6 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
-        
-        public void AddTagToTopic(int topicId, int tagId)
-        {
-            _connection.Query(
-                _tagToTopicAddProcedure,
-                new 
-                {
-                    topicId, 
-                    tagId
-                },
-                commandType: CommandType.StoredProcedure
-                );
-        }
-
-        public void DeleteTagFromTopic(int topicId, int tagId)
-        {
-            _connection.Query(
-                _tagFromTopicDeleteProcedure,
-                new
-                {
-                    topicId,
-                    tagId
-                },
-                commandType: CommandType.StoredProcedure
-                );
-        }
 
         public void AddTaskToCourse(int courseId, int taskId)
         {
@@ -162,6 +136,16 @@ namespace DevEdu.DAL.Repositories
                     },
                     new {courseId},
                     splitOn: "id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+
+        public List<CourseDto> GetCoursesToTaskByTaskId(int id)
+        {
+            return _connection.Query<CourseDto>(
+                    _courseSelectByTaskIdProcedure,
+                    new { id },
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();

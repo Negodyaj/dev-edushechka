@@ -4,8 +4,6 @@ BEGIN
 	SELECT
 		t.Id,
 		t.Name,
-		t.StartDate,
-		t.EndDate,
 		t.Description,
 		t.Links,
 		t.IsRequired,
