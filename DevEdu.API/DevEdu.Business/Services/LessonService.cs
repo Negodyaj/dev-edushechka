@@ -28,9 +28,25 @@ namespace DevEdu.Business.Services
 
         public LessonDto SelectLessonById(int id) => _lessonRepository.SelectLessonById(id);
 
-        public LessonDto SelectLessonWithCommentsById(int id) => _lessonRepository.SelectLessonWithCommentsById(id);
+        public LessonDto SelectLessonWithCommentsById(int id)
+        {
+            LessonDto result = new LessonDto();
+            result = _lessonRepository.SelectLessonById(id);
 
-        public LessonDto SelectLessonWithCommentsAndStudentsById(int id) => _lessonRepository.SelectLessonWithCommentsAndStudentsById(id);
+            CommentRepository commentRepository = new CommentRepository();
+            result.Comments = commentRepository.SelectCommentsFromLessonByLessonId(id);
+
+            return result;
+        }
+
+        public LessonDto SelectLessonWithCommentsAndStudentsById(int id)
+        {
+            LessonDto result = SelectLessonWithCommentsById(id);
+
+            result.Students = _lessonRepository.SelectStudentsLessonByLessonId(id);
+
+            return result;
+        }
 
         public void UpdateLesson(int id, LessonDto lessonDto)
         {

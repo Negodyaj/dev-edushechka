@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[Lesson_Comments_SelectById]
+﻿CREATE PROCEDURE [dbo].[Comment_SelectByLessonId]
 	@LessonId int
 AS
 BEGIN

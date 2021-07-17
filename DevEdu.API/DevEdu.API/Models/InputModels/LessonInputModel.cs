@@ -7,7 +7,7 @@ namespace DevEdu.API.Models.InputModels
     public class LessonInputModel
     {
         [Required(ErrorMessage = DateRequired)]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         [Required(ErrorMessage = TeacherCommentRequired)]
         public string TeacherComment { get; set; }
@@ -17,6 +17,6 @@ namespace DevEdu.API.Models.InputModels
 
         [Required(ErrorMessage = LinkToRecordIdRequired)]
         [Url]
-        public String LinkToRecord { get; set; }
+        public string LinkToRecord { get; set; }
     }
 }

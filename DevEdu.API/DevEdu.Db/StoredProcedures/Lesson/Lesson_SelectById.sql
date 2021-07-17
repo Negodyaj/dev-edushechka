@@ -19,6 +19,6 @@ BEGIN
 		inner join dbo.[User] u on l.TeacherId = u.Id  
 
 		inner join dbo.Lesson_Topic lt on l.Id = lt.LessonId
-		inner join dbo.Topic t on t.Id = lt.Id
+		left join dbo.Topic t on t.Id = lt.TopicId
 	WHERE l.Id = @Id
 END

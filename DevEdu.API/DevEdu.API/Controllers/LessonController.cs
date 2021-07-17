@@ -61,7 +61,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/groupId/{id}
-        [HttpGet("/groupId/{id}")]
+        [HttpGet("/by-groupId/{id}")]
         [Description("Get all lessons by groupId.")]
         [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
         public List<LessonInfoOutputModel> GetAllLessonsByGroupId(int id)
@@ -71,7 +71,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/teacherId/{id}
-        [HttpGet("/teacherId/{id}")]
+        [HttpGet("/by-teacherId/{id}")]
         [Description("Get all lessons by teacherId.")]
         [ProducesResponseType(typeof(List<LessonInfoWithCourseOutputModel>), StatusCodes.Status200OK)]
         public List<LessonInfoWithCourseOutputModel> GetAllLessonsByTeacherId(int id)
@@ -90,8 +90,8 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<LessonInfoOutputModel>(dto);
         }
 
-        // api/lesson/with-comments/{id}
-        [HttpGet("with-comments/{id}")]
+        // api/lesson/{id}/with-comments
+        [HttpGet("{id}/with-comments")]
         [Description("Get the lesson with comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
         public LessonInfoWithCommentsOutputModel GetAllLessonsWithComments(int id)
@@ -100,8 +100,8 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<LessonInfoWithCommentsOutputModel>(dto);
         }
 
-        // api/lesson/with-students-comments/{id}
-        [HttpGet("with-students-comments/{id}")]
+        // api/lesson/{id}/full-info"
+        [HttpGet("{id}/full-info")]
         [Description("Get the lesson with students and comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
         public LessonInfoWithStudentsAndCommentsOutputModel GetAllLessonsWithStudentsAndComments(int id)

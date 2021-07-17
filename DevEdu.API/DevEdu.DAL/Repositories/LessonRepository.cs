@@ -14,7 +14,6 @@ namespace DevEdu.DAL.Repositories
         private const string _lessonSelectAllByTeacherIdProcedure = "dbo.Lesson_SelectAllByTeacherId";
         private const string _lessonSelectByIdProcedure = "dbo.Lesson_SelectById";
         private const string _lessonUpdateProcedure = "dbo.Lesson_Update";
-        private const string _commentsFromLessonSelectByLessonIdProcedure = "dbo.Lesson_Comments_SelectById";
 
         private const string _commentAddToLessonProcedure = "dbo.Lesson_Comment_Insert";
         private const string _commentDeleteFromLessonProcedure = "dbo.Lesson_Comment_Delete";
@@ -37,9 +36,10 @@ namespace DevEdu.DAL.Repositories
                 _lessonAddProcedure,
                 new
                 {
-                    lessonDto.Date,
-                    lessonDto.TeacherComment,
-                    lessonDto.Teacher.Id
+                    Date = lessonDto.Date,
+                    TeacherComment = lessonDto.TeacherComment,
+                    TeacherId = lessonDto.Teacher.Id,
+                    LinkToRecord = lessonDto.LinkToRecord
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -178,6 +178,7 @@ namespace DevEdu.DAL.Repositories
                     _lessonSelectByIdProcedure,
                     (lesson, teacher, topic)=>
                     {
+                        result = lesson;
                         result.Teacher = teacher;
                         if(result.Topics == null)
                         {
@@ -193,54 +194,6 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
 
             return result;
-        }
-
-        public LessonDto SelectLessonWithCommentsById(int id)
-        {
-            LessonDto result = new LessonDto();
-            _connection
-                .Query<LessonDto, UserDto, TopicDto, LessonDto>(
-                    _lessonSelectByIdProcedure,
-                    (lesson, teacher, topic) =>
-                    {
-                        result.Teacher = teacher;
-                        if (result.Topics == null)
-                        {
-                            result.Topics = new List<TopicDto>();
-                        }
-                        result.Topics.Add(topic);
-                        return lesson;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
-                .FirstOrDefault();
-
-            result.Comments = SelectCommentsFromLessonByLessonId(id);
-
-            return result;
-        }
-
-        public LessonDto SelectLessonWithCommentsAndStudentsById(int id)
-        {
-            LessonDto result = SelectLessonWithCommentsById(id);
-
-            result.Students = SelectStudentsLessonByLessonId(id);
-
-            return result;
-        }
-
-        public List<CommentDto> SelectCommentsFromLessonByLessonId(int lessonId)
-        {
-            return _connection
-                .Query<CommentDto>(
-                    _commentsFromLessonSelectByLessonIdProcedure,
-                    new { lessonId },
-                    commandType: CommandType.StoredProcedure
-                )
-                .Distinct()
-                .ToList();
         }
 
         public List<StudentLessonDto> SelectStudentsLessonByLessonId(int lessonId)
