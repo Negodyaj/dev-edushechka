@@ -6,9 +6,9 @@ namespace DevEdu.DAL.Repositories
     public interface IStudentAnswerOnTaskRepository
     {
         void AddStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
-        void DeleteStudentAnswerOnTask(int taskId, int studentId);
+        void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask();
-        StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId);
+        StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto);
         void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto, int statusId);
         void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         void AddCommentOnStudentAnswer(int taskstudentId, int commentId);

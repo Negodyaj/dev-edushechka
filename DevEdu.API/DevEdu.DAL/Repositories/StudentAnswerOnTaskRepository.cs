@@ -26,14 +26,14 @@ namespace DevEdu.DAL.Repositories
 
         }
 
-        public void DeleteStudentAnswerOnTask(int taskId, int studentId)
+        public void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {
             _connection.Execute(
                 _taskStudentDelete,
                 new
                 {
-                    taskId,
-                    studentId
+                    TaskId = dto.Task.Id,
+                    StudentId = dto.User.Id
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -78,32 +78,29 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto)
         {
             StudentAnswerOnTaskDto result = default;
 
             _connection.
-                Query<StudentAnswerOnTaskDto, CommentDto, TaskStatus, StudentAnswerOnTaskDto>(
+                Query<StudentAnswerOnTaskDto, UserDto, TaskDto, TaskStatus, StudentAnswerOnTaskDto>(
                 _taskStudentSelectByTaskAndStudent,
-                (studentAnswer, comment, taskStatus) =>
+                (studentAnswer, user, task, taskStatus) =>
                 {
                     if(result == null)
                     {
                         result = studentAnswer;
-                        result.Comments = new List<CommentDto> { comment };
+                        result.User = user;
+                        result.Task = task;
                         result.TaskStatus = taskStatus;
-                    }
-                    else
-                    {
-                        result.Comments.Add(comment);
                     }
 
                     return studentAnswer;
                 },
                 new
                 {
-                    taskId,
-                    studentId
+                    TaskId = dto.Task.Id,
+                    StudetnId = dto.User.Id
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure

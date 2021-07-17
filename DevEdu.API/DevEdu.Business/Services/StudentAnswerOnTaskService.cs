@@ -12,11 +12,11 @@ namespace DevEdu.Business.Services
             _studentAnswerOnTaskService = studentAnswerOnTaskService;
         }
 
-        public void AddStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse) => _studentAnswerOnTaskService.AddStudentAnswerOnTask(studentResponse);
-        public void DeleteStudentAnswerOnTask(int taskId, int studentId) => _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(taskId, studentId);
+        public void AddStudentAnswerOnTask(StudentAnswerOnTaskDto dto) => _studentAnswerOnTaskService.AddStudentAnswerOnTask(dto);
+        public void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto) => _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(dto);
         public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask() => _studentAnswerOnTaskService.GetAllStudentAnswersOnTask();
-        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId) => GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
-        public void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId) => _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId);
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto) => GetStudentAnswerOnTaskByTaskIdAndStudentId(dto);
+        public void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto, int statusId) => _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(dto, statusId);
         public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto) => _studentAnswerOnTaskService.UpdateStudentAnswerOnTask(dto);
         public void AddCommentOnStudentAnswer(int taskstudentId, int commentId) => _studentAnswerOnTaskService.AddCommentOnStudentAnswer(taskstudentId, commentId);
     }

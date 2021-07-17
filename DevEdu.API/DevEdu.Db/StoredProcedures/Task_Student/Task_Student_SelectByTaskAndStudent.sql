@@ -8,13 +8,26 @@ BEGIN
 		tstud.TaskId,
 		tstud.StudentId,
 		tstud.Answer,
-		com.Id,
-		com.UserID,
-		com.Text,
-		com.Date,
+		tstud.CompletedDate,
+		us.Id,
+		us.Username,
+		us.FirstName,
+		us.LastName,
+		us.Email,
+		us.GitHubAccount,
+		us.Photo,
+		us.IsDeleted,
+		t.Id,
+		t.[Name],
+		t.[Description],
+		t.StartDate,
+		t.EndDate,
+		t.Links,
+		t.IsRequired,
+		t.IsDeleted,
 		tstud.StatusId as Id
 	FROM dbo.Task_Student tstud
-		LEFT JOIN dbo.Task_Student_Comment tc on tc.TaskStudentID = tstud.Id
-		LEFT JOIN dbo.Comment com on com.Id = tc.CommentId
-	WHERE tstud.TaskId =  @TaskId AND tstud.StudentId =  @StudentId
+		LEFT JOIN dbo.[User] us on us.Id = tstud.StatusId
+		LEFT JOIN dbo.Task t on t.Id = tstud.TaskId
+	WHERE tstud.TaskId =  @TaskId AND tstud.StudentId =  @StudentId AND us.IsDeleted = 0
 END

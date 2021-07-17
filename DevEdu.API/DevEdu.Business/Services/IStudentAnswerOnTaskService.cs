@@ -6,10 +6,10 @@ namespace DevEdu.Business.Services
     public interface IStudentAnswerOnTaskService
     {
         void AddStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse);
-        void DeleteStudentAnswerOnTask(int taskId, int studentId);
+        void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask();
-        StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId);
-        void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId);
+        StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto);
+        void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto, int statusId);
         void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         void AddCommentOnStudentAnswer(int taskstudentId, int commentId);
     }
