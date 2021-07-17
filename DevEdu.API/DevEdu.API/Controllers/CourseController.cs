@@ -8,6 +8,7 @@ using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
 {
@@ -40,6 +41,7 @@ namespace DevEdu.API.Controllers
         //  api/Course
         [HttpGet]
         [Description("Get all courses with topics")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CourseInfoOutputModel>))]
         public List<CourseInfoOutputModel> GetAllCourses()
         {
             var courses = _courseRepository.GetCourses();
@@ -68,22 +70,6 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<CourseDto>(model);
             _courseService.UpdateCourse(id, dto);
             return $"Course №{id} change name to {model.Name} and description to {model.Description}";
-        }
-
-        //  api/course/topic/{topicId}/tag/{tagId}
-        [HttpPost("topic/{topicId}/tag/{tagId}")]
-        public string AddTagToTopic(int topicId, int tagId)
-        {
-            _courseService.AddTagToTopic(topicId, tagId);
-            return $"add to topic with {topicId} Id tag with {tagId} Id";
-        }
-
-        //  api/course/topic/{topicId}/tag/{tagId}
-        [HttpDelete("topic/{topicId}/tag/{tagId}")]
-        public string DeleteTagAtTopic(int topicId, int tagId)
-        {
-            _courseService.DeleteTagFromTopic(topicId, tagId);
-            return $"deleted at topic with {topicId} Id tag with {tagId} Id";
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
