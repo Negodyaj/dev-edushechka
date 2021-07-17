@@ -39,13 +39,13 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse)
+        public void AddStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {
             _connection.QuerySingle<string>(
                 _taskStudentInsert,
                 new
                 {
-                    studentResponse.Answer
+                    dto.Answer
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -78,7 +78,7 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public StudentAnswerOnTaskDto GetStudentAnswerByTaskIdAndStudentIdOnTask(int taskId, int studentId)
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
             StudentAnswerOnTaskDto result = default;
 
@@ -113,28 +113,28 @@ namespace DevEdu.DAL.Repositories
             return result;
         }
 
-        public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse)
+        public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {
             _connection.Query<StudentAnswerOnTaskDto>(
                 _taskStudentUpdateAnswer,
                 new
                 {
-                    studentResponse.TaskId,
-                    studentResponse.StudentId,
-                    studentResponse.Answer
+                    dto.Task,
+                    dto.User,
+                    dto.Answer
                 },
                 commandType: CommandType.StoredProcedure
                 );
         }
 
-        public void UpdateStatusAnswerOnTask(int taskId, int studentId, int statusId)
+        public void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto, int statusId)
         {
             _connection.Query<StudentAnswerOnTaskDto>(
                 _taskStudentUpdateStatusId,
                 new
                 {
-                    taskId,
-                    studentId,
+                    dto.Task,
+                    dto.User,
                     statusId
                 },
                 commandType: CommandType.StoredProcedure

@@ -2,11 +2,8 @@
 {
     public enum TaskStatus
     {
-        appointed = 1,
-        expired, 
-        verification, 
-        correction,
-        completed,
-        completedOverLate
+        сhecked = 1,
+        accepted,
+        returned
     }
 }

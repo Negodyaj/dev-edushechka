@@ -111,7 +111,7 @@ namespace DevEdu.API.Controllers
         [HttpGet("{taskId}/student/{studentId}")]
         public StudentAnswerOnTaskDto GetStudentAnswerByTaskIdAndStudentIdOnTask(int taskId, int studentId)
         {
-            var studentStatusDto = _studentAnswerOnTaskService.GetStudentAnswerByTaskIdAndStudentIdOnTask(taskId, studentId);
+            var studentStatusDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
             return studentStatusDto;
         }
 
@@ -142,7 +142,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{taskId}/student/{studentId}/change-status/{statusId}")]
         public int UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
-            _studentAnswerOnTaskService.UpdateStatusAnswerOnTask(taskId, studentId, statusId);
+            _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId);
 
             return statusId;
         }
