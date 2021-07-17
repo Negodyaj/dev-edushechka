@@ -87,6 +87,7 @@ namespace DevEdu.DAL.Repositories
                         {
                             result = course;
                             result.Groups = new List<GroupDto> { group };
+                            courseDictionary.Add(course.Id, result);
                         }
                         else
                         {
@@ -100,12 +101,6 @@ namespace DevEdu.DAL.Repositories
                 )
                 .Distinct()
                 .ToList();
-            //return _connection
-            //    .Query<CourseDto>(
-            //        _courseSelectAllProcedure,
-            //        commandType: CommandType.StoredProcedure
-            //    )
-            //    .ToList();
         }
 
         public void UpdateCourse(CourseDto courseDto)

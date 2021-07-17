@@ -3,6 +3,7 @@ using System.Globalization;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Models.OutputModels.Group;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Configuration
@@ -53,6 +54,9 @@ namespace DevEdu.API.Configuration
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
             CreateMap<UserDto, UserInfoOutputModel>();
             CreateMap<CourseDto, CourseInfoFullOutputModel>();
+            CreateMap<GroupDto, GroupInfoOutputModel>();
+            CreateMap<MaterialDto, MaterialOutputModel>();
+            CreateMap<TaskDto, TaskOutputModel>();
 
         }
     }

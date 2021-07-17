@@ -8,6 +8,6 @@ namespace DevEdu.API.Models.OutputModels
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<GroupInfoOutputModel> CourseGroups { get; set; }
+        public List<GroupInfoOutputModel> Groups { get; set; }
     }
 }
