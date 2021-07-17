@@ -10,7 +10,7 @@ namespace DevEdu.API.Models.OutputModels
         public string Name { get; set; }
         public CourseDto Course { get; set; }
         public GroupStatus GroupStatus { get; set; }
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; }     // string
         public string Timetable { get; set; }
         public decimal PaymentPerMonth { get; set; }
     }

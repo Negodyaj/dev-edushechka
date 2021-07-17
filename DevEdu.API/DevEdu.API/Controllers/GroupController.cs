@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using DevEdu.DAL.Models;
 using DevEdu.API.Models.OutputModels;
 using System.Collections.Generic;
+using DevEdu.API.Models.OutputModels.Group;
 
 namespace DevEdu.API.Controllers
 {
@@ -26,7 +27,7 @@ namespace DevEdu.API.Controllers
         //  api/Group/5
         [HttpGet("{id}")]
         [Description("Return Group by id")]
-        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GroupFullOutputModel), StatusCodes.Status200OK)]  // todo
         public GroupOutputModel GetGroup(int id)
         {
             var dto = _groupService.GetGroup(id);

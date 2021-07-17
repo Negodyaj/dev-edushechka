@@ -22,7 +22,7 @@ namespace DevEdu.Business.Tests.Group
         public void AddGroup(GroupDto dto, GroupDto expected)
         {
             //Given
-            _mock.Setup(mock => mock.AddGroup(dto)).Returns(expected).Verifiable();
+            _mock.Setup(mock => mock.AddGroup(dto)).Returns(expected);
             var _service = new GroupService(_mock.Object);
             
             //When
@@ -38,9 +38,7 @@ namespace DevEdu.Business.Tests.Group
         public void GetGroup(int id, GroupDto expected)
         {
             //Given
-            _mock.Setup(mock => mock.GetGroup(id))
-                .Returns(expected)
-                .Verifiable();
+            _mock.Setup(mock => mock.GetGroup(id)).Returns(expected);
 
             var _service = new GroupService(_mock.Object);
 
