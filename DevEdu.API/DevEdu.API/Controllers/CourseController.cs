@@ -38,14 +38,14 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Course
-        [HttpGet]
+        [HttpGet("simple")]
         [Description("Get all courses with groups")]
         public List<CourseSimpleInfoOutputModel> GetAllCoursesWithGrops()
         {
             var courses = _courseService.GetCourses();
             return _mapper.Map<List<CourseSimpleInfoOutputModel>>(courses);
         }
-        [HttpGet]
+        [HttpGet("full")]
         [Description("Get all courses full")]
         public List<CourseInfoFullOutputModel> GetAllCoursesWithFull()
         {

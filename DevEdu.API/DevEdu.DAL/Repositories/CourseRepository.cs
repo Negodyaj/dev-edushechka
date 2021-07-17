@@ -75,12 +75,37 @@ namespace DevEdu.DAL.Repositories
 
         public List<CourseDto> GetCourses()
         {
+            var courseDictionary = new Dictionary<int, CourseDto>();
+            CourseDto result;
             return _connection
-                .Query<CourseDto>(
+                .Query<CourseDto, GroupDto, CourseDto>(
                     _courseSelectAllProcedure,
+                    (course, group) =>
+                    {
+
+                        if (!courseDictionary.TryGetValue(course.Id, out result))
+                        {
+                            result = course;
+                            result.Groups = new List<GroupDto> { group };
+                        }
+                        else
+                        {
+                            result.Groups.Add(group);
+                        }
+
+                        return result;
+                    },
+                    splitOn: "CourseId",
                     commandType: CommandType.StoredProcedure
                 )
+                .Distinct()
                 .ToList();
+            //return _connection
+            //    .Query<CourseDto>(
+            //        _courseSelectAllProcedure,
+            //        commandType: CommandType.StoredProcedure
+            //    )
+            //    .ToList();
         }
 
         public void UpdateCourse(CourseDto courseDto)
