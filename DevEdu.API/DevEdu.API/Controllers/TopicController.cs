@@ -64,7 +64,7 @@ namespace DevEdu.API.Controllers
 
         //  api/topic/{topicId}/tag/{tagId}
         [HttpPost("{topicId}/tag/{tagId}")]
-        [Description("Add Tag To Topic")]
+        [Description("Add tag to topic")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public int AddTagToTopic(int topicId, int tagId)
         {
@@ -73,7 +73,7 @@ namespace DevEdu.API.Controllers
 
         //  api/opic/{topicId}/tag/{tagId}
         [HttpDelete("{topicId}/tag/{tagId}")]
-        [Description("Delete Tag From Topic")]
+        [Description("Delete tag from topic")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public int DeleteTagFromTopic(int topicId, int tagId)
         {

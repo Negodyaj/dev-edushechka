@@ -46,7 +46,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task/courses
-        [HttpGet("{taskId}/courses")]
+        [HttpGet("{taskId}/with-courses")]
         [Description("Get task by Id with tags and courses")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
         public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
@@ -56,29 +56,23 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task/answers
-        [HttpGet("{taskId}/answers")]
+        [HttpGet("{taskId}/with-answers")]
         [Description("Get task by Id with tags and answers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithAnswersOutputModel))]
         public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
         {
             var taskDto = _taskService.GetTaskWithAnswersById(taskId);
-            var taskOutput = _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
-            var answers = _mapper.Map<List<StudentAnswerOnTaskInfoOutputModel>>(taskDto.StudentAnswers);
-            taskOutput.Answers = answers;
-            return taskOutput;
+            return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
         }
 
         //  api/Task/coursesandanswers
-        [HttpGet("{taskId}/coursesandanswers")]
+        [HttpGet("{taskId}/full-info")]
         [Description("Get task by Id with tags, courses and answers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesAndAnswersOutputModel))]
         public TaskInfoWithCoursesAndAnswersOutputModel GetTaskWithTagsCoursesAndAnswers(int taskId)
         {
             var taskDto = _taskService.GetTaskWithCoursesAndAnswersById(taskId);
-            var taskOutput = _mapper.Map<TaskInfoWithCoursesAndAnswersOutputModel>(taskDto);
-            var answers = _mapper.Map<List<StudentAnswerOnTaskInfoOutputModel>>(taskDto.StudentAnswers);
-            taskOutput.Answers = answers;
-            return taskOutput;
+            return _mapper.Map<TaskInfoWithCoursesAndAnswersOutputModel>(taskDto);
         }
 
         //  api/Task
@@ -93,7 +87,7 @@ namespace DevEdu.API.Controllers
 
         // api/task
         [HttpPost]
-        [Description("AddTaskToDataBase")]
+        [Description("Add new task")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public TaskInfoOutputModel AddTask([FromBody] TaskInputModel model)
         {
@@ -104,7 +98,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}
         [HttpPut("{taskId}")]
-        [Description("UpdateTaskWithSelectedId")]
+        [Description("Update task")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
@@ -115,7 +109,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}
         [HttpDelete("{taskId}")]
-        [Description("DeleteTaskWithSelectedId")]
+        [Description("Delete task with selected Id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTask(int taskId)
         {
@@ -124,7 +118,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/tag/{tagId}
         [HttpPost("{taskId}/tag/{tagId}")]
-        [Description("AddTagToTask")]
+        [Description("Add tag to task")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void AddTagToTask(int taskId, int tagId)
         {
@@ -133,7 +127,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/tag/{tagId}
         [HttpDelete("{taskId}/tag/{tagId}")]
-        [Description("DeletTagFromTask")]
+        [Description("Delete tag from task")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTagFromTask(int taskId, int tagId)
         {

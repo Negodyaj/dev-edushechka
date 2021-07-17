@@ -27,10 +27,9 @@ namespace DevEdu.Business.Tests
         public void AddTask_SimpleDtoWithoutTags_TaskCreated()
         {
             //Given
-            var expectedTaskId = 55;
-            var taskDto = new TaskDto { Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true};
+            var taskDto = TaskData.GetTaskDtoWithoutTags();
 
-            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(expectedTaskId);
+            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(TaskData.expectedTaskId);
             _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
@@ -39,7 +38,7 @@ namespace DevEdu.Business.Tests
             var actualTaskId = sut.AddTask(taskDto);
 
             //Than
-            Assert.AreEqual(expectedTaskId, actualTaskId);
+            Assert.AreEqual(TaskData.expectedTaskId, actualTaskId);
             _taskRepoMock.Verify(x => x.AddTask(taskDto), Times.Once);
             _taskRepoMock.Verify(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
@@ -48,22 +47,10 @@ namespace DevEdu.Business.Tests
         public void AddTask_DtoWithTags_TaskWithTagsCreated()
         {
             //Given
-            var expectedTaskId = 55;
-            var taskDto = new TaskDto {
-                Name = "Task1",
-                Description = "Description1", 
-                Links = "noLinks",
-                IsRequired = true,
-                Tags = new List<TagDto>
-                {
-                    new TagDto{ Id = 1 },
-                    new TagDto{ Id = 2 },
-                    new TagDto{ Id = 3 }
-                }
-            };
+            var taskDto = TaskData.GetTaskDtoWithTags();
 
-            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(expectedTaskId);
-            _taskRepoMock.Setup(x => x.AddTagToTask(expectedTaskId, It.IsAny<int>()));
+            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(TaskData.expectedTaskId);
+            _taskRepoMock.Setup(x => x.AddTagToTask(TaskData.expectedTaskId, It.IsAny<int>()));
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
@@ -71,223 +58,109 @@ namespace DevEdu.Business.Tests
             var actualTaskId = sut.AddTask(taskDto);
 
             //Than
-            Assert.AreEqual(expectedTaskId, actualTaskId);
+            Assert.AreEqual(TaskData.expectedTaskId, actualTaskId);
             _taskRepoMock.Verify(x => x.AddTask(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.AddTagToTask(expectedTaskId, It.IsAny<int>()), Times.Exactly(3));
+            _taskRepoMock.Verify(x => x.AddTagToTask(TaskData.expectedTaskId, It.IsAny<int>()), Times.Exactly(taskDto.Tags.Count));
         }
 
         [Test]
         public void GetTaskById_IntTaskId_ReturnedTaskDto()
         {
             //Given
-            var taskDto = new TaskDto
-            {
-                Name = "Task1",
-                Description = "Description1",
-                Links = "noLinks",
-                IsRequired = true,
-                Tags = new List<TagDto>
-                {
-                    new TagDto{ Id = 1 },
-                    new TagDto{ Id = 2 },
-                    new TagDto{ Id = 3 }
-                }
-            };
+            var taskDto = TaskData.GetTaskDtoWithTags();
 
-            var taskId = 1;
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Returns(taskDto);
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
             //When
-            var dto = sut.GetTaskById(taskId);
+            var dto = sut.GetTaskById(TaskData.expectedTaskId);
 
             //Than
             Assert.AreEqual(taskDto, dto);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Once);
         }
 
         [Test]
         public void GetTaskWithCoursesById_IntTaskId_ReturnedTaskDtoWithCourses()
         {
             //Given
-            var taskDto = new TaskDto
-            {
-                Name = "Task1",
-                Description = "Description1",
-                Links = "noLinks",
-                IsRequired = true,
-                Tags = new List<TagDto>
-                {
-                    new TagDto{ Id = 1 },
-                    new TagDto{ Id = 2 },
-                    new TagDto{ Id = 3 }
-                }
-            };
+            var taskDto = TaskData.GetTaskDtoWithTags();
 
-            var courseDtos = new List<CourseDto>
-            {
-                new CourseDto{ Id = 1 },
-                new CourseDto{ Id = 2 }, 
-                new CourseDto{ Id = 3 }
-            };
+            var courseDtos = TaskData.GetListOfCourses();
 
-            var taskId = 1;
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskId(taskId)).Returns(courseDtos);
+            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Returns(taskDto);
+            _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskId(TaskData.expectedTaskId)).Returns(courseDtos);
             taskDto.Courses = courseDtos;
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
             //When
-            var dto = sut.GetTaskWithCoursesById(taskId);
+            var dto = sut.GetTaskWithCoursesById(TaskData.expectedTaskId);
 
             //Than
             Assert.AreEqual(taskDto, dto);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesToTaskByTaskId(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Once);
+            _courseRepoMock.Verify(x => x.GetCoursesToTaskByTaskId(TaskData.expectedTaskId), Times.Once);
         }
 
         [Test]
         public void GetTaskWithAnswersById_IntTaskId_ReturnedTaskDtoWithStudentAnswers()
         {
             //Given
-            var taskDto = new TaskDto
-            {
-                Name = "Task1",
-                Description = "Description1",
-                Links = "noLinks",
-                IsRequired = true,
-                Tags = new List<TagDto>
-                {
-                    new TagDto{ Id = 1 },
-                    new TagDto{ Id = 2 },
-                    new TagDto{ Id = 3 }
-                }
-            };
+            var taskDto = TaskData.GetTaskDtoWithTags();
 
-            var studentAnswersDtos = new List<StudentAnswerOnTaskForTaskDto>
-            {
-                new StudentAnswerOnTaskForTaskDto{ Id = 1 },
-                new StudentAnswerOnTaskForTaskDto{ Id = 2 },
-                new StudentAnswerOnTaskForTaskDto{ Id = 3 }
-            };
+            var studentAnswersDtos = TaskData.GetListOfStudentAnswers();
 
-            var taskId = 1;
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _studentAnswerRepoMock.Setup(x => x.GetStudentAnswersToTaskByTaskId(taskId)).Returns(studentAnswersDtos);
+            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Returns(taskDto);
+            _studentAnswerRepoMock.Setup(x => x.GetStudentAnswersToTaskByTaskId(TaskData.expectedTaskId)).Returns(studentAnswersDtos);
             taskDto.StudentAnswers = studentAnswersDtos;
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
             //When
-            var dto = sut.GetTaskWithAnswersById(taskId);
+            var dto = sut.GetTaskWithAnswersById(TaskData.expectedTaskId);
 
             //Than
             Assert.AreEqual(taskDto, dto);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
-            _studentAnswerRepoMock.Verify(x => x.GetStudentAnswersToTaskByTaskId(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Once);
+            _studentAnswerRepoMock.Verify(x => x.GetStudentAnswersToTaskByTaskId(TaskData.expectedTaskId), Times.Once);
         }
 
         [Test]
         public void GetTaskWithCoursesAndAnswersById_IntTaskId_ReturnedTaskDtoWithCoursesAndStudentAnswers()
         {
             //Given
-            var taskDto = new TaskDto
-            {
-                Name = "Task1",
-                Description = "Description1",
-                Links = "noLinks",
-                IsRequired = true,
-                Tags = new List<TagDto>
-                {
-                    new TagDto{ Id = 1 },
-                    new TagDto{ Id = 2 },
-                    new TagDto{ Id = 3 }
-                }
-            };
+            var taskDto = TaskData.GetTaskDtoWithTags();
 
-            var courseDtos = new List<CourseDto>
-            {
-                new CourseDto{ Id = 1 },
-                new CourseDto{ Id = 2 },
-                new CourseDto{ Id = 3 }
-            };
+            var courseDtos = TaskData.GetListOfCourses();
 
-            var studentAnswersDtos = new List<StudentAnswerOnTaskForTaskDto>
-            {
-                new StudentAnswerOnTaskForTaskDto{ Id = 1 },
-                new StudentAnswerOnTaskForTaskDto{ Id = 2 },
-                new StudentAnswerOnTaskForTaskDto{ Id = 3 }
-            };
+            var studentAnswersDtos = TaskData.GetListOfStudentAnswers();
 
-            var taskId = 1;
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskId(taskId)).Returns(courseDtos);
+            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Returns(taskDto);
+            _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskId(TaskData.expectedTaskId)).Returns(courseDtos);
             taskDto.Courses = courseDtos;
-            _studentAnswerRepoMock.Setup(x => x.GetStudentAnswersToTaskByTaskId(taskId)).Returns(studentAnswersDtos);
+            _studentAnswerRepoMock.Setup(x => x.GetStudentAnswersToTaskByTaskId(TaskData.expectedTaskId)).Returns(studentAnswersDtos);
             taskDto.StudentAnswers = studentAnswersDtos;
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
             //When
-            var dto = sut.GetTaskWithCoursesAndAnswersById(taskId);
+            var dto = sut.GetTaskWithCoursesAndAnswersById(TaskData.expectedTaskId);
 
             //Than
             Assert.AreEqual(taskDto, dto);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesToTaskByTaskId(taskId), Times.Once);
-            _studentAnswerRepoMock.Verify(x => x.GetStudentAnswersToTaskByTaskId(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Once);
+            _courseRepoMock.Verify(x => x.GetCoursesToTaskByTaskId(TaskData.expectedTaskId), Times.Once);
+            _studentAnswerRepoMock.Verify(x => x.GetStudentAnswersToTaskByTaskId(TaskData.expectedTaskId), Times.Once);
         }
 
         [Test]
         public void GetTasks_NoEntry_ReturnedTaskDtos()
         {
             //Given
-            var taskDtos = new List<TaskDto>
-            {
-                new TaskDto
-                {
-                    Name = "Task1",
-                    Description = "Description1",
-                    Links = "noLinks",
-                    IsRequired = true,
-                    Tags = new List<TagDto>
-                    {
-                        new TagDto{ Id = 1 },
-                        new TagDto{ Id = 2 },
-                        new TagDto{ Id = 3 }
-                    }
-                },
-                new TaskDto
-                {
-                    Name = "Task2",
-                    Description = "Description2",
-                    Links = "noLinks",
-                    IsRequired = true,
-                    Tags = new List<TagDto>
-                    {
-                        new TagDto{ Id = 4 },
-                        new TagDto{ Id = 5 },
-                        new TagDto{ Id = 6 }
-                    }
-                },
-                new TaskDto
-                {
-                    Name = "Task3",
-                    Description = "Description3",
-                    Links = "noLinks",
-                    IsRequired = true,
-                    Tags = new List<TagDto>
-                    {
-                        new TagDto{ Id = 2 },
-                        new TagDto{ Id = 4 },
-                        new TagDto{ Id = 6 }
-                    }
-                }
-            };
+            var taskDtos = TaskData.GetListOfTasks();
 
-            var taskId = 1;
             _taskRepoMock.Setup(x => x.GetTasks()).Returns(taskDtos);
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
@@ -304,32 +177,9 @@ namespace DevEdu.Business.Tests
         public void UpdateTask_TaskDto_ReturnUpdateTaskDto()
         {
             //Given
-            var taskDto = new TaskDto
-            {
-                Name = "Task1",
-                Description = "Description1",
-                Links = "noLinks",
-                IsRequired = true,
-                Tags = new List<TagDto>
-                {
-                    new TagDto {Id = 1},
-                    new TagDto {Id = 2},
-                    new TagDto {Id = 3}
-                }
-            };
-            var expectedTaskDto = new TaskDto
-            {
-                Name = "Task2",
-                Description = "Description2",
-                Links = "noLinks",
-                IsRequired = true,
-                Tags = new List<TagDto>
-                {
-                    new TagDto {Id = 3},
-                    new TagDto {Id = 4},
-                    new TagDto {Id = 2}
-                }
-            };
+            var taskDto = TaskData.GetTaskDtoWithTags();
+            var expectedTaskDto = TaskData.GetAnotherTaskDtoWithTags();
+
             _taskRepoMock.Setup(x => x.UpdateTask(taskDto));
             _taskRepoMock.Setup(x => x.GetTaskById(taskDto.Id)).Returns(expectedTaskDto);
 
