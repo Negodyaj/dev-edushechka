@@ -20,7 +20,7 @@ BEGIN
 		U.Email,
 		U.Photo
 	FROM dbo.[Group] G
-		inner join [User_Group] UG on UG.UserId=G.Id
+		inner join [User_Group] UG on UG.GroupId=G.Id
 		inner join [User] U on UG.UserId=U.Id
 	WHERE (G.Id = @Id AND U.Id = U.Id  AND UG.RoleId IN (@Teacher, @Tutor, @Student))
 END

@@ -50,10 +50,10 @@ namespace DevEdu.DAL.Repositories
         public GroupDto GetGroup(int id)
         {
             GroupDto result = default;
-            _connection.Query<GroupDto, CourseDto, GroupDto>
+            _connection.Query<GroupDto, CourseDto, int, UserDto, GroupDto>
             (
                 _groupSelectByIdProcedure,
-                (group, course) =>
+                (group, course, role, user) =>
                 {
                     if (result == null)
                     {
