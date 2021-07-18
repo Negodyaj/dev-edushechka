@@ -2,8 +2,9 @@
 
 namespace DevEdu.API.Models.OutputModels
 {
-    public class MaterialInfoWithTagsAndCoursesOutputModel : MaterialInfoWithTagsOutputModel
+    public class MaterialInfoWithCoursesAndGroupsOutputModel : MaterialInfoOutputModel
     {
         public List <CourseInfoBaseOutputModel> Courses { get; set; }
+        public List <GroupInfoOutputModel> Groups { get; set; }
     }
 }

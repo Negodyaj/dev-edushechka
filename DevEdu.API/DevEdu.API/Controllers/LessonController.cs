@@ -82,7 +82,7 @@ namespace DevEdu.API.Controllers
         // api/lesson/{lessonId}/topic/{toppicId}
         [HttpDelete("{lessonId}/topic/{topicId}")]
         [Description("Deletes topic from lesson")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTopicFromLesson(int lessonId, int topicId)
         {
             _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);

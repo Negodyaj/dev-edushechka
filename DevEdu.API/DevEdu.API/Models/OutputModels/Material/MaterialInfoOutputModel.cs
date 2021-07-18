@@ -1,4 +1,4 @@
-﻿
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace DevEdu.API.Models.OutputModels
@@ -9,5 +9,6 @@ namespace DevEdu.API.Models.OutputModels
         public string Content { get; set; }
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
+        public List<TagOutputModel> Tags { get; set; }
     }
 }

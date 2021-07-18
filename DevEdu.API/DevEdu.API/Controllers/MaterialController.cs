@@ -31,27 +31,28 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             int id = _materialService.AddMaterial(dto);
-            return GetMaterialInfoOutputModelById(id);
+            dto = _materialService.GetMaterialById(id);
+            return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
         // api/material
         [HttpGet]
         [Description("Get all materials with tags")]
-        [ProducesResponseType(typeof(List<MaterialInfoWithTagsOutputModel>), StatusCodes.Status200OK)]
-        public List<MaterialInfoWithTagsOutputModel> GetAllMaterials()
+        [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
+        public List<MaterialInfoOutputModel> GetAllMaterials()
         {
             var dto = _materialService.GetAllMaterials();
-            return _mapper.Map<List<MaterialInfoWithTagsOutputModel>>(dto);
+            return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
         }
 
         // api/material/5
         [HttpGet("{id}")]
-        [Description("Get material by id with tags and courses")]
-        [ProducesResponseType(typeof(MaterialInfoWithTagsAndCoursesOutputModel), StatusCodes.Status200OK)]
-        public MaterialInfoWithTagsAndCoursesOutputModel GetMaterial(int id)
+        [Description("Get material by id with tags, courses and groups")]
+        [ProducesResponseType(typeof(MaterialInfoWithCoursesAndGroupsOutputModel), StatusCodes.Status200OK)]
+        public MaterialInfoWithCoursesAndGroupsOutputModel GetMaterial(int id)
         {
             var dto = _materialService.GetMaterialById(id);
-            return _mapper.Map<MaterialInfoWithTagsAndCoursesOutputModel>(dto);
+            return _mapper.Map<MaterialInfoWithCoursesAndGroupsOutputModel>(dto);
         }
 
         // api/material/5
@@ -62,7 +63,8 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             _materialService.UpdateMaterial(id, dto);
-            return GetMaterialInfoOutputModelById(id);
+            dto = _materialService.GetMaterialById(id);
+            return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
         // api/material/5/isDeleted/True
@@ -102,12 +104,6 @@ namespace DevEdu.API.Controllers
         {
             var dto = _materialService.GetMaterialsByTagId(tagId);
             return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
-        }
-
-        private MaterialInfoOutputModel GetMaterialInfoOutputModelById(int id)
-        {
-            var dto = _materialService.GetMaterialById(id);
-            return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
     }

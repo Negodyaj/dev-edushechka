@@ -54,17 +54,18 @@ namespace DevEdu.API.Configuration
             CreateMap<CourseDto, CourseInfoBaseOutputModel>();
             CreateMap<UserDto, UserInfoOutputModel>();
             CreateMap<MaterialDto, MaterialInfoOutputModel>();
-            CreateMap<MaterialDto, MaterialInfoWithTagsOutputModel>();
-            CreateMap<MaterialDto, MaterialInfoWithTagsAndCoursesOutputModel>();
+            CreateMap<MaterialDto, MaterialInfoWithCoursesAndGroupsOutputModel>();
             CreateMap<UserDto, UserInfoShortOutputModel>(); 
             CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<TaskDto, TaskInfoOutputModel>();
             CreateMap<TaskDto, TaskInfoWithCoursesOutputModel>();
             CreateMap<TaskDto, TaskInfoWithCoursesAndAnswersOutputModel>();
             CreateMap<TaskDto, TaskInfoWithAnswersOutputModel>();
-            CreateMap<TagDto, TagInfoOutputModel>();
+            CreateMap<TagDto, TagOutputModel>();
             CreateMap<StudentAnswerOnTaskForTaskDto, StudentAnswerOnTaskInfoOutputModel>();
             CreateMap<StudentAnswerOnTaskDto, StudentAnswerOnTaskInfoOutputModel>();
+            CreateMap<GroupDto, GroupInfoOutputModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
         }
     }
 }

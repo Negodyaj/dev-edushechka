@@ -61,20 +61,18 @@ namespace DevEdu.DAL.Repositories
         {
             MaterialDto result = default;
             _connection
-                .Query<MaterialDto, TagDto, CourseDto, MaterialDto>(
+                .Query<MaterialDto, TagDto, MaterialDto>(
                     _materialSelectByIdProcedure,
-                    (material, tag, course) =>
+                    (material, tag) =>
                     {
                         if(result == null)
                         {
                             result = material;
                             result.Tags = new List<TagDto> { tag };
-                            result.Courses = new List<CourseDto> { course };
                         }
                         else
                         {
                             result.Tags.Add(tag);
-                            result.Courses.Add(course);
                         }
 
                         return material;
@@ -150,5 +148,6 @@ namespace DevEdu.DAL.Repositories
                 ).
                 ToList();
         }
+
     }
 }

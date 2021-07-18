@@ -9,6 +9,7 @@ BEGIN
 	FROM dbo.Material m
 		left join dbo.Tag_Material tm on tm.MaterialId = m.Id
 		left join dbo.Tag t on t.Id = tm.TagId
-	WHERE m.IsDeleted = 0
+	WHERE m.IsDeleted = 0 AND t.IsDeleted = 0
+	ORDER BY m.Id
 END
 
