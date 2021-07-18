@@ -27,7 +27,9 @@ namespace DevEdu.API.Configuration
             CreateMap<CommentUpdateInputModel, CommentDto>();
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<GroupInputModel, GroupDto>();
-            CreateMap<GroupTaskInputModel, GroupTaskDto>();
+            CreateMap<GroupTaskInputModel, GroupTaskDto>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.Parse(src.StartDate)))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.Parse(src.EndDate)));
             CreateMap<MaterialInputModel, MaterialDto>();
             CreateMap<NotificationAddInputModel, NotificationDto>();
             CreateMap<NotificationUpdateInputModel, NotificationDto>();

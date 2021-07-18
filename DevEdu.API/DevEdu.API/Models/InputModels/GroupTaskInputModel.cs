@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using DevEdu.API.Common;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
@@ -7,8 +8,10 @@ namespace DevEdu.API.Models.InputModels
     public class GroupTaskInputModel
     {
         [Required(ErrorMessage = StartDateRequired)]
-        public DateTime StartDate { get; set; }
+        [DateTimeToStringAttribute(ErrorMessage = WrongFormatDate)]
+        public string StartDate { get; set; }
         [Required(ErrorMessage = EndDateRequired)]
-        public DateTime EndDate { get; set; }
+        [DateTimeToStringAttribute(ErrorMessage = WrongFormatDate)]
+        public string EndDate { get; set; }
     }
 }
