@@ -16,7 +16,7 @@ namespace DevEdu.Business.Tests
             return new GroupTaskDto
             {
                 Id = 1,
-                StartDate=DateTime.Parse("28.10.2020"),
+                StartDate = DateTime.Parse("28.10.2020"),
                 EndDate = DateTime.Parse("28.10.2021")
             };
         }
@@ -40,8 +40,8 @@ namespace DevEdu.Business.Tests
                     Id = 1,
                     Name = "group",
                     GroupStatus = new GroupStatus(),
-                    StartDate=DateTime.Parse("01.01.2021"),
-                    IsDeleted=false
+                    StartDate = DateTime.Parse("01.01.2021"),
+                    IsDeleted = false
                 },
                 StartDate = DateTime.Parse("28.10.2020"),
                 EndDate = DateTime.Parse("28.10.2021")

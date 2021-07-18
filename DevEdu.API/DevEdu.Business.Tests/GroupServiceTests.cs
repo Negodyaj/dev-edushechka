@@ -43,7 +43,7 @@ namespace DevEdu.Business.Tests
             const int groupId = GroupTaskData.GroupId;
             const int taskId = GroupTaskData.TaskId;
 
-            _groupRepoMock.Setup(x => x.GetGroupTask(groupId,taskId)).Returns(groupTaskDto);
+            _groupRepoMock.Setup(x => x.GetGroupTask(groupId, taskId)).Returns(groupTaskDto);
 
             var sut = new GroupService(_groupRepoMock.Object);
 
