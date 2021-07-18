@@ -128,6 +128,5 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure)
                 .ToList();
         }
-
     }
 }

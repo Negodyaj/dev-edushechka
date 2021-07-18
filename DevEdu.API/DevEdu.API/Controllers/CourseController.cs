@@ -132,6 +132,5 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<CourseTopicOutputModel>>(list);
             
         }
-
     }
 }
