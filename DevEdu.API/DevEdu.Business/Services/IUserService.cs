@@ -12,5 +12,6 @@ namespace DevEdu.Business.Services
         UserDto SelectUserById(int id);
         List<UserDto> SelectUsers();
         void UpdateUser(UserDto dto);
+        public List<UserDto> SelectUsersWithPasswords();
     }
 }

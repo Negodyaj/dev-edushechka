@@ -1,3 +1,7 @@
+using System;
+using System.Linq;
+using System.Text;
+using DevEdu.API.Configuration;
 using DevEdu.Business.Services;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
@@ -7,6 +11,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DevEdu.Business.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.IdentityModel.Tokens;
+using NSwag;
+using NSwag.Generation.Processors.Security;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DevEdu.API
 {
@@ -41,16 +58,66 @@ namespace DevEdu.API
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ICourseService, CourseService>(); 
+            services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ITopicService, TopicService>();
 
             services.AddControllers();
 
-            services.AddSwaggerDocument(settings => {
-                settings.Title = "DevEdu Education API";
-                settings.Version = "v8";
+            services.AddMvc();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    //если равно false, то SSL при отправке токена не используется. Однако данный вариант установлен только дя тестирования.
+                    //В реальном приложении все же лучше использовать передачу данных по протоколу https.
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        // укзывает, будет ли валидироваться издатель при валидации токена
+                        ValidateIssuer = true,
+                        // строка, представляющая издателя
+                        ValidIssuer = AuthOptions.ISSUER,
+                        // будет ли валидироваться потребитель токена
+                        ValidateAudience = true,
+                        // установка потребителя токена
+                        ValidAudience = AuthOptions.AUDIENCE,
+                        // будет ли валидироваться время существования
+                        ValidateLifetime = true,
+                        // установка ключа безопасности
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        // валидация ключа безопасности
+                        ValidateIssuerSigningKey = true,
+                    };
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminAuthorizationPolicy",
+                    policy => policy.RequireClaim("DeveloperBoss", "IAmBoss"));
             });
+
+            services.AddSwaggerDocument(document =>
+            {
+                document.DocumentName = "Endpoints for DevEdu";
+                document.Title = "DevEdu Education API";
+                document.Version = "v8";
+                document.Description = "An interface for some software.";
+
+                document.DocumentProcessors.Add(
+                    new SecurityDefinitionAppender("JWT token", new NSwag.OpenApiSecurityScheme
+                    {
+                        Type = NSwag.OpenApiSecuritySchemeType.ApiKey,
+                        Name = "Authorization",
+                        Description = "Copy 'Bearer ' + valid JWT token into field",
+                        In = NSwag.OpenApiSecurityApiKeyLocation.Header
+                    }));
+                document.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT token"));
+            });
+
+            // Add framework services.
+            services.AddOptions();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +133,8 @@ namespace DevEdu.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

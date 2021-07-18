@@ -12,6 +12,7 @@ namespace DevEdu.DAL.Repositories
         private const string _userAddProcedure = "dbo.User_Insert";
         private const string _userSelectByIdProcedure = "dbo.User_SelectById";
         private const string _userSelectAllProcedure = "dbo.User_SelectAll";
+        private const string _userSelectAllWithPasswordsProcedure = "dbo.User_SelectAllWithPasswords";
         private const string _userUpdateProcedure = "dbo.User_Update";
         private const string _userDeleteProcedure = "dbo.User_Delete";
 
@@ -33,7 +34,7 @@ namespace DevEdu.DAL.Repositories
                     user.Username,
                     user.Password,
                     user.ContractNumber,
-                    user.City,
+                    user.CityId,
                     user.BirthDate,
                     user.GitHubAccount,
                     user.Photo,
@@ -53,7 +54,7 @@ namespace DevEdu.DAL.Repositories
                     if (result == null)
                     {
                         result = user;
-                        result.City = city;
+                        result.CityId = city;
                         result.Roles = new List<Role> { role };
                     }
                     else
@@ -66,6 +67,35 @@ namespace DevEdu.DAL.Repositories
                 splitOn: "id",
             commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();
+        }
+
+        public List<UserDto> SelectUsersWithPasswords()
+        {
+            var UserDictionary = new Dictionary<int, UserDto>();
+
+            return _connection
+                .Query<UserDto, City, Role, UserDto>(
+                    _userSelectAllWithPasswordsProcedure,
+                    (user, city, role) =>
+                    {
+                        UserDto userEnrty;
+
+                        if (!UserDictionary.TryGetValue(user.Id, out userEnrty))
+                        {
+                            userEnrty = user;
+                            userEnrty.CityId = city;
+                            userEnrty.Roles = new List<Role>();
+                            UserDictionary.Add(user.Id, userEnrty);
+                        }
+
+                        userEnrty.Roles.Add(role);
+
+                        return userEnrty;
+                    },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure)
+                .Distinct<UserDto>()
+                .ToList<UserDto>();
         }
 
         public List<UserDto> SelectUsers()
@@ -82,7 +112,7 @@ namespace DevEdu.DAL.Repositories
                     if (!UserDictionary.TryGetValue(user.Id, out userEnrty))
                     {
                         userEnrty = user;
-                        userEnrty.City = city;
+                        userEnrty.CityId = city;
                         userEnrty.Roles = new List<Role>();
                         UserDictionary.Add(user.Id, userEnrty);
                     }
@@ -108,7 +138,7 @@ namespace DevEdu.DAL.Repositories
                     user.LastName,
                     user.Patronymic,
                     user.Username,
-                    user.City,
+                    user.CityId,
                     user.GitHubAccount,
                     user.Photo,
                     user.PhoneNumber

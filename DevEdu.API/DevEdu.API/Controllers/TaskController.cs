@@ -7,6 +7,7 @@ using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Repositories;
 using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
@@ -46,6 +47,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task/courses
+        [Authorize(Roles = "Teacher")]
         [HttpGet("{taskId}/with-courses")]
         [Description("Get task by Id with tags and courses")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
@@ -55,6 +57,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
         }
 
+        [Authorize(Policy = "AdminAuthorizationPolicy")]
         //  api/Task/answers
         [HttpGet("{taskId}/with-answers")]
         [Description("Get task by Id with tags and answers")]
@@ -66,6 +69,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task/coursesandanswers
+        [Authorize]
         [HttpGet("{taskId}/full-info")]
         [Description("Get task by Id with tags, courses and answers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesAndAnswersOutputModel))]
@@ -76,6 +80,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task
+        [Authorize(Roles = "Teacher")]
         [HttpGet]
         [Description("Get all tasks with tags")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
