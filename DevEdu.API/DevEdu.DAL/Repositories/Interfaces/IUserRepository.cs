@@ -10,8 +10,8 @@ namespace DevEdu.DAL.Repositories
         void DeleteUser(int id);
         void DeleteUserRole(int userId, int roleId);
         UserDto SelectUserById(int id);
+        public UserDto SelectUserByEmail(string email);
         List<UserDto> SelectUsers();
-        public List<UserDto> SelectUsersWithPasswords();
         void UpdateUser(UserDto user);
     }
 }

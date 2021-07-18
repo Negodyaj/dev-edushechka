@@ -11,8 +11,8 @@ namespace DevEdu.DAL.Repositories
     {
         private const string _userAddProcedure = "dbo.User_Insert";
         private const string _userSelectByIdProcedure = "dbo.User_SelectById";
+        private const string _userSelectByEmailProcedure = "dbo.User_SelectByEmail";
         private const string _userSelectAllProcedure = "dbo.User_SelectAll";
-        private const string _userSelectAllWithPasswordsProcedure = "dbo.User_SelectAllWithPasswords";
         private const string _userUpdateProcedure = "dbo.User_Update";
         private const string _userDeleteProcedure = "dbo.User_Delete";
 
@@ -69,33 +69,30 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
         }
 
-        public List<UserDto> SelectUsersWithPasswords()
+        public UserDto SelectUserByEmail(string email)
         {
-            var UserDictionary = new Dictionary<int, UserDto>();
-
+            UserDto result = default;
             return _connection
                 .Query<UserDto, City, Role, UserDto>(
-                    _userSelectAllWithPasswordsProcedure,
+                    _userSelectByEmailProcedure,
                     (user, city, role) =>
                     {
-                        UserDto userEnrty;
-
-                        if (!UserDictionary.TryGetValue(user.Id, out userEnrty))
+                        if (result == null)
                         {
-                            userEnrty = user;
-                            userEnrty.CityId = city;
-                            userEnrty.Roles = new List<Role>();
-                            UserDictionary.Add(user.Id, userEnrty);
+                            result = user;
+                            result.CityId = city;
+                            result.Roles = new List<Role> { role };
                         }
-
-                        userEnrty.Roles.Add(role);
-
-                        return userEnrty;
+                        else
+                        {
+                            result.Roles.Add(role);
+                        }
+                        return result;
                     },
-                    splitOn: "Id",
+                    new { email },
+                    splitOn: "id",
                     commandType: CommandType.StoredProcedure)
-                .Distinct<UserDto>()
-                .ToList<UserDto>();
+                .FirstOrDefault();
         }
 
         public List<UserDto> SelectUsers()

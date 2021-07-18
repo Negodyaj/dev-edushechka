@@ -207,7 +207,7 @@
     <Build Include="StoredProcedures\User_Role\User_Role_Delete.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectByTaskId.sql" />
     <Build Include="StoredProcedures\Course\Course_SelectByTaskId.sql" />
-    <Build Include="StoredProcedures\User\User_SelectAllWithPasswords.sql" />
+    <Build Include="StoredProcedures\User\User_SelectByEmail.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />

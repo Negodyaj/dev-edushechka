@@ -17,9 +17,9 @@ namespace DevEdu.Business.Services
 
         public UserDto SelectUserById(int id) => _userRepository.SelectUserById(id);
 
-        public List<UserDto> SelectUsers() => _userRepository.SelectUsers();
+        public UserDto SelectUserByEmail(string email) => _userRepository.SelectUserByEmail(email);
 
-        public List<UserDto> SelectUsersWithPasswords() => _userRepository.SelectUsersWithPasswords();
+        public List<UserDto> SelectUsers() => _userRepository.SelectUsers();
 
         public void UpdateUser(UserDto dto) => _userRepository.UpdateUser(dto);
 

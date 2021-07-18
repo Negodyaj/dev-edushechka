@@ -75,9 +75,7 @@ namespace DevEdu.API.Controllers
 
         private ClaimsIdentity GetIdentity(string username, string password)
         {
-            var users = _userService.SelectUsersWithPasswords();
-
-            var user = users.Find(x => x.Email == username);
+            var user = _userService.SelectUserByEmail(username);
 
             var claims = new List<Claim>();
             if (user != null)
