@@ -127,6 +127,17 @@ namespace DevEdu.API.Controllers
             return $"Topic Id:{topicId} added in course Id:{courseId} on {inputModel.Position} position";
 
         }
+        [HttpPost("{courseId}/select-topics")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [Description("Add topics to course")]
+        public string AddTopicToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
+        {
+            var dto = _mapper.Map<List<CourseTopicDto>>(inputModel);
+
+            _courseService.AddTopicsToCourse(courseId, dto);
+            return "done";
+
+        }
         // api/course/{courseId}/topic/{topicId}
         [HttpDelete("{courseId}/topic/{topicId}")]
         [Description("Delete topic from course")]

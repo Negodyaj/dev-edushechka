@@ -87,5 +87,23 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 );
         }
+
+        public void AddTopicToCourse(List<CourseTopicDto> dto)
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("CourseId");
+            dt.Columns.Add("TopicId");
+            dt.Columns.Add("Position");
+
+            foreach (var topic in dto)
+            {
+                dt.Rows.Add(topic.Course.Id, topic.Topic.Id, topic.Position);
+            }
+            _connection.Execute(
+                "[dbo].[Course_Topic_Add]",
+                new { tblCourseTopic = dt.AsTableValuedParameter("dbo.Course_TopicType") },
+                commandType: CommandType.StoredProcedure
+                );
+        }
     }
 }

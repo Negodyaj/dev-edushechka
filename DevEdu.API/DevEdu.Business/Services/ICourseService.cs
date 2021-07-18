@@ -11,6 +11,7 @@ namespace DevEdu.Business.Services
         List<CourseDto> GetCourses();
         void UpdateCourse(int id, CourseDto courseDto);
         void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
+        void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto);
         void DeleteTopicFromCourse(int courseId, int topicId);
         List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId);
         void AddTagToTopic(int topicId, int tagId);

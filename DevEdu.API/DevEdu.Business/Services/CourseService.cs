@@ -37,6 +37,11 @@ namespace DevEdu.Business.Services
             dto.Topic = new TopicDto { Id = topicId };
             _topicRepository.AddTopicToCourse(dto);
         }
+        public void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
+        {
+            foreach (var topic in listDto) topic.Course = new CourseDto() { Id = courseId };
+            _topicRepository.AddTopicToCourse(listDto);
+        }
         public void DeleteTopicFromCourse(int courseId, int topicId)
         {
             _topicRepository.DeleteTopicFromCourse(courseId, topicId);
@@ -73,10 +78,7 @@ namespace DevEdu.Business.Services
         public void DeleteAllTopicsByCourseId(int courseId) => _courseRepository.DeleteAllTopicsByCourseId(courseId);
         private void AddTopicsFromNewList(int courseId, List<CourseTopicDto> topics)
         {
-            foreach (var topic in topics)
-            {
-                AddTopicToCourse(courseId, topic.Topic.Id, topic);
-            }
+            AddTopicsToCourse(courseId,topics);
         }
         private void CheckUniquenessPositions(List<CourseTopicDto> topics)
         {
