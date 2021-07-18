@@ -95,7 +95,11 @@ namespace DevEdu.API
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminAuthorizationPolicy",
-                    policy => policy.RequireClaim("DeveloperBoss", "IAmBoss"));
+                    policy =>
+                    {
+                        policy.RequireClaim("DeveloperBoss", "IAmBoss");
+                        policy.RequireRole("Teacher");
+                    });
             });
 
             services.AddSwaggerDocument(document =>
