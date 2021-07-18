@@ -150,7 +150,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(GroupTaskInfoWithGroupOutputModel), StatusCodes.Status200OK)]
         public List<GroupTaskInfoWithGroupOutputModel> GetGroupsByTaskId(int taskId)
         {
-            var dto = _taskService.GetTaskGroupByTaskId(taskId);
+            var dto = _taskService.GetGroupsByTaskId(taskId);
             var output = _mapper.Map<List<GroupTaskInfoWithGroupOutputModel>>(dto);
             return output;
         }

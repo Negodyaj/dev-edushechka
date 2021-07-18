@@ -9,6 +9,7 @@ BEGIN
 		g.Id,
 		g.Name,
 		g.StartDate,
+		g.IsDeleted,
 		g.GroupStatusId as id
 	FROM dbo.Group_Task gt
 	inner join [Group] g on gt.GroupId=g.Id

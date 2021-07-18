@@ -14,8 +14,9 @@ BEGIN
 		t.IsRequired,
 		t.IsDeleted,
 		g.Id,
-		g.[Name],
+		g.Name,
 		g.StartDate,
+		g.IsDeleted,
 		g.GroupStatusId as id
 	FROM dbo.Group_Task gt
 	inner join Task t on gt.TaskId=t.Id

@@ -134,7 +134,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 );
         }
-        public List<GroupTaskDto> GetTaskGroupByTaskId(int taskId)
+        public List<GroupTaskDto> GetGroupsByTaskId(int taskId)
         {
             GroupTaskDto result;
             return _connection

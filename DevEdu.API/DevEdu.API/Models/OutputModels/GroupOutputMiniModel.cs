@@ -8,5 +8,6 @@ namespace DevEdu.API.Models.OutputModels
         public string Name { get; set; }
         public GroupStatus GroupStatus { get; set; }
         public string StartDate { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
