@@ -37,39 +37,80 @@ namespace DevEdu.API.Controllers
 
         //  api/Task/1
         [HttpGet("{taskId}")]
-        public TaskDto GetTask(int taskId)
+        [Description("Get task by Id with tags")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public TaskInfoOutputModel GetTaskWithTags(int taskId)
         {
             var taskDto = _taskService.GetTaskById(taskId);
-            return taskDto;
+            return _mapper.Map<TaskInfoOutputModel>(taskDto);
+        }
+
+        //  api/Task/courses
+        [HttpGet("{taskId}/with-courses")]
+        [Description("Get task by Id with tags and courses")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
+        public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
+        {
+            var taskDto = _taskService.GetTaskWithCoursesById(taskId);
+            return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
+        }
+
+        //  api/Task/answers
+        [HttpGet("{taskId}/with-answers")]
+        [Description("Get task by Id with tags and answers")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithAnswersOutputModel))]
+        public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
+        {
+            var taskDto = _taskService.GetTaskWithAnswersById(taskId);
+            return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
+        }
+
+        //  api/Task/coursesandanswers
+        [HttpGet("{taskId}/full-info")]
+        [Description("Get task by Id with tags, courses and answers")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesAndAnswersOutputModel))]
+        public TaskInfoWithCoursesAndAnswersOutputModel GetTaskWithTagsCoursesAndAnswers(int taskId)
+        {
+            var taskDto = _taskService.GetTaskWithCoursesAndAnswersById(taskId);
+            return _mapper.Map<TaskInfoWithCoursesAndAnswersOutputModel>(taskDto);
         }
 
         //  api/Task
         [HttpGet]
-        public List<TaskDto> GetAllTasks()
+        [Description("Get all tasks with tags")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
+        public List<TaskInfoOutputModel> GetAllTasksWithTags()
         {
             var taskDtos = _taskService.GetTasks();
-            return taskDtos;
+            return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
         }
 
         // api/task
         [HttpPost]
-        public int AddTask([FromBody] TaskInputModel model)
+        [Description("Add new task")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public TaskInfoOutputModel AddTask([FromBody] TaskInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
-            return _taskService.AddTask(taskDto);
+            return _mapper.Map<TaskInfoOutputModel>(_taskService.GetTaskById(_taskService.AddTask(taskDto)));
         }
 
 
         // api/task/{taskId}
         [HttpPut("{taskId}")]
-        public void UpdateTask(int taskId, [FromBody] TaskInputModel model)
+        [Description("Update task")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
-            _taskService.UpdateTask(taskId, taskDto);
+            taskDto.Id = taskId;
+            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto));
         }
 
         // api/task/{taskId}
         [HttpDelete("{taskId}")]
+        [Description("Delete task with selected Id")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTask(int taskId)
         {
             _taskService.DeleteTask(taskId);
@@ -77,17 +118,20 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/tag/{tagId}
         [HttpPost("{taskId}/tag/{tagId}")]
-        public int AddTagToTask(int taskId, int tagId)
+        [Description("Add tag to task")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public void AddTagToTask(int taskId, int tagId)
         {
-            return _taskRepository.AddTagToTagTask(taskId, tagId);
+            _taskService.AddTagToTask(taskId, tagId);
         }
 
         // api/task/{taskId}/tag/{tagId}
         [HttpDelete("{taskId}/tag/{tagId}")]
-        public string DeleteTagFromTask(int taskId, int tagId)
+        [Description("Delete tag from task")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public void DeleteTagFromTask(int taskId, int tagId)
         {
-            _taskRepository.DeleteTagFromTask(taskId, tagId);
-            return $"deleted tag task with {taskId} taskId";
+            _taskService.DeleteTagFromTask(taskId, tagId);
         }
 
         // api/task/{taskId}/student/{studentId}

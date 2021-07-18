@@ -10,9 +10,8 @@ namespace DevEdu.DAL.Models
         public string Links { get; set; }
         public bool IsRequired { get; set; }
         public List<TagDto> Tags { get; set; }
-        public List<StudentAnswerOnTaskDto> StudentAnswers { get; set; }
+        public List<StudentAnswerOnTaskForTaskDto> StudentAnswers { get; set; }
         public List<CourseDto> Courses { get; set; }
-
 
         public override bool Equals(object obj)
         {
@@ -26,7 +25,10 @@ namespace DevEdu.DAL.Models
                    && Name == actual.Name
                    && Description == actual.Description
                    && Links == actual.Links
-                   && IsRequired == actual.IsRequired;
+                   && IsRequired == actual.IsRequired
+                   && Tags == actual.Tags
+                   && StudentAnswers == actual.StudentAnswers
+                   && Courses == actual.Courses;
         }
 
         public override int GetHashCode()
@@ -38,8 +40,10 @@ namespace DevEdu.DAL.Models
             hashCode.Add(Description);
             hashCode.Add(Links);
             hashCode.Add(IsRequired);
+            hashCode.Add(Tags);
+            hashCode.Add(StudentAnswers);
+            hashCode.Add(Courses);
             return hashCode.ToHashCode();
-            
         }
     }
 }
