@@ -26,5 +26,6 @@ namespace DevEdu.Business.Services
         }
 
         public void DeleteTask(int id) => _taskRepository.DeleteTask(id);
+        public List<GroupTaskDto> GetTaskGroupByTaskId(int taskId) => _taskRepository.GetTaskGroupByTaskId(taskId);
     }
 }

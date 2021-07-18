@@ -212,6 +212,7 @@
     <Build Include="StoredProcedures\Group_Task\Group_Task_Update.sql" />
     <Build Include="StoredProcedures\Group_Task\Group_Task_SelectAllByGroupId.sql" />
     <Build Include="StoredProcedures\Group_Task\Group_Task_SelectById.sql" />
+    <Build Include="StoredProcedures\Group_Task\Group_Task_SelectAllByTaskId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />

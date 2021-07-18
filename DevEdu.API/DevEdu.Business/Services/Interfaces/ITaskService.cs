@@ -10,5 +10,6 @@ namespace DevEdu.Business.Services
         int AddTask(TaskDto taskDto);
         void UpdateTask(int id, TaskDto taskDto);
         void DeleteTask(int id);
+        List<GroupTaskDto> GetTaskGroupByTaskId(int taskId);
     }
 }

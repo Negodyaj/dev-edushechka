@@ -2,9 +2,12 @@
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using System.Collections.Generic;
+using System.ComponentModel;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Repositories;
 using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
 {
@@ -139,6 +142,17 @@ namespace DevEdu.API.Controllers
             _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskstudentId, commentId);
 
             return taskstudentId;
+        }
+
+        //  api/task/1/group/
+        [HttpGet("{taskId}/group")]
+        [Description("Get all group by task")]
+        [ProducesResponseType(typeof(GroupTaskInfoWithGroupOutputModel), StatusCodes.Status200OK)]
+        public List<GroupTaskInfoWithGroupOutputModel> GetGroupsByTaskId(int taskId)
+        {
+            var dto = _taskService.GetTaskGroupByTaskId(taskId);
+            var output = _mapper.Map<List<GroupTaskInfoWithGroupOutputModel>>(dto);
+            return output;
         }
     }
 }

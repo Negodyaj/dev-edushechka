@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [Group] (
 	Id int NOT NULL IDENTITY(1,1),
+	Name nvarchar(50) NOT NULL,
 	CourseId int NOT NULL,
 	GroupStatusId int NOT NULL,
 	StartDate date NOT NULL,

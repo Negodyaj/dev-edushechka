@@ -109,22 +109,22 @@ namespace DevEdu.API.Controllers
         //  api/group/1/task/1
         [HttpGet("{groupId}/task/{taskId}")]
         [Description("Return task group by both id")]
-        [ProducesResponseType(typeof(GroupTaskInfoWithGroupOutputModel), StatusCodes.Status200OK)]
-        public GroupTaskInfoWithGroupOutputModel GetGroupTask(int groupId, int taskId)
+        [ProducesResponseType(typeof(GroupTaskInfoFullOutputModel), StatusCodes.Status200OK)]
+        public GroupTaskInfoFullOutputModel GetGroupTask(int groupId, int taskId)
         {
             var dto = _groupService.GetGroupTask(groupId, taskId);
-            var output = _mapper.Map<GroupTaskInfoWithGroupOutputModel>(dto);
+            var output = _mapper.Map<GroupTaskInfoFullOutputModel>(dto);
             return output;
         }
 
         //  api/group/1/task/
         [HttpGet("{groupId}/task")]
         [Description("Get all task by group")]
-        [ProducesResponseType(typeof(GroupTaskInfoWithGroupOutputModel), StatusCodes.Status200OK)]
-        public List<GroupTaskInfoWithGroupOutputModel> GetTasksByGroupId(int groupId)
+        [ProducesResponseType(typeof(GroupTaskInfoWithTaskOutputModel), StatusCodes.Status200OK)]
+        public List<GroupTaskInfoWithTaskOutputModel> GetTasksByGroupId(int groupId)
         {
             var dto = _groupService.GetTasksByGroupId(groupId);
-            var output = _mapper.Map<List<GroupTaskInfoWithGroupOutputModel>>(dto);
+            var output = _mapper.Map<List<GroupTaskInfoWithTaskOutputModel>>(dto);
             return output;
         }
 
@@ -141,7 +141,7 @@ namespace DevEdu.API.Controllers
         //  api/group/1/task/1
         [HttpDelete("{groupId}/task/{taskId}")]
         [Description("Delete task from group")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTaskFromGroup(int groupId, int taskId)
         { 
             _groupService.DeleteTaskFromGroup(groupId, taskId);
@@ -151,7 +151,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{groupId}/task/{taskId}")]
         [Description("Update task by group")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public GroupTaskInfoOutputModel UpdateComment(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
+        public GroupTaskInfoOutputModel UpdateGroupTask(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
             var dto = _mapper.Map<GroupTaskDto>(model);
             var output=_groupService.UpdateGroupTask(groupId, taskId, dto);

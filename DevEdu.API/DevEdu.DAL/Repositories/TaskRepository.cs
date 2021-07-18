@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using Dapper;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
@@ -15,6 +16,7 @@ namespace DevEdu.DAL.Repositories
         private const string _taskUpdateProcedure = "dbo.Task_Update";
         private const string _tagTaskAddProcedure = "dbo.Tag_Task_Insert";
         private const string _tagTaskDeleteProcedure = "dbo.Tag_Task_Delete";
+        private const string _taskGroupSelectAllByTaskIdProcedure = "dbo.Group_Task_SelectAllByTaskId";
 
         public TaskRepository()
         {
@@ -131,6 +133,25 @@ namespace DevEdu.DAL.Repositories
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure
                 );
+        }
+        public List<GroupTaskDto> GetTaskGroupByTaskId(int taskId)
+        {
+            GroupTaskDto result;
+            return _connection
+                .Query<GroupTaskDto, GroupDto, GroupStatus, GroupTaskDto>(
+                    _taskGroupSelectAllByTaskIdProcedure,
+                    (groupTask, group, groupStatus) =>
+                    {
+                        result = groupTask;
+                        result.Group = group;
+                        result.Group.GroupStatus = groupStatus;
+                        return result;
+                    },
+                    new { taskId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
         }
     }
 }

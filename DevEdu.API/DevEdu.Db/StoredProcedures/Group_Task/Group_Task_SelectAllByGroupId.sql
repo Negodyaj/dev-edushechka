@@ -13,6 +13,6 @@ BEGIN
 		t.IsRequired,
 		t.IsDeleted
 	FROM dbo.Group_Task gt
-	inner join Task t on gt.TaskId=t.id
+	inner join Task t on gt.TaskId=t.Id
 	WHERE (gt.GroupId = @GroupId and t.IsDeleted=0)
 END
