@@ -51,7 +51,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(MaterialInfoWithCoursesAndGroupsOutputModel), StatusCodes.Status200OK)]
         public MaterialInfoWithCoursesAndGroupsOutputModel GetMaterial(int id)
         {
-            var dto = _materialService.GetMaterialById(id);
+            var dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
             return _mapper.Map<MaterialInfoWithCoursesAndGroupsOutputModel>(dto);
         }
 

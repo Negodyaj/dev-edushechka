@@ -23,7 +23,9 @@ namespace DevEdu.Business.Services
 
         public List<MaterialDto> GetAllMaterials() => _materialRepository.GetAllMaterials();
 
-        public MaterialDto GetMaterialById(int id) 
+        public MaterialDto GetMaterialById(int id) => _materialRepository.GetMaterialById(id);
+
+        public MaterialDto GetMaterialByIdWithCoursesAndGroups(int id)
         {
             var dto = _materialRepository.GetMaterialById(id);
             dto.Courses = _courseRepository.GetCoursesByMaterialId(id);

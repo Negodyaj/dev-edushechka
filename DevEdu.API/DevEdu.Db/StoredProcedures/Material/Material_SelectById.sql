@@ -7,9 +7,10 @@ BEGIN
 		m.Content, 
 		m.IsDeleted,
 		t.Id,
-		t.Name
+		t.Name,
+		t.IsDeleted
 	FROM dbo.Material m
 		left join dbo.Tag_Material tm on tm.MaterialId = m.Id
 		left join dbo.Tag t on t.Id = tm.TagId
-	WHERE m.Id = @Id AND t.IsDeleted = 0
+	WHERE m.Id = @Id
 END
