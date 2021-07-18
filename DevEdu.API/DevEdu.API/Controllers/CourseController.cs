@@ -146,8 +146,8 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<CourseTopicOutputModel>>(list);
             
         }
-        // api/course/{courseId}
-        [HttpPut("{courseId}/update")]
+        // api/course/{courseId}/program
+        [HttpPut("{courseId}/program")]
         [Description("updates topics in the course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public string UpdateCourseTopicsByCourseId(int courseId,  [FromBody] List<CourseTopicUpdateInputModel> topics)

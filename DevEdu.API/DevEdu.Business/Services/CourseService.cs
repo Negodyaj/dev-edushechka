@@ -33,7 +33,7 @@ namespace DevEdu.Business.Services
         public void DeleteTagFromTopic(int topicId, int tagId) => _courseRepository.DeleteTagFromTopic(topicId, tagId);
         public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {
-            dto.Course = SetIdToCourseDto(courseId, dto.Course);
+            dto.Course = new CourseDto() { Id = courseId };
             dto.Topic = new TopicDto { Id = topicId };
             _topicRepository.AddTopicToCourse(dto);
         }
@@ -50,8 +50,9 @@ namespace DevEdu.Business.Services
         public void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
         {
             CheckUniquenessPositions(topics);
+            CheckUniquenessTopics(topics);
             var topicsInDatabase = _courseRepository.SelectAllTopicsByCourseId(courseId);
-            if (((topics.Count > topicsInDatabase.Count) || (topics.Count < topicsInDatabase.Count)) && topicsInDatabase.Count!=0)
+            if (((topics.Count > topicsInDatabase.Count) || (topics.Count < topicsInDatabase.Count)) && topicsInDatabase.Count != 0 && topicsInDatabase != null && topics != null)
             {
                 DeleteAllTopicsByCourseId(courseId);
                 AddTopicsFromNewList(courseId, topics);
@@ -64,15 +65,12 @@ namespace DevEdu.Business.Services
             {
                 foreach (var topic in topics)
                 {
-                    topic.Course = SetIdToCourseDto(courseId, topic.Course);
+                    topic.Course = new CourseDto() { Id = courseId };
                 }
                 _courseRepository.UpdateCourseTopicsByCourseId(courseId, topics);
             }
         }
-        public void DeleteAllTopicsByCourseId(int courseId)
-        {
-            _courseRepository.DeleteAllTopicsByCourseId(courseId);
-        }
+        public void DeleteAllTopicsByCourseId(int courseId) => _courseRepository.DeleteAllTopicsByCourseId(courseId);
         private void AddTopicsFromNewList(int courseId, List<CourseTopicDto> topics)
         {
             foreach (var topic in topics)
@@ -87,9 +85,12 @@ namespace DevEdu.Business.Services
                 throw new Exception("the same positions of topics in the course");
             }
         }
-        private CourseDto SetIdToCourseDto(int courseId, CourseDto dto)
+        private void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
-            return dto = new CourseDto() { Id = courseId };
+            if(topics.GroupBy(n => n.Topic).Any(c => c.Count() > 1))
+            {
+                throw new Exception("the same topics  in the course");
+            }
         }
     }
 }
