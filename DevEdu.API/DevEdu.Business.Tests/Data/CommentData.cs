@@ -15,8 +15,8 @@ namespace DevEdu.Business.Tests
             return new CommentDto
             {
                 Id = 1,
-                Text="comment1",
-                User=new UserDto
+                Text = "comment1",
+                User = new UserDto
                 {
                     Id = 1,
                     FirstName = "Cat",
@@ -24,7 +24,7 @@ namespace DevEdu.Business.Tests
                     Email = "CatJack@meow.cat",
                     Photo = "Cat.jpg"
                 },
-                Date= DateTime.Parse("19.07.2021"),
+                Date = DateTime.Parse("19.07.2021"),
                 IsDeleted = false
             };
         }
