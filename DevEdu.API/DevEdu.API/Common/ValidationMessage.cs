@@ -36,6 +36,8 @@
         public const string DateRequired = "Date must be provided";
         public const string TeacherCommentRequired = "TeacherComment must be provided";
         public const string TeacherIdRequired = "TeacherId must be provided";
+        public const string SummRequired = "Summ must be provided";
+        public const string IsPaidRequired = "IsPaid cannot be empty";
         public const string WrongFormatBithDate = "BirthDate must be format 'dd.MM.yyyy'";
     }
 }

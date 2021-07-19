@@ -8,6 +8,7 @@ using DevEdu.DAL.Models;
 namespace DevEdu.DAL.Repositories
 {
     public class CourseRepository : BaseRepository, ICourseRepository
+
     {
         private const string _courseAddProcedure = "dbo.Course_Insert";
         private const string _courseDeleteProcedure = "dbo.Course_Delete";
@@ -15,6 +16,9 @@ namespace DevEdu.DAL.Repositories
         private const string _courseSelectAllProcedure = "dbo.Course_SelectAll";
         private const string _courseUpdateProcedure = "dbo.Course_Update";
         private const string _selectAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_SelectAllByCourseId]";
+
+        private const string _insertCourseMaterial = "dbo.Course_Material_Insert";
+        private const string _deleteCourseMaterial = "dbo.Course_Material_Delete";
 
         private const string _сourseTaskInsertProcedure = "dbo.Course_Task_Insert";
         private const string _сourseTaskDeleteProcedure = "dbo.Course_Task_Delete";
@@ -149,6 +153,32 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
+        }
+
+        public int AddCourseMaterialReference(int courseId, int materialId)
+        {
+            return _connection.Execute(
+                _insertCourseMaterial,
+                new
+                {
+                    courseId,
+                    materialId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public int RemoveCourseMaterialReference(int courseId, int materialId)
+        {
+            return _connection.Execute(
+                _deleteCourseMaterial,
+                new
+                {
+                    courseId,
+                    materialId
+                },
+                commandType: CommandType.StoredProcedure
+            );
         }
     }
 }
