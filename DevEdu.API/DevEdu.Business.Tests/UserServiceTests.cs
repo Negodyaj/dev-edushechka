@@ -20,202 +20,69 @@ namespace DevEdu.Business.Tests.Services
             _userRepoMock = new Mock<IUserRepository>();
         }
 
-        [Test]
-        public void AddUser_DtoWithRoles_UserDtoWithRolesCreated()
+        [TestCaseSource(typeof(UserServiceTestsSource))]
+        public void AddUser_DtoWithRoles_UserDtoWithRolesCreated(UserDto user)
         {
             //Given
-            var expectedUserId = 1;
-            var _userDto = new UserDto
-            {
-                FirstName = "Admin",
-                LastName = "Adminov",
-                Patronymic = "Adminovich",
-                Email = "admin@admin.ad",
-                Username = "Admin01",
-                Password = "qwerty12345",
-                ContractNumber = "admin01",
-                City = (City)1,
-                BirthDate = DateTime.Today,
-                GitHubAccount = "admin/admin.git",
-                Photo = "https://localhost:Admin/admin",
-                PhoneNumber = "adminPhoneNumber",
-                Roles = new List<Role>
-                {
-                     Role.Student ,
-                     Role.Admin
-                }
-            };
-            _userRepoMock.Setup(x => x.AddUser(_userDto)).Returns(expectedUserId);
-            _userRepoMock.Setup(x => x.AddUserRole(expectedUserId, It.IsAny<int>()));
+            var expectedId = 1;
+            _userRepoMock.Setup(x => x.AddUser(user)).Returns(expectedId);
+            _userRepoMock.Setup(x => x.AddUserRole(expectedId, It.IsAny<int>()));
             var sut = new UserService(_userRepoMock.Object);
 
             //When
-            var actualUserId = sut.AddUser(_userDto);
+            var actualId = sut.AddUser(user);
 
             //Then
-            Assert.AreEqual(expectedUserId, actualUserId);
-            _userRepoMock.Verify(x => x.AddUser(_userDto), Times.Once);
-            _userRepoMock.Verify(x => x.AddUserRole(actualUserId, It.IsAny<int>()), Times.Exactly(_userDto.Roles.Count));
+            Assert.AreEqual(expectedId, actualId);
+            _userRepoMock.Verify(x => x.AddUser(user), Times.Once);
+            _userRepoMock.Verify(x => x.AddUserRole(actualId, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
         }
 
-        [Test]
-        public void SelectById_IntUserId_ReturnUserDto()
+        [TestCaseSource(typeof(UserServiceTestsSource))]
+        public void SelectById_IntUserId_ReturnUserDto(UserDto expectedDto)
         {
             //Given
-            var _userDto = new UserDto
-            {
-                FirstName = "Admin",
-                LastName = "Adminov",
-                Patronymic = "Adminovich",
-                Email = "admin@admin.ad",
-                Username = "Admin01",
-                Password = "qwerty12345",
-                ContractNumber = "admin01",
-                City = (City)1,
-                BirthDate = DateTime.Today,
-                GitHubAccount = "admin/admin.git",
-                Photo = "https://localhost:Admin/admin",
-                PhoneNumber = "adminPhoneNumber",
-                Roles = new List<Role>
-                {
-                     Role.Student ,
-                     Role.Admin
-                }
-            };
-            var userId = 1;
-            _userRepoMock.Setup(x => x.SelectUserById(userId))
-                .Returns(_userDto);
+            var id = 1;
+            _userRepoMock.Setup(x => x.SelectUserById(id)).Returns(expectedDto);
             var sut = new UserService(_userRepoMock.Object);
 
             //When
-            var dto = sut.SelectUserById(userId);
+            var actualDto = sut.SelectUserById(id);
 
             //Then
-            Assert.AreEqual(_userDto, dto);
-            _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
+            Assert.AreEqual(expectedDto, actualDto);
+            _userRepoMock.Verify(x => x.SelectUserById(id), Times.Once);
         }
 
-        [Test]
-        public void SelectUsers_NoEntries_ReturnListUserDto()
+        [TestCaseSource(typeof(UserServiceTestsSource), nameof(UserServiceTestsSource.GetUsers))]
+        public void SelectUsers_NoEntries_ReturnListUserDto(List<UserDto> expectedList)
         {
             //Given
-            var expectedListUserDto = new List<UserDto>
-            {
-                new UserDto
-                {
-                    FirstName = "Admin",
-                    LastName = "Adminov",
-                    Patronymic = "Adminovich",
-                    Email = "admin@admin.ad",
-                    Username = "Admin01",
-                    Password = "qwerty12345",
-                    ContractNumber = "admin01",
-                    City = (City)1,
-                    BirthDate = DateTime.Today,
-                    GitHubAccount = "admin/admin.git",
-                    Photo = "https://localhost:Admin/admin",
-                    PhoneNumber = "adminPhoneNumber",
-                    Roles = new List<Role>
-                    {
-                         Role.Student ,
-                         Role.Admin
-                    }
-                },
-                new UserDto
-                {
-                    FirstName = "Student",
-                    LastName = "Studentov",
-                    Patronymic = "Studentovich",
-                    Email = "student@student.st",
-                    Username = "Student01",
-                    Password = "qwerty12345",
-                    ContractNumber = "Student01",
-                    City = (City)1,
-                    BirthDate = DateTime.Today,
-                    GitHubAccount = "Student/Student.git",
-                    Photo = "https://localhost:Student",
-                    PhoneNumber = "StudentPhoneNumber",
-                    Roles = new List<Role> { Role.Student }
-                },
-                new UserDto
-                {
-                    FirstName = "Manager",
-                    LastName = "Managerov",
-                    Patronymic = "Managerovich",
-                    Email = "Manager@manager.mn",
-                    Username = "SManager01",
-                    Password = "qwerty12345",
-                    ContractNumber = "Manager01",
-                    City = (City)1,
-                    BirthDate = DateTime.Today,
-                    GitHubAccount = "Manager/Manager.git",
-                    Photo = "https://localhost:Manager",
-                    PhoneNumber = "ManagerPhoneNumber",
-                    Roles = new List<Role> { Role.Manager }
-                }
-            };
-            _userRepoMock.Setup(x => x.SelectUsers())
-                .Returns(expectedListUserDto);
+            _userRepoMock.Setup(x => x.SelectUsers()).Returns(expectedList);
             var sut = new UserService(_userRepoMock.Object);
 
             //When
-            var actualListUserDto = sut.SelectUsers();
+            var actualList = sut.SelectUsers();
 
             //Then
-            Assert.AreEqual(expectedListUserDto, actualListUserDto);
+            Assert.AreEqual(expectedList, actualList);
             _userRepoMock.Verify(x => x.SelectUsers(), Times.Once);
         }
 
-        [Test]
-        public void UpdateUser_UserDto_ReturnUpdateUserDto()
+        [TestCaseSource(typeof(UserServiceTestsSource))]
+        public void UpdateUser_UserDto_ReturnUpdateUserDto(UserDto expectedDto)
         {
             //Given
-            var _userDto = new UserDto
-            {
-                FirstName = "Admin",
-                LastName = "Adminov",
-                Patronymic = "Adminovich",
-                Email = "admin@admin.ad",
-                Username = "Admin01",
-                Password = "qwerty12345",
-                ContractNumber = "admin01",
-                City = (City)1,
-                BirthDate = DateTime.Today,
-                GitHubAccount = "admin/admin.git",
-                Photo = "https://localhost:Admin/admin",
-                PhoneNumber = "adminPhoneNumber",
-                Roles = new List<Role>
-                {
-                     Role.Student ,
-                     Role.Admin
-                }
-            };
-            var expectedUserDto = new UserDto
-            {
-                FirstName = "Student",
-                LastName = "Studentov",
-                Patronymic = "Studentovich",
-                Email = "student@student.st",
-                Username = "Student01",
-                Password = "qwerty12345",
-                ContractNumber = "Student01",
-                City = (City)1,
-                BirthDate = DateTime.Today,
-                GitHubAccount = "Student/Student.git",
-                Photo = "https://localhost:Student",
-                PhoneNumber = "StudentPhoneNumber",
-                Roles = new List<Role> { Role.Student }
-            };
-            _userRepoMock.Setup(x => x.UpdateUser(_userDto));
-            _userRepoMock.Setup(x => x.SelectUserById(_userDto.Id)).Returns(expectedUserDto);
+            _userRepoMock.Setup(x => x.UpdateUser(expectedDto));
+            _userRepoMock.Setup(x => x.SelectUserById(expectedDto.Id)).Returns(expectedDto);
             var sut = new UserService(_userRepoMock.Object);
 
             //When
-            var actualUserDto = sut.UpdateUser(_userDto);
+            var actualDto = sut.UpdateUser(expectedDto);
 
             //Then
-            Assert.AreEqual(expectedUserDto, actualUserDto);
-            _userRepoMock.Verify(x => x.UpdateUser(_userDto), Times.Once);
+            Assert.AreEqual(expectedDto, actualDto);
+            _userRepoMock.Verify(x => x.UpdateUser(expectedDto), Times.Once);
         }
     }
 }
