@@ -94,7 +94,7 @@ namespace DevEdu.API.Controllers
                         claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString()));
                     }
                     if(user.Roles.Contains(Role.Admin))
-                    claims.Add(new Claim("DeveloperBoss", "IAmBoss"));
+                    claims.Add(new Claim("AdminOfDevEdu", "IAmBoss"));
                 };
 
                 ClaimsIdentity claimsIdentity =

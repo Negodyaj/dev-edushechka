@@ -97,7 +97,7 @@ namespace DevEdu.API
                 options.AddPolicy("AdminAuthorizationPolicy",
                     policy =>
                     {
-                        policy.RequireClaim("DeveloperBoss", "IAmBoss");
+                        policy.RequireClaim("AdminOfDevEdu", "IAmBoss");
                         policy.RequireRole("Teacher");
                     });
             });
@@ -107,7 +107,7 @@ namespace DevEdu.API
                 document.DocumentName = "Endpoints for DevEdu";
                 document.Title = "DevEdu Education API";
                 document.Version = "v8";
-                document.Description = "An interface for DevEduApi.";
+                document.Description = "An interface for DevEdushechka.";
 
                 document.DocumentProcessors.Add(
                     new SecurityDefinitionAppender("JWT token", new NSwag.OpenApiSecurityScheme
