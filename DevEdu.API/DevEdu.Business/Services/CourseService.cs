@@ -18,8 +18,11 @@ namespace DevEdu.Business.Services
         }
 
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
+
         public void DeleteCourse(int id) => _courseRepository.GetCourse(id);
+
         public CourseDto GetCourse(int id) => _courseRepository.GetCourse(id);
+
         public List<CourseDto> GetCourses() => _courseRepository.GetCourses();
 
         public void UpdateCourse(int id, CourseDto courseDto)
@@ -31,17 +34,21 @@ namespace DevEdu.Business.Services
         public void AddTagToTopic(int topicId, int tagId) => _courseRepository.AddTagToTopic(topicId, tagId);
 
         public void DeleteTagFromTopic(int topicId, int tagId) => _courseRepository.DeleteTagFromTopic(topicId, tagId);
+
         public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {
             dto.Course = new CourseDto() { Id = courseId };
             dto.Topic = new TopicDto { Id = topicId };
             _topicRepository.AddTopicToCourse(dto);
         }
+
         public void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
         {
-            foreach (var topic in listDto) topic.Course = new CourseDto() { Id = courseId };
-            _topicRepository.AddTopicToCourse(listDto);
+            foreach (var topic in listDto) 
+                topic.Course = new CourseDto() { Id = courseId };
+            _topicRepository.AddTopicsToCourse(listDto);
         }
+
         public void DeleteTopicFromCourse(int courseId, int topicId)
         {
             _topicRepository.DeleteTopicFromCourse(courseId, topicId);
@@ -52,19 +59,27 @@ namespace DevEdu.Business.Services
             var list = _courseRepository.SelectAllTopicsByCourseId(courseId);
             return list;
         }
+
         public void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
         {
+            if (topics == null || topics.Count == 0)
+                return;
+
             CheckUniquenessPositions(topics);
             CheckUniquenessTopics(topics);
             var topicsInDatabase = _courseRepository.SelectAllTopicsByCourseId(courseId);
-            if (((topics.Count > topicsInDatabase.Count) || (topics.Count < topicsInDatabase.Count)) && topicsInDatabase.Count != 0 && topicsInDatabase != null && topics != null)
+            if (
+                topicsInDatabase != null && 
+                topicsInDatabase.Count != 0 &&
+                topics.Count != topicsInDatabase.Count
+            )
             {
                 DeleteAllTopicsByCourseId(courseId);
-                AddTopicsFromNewList(courseId, topics);
+                AddTopicsToCourse(courseId, topics);
             }
-            else if( topicsInDatabase.Count == 0)
+            else if (topicsInDatabase == null || topicsInDatabase.Count == 0)
             {
-                AddTopicsFromNewList(courseId, topics);
+                AddTopicsToCourse(courseId, topics);
             }
             else
             {
@@ -75,11 +90,9 @@ namespace DevEdu.Business.Services
                 _courseRepository.UpdateCourseTopicsByCourseId( topics);
             }
         }
+
         public void DeleteAllTopicsByCourseId(int courseId) => _courseRepository.DeleteAllTopicsByCourseId(courseId);
-        private void AddTopicsFromNewList(int courseId, List<CourseTopicDto> topics)
-        {
-            AddTopicsToCourse(courseId,topics);
-        }
+
         private void CheckUniquenessPositions(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))

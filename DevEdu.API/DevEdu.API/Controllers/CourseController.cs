@@ -115,6 +115,7 @@ namespace DevEdu.API.Controllers
             _courseRepository.DeleteTaskFromCourse(courseId, taskId);
             return $"Course {courseId} remove  Task Id:{taskId}";
         }
+
         // api/course/{courseId}/topic/{topicId}
         [HttpPost("{courseId}/topic/{topicId}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
@@ -125,19 +126,19 @@ namespace DevEdu.API.Controllers
 
             _courseService.AddTopicToCourse(courseId, topicId, dto);
             return $"Topic Id:{topicId} added in course Id:{courseId} on {inputModel.Position} position";
-
         }
+
         [HttpPost("{courseId}/select-topics")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [Description("Add topics to course")]
-        public string AddTopicToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
+        public string AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
         {
             var dto = _mapper.Map<List<CourseTopicDto>>(inputModel);
 
             _courseService.AddTopicsToCourse(courseId, dto);
             return "done";
-
         }
+
         // api/course/{courseId}/topic/{topicId}
         [HttpDelete("{courseId}/topic/{topicId}")]
         [Description("Delete topic from course")]
@@ -147,6 +148,7 @@ namespace DevEdu.API.Controllers
             _courseService.DeleteTopicFromCourse(courseId, topicId);
             return $"Topic Id:{topicId} deleted from course Id:{courseId}";
         }
+
         [HttpGet("{courseId}/topics")]
         [Description("Get all topics by course id ")]
         [ProducesResponseType(typeof(List<CourseTopicOutputModel>),StatusCodes.Status200OK)]
@@ -154,9 +156,9 @@ namespace DevEdu.API.Controllers
         {
             var list = _courseService.SelectAllTopicsByCourseId(courseId);
             
-            return _mapper.Map<List<CourseTopicOutputModel>>(list);
-            
+            return _mapper.Map<List<CourseTopicOutputModel>>(list);            
         }
+
         // api/course/{courseId}/program
         [HttpPut("{courseId}/program")]
         [Description("updates topics in the course")]
@@ -166,17 +168,6 @@ namespace DevEdu.API.Controllers
             var list = _mapper.Map<List<CourseTopicDto>>(topics);
             _courseService.UpdateCourseTopicsByCourseId(courseId, list);
             return "updated";
-
         }
-        // api/course/{courseId}/topics-delete
-        [HttpDelete("{courseId}/topics-delete")]
-        [Description("Delete all topics by course id")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
-        public string DeleteAllTopicsByCourseId(int courseId)
-        {
-            _courseService.DeleteAllTopicsByCourseId(courseId);
-            return $"All topics deleted from course id: {courseId}";
-        }
-
     }
 }

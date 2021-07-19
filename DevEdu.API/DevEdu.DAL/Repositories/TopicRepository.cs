@@ -90,7 +90,7 @@ namespace DevEdu.DAL.Repositories
                 );
         }
 
-        public void AddTopicToCourse(List<CourseTopicDto> dto)
+        public void AddTopicsToCourse(List<CourseTopicDto> dto)
         {
             var dt = new DataTable();
             dt.Columns.Add("CourseId");

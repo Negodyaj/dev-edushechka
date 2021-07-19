@@ -59,7 +59,7 @@ namespace DevEdu.DAL.Repositories
                     if (result == null)
                     {
                         result = course;
-                        result.Groups = new List<GroupDto> {group};
+                        result.Groups = new List<GroupDto> { group };
                     }
                     else
                     {
@@ -98,14 +98,14 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
-        
+
         public void AddTagToTopic(int topicId, int tagId)
         {
             _connection.Query(
                 _tagToTopicAddProcedure,
-                new 
+                new
                 {
-                    topicId, 
+                    topicId,
                     tagId
                 },
                 commandType: CommandType.StoredProcedure
