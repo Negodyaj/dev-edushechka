@@ -28,20 +28,20 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         [Description("Return Group by id")]
         [ProducesResponseType(typeof(GroupFullOutputModel), StatusCodes.Status200OK)]  // todo
-        public GroupOutputModel GetGroup(int id)
+        public GroupFullOutputModel GetGroup(int id)
         {
             var dto = _groupService.GetGroup(id);
-            return _mapper.Map<GroupOutputModel>(dto);           
+            return _mapper.Map<GroupFullOutputModel>(dto);           
         }
 
         //  api/Group/
         [HttpGet]
         [Description("Get all Groups")]
         [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
-        public List<GroupOutputModel> GetAllGroups()
+        public List<GroupFullOutputModel> GetAllGroups()
         {
             var dto = _groupService.GetGroups();
-            return _mapper.Map<List<GroupOutputModel>>(dto);
+            return _mapper.Map<List<GroupFullOutputModel>>(dto);
         }
 
         //  api/Group

@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Models.OutputModels.Group;
 using DevEdu.DAL.Models;
+using System;
+using System.Linq.Expressions;
 
 namespace DevEdu.API.Configuration
 {
@@ -15,7 +18,7 @@ namespace DevEdu.API.Configuration
         }
 
         private void CreateMappingToDto()
-        { 
+        {
             CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
             CreateMap<AttendanceInputModel, StudentLessonDto>();
             CreateMap<CourseInputModel, CourseDto>();
@@ -30,7 +33,7 @@ namespace DevEdu.API.Configuration
             CreateMap<NotificationUpdateInputModel, NotificationDto>();
             CreateMap<StudentAnswerOnTaskInputModel, StudentAnswerOnTaskDto>();
             CreateMap<LessonInputModel, LessonDto>()
-                .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => new UserDto { Id = src.TeacherId}));
+                .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => new UserDto { Id = src.TeacherId }));
             CreateMap<LessonUpdateInputModel, LessonDto>();
             CreateMap<TagInputModel, TagDto>();
             CreateMap<TaskInputModel, TaskDto>();
@@ -45,14 +48,13 @@ namespace DevEdu.API.Configuration
         private void CreateMappingFromDto()
         {
             CreateMap<CourseDto, CourseInfoOutputModel>();
-            CreateMap<GroupDto, GroupOutputModel>()
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
+            CreateMap<GroupDto, GroupFullOutputModel>();
             CreateMap<TopicDto, TopicOutputModel>();
             CreateMap<CommentDto, CommentInfoOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
             CreateMap<UserDto, UserInfoOutputModel>();
-            CreateMap<UserDto, UserInfoShortOutputModel>(); 
+            CreateMap<UserDto, UserInfoShortOutputModel>();
             CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<TaskDto, TaskInfoOutputModel>();
             CreateMap<TaskDto, TaskInfoWithCoursesOutputModel>();

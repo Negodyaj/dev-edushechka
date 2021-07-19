@@ -1,10 +1,8 @@
 ﻿CREATE PROCEDURE dbo.Group_SelectById
-	@Id int
+	@Id int,
+	@Role int
 AS
 BEGIN
-	DECLARE @Teacher int = 4
-	DECLARE @Tutor int = 5
-	DECLARE @Student int = 6
 	SELECT 
 		G.Id,
 		G.[Name],
@@ -22,5 +20,5 @@ BEGIN
 	FROM dbo.[Group] G
 		inner join [User_Group] UG on UG.GroupId=G.Id
 		inner join [User] U on UG.UserId=U.Id
-	WHERE (G.Id = @Id AND U.Id = U.Id  AND UG.RoleId IN (@Teacher, @Tutor, @Student))
+	WHERE (G.Id = @Id AND U.Id = U.Id  AND UG.RoleId = @Role)
 END
