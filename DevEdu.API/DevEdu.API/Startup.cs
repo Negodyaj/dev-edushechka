@@ -1,5 +1,4 @@
 using DevEdu.Business.Services;
-using DevEdu.Business.Servicies;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +29,8 @@ namespace DevEdu.API
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
@@ -42,11 +43,9 @@ namespace DevEdu.API
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICourseService, CourseService>(); 
             services.AddScoped<ILessonService, LessonService>();
+            services.AddScoped<ITopicService, TopicService>();
 
-
-            services.AddScoped<ICourseService, CourseService>();
-            services.AddScoped<IMaterialService, MaterialService>();
-
+            services.AddControllers();
             services.AddControllers();
 
             services.AddSwaggerDocument(settings => {

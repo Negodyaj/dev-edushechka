@@ -40,6 +40,7 @@ namespace DevEdu.API.Controllers
         //  api/Course
         [HttpGet]
         [Description("Get all courses with topics")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CourseInfoOutputModel>))]
         public List<CourseInfoOutputModel> GetAllCourses()
         {
             var courses = _courseRepository.GetCourses();
@@ -70,34 +71,18 @@ namespace DevEdu.API.Controllers
             return $"Course №{id} change name to {model.Name} and description to {model.Description}";
         }
 
-        //  api/course/topic/{topicId}/tag/{tagId}
-        [HttpPost("topic/{topicId}/tag/{tagId}")]
-        public string AddTagToTopic(int topicId, int tagId)
-        {
-            _courseService.AddTagToTopic(topicId, tagId);
-            return $"add to topic with {topicId} Id tag with {tagId} Id";
-        }
-
-        //  api/course/topic/{topicId}/tag/{tagId}
-        [HttpDelete("topic/{topicId}/tag/{tagId}")]
-        public string DeleteTagAtTopic(int topicId, int tagId)
-        {
-            _courseService.DeleteTagFromTopic(topicId, tagId);
-            return $"deleted at topic with {topicId} Id tag with {tagId} Id";
-        }
-
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpPost("{courseId}/material/{materialId}")]
-        public string AddMaterialToCourse(int courseId, int materialId)
+        public void AddCourseMaterialReference(int courseId, int materialId)
         {
-            return $"Course {courseId} add  Material Id {materialId}";
+            _courseService.AddCourseMaterialReference(courseId, materialId);
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpDelete("{courseId}/material/{materialId}")]
-        public string RemoveMaterialFromCourse(int courseId, int materialId)
+        public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
-            return $"Course {courseId} remove  Material Id:{materialId}";
+            _courseService.RemoveCourseMaterialReference(courseId, materialId);
         }
 
         //  api/course/{CourseId}/Task/{TaskId}

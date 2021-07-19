@@ -16,6 +16,5 @@ namespace DevEdu.API
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-        
     }
 }

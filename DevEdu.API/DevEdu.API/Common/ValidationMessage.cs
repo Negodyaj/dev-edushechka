@@ -25,6 +25,10 @@
         public const string PhotoRequired = "Photo must be provided";
         public const string WrongFormatPhoto = "Photo must be Url";
         public const string PhoneNumberRequired = "PhoneNumber must be provided";
+        public const string DurationRequired = "Duration must be provided";
+        public const string FeedbackRequired = "Feedback must be provided";
+        public const string AbsenceReasonRequired = "AbsenceReason must be provided";
+        public const string AttendanceRequired = "Attendance must be provided";
         public const string PositionRequired = "Position must be provided";
         public const string ContentRequired = "Content must be provided";
         public const string TextRequired = "Comment cannot be empty";
@@ -32,5 +36,8 @@
         public const string DateRequired = "Date must be provided";
         public const string TeacherCommentRequired = "TeacherComment must be provided";
         public const string TeacherIdRequired = "TeacherId must be provided";
+        public const string SummRequired = "Summ must be provided";
+        public const string IsPaidRequired = "IsPaid cannot be empty";
+        public const string WrongFormatBithDate = "BirthDate must be format 'dd.MM.yyyy'";
     }
 }

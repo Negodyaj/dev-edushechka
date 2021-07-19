@@ -13,6 +13,5 @@ namespace DevEdu.DAL.Models
         public List<TopicDto> Topics { get; set; }
         public List<GroupDto> Groups { get; set; }
         public List<UserDto> Students { get; set; }
-
     }
 }

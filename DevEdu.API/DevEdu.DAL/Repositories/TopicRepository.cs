@@ -17,6 +17,9 @@ namespace DevEdu.DAL.Repositories
         private const string _deleteTopicToCourseProcedure = "[dbo].[Course_Topic_Delete]";
         private const string _course_TopicType = "dbo.Course_TopicType";
 
+        private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
+        private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
+
         public TopicRepository() { }
 
         public int AddTopic(TopicDto topicDto)
@@ -60,13 +63,13 @@ namespace DevEdu.DAL.Repositories
               .AsList();
         }
 
-        public void UpdateTopic(int id, TopicDto topicDto)       
+        public void UpdateTopic(TopicDto topicDto)       
         {
             _connection.Execute(
                 _topicUpdateProcedure,
                 new
                 {
-                    id,
+                    topicDto.Id,
                     topicDto.Name,
                     topicDto.Duration
                 },
@@ -88,6 +91,32 @@ namespace DevEdu.DAL.Repositories
                 new { courseId, topicId },
                 commandType: CommandType.StoredProcedure
                 );
+        }
+
+        public int AddTagToTopic(int topicId, int tagId)
+        {
+            return _connection.Execute(
+                _tagToTopicAddProcedure,
+                new
+                {
+                    topicId,
+                    tagId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public int DeleteTagFromTopic(int topicId, int tagId)
+        {
+            return _connection.Execute(
+                _tagFromTopicDeleteProcedure,
+                new
+                {
+                    topicId,
+                    tagId
+                },
+                commandType: CommandType.StoredProcedure
+            );
         }
 
         public void AddTopicsToCourse(List<CourseTopicDto> dto)

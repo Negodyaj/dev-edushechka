@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE dbo.Group_Material_Delete
-	@MaterialId int,
-	@GroupId int
+	@GroupId int,
+	@MaterialId int
 AS
 BEGIN
 	DELETE FROM dbo.Group_Material

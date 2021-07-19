@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
 {
     public class TopicInputModel
     {
-        [Required]
-        public string Name { get; set; }
-        [Required]
-        public int Duration { get; set; }
-
+            [Required(ErrorMessage = NameRequired)]             
+            public string Name { get; set; }         
+            [Required(ErrorMessage = DurationRequired)]             
+            public int Duration { get; set; }
     }
 }

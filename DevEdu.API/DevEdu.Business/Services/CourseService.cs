@@ -31,10 +31,6 @@ namespace DevEdu.Business.Services
             _courseRepository.UpdateCourse(courseDto);
         }
 
-        public void AddTagToTopic(int topicId, int tagId) => _courseRepository.AddTagToTopic(topicId, tagId);
-
-        public void DeleteTagFromTopic(int topicId, int tagId) => _courseRepository.DeleteTagFromTopic(topicId, tagId);
-
         public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {
             dto.Course = new CourseDto() { Id = courseId };
@@ -59,6 +55,10 @@ namespace DevEdu.Business.Services
             var list = _courseRepository.SelectAllTopicsByCourseId(courseId);
             return list;
         }
+
+        public int AddCourseMaterialReference(int courseId, int materialId) => _courseRepository.AddCourseMaterialReference(courseId, materialId);
+
+        public int RemoveCourseMaterialReference(int courseId, int materialId) => _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
 
         public void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
         {
