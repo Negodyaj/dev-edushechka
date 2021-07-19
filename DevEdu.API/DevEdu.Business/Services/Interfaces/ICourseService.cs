@@ -13,5 +13,7 @@ namespace DevEdu.Business.Services
         void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
         void DeleteTopicFromCourse(int courseId, int topicId);
         List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId);
+        int AddCourseMaterialReference(int courseId, int materialId);
+        int RemoveCourseMaterialReference(int courseId, int materialId);
     }
 }
