@@ -8,7 +8,6 @@ using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
-using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
 {
@@ -74,16 +73,16 @@ namespace DevEdu.API.Controllers
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpPost("{courseId}/material/{materialId}")]
-        public string AddMaterialToCourse(int courseId, int materialId)
+        public void AddCourseMaterialReference(int courseId, int materialId)
         {
-            return $"Course {courseId} add  Material Id {materialId}";
+            _courseService.AddCourseMaterialReference(courseId, materialId);
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpDelete("{courseId}/material/{materialId}")]
-        public string RemoveMaterialFromCourse(int courseId, int materialId)
+        public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
-            return $"Course {courseId} remove  Material Id:{materialId}";
+            _courseService.RemoveCourseMaterialReference(courseId, materialId);
         }
 
         //  api/course/{CourseId}/Task/{TaskId}

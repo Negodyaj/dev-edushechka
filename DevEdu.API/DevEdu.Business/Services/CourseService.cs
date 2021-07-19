@@ -41,5 +41,9 @@ namespace DevEdu.Business.Services
             var list = _courseRepository.SelectAllTopicsByCourseId(courseId);
             return list;
         }
+
+        public int AddCourseMaterialReference(int courseId, int materialId) => _courseRepository.AddCourseMaterialReference(courseId, materialId);
+
+        public int RemoveCourseMaterialReference(int courseId, int materialId) => _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
     }
 }

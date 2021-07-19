@@ -14,5 +14,7 @@ namespace DevEdu.DAL.Repositories
         void DeleteTaskFromCourse(int courseId, int taskId);
         List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId);
         List<CourseDto> GetCoursesToTaskByTaskId(int id);
+        int AddCourseMaterialReference(int courseId, int materialId);
+        int RemoveCourseMaterialReference(int courseId, int materialId);
     }
 }
