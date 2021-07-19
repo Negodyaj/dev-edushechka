@@ -15,7 +15,7 @@ namespace DevEdu.API.Models.OutputModels
 
         public override bool Equals(object obj)
         {
-            return obj is UserInfoOutputModel model &&
+            return obj is UserInfoOutPutModel model &&
                    Id == model.Id &&
                    FirstName == model.FirstName &&
                    LastName == model.LastName &&

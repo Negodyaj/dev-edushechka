@@ -1,4 +1,4 @@
-﻿using DevEdu.Business.Servicies;
+﻿using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
@@ -216,42 +216,6 @@ namespace DevEdu.Business.Tests.Services
             //Then
             Assert.AreEqual(expectedUserDto, actualUserDto);
             _userRepoMock.Verify(x => x.UpdateUser(_userDto), Times.Once);
-        }
-
-        [Test]
-        public void AddRoleToUser_IntUserIdAndRoleId_ReturnIntRecord()
-        {
-            //Given
-            var expectedUserRoleId = 24;
-            var _userDto = new UserDto
-            {
-                FirstName = "Admin",
-                LastName = "Adminov",
-                Patronymic = "Adminovich",
-                Email = "admin@admin.ad",
-                Username = "Admin01",
-                Password = "qwerty12345",
-                ContractNumber = "admin01",
-                City = (City)1,
-                BirthDate = DateTime.Today,
-                GitHubAccount = "admin/admin.git",
-                Photo = "https://localhost:Admin/admin",
-                PhoneNumber = "adminPhoneNumber",
-                Roles = new List<Role>
-                {
-                     Role.Student ,
-                     Role.Admin
-                }
-            };
-            _userRepoMock.Setup(x => x.AddUserRole(_userDto.Id, (int)Role.Teacher)).Returns(expectedUserRoleId);
-            var sut = new UserService(_userRepoMock.Object);
-
-            //When
-            var actualUserRoleId = sut.AddUserRole(_userDto.Id, (int)Role.Teacher);
-
-            //Then
-            Assert.AreEqual(expectedUserRoleId, actualUserRoleId);
-            _userRepoMock.Verify(x => x.AddUserRole(_userDto.Id, (int)Role.Teacher), Times.Once);
         }
     }
 }
