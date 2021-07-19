@@ -102,6 +102,7 @@ namespace DevEdu.API.Controllers
 
 
         // api/task/{taskId}
+        [AllowAnonymous]
         [HttpPut("{taskId}")]
         [Description("Update task")]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -92,16 +92,6 @@ namespace DevEdu.API
                     };
                 });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("AdminAuthorizationPolicy",
-                    policy =>
-                    {
-                        policy.RequireClaim("AdminOfDevEdu", "IAmBoss");
-                        policy.RequireRole("Teacher");
-                    });
-            });
-
             services.AddSwaggerDocument(document =>
             {
                 document.DocumentName = "Endpoints for DevEdu";

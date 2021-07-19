@@ -44,39 +44,27 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpPost("/signin/{username}/{password}")]
-        public IActionResult SignIn(string username, string password)
+        public string SignIn(string username, string password)
         {
             var identity = GetIdentity(username, password);
             if (identity == null)
             {
-                return BadRequest();
+                return null;
             }
 
             var now = DateTime.UtcNow;
-            // создаем JWT-токен
+
             var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
                 notBefore: now,
-                claims: identity.Claims,
+                claims: identity.Claims,//Here we are adding claims to JWT
                 expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
                     SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            //var response = new
-            //{
-            //    access_token = encodedJwt,
-            //    username = identity.Name
-            //};
-            var response = new List<string>();
-            response.Add("access_token: " + encodedJwt);
-            foreach (var claim in identity.Claims)
-            {
-                response.Add(claim.Type + ": " + claim.Value);
-            }
-
-            return Json(response);
+            return encodedJwt;
         }
 
         private ClaimsIdentity GetIdentity(string username, string password)
@@ -88,15 +76,11 @@ namespace DevEdu.API.Controllers
             {
                 if (_service.Verify(user.Password, password))
                 {
-                    claims.Add(new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email));
+                    claims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
                     foreach (var role in user.Roles)
                     {
                         claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString()));
                     }
-                    if(user.Roles.Contains(Role.Admin))
-                    claims.Add(new Claim("AdminOfDevEdu", "IAmBoss"));
-                    if (user.Username == "Cat")
-                    claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, user.Username));
                 };
 
                 ClaimsIdentity claimsIdentity =
