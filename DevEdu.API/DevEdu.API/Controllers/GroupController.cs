@@ -69,17 +69,25 @@ namespace DevEdu.API.Controllers
         //add group_lesson relation
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpPost("{groupId}/lesson/{lessonId}")]
-        public void AddGroupLessonReference(int groupId, int lessonId)
+        [Description("Add lesson to group")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public string AddGroupLesson(int groupId, int lessonId)
         {
-            _groupRepository.AddGroupLesson(groupId, lessonId);
+            _groupService.AddGroupLesson(groupId, lessonId);
+            return $"Group {groupId} add  Lesson Id:{lessonId}";
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
-        public void RemoveGroupLessonReference(int groupId, int lessonId)
+        [Description("Delete lesson from groupId")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public string RemoveGroupLesson(int groupId, int lessonId)
         {
-            _groupRepository.RemoveGroupLesson(groupId, lessonId);
+            _groupService.RemoveGroupLesson(groupId,    lessonId);
+            return $"Group {groupId} remove  Lesson Id:{lessonId}";
         }
+
+
 
         // api/Group/{groupId}/material/{materialId}
         [HttpPost("{groupId}/material/{materialId}")]

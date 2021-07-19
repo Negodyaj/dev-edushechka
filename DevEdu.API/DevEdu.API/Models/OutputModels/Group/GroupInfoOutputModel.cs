@@ -1,4 +1,4 @@
-﻿namespace DevEdu.API.Models.OutputModels.Group
+﻿namespace DevEdu.API.Models.OutputModels
 {
     public class GroupInfoOutputModel
     {

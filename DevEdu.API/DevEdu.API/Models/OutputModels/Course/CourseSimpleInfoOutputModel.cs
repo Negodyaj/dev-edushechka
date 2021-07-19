@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DevEdu.API.Models.OutputModels.Group;
+using DevEdu.API.Models.OutputModels;
 
 namespace DevEdu.API.Models.OutputModels
 {
