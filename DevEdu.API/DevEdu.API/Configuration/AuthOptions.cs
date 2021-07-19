@@ -9,9 +9,9 @@ namespace DevEdu.API.Configuration
 {
     public class AuthOptions
     {
-        public const string ISSUER = "MyAuthServer"; // издатель токена
-        public const string AUDIENCE = "MyAuthClient"; // потребитель токена
-        const string KEY = "mysupersecret_secretkey!123";   // ключ для шифрации
+        public const string ISSUER = "MyAuthServer"; // издатель токена, например auth.myserver.com
+        public const string AUDIENCE = "MyAuthClient"; // потребитель токена my.server.com
+        const string KEY = "mysupersecret_secretkey!123";   // ключ для шифрации подписи
         public const int LIFETIME = 5; // время жизни токена - 5 минут
         public static SymmetricSecurityKey GetSymmetricSecurityKey()
         {

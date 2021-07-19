@@ -88,7 +88,7 @@ namespace DevEdu.API
                         // установка ключа безопасности
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                         // валидация ключа безопасности
-                        ValidateIssuerSigningKey = true,
+                        ValidateIssuerSigningKey = true
                     };
                 });
 
@@ -107,7 +107,7 @@ namespace DevEdu.API
                 document.DocumentName = "Endpoints for DevEdu";
                 document.Title = "DevEdu Education API";
                 document.Version = "v8";
-                document.Description = "An interface for some software.";
+                document.Description = "An interface for DevEduApi.";
 
                 document.DocumentProcessors.Add(
                     new SecurityDefinitionAppender("JWT token", new NSwag.OpenApiSecurityScheme
