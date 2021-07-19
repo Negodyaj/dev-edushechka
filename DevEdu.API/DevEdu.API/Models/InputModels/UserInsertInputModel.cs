@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DevEdu.API.Common;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
@@ -34,10 +36,11 @@ namespace DevEdu.API.Models.InputModels
 
         [Required(ErrorMessage = CityIdRequired)]
         [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatCityId)]
-        public int CityId { get; set; }
+        public int City { get; set; }
 
         [Required(ErrorMessage = BirthDateRequired)]
-        public DateTime BirthDate { get; set; }
+        [DateTimeToStringAttribute(ErrorMessage = WrongFormatBithDate)]
+        public string BirthDate { get; set; }
 
         public string GitHubAccount { get; set; }
 
