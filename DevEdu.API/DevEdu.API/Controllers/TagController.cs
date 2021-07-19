@@ -26,7 +26,7 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         public int AddTag([FromBody] TagInputModel model)
         {
-            var dto = _mapper.Map< TagDto>(model);            
+            var dto = _mapper.Map<TagDto>(model);
             return _service.AddTag(dto);
         }
 

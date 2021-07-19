@@ -1,6 +1,5 @@
 ﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
@@ -13,7 +12,7 @@ namespace DevEdu.Business.Services
         {
             _lessonRepository = lessonRepository;
         }
-        
+
         public void AddCommentToLesson(int lessonId, int commentId) => _lessonRepository.AddCommentToLesson(lessonId, commentId);
 
         public int AddLesson(LessonDto lessonDto) => _lessonRepository.AddLesson(lessonDto);
@@ -31,10 +30,10 @@ namespace DevEdu.Business.Services
             lessonDto.Id = id;
             _lessonRepository.UpdateLesson(lessonDto);
         }
-        public void DeleteTopicFromLesson(int lessonId, int topicId) => 
+        public void DeleteTopicFromLesson(int lessonId, int topicId) =>
             _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
 
-        public void AddTopicToLesson(int lessonId, int topicId) => 
+        public void AddTopicToLesson(int lessonId, int topicId) =>
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
 
         public void AddStudentToLesson(int lessonId, int userId)

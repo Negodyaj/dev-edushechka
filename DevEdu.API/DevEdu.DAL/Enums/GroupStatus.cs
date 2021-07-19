@@ -5,4 +5,4 @@
         Active = 1,
         NoActive
     }
-}   
+}

@@ -22,9 +22,9 @@ namespace DevEdu.API.Controllers
         private readonly ICommentRepository _commentRepository;
 
         public TaskController(
-            IMapper mapper, 
-            ITaskService taskService, 
-            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, 
+            IMapper mapper,
+            ITaskService taskService,
+            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository,
             ITaskRepository taskRepository,
             ICommentRepository commentRepository)
         {

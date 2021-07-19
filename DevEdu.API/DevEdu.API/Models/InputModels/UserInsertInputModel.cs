@@ -1,7 +1,5 @@
 ﻿using DevEdu.API.Common;
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
@@ -37,7 +35,7 @@ namespace DevEdu.API.Models.InputModels
         public int City { get; set; }
 
         [Required(ErrorMessage = BirthDateRequired)]
-        [DateTimeToStringAttribute(ErrorMessage = WrongFormatBithDate)]
+        [DateTimeToStringAttribute(ErrorMessage = WrongFormatBirthDate)]
         public string BirthDate { get; set; }
 
         public string GitHubAccount { get; set; }

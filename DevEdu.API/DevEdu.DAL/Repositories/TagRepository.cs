@@ -56,8 +56,8 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection.Execute(
                 _tagUpdateProcedure,
-                new 
-                { 
+                new
+                {
                     tagDto.Id,
                     tagDto.Name
                 },

@@ -191,5 +191,5 @@ namespace DevEdu.DAL.Repositories
             int taskId = groupTaskDto.Task.Id;
             return GetGroupTask(groupId, taskId);
         }
-    }    
+    }
 }

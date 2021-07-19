@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using DevEdu.API.Common;
 using static DevEdu.API.Common.ValidationMessage;
 

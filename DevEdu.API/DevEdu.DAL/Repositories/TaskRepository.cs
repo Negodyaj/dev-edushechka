@@ -33,7 +33,7 @@ namespace DevEdu.DAL.Repositories
                     if (task == null)
                     {
                         task = taskDto;
-                        task.Tags = new List<TagDto> {TagDto};
+                        task.Tags = new List<TagDto> { TagDto };
                     }
                     else
                     {
@@ -42,7 +42,7 @@ namespace DevEdu.DAL.Repositories
 
                     return taskDto;
                 },
-                new {id},
+                new { id },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
@@ -63,7 +64,7 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.ExileDate, opt => opt.MapFrom(src => src.ExileDate.ToString(_dateFormat)));
             CreateMap<UserDto, UserUpdateInfoOutPutModel>();
             CreateMap<UserDto, UserInfoOutPutModel>();
-            CreateMap<UserDto, UserInfoShortOutputModel>(); 
+            CreateMap<UserDto, UserInfoShortOutputModel>();
             CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<TaskDto, TaskInfoOutputModel>();
             CreateMap<TaskDto, TaskInfoWithCoursesOutputModel>();

@@ -16,7 +16,7 @@ namespace DevEdu.API.Controllers
         private readonly IMaterialService _materialService;
         private readonly IMapper _mapper;
 
-        public MaterialController(IMapper mapper, IMaterialService materialService) 
+        public MaterialController(IMapper mapper, IMaterialService materialService)
         {
             _materialService = materialService;
             _mapper = mapper;
@@ -45,8 +45,8 @@ namespace DevEdu.API.Controllers
         }
 
         // api/material/5
-        [HttpPut("{id}")] 
-        public void UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
+        [HttpPut("{id}")]
+        public void UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             _materialService.UpdateMaterial(id, dto);
@@ -72,7 +72,7 @@ namespace DevEdu.API.Controllers
         // api/material/{materialId}/tag/{tagId}
         [HttpDelete("{materialId}/tag/{tagId}")]
         [Description("Delete tag from material")]
-        [ProducesResponseType(typeof(string),StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public string DeleteTagFromMaterial(int materialId, int tagId)
         {
             _materialService.DeleteTagFromMaterial(materialId, tagId);
@@ -85,6 +85,5 @@ namespace DevEdu.API.Controllers
         {
             return _materialService.GetMaterialsByTagId(tagId);
         }
-
     }
 }

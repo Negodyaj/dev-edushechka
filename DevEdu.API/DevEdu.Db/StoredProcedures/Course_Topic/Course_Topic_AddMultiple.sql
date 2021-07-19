@@ -6,5 +6,4 @@ Begin
 	
 	insert into Course_Topic(CourseId,TopicId,Position)
 	Select CourseId,TopicId,Position From @tblCourseTopic
-
-	End  
+End

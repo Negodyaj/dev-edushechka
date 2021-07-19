@@ -7,6 +7,5 @@ namespace DevEdu.API.Models.InputModels
     {
         [Required(ErrorMessage = AttendanceRequired)]
         public bool IsPresent { get; set; }
-
     }
 }

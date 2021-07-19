@@ -143,7 +143,7 @@ namespace DevEdu.API.Controllers
         [Description("Delete task from group")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTaskFromGroup(int groupId, int taskId)
-        { 
+        {
             _groupService.DeleteTaskFromGroup(groupId, taskId);
         }
 
@@ -154,7 +154,7 @@ namespace DevEdu.API.Controllers
         public GroupTaskInfoOutputModel UpdateGroupTask(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
             var dto = _mapper.Map<GroupTaskDto>(model);
-            var output=_groupService.UpdateGroupTask(groupId, taskId, dto);
+            var output = _groupService.UpdateGroupTask(groupId, taskId, dto);
             return _mapper.Map<GroupTaskInfoOutputModel>(output);
         }
     }

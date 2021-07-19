@@ -10,7 +10,7 @@ namespace DevEdu.API.Models.InputModels
         [Required(ErrorMessage = DateRequired)]
         public DateTime Date { get; set; }
 
-        [Required(ErrorMessage = SummRequired)]
+        [Required(ErrorMessage = SumRequired)]
         public int Sum { get; set; }
 
         [Required(ErrorMessage = UserIdRequired)]
