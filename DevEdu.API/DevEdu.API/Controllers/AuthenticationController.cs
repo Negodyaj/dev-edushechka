@@ -64,11 +64,17 @@ namespace DevEdu.API.Controllers
                     SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            var response = new
+            //var response = new
+            //{
+            //    access_token = encodedJwt,
+            //    username = identity.Name
+            //};
+            var response = new List<string>();
+            response.Add("access_token: " + encodedJwt);
+            foreach (var claim in identity.Claims)
             {
-                access_token = encodedJwt,
-                username = identity.Name
-            };
+                response.Add(claim.Type + ": " + claim.Value);
+            }
 
             return Json(response);
         }
@@ -82,10 +88,7 @@ namespace DevEdu.API.Controllers
             {
                 if (_service.Verify(user.Password, password))
                 {
-                    claims = new List<Claim>
-                    {
-                        new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                    };
+                    claims.Add(new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email));
                     foreach (var role in user.Roles)
                     {
                         claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString()));
