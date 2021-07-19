@@ -1,11 +1,10 @@
+using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
-using DevEdu.Business.Servicies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
 
 namespace DevEdu.API
 {
@@ -22,18 +21,31 @@ namespace DevEdu.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<IMaterialRepository, MaterialRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IStudentAnswerOnTaskRepository, StudentAnswerOnTaskRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<ILessonRepository, LessonRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
+            services.AddScoped<ITopicRepository, TopicRepository>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<IMaterialService, MaterialService>();
+            services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICourseService, CourseService>(); 
+            services.AddScoped<ILessonService, LessonService>();
+            services.AddScoped<ITopicService, TopicService>();
 
-            services.AddControllers();
+            services.AddControllers();
             services.AddControllers();
 
             services.AddSwaggerDocument(settings => {

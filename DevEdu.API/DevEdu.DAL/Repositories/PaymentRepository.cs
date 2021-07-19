@@ -2,7 +2,6 @@
 using System.Data;
 using System.Linq;
 using Dapper;
-using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
@@ -51,7 +50,6 @@ namespace DevEdu.DAL.Repositories
                 {
                     if (result == null)
                     {
-
                         result = payment;
                         result.User = user;
                     }
@@ -98,6 +96,7 @@ namespace DevEdu.DAL.Repositories
                 _paymentUpdateProcedure,
                 new
                 {
+                    paymentDto.Date,
                     paymentDto.Sum,
                     paymentDto.IsPaid
                 },

@@ -3,22 +3,23 @@
 AS
 BEGIN
 	SELECT 
-		Id,
-		FisrtName,
-		LastName,
-		Patronymic,
-		Email,
-		Username,
-		Password,
-		IsDeleted,
-		RegistrationDate,
-		ContractNumber,
-		CityId,
-		BirthDate,
-		GitHubAccount,
-		Photo,
-		PhoneNumer,
-		ExileDate
-	FROM dbo.[User]
-	WHERE Id = @Id
+		u.Id,
+		u.FirstName,
+		u.LastName,
+		u.Patronymic,
+		u.Email,
+		u.Username,
+		u.IsDeleted,
+		u.RegistrationDate,
+		u.ContractNumber,
+		u.BirthDate,
+		u.GitHubAccount,
+		u.Photo,
+		u.PhoneNumber,
+		u.ExileDate,
+		u.CityId as id,
+		ur.RoleId as id
+	FROM dbo.[User] u 
+	inner join dbo.User_Role ur on ur.UserId = u.Id
+	WHERE u.Id = @Id
 END

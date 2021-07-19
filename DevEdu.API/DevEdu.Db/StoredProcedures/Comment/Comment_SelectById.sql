@@ -3,7 +3,18 @@
 AS
 BEGIN
 	SELECT 
-	Id, UserId, Text, Date, IsDeleted
-	FROM dbo.Comment
-	WHERE (Id = @Id)
+		c.Id,
+		c.Text,
+		c.Date,
+		c.IsDeleted,
+		u.Id,
+		u.FirstName,
+		u.LastName,
+		u.Email,
+		u.Photo,
+		ur.RoleId as id
+	FROM dbo.Comment c
+		inner join [User] u on u.Id=c.UserId
+		inner join User_Role ur on ur.UserId=u.Id
+	WHERE (c.Id = @Id)
 END

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
-using DevEdu.Business.Servicies;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 

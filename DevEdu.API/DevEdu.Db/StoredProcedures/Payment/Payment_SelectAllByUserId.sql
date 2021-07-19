@@ -10,7 +10,7 @@ BEGIN
 		p.IsPaid,
 		p.IsDeleted,
 		u.Id,
-		u.FisrtName,
+		u.FirstName,
 		u.LastName,
 		u.GitHubAccount,
 		u.Photo

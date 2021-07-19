@@ -2,6 +2,17 @@
 	@Id int
 AS
 BEGIN
-	SELECT Date, TeacherComment, TeacherId, IsDeleted FROM dbo.Lesson
-	WHERE (Id = @Id)
+	SELECT 
+		l.Id, 
+		l.Date, 
+		l.TeacherComment, 
+		l.IsDeleted,
+		u.Id,
+		u.FirstName,
+		u.LastName,
+		u.Email,
+		u.Photo
+	FROM dbo.Lesson as l
+		inner join dbo.[User] u on l.TeacherId = u.Id  
+	WHERE l.Id = @Id
 END

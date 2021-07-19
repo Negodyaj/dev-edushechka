@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE dbo.Comment_Insert
-	@UserId int,
-	@Text nvarchar(max)
+	@UserId		int,
+	@Text		nvarchar(max)
 AS
 BEGIN
 	INSERT INTO dbo.Comment (UserId,[Text],[Date])

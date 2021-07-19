@@ -3,6 +3,6 @@
 	@LessonId int
 AS
 BEGIN
-	INSERT INTO dbo.Lesson_Topic (TopicId, ClassId)
+	INSERT INTO dbo.Lesson_Topic (TopicId, LessonId)
 	VALUES (@TopicId, @LessonId)
 END

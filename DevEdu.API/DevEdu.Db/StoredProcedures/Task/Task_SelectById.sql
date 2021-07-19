@@ -3,14 +3,16 @@
 AS
 BEGIN
 	SELECT
-		Id,
-		Name,
-		StartDate,
-		EndDate,
-		Description,
-		Links,
-		IsRequired
-	From dbo.Task
+		t.Id,
+		t.Name,
+		t.Description,
+		t.Links,
+		t.IsRequired,
+		tg.Id,
+		tg.Name
+	From dbo.Task t
+		left join dbo.Tag_Task tgt on tgt.TaskId = t.Id
+		left join dbo.Tag tg on tg.Id = tgt.TagId
 	WHERE 
-	Id = @Id
+	t.Id = @Id
 END
