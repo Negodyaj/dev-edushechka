@@ -54,7 +54,7 @@ namespace DevEdu.DAL.Repositories
                     if (result == null)
                     {
                         result = user;
-                        result.CityId = city;
+                        result.City = city;
                         result.Roles = new List<Role> { role };
                     }
                     else
@@ -80,7 +80,7 @@ namespace DevEdu.DAL.Repositories
                         if (result == null)
                         {
                             result = user;
-                            result.CityId = city;
+                            result.City = city;
                             result.Roles = new List<Role> { role };
                         }
                         else
@@ -109,7 +109,7 @@ namespace DevEdu.DAL.Repositories
                     if (!UserDictionary.TryGetValue(user.Id, out userEnrty))
                     {
                         userEnrty = user;
-                        userEnrty.CityId = city;
+                        userEnrty.City = city;
                         userEnrty.Roles = new List<Role>();
                         UserDictionary.Add(user.Id, userEnrty);
                     }
