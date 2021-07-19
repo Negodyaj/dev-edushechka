@@ -95,6 +95,8 @@ namespace DevEdu.API.Controllers
                     }
                     if(user.Roles.Contains(Role.Admin))
                     claims.Add(new Claim("AdminOfDevEdu", "IAmBoss"));
+                    if (user.Username == "Cat")
+                    claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, user.Username));
                 };
 
                 ClaimsIdentity claimsIdentity =
