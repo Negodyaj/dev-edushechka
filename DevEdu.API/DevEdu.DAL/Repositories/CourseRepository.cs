@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
@@ -19,6 +18,7 @@ namespace DevEdu.DAL.Repositories
         private const string _selectAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_SelectAllByCourseId]";
         private const string _updateCourseTopicsProcedure = "[dbo].[Course_Topic_Update]";
         private const string _deleteAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_DeleteAllTopicsByCourseId]";
+        private const string _course_TopicType = "dbo.Course_TopicType";
 
         private const string _сourseTaskInsertProcedure = "dbo.Course_Task_Insert";
         private const string _сourseTaskDeleteProcedure = "dbo.Course_Task_Delete";
@@ -154,7 +154,7 @@ namespace DevEdu.DAL.Repositories
         public List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId)
         {
             return _connection
-                .Query<CourseTopicDto,TopicDto, CourseTopicDto>(
+                .Query<CourseTopicDto, TopicDto, CourseTopicDto>(
                     _selectAllTopicsByCourseIdProcedure,
                     (courseTopicDto, topicDto) =>
                     {
@@ -162,27 +162,28 @@ namespace DevEdu.DAL.Repositories
                         courseTopicDto.Course = new CourseDto() { Id = courseId };
                         return courseTopicDto;
                     },
-                    new {courseId},
+                    new { courseId },
                     splitOn: "id",
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
         }
-        public void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
+        public void UpdateCourseTopicsByCourseId(List<CourseTopicDto> topics)
         {
+            var dt = new DataTable();
+            dt.Columns.Add("CourseId");
+            dt.Columns.Add("TopicId");
+            dt.Columns.Add("Position");
+
             foreach (var topic in topics)
             {
-                _connection.Query(
-                    _updateCourseTopicsProcedure,
-                    new
-                    {
-                        courseId,
-                        TopicId = topic.Topic.Id,
-                        topic.Position
-                    },
-                    commandType: CommandType.StoredProcedure
-               );
+                dt.Rows.Add(topic.Course.Id, topic.Topic.Id, topic.Position);
             }
+            _connection.Execute(
+                _updateCourseTopicsProcedure,
+                new { tblCourseTopic = dt.AsTableValuedParameter(_course_TopicType) },
+                commandType: CommandType.StoredProcedure
+                );
         }
         public void DeleteAllTopicsByCourseId(int courseId)
         {

@@ -1,4 +1,4 @@
-﻿Create Procedure [dbo].[Course_Topic_Add]
+﻿Create Procedure [dbo].[Course_Topic_AddMultiple]
 	@tblCourseTopic Course_TopicType readonly
 As
 Begin

@@ -1,12 +1,15 @@
-﻿CREATE PROCEDURE [dbo].[Course_Topic_Update]
-	@CourseId int,
-	@TopicId int,
-	@Position int
-AS
-BEGIN
-	UPDATE dbo.Course_Topic
-	SET
-	TopicId = @TopicId,
-	Position = @Position
-	WHERE CourseId = @CourseId and TopicId = @TopicId
-END
+﻿Create Procedure [dbo].[Course_Topic_Update]
+  @tblCourseTopic Course_TopicType readonly 
+As
+Begin
+  Update dbo.Course_Topic
+  Set 
+    TopicId = src.TopicId,
+	Position = src.Position
+  From 
+    @tblCourseTopic src
+  Where 
+    dbo.Course_Topic.CourseId = src.CourseId
+    and
+    dbo.Course_Topic.TopicId = src.TopicId
+End

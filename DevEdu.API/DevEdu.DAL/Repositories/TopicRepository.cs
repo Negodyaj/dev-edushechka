@@ -13,7 +13,9 @@ namespace DevEdu.DAL.Repositories
         private const string _topicSelectAllProcedure = "dbo.Topic_SelectAll";
         private const string _topicUpdateProcedure = "dbo.Topic_Update";     
         private const string _addTopicToCourseProcedure = "[dbo].[Course_Topic_Insert]";
-        private const string _deleteTopicToCourseProcedure = "[dbo].[Course_Topic_Delete]";  
+        private const string _addMultipleTopicsToCourseProcedure = "[dbo].[Course_Topic_AddMultiple]";
+        private const string _deleteTopicToCourseProcedure = "[dbo].[Course_Topic_Delete]";
+        private const string _course_TopicType = "dbo.Course_TopicType";
 
         public TopicRepository() { }
 
@@ -100,8 +102,8 @@ namespace DevEdu.DAL.Repositories
                 dt.Rows.Add(topic.Course.Id, topic.Topic.Id, topic.Position);
             }
             _connection.Execute(
-                "[dbo].[Course_Topic_Add]",
-                new { tblCourseTopic = dt.AsTableValuedParameter("dbo.Course_TopicType") },
+                _addMultipleTopicsToCourseProcedure,
+                new { tblCourseTopic = dt.AsTableValuedParameter(_course_TopicType) },
                 commandType: CommandType.StoredProcedure
                 );
         }
