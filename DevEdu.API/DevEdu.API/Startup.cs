@@ -71,25 +71,16 @@ namespace DevEdu.API
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    //���� ����� false, �� SSL ��� �������� ������ �� ������������. ������ ������ ������� ���������� ������ �� ������������.
-                    //� �������� ���������� ��� �� ����� ������������ �������� ������ �� ��������� https.
                     options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        // ��������, ����� �� �������������� �������� ��� ��������� ������
                         ValidateIssuer = true,
-                        // ������, �������������� ��������
-                        ValidIssuer = AuthOptions.ISSUER,
-                        // ����� �� �������������� ����������� ������
+                        ValidIssuer = AuthOptions._issuer,
                         ValidateAudience = true,
-                        // ��������� ����������� ������
-                        ValidAudience = AuthOptions.AUDIENCE,
-                        // ����� �� �������������� ����� �������������
+                        ValidAudience = AuthOptions._audience,
                         ValidateLifetime = true,
-                        // ��������� ����� ������������
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        // ��������� ����� ������������
                         ValidateIssuerSigningKey = true
                     };
                 });

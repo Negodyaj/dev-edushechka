@@ -55,11 +55,11 @@ namespace DevEdu.API.Controllers
             var now = DateTime.UtcNow;
 
             var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
+                issuer: AuthOptions._issuer,
+                audience: AuthOptions._audience,
                 notBefore: now,
                 claims: identity.Claims,//Here we are adding claims to JWT
-                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+                expires: now.Add(TimeSpan.FromMinutes(AuthOptions._lifetime)),
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
                     SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
