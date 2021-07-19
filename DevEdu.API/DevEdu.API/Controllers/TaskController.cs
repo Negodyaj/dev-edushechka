@@ -57,7 +57,6 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
         }
 
-        [Authorize(Policy = "AdminAuthorizationPolicy")]
         //  api/Task/answers
         [HttpGet("{taskId}/with-answers")]
         [Description("Get task by Id with tags and answers")]
@@ -69,7 +68,6 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task/coursesandanswers
-        [Authorize]
         [HttpGet("{taskId}/full-info")]
         [Description("Get task by Id with tags, courses and answers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesAndAnswersOutputModel))]
@@ -80,7 +78,6 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task
-        [Authorize(Roles = "Teacher")]
         [HttpGet]
         [Description("Get all tasks with tags")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
@@ -102,7 +99,6 @@ namespace DevEdu.API.Controllers
 
 
         // api/task/{taskId}
-        [AllowAnonymous]
         [HttpPut("{taskId}")]
         [Description("Update task")]
         [ProducesResponseType(StatusCodes.Status200OK)]
