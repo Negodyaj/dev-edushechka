@@ -40,19 +40,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteStudentRaiting(int id) => _service.DeleteStudentRaiting(id);
 
-        // api/raiting/1
-        [HttpPut("{id}/raiting/{newRaiting}/reportingPeriodNumber/{newReportingPeriodNumber}")]
+        // api/raiting/1/{periodNumber}/value/50
+        [HttpPut("{id}/period/{periodNumber}/value/{value}")]
         [Description("Update StudentRaiting in database and return updated StudentRaiting")]
         [ProducesResponseType(typeof(StudentRaitingOutputModel), StatusCodes.Status200OK)]
-        public StudentRaitingOutputModel UpdateStudentRaiting(int id, int newRaiting, int newReportingPeriodNumber)
-        {
-            var dto = new StudentRaitingDto 
-            { 
-                Id = id ,
-                Raiting = newRaiting ,
-                ReportingPeriodNumber = newReportingPeriodNumber 
-            };
-            _service.UpdateStudentRaiting(dto);
+        public StudentRaitingOutputModel UpdateStudentRaiting(int id, int value, int periodNumber)
+        {            
+            _service.UpdateStudentRaiting(id, value, periodNumber);
             return GetStudentRaitingById(id);
         }
 
@@ -76,8 +70,18 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<StudentRaitingOutputModel>(queryResult);
         }
 
-        // api/raiting/user/1
-        [HttpGet("user/{userid}")]
+        // api/raiting/group/1
+        [HttpGet("group/{groupId}")]
+        [Description("Get StudentRaiting from database by GroupID")]
+        [ProducesResponseType(typeof(StudentRaitingOutputModel), StatusCodes.Status200OK)]
+        public List<StudentRaitingOutputModel> GetStudentRaitingByGroupID(int groupId)
+        {
+            var queryResult = _service.GetStudentRaitingByGroupId(groupId);
+            return _mapper.Map<List<StudentRaitingOutputModel>>(queryResult);
+        }
+
+        // api/raiting/by-user/1
+        [HttpGet("by-user/{userid}")]
         [Description("Get StudentRaitings from database by UserID")]
         [ProducesResponseType(typeof(List<StudentRaitingOutputModel>), StatusCodes.Status200OK)]
         public List<StudentRaitingOutputModel> GetStudentRaitingByUserId(int userid)

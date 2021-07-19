@@ -23,6 +23,17 @@ namespace DevEdu.Business.Services
 
         public List<StudentRaitingDto> GetStudentRaitingByUserId(int userId) => _repository.SelectStudentRaitingByUserId(userId);
 
-        public void UpdateStudentRaiting(StudentRaitingDto studentRaitingDto) => _repository.UpdateStudentRaiting(studentRaitingDto);
+        public List<StudentRaitingDto> GetStudentRaitingByGroupId(int groupId) => _repository.SelectStudentRaitingByGroupId(groupId);
+
+        public void UpdateStudentRaiting(int id, int value, int periodNumber)
+        {
+            var dto = new StudentRaitingDto
+            {
+                Id = id,
+                Raiting = value,
+                ReportingPeriodNumber = periodNumber
+            };
+            _repository.UpdateStudentRaiting(dto);
+        }
     }
 }

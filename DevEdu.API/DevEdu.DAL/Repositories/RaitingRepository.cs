@@ -17,19 +17,20 @@ namespace DevEdu.DAL.Repositories
         private const string _studentRaitingSelectAllProcedure = "dbo.StudentRaiting_SelectAll";
         private const string _studentRaitingSelectByIDProcedure = "dbo.StudentRaiting_SelectById";
         private const string _studentRaitingSelectByUserIdProcedure = "dbo.StudentRaiting_SelectByUserId";
+        private const string _studentRaitingSelectByGroupIdProcedure = "dbo.StudentRaiting_SelectByGroupId";
         private const string _studentRaitingUpdateProcedure = "dbo.StudentRaiting_Update";
 
         public int AddStudentRaiting(StudentRaitingDto studentRaitingDto)
         {
-            var UserId = studentRaitingDto.User.Id;
-            var GroupId = studentRaitingDto.Group.Id;
+            var userId = studentRaitingDto.User.Id;
+            var groupId = studentRaitingDto.Group.Id;
             var raitingTypeId = studentRaitingDto.RaitingType.Id;
             return _connection.QuerySingleOrDefault<int>(
                 _studentRaitingInsertProcedure,
                 new
                 {
-                    UserId,
-                    GroupId,
+                    userId,
+                    groupId,
                     raitingTypeId,
                     studentRaitingDto.Raiting,
                     studentRaitingDto.ReportingPeriodNumber
@@ -100,6 +101,24 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
+        public List<StudentRaitingDto> SelectStudentRaitingByGroupId(int groupId)
+        {
+            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, StudentRaitingDto>
+                (
+                _studentRaitingSelectByGroupIdProcedure,
+                (studentRaiting, group, raitingType, user) =>
+                {
+                    studentRaiting.RaitingType = raitingType;
+                    studentRaiting.User = user;
+                    studentRaiting.Group = group;
+                    return studentRaiting;
+                },
+                 new { groupId },
+                commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+
         public void UpdateStudentRaiting(StudentRaitingDto studentRaitingDto)
         {
             _connection.Execute(
@@ -113,5 +132,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
+
+
     }
 }

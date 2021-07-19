@@ -10,6 +10,7 @@ namespace DevEdu.DAL.Repositories
         List<StudentRaitingDto> SelectAllStudentRaitings();
         StudentRaitingDto SelectStudentRaitingById(int id);
         List<StudentRaitingDto> SelectStudentRaitingByUserId(int userId);
+        public List<StudentRaitingDto> SelectStudentRaitingByGroupId(int groupId);
         void UpdateStudentRaiting(StudentRaitingDto studentRaitingDto);
     }
 }

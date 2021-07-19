@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE dbo.StudentRaiting_SelectAll
+﻿CREATE PROCEDURE dbo.StudentRaiting_SelectByGroupId
+		@GroupId int
 	AS
 BEGIN
 	SELECT 
@@ -32,6 +33,6 @@ BEGIN
 	left join [dbo].[Group] g on sr.GroupId = g.Id
 	left join dbo.RaitingType rt on sr.RaitingTypeID = rt.Id
 	left join [dbo].[User] u on sr.UserID = u.Id
-	WHERE u.IsDeleted = 0
-	AND g.IsDeleted = 0
+	WHERE g.Id = @GroupId
+	AND u.IsDeleted = 0
 END

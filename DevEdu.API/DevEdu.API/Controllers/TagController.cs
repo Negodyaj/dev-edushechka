@@ -46,8 +46,7 @@ namespace DevEdu.API.Controllers
         public TagOutputModel UpdateTag(int id, [FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
-            dto.Id = id;
-            _service.UpdateTag(dto);
+            _service.UpdateTag(dto, id);
             return GetTagById(id);
         }
 
