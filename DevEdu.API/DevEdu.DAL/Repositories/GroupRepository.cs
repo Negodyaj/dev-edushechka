@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using Dapper;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
@@ -49,21 +50,30 @@ namespace DevEdu.DAL.Repositories
 
         public GroupDto GetGroup(int id)
         {
+            var userDictionary = new Dictionary<int, UserDto>();
             GroupDto result = default;
-            _connection.Query<GroupDto, CourseDto, int, UserDto, GroupDto>
+            UserDto resultUser = default;
+            int index = 0;
+            return _connection
+                .Query<GroupDto, CourseDto, Role, UserDto, GroupDto>
             (
                 _groupSelectByIdProcedure,
                 (group, course, role, user) =>
                 {
-                    if (result == null)
+                    if (!userDictionary.TryGetValue(user.Id, out resultUser))
                     {
                         result = group;
                         result.Course = course;
+                        result.Users = new List<UserDto> { user };
+                        result.Users[index].Roles = new List<Role> { role };
+                        userDictionary.Add(user.Id, resultUser);
                     }
                     else
                     {
-                        result.Course = course;
+                        result.Users.Add(user);
+                        result.Users[index].Roles.Add(role);
                     }
+                    index++;
                     return result;
                 },
                 new { id },
@@ -71,16 +81,51 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             )
             .FirstOrDefault();
-            return result;
         }
 
         public List<GroupDto> GetGroups()
         {
-            return _connection.Query<GroupDto>
+            var groupDictionary = new Dictionary<int, GroupDto>();
+            var userDictionary = new Dictionary<int, UserDto>();
+            GroupDto result = default;
+            UserDto resultUser = default;
+            int index = 0;
+            return _connection
+                .Query<GroupDto, CourseDto, Role, UserDto, GroupDto>
             (
-                _groupSelectAllProcedure,
+                _groupSelectByIdProcedure,
+                (group, course, role, user) =>
+                {
+                    if(!groupDictionary.TryGetValue(group.Id, out result))
+                    {
+                        if (!userDictionary.TryGetValue(user.Id, out resultUser))
+                        {
+                            result = group;
+                            result.Course = course;
+                            result.Users = new List<UserDto> { user };
+                            result.Users[index].Roles = new List<Role> { role };
+                            userDictionary.Add(user.Id, resultUser);
+                        }
+                        else
+                        {
+                            result.Users.Add(user);
+                            result.Users[index].Roles.Add(role);
+                        }
+                        index++;
+                        return result;
+                    }
+                    else
+                    {
+                        groupDictionary.Add(group.Id, result);
+                    }
+                   
+                    index = 0;
+                    return result;
+                },
+                splitOn: "Id",
                 commandType: CommandType.StoredProcedure
             )
+            .Distinct()
             .ToList();
         }
 
