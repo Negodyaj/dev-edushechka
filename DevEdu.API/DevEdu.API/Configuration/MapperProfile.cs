@@ -42,6 +42,8 @@ namespace DevEdu.API.Configuration
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<PaymentInputModel, PaymentDto>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }));
+            CreateMap<CourseTopicUpdateInputModel, CourseTopicDto>()
+                .ForMember(dest => dest.Topic, opt => opt.MapFrom(src => new TopicDto { Id = src.TopicId }));
         }
 
         private void CreateMappingFromDto()
