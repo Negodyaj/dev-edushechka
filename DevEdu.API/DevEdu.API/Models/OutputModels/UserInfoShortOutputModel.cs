@@ -4,14 +4,13 @@ using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Models.OutputModels
 {
-    public class UserInfoOutputModel
+    public class UserInfoShortOutputModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Photo { get; set; }
-        public List<Role> Roles { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -20,13 +19,12 @@ namespace DevEdu.API.Models.OutputModels
                    FirstName == model.FirstName &&
                    LastName == model.LastName &&
                    Email == model.Email &&
-                   Photo == model.Photo &&
-                   EqualityComparer<List<Role>>.Default.Equals(Roles, model.Roles);
+                   Photo == model.Photo;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, FirstName, LastName, Email, Photo, Roles);
+            return HashCode.Combine(Id, FirstName, LastName, Email, Photo);
         }
     }
 }
