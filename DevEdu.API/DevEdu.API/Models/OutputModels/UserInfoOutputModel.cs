@@ -1,6 +1,6 @@
-﻿using DevEdu.DAL.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Models.OutputModels
 {
@@ -15,7 +15,7 @@ namespace DevEdu.API.Models.OutputModels
 
         public override bool Equals(object obj)
         {
-            return obj is UserInfoOutPutModel model &&
+            return obj is UserInfoOutputModel model &&
                    Id == model.Id &&
                    FirstName == model.FirstName &&
                    LastName == model.LastName &&

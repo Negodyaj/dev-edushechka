@@ -1,7 +1,7 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
-namespace DevEdu.Business.Servicies
+namespace DevEdu.Business.Services
 {
     public interface IUserService
     {
