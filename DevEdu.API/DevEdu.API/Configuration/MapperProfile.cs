@@ -3,8 +3,6 @@ using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.API.Models.OutputModels.Group;
 using DevEdu.DAL.Models;
-using System;
-using System.Linq.Expressions;
 
 namespace DevEdu.API.Configuration
 {
