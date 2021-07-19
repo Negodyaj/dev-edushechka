@@ -15,7 +15,7 @@ namespace DevEdu.Business.Servicies
 
         public PaymentDto GetPayment(int id) => _paymentRepository.GetPayment(id);
 
-        public List<PaymentDto> GetPaymentByUserId(int userId) => _paymentRepository.GetPaymentsByUser(userId);
+        public List<PaymentDto> GetPaymentsByUserId(int userId) => _paymentRepository.GetPaymentsByUser(userId);
 
         public int AddPayment(PaymentDto dto) => _paymentRepository.AddPayment(dto);
 

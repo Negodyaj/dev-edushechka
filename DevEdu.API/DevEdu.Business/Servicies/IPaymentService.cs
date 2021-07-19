@@ -8,7 +8,7 @@ namespace DevEdu.Business.Servicies
         int AddPayment(PaymentDto dto);
         void DeletePayment(int id);
         PaymentDto GetPayment(int id);
-        List<PaymentDto> GetPaymentByUserId(int userId);
+        List<PaymentDto> GetPaymentsByUserId(int userId);
         void UpdatePayment(int id, PaymentDto dto);
     }
 }

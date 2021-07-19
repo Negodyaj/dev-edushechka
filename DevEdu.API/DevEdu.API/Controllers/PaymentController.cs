@@ -32,7 +32,7 @@ namespace DevEdu.API.Controllers
         [HttpGet("user/{userId}")]
         public List<PaymentDto> SelectAllPaymentsByUserId(int userId)
         {
-            return _paymentService.GetPaymentByUserId(userId);
+            return _paymentService.GetPaymentsByUserId(userId);
         }
 
         //  api/payment

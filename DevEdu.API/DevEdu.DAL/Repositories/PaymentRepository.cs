@@ -98,9 +98,7 @@ namespace DevEdu.DAL.Repositories
                 _paymentUpdateProcedure,
                 new
                 {
-                    paymentDto.Date,
                     paymentDto.Sum,
-                    paymentDto.User.Id,
                     paymentDto.IsPaid
                 },
                 commandType: CommandType.StoredProcedure
