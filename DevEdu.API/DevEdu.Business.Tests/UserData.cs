@@ -6,11 +6,13 @@ using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
-    public class UserServiceTestsSource : IEnumerable
+    public static class UserData
     {
-        public IEnumerator GetEnumerator()
+        public const int expectedUserId = 33;
+
+        public static UserDto GetUserDto()
         {
-            yield return new UserDto
+            return new UserDto
             {
                 FirstName = "Admin",
                 LastName = "Adminov",
@@ -32,9 +34,29 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static IEnumerable<List<UserDto>> GetUsers()
+        public static UserDto GetAnotherUserDto()
         {
-            yield return new List<UserDto>
+            return new UserDto
+            {
+                FirstName = "Student",
+                LastName = "Studentov",
+                Patronymic = "Studentovich",
+                Email = "student@student.st",
+                Username = "Student01",
+                Password = "qwerty12345",
+                ContractNumber = "Student01",
+                City = (City)1,
+                BirthDate = DateTime.Today,
+                GitHubAccount = "Student/Student.git",
+                Photo = "https://localhost:Student",
+                PhoneNumber = "StudentPhoneNumber",
+                Roles = new List<Role> { Role.Student }
+            };
+        }
+
+        public static List<UserDto> GetListUsersDto()
+        {
+            return new List<UserDto>
             {
                 new UserDto
                 {

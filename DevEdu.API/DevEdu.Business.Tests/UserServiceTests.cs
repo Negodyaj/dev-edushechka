@@ -20,44 +20,47 @@ namespace DevEdu.Business.Tests.Services
             _userRepoMock = new Mock<IUserRepository>();
         }
 
-        [TestCaseSource(typeof(UserServiceTestsSource))]
-        public void AddUser_DtoWithRoles_UserDtoWithRolesCreated(UserDto user)
+        [Test]
+        public void AddUser_DtoWithRoles_UserDtoWithRolesCreated()
         {
             //Given
-            var expectedId = 1;
-            _userRepoMock.Setup(x => x.AddUser(user)).Returns(expectedId);
-            _userRepoMock.Setup(x => x.AddUserRole(expectedId, It.IsAny<int>()));
+            var user = UserData.GetUserDto();
+
+            _userRepoMock.Setup(x => x.AddUser(user)).Returns(UserData.expectedUserId);
+            _userRepoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
+
             var sut = new UserService(_userRepoMock.Object);
 
             //When
             var actualId = sut.AddUser(user);
 
             //Then
-            Assert.AreEqual(expectedId, actualId);
+            Assert.AreEqual(UserData.expectedUserId, actualId);
             _userRepoMock.Verify(x => x.AddUser(user), Times.Once);
             _userRepoMock.Verify(x => x.AddUserRole(actualId, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
         }
 
-        [TestCaseSource(typeof(UserServiceTestsSource))]
-        public void SelectById_IntUserId_ReturnUserDto(UserDto expectedDto)
+        [Test]
+        public void SelectById_IntUserId_ReturnUserDto()
         {
             //Given
-            var id = 1;
-            _userRepoMock.Setup(x => x.SelectUserById(id)).Returns(expectedDto);
+            var expectedDto = UserData.GetUserDto();
+            _userRepoMock.Setup(x => x.SelectUserById(UserData.expectedUserId)).Returns(expectedDto);
             var sut = new UserService(_userRepoMock.Object);
 
             //When
-            var actualDto = sut.SelectUserById(id);
+            var actualDto = sut.SelectUserById(UserData.expectedUserId);
 
             //Then
             Assert.AreEqual(expectedDto, actualDto);
-            _userRepoMock.Verify(x => x.SelectUserById(id), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.Once);
         }
 
-        [TestCaseSource(typeof(UserServiceTestsSource), nameof(UserServiceTestsSource.GetUsers))]
-        public void SelectUsers_NoEntries_ReturnListUserDto(List<UserDto> expectedList)
+        [Test]
+        public void SelectUsers_NoEntries_ReturnListUserDto()
         {
             //Given
+            var expectedList = UserData.GetListUsersDto();
             _userRepoMock.Setup(x => x.SelectUsers()).Returns(expectedList);
             var sut = new UserService(_userRepoMock.Object);
 
@@ -69,20 +72,25 @@ namespace DevEdu.Business.Tests.Services
             _userRepoMock.Verify(x => x.SelectUsers(), Times.Once);
         }
 
-        [TestCaseSource(typeof(UserServiceTestsSource))]
-        public void UpdateUser_UserDto_ReturnUpdateUserDto(UserDto expectedDto)
+        [Test]
+        public void UpdateUser_UserDto_ReturnUpdateUserDto()
         {
             //Given
+            var expectedDto = UserData.GetUserDto();
+            var expectedAnotherDto = UserData.GetAnotherUserDto();
+
             _userRepoMock.Setup(x => x.UpdateUser(expectedDto));
-            _userRepoMock.Setup(x => x.SelectUserById(expectedDto.Id)).Returns(expectedDto);
+            _userRepoMock.Setup(x => x.SelectUserById(expectedDto.Id)).Returns(expectedAnotherDto);
+           
             var sut = new UserService(_userRepoMock.Object);
 
             //When
             var actualDto = sut.UpdateUser(expectedDto);
 
             //Then
-            Assert.AreEqual(expectedDto, actualDto);
+            Assert.AreEqual(expectedAnotherDto, actualDto);
             _userRepoMock.Verify(x => x.UpdateUser(expectedDto), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(expectedDto.Id), Times.Once);
         }
     }
 }
