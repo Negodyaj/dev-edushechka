@@ -29,6 +29,8 @@ namespace DevEdu.API
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
@@ -43,6 +45,7 @@ namespace DevEdu.API
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ITopicService, TopicService>();
 
+            services.AddControllers();
             services.AddControllers();
 
             services.AddSwaggerDocument(settings => {

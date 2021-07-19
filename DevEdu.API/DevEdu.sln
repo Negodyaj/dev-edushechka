@@ -11,7 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEdu.DAL", "DevEdu.DAL\De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEdu.Business", "DevEdu.Business\DevEdu.Business.csproj", "{E46DE434-9A9B-4FA6-880E-64873889410B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEdu.Business.Tests", "DevEdu.Business.Tests\DevEdu.Business.Tests.csproj", "{1EEEC36C-0A40-479B-94A9-0F8ECA5CCFC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEdu.Business.Tests", "DevEdu.Business.Tests\DevEdu.Business.Tests.csproj", "{1EEEC36C-0A40-479B-94A9-0F8ECA5CCFC0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E46DE434-9A9B-4FA6-880E-64873889410B} = {E46DE434-9A9B-4FA6-880E-64873889410B}
+		{8792CAB0-58A2-4F9F-ADB5-2BE94B76D577} = {8792CAB0-58A2-4F9F-ADB5-2BE94B76D577}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
