@@ -7,6 +7,7 @@ using DevEdu.DAL.Models;
 namespace DevEdu.DAL.Repositories
 {
     public class CourseRepository : BaseRepository, ICourseRepository
+
     {
         private const string _courseAddProcedure = "dbo.Course_Insert";
         private const string _courseDeleteProcedure = "dbo.Course_Delete";
@@ -14,6 +15,12 @@ namespace DevEdu.DAL.Repositories
         private const string _courseSelectAllProcedure = "dbo.Course_SelectAll";
         private const string _courseUpdateProcedure = "dbo.Course_Update";
         private const string _selectAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_SelectAllByCourseId]";
+        private const string _updateCourseTopicsProcedure = "[dbo].[Course_Topic_Update]";
+        private const string _deleteAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_DeleteAllTopicsByCourseId]";
+        private const string _course_TopicType = "dbo.Course_TopicType";
+
+        private const string _insertCourseMaterial = "dbo.Course_Material_Insert";
+        private const string _deleteCourseMaterial = "dbo.Course_Material_Delete";
 
         private const string _сourseTaskInsertProcedure = "dbo.Course_Task_Insert";
         private const string _сourseTaskDeleteProcedure = "dbo.Course_Task_Delete";
@@ -56,7 +63,7 @@ namespace DevEdu.DAL.Repositories
                     if (result == null)
                     {
                         result = course;
-                        result.Groups = new List<GroupDto> {group};
+                        result.Groups = new List<GroupDto> { group };
                     }
                     else
                     {
@@ -125,7 +132,7 @@ namespace DevEdu.DAL.Repositories
         public List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId)
         {
             return _connection
-                .Query<CourseTopicDto,TopicDto, CourseTopicDto>(
+                .Query<CourseTopicDto, TopicDto, CourseTopicDto>(
                     _selectAllTopicsByCourseIdProcedure,
                     (courseTopicDto, topicDto) =>
                     {
@@ -133,11 +140,36 @@ namespace DevEdu.DAL.Repositories
                         courseTopicDto.Course = new CourseDto() { Id = courseId };
                         return courseTopicDto;
                     },
-                    new {courseId},
+                    new { courseId },
                     splitOn: "id",
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
+        }
+        public void UpdateCourseTopicsByCourseId(List<CourseTopicDto> topics)
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("CourseId");
+            dt.Columns.Add("TopicId");
+            dt.Columns.Add("Position");
+
+            foreach (var topic in topics)
+            {
+                dt.Rows.Add(topic.Course.Id, topic.Topic.Id, topic.Position);
+            }
+            _connection.Execute(
+                _updateCourseTopicsProcedure,
+                new { tblCourseTopic = dt.AsTableValuedParameter(_course_TopicType) },
+                commandType: CommandType.StoredProcedure
+                );
+        }
+        public void DeleteAllTopicsByCourseId(int courseId)
+        {
+            _connection.Execute(
+                _deleteAllTopicsByCourseIdProcedure,
+                new { courseId },
+                commandType: CommandType.StoredProcedure
+                );
         }
 
         public List<CourseDto> GetCoursesToTaskByTaskId(int id)
@@ -148,6 +180,32 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
+        }
+
+        public int AddCourseMaterialReference(int courseId, int materialId)
+        {
+            return _connection.Execute(
+                _insertCourseMaterial,
+                new
+                {
+                    courseId,
+                    materialId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public int RemoveCourseMaterialReference(int courseId, int materialId)
+        {
+            return _connection.Execute(
+                _deleteCourseMaterial,
+                new
+                {
+                    courseId,
+                    materialId
+                },
+                commandType: CommandType.StoredProcedure
+            );
         }
     }
 }
