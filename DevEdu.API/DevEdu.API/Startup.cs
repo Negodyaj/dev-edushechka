@@ -46,8 +46,9 @@ namespace DevEdu.API
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IRaitingService, RaitingService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
-            services.AddControllers();
+
             services.AddControllers();
 
             services.AddSwaggerDocument(settings => {
