@@ -20,8 +20,9 @@ namespace DevEdu.DAL.Repositories
                 _notificationInsertProcedure,
                 new
                 {
-                    userId = notificationDto.User.Id,
-                    roleId = notificationDto.Role,
+
+                    userId = (notificationDto.User == null) ? null : (int?)notificationDto.User.Id,
+                    roleId = (notificationDto.Role == null) ? null : (int?)notificationDto.Role,
                     notificationDto.Text
 
                 },

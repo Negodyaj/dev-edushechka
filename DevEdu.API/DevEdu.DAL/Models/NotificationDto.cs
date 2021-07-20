@@ -10,9 +10,11 @@ namespace DevEdu.DAL.Models
 {
     public class NotificationDto : BaseDto
     {
-        public string Text { get; set; }
-        public UserDto User { get; set; }
         public DateTime Date { get; set; }
-        public Role Role { get; set; } 
+        public string Text { get; set; }
+        public Role? Role { get; set; }
+        public UserDto User { get; set; }
+       
+         
     }
 }
