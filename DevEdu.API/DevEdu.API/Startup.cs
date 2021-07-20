@@ -1,12 +1,10 @@
 using DevEdu.Business.Services;
-using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using DevEdu.Business.Services;
 
 namespace DevEdu.API
 {
@@ -31,6 +29,8 @@ namespace DevEdu.API
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
@@ -46,8 +46,6 @@ namespace DevEdu.API
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<INotificationService, NotificationService>();
 
-            services.AddScoped<ICourseService, CourseService>();
-            services.AddScoped<IMaterialService, MaterialService>();
 
             services.AddControllers();
 

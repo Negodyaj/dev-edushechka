@@ -51,7 +51,6 @@ namespace DevEdu.DAL.Repositories
         {
             var taskDictionary = new Dictionary<int, TaskDto>();
 
-
             var list = _connection.Query<TaskDto, TagDto, TaskDto>(
                     _taskSelectAlldProcedure,
                 (taskDto, TagDto) =>
@@ -81,8 +80,6 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     taskDto.Name,
-                    taskDto.StartDate,
-                    taskDto.EndDate,
                     taskDto.Description,
                     taskDto.Links,
                     taskDto.IsRequired
@@ -100,8 +97,6 @@ namespace DevEdu.DAL.Repositories
                 {
                     taskDto.Id,
                     taskDto.Name,
-                    taskDto.StartDate,
-                    taskDto.EndDate,
                     taskDto.Description,
                     taskDto.Links,
                     taskDto.IsRequired
@@ -119,7 +114,7 @@ namespace DevEdu.DAL.Repositories
                 );
         }
 
-        public int AddTagToTagTask(int taskId, int tagId)
+        public int AddTagToTask(int taskId, int tagId)
         {
             return _connection
                 .QuerySingle(_tagTaskAddProcedure,
