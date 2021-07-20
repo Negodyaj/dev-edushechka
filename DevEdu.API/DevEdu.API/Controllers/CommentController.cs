@@ -37,7 +37,7 @@ namespace DevEdu.API.Controllers
         //  api/comment/by-user/1
         [HttpGet("by-user/{userId}")]
         [Description("Return comments by user")]
-        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<CommentInfoOutputModel>), StatusCodes.Status200OK)]
         public List<CommentInfoOutputModel> GetCommentsByUserId(int userId)
         {
             var dto = _commentService.GetCommentsByUserId(userId);

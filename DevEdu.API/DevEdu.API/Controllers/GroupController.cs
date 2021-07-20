@@ -106,6 +106,10 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
         public void AddUserToGroup(int groupId, int userId, int roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
 
+        //  api/group/1/user/2
+        [HttpDelete("{groupId}/user/{userId}")]
+        public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
+
         //  api/group/1/task/1
         [HttpGet("{groupId}/task/{taskId}")]
         [Description("Return task group by both id")]
@@ -118,9 +122,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/group/1/task/
-        [HttpGet("{groupId}/task")]
-        [Description("Get all task by group")]
-        [ProducesResponseType(typeof(GroupTaskInfoWithTaskOutputModel), StatusCodes.Status200OK)]
+        [HttpGet("{groupId}/tasks")]
+        [Description("Get all tasks by group")]
+        [ProducesResponseType(typeof(List<GroupTaskInfoWithTaskOutputModel>), StatusCodes.Status200OK)]
         public List<GroupTaskInfoWithTaskOutputModel> GetTasksByGroupId(int groupId)
         {
             var dto = _groupService.GetTasksByGroupId(groupId);
