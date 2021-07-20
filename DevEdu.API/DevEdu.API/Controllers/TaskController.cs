@@ -7,6 +7,7 @@ using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Repositories;
 using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
@@ -46,6 +47,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task/courses
+        [Authorize(Roles = "Teacher")]
         [HttpGet("{taskId}/with-courses")]
         [Description("Get task by Id with tags and courses")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
