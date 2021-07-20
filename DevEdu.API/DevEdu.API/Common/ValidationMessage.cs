@@ -33,8 +33,17 @@
         public const string ContentRequired = "Content must be provided";
         public const string TextRequired = "Comment cannot be empty";
         public const string UserIdRequired = "UserId cannot be empty";
+        public const string GroupIdRequired = "GroupId must be provided";
+        public const string RaitingTypeIdRequired = "RaitingTypeId must be provided";
+        public const string RaitingRequired = "Raiting must be provided";
+        public const string ReportingPeriodNumberRequired = "ReportingPeriodNumber must be provided";
         public const string DateRequired = "Date must be provided";
         public const string TeacherCommentRequired = "TeacherComment must be provided";
         public const string TeacherIdRequired = "TeacherId must be provided";
+        public const string LinkToRecordIdRequired = "LinkToRecord must be provided";
+        public const string SummRequired = "Summ must be provided";
+        public const string IsPaidRequired = "IsPaid cannot be empty";
+        public const string WrongFormatBithDate = "BirthDate must be format 'dd.MM.yyyy'";
+        public const string RoleIdRequired = "RoleId cannot be empty";
     }
 }

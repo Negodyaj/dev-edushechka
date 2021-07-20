@@ -8,7 +8,6 @@ using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
-using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
 {
@@ -74,23 +73,23 @@ namespace DevEdu.API.Controllers
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpPost("{courseId}/material/{materialId}")]
-        public string AddMaterialToCourse(int courseId, int materialId)
+        public void AddCourseMaterialReference(int courseId, int materialId)
         {
-            return $"Course {courseId} add  Material Id {materialId}";
+            _courseService.AddCourseMaterialReference(courseId, materialId);
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpDelete("{courseId}/material/{materialId}")]
-        public string RemoveMaterialFromCourse(int courseId, int materialId)
+        public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
-            return $"Course {courseId} remove  Material Id:{materialId}";
+            _courseService.RemoveCourseMaterialReference(courseId, materialId);
         }
 
         //  api/course/{CourseId}/Task/{TaskId}
         [HttpPost("{courseId}/task/{taskId}")]
         public string AddTaskToCourse(int courseId, int taskId)
         {
-            _courseRepository.AddTaskToCourse(courseId, taskId);
+            _courseService.AddTaskToCourse(courseId, taskId);
             return $"Course {courseId} add  Task Id:{taskId}";
         }
 
@@ -98,9 +97,10 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{courseId}/task/{taskId}")]
         public string RemoveTaskFromCourse(int courseId, int taskId)
         {
-            _courseRepository.DeleteTaskFromCourse(courseId, taskId);
+            _courseService.DeleteTaskFromCourse(courseId, taskId);
             return $"Course {courseId} remove  Task Id:{taskId}";
         }
+
         // api/course/{courseId}/topic/{topicId}
         [HttpPost("{courseId}/topic/{topicId}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
@@ -111,8 +111,19 @@ namespace DevEdu.API.Controllers
 
             _courseService.AddTopicToCourse(courseId, topicId, dto);
             return $"Topic Id:{topicId} added in course Id:{courseId} on {inputModel.Position} position";
-
         }
+
+        [HttpPost("{courseId}/select-topics")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [Description("Add topics to course")]
+        public string AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
+        {
+            var dto = _mapper.Map<List<CourseTopicDto>>(inputModel);
+
+            _courseService.AddTopicsToCourse(courseId, dto);
+            return "done";
+        }
+
         // api/course/{courseId}/topic/{topicId}
         [HttpDelete("{courseId}/topic/{topicId}")]
         [Description("Delete topic from course")]
@@ -122,6 +133,7 @@ namespace DevEdu.API.Controllers
             _courseService.DeleteTopicFromCourse(courseId, topicId);
             return $"Topic Id:{topicId} deleted from course Id:{courseId}";
         }
+
         [HttpGet("{courseId}/topics")]
         [Description("Get all topics by course id ")]
         [ProducesResponseType(typeof(List<CourseTopicOutputModel>),StatusCodes.Status200OK)]
@@ -129,9 +141,18 @@ namespace DevEdu.API.Controllers
         {
             var list = _courseService.SelectAllTopicsByCourseId(courseId);
             
-            return _mapper.Map<List<CourseTopicOutputModel>>(list);
-            
+            return _mapper.Map<List<CourseTopicOutputModel>>(list);            
         }
 
+        // api/course/{courseId}/program
+        [HttpPut("{courseId}/program")]
+        [Description("updates topics in the course")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public string UpdateCourseTopicsByCourseId(int courseId,  [FromBody] List<CourseTopicUpdateInputModel> topics)
+        {
+            var list = _mapper.Map<List<CourseTopicDto>>(topics);
+            _courseService.UpdateCourseTopicsByCourseId(courseId, list);
+            return "updated";
+        }
     }
 }

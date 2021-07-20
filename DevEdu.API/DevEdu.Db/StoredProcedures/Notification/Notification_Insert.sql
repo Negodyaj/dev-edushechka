@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[Notification_Insert]
-	@UserId		int,
-	@RoleId		int,
+	@UserId		int = null,
+	@RoleId		int = null,
 	@Text		nvarchar(max)
 
 AS
