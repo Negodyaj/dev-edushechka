@@ -134,6 +134,8 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/topic/{toppicId}
         [HttpDelete("{lessonId}/topic/{topicId}")]
+        [Description("Delete topic from lesson")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTopicFromLesson(int lessonId, int topicId)
         {
             _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
@@ -141,6 +143,8 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/topic/{topicId}
         [HttpPost("{lessonId}/topic/{topicId}")]
+        [Description("Add topic to lesson")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void AddTopicToLesson(int lessonId, int topicId)
         {
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
