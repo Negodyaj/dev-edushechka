@@ -1,10 +1,11 @@
 ﻿CREATE PROCEDURE [dbo].[Lesson_Insert]
 	@Date datetime,
 	@TeacherComment nvarchar(500),
-	@TeacherId int
+	@TeacherId int,
+	@LinkToRecord nvarchar(150)
 AS
 BEGIN
-	INSERT INTO dbo.Lesson (Date, TeacherComment, TeacherId)
-	VALUES (@Date, @TeacherComment, @TeacherId)
+	INSERT INTO dbo.Lesson (Date, TeacherComment, TeacherId, LinkToRecord)
+	VALUES (@Date, @TeacherComment, @TeacherId, @LinkToRecord)
 	SELECT @@IDENTITY
 END

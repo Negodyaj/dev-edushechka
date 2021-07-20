@@ -167,7 +167,6 @@
     <Build Include="StoredProcedures\Lesson_Comment\Lesson_Comment_Insert.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_Delete.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_Insert.sql" />
-    <Build Include="StoredProcedures\Lesson\Lesson_SelectAll.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectById.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_Update.sql" />
     <Build Include="StoredProcedures\User\User_SelectAll.sql" />
@@ -213,12 +212,17 @@
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_AddMultiple.sql" />
     <Build Include="Types\User-Defined Table Types\Course_TopicType.sql" />
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_Update.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonId.sql" />
+    <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByGroupId.sql" />
+    <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByTeacherId.sql" />
+    <Build Include="StoredProcedures\Comment\Comment_SelectByLessonId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />
     <None Include="StoredProcedures\Course_Material\Course_Material_Insert.sql" />
     <None Include="StoredProcedures\Course_Task\Course_Task_Delete.sql" />
     <None Include="StoredProcedures\Course_Task\Course_Task_Insert.sql" />
+    <None Include="DevEdu.Db.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
