@@ -20,5 +20,6 @@ namespace DevEdu.DAL.Repositories
         void UpdateStudentAbsenceReasonOnLesson(StudentLessonDto studentLessonDto);
         void UpdateStudentAttendanceOnLesson(StudentLessonDto studentLessonDto);
         void UpdateStudentFeedbackForLesson(StudentLessonDto studentLessonDto);
+        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);
     }
 }

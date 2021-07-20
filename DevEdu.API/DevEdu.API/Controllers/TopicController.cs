@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.ComponentModel;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Repositories;
 using AutoMapper;
 using DevEdu.DAL.Models;
-using DevEdu.Business.Services;
+using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
+using DevEdu.Business.Services;
+using DevEdu.API.Models.OutputModels;
 
 namespace DevEdu.API.Controllers
 {
@@ -14,25 +15,27 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class TopicController : Controller
     {
-        private readonly ITopicRepository _topicRepository;
         private readonly ITopicService _topicService;
         private readonly IMapper _mapper;
 
-        public TopicController(IMapper mapper, ITopicRepository topicRepository, ITopicService topicService)
+        public TopicController(IMapper mapper, ITopicService topicService)
         {
-            _topicRepository = topicRepository;
             _topicService = topicService;
             _mapper = mapper;
         }
 
         //  api/topic/{id}
         [HttpGet("{id}")]
+        [Description("Get topic by id")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public TopicDto GetTopicById(int id)
         {
             return _topicService.GetTopic(id);
         }
 
         [HttpGet]
+        [Description("Get all topic")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public List<TopicDto> GetAllTopics()
         {
             return _topicService.GetAllTopics();
@@ -40,14 +43,19 @@ namespace DevEdu.API.Controllers
 
         //  api/topic
         [HttpPost]
-        public int AddTopic([FromBody] TopicInputModel model)
+        [Description("Add topic")]
+        [ProducesResponseType(typeof(TopicOutputModel), (StatusCodes.Status201Created))]
+        public TopicOutputModel AddTopic([FromBody] TopicInputModel model)
         {
             var dto = _mapper.Map<TopicDto>(model);
-            return _topicService.AddTopic(dto);
+            var output = _topicService.AddTopic(dto);
+            return _mapper.Map<TopicOutputModel>(output);
         }
 
         //  api/topic/{id}
         [HttpDelete("{id}")]
+        [Description("Delete topic")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTopic(int id)
         {
             _topicService.DeleteTopic(id);
@@ -55,29 +63,13 @@ namespace DevEdu.API.Controllers
 
         //  api/topic/{id}
         [HttpPut("{id}")]
+        [Description("Update topic")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public void UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
             var dto = _mapper.Map<TopicDto>(model);
-           
             _topicService.UpdateTopic(id, dto);
-        }
-
-        //  api/topic/{topicId}/tag/{tagId}
-        [HttpPost("{topicId}/tag/{tagId}")]
-        [Description("Add tag to topic")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public int AddTagToTopic(int topicId, int tagId)
-        {
-            return _topicService.AddTagToTopic(topicId, tagId);
-        }
-
-        //  api/opic/{topicId}/tag/{tagId}
-        [HttpDelete("{topicId}/tag/{tagId}")]
-        [Description("Delete tag from topic")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public int DeleteTagFromTopic(int topicId, int tagId)
-        {
-            return _topicService.DeleteTagFromTopic(topicId, tagId);
-        }
+        }      
     }
 }
+

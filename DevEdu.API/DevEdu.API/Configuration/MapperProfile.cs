@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Models.OutputModels.Lesson;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Configuration
@@ -69,6 +70,7 @@ namespace DevEdu.API.Configuration
             CreateMap<TagDto, TagInfoOutputModel>();
             CreateMap<StudentAnswerOnTaskForTaskDto, StudentAnswerOnTaskInfoOutputModel>();
             CreateMap<StudentAnswerOnTaskDto, StudentAnswerOnTaskInfoOutputModel>();
+            CreateMap<StudentLessonDto, FeedbackOutputModel>();
         }
     }
 }
