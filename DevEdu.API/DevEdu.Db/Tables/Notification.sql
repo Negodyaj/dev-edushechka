@@ -4,6 +4,7 @@
 	Text nvarchar(max) NOT NULL,
 	UserId int,
 	RoleId int,
+	GroupId int,
 	IsDeleted bit NOT NULL DEFAULT '0',
   CONSTRAINT [PK_NOTIFICATION] PRIMARY KEY CLUSTERED
   (
