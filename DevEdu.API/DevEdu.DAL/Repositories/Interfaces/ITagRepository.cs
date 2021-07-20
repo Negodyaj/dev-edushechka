@@ -10,6 +10,5 @@ namespace DevEdu.DAL.Repositories
         List<TagDto> SelectAllTags();
         TagDto SelectTagById(int id);
         int UpdateTag(TagDto tagDto);
-        public List<TagDto> GetTagsByMaterialId(int materialId);
     }
 }

@@ -13,8 +13,6 @@ namespace DevEdu.DAL.Repositories
         private const string _tagSelectAllProcedure = "dbo.Tag_SelectAll";
         private const string _tagSelectByIDProcedure = "dbo.Tag_SelectByID";
         private const string _tagUpdateProcedure = "dbo.Tag_Update";
-        private const string _tagSelectAllByMaterialIdProcedure = "dbo.Tag_SelectAllByMaterialId";
-
 
 
         public int AddTag(TagDto tagDto)
@@ -64,16 +62,6 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             );
-        }
-
-        public List<TagDto> GetTagsByMaterialId(int materialId)
-        {
-            return _connection.Query<TagDto>(
-                _tagSelectAllByMaterialIdProcedure,
-                new { materialId },
-                commandType: CommandType.StoredProcedure
-            )
-            .ToList();
         }
     }
 }
