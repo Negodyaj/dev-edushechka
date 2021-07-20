@@ -8,10 +8,11 @@ namespace DevEdu.Business.Services
     public class LessonService : ILessonService
     {
         private readonly ILessonRepository _lessonRepository;
-
-        public LessonService(ILessonRepository lessonRepository)
+        private readonly ICommentRepository _commentRepository;
+        public LessonService(ILessonRepository lessonRepository, ICommentRepository commentRepository)
         {
             _lessonRepository = lessonRepository;
+            _commentRepository = commentRepository;
         }
         
         public void AddCommentToLesson(int lessonId, int commentId) => _lessonRepository.AddCommentToLesson(lessonId, commentId);
@@ -30,11 +31,9 @@ namespace DevEdu.Business.Services
 
         public LessonDto SelectLessonWithCommentsById(int id)
         {
-            LessonDto result = new LessonDto();
-            result = _lessonRepository.SelectLessonById(id);
+            LessonDto result = _lessonRepository.SelectLessonById(id);
 
-            CommentRepository commentRepository = new CommentRepository();
-            result.Comments = commentRepository.SelectCommentsFromLessonByLessonId(id);
+            result.Comments = _commentRepository.SelectCommentsFromLessonByLessonId(id);
 
             return result;
         }

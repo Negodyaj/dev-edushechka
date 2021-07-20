@@ -4,6 +4,6 @@ namespace DevEdu.API.Models.OutputModels
 {
     public class LessonInfoWithCourseOutputModel : LessonInfoOutputModel
     {
-        public CourseDto Course { get; set; }
+        public CourseInfoShortOutputModel Course { get; set; }
     }
 }
