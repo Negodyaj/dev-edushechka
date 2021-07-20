@@ -9,6 +9,6 @@ namespace DevEdu.Business.Services
         void DeleteTag(int id);
         List<TagDto> GetAllTags();
         TagDto GetTagById(int id);
-        void UpdateTag(TagDto dto);
+        void UpdateTag(TagDto dto, int id);
     }
 }

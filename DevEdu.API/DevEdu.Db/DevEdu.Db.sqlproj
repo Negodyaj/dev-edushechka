@@ -84,6 +84,7 @@
     <Folder Include="StoredProcedures\Course_Topic" />
     <Folder Include="Types" />
     <Folder Include="Types\User-Defined Table Types" />
+    <Folder Include="StoredProcedures\StudentRaiting" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -216,6 +217,15 @@
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByGroupId.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByTeacherId.sql" />
     <Build Include="StoredProcedures\Comment\Comment_SelectByLessonId.sql" />
+    <Build Include="Tables\RaitingType.sql" />
+    <Build Include="Tables\StudentRaiting.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Insert.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Delete.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectAll.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectById.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectByUserId.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Update.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectByGroupId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />
@@ -228,5 +238,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="DevEdu.Db.refactorlog" />
   </ItemGroup>
 </Project>
