@@ -82,6 +82,8 @@
     <Folder Include="StoredProcedures\User_Role" />
     <Folder Include="StoredProcedures\Group" />
     <Folder Include="StoredProcedures\Course_Topic" />
+    <Folder Include="Types" />
+    <Folder Include="Types\User-Defined Table Types" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -206,6 +208,10 @@
     <Build Include="StoredProcedures\User_Role\User_Role_Delete.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectByTaskId.sql" />
     <Build Include="StoredProcedures\Course\Course_SelectByTaskId.sql" />
+    <Build Include="StoredProcedures\Course_Topic\Course_Topic_DeleteAllTopicsByCourseId.sql" />
+    <Build Include="StoredProcedures\Course_Topic\Course_Topic_AddMultiple.sql" />
+    <Build Include="Types\User-Defined Table Types\Course_TopicType.sql" />
+    <Build Include="StoredProcedures\Course_Topic\Course_Topic_Update.sql" />
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonId.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByGroupId.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByTeacherId.sql" />

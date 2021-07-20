@@ -1,13 +1,13 @@
 ﻿CREATE PROCEDURE [dbo].[Payment_Insert]
+	@Date		DateTime,
 	@UserId		int,
 	@Sum		decimal(6,2),
-	@IsPaid		bit,
-	@Date		datetime
+	@IsPaid		bit
 
 
 AS
 BEGIN
-	INSERT INTO dbo.Payment (Sum, Date, UserId, IsPaid)
-	VALUES (@Sum, @Date, @UserId, @IsPaid)
+	INSERT INTO dbo.Payment (Date, UserId, Sum,  IsPaid )
+	VALUES (Date, @UserId, @Sum,  @IsPaid)
 	SELECT @@IDENTITY
 END
