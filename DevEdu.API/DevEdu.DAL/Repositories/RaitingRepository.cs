@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
@@ -46,13 +47,14 @@ namespace DevEdu.DAL.Repositories
 
         public List<StudentRaitingDto> SelectAllStudentRaitings()
         {
-            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, StudentRaitingDto>
+            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, Role, StudentRaitingDto>
                 (
                 _studentRaitingSelectAllProcedure,
-                (studentRaiting, group, raitingType, user) =>
+                (studentRaiting, group, raitingType, user, role) =>
                 {
                     studentRaiting.RaitingType = raitingType;
                     studentRaiting.User = user;
+                    user.Roles = new List<Role> { role };
                     studentRaiting.Group = group;
                     return studentRaiting;
                 },
@@ -63,13 +65,14 @@ namespace DevEdu.DAL.Repositories
 
         public StudentRaitingDto SelectStudentRaitingById(int id)
         {
-            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, StudentRaitingDto>
+            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, Role, StudentRaitingDto>
                 (
                 _studentRaitingSelectByIDProcedure,
-                (studentRaiting, group, raitingType, user) =>
+                (studentRaiting, group, raitingType, user, role) =>
                 {
                     studentRaiting.RaitingType = raitingType;
                     studentRaiting.User = user;
+                    user.Roles = new List<Role> { role };
                     studentRaiting.Group = group;
                     return studentRaiting;
                 },
@@ -81,13 +84,14 @@ namespace DevEdu.DAL.Repositories
 
         public List<StudentRaitingDto> SelectStudentRaitingByUserId(int userId)
         {
-            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, StudentRaitingDto>
+            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, Role, StudentRaitingDto>
                 (
                 _studentRaitingSelectByUserIdProcedure,
-                (studentRaiting, group, raitingType, user) =>
+                (studentRaiting, group, raitingType, user, role) =>
                 {
                     studentRaiting.RaitingType = raitingType;
                     studentRaiting.User = user;
+                    user.Roles = new List<Role> { role };
                     studentRaiting.Group = group;
                     return studentRaiting;
                 },
@@ -99,13 +103,14 @@ namespace DevEdu.DAL.Repositories
 
         public List<StudentRaitingDto> SelectStudentRaitingByGroupId(int groupId)
         {
-            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, StudentRaitingDto>
+            return _connection.Query<StudentRaitingDto, GroupDto, RaitingTypeDto, UserDto, Role, StudentRaitingDto>
                 (
                 _studentRaitingSelectByGroupIdProcedure,
-                (studentRaiting, group, raitingType, user) =>
+                (studentRaiting, group, raitingType, user, role) =>
                 {
                     studentRaiting.RaitingType = raitingType;
                     studentRaiting.User = user;
+                    user.Roles = new List<Role> { role };
                     studentRaiting.Group = group;
                     return studentRaiting;
                 },

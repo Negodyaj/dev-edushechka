@@ -68,7 +68,7 @@ namespace DevEdu.API.Configuration
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<StudentRaitingDto, StudentRaitingOutputModel>();
             CreateMap<RaitingTypeDto, RaitingTypeOutputModel>();
-            CreateMap<UserDto, StudentInfoOutputModel>();
+            CreateMap<UserDto, UserInfoOutputModel>();
         }
     }
 }
