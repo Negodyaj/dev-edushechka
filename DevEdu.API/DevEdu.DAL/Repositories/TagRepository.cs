@@ -15,7 +15,6 @@ namespace DevEdu.DAL.Repositories
         private const string _tagUpdateProcedure = "dbo.Tag_Update";
 
 
-
         public int AddTag(TagDto tagDto)
         {
             return _connection.QuerySingleOrDefault<int>(

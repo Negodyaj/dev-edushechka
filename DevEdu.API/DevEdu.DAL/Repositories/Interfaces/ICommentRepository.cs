@@ -10,5 +10,6 @@ namespace DevEdu.DAL.Repositories
         CommentDto GetComment(int id);
         List<CommentDto> GetCommentsByUser(int userId);
         int UpdateComment(CommentDto commentDto);
+        List<CommentDto> SelectCommentsFromLessonByLessonId(int lessonId);
     }
 }

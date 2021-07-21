@@ -7,17 +7,38 @@ namespace DevEdu.Business.Services
     public class MaterialService : IMaterialService
     {
         private readonly IMaterialRepository _materialRepository;
+        private readonly ICourseRepository _courseRepository;
+        private readonly IGroupRepository _groupRepository;
 
-        public MaterialService(IMaterialRepository materialRepository)
+        public MaterialService(IMaterialRepository materialRepository, ICourseRepository courseRepository, 
+            IGroupRepository groupRepository)
         {
             _materialRepository = materialRepository;
+            _courseRepository = courseRepository;
+            _groupRepository = groupRepository;
         }
 
         public List<MaterialDto> GetAllMaterials() => _materialRepository.GetAllMaterials();
 
         public MaterialDto GetMaterialById(int id) => _materialRepository.GetMaterialById(id);
 
-        public int AddMaterial(MaterialDto dto) => _materialRepository.AddMaterial(dto);
+        public MaterialDto GetMaterialByIdWithCoursesAndGroups(int id)
+        {
+            var dto = _materialRepository.GetMaterialById(id);
+            dto.Courses = _courseRepository.GetCoursesByMaterialId(id);
+            dto.Groups = _groupRepository.GetGroupsByMaterialId(id);
+            return dto;
+        }
+
+        public int AddMaterial(MaterialDto dto)
+        {
+            var materialId = _materialRepository.AddMaterial(dto);
+            if (dto.Tags == null || dto.Tags.Count == 0)
+                return materialId;
+
+            dto.Tags.ForEach(tag => AddTagToMaterial(materialId, tag.Id));
+            return materialId;
+        }
 
         public void UpdateMaterial(int id, MaterialDto dto)
         {

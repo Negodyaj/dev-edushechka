@@ -26,7 +26,8 @@ namespace DevEdu.Business.Services
             string hashedPassword = Convert.ToBase64String(hashBytes);
             return hashedPassword;
         }
-        public bool Verify(string hashedPassword, string userPassword)
+                                                                                    
+        public bool Verify(string hashedPassword, string userPasword)
         {
             byte[] hashBytes = Convert.FromBase64String(hashedPassword);
             byte[] salt = new byte[16];

@@ -13,8 +13,9 @@ namespace DevEdu.DAL.Repositories
         private const string _userGroupDeleteProcedure = "dbo.Tag_Delete";
         private const string _insertGroupLesson = "dbo.Group_Lesson_Insert";
         private const string _deleteGroupLesson = "dbo.Group_Lesson_Delete";
-        private const string _materialToGroupAddProcedure = "dbo.Group_Material_Insert";
-        private const string _materialFromGroupDeleteProcedure = "dbo.Group_Material_Delete";
+        private const string _insertGroupMaterial = "dbo.Group_Material_Insert";
+        private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
+        private const string _groupSelectAllByMaterialIdProcedure = "dbo.Group_SelectByMaterialId";
 
         private const string _taskToGroupAddProcedure = "dbo.Group_Task_Insert";
         private const string _taskFromGroupDeleteProcedure = "dbo.Group_Task_Delete";
@@ -188,4 +189,15 @@ namespace DevEdu.DAL.Repositories
             );
         }
     }
+
+        public List<GroupDto> GetGroupsByMaterialId(int id)
+        {
+            return _connection.Query<GroupDto>(
+                    _groupSelectAllByMaterialIdProcedure,
+                    new { id },
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+    }    
 }

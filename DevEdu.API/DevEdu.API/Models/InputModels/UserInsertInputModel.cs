@@ -1,4 +1,6 @@
 ﻿using DevEdu.API.Common;
+using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using static DevEdu.API.Common.ValidationMessage;
 
@@ -6,7 +8,8 @@ namespace DevEdu.API.Models.InputModels
 {
     public class UserInsertInputModel
     {
-
+        [DefaultValue(false)]
+        public bool IsDeleted { get; set; }
         [Required(ErrorMessage = FirstNameRequired)]
         public string FirstName { get; set; }
 
@@ -35,7 +38,7 @@ namespace DevEdu.API.Models.InputModels
         public int City { get; set; }
 
         [Required(ErrorMessage = BirthDateRequired)]
-        [DateTimeToStringAttribute(ErrorMessage = WrongFormatBirthDate)]
+        [CustomDateFormatAttribute(ErrorMessage = WrongFormatBithDate)]
         public string BirthDate { get; set; }
 
         public string GitHubAccount { get; set; }
