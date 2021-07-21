@@ -24,7 +24,8 @@ namespace DevEdu.Business.Services
         public CommentDto UpdateComment(int id, CommentDto dto)
         {
             dto.Id = id;
-            return _commentRepository.UpdateComment(dto);
+            _commentRepository.UpdateComment(dto);
+            return _commentRepository.GetComment(id);
         }
     }
 }

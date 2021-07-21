@@ -9,6 +9,6 @@ namespace DevEdu.DAL.Repositories
         void DeleteComment(int id);
         CommentDto GetComment(int id);
         List<CommentDto> GetCommentsByUser(int userId);
-        CommentDto UpdateComment(CommentDto commentDto);
+        void UpdateComment(CommentDto commentDto);
     }
 }

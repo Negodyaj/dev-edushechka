@@ -59,7 +59,8 @@ namespace DevEdu.Business.Tests
             var commentDto = CommentData.GetCommentDto();
             const int commentId = CommentData.CommentId;
 
-            _commentRepoMock.Setup(x => x.UpdateComment(commentDto)).Returns(commentDto);
+            _commentRepoMock.Setup(x => x.UpdateComment(commentDto));
+            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
 
             var sut = new CommentService(_commentRepoMock.Object);
 
@@ -69,6 +70,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(commentDto, dto);
             _commentRepoMock.Verify(x => x.UpdateComment(commentDto), Times.Once);
+            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
         }
 
         [Test]

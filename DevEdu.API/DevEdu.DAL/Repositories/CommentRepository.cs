@@ -99,7 +99,7 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public CommentDto UpdateComment(CommentDto commentDto)
+        public void UpdateComment(CommentDto commentDto)
         {
             _connection.Execute(
                 _commentUpdateProcedure,
@@ -110,9 +110,6 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             );
-
-            var commentId = commentDto.Id;
-            return GetComment(commentId);
         }
     }
 }
