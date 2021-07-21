@@ -7,7 +7,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace DevEdu.Business.Tests.Services
+namespace DevEdu.Business.Tests
 {
     public class UserServiceTests
     {
