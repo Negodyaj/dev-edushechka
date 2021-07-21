@@ -36,7 +36,7 @@
         public const string DateRequired = "Date must be provided";
         public const string TeacherCommentRequired = "TeacherComment must be provided";
         public const string TeacherIdRequired = "TeacherId must be provided";
-        public const string SumRequired = "Summ must be provided";
+        public const string SumRequired = "Sum must be provided";
         public const string IsPaidRequired = "IsPaid cannot be empty";
         public const string WrongFormatBirthDate = "BirthDate must be format 'dd.MM.yyyy'";
         public const string WrongFormatDate = "the date must be in the format dd.mm.yyyy";
