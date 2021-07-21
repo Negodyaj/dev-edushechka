@@ -15,6 +15,8 @@ namespace DevEdu.Business.Services
         void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics);
         void DeleteTopicFromCourse(int courseId, int topicId);
         List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId);
+        void DeleteTaskFromCourse(int courseId, int taskId);
+        public void AddTaskToCourse(int courseId, int taskId);
         int AddCourseMaterialReference(int courseId, int materialId);
         int RemoveCourseMaterialReference(int courseId, int materialId);
     }

@@ -7,10 +7,11 @@ namespace DevEdu.Business.Services
     public class LessonService : ILessonService
     {
         private readonly ILessonRepository _lessonRepository;
-
-        public LessonService(ILessonRepository lessonRepository)
+        private readonly ICommentRepository _commentRepository;
+        public LessonService(ILessonRepository lessonRepository, ICommentRepository commentRepository)
         {
             _lessonRepository = lessonRepository;
+            _commentRepository = commentRepository;
         }
         
         public void AddCommentToLesson(int lessonId, int commentId) => _lessonRepository.AddCommentToLesson(lessonId, commentId);
@@ -21,15 +22,36 @@ namespace DevEdu.Business.Services
 
         public void DeleteLesson(int id) => _lessonRepository.DeleteLesson(id);
 
-        public List<LessonDto> SelectAllLessons() => _lessonRepository.SelectAllLessons();
+        public List<LessonDto> SelectAllLessonsByGroupId(int id) => _lessonRepository.SelectAllLessonsByGroupId(id);
+
+        public List<LessonDto> SelectAllLessonsByTeacherId(int id) => _lessonRepository.SelectAllLessonsByTeacherId(id);
 
         public LessonDto SelectLessonById(int id) => _lessonRepository.SelectLessonById(id);
+
+        public LessonDto SelectLessonWithCommentsById(int id)
+        {
+            LessonDto result = _lessonRepository.SelectLessonById(id);
+
+            result.Comments = _commentRepository.SelectCommentsFromLessonByLessonId(id);
+
+            return result;
+        }
+
+        public LessonDto SelectLessonWithCommentsAndStudentsById(int id)
+        {
+            LessonDto result = SelectLessonWithCommentsById(id);
+
+            result.Students = _lessonRepository.SelectStudentsLessonByLessonId(id);
+
+            return result;
+        }
 
         public void UpdateLesson(int id, LessonDto lessonDto)
         {
             lessonDto.Id = id;
             _lessonRepository.UpdateLesson(lessonDto);
         }
+
         public void DeleteTopicFromLesson(int lessonId, int topicId) => 
             _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
 

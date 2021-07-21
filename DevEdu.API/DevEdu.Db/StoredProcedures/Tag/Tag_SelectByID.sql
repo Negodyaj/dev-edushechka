@@ -2,7 +2,9 @@
 	@Id int
 AS
 BEGIN
-	SELECT Id, Name 
+	SELECT 
+	Id,
+	Name 
 	from [dbo].[Tag]
 	WHERE 
 	Id = @Id

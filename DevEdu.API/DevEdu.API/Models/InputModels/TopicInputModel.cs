@@ -5,9 +5,9 @@ namespace DevEdu.API.Models.InputModels
 {
     public class TopicInputModel
     {
-            [Required(ErrorMessage = NameRequired)]             
-            public string Name { get; set; }         
-            [Required(ErrorMessage = DurationRequired)]             
-            public int Duration { get; set; }
+        [Required(ErrorMessage = NameRequired)]
+        public string Name { get; set; }
+        [Required(ErrorMessage = DurationRequired)]
+        public int Duration { get; set; }
     }
 }
