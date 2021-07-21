@@ -8,7 +8,7 @@ BEGIN
 		tstud.TaskId,
 		tstud.StudentId,
 		tstud.Answer,
-		tstud.CompletedDate,
+		/*tstud.CompletedDate,*/
 		us.Id,
 		us.Username,
 		us.FirstName,
@@ -20,8 +20,6 @@ BEGIN
 		t.Id,
 		t.[Name],
 		t.[Description],
-		t.StartDate,
-		t.EndDate,
 		t.Links,
 		t.IsRequired,
 		t.IsDeleted,
