@@ -5,12 +5,13 @@ namespace DevEdu.Business.Services
 {
     public interface IStudentAnswerOnTaskService
     {
-        void AddStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse);
-        void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
+        void AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto);
+        void DeleteStudentAnswerOnTask(int taskId, int studentId);
         List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTasks();
-        StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto);
+        List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId);
+        StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId);
         void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId);
-        void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
+        void UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto);
         void AddCommentOnStudentAnswer(int taskstudentId, int commentId);
     }
 }
