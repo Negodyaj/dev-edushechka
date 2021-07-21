@@ -148,12 +148,22 @@ namespace DevEdu.API.Controllers
 
         }
 
-        // api/task/{taskId}/student
-        [HttpGet("student")]
+        // api/task/all-answers
+        [HttpGet("all-answers")]
         public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTasks()
         {
             var studentStatusDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTasks();
             return studentStatusDto;
+        }
+
+        // api/task/{taskId}/all-answers
+        [HttpGet("{taskId}/all-answers")]
+        public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId)
+        {
+            // todo
+            //var studentStatusDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTasks();
+            //return studentStatusDto;
+            return null;
         }
 
         // api/task/{taskId}/student/{studentId}
@@ -201,13 +211,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{taskId}/student/{studentId}/change-status/{statusId}")]
         public int UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
-            StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
-            dto.Task = new TaskDto { Id = taskId };
-            dto.User = new UserDto { Id = studentId };
-            dto.TaskStatus = (DAL.Enums.TaskStatus)statusId;
-            dto.Comments = new List<CommentDto>();
-
-            _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(dto);
+            _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId);
 
             return statusId;
         }

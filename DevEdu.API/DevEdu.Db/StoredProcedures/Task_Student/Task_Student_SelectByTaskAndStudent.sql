@@ -8,7 +8,7 @@ BEGIN
 		tstud.TaskId,
 		tstud.StudentId,
 		tstud.Answer,
-		/*tstud.CompletedDate,*/
+		tstud.CompletedDate,
 		us.Id,
 		us.Username,
 		us.FirstName,

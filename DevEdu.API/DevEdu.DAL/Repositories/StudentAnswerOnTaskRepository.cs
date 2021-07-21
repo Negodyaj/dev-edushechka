@@ -54,29 +54,19 @@ namespace DevEdu.DAL.Repositories
 
         public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask()
         {
-            var studentStudentDictionary = new Dictionary<int, StudentAnswerOnTaskDto>();
-
             return _connection
-                .Query<StudentAnswerOnTaskDto, TaskStatus, StudentAnswerOnTaskDto>(
+                .Query<StudentAnswerOnTaskDto, TaskStatus, UserDto, StudentAnswerOnTaskDto>(
                 _taskStudentSelectAll,
-                (studentAnswer, taskStatus) =>
+                (studentAnswer, taskStatus, user) =>
                 {
-                    StudentAnswerOnTaskDto studentAnswerEntry;
+                    studentAnswer.TaskStatus = taskStatus;
+                    studentAnswer.User = user;
 
-                    if (!studentStudentDictionary.TryGetValue(studentAnswer.User.Id, out studentAnswerEntry))
-                    {
-                        studentAnswerEntry = studentAnswer;
-                        studentAnswer.TaskStatus = taskStatus;
-                        Convert.ToInt32(studentAnswer.TaskStatus);
-                        studentStudentDictionary.Add(studentAnswer.User.Id, studentAnswerEntry);
-                    }
-
-                    return studentAnswerEntry;
+                    return studentAnswer;
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
                 )
-                .Distinct()
                 .ToList();
         }
 
@@ -135,7 +125,8 @@ namespace DevEdu.DAL.Repositories
                 {
                     TaskId = dto.Task.Id,
                     StudentId = dto.User.Id,
-                    StatusId = (int)(dto.TaskStatus)
+                    StatusId = (int)(dto.TaskStatus),
+                    dto.CompletedDate
                 },
                 commandType: CommandType.StoredProcedure
                 );
