@@ -5,14 +5,16 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using DevEdu.Business.Services;
 using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
 using DevEdu.API.Models.OutputModels;
-using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
+using DevEdu.DAL.Enums;
+using DevEdu.API.Common;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class LessonController : Controller
@@ -101,6 +103,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{id}/full-info"
+        [AuthorizeRoles(Role.Student, Role.Teacher)]
         [HttpGet("{id}/full-info")]
         [Description("Get the lesson with students and comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
@@ -165,6 +168,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{lessonId}/user/{userId}/feedback
+        [AuthorizeRoles(Role.Student)]
         [HttpPut("{lessonId}/user/{userId}/feedback")]
         public void UpdateStudentFeedbackForLesson(int lessonId, int userId, [FromBody] FeedbackInputModel model)
         {

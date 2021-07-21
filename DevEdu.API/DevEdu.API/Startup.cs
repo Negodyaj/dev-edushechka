@@ -52,8 +52,6 @@ namespace DevEdu.API
             services.AddScoped<IRaitingService, RaitingService>();
             services.AddScoped<INotificationService, NotificationService>();
 
-
-            services.AddControllers();
             services.AddControllers();
 
             services.AddMvc();
