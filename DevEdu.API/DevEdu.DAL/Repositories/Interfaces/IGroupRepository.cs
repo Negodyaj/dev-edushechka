@@ -15,6 +15,6 @@ namespace DevEdu.DAL.Repositories
         void DeleteTaskFromGroup(int groupId, int taskId);
         List<GroupTaskDto> GetTaskGroupByGroupId(int groupId);
         GroupTaskDto GetGroupTask(int groupId, int taskId);
-        GroupTaskDto UpdateGroupTask(GroupTaskDto groupTaskDto);
+        void UpdateGroupTask(GroupTaskDto groupTaskDto);
     }
 }

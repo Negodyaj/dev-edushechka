@@ -173,7 +173,7 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
         }
 
-        public GroupTaskDto UpdateGroupTask(GroupTaskDto groupTaskDto)
+        public void UpdateGroupTask(GroupTaskDto groupTaskDto)
         {
             _connection.Execute(
                 _taskGroupUpdateProcedure,
@@ -186,10 +186,6 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             );
-
-            int groupId = groupTaskDto.Group.Id;
-            int taskId = groupTaskDto.Task.Id;
-            return GetGroupTask(groupId, taskId);
         }
     }
 }

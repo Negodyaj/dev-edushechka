@@ -63,7 +63,8 @@ namespace DevEdu.Business.Tests
             const int groupId = GroupTaskData.GroupId;
             const int taskId = GroupTaskData.TaskId;
 
-            _groupRepoMock.Setup(x => x.UpdateGroupTask(groupTaskDto)).Returns(groupTaskDto);
+            _groupRepoMock.Setup(x => x.UpdateGroupTask(groupTaskDto));
+            _groupRepoMock.Setup(x => x.GetGroupTask(groupId, taskId)).Returns(groupTaskDto);
 
             var sut = new GroupService(_groupRepoMock.Object);
 
@@ -73,6 +74,7 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(groupTaskDto, actualGroupTaskDto);
             _groupRepoMock.Verify(x => x.UpdateGroupTask(groupTaskDto), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupTask(groupId, taskId), Times.Once);
         }
 
         [Test]

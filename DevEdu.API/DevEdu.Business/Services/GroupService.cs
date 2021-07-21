@@ -37,7 +37,8 @@ namespace DevEdu.Business.Services
         {
             dto.Group = new GroupDto { Id = groupId };
             dto.Task = new TaskDto { Id = taskId };
-            return _groupRepository.UpdateGroupTask(dto);
+            _groupRepository.UpdateGroupTask(dto);
+            return _groupRepository.GetGroupTask(groupId, taskId);
         }
     }
 }
