@@ -99,8 +99,8 @@ namespace DevEdu.API.Controllers
 
         }
 
-        //  api/task
-        [HttpGet]
+        // api/task/{taskId}/student
+        [HttpGet("student")]
         public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask()
         {
             var studentStatusDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTask();
@@ -109,10 +109,12 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpGet("{taskId}/student/{studentId}")]
-        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId, StudentAnswerOnTaskDto dto)
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
-            dto.Task.Id = taskId;
-            dto.User.Id = studentId;
+            StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
+            dto.Task = new TaskDto { Id = taskId };
+            dto.User = new UserDto { Id = studentId };
+            dto.Comments = new List<CommentDto>();
 
             var studentStatusDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(dto);
             return studentStatusDto;
@@ -134,10 +136,12 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpDelete("{taskId}/student/{studentId}")]
-        public string DeleteStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto dto)
+        public string DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
-            dto.Task.Id = taskId;
-            dto.User.Id = studentId;
+            StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
+            dto.Task = new TaskDto { Id = taskId };
+            dto.User = new UserDto { Id = studentId };
+            dto.Comments = new List<CommentDto>();
 
             _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(dto);
 
@@ -146,12 +150,15 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}/change-status/{statusId}
         [HttpPut("{taskId}/student/{studentId}/change-status/{statusId}")]
-        public int UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId, StudentAnswerOnTaskDto dto)
+        public int UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
-            dto.Task.Id = taskId;
-            dto.User.Id = studentId;
+            StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
+            dto.Task = new TaskDto { Id = taskId };
+            dto.User = new UserDto { Id = studentId };
+            dto.TaskStatus = (DAL.Enums.TaskStatus)statusId;
+            dto.Comments = new List<CommentDto>();
 
-            _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(dto, statusId);
+            _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(dto);
 
             return statusId;
         }

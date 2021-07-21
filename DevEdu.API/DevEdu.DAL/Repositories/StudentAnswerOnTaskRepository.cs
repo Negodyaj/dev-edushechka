@@ -99,8 +99,8 @@ namespace DevEdu.DAL.Repositories
                 },
                 new
                 {
-                    TaskId = dto.Task.Id,
-                    StudetnId = dto.User.Id
+                   TaskId = dto.Task.Id,
+                   StudentId = dto.User.Id
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
@@ -116,23 +116,23 @@ namespace DevEdu.DAL.Repositories
                 _taskStudentUpdateAnswer,
                 new
                 {
-                    dto.Task,
-                    dto.User,
+                    TaskId = dto.Task.Id,
+                    StudentId = dto.User.Id,
                     dto.Answer
                 },
                 commandType: CommandType.StoredProcedure
                 );
         }
 
-        public void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto, int statusId)
+        public void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {
             _connection.Query<StudentAnswerOnTaskDto>(
                 _taskStudentUpdateStatusId,
                 new
                 {
-                    dto.Task,
-                    dto.User,
-                    statusId
+                    TaskId = dto.Task.Id,
+                    StudentId = dto.User.Id,
+                    StatusId = (int)(dto.TaskStatus)
                 },
                 commandType: CommandType.StoredProcedure
                 );

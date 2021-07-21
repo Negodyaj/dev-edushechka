@@ -9,7 +9,7 @@ namespace DevEdu.DAL.Repositories
         void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask();
         StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto);
-        void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto, int statusId);
+        void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         void AddCommentOnStudentAnswer(int taskstudentId, int commentId);
 

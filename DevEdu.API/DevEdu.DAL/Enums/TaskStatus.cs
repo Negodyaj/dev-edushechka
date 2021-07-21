@@ -2,8 +2,8 @@
 {
     public enum TaskStatus
     {
-        сhecked = 1,
-        accepted,
-        returned
+        Checked = 1,
+        Accepted,
+        Returned
     }
 }

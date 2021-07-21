@@ -1,23 +1,24 @@
 ﻿using System.Collections.Generic;
 using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.Services
 {
     public class StudentAnswerOnTaskService: IStudentAnswerOnTaskService
     {
-        private readonly IStudentAnswerOnTaskService _studentAnswerOnTaskService;
+        private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
 
-        public StudentAnswerOnTaskService(IStudentAnswerOnTaskService studentAnswerOnTaskService)
+        public StudentAnswerOnTaskService(IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
         {
-            _studentAnswerOnTaskService = studentAnswerOnTaskService;
+            _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
         }
 
-        public void AddStudentAnswerOnTask(StudentAnswerOnTaskDto dto) => _studentAnswerOnTaskService.AddStudentAnswerOnTask(dto);
-        public void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto) => _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(dto);
-        public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask() => _studentAnswerOnTaskService.GetAllStudentAnswersOnTask();
-        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto) => GetStudentAnswerOnTaskByTaskIdAndStudentId(dto);
-        public void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto, int statusId) => _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(dto, statusId);
-        public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto) => _studentAnswerOnTaskService.UpdateStudentAnswerOnTask(dto);
-        public void AddCommentOnStudentAnswer(int taskstudentId, int commentId) => _studentAnswerOnTaskService.AddCommentOnStudentAnswer(taskstudentId, commentId);
+        public void AddStudentAnswerOnTask(StudentAnswerOnTaskDto dto) => _studentAnswerOnTaskRepository.AddStudentAnswerOnTask(dto);
+        public void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto) => _studentAnswerOnTaskRepository.DeleteStudentAnswerOnTask(dto);
+        public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask() => _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask();
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto) => _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(dto);
+        public void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto) => _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(dto);
+        public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto) => _studentAnswerOnTaskRepository.UpdateStudentAnswerOnTask(dto);
+        public void AddCommentOnStudentAnswer(int taskstudentId, int commentId) => _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskstudentId, commentId);
     }
 }
