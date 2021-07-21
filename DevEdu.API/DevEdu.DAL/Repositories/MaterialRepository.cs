@@ -33,21 +33,62 @@ namespace DevEdu.DAL.Repositories
 
         public List<MaterialDto> GetAllMaterials()
         {
+            var materialDictionary = new Dictionary<int, MaterialDto>();
             return _connection
-                .Query<MaterialDto>(
+                .Query<MaterialDto, TagDto, MaterialDto>(
                     _materialSelectAllProcedure,
+                    (material, tag) =>
+                    {
+                        MaterialDto materialEntry;
+                        if (!materialDictionary.TryGetValue(material.Id, out materialEntry))
+                        {
+                            materialEntry = material;
+                            materialEntry.Tags = new List<TagDto>();
+                            materialDictionary.Add(material.Id, materialEntry);
+                        }
+                        if(tag != null && tag.Name != null)
+                        {
+                            materialEntry.Tags.Add(tag);
+                        }
+                        return materialEntry;
+                    },
+                    splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                ).
-                ToList();
+                )
+                .Distinct()
+                .ToList();
         }
 
         public MaterialDto GetMaterialById(int id)
         {
-            return _connection.QuerySingleOrDefault<MaterialDto>(
-                _materialSelectByIdProcedure,
-                new { id },
-                commandType: CommandType.StoredProcedure
-            );
+            MaterialDto result = default;
+            _connection
+                .Query<MaterialDto, TagDto, MaterialDto>(
+                    _materialSelectByIdProcedure,
+                    (material, tag) =>
+                    {
+                        if(result == null)
+                        {
+                            result = material;
+                            result.Tags = new List<TagDto> { tag };
+                        }
+                        else
+                        {
+                            if (tag != null && tag.Name != null)
+                            {
+                                result.Tags.Add(tag);
+                            }
+                        }
+
+                        return material;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .FirstOrDefault();
+
+            return result;
         }
 
         public int UpdateMaterial(MaterialDto material)
@@ -104,13 +145,30 @@ namespace DevEdu.DAL.Repositories
 
         public List<MaterialDto> GetMaterialsByTagId(int tagId)
         {
+            var materialDictionary = new Dictionary<int, MaterialDto>();
             return _connection
-                .Query<MaterialDto>(
+                .Query<MaterialDto, TagDto, MaterialDto>(
                     _materialSelectAllByTagIdProcedure,
+                    (material, tag) =>
+                    {
+                        MaterialDto materialEntry;
+                        if (!materialDictionary.TryGetValue(material.Id, out materialEntry))
+                        {
+                            materialEntry = material;
+                            materialEntry.Tags = new List<TagDto>();
+                            materialDictionary.Add(material.Id, materialEntry);
+                        }
+                        materialEntry.Tags.Add(tag);
+
+                        return materialEntry;
+                    },
                     new { tagId },
+                    splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                ).
-                ToList();
+                )
+                .Distinct()
+                .ToList();
         }
+
     }
 }

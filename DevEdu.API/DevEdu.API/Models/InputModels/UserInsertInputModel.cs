@@ -1,11 +1,16 @@
-﻿using System;
+﻿using DevEdu.API.Common;
+using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
 {
     public class UserInsertInputModel
     {
+        [DefaultValue(false)]
+        public bool IsDeleted { get; set; }
         [Required(ErrorMessage = FirstNameRequired)]
         public string FirstName { get; set; }
 
@@ -16,29 +21,30 @@ namespace DevEdu.API.Models.InputModels
         public string Patronymic { get; set; }
 
         [Required(ErrorMessage = EmailRequired)]
-        [EmailAddress(ErrorMessage = WrongFormatEmailFormat)]
+        [EmailAddress(ErrorMessage = WrongEmailFormat)]
         public string Email { get; set; }
 
         [Required(ErrorMessage = UsernameRequired)]
         public string Username { get; set; }
 
         [Required(ErrorMessage = PasswordRequired)]
-        [MinLength(8, ErrorMessage = WrongFormatPasswordRequired)]
+        [MinLength(8, ErrorMessage = WrongFormatPassword)]
         public string Password { get; set; }
 
         [Required(ErrorMessage = ContractNumberRequired)]
         public string ContractNumber { get; set; }
 
         [Required(ErrorMessage = CityIdRequired)]
-        [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatCityIdRequired)]
-        public int CityId { get; set; }
+        [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatCityId)]
+        public int City { get; set; }
 
         [Required(ErrorMessage = BirthDateRequired)]
-        public DateTime BirthDate { get; set; }
+        [CustomDateFormatAttribute(ErrorMessage = WrongFormatBithDate)]
+        public string BirthDate { get; set; }
 
         public string GitHubAccount { get; set; }
 
-        [Url(ErrorMessage = WrongFormatPhotoRequired)]
+        [Url(ErrorMessage = WrongFormatPhoto)]
         public string Photo { get; set; }
 
         [Required(ErrorMessage = PhoneNumberRequired)]

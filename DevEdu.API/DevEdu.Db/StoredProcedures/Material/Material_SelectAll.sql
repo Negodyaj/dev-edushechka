@@ -1,7 +1,23 @@
 ﻿CREATE PROCEDURE dbo.Material_SelectAll
 AS
 BEGIN
-	SELECT Id, Content from dbo.Material
-	WHERE IsDeleted = 0
+	SELECT 
+		m.Id, 
+		m.Content,
+		x.Id,
+		x.Name,
+		x.IsDeleted
+	FROM dbo.Material m left join
+	(
+		SELECT
+			t.Id,
+			t.Name,
+			t.IsDeleted,
+			tm.MaterialId
+		FROM dbo.Tag t 
+			inner join dbo.Tag_Material tm on tm.TagId = t.Id
+			WHERE t.IsDeleted = 0
+	) x on x.MaterialId = m.Id
+	WHERE m.IsDeleted = 0 
 END
 

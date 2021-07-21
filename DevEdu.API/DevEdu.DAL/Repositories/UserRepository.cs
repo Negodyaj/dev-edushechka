@@ -3,8 +3,7 @@ using Dapper;
 using System.Data;
 using System.Linq;
 using System.Collections.Generic;
-
-
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -12,6 +11,7 @@ namespace DevEdu.DAL.Repositories
     {
         private const string _userAddProcedure = "dbo.User_Insert";
         private const string _userSelectByIdProcedure = "dbo.User_SelectById";
+        private const string _userSelectByEmailProcedure = "dbo.User_SelectByEmail";
         private const string _userSelectAllProcedure = "dbo.User_SelectAll";
         private const string _userUpdateProcedure = "dbo.User_Update";
         private const string _userDeleteProcedure = "dbo.User_Delete";
@@ -24,7 +24,7 @@ namespace DevEdu.DAL.Repositories
         public int AddUser(UserDto user)
         {
             return _connection.QuerySingle<int>(
-               _userAddProcedure,
+                _userAddProcedure,
                 new
                 {
                     user.FirstName,
@@ -34,30 +34,94 @@ namespace DevEdu.DAL.Repositories
                     user.Username,
                     user.Password,
                     user.ContractNumber,
-                    user.CityId,
+                    CityId = (int)user.City,
                     user.BirthDate,
                     user.GitHubAccount,
                     user.Photo,
                     user.PhoneNumber
                 },
-            commandType: CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure);
         }
 
         public UserDto SelectUserById(int id)
         {
-            return _connection.QuerySingleOrDefault<UserDto>(
+            UserDto result = default;
+            return _connection
+                .Query<UserDto, City, Role, UserDto>(
                 _userSelectByIdProcedure,
+                (user, city, role) =>
+                {
+                    if (result == null)
+                    {
+                        result = user;
+                        result.City = city;
+                        result.Roles = new List<Role> { role };
+                    }
+                    else
+                    {
+                        result.Roles.Add(role);
+                    }
+                    return result;
+                },
                 new { id },
-            commandType: CommandType.StoredProcedure);
+                splitOn: "id",
+                commandType: CommandType.StoredProcedure)
+                .FirstOrDefault();
+        }
+
+        public UserDto SelectUserByEmail(string email)
+        {
+            UserDto result = default;
+            return _connection
+                .Query<UserDto, City, Role, UserDto>(
+                    _userSelectByEmailProcedure,
+                    (user, city, role) =>
+                    {
+                        if (result == null)
+                        {
+                            result = user;
+                            result.City = city;
+                            result.Roles = new List<Role> { role };
+                        }
+                        else
+                        {
+                            result.Roles.Add(role);
+                        }
+                        return result;
+                    },
+                    new { email },
+                    splitOn: "id",
+                    commandType: CommandType.StoredProcedure)
+                .FirstOrDefault();
         }
 
         public List<UserDto> SelectUsers()
         {
+            var UserDictionary = new Dictionary<int, UserDto>();
+
             return _connection
-                .Query<UserDto>(
+                .Query<UserDto, City, Role, UserDto>(
                 _userSelectAllProcedure,
-            commandType: CommandType.StoredProcedure)
-                .ToList();
+                (user, city, role) =>
+                {
+                    UserDto userEnrty;
+
+                    if (!UserDictionary.TryGetValue(user.Id, out userEnrty))
+                    {
+                        userEnrty = user;
+                        userEnrty.City = city;
+                        userEnrty.Roles = new List<Role>();
+                        UserDictionary.Add(user.Id, userEnrty);
+                    }
+
+                    userEnrty.Roles.Add(role);
+
+                    return userEnrty;
+                },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure)
+                .Distinct<UserDto>()
+                .ToList<UserDto>();
         }
 
         public void UpdateUser(UserDto user)
@@ -71,13 +135,12 @@ namespace DevEdu.DAL.Repositories
                     user.LastName,
                     user.Patronymic,
                     user.Username,
-                    user.CityId,
+                    CityId = (int)user.City,
                     user.GitHubAccount,
                     user.Photo,
                     user.PhoneNumber
                 },
-            commandType: CommandType.StoredProcedure
-            );
+                commandType: CommandType.StoredProcedure);
         }
 
         public void DeleteUser(int id)
@@ -85,13 +148,12 @@ namespace DevEdu.DAL.Repositories
             _connection.Execute(
                 _userDeleteProcedure,
                 new { id },
-            commandType: CommandType.StoredProcedure
-            );
+                commandType: CommandType.StoredProcedure);
         }
 
-        public int AddUserRole(int userId, int roleId)
+        public void AddUserRole(int userId, int roleId)
         {
-            return _connection.QuerySingle<int>(
+            _connection.QuerySingleOrDefault<int>(
                 _userRoleAddProcedure,
                 new
                 {
@@ -112,6 +174,5 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure);
         }
-
     }
 }

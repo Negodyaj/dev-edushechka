@@ -1,5 +1,8 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using Dapper;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -11,6 +14,7 @@ namespace DevEdu.DAL.Repositories
         private const string _deleteGroupLesson = "dbo.Group_Lesson_Delete";
         private const string _insertGroupMaterial = "dbo.Group_Material_Insert";
         private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
+        private const string _groupSelectAllByMaterialIdProcedure = "dbo.Group_SelectByMaterialId";
 
         public void AddGroupLesson(int groupId, int lessonId)
         {
@@ -25,7 +29,6 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-
         public void RemoveGroupLesson(int groupId, int lessonId)
         {
             _connection.Execute(
@@ -39,27 +42,27 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddGroupMaterialReference(int materialId, int groupId)
+        public int AddGroupMaterialReference(int groupId, int materialId)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 _insertGroupMaterial,
                 new
                 {
-                    materialId,
-                    groupId
+                    groupId,
+                    materialId
                 },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public void RemoveGroupMaterialReference(int materialId, int groupId)
+        public int RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 _deleteGroupMaterial,
                 new
                 {
-                    materialId,
-                    groupId
+                    groupId,
+                    materialId
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -91,5 +94,15 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
-    }
+
+        public List<GroupDto> GetGroupsByMaterialId(int id)
+        {
+            return _connection.Query<GroupDto>(
+                    _groupSelectAllByMaterialIdProcedure,
+                    new { id },
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+    }    
 }
