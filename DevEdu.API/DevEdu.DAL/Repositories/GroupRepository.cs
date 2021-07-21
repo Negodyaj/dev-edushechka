@@ -12,7 +12,7 @@ namespace DevEdu.DAL.Repositories
         private const string _insertGroupMaterial = "dbo.Group_Material_Insert";
         private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
 
-        public int AddGroupLesson(int groupId, int lessonId)
+        public int AddGroupToLesson(int groupId, int lessonId)
         {
             return _connection.Execute(
                 _insertGroupLesson,
@@ -25,7 +25,7 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int RemoveGroupLesson(int groupId, int lessonId)
+        public int RemoveGroupFromLesson(int groupId, int lessonId)
         {
            return  _connection.Execute(
                 _deleteGroupLesson,

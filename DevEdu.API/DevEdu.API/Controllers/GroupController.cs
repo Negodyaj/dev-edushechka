@@ -70,20 +70,20 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpPost("{groupId}/lesson/{lessonId}")]
         [Description("Add lesson to group")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public string AddGroupLesson(int groupId, int lessonId)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public string AddGroupToLesson(int groupId, int lessonId)
         {
-            _groupService.AddGroupLesson(groupId, lessonId);
+            _groupService.AddGroupToLesson(groupId, lessonId);
             return $"Group {groupId} add  Lesson Id:{lessonId}";
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
         [Description("Delete lesson from groupId")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public string RemoveGroupLesson(int groupId, int lessonId)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public string RemoveGroupFromLesson(int groupId, int lessonId)
         {
-            _groupService.RemoveGroupLesson(groupId,    lessonId);
+            _groupService.RemoveGroupFromLesson(groupId,    lessonId);
             return $"Group {groupId} remove  Lesson Id:{lessonId}";
         }
 

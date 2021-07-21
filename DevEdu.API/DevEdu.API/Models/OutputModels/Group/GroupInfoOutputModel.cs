@@ -3,5 +3,6 @@
     public class GroupInfoOutputModel
     {
         public string Timetable { get; set; }
+        public string PaymentPerMonth { get; set; }
     }
 }

@@ -30,54 +30,47 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("simple/{id}")]
+        [HttpGet("{id}/simple")]
         [Description("Get course by id with groups")]
-        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
-        public CourseSimplePriceOutputModel GetCourseSimple(int id)
+        [ProducesResponseType(typeof(CourseSimpleInfoOutputModel), StatusCodes.Status200OK)]
+        public CourseSimpleInfoOutputModel GetCourseSimple(int id)
         {
             var course = _courseService.GetCourse(id);
-            return _mapper.Map<CourseSimplePriceOutputModel>(course);
+            return _mapper.Map<CourseSimpleInfoOutputModel>(course);
         }
 
-        [HttpGet("full/{id}")]
+        [HttpGet("{id}/full")]
         [Description("Get course by id full")]
-        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
         public CourseInfoFullOutputModel GetCourseFull(int id)
         {
-            var course = _courseService.GetCourseForAdmin(id);
+            var course = _courseService.GetFullCourseInfo(id);
             return _mapper.Map<CourseInfoFullOutputModel>(course);
         }
 
-        [HttpGet("simple")]
-        [Description("Get all courses with groups")]
-        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
+        [HttpGet]
+        [Description("Get all courses")]
+        [ProducesResponseType(typeof(CourseSimpleInfoOutputModel), StatusCodes.Status200OK)]
         public List<CourseSimpleInfoOutputModel> GetAllCoursesWithGrops()
         {
-            var courses = _courseService.GetCourse();
+            var courses = _courseService.GetCourses();
             return _mapper.Map<List<CourseSimpleInfoOutputModel>>(courses);
         }
 
-        [HttpGet("full")]
-        [Description("Get all courses full")]
-        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
-        public List<CourseInfoFullOutputModel> GetAllCoursesWithFull()
-        {
-            var courses = _courseService.GetCourseForAdmin();
-            return _mapper.Map<List<CourseInfoFullOutputModel>>(courses);
-        }
 
         [HttpPost]
         [Description("Create new course")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
-        public int AddCourse([FromBody] CourseInputModel model)
+        [ProducesResponseType(typeof(CourseSimpleInfoOutputModel), StatusCodes.Status201Created)]
+        public CourseSimpleInfoOutputModel AddCourse([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            return _courseService.AddCourse(dto);
+            int id = _courseService.AddCourse(dto);
+            return GetCourseSimple(id);
         }
 
         [HttpDelete("{id}")]
         [Description("Delete course by id")]
-        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteCourse(int id)
         {
             _courseService.DeleteCourse(id);
@@ -85,12 +78,12 @@ namespace DevEdu.API.Controllers
 
         [HttpPut("{id}")]
         [Description("Update course by Id")]
-        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
-        public string UpdateCourse(int id, [FromBody] CourseInputModel model)
+        [ProducesResponseType(typeof(CourseSimpleInfoOutputModel), StatusCodes.Status200OK)]
+        public CourseSimpleInfoOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
             _courseService.UpdateCourse(id, dto);
-            return $"Course №{id} change name to {model.Name} and description to {model.Description}";
+            return GetCourseSimple(id);
         }
 
         [HttpPost("topic/{topicId}/tag/{tagId}")]

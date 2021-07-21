@@ -45,7 +45,6 @@ namespace DevEdu.API.Configuration
         private void CreateMappingFromDto()
         {
             CreateMap<CourseDto, CourseSimpleInfoOutputModel>();
-            CreateMap<CourseDto, CourseSimplePriceOutputModel>();
             CreateMap<TopicDto, TopicOutputModel>();
             CreateMap<CommentDto, CommentInfoOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
@@ -53,7 +52,6 @@ namespace DevEdu.API.Configuration
             CreateMap<UserDto, UserInfoOutputModel>();
             CreateMap<CourseDto, CourseInfoFullOutputModel>();
             CreateMap<GroupDto, GroupInfoOutputModel>();
-            CreateMap<GroupDto, GroupMethodistOutputModel>();
             CreateMap<MaterialDto, MaterialOutputModel>();
             CreateMap<TaskDto, TaskOutputModel>();
         }

@@ -73,7 +73,7 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
         }
 
-        public List<CourseDto> GetCourse()
+        public List<CourseDto> GetCourses()
         {
             var courseDictionary = new Dictionary<int, CourseDto>();
             CourseDto result;

@@ -24,22 +24,21 @@ namespace DevEdu.Business.Services
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
         public void DeleteCourse(int id) => _courseRepository.DeleteCourse(id);
         public CourseDto GetCourse(int id) => _courseRepository.GetCourse(id);
-        public CourseDto GetCourseForAdmin(int id) 
+        public CourseDto GetFullCourseInfo(int id) 
         {
             var course = GetCourse(id);
-            return FillCourse(course, id);
+            course.Tasks = _taskRepository.GetTaskByCourseId(course.Id);
+            course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
+            course.Topics = _topicRepository.GetTopicsByCourseId(course.Id);
+            return course;
 
         }
-        public List<CourseDto> GetCourseForAdmin()
+        public List<CourseDto> GetCoursesForAdmin()
         {
-            var courses = _courseRepository.GetCourse();
-            foreach (var course in courses)
-            {
-                FillCourse(course, course.Id);
-            }
+            var courses = _courseRepository.GetCourses();
             return courses;
         }
-        public List<CourseDto> GetCourse() => _courseRepository.GetCourse();
+        public List<CourseDto> GetCourses() => _courseRepository.GetCourses();
 
         public void UpdateCourse(int id, CourseDto courseDto)
         {
@@ -65,14 +64,6 @@ namespace DevEdu.Business.Services
         {
             var list = _courseRepository.SelectAllTopicsByCourseId(courseId);
             return list;
-        }
-
-        private CourseDto FillCourse(CourseDto course, int id)
-        {
-            course.Tasks = _taskRepository.GetTaskByCourseId(course.Id);
-            course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
-            course.Topics = _topicRepository.GetTopicsByCourseId(course.Id);
-            return course;
         }
     }
 }

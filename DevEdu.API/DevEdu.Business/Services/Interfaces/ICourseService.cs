@@ -6,11 +6,11 @@ namespace DevEdu.Business.Services
     public interface ICourseService
     {
         CourseDto GetCourse(int id);
-        CourseDto GetCourseForAdmin(int id);
+        CourseDto GetFullCourseInfo(int id);
         int AddCourse(CourseDto courseDto);
         void DeleteCourse(int id);
-        List<CourseDto> GetCourse();
-        List<CourseDto> GetCourseForAdmin();
+        List<CourseDto> GetCourses();
+        List<CourseDto> GetCoursesForAdmin();
         void UpdateCourse(int id, CourseDto courseDto);
         void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
         void DeleteTopicFromCourse(int courseId, int topicId);
