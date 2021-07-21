@@ -45,7 +45,9 @@ namespace DevEdu.DAL.Repositories
                 _taskStudentInsert,
                 new
                 {
-                    dto.Answer
+                    TaskId = dto.Task.Id,
+                    StudentId = dto.User.Id,
+                    Answer = dto.Answer
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -62,11 +64,12 @@ namespace DevEdu.DAL.Repositories
                 {
                     StudentAnswerOnTaskDto studentAnswerEntry;
 
-                    if (!studentStudentDictionary.TryGetValue(studentAnswer.Id, out studentAnswerEntry))
+                    if (!studentStudentDictionary.TryGetValue(studentAnswer.User.Id, out studentAnswerEntry))
                     {
                         studentAnswerEntry = studentAnswer;
                         studentAnswer.TaskStatus = taskStatus;
-                        studentStudentDictionary.Add(studentAnswer.Id, studentAnswerEntry);
+                        Convert.ToInt32(studentAnswer.TaskStatus);
+                        studentStudentDictionary.Add(studentAnswer.User.Id, studentAnswerEntry);
                     }
 
                     return studentAnswerEntry;
@@ -93,6 +96,7 @@ namespace DevEdu.DAL.Repositories
                         result.User = user;
                         result.Task = task;
                         result.TaskStatus = taskStatus;
+
                     }
 
                     return studentAnswer;

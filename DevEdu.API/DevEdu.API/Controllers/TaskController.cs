@@ -92,8 +92,8 @@ namespace DevEdu.API.Controllers
         public void AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
-            taskAnswerDto.Task.Id = taskId;
-            taskAnswerDto.User.Id = studentId;
+            taskAnswerDto.Task = new TaskDto { Id = taskId };
+            taskAnswerDto.User = new UserDto { Id = studentId };
 
             _studentAnswerOnTaskService.AddStudentAnswerOnTask(taskAnswerDto);
 
@@ -101,9 +101,9 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student
         [HttpGet("student")]
-        public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask()
+        public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTasks()
         {
-            var studentStatusDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTask();
+            var studentStatusDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTasks();
             return studentStatusDto;
         }
 

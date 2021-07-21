@@ -7,7 +7,7 @@ namespace DevEdu.Business.Services
     {
         void AddStudentAnswerOnTask(StudentAnswerOnTaskDto studentResponse);
         void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
-        List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask();
+        List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTasks();
         StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto);
         void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
