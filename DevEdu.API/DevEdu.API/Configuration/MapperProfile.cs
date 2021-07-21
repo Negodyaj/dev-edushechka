@@ -3,7 +3,6 @@ using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
-using System;
 
 namespace DevEdu.API.Configuration
 {

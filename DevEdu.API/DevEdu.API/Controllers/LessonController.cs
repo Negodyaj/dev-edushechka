@@ -5,11 +5,9 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using DevEdu.Business.Services;
 using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
 using DevEdu.API.Models.OutputModels;
-using System.Net.Http;
 
 namespace DevEdu.API.Controllers
 {

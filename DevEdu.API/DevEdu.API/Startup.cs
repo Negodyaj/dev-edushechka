@@ -49,7 +49,7 @@ namespace DevEdu.API
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ITopicService, TopicService>();
-            services.AddScoped<IRaitingService, RaitingService>();
+            services.AddScoped<IRatingService, RaitingService>();
             services.AddScoped<INotificationService, NotificationService>();
 
 

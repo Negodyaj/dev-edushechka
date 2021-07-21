@@ -7,10 +7,10 @@ namespace DevEdu.API.Models.InputModels
     public class GroupTaskInputModel
     {
         [Required(ErrorMessage = StartDateRequired)]
-        [DateTimeToStringAttribute(ErrorMessage = WrongFormatDate)]
+        [CustomDateFormatAttribute(ErrorMessage = WrongFormatDate)]
         public string StartDate { get; set; }
         [Required(ErrorMessage = EndDateRequired)]
-        [DateTimeToStringAttribute(ErrorMessage = WrongFormatDate)]
+        [CustomDateFormatAttribute(ErrorMessage = WrongFormatDate)]
         public string EndDate { get; set; }
     }
 }

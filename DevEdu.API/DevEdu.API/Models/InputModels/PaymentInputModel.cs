@@ -18,6 +18,5 @@ namespace DevEdu.API.Models.InputModels
 
         [Required(ErrorMessage = IsPaidRequired)]
         public int IsPaid { get; set; }
-
     }
 }

@@ -65,7 +65,7 @@ namespace DevEdu.DAL.Repositories
 
             return _connection
                 .Query<NotificationDto, Role, UserDto, NotificationDto>(
-                    _notificationSelectAllByUserIdProcedure,
+                    _notificationSelectAllByUserProcedure,
                     (notification, role, user) =>
                     {
                         NotificationDto result;

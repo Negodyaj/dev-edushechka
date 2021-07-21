@@ -52,7 +52,7 @@ namespace DevEdu.DAL.Repositories
         public int AddGroupMaterialReference(int groupId, int materialId)
         {
             return _connection.Execute(
-                _materialToGroupAddProcedure,
+                _insertGroupMaterial,
                 new
                 {
                     groupId,
@@ -65,7 +65,7 @@ namespace DevEdu.DAL.Repositories
         public int RemoveGroupMaterialReference(int groupId, int materialId)
         {
             return _connection.Execute(
-                _materialFromGroupDeleteProcedure,
+                _deleteGroupMaterial,
                 new
                 {
                     groupId,
@@ -188,8 +188,6 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
-    }
-
         public List<GroupDto> GetGroupsByMaterialId(int id)
         {
             return _connection.Query<GroupDto>(
