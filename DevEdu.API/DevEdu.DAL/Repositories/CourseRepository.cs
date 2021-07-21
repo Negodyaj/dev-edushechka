@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
@@ -26,6 +27,7 @@ namespace DevEdu.DAL.Repositories
         private const string _сourseTaskDeleteProcedure = "dbo.Course_Task_Delete";
 
         private const string _courseSelectByTaskIdProcedure = "dbo.Course_SelectByTaskId";
+        private const string _courseSelectAllByMaterialIdProcedure = "dbo.Course_SelectByMaterialId";
 
         public CourseRepository()
         {
@@ -176,6 +178,16 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection.Query<CourseDto>(
                     _courseSelectByTaskIdProcedure,
+                    new { id },
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+
+        public List<CourseDto> GetCoursesByMaterialId(int id)
+        {
+            return _connection.Query<CourseDto>(
+                    _courseSelectAllByMaterialIdProcedure,
                     new { id },
                     commandType: CommandType.StoredProcedure
                 )

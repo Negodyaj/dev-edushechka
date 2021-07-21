@@ -4,7 +4,7 @@ using DevEdu.DAL.Enums;
 namespace DevEdu.DAL.Models
     
 {
-   public class NotificationDto : BaseDto
+    public class NotificationDto : BaseDto
     {
         public DateTime Date { get; set; }
         public string Text { get; set; }
