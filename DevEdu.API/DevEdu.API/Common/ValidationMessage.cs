@@ -45,5 +45,9 @@
         public const string IsPaidRequired = "IsPaid cannot be empty";
         public const string WrongFormatBithDate = "BirthDate must be format 'dd.MM.yyyy'";
         public const string RoleIdRequired = "RoleId cannot be empty";
+        public const string WrongFormatEmailFormat = "Email must be provided";
+        public const string StudentAnswerRequired = "Answer of student must be provided";
+        public const string CommentUserIdRequired = "UserId of comment must be provided";
+        public const string CommentTextRequired = "Text of comment must be provided";
     }
 }
