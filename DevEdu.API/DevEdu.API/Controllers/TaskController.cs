@@ -200,13 +200,24 @@ namespace DevEdu.API.Controllers
 
         // api/task/answer/{taskStudentId}/comment}
         [HttpPost("answer/{taskStudentId}/comment")]
-        public int AddCommentOnStudentAnswer(int taskstudentId, [FromBody] CommentAddInputModel inputModel)
+        public int AddCommentOnStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel inputModel)
         {
             var commentDto = _mapper.Map<CommentDto>(inputModel);
             int commentId = _commentRepository.AddComment(commentDto);
-            _studentAnswerOnTaskService.AddCommentOnStudentAnswer(taskstudentId, commentId);
+            _studentAnswerOnTaskService.AddCommentOnStudentAnswer(taskStudentId, commentId);
 
-            return taskstudentId;
+            return taskStudentId;
+        }
+
+        //  api/task/1/group/
+        [HttpGet("{taskId}/groups")]
+        [Description("Get all groups by task")]
+        [ProducesResponseType(typeof(List<GroupTaskInfoWithGroupOutputModel>), StatusCodes.Status200OK)]
+        public List<GroupTaskInfoWithGroupOutputModel> GetGroupsByTaskId(int taskId)
+        {
+            var dto = _taskService.GetGroupsByTaskId(taskId);
+            var output = _mapper.Map<List<GroupTaskInfoWithGroupOutputModel>>(dto);
+            return output;
         }
     }
 }

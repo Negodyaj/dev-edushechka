@@ -77,7 +77,7 @@ namespace DevEdu.DAL.Repositories
                     _commentSelectAllByUserIdProcedure,
                     (comment, user, role) =>
                     {
-                        
+
                         if (!commentDictionary.TryGetValue(comment.Id, out result))
                         {
                             result = comment;

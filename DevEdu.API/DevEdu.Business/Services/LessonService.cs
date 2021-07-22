@@ -21,7 +21,7 @@ namespace DevEdu.Business.Services
             _commentRepository = commentRepository;
             _userRepository = userRepository;
         }
-        
+
         public void AddCommentToLesson(int lessonId, int commentId) => _lessonRepository.AddCommentToLesson(lessonId, commentId);
 
         public int AddLesson(LessonDto lessonDto) => _lessonRepository.AddLesson(lessonDto);
@@ -63,7 +63,7 @@ namespace DevEdu.Business.Services
         public void DeleteTopicFromLesson(int lessonId, int topicId) => 
             _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
 
-        public void AddTopicToLesson(int lessonId, int topicId) => 
+        public void AddTopicToLesson(int lessonId, int topicId) =>
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
 
         public void AddStudentToLesson(int lessonId, int userId)

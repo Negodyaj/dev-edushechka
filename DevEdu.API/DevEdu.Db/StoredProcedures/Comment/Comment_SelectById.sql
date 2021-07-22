@@ -12,7 +12,7 @@ BEGIN
 		u.LastName,
 		u.Email,
 		u.Photo,
-		ur.RoleId as id
+		ur.RoleId as Id
 	FROM dbo.Comment c
 		inner join [User] u on u.Id=c.UserId
 		inner join User_Role ur on ur.UserId=u.Id

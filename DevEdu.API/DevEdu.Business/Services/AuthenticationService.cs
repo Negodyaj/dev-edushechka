@@ -11,9 +11,9 @@ namespace DevEdu.Business.Services
             new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
             return salt;
         }
-        public string HashPassword(string pass, byte[] salt = default) 
+        public string HashPassword(string pass, byte[] salt = default)
         {
-            if(salt == default)
+            if (salt == default)
             {
                 salt = GetSalt();
             }
@@ -27,12 +27,12 @@ namespace DevEdu.Business.Services
             return hashedPassword;
         }
                                                                                     
-        public bool Verify(string hashedPassword, string userPasword)
+        public bool Verify(string hashedPassword, string userPassword)
         {
             byte[] hashBytes = Convert.FromBase64String(hashedPassword);
             byte[] salt = new byte[16];
             Array.Copy(hashBytes, 0, salt, 0, 16);
-            string result = HashPassword(userPasword, salt);
+            string result = HashPassword(userPassword, salt);
             return result == hashedPassword;
         }
     }

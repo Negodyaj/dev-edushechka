@@ -41,9 +41,10 @@
         public const string TeacherCommentRequired = "TeacherComment must be provided";
         public const string TeacherIdRequired = "TeacherId must be provided";
         public const string LinkToRecordIdRequired = "LinkToRecord must be provided";
-        public const string SummRequired = "Summ must be provided";
+        public const string SumRequired = "Sum must be provided";
         public const string IsPaidRequired = "IsPaid cannot be empty";
-        public const string WrongFormatBithDate = "BirthDate must be format 'dd.MM.yyyy'";
+        public const string WrongFormatBirthDate = "BirthDate must be format 'dd.MM.yyyy'";
+        public const string WrongFormatDate = "the date must be in the format dd.mm.yyyy";
         public const string RoleIdRequired = "RoleId cannot be empty";
         public const string WrongFormatEmailFormat = "Email must be provided";
         public const string StudentAnswerRequired = "Answer of student must be provided";
