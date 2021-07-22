@@ -31,9 +31,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int DeleteComment(int id)
+        public void DeleteComment(int id)
         {
-            return _connection.Execute(
+            _connection.Execute(
                 _commentDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
@@ -100,9 +100,9 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public int UpdateComment(CommentDto commentDto)
+        public void UpdateComment(CommentDto commentDto)
         {
-            return _connection.Execute(
+            _connection.Execute(
                 _commentUpdateProcedure,
                 new
                 {

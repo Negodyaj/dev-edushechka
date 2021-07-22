@@ -177,7 +177,7 @@ namespace DevEdu.Business.Tests
             var taskDto = TaskData.GetTaskDtoWithTags();
             var expectedTaskDto = TaskData.GetAnotherTaskDtoWithTags();
 
-            _taskRepoMock.Setup(x => x.UpdateTask(taskDto));
+            //_taskRepoMock.Setup(x => x.UpdateTask(taskDto));
             _taskRepoMock.Setup(x => x.GetTaskById(taskDto.Id)).Returns(expectedTaskDto);
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
