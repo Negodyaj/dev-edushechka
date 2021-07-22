@@ -73,21 +73,13 @@ namespace DevEdu.DAL.Repositories
 
         public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId)
         {
-            var studentAnswersDictionary = new Dictionary<int, StudentAnswerOnTaskDto>();
-
             return _connection
                 .Query<StudentAnswerOnTaskDto, TaskStatus, UserDto, StudentAnswerOnTaskDto>(
                 _taskStudentSelectAllAnswersByTaskId,
                 (studentAnswer, taskStatus, user) =>
                 {
-                    StudentAnswerOnTaskDto studentAnswerEntry;
-
-                    if (!studentAnswersDictionary.TryGetValue(studentAnswer.Id, out studentAnswerEntry))
-                    {
-                        studentAnswer.TaskStatus = taskStatus;
-                        studentAnswer.User = user;
-                        studentAnswersDictionary.Add(studentAnswer.Id, studentAnswerEntry);
-                    }
+                    studentAnswer.TaskStatus = taskStatus;
+                    studentAnswer.User = user;
 
                     return studentAnswer;
                 },
@@ -103,27 +95,21 @@ namespace DevEdu.DAL.Repositories
 
         public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto)
         {
-            StudentAnswerOnTaskDto result = default;
-
-            _connection.
-                Query<StudentAnswerOnTaskDto, UserDto, TaskDto, TaskStatus, StudentAnswerOnTaskDto>(
+            var result = _connection
+                .Query<StudentAnswerOnTaskDto, UserDto, TaskDto, TaskStatus, StudentAnswerOnTaskDto>(
                 _taskStudentSelectByTaskAndStudent,
                 (studentAnswer, user, task, taskStatus) =>
                 {
-                    if(result == null)
-                    {
-                        result = studentAnswer;
-                        result.User = user;
-                        result.Task = task;
-                        result.TaskStatus = taskStatus;
-                    }
+                    studentAnswer.User = user;
+                    studentAnswer.Task = task;
+                    studentAnswer.TaskStatus = taskStatus;
 
                     return studentAnswer;
                 },
                 new
                 {
-                   TaskId = dto.Task.Id,
-                   StudentId = dto.User.Id
+                    TaskId = dto.Task.Id,
+                    StudentId = dto.User.Id
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
@@ -135,7 +121,7 @@ namespace DevEdu.DAL.Repositories
 
         public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {
-            _connection.Query<StudentAnswerOnTaskDto>(
+            _connection.Execute(
                 _taskStudentUpdateAnswer,
                 new
                 {
@@ -149,7 +135,7 @@ namespace DevEdu.DAL.Repositories
 
         public void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {
-            _connection.Query<StudentAnswerOnTaskDto>(
+            _connection.Execute(
                 _taskStudentUpdateStatusId,
                 new
                 {
@@ -181,10 +167,8 @@ namespace DevEdu.DAL.Repositories
                     _task_Student_SelectByTaskIdProcedure,
                     (answerDto, userDto) =>
                     {
-                        StudentAnswerOnTaskForTaskDto answerEntry;
-                        answerEntry = answerDto;
-                        answerEntry.Student = userDto;
-                        return answerEntry;
+                        answerDto.Student = userDto;
+                        return answerDto;
                     },
                     new { id },
                     splitOn: "Id",
