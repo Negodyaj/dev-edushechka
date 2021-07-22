@@ -135,5 +135,8 @@ namespace DevEdu.Business.Services
 
         public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId)=>
             _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
+
+        public StudentLessonDto GetStudenLessonByLessonAndUserId(int lessonId, int userId) =>
+            _lessonRepository.SelectByLessonAndUserId(lessonId, userId);
     }
 }

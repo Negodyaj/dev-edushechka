@@ -108,6 +108,7 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<TaskDto, TaskInfoOutputMiniModel>();
             CreateMap<StudentLessonDto, FeedbackOutputModel>();
+            CreateMap<StudentLessonDto, StudentLessonShortOutputModel>();
         }
     }
 }

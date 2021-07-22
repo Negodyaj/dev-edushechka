@@ -22,5 +22,6 @@ namespace DevEdu.DAL.Repositories
         void UpdateStudentAttendanceOnLesson(StudentLessonDto studentLessonDto);
         void UpdateStudentFeedbackForLesson(StudentLessonDto studentLessonDto);
         List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);
+        StudentLessonDto SelectByLessonAndUserId(int lessonId, int userId);
     }
 }
