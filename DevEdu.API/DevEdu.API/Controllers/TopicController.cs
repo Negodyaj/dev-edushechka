@@ -4,12 +4,15 @@ using System.ComponentModel;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Repositories;
 using AutoMapper;
+using DevEdu.API.Common;
 using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
 {
+    [AuthorizeRoles()]
     [ApiController]
     [Route("api/[controller]")]
     public class TopicController : Controller
@@ -63,6 +66,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/topic/{topicId}/tag/{tagId}
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpPost("{topicId}/tag/{tagId}")]
         [Description("Add tag to topic")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -72,6 +76,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/opic/{topicId}/tag/{tagId}
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpDelete("{topicId}/tag/{tagId}")]
         [Description("Delete tag from topic")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

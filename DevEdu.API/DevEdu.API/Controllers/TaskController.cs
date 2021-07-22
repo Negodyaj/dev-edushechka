@@ -3,15 +3,18 @@ using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DevEdu.API.Common;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Repositories;
 using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
 {
+    [AuthorizeRoles()]
     [ApiController]
     [Route("api/[controller]")]
     public class TaskController : Controller
@@ -37,6 +40,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task/1
+        [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet("{taskId}")]
         [Description("Get task by Id with tags")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -47,7 +51,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task/courses
-        [Authorize(Roles = "Teacher")]
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpGet("{taskId}/with-courses")]
         [Description("Get task by Id with tags and courses")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
@@ -58,6 +62,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task/answers
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [HttpGet("{taskId}/with-answers")]
         [Description("Get task by Id with tags and answers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithAnswersOutputModel))]
@@ -68,6 +73,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task/coursesandanswers
+        [AuthorizeRoles(Role.Teacher)]
         [HttpGet("{taskId}/full-info")]
         [Description("Get task by Id with tags, courses and answers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesAndAnswersOutputModel))]
@@ -78,6 +84,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task
+        [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet]
         [Description("Get all tasks with tags")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
@@ -88,6 +95,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/task
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpPost]
         [Description("Add new task")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -99,6 +107,7 @@ namespace DevEdu.API.Controllers
 
 
         // api/task/{taskId}
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpPut("{taskId}")]
         [Description("Update task")]
         [ProducesResponseType(StatusCodes.Status200OK)]
