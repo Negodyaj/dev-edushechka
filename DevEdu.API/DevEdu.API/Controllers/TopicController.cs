@@ -27,15 +27,16 @@ namespace DevEdu.API.Controllers
         //  api/topic/{id}
         [HttpGet("{id}")]
         [Description("Get topic by id")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public TopicDto GetTopicById(int id)
+        [ProducesResponseType(typeof(TopicDto), StatusCodes.Status200OK)]
+        public TopicOutputModel GetTopicById(int id)
         {
-            return _topicService.GetTopic(id);
+            var output= _topicService.GetTopic(id);
+            return _mapper.Map<TopicOutputModel>(output);
         }
 
         [HttpGet]
-        [Description("Get all topic")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [Description("Get all topics")]
+        [ProducesResponseType(typeof(TopicDto), StatusCodes.Status200OK)]
         public List<TopicDto> GetAllTopics()
         {
             return _topicService.GetAllTopics();
@@ -64,11 +65,12 @@ namespace DevEdu.API.Controllers
         //  api/topic/{id}
         [HttpPut("{id}")]
         [Description("Update topic")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public void UpdateTopic(int id, [FromBody] TopicInputModel model)
+        [ProducesResponseType(typeof(TopicOutputModel), StatusCodes.Status200OK)]
+        public TopicOutputModel UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
-            var dto = _mapper.Map<TopicDto>(model);
-            _topicService.UpdateTopic(id, dto);
+            var dto = _mapper.Map<TopicDto>(model);           
+            var output =_topicService.UpdateTopic(id, dto);
+            return GetTopicById(id);
         }      
     }
 }

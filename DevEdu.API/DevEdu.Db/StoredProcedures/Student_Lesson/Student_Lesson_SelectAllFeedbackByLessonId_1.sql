@@ -3,7 +3,10 @@
 AS
 BEGIN	
 SELECT 
-		s.Feedback,		
+		s.Id,
+		s.Feedback,
+		s.IsPresent,
+		s.AbsenceReason,
 		u.Id,
 		u.FirstName,
 		u.LastName,
