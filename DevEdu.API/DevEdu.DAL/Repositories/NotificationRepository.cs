@@ -87,6 +87,7 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
+        public void UpdateNotification(NotificationDto notificationDto)
         public List<NotificationDto> GetNotificationsByGroupId(int groupId)
         {
 

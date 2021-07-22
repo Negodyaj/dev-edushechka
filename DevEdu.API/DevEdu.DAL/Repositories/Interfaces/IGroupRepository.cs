@@ -1,5 +1,5 @@
-﻿using DevEdu.DAL.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -11,6 +11,11 @@ namespace DevEdu.DAL.Repositories
         void RemoveGroupLesson(int groupId, int lessonId);
         int AddGroupMaterialReference(int groupId, int materialId);
         int RemoveGroupMaterialReference(int groupId, int materialId);
+        int AddTaskToGroup(GroupTaskDto groupTaskDto);
+        void DeleteTaskFromGroup(int groupId, int taskId);
+        List<GroupTaskDto> GetTaskGroupByGroupId(int groupId);
+        GroupTaskDto GetGroupTask(int groupId, int taskId);
+        void UpdateGroupTask(GroupTaskDto groupTaskDto);
         public List<GroupDto> GetGroupsByMaterialId(int id);
     }
 }

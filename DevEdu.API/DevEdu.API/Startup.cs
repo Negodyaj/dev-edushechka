@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Text;
 using DevEdu.API.Configuration;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
@@ -9,20 +6,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using DevEdu.Business.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
-using NSwag;
 using NSwag.Generation.Processors.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DevEdu.API
 {
@@ -65,9 +51,8 @@ namespace DevEdu.API
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IRaitingService, RaitingService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>(); 
 
-
-            services.AddControllers();
             services.AddControllers();
 
             services.AddMvc();
