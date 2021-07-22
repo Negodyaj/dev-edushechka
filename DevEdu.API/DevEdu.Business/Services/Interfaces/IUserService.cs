@@ -10,6 +10,7 @@ namespace DevEdu.Business.Services
         void DeleteUser(int id);
         void DeleteUserRole(int userId, int roleId);
         UserDto SelectUserById(int id);
+        public UserDto SelectUserByEmail(string email);
         List<UserDto> SelectUsers();
         UserDto UpdateUser(UserDto dto);
     }

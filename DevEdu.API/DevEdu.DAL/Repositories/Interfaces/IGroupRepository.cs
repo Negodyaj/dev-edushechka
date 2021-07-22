@@ -16,5 +16,6 @@ namespace DevEdu.DAL.Repositories
         void RemoveGroupLesson(int groupId, int lessonId);
         int AddGroupMaterialReference(int groupId, int materialId);
         int RemoveGroupMaterialReference(int groupId, int materialId);
+        public List<GroupDto> GetGroupsByMaterialId(int id);
     }
 }

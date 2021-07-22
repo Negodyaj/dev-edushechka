@@ -3,6 +3,6 @@
     public enum GroupStatus
     {
         Active = 1,
-        NoActive = 2
+        Finished
     }
 }

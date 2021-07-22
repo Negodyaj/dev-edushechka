@@ -3,6 +3,6 @@
 	@MaterialId int
 AS	
 BEGIN
-	INSERT INTO dbo.Course_Material (CorseId, MaterialId)
-	VALUES (@CorseId,  @MaterialId)  
+	INSERT INTO dbo.Course_Material (CourseId, MaterialId)
+	VALUES (@CourseId,  @MaterialId)  
 END

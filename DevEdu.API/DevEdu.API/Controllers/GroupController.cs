@@ -128,7 +128,7 @@ namespace DevEdu.API.Controllers
 
         //  api/group/1/user/2
         [HttpDelete("{groupId}/user/{userId}")]
-        [Description("Remove user from group")]
+        [Description("Delete user from group")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
     }

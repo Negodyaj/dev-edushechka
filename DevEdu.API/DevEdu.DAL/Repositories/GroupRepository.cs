@@ -22,6 +22,7 @@ namespace DevEdu.DAL.Repositories
         private const string _deleteGroupLesson = "dbo.Group_Lesson_Delete";
         private const string _insertGroupMaterial = "dbo.Group_Material_Insert";
         private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
+        private const string _groupSelectAllByMaterialIdProcedure = "dbo.Group_SelectByMaterialId";
 
         public int AddGroup(GroupDto groupDto)
         {
@@ -204,6 +205,16 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             );
+        }
+
+        public List<GroupDto> GetGroupsByMaterialId(int id)
+        {
+            return _connection.Query<GroupDto>(
+                    _groupSelectAllByMaterialIdProcedure,
+                    new { id },
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
         }
     }    
 }
