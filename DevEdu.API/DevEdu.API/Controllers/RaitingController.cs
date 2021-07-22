@@ -45,9 +45,9 @@ namespace DevEdu.API.Controllers
         [Description("Update StudentRaiting in database and return updated StudentRaiting")]
         [ProducesResponseType(typeof(StudentRaitingOutputModel), StatusCodes.Status200OK)]
         public StudentRaitingOutputModel UpdateStudentRaiting(int id, int value, int periodNumber)
-        {            
-            _service.UpdateStudentRaiting(id, value, periodNumber);
-            return GetStudentRaitingById(id);
+        {
+            var queryResult = _service.UpdateStudentRaiting(id, value, periodNumber);
+            return _mapper.Map<StudentRaitingOutputModel>(queryResult);
         }
 
         // api/raiting
@@ -60,18 +60,9 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<StudentRaitingOutputModel>>(queryResult);
         }
 
-        // api/raiting/1
-        [HttpGet("{id}")]
-        [Description("Get StudentRaiting from database by ID")]
-        [ProducesResponseType(typeof(StudentRaitingOutputModel), StatusCodes.Status200OK)]
-        public StudentRaitingOutputModel GetStudentRaitingById(int id)
-        {
-            var queryResult = _service.GetStudentRaitingById(id);
-            return _mapper.Map<StudentRaitingOutputModel>(queryResult);
-        }
 
-        // api/raiting/group/1
-        [HttpGet("group/{groupId}")]
+        // api/raiting/by-group/1
+        [HttpGet("by-group/{groupId}")]
         [Description("Get StudentRaiting from database by GroupID")]
         [ProducesResponseType(typeof(StudentRaitingOutputModel), StatusCodes.Status200OK)]
         public List<StudentRaitingOutputModel> GetStudentRaitingByGroupID(int groupId)

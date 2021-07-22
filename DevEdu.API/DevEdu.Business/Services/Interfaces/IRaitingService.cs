@@ -11,6 +11,6 @@ namespace DevEdu.Business.Services
         StudentRaitingDto GetStudentRaitingById(int id);
         List<StudentRaitingDto> GetStudentRaitingByUserId(int userId);
         public List<StudentRaitingDto> GetStudentRaitingByGroupId(int groupId);
-        void UpdateStudentRaiting(int id, int value, int periodNumber);
+        StudentRaitingDto UpdateStudentRaiting(int id, int value, int periodNumber);
     }
 }

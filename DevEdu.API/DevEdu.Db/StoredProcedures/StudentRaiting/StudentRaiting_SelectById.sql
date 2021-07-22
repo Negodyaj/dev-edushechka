@@ -18,17 +18,8 @@ BEGIN
 	u.Id,
 	u.FirstName,
 	u.LastName,
-	u.Patronymic,
 	u.Email,
-	u.Username,
-	u.RegistrationDate,
-	u.ContractNumber,
-	u.BirthDate, 
-	u.GitHubAccount,
 	u.Photo,
-	u.PhoneNumber, 
-	u.ExileDate, 
-	u.CityId,
 	ug.RoleId as Id
 	from dbo.StudentRaiting sr
 	left join [dbo].[Group] g on sr.GroupId = g.Id

@@ -25,7 +25,7 @@ namespace DevEdu.Business.Services
 
         public List<StudentRaitingDto> GetStudentRaitingByGroupId(int groupId) => _repository.SelectStudentRaitingByGroupId(groupId);
 
-        public void UpdateStudentRaiting(int id, int value, int periodNumber)
+        public StudentRaitingDto UpdateStudentRaiting(int id, int value, int periodNumber)
         {
             var dto = new StudentRaitingDto
             {
@@ -34,6 +34,7 @@ namespace DevEdu.Business.Services
                 ReportingPeriodNumber = periodNumber
             };
             _repository.UpdateStudentRaiting(dto);
+            return GetStudentRaitingById(id);
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace DevEdu.DAL.Models
+namespace DevEdu.API.Models.OutputModels
 {
-    public class RaitingTypeDto
+    public class RaitingTypeOutputModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -14,10 +13,10 @@ namespace DevEdu.DAL.Models
 
         public override bool Equals(object obj)
         {
-            return obj is RaitingTypeDto dto &&
-                   Id == dto.Id &&
-                   Name == dto.Name &&
-                   Weight == dto.Weight;
+            return obj is RaitingTypeOutputModel model &&
+                   Id == model.Id &&
+                   Name == model.Name &&
+                   Weight == model.Weight;
         }
 
         public override int GetHashCode()

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace DevEdu.API.Models.OutputModels
 {
@@ -8,5 +9,18 @@ namespace DevEdu.API.Models.OutputModels
         public string Name { get; set; }
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is TagOutputModel model &&
+                   Id == model.Id &&
+                   Name == model.Name &&
+                   IsDeleted == model.IsDeleted;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name, IsDeleted);
+        }
     }
 }
