@@ -11,7 +11,7 @@ BEGIN
 	  ,G.Timetable
 	  
 
-  FROM [DevEdu].[dbo].[Course] C WITH (NOLOCK)
+  FROM [dbo].[Course] C WITH (NOLOCK)
 
   LEFT JOIN [Group] G WITH (NOLOCK) ON C.Id = G.CourseId
 	WHERE (C.Id = @Id)

@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
-using DevEdu.DAL.Repositories;
-using Microsoft.AspNetCore.Http;
 using DevEdu.DAL.Models;
-using DevEdu.API.Models.OutputModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
@@ -33,7 +30,7 @@ namespace DevEdu.API.Controllers
         public GroupFullOutputModel GetGroup(int id)
         {
             var dto = _groupService.GetGroup(id);
-            return _mapper.Map<GroupFullOutputModel>(dto);           
+            return _mapper.Map<GroupFullOutputModel>(dto);
         }
 
         //  api/Group/

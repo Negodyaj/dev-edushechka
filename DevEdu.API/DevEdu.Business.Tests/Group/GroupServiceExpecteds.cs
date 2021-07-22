@@ -1,7 +1,6 @@
 ﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests.Group
 {
@@ -22,7 +21,7 @@ namespace DevEdu.Business.Tests.Group
                         Groups = null,
                         IsDeleted = false
                     },
-                    GroupStatus = GroupStatus.Active,
+                    GroupStatus = GroupStatus.Formed,
                     StartDate = System.DateTime.MaxValue,
                     Timetable = "rrr",
                     PaymentPerMonth = 1,

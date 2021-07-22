@@ -14,12 +14,12 @@
 )
 GO
 
-ALTER TABLE [dbo].[StudentRaiting] WITH CHECK ADD CONSTRAINT [StudentRaiting_fk0] FOREIGN KEY ([UserID]) REFERENCES [User]([Id])
+ALTER TABLE [dbo].[StudentRaiting] WITH CHECK ADD CONSTRAINT [StudentRaiting_fk0] FOREIGN KEY ([UserId]) REFERENCES [User]([Id])
 ON UPDATE NO ACTION
 GO
 ALTER TABLE [dbo].[StudentRaiting] CHECK CONSTRAINT [StudentRaiting_fk0]
 GO
-ALTER TABLE [dbo].[StudentRaiting] WITH CHECK ADD CONSTRAINT [StudentRaiting_fk1] FOREIGN KEY ([RaitingTypeID]) REFERENCES [RaitingType]([Id])
+ALTER TABLE [dbo].[StudentRaiting] WITH CHECK ADD CONSTRAINT [StudentRaiting_fk1] FOREIGN KEY ([RaitingTypeId]) REFERENCES [RaitingType]([Id])
 ON UPDATE NO ACTION
 GO
 ALTER TABLE [dbo].[StudentRaiting] CHECK CONSTRAINT [StudentRaiting_fk1]
