@@ -9,7 +9,7 @@ namespace DevEdu.DAL.Repositories
         void DeleteGroup(int id);
         GroupDto GetGroup(int id);
         List<GroupDto> GetGroups();
-        GroupDto UpdateGroup(int id, GroupDto groupDto);
+        void UpdateGroup(int id, GroupDto groupDto);
         int AddUserToGroup(int groupId, int userId, int roleId);
         int DeleteUserFromGroup(int userId, int groupId);
         void AddGroupLesson(int groupId, int lessonId);

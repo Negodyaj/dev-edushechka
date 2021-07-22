@@ -42,5 +42,7 @@
         public const string GroupStatusIdRequired = "GroupStatusId must be provided";
         public const string TimetableRequired = "Timetable must be provided";
         public const string PaymentPerMonthRequired = "PaymentPerMonth must be provided";
+        public const string WrongFormatGroupStatusId = "GroupStatusId must be integer from 1 to int.MaxValue";
+        public const string WrongFormatStartDate = "StartDate must be format 'dd.MM.yyyy'";
     }
 }

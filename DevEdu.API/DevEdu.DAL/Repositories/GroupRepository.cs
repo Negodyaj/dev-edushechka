@@ -90,7 +90,7 @@ namespace DevEdu.DAL.Repositories
             return _connection
                 .Query<GroupDto, CourseDto, GroupDto>
             (
-                _groupSelectByIdProcedure,
+                _groupSelectAllProcedure,
                 (group, course) =>
                 {
                     if (!groupDictionary.TryGetValue(group.Id, out result))
@@ -108,9 +108,9 @@ namespace DevEdu.DAL.Repositories
             .ToList();
         }
 
-        public GroupDto UpdateGroup(int id, GroupDto groupDto)
+        public void UpdateGroup(int id, GroupDto groupDto)
         {
-            return _connection.QuerySingle<GroupDto>
+            _connection.Execute
             (
                 _groupUpdateByIdProcedure,
                 new

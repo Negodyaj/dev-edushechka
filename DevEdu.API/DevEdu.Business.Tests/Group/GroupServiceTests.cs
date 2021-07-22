@@ -66,24 +66,6 @@ namespace DevEdu.Business.Tests.Group
             //Then
             Assert.AreEqual(expected, actual);
             _mock.Verify(mock => mock.GetGroups(), Times.Once);
-        }        
-
-        [TestCaseSource(typeof(GroupServiceExpecteds), nameof(GroupServiceExpecteds.UpdateGroup))]
-        public void UpdateGroup(int id, GroupDto dto, GroupDto expected)
-        {
-            //Given
-            _mock.Setup(mock => mock.UpdateGroup(id, dto))
-                .Returns(expected)
-                .Verifiable();
-
-            var _service = new GroupService(_mock.Object);
-
-            //When
-            var actual = _service.UpdateGroup(id, dto);
-
-            //Then
-            Assert.AreEqual(expected, actual);
-            _mock.Verify(mock => mock.UpdateGroup(id, dto), Times.Once);
         }
 
         [TestCaseSource(typeof(GroupServiceExpecteds), nameof(GroupServiceExpecteds.AddGroupMaterialReference))]

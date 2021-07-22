@@ -68,11 +68,10 @@ namespace DevEdu.API.Controllers
         [HttpPut]
         [Description("Update Group by id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public GroupOutputModel UpdateGroup(int id, [FromBody] GroupInputModel model)
+        public void UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
             var dto = _mapper.Map<GroupDto>(model);
-            var result = _groupService.UpdateGroup(id, dto);
-            return _mapper.Map<GroupOutputModel>(result);
+            _groupService.UpdateGroup(id, dto);
         }
 
         //  api/Group/{groupId}/change-status/{statusId}
@@ -88,7 +87,7 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpPost("{groupId}/lesson/{lessonId}")]
         [Description("Add group lesson reference")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void AddGroupLessonReference(int groupId, int lessonId)
         {
             _groupService.AddGroupLesson(groupId, lessonId);
@@ -97,7 +96,7 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
         [Description("Delete group lesson reference")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void RemoveGroupLessonReference(int groupId, int lessonId)
         {
             _groupService.RemoveGroupLesson(groupId, lessonId);
@@ -124,13 +123,13 @@ namespace DevEdu.API.Controllers
         //  api/group/1/user/2/role/1
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
         [Description("Add user to group")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void AddUserToGroup(int groupId, int userId, int roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
 
         //  api/group/1/user/2
         [HttpDelete("{groupId}/user/{userId}")]
         [Description("Remove user from group")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
     }
 }

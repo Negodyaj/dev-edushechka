@@ -41,14 +41,15 @@ namespace DevEdu.API
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ICourseService, CourseService>(); 
+            services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ITopicService, TopicService>();
 
             services.AddControllers();
             services.AddControllers();
 
-            services.AddSwaggerDocument(settings => {
+            services.AddSwaggerDocument(settings =>
+            {
                 settings.Title = "DevEdu Education API";
                 settings.Version = "v8";
             });
