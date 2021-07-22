@@ -24,7 +24,8 @@ namespace DevEdu.Business.Services
 
         public void RemoveGroupLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupLesson(groupId, lessonId);
 
-        public void UpdateGroup(int id, GroupDto groupDto) => _groupRepository.UpdateGroup(id, groupDto);
+        public GroupDto UpdateGroup(int id, GroupDto groupDto) => _groupRepository.UpdateGroup(id, groupDto);
+        public GroupDto ChangeGroupStatus(int groupId, int statusId) => _groupRepository.ChangeGroupStatus(groupId, statusId);
 
         public int AddGroupMaterialReference(int groupId, int materialId) => _groupRepository.AddGroupMaterialReference(groupId, materialId);
 

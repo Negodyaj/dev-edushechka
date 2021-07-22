@@ -1,5 +1,4 @@
 ﻿CREATE PROCEDURE dbo.Group_SelectAll
-	@Role int
 AS
 BEGIN
 	SELECT 

@@ -1,8 +1,8 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
+using System;
 
 namespace DevEdu.API.Configuration
 {
@@ -28,7 +28,6 @@ namespace DevEdu.API.Configuration
             CreateMap<GroupInputModel, GroupDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => Convert.ToDateTime(src.StartDate)))
                 .ForMember(dest => dest.GroupStatus, opt => opt.MapFrom(src => src.GroupStatusId != null ? src.GroupStatusId : null));
-            CreateMap<GroupInputModel, GroupDto>();
             CreateMap<GroupTaskInputModel, GroupTaskDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.Parse(src.StartDate)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.Parse(src.EndDate)));
@@ -64,7 +63,13 @@ namespace DevEdu.API.Configuration
         private void CreateMappingFromDto()
         {
             CreateMap<CourseDto, CourseInfoOutputModel>();
-            CreateMap<GroupDto, GroupFullOutputModel>();
+            CreateMap<GroupDto, GroupOutputBaseModel>();
+            CreateMap<GroupDto, GroupInputModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
+            CreateMap<GroupDto, GroupFullOutputModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
+            CreateMap<GroupDto, GroupInfoOutputModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<TopicDto, TopicOutputModel>();
             CreateMap<CommentDto, CommentInfoOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));

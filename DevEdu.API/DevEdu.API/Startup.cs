@@ -1,12 +1,12 @@
 using DevEdu.API.Configuration;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
 
@@ -51,9 +51,8 @@ namespace DevEdu.API
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IRaitingService, RaitingService>();
             services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>(); 
+            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>();
 
-            services.AddControllers();
             services.AddControllers();
 
             services.AddMvc();

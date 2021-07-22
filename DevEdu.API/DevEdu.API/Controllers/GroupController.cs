@@ -26,21 +26,21 @@ namespace DevEdu.API.Controllers
         //  api/Group/5
         [HttpGet("{id}")]
         [Description("Return Group by id")]
-        [ProducesResponseType(typeof(GroupFullOutputModel), StatusCodes.Status200OK)]  // todo
-        public GroupFullOutputModel GetGroup(int id)
+        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]  // todo
+        public GroupOutputModel GetGroup(int id)
         {
             var dto = _groupService.GetGroup(id);
-            return _mapper.Map<GroupFullOutputModel>(dto);
+            return _mapper.Map<GroupOutputModel>(dto);
         }
 
         //  api/Group/
         [HttpGet]
         [Description("Get all Groups")]
-        [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
-        public List<GroupOutputModel> GetAllGroups()
+        [ProducesResponseType(typeof(List<GroupFullOutputModel>), StatusCodes.Status200OK)]
+        public List<GroupFullOutputModel> GetAllGroups()
         {
             var dto = _groupService.GetGroups();
-            return _mapper.Map<List<GroupOutputModel>>(dto);
+            return _mapper.Map<List<GroupFullOutputModel>>(dto);
         }
 
         //  api/Group
@@ -57,7 +57,7 @@ namespace DevEdu.API.Controllers
         //  api/Group
         [HttpDelete("{id}")]
         [Description("Delete Group by Id")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteGroup(int id)
         {
             _groupService.DeleteGroup(id);
@@ -67,19 +67,21 @@ namespace DevEdu.API.Controllers
         [HttpPut]
         [Description("Update Group by id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public void UpdateGroup(int id, [FromBody] GroupInputModel model)
+        public GroupInfoOutputModel UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
             var dto = _mapper.Map<GroupDto>(model);
-            _groupService.UpdateGroup(id, dto);
+            var output = _groupService.UpdateGroup(id, dto);
+            return _mapper.Map<GroupInfoOutputModel>(output);
         }
 
         //  api/Group/{groupId}/change-status/{statusId}
         [HttpPut("{groupId}/change-status/{statusId}")]
         [Description("Change group status by id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void ChangeGroupStatus(int groupId, int statusId)
+        public GroupOutputBaseModel ChangeGroupStatus(int groupId, int statusId)
         {
-
+            var output = _groupService.ChangeGroupStatus(groupId, statusId);
+            return _mapper.Map<GroupOutputBaseModel>(output);
         }
 
         //add group_lesson relation

@@ -14,6 +14,7 @@ namespace DevEdu.DAL.Repositories
         private const string _groupSelectByIdProcedure = "dbo.Group_SelectById";
         private const string _groupSelectAllProcedure = "dbo.Group_SelectAll";
         private const string _groupUpdateByIdProcedure = "dbo.Group_UpdateById";
+        private const string _groupUpdateGroupStatusProcedure = "dbo.Group_UpdateGroupStatus";
 
 
         private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
@@ -115,9 +116,9 @@ namespace DevEdu.DAL.Repositories
             .ToList();
         }
 
-        public void UpdateGroup(int id, GroupDto groupDto)
+        public GroupDto UpdateGroup(int id, GroupDto groupDto)
         {
-            _connection.Execute
+            return _connection.QuerySingle<GroupDto>
             (
                 _groupUpdateByIdProcedure,
                 new
@@ -129,6 +130,20 @@ namespace DevEdu.DAL.Repositories
                     groupDto.StartDate,
                     groupDto.Timetable,
                     groupDto.PaymentPerMonth
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public GroupDto ChangeGroupStatus(int groupId, int statusId)
+        {
+            return _connection.QuerySingle<GroupDto>
+            (
+                _groupUpdateGroupStatusProcedure,
+                new
+                {
+                    groupId,
+                    statusId
                 },
                 commandType: CommandType.StoredProcedure
             );
