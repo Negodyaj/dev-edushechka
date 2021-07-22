@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DevEdu.API.Models.OutputModels.Group
+namespace DevEdu.API.Models.OutputModels
 {
     public class GroupFullOutputModel : GroupOutputModel
     {

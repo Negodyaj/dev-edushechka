@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using DevEdu.DAL.Models;
 using DevEdu.API.Models.OutputModels;
 using System.Collections.Generic;
-using DevEdu.API.Models.OutputModels.Group;
 
 namespace DevEdu.API.Controllers
 {

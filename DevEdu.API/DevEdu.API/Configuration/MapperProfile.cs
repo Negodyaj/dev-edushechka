@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
-using DevEdu.API.Models.OutputModels.Group;
 using DevEdu.DAL.Models;
 using System;
 
@@ -26,7 +25,9 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }));
             CreateMap<CommentUpdateInputModel, CommentDto>();
             CreateMap<FeedbackInputModel, StudentLessonDto>();
-            CreateMap<GroupInputModel, GroupDto>();
+            CreateMap<GroupInputModel, GroupDto>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => Convert.ToDateTime(src.StartDate)))
+                .ForMember(dest => dest.GroupStatus, opt => opt.MapFrom(src => src.GroupStatusId != null ? src.GroupStatusId : null));
             CreateMap<MaterialInputModel, MaterialDto>();
             CreateMap<NotificationAddInputModel, NotificationDto>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserId != null ? new UserDto { Id = (int)src.UserId } : null))

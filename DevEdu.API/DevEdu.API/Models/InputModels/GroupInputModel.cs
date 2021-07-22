@@ -14,9 +14,9 @@ namespace DevEdu.API.Models.InputModels
         public int CourseId { get; set; }
         [Required(ErrorMessage = GroupStatusIdRequired)]
         [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatGroupStatusId)]
-        public GroupStatus GroupStatusId { get; set; }
+        public GroupStatus? GroupStatusId { get; set; }
         [Required(ErrorMessage = DateRequired)]
-        [DateTimeToStringAttribute(ErrorMessage = WrongFormatStartDate)]
+        [CustomDateFormatAttribute(ErrorMessage = WrongFormatStartDate)]
         public string StartDate { get; set; }
         [Required(ErrorMessage = TimetableRequired)]
         public string Timetable { get; set; }

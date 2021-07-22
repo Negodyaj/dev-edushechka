@@ -1,6 +1,5 @@
 ﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
-using System;
 
 namespace DevEdu.API.Models.OutputModels
 {
