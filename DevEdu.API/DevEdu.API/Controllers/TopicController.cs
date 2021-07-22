@@ -69,7 +69,7 @@ namespace DevEdu.API.Controllers
         public TopicOutputModel UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
             var dto = _mapper.Map<TopicDto>(model);           
-            var output =_topicService.UpdateTopic(id, dto);
+            _topicService.UpdateTopic(id, dto);
             return GetTopicById(id);
         }      
     }
