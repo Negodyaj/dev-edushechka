@@ -1,8 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Models;
-using System;
 
 namespace DevEdu.API.Configuration
 {
@@ -28,6 +28,10 @@ namespace DevEdu.API.Configuration
             CreateMap<GroupInputModel, GroupDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => Convert.ToDateTime(src.StartDate)))
                 .ForMember(dest => dest.GroupStatus, opt => opt.MapFrom(src => src.GroupStatusId != null ? src.GroupStatusId : null));
+            CreateMap<GroupInputModel, GroupDto>();
+            CreateMap<GroupTaskInputModel, GroupTaskDto>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.Parse(src.StartDate)))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.Parse(src.EndDate)));
             CreateMap<MaterialInputModel, MaterialDto>();
             CreateMap<NotificationAddInputModel, NotificationDto>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserId != null ? new UserDto { Id = (int)src.UserId } : null))
@@ -75,7 +79,7 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.ExileDate, opt => opt.MapFrom(src => src.ExileDate.ToString(_dateFormat)));
             CreateMap<UserDto, UserUpdateInfoOutPutModel>();
             CreateMap<UserDto, UserInfoOutPutModel>();
-            CreateMap<UserDto, UserInfoShortOutputModel>(); 
+            CreateMap<UserDto, UserInfoShortOutputModel>();
             CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<TaskDto, TaskInfoOutputModel>();
             CreateMap<TaskDto, TaskInfoWithCoursesOutputModel>();
@@ -97,6 +101,15 @@ namespace DevEdu.API.Configuration
             CreateMap<StudentLessonDto, StudentLessonOutputModel>();
             CreateMap<StudentRaitingDto, StudentRaitingOutputModel>();
             CreateMap<RaitingTypeDto, RaitingTypeOutputModel>();
+            CreateMap<GroupTaskDto, GroupTaskInfoWithGroupOutputModel>();
+            CreateMap<GroupTaskDto, GroupTaskInfoWithTaskOutputModel>();
+            CreateMap<GroupTaskDto, GroupTaskInfoFullOutputModel>();
+            CreateMap<GroupTaskDto, GroupTaskInfoOutputModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString(_dateFormat)));
+            CreateMap<GroupDto, GroupOutputMiniModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
+            CreateMap<TaskDto, TaskInfoOutputMiniModel>();
         }
     }
 }
