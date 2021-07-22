@@ -5,7 +5,7 @@
 	Patronymic 			nvarchar(50) NOT NULL,
 	Email				nvarchar(50) NOT NULL, 
 	Username			nvarchar(50) NOT NULL,
-	Password			nvarchar(30) NOT NULL,
+	Password			nvarchar(200) NOT NULL,
 	RegistrationDate	datetime NOT NULL,
 	ContractNumber		nvarchar(50) NOT NULL UNIQUE,
 	CityId				int NOT NULL,

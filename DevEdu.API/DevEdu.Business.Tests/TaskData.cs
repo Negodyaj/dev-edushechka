@@ -9,7 +9,7 @@ namespace DevEdu.Business.Tests
 
         public static TaskDto GetTaskDtoWithoutTags()
         {
-            return new TaskDto {Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true};
+            return new TaskDto { Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true };
         }
 
         public static TaskDto GetTaskDtoWithTags()

@@ -11,6 +11,7 @@ namespace DevEdu.DAL.Repositories
     {
         private const string _userAddProcedure = "dbo.User_Insert";
         private const string _userSelectByIdProcedure = "dbo.User_SelectById";
+        private const string _userSelectByEmailProcedure = "dbo.User_SelectByEmail";
         private const string _userSelectAllProcedure = "dbo.User_SelectAll";
         private const string _userUpdateProcedure = "dbo.User_Update";
         private const string _userDeleteProcedure = "dbo.User_Delete";
@@ -65,6 +66,32 @@ namespace DevEdu.DAL.Repositories
                 new { id },
                 splitOn: "id",
                 commandType: CommandType.StoredProcedure)
+                .FirstOrDefault();
+        }
+
+        public UserDto SelectUserByEmail(string email)
+        {
+            UserDto result = default;
+            return _connection
+                .Query<UserDto, City, Role, UserDto>(
+                    _userSelectByEmailProcedure,
+                    (user, city, role) =>
+                    {
+                        if (result == null)
+                        {
+                            result = user;
+                            result.City = city;
+                            result.Roles = new List<Role> { role };
+                        }
+                        else
+                        {
+                            result.Roles.Add(role);
+                        }
+                        return result;
+                    },
+                    new { email },
+                    splitOn: "id",
+                    commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();
         }
 

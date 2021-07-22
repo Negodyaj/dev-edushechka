@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
 {
-         public class TopicService : ITopicService
+    public class TopicService : ITopicService
     {
         private readonly ITopicRepository _topicRepository;
 
@@ -21,7 +21,7 @@ namespace DevEdu.Business.Services
 
             topicDto.Tags.ForEach(tag => AddTagToTopic(topicId, tag.Id));
             return topicId;
-        } 
+        }
 
         public void DeleteTopic(int id) => _topicRepository.DeleteTopic(id);
 

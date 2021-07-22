@@ -18,9 +18,9 @@ namespace DevEdu.API.Controllers
         private readonly IMapper _mapper;
         private readonly ICourseRepository _courseRepository;
         private readonly ICourseService _courseService;
-        
+
         public CourseController(
-            IMapper mapper, 
+            IMapper mapper,
             ICourseRepository courseRepository,
             ICourseService courseService)
         {
@@ -89,7 +89,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{courseId}/task/{taskId}")]
         public string AddTaskToCourse(int courseId, int taskId)
         {
-            _courseRepository.AddTaskToCourse(courseId, taskId);
+            _courseService.AddTaskToCourse(courseId, taskId);
             return $"Course {courseId} add  Task Id:{taskId}";
         }
 
@@ -97,7 +97,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{courseId}/task/{taskId}")]
         public string RemoveTaskFromCourse(int courseId, int taskId)
         {
-            _courseRepository.DeleteTaskFromCourse(courseId, taskId);
+            _courseService.DeleteTaskFromCourse(courseId, taskId);
             return $"Course {courseId} remove  Task Id:{taskId}";
         }
 
@@ -136,19 +136,19 @@ namespace DevEdu.API.Controllers
 
         [HttpGet("{courseId}/topics")]
         [Description("Get all topics by course id ")]
-        [ProducesResponseType(typeof(List<CourseTopicOutputModel>),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]
         public List<CourseTopicOutputModel> SelectAllTopicsByCourseId(int courseId)
         {
             var list = _courseService.SelectAllTopicsByCourseId(courseId);
-            
-            return _mapper.Map<List<CourseTopicOutputModel>>(list);            
+
+            return _mapper.Map<List<CourseTopicOutputModel>>(list);
         }
 
         // api/course/{courseId}/program
         [HttpPut("{courseId}/program")]
         [Description("updates topics in the course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public string UpdateCourseTopicsByCourseId(int courseId,  [FromBody] List<CourseTopicUpdateInputModel> topics)
+        public string UpdateCourseTopicsByCourseId(int courseId, [FromBody] List<CourseTopicUpdateInputModel> topics)
         {
             var list = _mapper.Map<List<CourseTopicDto>>(topics);
             _courseService.UpdateCourseTopicsByCourseId(courseId, list);

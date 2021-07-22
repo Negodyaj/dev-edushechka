@@ -15,14 +15,14 @@ namespace DevEdu.Business.Services
 
         public int AddUser(UserDto dto)
         {
-           var addedUserId = _userRepository.AddUser(dto);
-            
-            if(dto.Roles == null || dto.Roles.Count == 0)
+            var addedUserId = _userRepository.AddUser(dto);
+
+            if (dto.Roles == null || dto.Roles.Count == 0)
             {
                 return addedUserId;
             }
 
-            foreach(var role in dto.Roles)
+            foreach (var role in dto.Roles)
             {
                 AddUserRole(addedUserId, (int)role);
             }
@@ -30,6 +30,8 @@ namespace DevEdu.Business.Services
         }
 
         public UserDto SelectUserById(int id) => _userRepository.SelectUserById(id);
+
+        public UserDto SelectUserByEmail(string email) => _userRepository.SelectUserByEmail(email);
 
         public List<UserDto> SelectUsers() => _userRepository.SelectUsers();
 

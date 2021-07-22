@@ -14,6 +14,7 @@ namespace DevEdu.DAL.Repositories
         private const string _commentSelectByIdProcedure = "dbo.Comment_SelectById";
         private const string _commentSelectAllByUserIdProcedure = "dbo.Comment_SelectAllByUserId";
         private const string _commentUpdateProcedure = "dbo.Comment_Update";
+        private const string _commentsFromLessonSelectByLessonIdProcedure = "dbo.Comment_SelectByLessonId";
 
         public CommentRepository() { }
 
@@ -30,9 +31,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int DeleteComment(int id)
+        public void DeleteComment(int id)
         {
-            return _connection.Execute(
+            _connection.Execute(
                 _commentDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
@@ -76,7 +77,7 @@ namespace DevEdu.DAL.Repositories
                     _commentSelectAllByUserIdProcedure,
                     (comment, user, role) =>
                     {
-                        
+
                         if (!commentDictionary.TryGetValue(comment.Id, out result))
                         {
                             result = comment;
@@ -99,9 +100,9 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public int UpdateComment(CommentDto commentDto)
+        public void UpdateComment(CommentDto commentDto)
         {
-            return _connection.Execute(
+            _connection.Execute(
                 _commentUpdateProcedure,
                 new
                 {
@@ -110,6 +111,18 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             );
+        }
+
+        public List<CommentDto> SelectCommentsFromLessonByLessonId(int lessonId)
+        {
+            return _connection
+                .Query<CommentDto>(
+                    _commentsFromLessonSelectByLessonIdProcedure,
+                    new { lessonId },
+                    commandType: CommandType.StoredProcedure
+                )
+                .Distinct()
+                .ToList();
         }
     }
 }

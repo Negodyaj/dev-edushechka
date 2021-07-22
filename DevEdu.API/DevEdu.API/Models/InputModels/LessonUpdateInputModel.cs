@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
@@ -9,7 +8,11 @@ namespace DevEdu.API.Models.InputModels
         [Required(ErrorMessage = TeacherCommentRequired)]
         public string TeacherComment { get; set; }
 
+        [Required(ErrorMessage = LinkToRecordIdRequired)]
+        [Url]
+        public string LinkToRecord { get; set; }
+
         [Required(ErrorMessage = DateRequired)]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
     }
 }

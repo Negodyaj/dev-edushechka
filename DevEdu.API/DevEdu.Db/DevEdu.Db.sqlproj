@@ -82,8 +82,10 @@
     <Folder Include="StoredProcedures\User_Role" />
     <Folder Include="StoredProcedures\Group" />
     <Folder Include="StoredProcedures\Course_Topic" />
+    <Folder Include="StoredProcedures\Group_Task" />
     <Folder Include="Types" />
     <Folder Include="Types\User-Defined Table Types" />
+    <Folder Include="StoredProcedures\StudentRaiting" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -167,7 +169,6 @@
     <Build Include="StoredProcedures\Lesson_Comment\Lesson_Comment_Insert.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_Delete.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_Insert.sql" />
-    <Build Include="StoredProcedures\Lesson\Lesson_SelectAll.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectById.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_Update.sql" />
     <Build Include="StoredProcedures\User\User_SelectAll.sql" />
@@ -203,10 +204,39 @@
     <Build Include="StoredProcedures\Tag_Material\Material_Tag_Delete.sql" />
     <Build Include="StoredProcedures\Tag_Material\Material_Tag_Insert.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectAllByTagId.sql" />
-    <Build Include="StoredProcedures\Task_Student\Task_Student_GetIdByTaskAndStudent.sql" />
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_SelectAllByCourseId.sql" />
     <Build Include="StoredProcedures\User_Role\User_Role_Insert.sql" />
     <Build Include="StoredProcedures\User_Role\User_Role_Delete.sql" />
+    <Build Include="Tables\Group_Task.sql" />
+    <Build Include="StoredProcedures\Group_Task\Group_Task_Delete.sql" />
+    <Build Include="StoredProcedures\Group_Task\Group_Task_Insert.sql" />
+    <Build Include="StoredProcedures\Group_Task\Group_Task_Update.sql" />
+    <Build Include="StoredProcedures\Group_Task\Group_Task_SelectAllByGroupId.sql" />
+    <Build Include="StoredProcedures\Group_Task\Group_Task_SelectById.sql" />
+    <Build Include="StoredProcedures\Group_Task\Group_Task_SelectAllByTaskId.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectByTaskId.sql" />
+    <Build Include="StoredProcedures\Course\Course_SelectByTaskId.sql" />
+    <Build Include="StoredProcedures\Course\Course_SelectByMaterialId.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectByMaterialId.sql" />
+    <Build Include="StoredProcedures\User\User_SelectByEmail.sql" />
+    <Build Include="StoredProcedures\Course_Topic\Course_Topic_DeleteAllTopicsByCourseId.sql" />
+    <Build Include="StoredProcedures\Course_Topic\Course_Topic_AddMultiple.sql" />
+    <Build Include="Types\User-Defined Table Types\Course_TopicType.sql" />
+    <Build Include="StoredProcedures\Course_Topic\Course_Topic_Update.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonId.sql" />
+    <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByGroupId.sql" />
+    <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByTeacherId.sql" />
+    <Build Include="StoredProcedures\Comment\Comment_SelectByLessonId.sql" />
+    <Build Include="Tables\RaitingType.sql" />
+    <Build Include="Tables\StudentRaiting.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Insert.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Delete.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectAll.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectById.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectByUserId.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Update.sql" />
+    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectByGroupId.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAnswersByTaskId.sql" />
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectAllFeedbackByLessonId_1.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -214,10 +244,14 @@
     <None Include="StoredProcedures\Course_Material\Course_Material_Insert.sql" />
     <None Include="StoredProcedures\Course_Task\Course_Task_Delete.sql" />
     <None Include="StoredProcedures\Course_Task\Course_Task_Insert.sql" />
+    <None Include="DevEdu.Db.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="DevEdu.Db.refactorlog" />
   </ItemGroup>
 </Project>

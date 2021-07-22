@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DevEdu.DAL.Models
 {
@@ -9,9 +8,11 @@ namespace DevEdu.DAL.Models
         public DateTime Date { get; set; }
         public String TeacherComment { get; set; }
         public UserDto Teacher { get; set; }
-        public List<CommentDto> Comments { get; set; }
+        public String LinkToRecord { get; set; }
         public List<TopicDto> Topics { get; set; }
+        public List<CommentDto> Comments { get; set; }
         public List<GroupDto> Groups { get; set; }
-        public List<UserDto> Students { get; set; }
+        public List<StudentLessonDto> Students { get; set; }
+        public CourseDto Course { get; set; }
     }
 }
