@@ -5,7 +5,7 @@ namespace DevEdu.DAL.Repositories
 {
     public interface IGroupRepository
     {
-        GroupDto AddGroup(GroupDto groupDto);
+        int AddGroup(GroupDto groupDto);
         void DeleteGroup(int id);
         GroupDto GetGroup(int id);
         List<GroupDto> GetGroups();

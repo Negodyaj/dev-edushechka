@@ -28,23 +28,7 @@ namespace DevEdu.Business.Tests.Group
                     PaymentPerMonth = 1,
                     IsDeleted = false
                 },
-                new GroupDto
-                {
-                    Id = 1,
-                    Course = new CourseDto
-                    {
-                        Id = 1,
-                        Name = "www",
-                        Description = "w",
-                        Groups = new List<GroupDto>(),
-                        IsDeleted = false
-                    },
-                    GroupStatus = GroupStatus.Active,
-                    StartDate = System.DateTime.MaxValue,
-                    Timetable = "rrr",
-                    PaymentPerMonth = 1,
-                    IsDeleted = false
-                }                
+                1                
             };
         }
         

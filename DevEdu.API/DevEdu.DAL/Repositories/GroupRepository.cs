@@ -23,9 +23,9 @@ namespace DevEdu.DAL.Repositories
         private const string _insertGroupMaterial = "dbo.Group_Material_Insert";
         private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
 
-        public GroupDto AddGroup(GroupDto groupDto)
+        public int AddGroup(GroupDto groupDto)
         {
-            return _connection.QuerySingle<GroupDto>
+            return _connection.QuerySingle<int>
             (
                 _groupInsertProcedure,
                 new
@@ -86,40 +86,19 @@ namespace DevEdu.DAL.Repositories
         public List<GroupDto> GetGroups()
         {
             var groupDictionary = new Dictionary<int, GroupDto>();
-            var userDictionary = new Dictionary<int, UserDto>();
             GroupDto result = default;
-            UserDto resultUser = default;
-            int index = 0;
             return _connection
-                .Query<GroupDto, CourseDto, Role, UserDto, GroupDto>
+                .Query<GroupDto, CourseDto, GroupDto>
             (
                 _groupSelectByIdProcedure,
-                (group, course, role, user) =>
+                (group, course) =>
                 {
-                    if(!groupDictionary.TryGetValue(group.Id, out result))
+                    if (!groupDictionary.TryGetValue(group.Id, out result))
                     {
-                        if (!userDictionary.TryGetValue(user.Id, out resultUser))
-                        {
-                            result = group;
-                            result.Course = course;
-                            result.Users = new List<UserDto> { user };
-                            result.Users[index].Roles = new List<Role> { role };
-                            userDictionary.Add(user.Id, resultUser);
-                        }
-                        else
-                        {
-                            result.Users.Add(user);
-                            result.Users[index].Roles.Add(role);
-                        }
-                        index++;
-                        return result;
+                        result = group;
+                        result.Course = course;
                     }
-                    else
-                    {
-                        groupDictionary.Add(group.Id, result);
-                    }
-                   
-                    index = 0;
+                    groupDictionary.Add(group.Id, result);              
                     return result;
                 },
                 splitOn: "Id",

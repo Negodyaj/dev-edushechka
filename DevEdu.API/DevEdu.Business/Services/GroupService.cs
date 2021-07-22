@@ -12,7 +12,7 @@ namespace DevEdu.Business.Services
             _groupRepository = groupRepository;
         }
 
-        public GroupDto AddGroup(GroupDto groupDto) => _groupRepository.AddGroup(groupDto);
+        public int AddGroup(GroupDto groupDto) => _groupRepository.AddGroup(groupDto);
 
         public void DeleteGroup(int id) => _groupRepository.DeleteGroup(id);
 

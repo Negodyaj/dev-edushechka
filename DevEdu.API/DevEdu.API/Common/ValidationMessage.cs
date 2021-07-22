@@ -39,5 +39,8 @@
         public const string SummRequired = "Summ must be provided";
         public const string IsPaidRequired = "IsPaid cannot be empty";
         public const string WrongFormatBithDate = "BirthDate must be format 'dd.MM.yyyy'";
+        public const string GroupStatusIdRequired = "GroupStatusId must be provided";
+        public const string TimetableRequired = "Timetable must be provided";
+        public const string PaymentPerMonthRequired = "PaymentPerMonth must be provided";
     }
 }

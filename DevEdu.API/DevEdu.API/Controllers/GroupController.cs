@@ -38,10 +38,10 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         [Description("Get all Groups")]
         [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
-        public List<GroupFullOutputModel> GetAllGroups()
+        public List<GroupOutputModel> GetAllGroups()
         {
             var dto = _groupService.GetGroups();
-            return _mapper.Map<List<GroupFullOutputModel>>(dto);
+            return _mapper.Map<List<GroupOutputModel>>(dto);
         }
 
         //  api/Group
@@ -78,7 +78,7 @@ namespace DevEdu.API.Controllers
         //  api/Group/{groupId}/change-status/{statusId}
         [HttpPut("{groupId}/change-status/{statusId}")]
         [Description("Change group status by id")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void ChangeGroupStatus(int groupId, int statusId)
         {
 

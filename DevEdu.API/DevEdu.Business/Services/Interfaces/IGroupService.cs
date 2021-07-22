@@ -5,7 +5,7 @@ namespace DevEdu.Business.Services
 {
     public interface IGroupService
     {
-        GroupDto AddGroup(GroupDto groupDto);
+        int AddGroup(GroupDto groupDto);
         void DeleteGroup(int id);
         GroupDto GetGroup(int id);
         List<GroupDto> GetGroups();

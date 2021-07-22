@@ -19,7 +19,7 @@ namespace DevEdu.Business.Tests.Group
         }
 
         [TestCaseSource(typeof(GroupServiceExpecteds), nameof(GroupServiceExpecteds.AddGroup))]
-        public void AddGroup(GroupDto dto, GroupDto expected)
+        public void AddGroup(GroupDto dto, int expected)
         {
             //Given
             _mock.Setup(mock => mock.AddGroup(dto)).Returns(expected);
