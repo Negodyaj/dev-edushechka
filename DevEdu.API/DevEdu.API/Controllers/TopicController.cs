@@ -36,10 +36,11 @@ namespace DevEdu.API.Controllers
 
         [HttpGet]
         [Description("Get all topics")]
-        [ProducesResponseType(typeof(TopicDto), StatusCodes.Status200OK)]
-        public List<TopicDto> GetAllTopics()
+        [ProducesResponseType(typeof(List<TopicOutputModel>), StatusCodes.Status200OK)]
+        public List<TopicOutputModel> GetAllTopics()
         {
-            return _topicService.GetAllTopics();
+            var output = _topicService.GetAllTopics();
+            return _mapper.Map<List<TopicOutputModel>>(output);
         }
 
         //  api/topic
