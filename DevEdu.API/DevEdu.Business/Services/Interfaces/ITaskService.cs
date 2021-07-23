@@ -5,6 +5,7 @@ namespace DevEdu.Business.Services
 {
     public interface ITaskService
     {
+        public TaskDto GetTaskByIdWithValidation(int id, int userId);
         TaskDto GetTaskById(int id);
         TaskDto GetTaskWithCoursesById(int id);
         public TaskDto GetTaskWithAnswersById(int id);

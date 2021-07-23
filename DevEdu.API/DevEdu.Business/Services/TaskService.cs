@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
@@ -10,15 +11,38 @@ namespace DevEdu.Business.Services
         private readonly ITaskRepository _taskRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
+        private readonly IUserRepository _userRepository;
 
         public TaskService(
             ITaskRepository taskRepository,
             ICourseRepository courseRepository,
-            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
+            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository,
+            IUserRepository userRepository
+            )
         {
             _taskRepository = taskRepository;
             _courseRepository = courseRepository;
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
+            _userRepository = userRepository;
+        }
+
+        public TaskDto GetTaskByIdWithValidation(int id, int userId)
+        {
+            var groupsByTask = _taskRepository.GetGroupsByTaskId(id);
+            var groupsByUser = _userRepository.GetGroupsByUserId(userId);
+            List<GroupDto> grByT = new List<GroupDto>();
+            List<GroupDto> grByU = new List<GroupDto>();
+            foreach (var group in groupsByTask)
+                grByT.Add(group.Group);
+            foreach (var group in groupsByUser)
+                grByU.Add(group.Group);
+
+            var result = grByT.FirstOrDefault(gt => grByU.Any(gu => gu.Id == gt.Id));
+            if (result == default)
+                throw new AuthorizationException($"user with id = {userId} doesn't relate to task with id = {id}");
+            // check if task exists
+            var taskDto = GetTaskById(id);
+            return taskDto;
         }
 
         public TaskDto GetTaskById(int id)

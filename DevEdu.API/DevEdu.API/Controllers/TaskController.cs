@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
 {
-    [AuthorizeRoles()]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TaskController : Controller
@@ -50,8 +51,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public TaskInfoOutputModel GetTaskWithTags(int taskId)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var taskDto = _taskService.GetTaskById(taskId);
+            var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            var taskDto = _taskService.GetTaskByIdWithValidation(taskId, userId);
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
         }
 
