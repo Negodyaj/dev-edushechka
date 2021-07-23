@@ -244,5 +244,25 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Verify(x => x.DeleteTask(TaskData.expectedTaskId), Times.Never);
             _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Exactly(1));
         }
+
+
+        [Test]
+        public void GetGroupsByTaskId_IntTaskId_ReturnedListOfGroupTaskDtoWithTask()
+        {
+            //Given
+            var groupTaskList = GroupTaskData.GetListOfGroupTaskDtoWithGroup();
+            const int taskId = GroupTaskData.TaskId;
+
+            _taskRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupTaskList);
+
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
+
+            //When
+            var dto = sut.GetGroupsByTaskId(taskId);
+
+            //Than
+            Assert.AreEqual(groupTaskList, dto);
+            _taskRepoMock.Verify(x => x.GetGroupsByTaskId(taskId), Times.Once);
+        }
     }
 }
