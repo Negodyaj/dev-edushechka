@@ -50,6 +50,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public TaskInfoOutputModel GetTaskWithTags(int taskId)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var taskDto = _taskService.GetTaskById(taskId);
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
         }
@@ -84,7 +85,7 @@ namespace DevEdu.API.Controllers
         public List<TaskInfoOutputModel> GetAllTasksWithTags()
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-           // var userRoles = User.Claims(c => c.Role == ClaimTypes.Role)?.;
+            //var userRoles = User.Claims(c => c.Role == ClaimTypes.Role)?.;
             //var userRoles = claimsIdentity.FindAll(ClaimTypes.Role)?.AsList();
             var taskDtos = _taskService.GetTasks();
             return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
