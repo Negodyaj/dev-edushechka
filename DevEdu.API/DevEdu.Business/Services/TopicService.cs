@@ -1,16 +1,22 @@
 ﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.Business.Exceptions;
 
 namespace DevEdu.Business.Services
 {
     public class TopicService : ITopicService
     {
         private readonly ITopicRepository _topicRepository;
+        private readonly ITagRepository _tagRepository;
 
-        public TopicService(ITopicRepository topicRepository)
+        public TopicService(
+            ITopicRepository topicRepository,
+            ITagRepository tagRepository
+            )
         {
             _topicRepository = topicRepository;
+            _tagRepository = tagRepository;
         }
 
         public int AddTopic(TopicDto topicDto)
@@ -35,8 +41,26 @@ namespace DevEdu.Business.Services
             _topicRepository.UpdateTopic(topicDto);
         }
 
-        public int AddTagToTopic(int topicId, int tagId) => _topicRepository.AddTagToTopic(topicId, tagId);
+        public int AddTagToTopic(int topicId, int tagId)
+        {
+            var topic = _topicRepository.GetTopic(topicId);
+            if (topic == default)
+                throw new EntityNotFoundException($"topic with id = {topicId} was not found");
+            var tag = _tagRepository.SelectTagById(tagId);
+            if (tag == default)
+                throw new EntityNotFoundException($"tag with id = {tagId} was not found");
+            return _topicRepository.AddTagToTopic(topicId, tagId);
+        }
 
-        public int DeleteTagFromTopic(int topicId, int tagId) => _topicRepository.DeleteTagFromTopic(topicId, tagId);
+        public int DeleteTagFromTopic(int topicId, int tagId)
+        {
+            var topic = _topicRepository.GetTopic(topicId);
+            if (topic == default)
+                throw new EntityNotFoundException($"topic with id = {topicId} was not found");
+            var tag = _tagRepository.SelectTagById(tagId);
+            if (tag == default)
+                throw new EntityNotFoundException($"tag with id = {tagId} was not found");
+            return _topicRepository.DeleteTagFromTopic(topicId, tagId);
+        }
     }
 }

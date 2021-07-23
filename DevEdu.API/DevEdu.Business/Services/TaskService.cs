@@ -11,7 +11,10 @@ namespace DevEdu.Business.Services
         private readonly ICourseRepository _courseRepository;
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
 
-        public TaskService(ITaskRepository taskRepository, ICourseRepository courseRepository, IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
+        public TaskService(
+            ITaskRepository taskRepository,
+            ICourseRepository courseRepository,
+            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
         {
             _taskRepository = taskRepository;
             _courseRepository = courseRepository;
