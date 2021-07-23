@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
-using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -206,7 +205,7 @@ namespace DevEdu.Business.Tests
             var taskDto = TaskData.GetTaskDtoWithTags();
             var expectedTaskDto = TaskData.GetAnotherTaskDtoWithTags();
 
-            _taskRepoMock.Setup(x => x.UpdateTask(taskDto));
+            //_taskRepoMock.Setup(x => x.UpdateTask(taskDto));
             _taskRepoMock.Setup(x => x.GetTaskById(taskDto.Id)).Returns(expectedTaskDto);
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);

@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using DevEdu.Business.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using DevEdu.API.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.Web;
 using AutoMapper;
-using AutoMapper.Internal;
 using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
-using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Controllers
@@ -39,8 +32,8 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<UserDto>(model);
             dto.Password = _service.HashPassword(model.Password);
-            var addeduser = _userService.AddUser(dto);
-            return addeduser;
+            var addedUser = _userService.AddUser(dto);
+            return addedUser;
         }
 
         [HttpPost("/signin/{username}/{password}")]

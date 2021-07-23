@@ -40,8 +40,8 @@ namespace DevEdu.API.Controllers
         public UserUpdateInfoOutPutModel UpdateUserById([FromBody] UserUpdateInputModel model)
         {
             var dtoEntry = _mapper.Map<UserDto>(model);
-            var dtoresult = _userService.UpdateUser(dtoEntry);
-            return _mapper.Map<UserUpdateInfoOutPutModel>(dtoresult);
+            var dtoResult = _userService.UpdateUser(dtoEntry);
+            return _mapper.Map<UserUpdateInfoOutPutModel>(dtoResult);
         }
 
         // api/user/{userId}

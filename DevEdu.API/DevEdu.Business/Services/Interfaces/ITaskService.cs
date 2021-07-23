@@ -14,5 +14,6 @@ namespace DevEdu.Business.Services
         void DeleteTask(int id);
         public int AddTagToTask(int taskId, int tagId);
         public void DeleteTagFromTask(int taskId, int tagId);
+        List<GroupTaskDto> GetGroupsByTaskId(int taskId);
     }
 }
