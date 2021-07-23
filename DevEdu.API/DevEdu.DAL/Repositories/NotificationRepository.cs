@@ -15,7 +15,6 @@ namespace DevEdu.DAL.Repositories
         private const string _notificationSelectAllByUserIdProcedure = "dbo.Notification_SelectAllByUserId";
         private const string _notificationSelectAllByGroupIdProcedure = "dbo.Notification_SelectAllByGroupId";
         private const string _notificationSelectAllByRoleIdProcedure = "dbo.Notification_SelectAllByRoleId";
-
         private const string _notificationUpdateProcedure = "dbo.Notification_Update";
         public int AddNotification(NotificationDto notificationDto)
         {
@@ -27,7 +26,6 @@ namespace DevEdu.DAL.Repositories
                     userId = (notificationDto.User.Id == 0) ? null : (int?)notificationDto.User.Id,
                     groupId = (notificationDto.Group.Id == 0) ? null : (int?)notificationDto.Group.Id,
                     notificationDto.Text
-
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -77,7 +75,6 @@ namespace DevEdu.DAL.Repositories
                             result = notification;
                             result.User = user;
                         }
-
                         return result;
                     },
                     new { userId },
@@ -100,7 +97,6 @@ namespace DevEdu.DAL.Repositories
                             result = notification;
                             result.Group = group;
                         }
-
                         return result;
                     },
                     new { groupId },
@@ -123,7 +119,6 @@ namespace DevEdu.DAL.Repositories
                             result = notification;
                             result.Role = role;
                         }
-
                         return result;
                     },
                     new { roleId },

@@ -7,6 +7,6 @@
 AS
 BEGIN
 	INSERT INTO dbo.Notification (Text, Date, RoleId, UserId, GroupId)
-	VALUES (@Text, getdate(), @UserId, @RoleId, @GroupId)
+	VALUES (@Text, getdate(), @RoleId, @UserId, @GroupId)
 	SELECT @@IDENTITY
 END
