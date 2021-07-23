@@ -35,7 +35,7 @@ namespace DevEdu.Business.Tests
 
             return courseTopicDto;
         }
-        /// <summary> This method returns List CourseTopicDto, you can choose 1-5 version.</summary>
+        /// <summary> This method returns List CourseTopicDto, you can choose 1-7 version.</summary>
         public static List<CourseTopicDto> GetListCourseTopicDto(int vesionOfList)
         {
             List<CourseTopicDto> courseTopicsDto = new List<CourseTopicDto>();
@@ -69,6 +69,11 @@ namespace DevEdu.Business.Tests
                     courseTopicsDto.Add(new CourseTopicDto { Position = 4, Id = 15, Topic = new TopicDto { Id = 15 } });
                     courseTopicsDto.Add(new CourseTopicDto { Position = 4, Id = 21, Topic = new TopicDto { Id = 21 } });
                     courseTopicsDto.Add(new CourseTopicDto { Position = 1, Id = 13, Topic = new TopicDto { Id = 13 } });
+                    break;
+                case 7:
+                    courseTopicsDto.Add(new CourseTopicDto { Position = 4, Id = 15, Topic = new TopicDto { Id = 15 } });
+                    courseTopicsDto.Add(new CourseTopicDto { Position = 3, Id = 21, Topic = new TopicDto { Id = 21 } });
+                    courseTopicsDto.Add(new CourseTopicDto { Position = 1, Id = 15, Topic = new TopicDto { Id = 15 } });
                     break;
                 default:
                     courseTopicsDto.Add(new CourseTopicDto { Position = 5, Id = 7, Topic = new TopicDto { Id = 7 } });

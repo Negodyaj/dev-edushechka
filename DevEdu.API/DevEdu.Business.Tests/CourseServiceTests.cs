@@ -143,9 +143,34 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
         }
         [Test]
-        protected void UpdateCourseTopicsByCourseId_PositionsNotUniqueness_ThrownException()
+        public void UpdateCourseTopicsByCourseId_PositionsNotUniqueness_ThrownException()
         {
-
+            //Given
+            var givenCourseId = 3;
+            var givenTopicsToUpdate = CourseData.GetListCourseTopicDto(6);
+            var toicsFromDB = CourseData.GetListCourseTopicDto(3);
+            _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId)).Returns(toicsFromDB);
+            _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            //When
+            Assert.Throws<Exception>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate));
+            //Then
+            _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
+            
+        }
+        [Test]
+        public void UpdateCourseTopicsByCourseId_TopicsNotUniqueness_ThrownException()
+        {
+            var givenCourseId = 3;
+            var givenTopicsToUpdate = CourseData.GetListCourseTopicDto(7);
+            var toicsFromDB = CourseData.GetListCourseTopicDto(3);
+            _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId)).Returns(toicsFromDB);
+            _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            //When
+            Assert.Throws<Exception>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate), "the same topics  in the course");
+            //Then
+            _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
         }
 
     }
