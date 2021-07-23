@@ -8,7 +8,7 @@ namespace DevEdu.API.Models.InputModels
     public class PaymentInputModel
     {
         [Required(ErrorMessage = DateRequired)]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         [Required(ErrorMessage = SumRequired)]
         public int Sum { get; set; }

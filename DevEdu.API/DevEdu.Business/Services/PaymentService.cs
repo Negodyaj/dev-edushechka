@@ -26,5 +26,9 @@ namespace DevEdu.Business.Services
             dto.Id = id;
             _paymentRepository.UpdatePayment(dto);
         }
+        public void AddPayments(List<PaymentDto> payments)
+        {
+            _paymentRepository.AddPayments(payments);
+        }
     }
 }

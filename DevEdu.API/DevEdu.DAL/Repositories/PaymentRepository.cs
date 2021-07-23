@@ -13,6 +13,8 @@ namespace DevEdu.DAL.Repositories
         private const string _paymentSelectByIdProcedure = "dbo.Payment_SelectById";
         private const string _paymentAllByUserIdProcedure = "dbo.Payment_SelectAllByUserId";
         private const string _paymentUpdateProcedure = "dbo.Payment_Update";
+        private const string _addPaymentsProcedure = "[dbo].[Insert_Payments]";
+        private const string _paymentType = "[dbo].[PaymentType]";
 
         public PaymentRepository() { }
 
@@ -102,6 +104,25 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             );
+        }
+        public void AddPayments(List<PaymentDto> payments)
+        {
+            var table = new DataTable();
+            table.Columns.Add("Date");
+            table.Columns.Add("Sum");
+            table.Columns.Add("UserId");
+            table.Columns.Add("IsPaid");
+            table.Columns.Add("IsDeleted");
+
+            foreach (var bill in payments)
+            {
+                table.Rows.Add(bill.Date, bill.Sum, bill.User.Id, bill.IsPaid, bill.IsDeleted);
+            }
+            _connection.Execute(
+                _addPaymentsProcedure,
+                new { tblPayment = table.AsTableValuedParameter(_paymentType) },
+                commandType: CommandType.StoredProcedure
+                );
         }
     }
 }

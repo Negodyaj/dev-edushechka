@@ -50,7 +50,8 @@ namespace DevEdu.API.Configuration
             CreateMap<AttendanceInputModel, StudentLessonDto>();
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<PaymentInputModel, PaymentDto>()
-                .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }));
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }))
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<CourseTopicUpdateInputModel, CourseTopicDto>()
                 .ForMember(dest => dest.Topic, opt => opt.MapFrom(src => new TopicDto { Id = src.TopicId }));
             CreateMap<StudentRaitingInputModel, StudentRaitingDto>()
