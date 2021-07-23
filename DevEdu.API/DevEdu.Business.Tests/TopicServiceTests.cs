@@ -81,7 +81,10 @@ namespace DevEdu.Business.Tests
 
             var sut = new TopicService(_topicRepoMock.Object, _tagRepoMock.Object);
 
-            Assert.Throws<EntityNotFoundException>(() => sut.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId));
+            EntityNotFoundException ex = Assert.Throws<EntityNotFoundException>(
+                () => sut.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId));
+            Assert.That(ex.Message, Is.EqualTo($"topic with id = {TopicData.expectedTopicId} was not found"));
+
             _topicRepoMock.Verify(x => x.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId), Times.Never);
             _topicRepoMock.Verify(x => x.GetTopic(TopicData.expectedTopicId), Times.Exactly(1));
             _tagRepoMock.Verify(x => x.SelectTagById(TagData.expectedTagId), Times.Never);
@@ -95,7 +98,10 @@ namespace DevEdu.Business.Tests
 
             var sut = new TopicService(_topicRepoMock.Object, _tagRepoMock.Object);
 
-            Assert.Throws<EntityNotFoundException>(() => sut.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId));
+            EntityNotFoundException ex = Assert.Throws<EntityNotFoundException>(
+                () => sut.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId));
+            Assert.That(ex.Message, Is.EqualTo($"tag with id = {TagData.expectedTagId} was not found"));
+
             _topicRepoMock.Verify(x => x.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId), Times.Never);
             _topicRepoMock.Verify(x => x.GetTopic(TopicData.expectedTopicId), Times.Exactly(1));
             _tagRepoMock.Verify(x => x.SelectTagById(TagData.expectedTagId), Times.Exactly(1));

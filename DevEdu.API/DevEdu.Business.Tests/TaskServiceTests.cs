@@ -89,7 +89,10 @@ namespace DevEdu.Business.Tests
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
-            Assert.Throws<EntityNotFoundException>(() => sut.GetTaskById(TaskData.expectedTaskId));
+            EntityNotFoundException ex = Assert.Throws<EntityNotFoundException>(
+                () => sut.GetTaskById(TaskData.expectedTaskId));
+            Assert.That(ex.Message, Is.EqualTo($"task with id = {TaskData.expectedTaskId} was not found"));
+
             _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Once);
         }
         
@@ -124,7 +127,9 @@ namespace DevEdu.Business.Tests
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
-            Assert.Throws<EntityNotFoundException>(() => sut.GetTaskWithCoursesById(TaskData.expectedTaskId));
+            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+                .And.Message.EqualTo($"task with id = {TaskData.expectedTaskId} was not found"), 
+                () => sut.GetTaskWithCoursesById(TaskData.expectedTaskId));
             _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Once);
         }
 
@@ -158,7 +163,9 @@ namespace DevEdu.Business.Tests
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
-            Assert.Throws<EntityNotFoundException>(() => sut.GetTaskWithAnswersById(TaskData.expectedTaskId));
+            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+                .And.Message.EqualTo($"task with id = {TaskData.expectedTaskId} was not found"), 
+                () => sut.GetTaskWithAnswersById(TaskData.expectedTaskId));
             _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Once);
         }
 
@@ -197,7 +204,9 @@ namespace DevEdu.Business.Tests
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
-            Assert.Throws<EntityNotFoundException>(() => sut.GetTaskWithCoursesAndAnswersById(TaskData.expectedTaskId));
+            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+                .And.Message.EqualTo($"task with id = {TaskData.expectedTaskId} was not found"),
+                () => sut.GetTaskWithCoursesAndAnswersById(TaskData.expectedTaskId));
             _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Once);
         }
 
@@ -226,7 +235,8 @@ namespace DevEdu.Business.Tests
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
-            Assert.Throws<EntityNotFoundException>(() => sut.GetTasks());
+            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+                .And.Message.EqualTo($"not found any task"), () => sut.GetTasks());
             _taskRepoMock.Verify(x => x.GetTasks(), Times.Once);
         }
 
@@ -258,10 +268,9 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.UpdateTask(taskDto)).Throws(new EntityNotFoundException($"task with id = {TaskData.expectedTaskId} was not found"));
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
-
-            Assert.Throws<EntityNotFoundException>(() => sut.UpdateTask(taskDto));
-            _taskRepoMock.Verify(x => x.UpdateTask(taskDto), Times.Never);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskDto.Id), Times.Exactly(1));
+            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+                    .And.Message.EqualTo($"task with id = {TaskData.expectedTaskId} was not found"),
+                () => sut.UpdateTask(taskDto));
         }
 
         [Test]
@@ -271,7 +280,9 @@ namespace DevEdu.Business.Tests
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
-            Assert.Throws<EntityNotFoundException>(() => sut.DeleteTask(TaskData.expectedTaskId));
+            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+                    .And.Message.EqualTo($"task with id = {TaskData.expectedTaskId} was not found"),
+                () => sut.DeleteTask(TaskData.expectedTaskId)); 
             _taskRepoMock.Verify(x => x.DeleteTask(TaskData.expectedTaskId), Times.Never);
             _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Exactly(1));
         }
