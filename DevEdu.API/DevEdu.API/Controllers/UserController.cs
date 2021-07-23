@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using DevEdu.API.Common;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,7 @@ namespace DevEdu.API.Controllers
         // api/user
         [HttpPost]
         [Description("Add new user")]
+        [AuthorizeRolesAttribute(Role.Manager)]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         public int AddUser([FromBody] UserInsertInputModel model)
         {
@@ -36,6 +39,7 @@ namespace DevEdu.API.Controllers
         // api/user/userId
         [HttpPut("{userId}")]
         [Description("Update user")]
+        [AuthorizeRolesAttribute(Role.Manager)]
         [ProducesResponseType(typeof(UserUpdateInfoOutPutModel), StatusCodes.Status200OK)]
         public UserUpdateInfoOutPutModel UpdateUserById([FromBody] UserUpdateInputModel model)
         {
@@ -47,6 +51,7 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}
         [HttpGet("{userId}")]
         [Description("Return user by id")]
+        [AuthorizeRolesAttribute(Role.Manager)]
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
         public UserFullInfoOutPutModel GetUserById(int userId)
         {
@@ -57,6 +62,7 @@ namespace DevEdu.API.Controllers
         // api/user
         [HttpGet]
         [Description("Return list users")]
+        [AuthorizeRolesAttribute(Role.Manager)]
         [ProducesResponseType(typeof(List<UserInfoOutPutModel>), StatusCodes.Status200OK)]
         public List<UserInfoOutPutModel> GetAllUsers()
         {
@@ -67,6 +73,7 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}
         [HttpDelete("{userId}")]
         [Description("Delete user by id")]
+        [AuthorizeRolesAttribute(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteUser(int userId)
         {
@@ -76,6 +83,7 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}/role/{roleId}
         [HttpPost("{userId}/role/{roleId}")]
         [Description("Add new role to user")]
+        [AuthorizeRolesAttribute(Role.Admin)]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         public void AddRoleToUser(int userId, int roleId)
         {
@@ -85,6 +93,7 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}/role/{roleId}
         [HttpDelete("{userId}/role/{roleId}")]
         [Description("Delete role from user")]
+        [AuthorizeRolesAttribute(Role.Admin)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteRoleFromUser(int userId, int roleId)
         {
