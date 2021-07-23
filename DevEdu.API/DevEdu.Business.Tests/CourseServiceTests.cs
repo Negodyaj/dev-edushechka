@@ -149,8 +149,10 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
             var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
             //When
-            Assert.Throws<ValidationException>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate), "the same positions of topics in the course");
+            var exception = Assert.Throws<ValidationException>(() => 
+            sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate));
             //Then
+            Assert.That(exception.Message, Is.EqualTo("the same positions of topics in the course"));
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
             
         }
@@ -164,8 +166,10 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
             var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
             //When
-            Assert.Throws<ValidationException>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate), "the same topics  in the course");
+            var exception = Assert.Throws<ValidationException>(() => 
+            sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate));
             //Then
+            Assert.That(exception.Message, Is.EqualTo("the same topics  in the course"));
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
         }
 
