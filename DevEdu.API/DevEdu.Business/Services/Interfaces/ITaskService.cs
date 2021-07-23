@@ -7,8 +7,8 @@ namespace DevEdu.Business.Services
     {
         public TaskDto GetTaskByIdWithValidation(int id, int userId);
         TaskDto GetTaskById(int id);
-        TaskDto GetTaskWithCoursesById(int id);
-        public TaskDto GetTaskWithAnswersById(int id);
+        TaskDto GetTaskWithCoursesById(int id, int userId);
+        public TaskDto GetTaskWithAnswersById(int id, int userId);
         List<TaskDto> GetTasks();
         int AddTask(TaskDto taskDto);
         public TaskDto UpdateTask(TaskDto taskDto);

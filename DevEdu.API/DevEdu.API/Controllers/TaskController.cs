@@ -63,7 +63,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
         public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
         {
-            var taskDto = _taskService.GetTaskWithCoursesById(taskId);
+            var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            var taskDto = _taskService.GetTaskWithCoursesById(taskId, userId);
             return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
         }
 
@@ -74,7 +75,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithAnswersOutputModel))]
         public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
         {
-            var taskDto = _taskService.GetTaskWithAnswersById(taskId);
+            var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            var taskDto = _taskService.GetTaskWithAnswersById(taskId, userId);
             return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
         }
 

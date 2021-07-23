@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 
@@ -11,35 +12,25 @@ namespace DevEdu.Business.Services
         private readonly ITaskRepository _taskRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly ITaskValidationHelper _taskValidationHelper;
 
         public TaskService(
             ITaskRepository taskRepository,
             ICourseRepository courseRepository,
-            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository,
-            IUserRepository userRepository
-            )
+            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, 
+            ITaskValidationHelper taskValidationHelper
+        )
         {
             _taskRepository = taskRepository;
             _courseRepository = courseRepository;
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
-            _userRepository = userRepository;
+            _taskValidationHelper = taskValidationHelper;
         }
 
         public TaskDto GetTaskByIdWithValidation(int id, int userId)
         {
-            var groupsByTask = _taskRepository.GetGroupsByTaskId(id);
-            var groupsByUser = _userRepository.GetGroupsByUserId(userId);
-            List<GroupDto> grByT = new List<GroupDto>();
-            List<GroupDto> grByU = new List<GroupDto>();
-            foreach (var group in groupsByTask)
-                grByT.Add(group.Group);
-            foreach (var group in groupsByUser)
-                grByU.Add(group.Group);
+            _taskValidationHelper.CheckTaskExistenceWithValidation(id, userId);
 
-            var result = grByT.FirstOrDefault(gt => grByU.Any(gu => gu.Id == gt.Id));
-            if (result == default)
-                throw new AuthorizationException($"user with id = {userId} doesn't relate to task with id = {id}");
             // check if task exists
             var taskDto = GetTaskById(id);
             return taskDto;
@@ -48,26 +39,21 @@ namespace DevEdu.Business.Services
         public TaskDto GetTaskById(int id)
         {
             // check if task exists
+            _taskValidationHelper.CheckTaskExistence(id);
             var taskDto = _taskRepository.GetTaskById(id);
-            if (taskDto == default)
-                throw new EntityNotFoundException($"task with id = {id} was not found");
             return taskDto;
         }
 
-        public TaskDto GetTaskWithCoursesById(int id)
+        public TaskDto GetTaskWithCoursesById(int id, int userId)
         {
-            var taskDto = _taskRepository.GetTaskById(id);
-            if (taskDto == default)
-                throw new EntityNotFoundException($"task with id = {id} was not found");
+            var taskDto = GetTaskByIdWithValidation(id, userId);
             taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(id);
             return taskDto;
         }
 
-        public TaskDto GetTaskWithAnswersById(int id)
+        public TaskDto GetTaskWithAnswersById(int id, int userId)
         {
-            var taskDto = _taskRepository.GetTaskById(id);
-             if (taskDto == default)
-                throw new EntityNotFoundException($"task with id = {id} was not found");
+            var taskDto = GetTaskByIdWithValidation(id, userId);
             taskDto.StudentAnswers = _studentAnswerOnTaskRepository.GetStudentAnswersToTaskByTaskId(id);
             return taskDto;
         }
@@ -92,18 +78,14 @@ namespace DevEdu.Business.Services
 
         public TaskDto UpdateTask(TaskDto taskDto)
         {
-            var task = _taskRepository.GetTaskById(taskDto.Id);
-            if (task == default)
-                throw new EntityNotFoundException($"task with id = {taskDto.Id} was not found");
+            _taskValidationHelper.CheckTaskExistence(taskDto.Id);
             _taskRepository.UpdateTask(taskDto);
             return _taskRepository.GetTaskById(taskDto.Id);
         }
 
         public void DeleteTask(int id)
         {
-            var task = _taskRepository.GetTaskById(id);
-            if (task == default)
-                throw new EntityNotFoundException($"task with id = {id} was not found");
+            _taskValidationHelper.CheckTaskExistence(id);
             _taskRepository.DeleteTask(id);
         }
 
