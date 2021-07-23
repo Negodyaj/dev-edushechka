@@ -6,7 +6,7 @@ BEGIN
       ,C.Name
       ,C.Description
       ,C.IsDeleted
-	  ,G.CourseId
+	  ,G.CourseId Id
 	  ,G.Timetable
 	  
 
