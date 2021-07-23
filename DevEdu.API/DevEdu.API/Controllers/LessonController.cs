@@ -5,14 +5,16 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using DevEdu.Business.Services;
 using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
 using DevEdu.API.Models.OutputModels;
-using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
+using DevEdu.DAL.Enums;
+using DevEdu.API.Common;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class LessonController : Controller
@@ -25,7 +27,7 @@ namespace DevEdu.API.Controllers
         {
             _lessonRepository = lessonRepository;
             _lessonService = lessonService;
-            
+
             _mapper = mapper;
         }
 
@@ -101,6 +103,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{id}/full-info"
+        [AuthorizeRoles(Role.Student, Role.Teacher)]
         [HttpGet("{id}/full-info")]
         [Description("Get the lesson with students and comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
@@ -152,7 +155,7 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{lessonId}/user/{userId}
         [HttpPost("{lessonId}/user/{userId}")]
-        public void AddStudentToLesson(int lessonId, int userId )
+        public void AddStudentToLesson(int lessonId, int userId)
         {
             _lessonService.AddStudentToLesson(lessonId, userId);
         }
@@ -160,23 +163,24 @@ namespace DevEdu.API.Controllers
         // api/lesson/{lessonId}/user/{userId}
         [HttpDelete("{lessonId}/user/{userId}")]
         public void DeleteStudentFromLesson(int lessonId, int userId)
-        {        
-            _lessonService.DeleteStudentFromLesson(lessonId, userId); 
+        {
+            _lessonService.DeleteStudentFromLesson(lessonId, userId);
         }
 
         // api/lesson/{lessonId}/user/{userId}/feedback
+        [AuthorizeRoles(Role.Student)]
         [HttpPut("{lessonId}/user/{userId}/feedback")]
         public void UpdateStudentFeedbackForLesson(int lessonId, int userId, [FromBody] FeedbackInputModel model)
         {
-            var dto = _mapper.Map<StudentLessonDto>(model);          
-            _lessonService.UpdateStudentFeedbackForLesson(lessonId, userId,dto);
+            var dto = _mapper.Map<StudentLessonDto>(model);
+            _lessonService.UpdateStudentFeedbackForLesson(lessonId, userId, dto);
         }
 
         // api/lesson/{lessonId}/user/{userId}/absenceReason
         [HttpPut("{lessonId}/user/{userId}/absenceReason")]
         public void UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, [FromBody] AbsenceReasonInputModel model)
         {
-            var dto = _mapper.Map<StudentLessonDto>(model);          
+            var dto = _mapper.Map<StudentLessonDto>(model);
             _lessonService.UpdateStudentAbsenceReasonOnLesson(lessonId, userId, dto);
         }
 
@@ -184,7 +188,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{lessonId}/user/{userId}/attendance")]
         public void UpdateStudentAttendanceOnLesson(int lessonId, int userId, [FromBody] AttendanceInputModel model)
         {
-            var dto = _mapper.Map<StudentLessonDto>(model);           
+            var dto = _mapper.Map<StudentLessonDto>(model);
             _lessonService.UpdateStudentAttendanceOnLesson(lessonId, userId, dto);
         }
     }

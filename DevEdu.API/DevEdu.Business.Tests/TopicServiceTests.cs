@@ -22,7 +22,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedTopicId = 77;
-            var topicDto = new TopicDto {Name = "Topic1", Duration = 5};
+            var topicDto = new TopicDto { Name = "Topic1", Duration = 5 };
 
             _topicRepoMock.Setup(x => x.AddTopic(topicDto)).Returns(expectedTopicId);
             _topicRepoMock.Setup(x => x.AddTagToTopic(It.IsAny<int>(), It.IsAny<int>()));
@@ -34,7 +34,7 @@ namespace DevEdu.Business.Tests
 
             //Than
             Assert.AreEqual(expectedTopicId, actualTopicId);
-            _topicRepoMock.Verify(x=> x.AddTopic(topicDto), Times.Once);
+            _topicRepoMock.Verify(x => x.AddTopic(topicDto), Times.Once);
             _topicRepoMock.Verify(x => x.AddTagToTopic(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 

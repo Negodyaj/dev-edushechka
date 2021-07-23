@@ -41,7 +41,7 @@ namespace DevEdu.Business.Services
 
         public void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
         {
-            foreach (var topic in listDto) 
+            foreach (var topic in listDto)
                 topic.Course = new CourseDto() { Id = courseId };
             _topicRepository.AddTopicsToCourse(listDto);
         }
@@ -76,7 +76,7 @@ namespace DevEdu.Business.Services
             CheckUniquenessTopics(topics);
             var topicsInDatabase = _courseRepository.SelectAllTopicsByCourseId(courseId);
             if (
-                topicsInDatabase != null && 
+                topicsInDatabase != null &&
                 topicsInDatabase.Count != 0 &&
                 topics.Count != topicsInDatabase.Count
             )
@@ -94,7 +94,7 @@ namespace DevEdu.Business.Services
                 {
                     topic.Course = new CourseDto() { Id = courseId };
                 }
-                _courseRepository.UpdateCourseTopicsByCourseId( topics);
+                _courseRepository.UpdateCourseTopicsByCourseId(topics);
             }
         }
 
@@ -109,7 +109,7 @@ namespace DevEdu.Business.Services
         }
         private void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
-            if(topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
+            if (topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
                 throw new ArgumentException("the same topics  in the course");
             }
