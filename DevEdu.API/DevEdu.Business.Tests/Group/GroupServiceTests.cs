@@ -5,57 +5,64 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace DevEdu.Business.Tests.Group
+namespace DevEdu.Business.Tests
 {
     public class GroupServiceTests
     {
-
+        /// <summary>
+        /// Осталось, сменить имена методам
+        /// Создать правильные експектеды
+        /// Заполнить Дтохи
+        /// Заменить Тмп
+        /// Добавить новые методы
+        /// </summary>
         private Mock<IGroupRepository> _mock;
-
+        private int tmp = 1;
         [SetUp]
         public void SetUp()
         {
             _mock = new Mock<IGroupRepository>();
         }
 
-        [TestCaseSource(typeof(GroupServiceExpecteds), nameof(GroupServiceExpecteds.AddGroup))]
-        public void AddGroup(GroupDto dto, int expected)
+        [Test]
+        public void AddGroup()
         {
             //Given
-            _mock.Setup(mock => mock.AddGroup(dto)).Returns(expected);
-            var _service = new GroupService(_mock.Object);
-            
+            var dto = GroupData.GetGroupDto();
+            _mock.Setup(mock => mock.AddGroup(dto)).Returns(GroupData.ExpectedAffectedRows);
+            var service = new GroupService(_mock.Object);
+
             //When
-            var actual = _service.AddGroup(dto);
+            var actual = service.AddGroup(dto);
 
             //Then
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(GroupData.ExpectedAffectedRows, actual);
             _mock.Verify(mock => mock.AddGroup(dto), Times.Once);
         }
 
-        
-        [TestCaseSource(typeof(GroupServiceExpecteds), nameof(GroupServiceExpecteds.GetGroup))]
-        public void GetGroup(int id, GroupDto expected)
+
+        [Test]
+        public void GetGroup()
         {
             //Given
-            _mock.Setup(mock => mock.GetGroup(id)).Returns(expected);
+            _mock.Setup(mock => mock.GetGroup(tmp)).Returns(new GroupDto());
 
             var _service = new GroupService(_mock.Object);
 
             //When
-            var actual = _service.GetGroup(id);
+            var actual = _service.GetGroup(tmp);
 
             //Then
-            Assert.AreEqual(expected, actual);
-            _mock.Verify(mock => mock.GetGroup(id), Times.Once);
+            Assert.AreEqual(tmp, actual);
+            _mock.Verify(mock => mock.GetGroup(tmp), Times.Once);
         }
 
-        [TestCaseSource(typeof(GroupServiceExpecteds), nameof(GroupServiceExpecteds.GetGroups))]
-        public void GetGroups(List<GroupDto> expected)
+        [Test]
+        public void GetGroups()
         {
             //Given
             _mock.Setup(mock => mock.GetGroups())
-                .Returns(expected)
+                .Returns(new List<GroupDto>())
                 .Verifiable();
 
             var _service = new GroupService(_mock.Object);
@@ -64,44 +71,44 @@ namespace DevEdu.Business.Tests.Group
             var actual = _service.GetGroups();
 
             //Then
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(tmp, actual);
             _mock.Verify(mock => mock.GetGroups(), Times.Once);
         }
 
-        [TestCaseSource(typeof(GroupServiceExpecteds), nameof(GroupServiceExpecteds.AddGroupMaterialReference))]
-        public void AddGroupMaterialReference(int groupId, int materialId, int expected)
+        [Test]
+        public void AddGroupMaterialReference()
         {
             //Given
-            _mock.Setup(mock => mock.AddGroupMaterialReference(groupId, materialId))
-                .Returns(expected)
+            _mock.Setup(mock => mock.AddGroupMaterialReference(tmp, tmp))
+                .Returns(tmp)
                 .Verifiable();
 
             var _service = new GroupService(_mock.Object);
 
             //When
-            var actual = _service.AddGroupMaterialReference(groupId, materialId);
+            var actual = _service.AddGroupMaterialReference(tmp, tmp);
 
             //Then
-            Assert.AreEqual(expected, actual);
-            _mock.Verify(mock => mock.AddGroupMaterialReference(groupId, materialId), Times.Once);
+            Assert.AreEqual(tmp, actual);
+            _mock.Verify(mock => mock.AddGroupMaterialReference(tmp, tmp), Times.Once);
         }
 
-        [TestCaseSource(typeof(GroupServiceExpecteds), nameof(GroupServiceExpecteds.RemoveGroupMaterialReference))]
-        public void RemoveGroupMaterialReference(int groupId, int materialId, int expected)
+        [Test]
+        public void RemoveGroupMaterialReference()
         {
             //Given
-            _mock.Setup(mock => mock.RemoveGroupMaterialReference(groupId, materialId))
-                .Returns(expected)
+            _mock.Setup(mock => mock.RemoveGroupMaterialReference(tmp, tmp))
+                .Returns(tmp)
                 .Verifiable();
 
             var _service = new GroupService(_mock.Object);
 
             //When
-            var actual = _service.RemoveGroupMaterialReference(groupId, materialId);
+            var actual = _service.RemoveGroupMaterialReference(tmp, tmp);
 
             //Then
-            Assert.AreEqual(expected, actual);
-            _mock.Verify(mock => mock.RemoveGroupMaterialReference(groupId, materialId), Times.Once);
+            Assert.AreEqual(tmp, actual);
+            _mock.Verify(mock => mock.RemoveGroupMaterialReference(tmp, tmp), Times.Once);
         }
     }
 }
