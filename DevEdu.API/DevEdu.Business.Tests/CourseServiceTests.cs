@@ -1,4 +1,5 @@
-﻿using DevEdu.Business.Services;
+﻿using DevEdu.Business.Exceptions;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -148,7 +149,7 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
             var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
             //When
-            Assert.Throws<ArgumentException>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate), "the same positions of topics in the course");
+            Assert.Throws<ValidationException>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate), "the same positions of topics in the course");
             //Then
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
             

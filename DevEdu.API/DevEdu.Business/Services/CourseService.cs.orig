@@ -1,5 +1,4 @@
-﻿using DevEdu.Business.Exceptions;
-using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -32,7 +31,11 @@ namespace DevEdu.Business.Services
             _courseRepository.UpdateCourse(courseDto);
         }
 
+<<<<<<< HEAD
         public int AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
+=======
+        public void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto)
+>>>>>>> main
         {
             dto.Course = new CourseDto() { Id = courseId };
             dto.Topic = new TopicDto { Id = topicId };
@@ -105,14 +108,18 @@ namespace DevEdu.Business.Services
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
-                throw new ValidationException("the same positions of topics in the course");
+                throw new ArgumentException("the same positions of topics in the course");
             }
         }
         private void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
-                throw new ValidationException("the same topics  in the course");
+<<<<<<< HEAD
+                throw new ArgumentException("the same topics  in the course");
+=======
+                throw new Exception("the same topics in the course");
+>>>>>>> main
             }
         }
     }
