@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
-using DevEdu.DAL.Models;
+﻿using System.Collections.Generic;
 
 namespace DevEdu.API.Models.OutputModels
 {

@@ -51,6 +51,7 @@ namespace DevEdu.API
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IRaitingService, RaitingService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 
             services.AddControllers();
@@ -66,9 +67,9 @@ namespace DevEdu.API
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
-                        ValidIssuer = AuthOptions._issuer,
+                        ValidIssuer = AuthOptions.Issuer,
                         ValidateAudience = true,
-                        ValidAudience = AuthOptions._audience,
+                        ValidAudience = AuthOptions.Audience,
                         ValidateLifetime = true,
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true

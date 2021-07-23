@@ -1,23 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+using DevEdu.Business.Configuration;
+using DevEdu.DAL.Models;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DevEdu.Business.Services
 {
-    public class AuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
-        public byte[] GetSalt()
+        private readonly IUserService _userService;
+        public AuthenticationService(){}
+
+        public AuthenticationService(IUserService userService)
         {
-            byte[] salt;
-            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
-            return salt;
+            _userService = userService;
         }
-        public string HashPassword(string pass, byte[] salt = default) 
+
+        public string SignIn(UserDto dto)
         {
-            if(salt == default)
+            var identity = GetIdentity(dto.Email, dto.Password);
+            if (identity == null)
+            {
+                return null;
+            }
+
+            var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.Issuer,
+                audience: AuthOptions.Audience,
+                notBefore: DateTime.UtcNow,
+                claims: identity.Claims,//Here we are adding claims to JWT
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(AuthOptions.Lifetime)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
+                    SecurityAlgorithms.HmacSha256));
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            return encodedJwt;
+        }
+        public string HashPassword(string pass, byte[] salt = default)
+        {
+            if (salt == default)
             {
                 salt = GetSalt();
             }
@@ -30,8 +54,38 @@ namespace DevEdu.Business.Services
             string hashedPassword = Convert.ToBase64String(hashBytes);
             return hashedPassword;
         }
-                                                                                    
-        public bool Verify(string hashedPassword, string userPasword)
+        private byte[] GetSalt()
+        {
+            byte[] salt;
+            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+            return salt;
+        }
+
+
+        private ClaimsIdentity GetIdentity(string username, string password)
+        {
+            var user = _userService.SelectUserByEmail(username);
+
+            var claims = new List<Claim>();
+            if (user != null)
+            {
+                if (Verify(user.Password, password))
+                {
+                    claims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
+                    foreach (var role in user.Roles)
+                    {
+                        claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString()));
+                    }
+                };
+
+                ClaimsIdentity claimsIdentity =
+                    new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
+                        ClaimsIdentity.DefaultRoleClaimType);
+                return claimsIdentity;
+            }
+            return null;
+        }
+        private bool Verify(string hashedPassword, string userPasword)
         {
             byte[] hashBytes = Convert.FromBase64String(hashedPassword);
             byte[] salt = new byte[16];
@@ -39,5 +93,6 @@ namespace DevEdu.Business.Services
             string result = HashPassword(userPasword, salt);
             return result == hashedPassword;
         }
+
     }
 }

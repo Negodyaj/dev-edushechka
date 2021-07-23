@@ -8,6 +8,6 @@
 AS
 BEGIN
 	INSERT INTO dbo.Payment (Date, UserId, Sum,  IsPaid )
-	VALUES (Date, @UserId, @Sum,  @IsPaid)
+	VALUES (@Date, @UserId, @Sum,  @IsPaid)
 	SELECT @@IDENTITY
 END

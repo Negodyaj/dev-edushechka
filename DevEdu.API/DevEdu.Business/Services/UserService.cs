@@ -15,17 +15,16 @@ namespace DevEdu.Business.Services
 
         public int AddUser(UserDto dto)
         {
-           var addedUserId = _userRepository.AddUser(dto);
-            
-            if(dto.Roles == null || dto.Roles.Count == 0)
-            {
-                return addedUserId;
-            }
+            AuthenticationService authenticationService = new AuthenticationService();
+            dto.Password = authenticationService.HashPassword(dto.Password);
 
-            foreach(var role in dto.Roles)
-            {
-                AddUserRole(addedUserId, (int)role);
-            }
+            var addedUserId = _userRepository.AddUser(dto);
+
+            foreach (var role in dto.Roles)
+                {
+                    AddUserRole(addedUserId, (int)role);
+                }
+            
             return addedUserId;
         }
 
