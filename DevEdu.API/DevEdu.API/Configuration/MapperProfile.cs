@@ -107,6 +107,8 @@ namespace DevEdu.API.Configuration
             CreateMap<GroupDto, GroupOutputMiniModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<TaskDto, TaskInfoOutputMiniModel>();
+            CreateMap<NotificationDto, NotificationInfoOutputModel>()
+                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.Role != null ? src.Role : null));
         }
     }
 }

@@ -11,6 +11,6 @@ namespace DevEdu.Business.Services
         List<NotificationDto> GetNotificationsByRoleId(int RoleId);
         int AddNotification(NotificationDto dto);
         void DeleteNotification(int id);
-        void UpdateNotification(int id, NotificationDto dto);
+        NotificationDto UpdateNotification(int id, NotificationDto dto);
     }
 }

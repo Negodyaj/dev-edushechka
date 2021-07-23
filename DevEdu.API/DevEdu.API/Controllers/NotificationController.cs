@@ -65,11 +65,11 @@ namespace DevEdu.API.Controllers
 
         //  api/notification/5
         [HttpPut("{id}")]
-        public string UpdateNotification(int id, [FromBody] NotificationUpdateInputModel model)
+        public NotificationInfoOutputModel UpdateNotification(int id, [FromBody] NotificationUpdateInputModel model)
         {
             var dto = _mapper.Map<NotificationDto>(model);
-            _notificationService.UpdateNotification(id, dto);
-            return $"Text notification №{id} change to {model.Text}";
+            var output = _notificationService.UpdateNotification(id, dto);
+            return _mapper.Map<NotificationInfoOutputModel>(output);
         }
     }
 }

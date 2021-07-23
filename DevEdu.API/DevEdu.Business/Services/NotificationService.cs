@@ -31,10 +31,11 @@ namespace DevEdu.Business.Services
 
         public void DeleteNotification(int id) => _notificationRepository.DeleteNotification(id);
 
-        public void UpdateNotification(int id, NotificationDto dto)
+        public NotificationDto UpdateNotification(int id, NotificationDto dto)
         {
             dto.Id = id;
             _notificationRepository.UpdateNotification(dto);
+            return _notificationRepository.GetNotification(id);
         }
     }
 }
