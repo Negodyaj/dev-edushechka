@@ -3,6 +3,10 @@ using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Security.Claims;
+using AutoMapper.Internal;
+using Dapper;
 using DevEdu.API.Common;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Repositories;
@@ -51,7 +55,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Task/courses
-        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
+        [AuthorizeRoles(Role.Methodist)]
         [HttpGet("{taskId}/with-courses")]
         [Description("Get task by Id with tags and courses")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
@@ -72,17 +76,6 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
         }
 
-        //  api/Task/coursesandanswers
-        [AuthorizeRoles(Role.Teacher)]
-        [HttpGet("{taskId}/full-info")]
-        [Description("Get task by Id with tags, courses and answers")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesAndAnswersOutputModel))]
-        public TaskInfoWithCoursesAndAnswersOutputModel GetTaskWithTagsCoursesAndAnswers(int taskId)
-        {
-            var taskDto = _taskService.GetTaskWithCoursesAndAnswersById(taskId);
-            return _mapper.Map<TaskInfoWithCoursesAndAnswersOutputModel>(taskDto);
-        }
-
         //  api/Task
         [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet]
@@ -90,6 +83,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
         public List<TaskInfoOutputModel> GetAllTasksWithTags()
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+           // var userRoles = User.Claims(c => c.Role == ClaimTypes.Role)?.;
+            //var userRoles = claimsIdentity.FindAll(ClaimTypes.Role)?.AsList();
             var taskDtos = _taskService.GetTasks();
             return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
         }
@@ -119,6 +115,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/task/{taskId}
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpDelete("{taskId}")]
         [Description("Delete task with selected Id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

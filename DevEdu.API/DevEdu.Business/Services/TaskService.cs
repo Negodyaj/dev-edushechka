@@ -48,16 +48,6 @@ namespace DevEdu.Business.Services
             return taskDto;
         }
 
-        public TaskDto GetTaskWithCoursesAndAnswersById(int id)
-        {
-            var taskDto = _taskRepository.GetTaskById(id);
-            if (taskDto == default)
-                throw new EntityNotFoundException($"task with id = {id} was not found");
-            taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(id);
-            taskDto.StudentAnswers = _studentAnswerOnTaskRepository.GetStudentAnswersToTaskByTaskId(id);
-            return taskDto;
-        }
-
         public List<TaskDto> GetTasks()
         {
             var tasks = _taskRepository.GetTasks();

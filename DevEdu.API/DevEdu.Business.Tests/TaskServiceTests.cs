@@ -170,47 +170,6 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetTaskWithCoursesAndAnswersById_IntTaskId_ReturnedTaskDtoWithCoursesAndStudentAnswers()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
-
-            var courseDtos = TaskData.GetListOfCourses();
-
-            var studentAnswersDtos = TaskData.GetListOfStudentAnswers();
-
-            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Returns(taskDto);
-            _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskId(TaskData.expectedTaskId)).Returns(courseDtos);
-            taskDto.Courses = courseDtos;
-            _studentAnswerRepoMock.Setup(x => x.GetStudentAnswersToTaskByTaskId(TaskData.expectedTaskId)).Returns(studentAnswersDtos);
-            taskDto.StudentAnswers = studentAnswersDtos;
-
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
-
-            //When
-            var dto = sut.GetTaskWithCoursesAndAnswersById(TaskData.expectedTaskId);
-
-            //Than
-            Assert.AreEqual(taskDto, dto);
-            _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesToTaskByTaskId(TaskData.expectedTaskId), Times.Once);
-            _studentAnswerRepoMock.Verify(x => x.GetStudentAnswersToTaskByTaskId(TaskData.expectedTaskId), Times.Once);
-        }
-
-        [Test]
-        public void GetTaskWithCoursesAndAnswersById_WhenTaskDoesNotExist_EntityNotFoundException()
-        {
-            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Throws(new EntityNotFoundException($"task with id = {TaskData.expectedTaskId} was not found"));
-
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
-
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
-                .And.Message.EqualTo($"task with id = {TaskData.expectedTaskId} was not found"),
-                () => sut.GetTaskWithCoursesAndAnswersById(TaskData.expectedTaskId));
-            _taskRepoMock.Verify(x => x.GetTaskById(TaskData.expectedTaskId), Times.Once);
-        }
-
-        [Test]
         public void GetTasks_NoEntry_ReturnedTaskDtos()
         {
             //Given
