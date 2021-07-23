@@ -104,14 +104,14 @@ namespace DevEdu.Business.Services
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
-                throw new Exception("the same positions of topics in the course");
+                throw new ArgumentException("the same positions of topics in the course");
             }
         }
         private void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
             if(topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
-                throw new Exception("the same topics  in the course");
+                throw new ArgumentException("the same topics  in the course");
             }
         }
     }

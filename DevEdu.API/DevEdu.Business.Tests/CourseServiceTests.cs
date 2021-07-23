@@ -1,13 +1,8 @@
 ﻿using DevEdu.Business.Services;
-using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -153,7 +148,7 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
             var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
             //When
-            Assert.Throws<Exception>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate));
+            Assert.Throws<ArgumentException>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate), "the same positions of topics in the course");
             //Then
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
             
@@ -168,7 +163,7 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
             var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
             //When
-            Assert.Throws<Exception>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate), "the same topics  in the course");
+            Assert.Throws<ArgumentException>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate), "the same topics  in the course");
             //Then
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
         }
