@@ -5,7 +5,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace DevEdu.Business.Tests
+namespace DevEdu.Business.Tests.Group
 {
     public class GroupServiceTests
     {
@@ -15,6 +15,7 @@ namespace DevEdu.Business.Tests
         /// Заполнить Дтохи
         /// Заменить Тмп
         /// Добавить новые методы
+        /// Объеденить со вторым GroupServiceTests
         /// </summary>
         private Mock<IGroupRepository> _mock;
         private int tmp = 1;
