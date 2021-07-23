@@ -77,6 +77,13 @@ namespace DevEdu.Business.Services
 
         public void AddCommentOnStudentAnswer(int taskstudentId, int commentId) => _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskstudentId, commentId);
 
-
+        public List<StudentAnswerOnTaskDto> GetAllStudentAswersOnTaskByGroupsAndTask(int groupId, int taskId)
+        {
+            StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
+            dto.Task = new TaskDto { Id = taskId };
+            dto.User = new UserDto();
+            dto.Comments = new List<CommentDto>();
+            return new List<StudentAnswerOnTaskDto>();
+        }
     }
 }

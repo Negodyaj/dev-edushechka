@@ -6,6 +6,8 @@ SELECT
 		ts.Id,
 		tss.Name as Status,
 		ts.Answer,
+		ts.CompletedDate,
+		ts.IsDeleted,
 		u.Id,
 		u.FirstName,
 		u.LastName,

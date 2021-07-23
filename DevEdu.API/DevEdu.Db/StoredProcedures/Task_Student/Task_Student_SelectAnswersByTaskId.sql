@@ -7,6 +7,7 @@ BEGIN
 		tstud.StudentId,
 		tstud.Answer,
 		tstud.CompletedDate,
+		tstud.IsDeleted,
 		tstud.StatusId as Id,
 		us.Id,
 		us.Username,

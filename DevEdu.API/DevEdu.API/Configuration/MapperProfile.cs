@@ -84,6 +84,8 @@ namespace DevEdu.API.Configuration
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<StudentAnswerOnTaskForTaskDto, StudentAnswerOnTaskInfoOutputModel>();
             CreateMap<StudentAnswerOnTaskDto, StudentAnswerOnTaskInfoOutputModel>();
+            CreateMap<StudentAnswerOnTaskDto, StudentAnswerOnTaskFullOutputModel>()
+                .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
             CreateMap<GroupDto, GroupInfoOutputModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<LessonDto, LessonInfoOutputModel>()
