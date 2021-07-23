@@ -75,7 +75,7 @@ namespace DevEdu.API.Controllers
         [Description("Delete user by id")]
         [AuthorizeRolesAttribute(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void DeleteUser(int userId)
+        public void DeleteUser(int userId)                       
         {
             _userService.DeleteUser(userId);
         }
