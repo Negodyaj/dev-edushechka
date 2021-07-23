@@ -77,7 +77,7 @@ namespace DevEdu.Business.Tests
         [Test]
         public void AddTagToTopic_WhenTopicNotFound_EntityNotFoundException()
         {
-            _topicRepoMock.Setup(x => x.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId)).Throws<EntityNotFoundException>();
+            _topicRepoMock.Setup(x => x.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId)).Throws(new EntityNotFoundException($"topic with id = {TopicData.expectedTopicId} was not found"));
 
             var sut = new TopicService(_topicRepoMock.Object, _tagRepoMock.Object);
 
@@ -90,7 +90,7 @@ namespace DevEdu.Business.Tests
         [Test]
         public void AddTagToTopic_WhenTagNotFound_EntityNotFoundException()
         {
-            _topicRepoMock.Setup(x => x.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId)).Throws<EntityNotFoundException>();
+            _topicRepoMock.Setup(x => x.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId)).Throws(new EntityNotFoundException($"tag with id = {TagData.expectedTagId} was not found"));
             _topicRepoMock.Setup(x => x.GetTopic(TopicData.expectedTopicId)).Returns(TopicData.GetTopicDtoWithTags);
 
             var sut = new TopicService(_topicRepoMock.Object, _tagRepoMock.Object);

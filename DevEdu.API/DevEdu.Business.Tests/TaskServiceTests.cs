@@ -85,7 +85,7 @@ namespace DevEdu.Business.Tests
         [Test]
         public void GetTaskById_WhenTaskDoesNotExist_EntityNotFoundException()
         {
-            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Throws<EntityNotFoundException>();
+            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Throws(new EntityNotFoundException($"task with id = {TaskData.expectedTaskId} was not found"));
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
@@ -120,7 +120,7 @@ namespace DevEdu.Business.Tests
         [Test]
         public void GetTaskWithCoursesById_WhenTaskDoesNotExist_EntityNotFoundException()
         {
-            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Throws<EntityNotFoundException>();
+            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Throws(new EntityNotFoundException($"task with id = {TaskData.expectedTaskId} was not found"));
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
@@ -154,7 +154,7 @@ namespace DevEdu.Business.Tests
         [Test]
         public void GetTaskWithAnswersById_WhenTaskDoesNotExist_EntityNotFoundException()
         {
-            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Throws<EntityNotFoundException>();
+            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Throws(new EntityNotFoundException($"task with id = {TaskData.expectedTaskId} was not found"));
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
@@ -193,7 +193,7 @@ namespace DevEdu.Business.Tests
         [Test]
         public void GetTaskWithCoursesAndAnswersById_WhenTaskDoesNotExist_EntityNotFoundException()
         {
-            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Throws<EntityNotFoundException>();
+            _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Throws(new EntityNotFoundException($"task with id = {TaskData.expectedTaskId} was not found"));
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
@@ -222,7 +222,7 @@ namespace DevEdu.Business.Tests
         [Test]
         public void GetTasks_WhenDoesNotExistAnyTask_EntityNotFoundException()
         {
-            _taskRepoMock.Setup(x => x.GetTasks()).Throws<EntityNotFoundException>();
+            _taskRepoMock.Setup(x => x.GetTasks()).Throws(new EntityNotFoundException($"not found any task"));
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
@@ -255,7 +255,7 @@ namespace DevEdu.Business.Tests
         public void UpdateTask_WhenTaskDoesNotExist_EntityNotFoundException()
         {
             var taskDto = TaskData.GetTaskDtoWithTags();
-            _taskRepoMock.Setup(x => x.UpdateTask(taskDto)).Throws<EntityNotFoundException>();
+            _taskRepoMock.Setup(x => x.UpdateTask(taskDto)).Throws(new EntityNotFoundException($"task with id = {TaskData.expectedTaskId} was not found"));
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
@@ -267,7 +267,7 @@ namespace DevEdu.Business.Tests
         [Test]
         public void DeleteTask_WhenTaskDoesNotExist_EntityNotFoundException()
         {
-            _taskRepoMock.Setup(x => x.DeleteTask(TaskData.expectedTaskId)).Throws<EntityNotFoundException>();
+            _taskRepoMock.Setup(x => x.DeleteTask(TaskData.expectedTaskId)).Throws(new EntityNotFoundException($"task with id = {TaskData.expectedTaskId} was not found"));
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
 
