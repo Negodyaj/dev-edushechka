@@ -164,7 +164,7 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
             var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
             //When
-            Assert.Throws<ArgumentException>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate), "the same topics  in the course");
+            Assert.Throws<ValidationException>(() => sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate), "the same topics  in the course");
             //Then
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
         }
