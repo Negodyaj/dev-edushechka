@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.Exceptions;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 
@@ -23,6 +24,10 @@ namespace DevEdu.Business.Services
 
         public void UpdatePayment(int id, PaymentDto dto)
         {
+            var paymentInDb = _paymentRepository.GetPayment(id);
+            if(paymentInDb.IsDeleted == true)  
+            throw new EntityNotFoundException("This payment is deleted");
+            
             dto.Id = id;
             _paymentRepository.UpdatePayment(dto);
         }
