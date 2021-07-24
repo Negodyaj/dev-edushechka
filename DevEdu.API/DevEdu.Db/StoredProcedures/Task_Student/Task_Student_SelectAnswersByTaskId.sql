@@ -17,6 +17,6 @@ BEGIN
 		us.GitHubAccount,
 		us.Photo
 	FROM dbo.Task_Student tstud
-		inner JOIN dbo.[User] us on us.Id = tstud.StatusId
+		inner JOIN dbo.[User] us on us.Id = tstud.StudentId
 	WHERE tstud.TaskId = @TaskId
 END
