@@ -1,3 +1,4 @@
+using DevEdu.API.Common;
 using DevEdu.API.Configuration;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
@@ -119,6 +120,8 @@ namespace DevEdu.API
                 app.UseOpenApi();
                 app.UseSwaggerUi3();
             }
+
+            app.UseExceptionHandler(err => err.UseCustomErrors(env));
 
             app.UseHttpsRedirection();
 
