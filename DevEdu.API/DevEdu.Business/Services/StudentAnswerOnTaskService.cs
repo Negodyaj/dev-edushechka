@@ -8,10 +8,12 @@ namespace DevEdu.Business.Services
     public class StudentAnswerOnTaskService: IStudentAnswerOnTaskService
     {
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
+        private readonly IGroupRepository _groupRepository;
 
-        public StudentAnswerOnTaskService(IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
+        public StudentAnswerOnTaskService(IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, IGroupRepository groupRepository)
         {
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
+            _groupRepository = groupRepository;
         }
 
         public void AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
@@ -84,6 +86,13 @@ namespace DevEdu.Business.Services
             dto.User = new UserDto();
             dto.Comments = new List<CommentDto>();
             return new List<StudentAnswerOnTaskDto>();
+        }
+
+        public List<StudentAnswerOnTaskDto> GetPresentGroupForStudentByUserId(int userId)
+        {
+            int groupId = _groupRepository.GetPresentGroupForStudentByUserId(userId);
+
+
         }
     }
 }

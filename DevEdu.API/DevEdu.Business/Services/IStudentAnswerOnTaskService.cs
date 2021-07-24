@@ -14,5 +14,7 @@ namespace DevEdu.Business.Services
         void UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto);
         void AddCommentOnStudentAnswer(int taskstudentId, int commentId);
         List<StudentAnswerOnTaskDto> GetAllStudentAswersOnTaskByGroupsAndTask(int groupId, int taskId);
+
+        List<StudentAnswerOnTaskDto> GetPresentGroupForStudentByUserId(int userId);
     }
 }

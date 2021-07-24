@@ -21,6 +21,8 @@ namespace DevEdu.API.Controllers
         private readonly IStudentAnswerOnTaskService _studentAnswerOnTaskService;
         private readonly ITaskRepository _taskRepository;
         private readonly ICommentRepository _commentRepository;
+        private readonly IUserService _userService;
+        private readonly IGroupService _groupService;
 
         public TaskController(
             IMapper mapper,
@@ -224,11 +226,15 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public CommentInfoOutputModel AddCommentOnStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel inputModel)
         {
+            CommentService commentService = new CommentService(new CommentRepository());
             var commentDto = _mapper.Map<CommentDto>(inputModel);
-            int commentId = _commentRepository.AddComment(commentDto);
-            _studentAnswerOnTaskService.AddCommentOnStudentAnswer(taskStudentId, commentId);
-            var output = _commentRepository.GetComment(commentId);
+            int commentId = commentService.AddComment(commentDto);
 
+            UserService userService = new UserService(new UserRepository());
+            var userDto = userService.SelectUserById(inputModel.UserId);
+            commentDto.User = userDto;
+
+            var output = _commentRepository.GetComment(commentId);
             return _mapper.Map<CommentInfoOutputModel>(output);
         }
 
@@ -246,12 +252,26 @@ namespace DevEdu.API.Controllers
         // api/task/{taskId}/group/{groupId}}
         [HttpGet("{taskId}/group/{groupId}")]
         [Description("Get all student task answers by group")]
-        public List<StudentAnswerOnTaskDto> GetAllStudentAswersOnTaskByGroupsAndTask(int groupId, int taskId)
+        [ProducesResponseType(typeof(List<StudentAnswerOnTaskFullOutputModel>), StatusCodes.Status200OK)]
+        public List<StudentAnswerOnTaskFullOutputModel> GetAllStudentAswersOnTaskByGroupsAndTask(int groupId, int taskId)
         {
             var dto = _studentAnswerOnTaskService.GetAllStudentAswersOnTaskByGroupsAndTask(groupId, taskId);
-            var output = _mapper.Map<List<StudentAnswerOnTaskDto>>(dto);
+            var output = _mapper.Map<List<StudentAnswerOnTaskFullOutputModel>>(dto);
 
             return output;
         }
+
+        //// api/user/{userId}/answer-in-group}
+        //[HttpGet("{taskId}/group/{groupId}")]
+        //[Description("Get all student task answers by group")]
+        //[ProducesResponseType(typeof(List<StudentAnswerOnTaskFullOutputModel>), StatusCodes.Status200OK)]
+        //public List<StudentAnswerOnTaskFullOutputModel> GetAnswersForStudentInGroup(int userId)
+        //{
+        //    var dto = _groupService.GetAnswersForStudentInGroup(userId);
+
+
+        //    _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId);
+ 
+        //}
     }
 }
