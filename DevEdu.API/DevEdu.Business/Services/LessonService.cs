@@ -22,8 +22,13 @@ namespace DevEdu.Business.Services
             _commentRepository = commentRepository;
             _userRepository = userRepository;
         }
-        
-        public void AddCommentToLesson(int lessonId, int commentId) => _lessonRepository.AddCommentToLesson(lessonId, commentId);
+
+        public void AddCommentToLesson(int lessonId, CommentDto commentDto)
+        {
+            int commentId =_commentRepository.AddComment(commentDto);
+
+            _lessonRepository.AddCommentToLesson(lessonId, commentId);
+        }
 
         public int AddLesson(LessonDto lessonDto) => _lessonRepository.AddLesson(lessonDto);
 
@@ -55,10 +60,10 @@ namespace DevEdu.Business.Services
             return result;
         }
 
-        public void UpdateLesson(int id, LessonDto lessonDto)
+        public LessonDto UpdateLesson(LessonDto lessonDto)
         {
-            lessonDto.Id = id;
             _lessonRepository.UpdateLesson(lessonDto);
+            return _lessonRepository.SelectLessonById(lessonDto.Id);
         }
 
         public void DeleteTopicFromLesson(int lessonId, int topicId) => 
