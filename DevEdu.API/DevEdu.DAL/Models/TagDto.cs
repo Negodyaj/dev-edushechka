@@ -10,9 +10,9 @@ namespace DevEdu.DAL.Models
         {
 
             return obj != null &&
-              obj is TagDto tagDto &&
-              Id == tagDto.Id &&
-              Name == tagDto.Name;
+                   obj is TagDto tagDto &&
+                   Id == tagDto.Id &&
+                   Name == tagDto.Name;
         }
 
         public override int GetHashCode()

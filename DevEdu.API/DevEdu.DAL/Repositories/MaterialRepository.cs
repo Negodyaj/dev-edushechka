@@ -67,7 +67,7 @@ namespace DevEdu.DAL.Repositories
                     _materialSelectByIdProcedure,
                     (material, tag) =>
                     {
-                        if(result == null)
+                        if (result == null)
                         {
                             result = material;
                             result.Tags = new List<TagDto> { tag };
@@ -108,8 +108,8 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection.Execute(
                 _materialDeleteProcedure,
-                new 
-                { 
+                new
+                {
                     id,
                     isDeleted
                 },

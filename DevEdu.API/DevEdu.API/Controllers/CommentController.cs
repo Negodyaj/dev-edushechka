@@ -37,7 +37,7 @@ namespace DevEdu.API.Controllers
         //  api/comment/by-user/1
         [HttpGet("by-user/{userId}")]
         [Description("Return comments by user")]
-        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<CommentInfoOutputModel>), StatusCodes.Status200OK)]
         public List<CommentInfoOutputModel> GetCommentsByUserId(int userId)
         {
             var dto = _commentService.GetCommentsByUserId(userId);
@@ -58,20 +58,21 @@ namespace DevEdu.API.Controllers
         //  api/comment/5
         [HttpDelete("{id}")]
         [Description("Delete comment by id")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public int DeleteComment(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public void DeleteComment(int id)
         {
-            return _commentService.DeleteComment(id);
+            _commentService.DeleteComment(id);
         }
 
         //  api/comment/5
         [HttpPut("{id}")]
         [Description("Update comment by id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public int UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
+        public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
         {
             var dto = _mapper.Map<CommentDto>(model);
-            return _commentService.UpdateComment(id, dto);
+            var output= _commentService.UpdateComment(id, dto);
+            return _mapper.Map<CommentInfoOutputModel>(output);
         }
     }
 }

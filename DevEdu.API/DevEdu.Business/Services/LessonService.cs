@@ -1,9 +1,9 @@
 ﻿using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using DevEdu.Business.ValidationHelpers;
 
 namespace DevEdu.Business.Services
 {
@@ -12,15 +12,21 @@ namespace DevEdu.Business.Services
         private readonly ILessonRepository _lessonRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IUserValidationHelper _userValidationHelper;
+        private readonly ILessonValidationHelper _lessonValidationHelper;
         public LessonService(
-            ILessonRepository lessonRepository, 
+            ILessonRepository lessonRepository,
             ICommentRepository commentRepository,
-            IUserRepository userRepository
-            )
+            IUserRepository userRepository,
+            IUserValidationHelper userValidationHelper,
+            ILessonValidationHelper lessonValidationHelper
+        )
         {
             _lessonRepository = lessonRepository;
             _commentRepository = commentRepository;
             _userRepository = userRepository;
+            _userValidationHelper = userValidationHelper;
+            _lessonValidationHelper = lessonValidationHelper;
         }
 
         public void AddCommentToLesson(int lessonId, CommentDto commentDto)
@@ -69,7 +75,7 @@ namespace DevEdu.Business.Services
         public void DeleteTopicFromLesson(int lessonId, int topicId) => 
             _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
 
-        public void AddTopicToLesson(int lessonId, int topicId) => 
+        public void AddTopicToLesson(int lessonId, int topicId) =>
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
 
         public void AddStudentToLesson(int lessonId, int userId)
@@ -96,15 +102,8 @@ namespace DevEdu.Business.Services
 
         public void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
-            // check if user exists
-            var user = _userRepository.SelectUserById(userId);
-            if (user == default)
-                throw new EntityNotFoundException($"user with id = {userId} was not found");
-
-            // check if lesson exists
-            var lesson = _lessonRepository.SelectLessonById(lessonId);
-            if (lesson == default)
-                throw new EntityNotFoundException($"lesson with id = {lessonId} was not found");
+            _userValidationHelper.CheckUserExistence(userId);
+            _lessonValidationHelper.CheckLessonExistence(lessonId);
 
             // check if user relates to lesson
             /*

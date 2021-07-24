@@ -11,7 +11,7 @@ namespace DevEdu.DAL.Repositories
         private const string _topicDeleteProcedure = "dbo.Topic_Delete";
         private const string _topicSelectByIdProcedure = "dbo.Topic_SelectById";
         private const string _topicSelectAllProcedure = "dbo.Topic_SelectAll";
-        private const string _topicUpdateProcedure = "dbo.Topic_Update";     
+        private const string _topicUpdateProcedure = "dbo.Topic_Update";
         private const string _addTopicToCourseProcedure = "[dbo].[Course_Topic_Insert]";
         private const string _addMultipleTopicsToCourseProcedure = "[dbo].[Course_Topic_AddMultiple]";
         private const string _deleteTopicToCourseProcedure = "[dbo].[Course_Topic_Delete]";
@@ -35,18 +35,18 @@ namespace DevEdu.DAL.Repositories
              );
         }
 
-        public void DeleteTopic(int id)  
+        public void DeleteTopic(int id)
         {
-             _connection.Execute(
-              _topicDeleteProcedure,
-              new { id },
-              commandType: CommandType.StoredProcedure
-          );       
-            }
+            _connection.Execute(
+             _topicDeleteProcedure,
+             new { id },
+             commandType: CommandType.StoredProcedure
+         );
+        }
 
         public TopicDto GetTopic(int id)
         {
-            return _connection.QuerySingleOrDefault<TopicDto>(   
+            return _connection.QuerySingleOrDefault<TopicDto>(
               _topicSelectByIdProcedure,
               new { id },
               commandType: CommandType.StoredProcedure
@@ -63,7 +63,7 @@ namespace DevEdu.DAL.Repositories
               .AsList();
         }
 
-        public void UpdateTopic(TopicDto topicDto)       
+        public void UpdateTopic(TopicDto topicDto)
         {
             _connection.Execute(
                 _topicUpdateProcedure,
