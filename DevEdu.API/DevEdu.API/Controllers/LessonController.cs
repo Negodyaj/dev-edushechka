@@ -112,8 +112,8 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel> (dto);
         }
 
-        // api/lesson/{lessonId}/comment/{commentId}
-        [HttpPost("{lessonId}/comment/{commentId}")]
+        // api/lesson/{lessonId}
+        [HttpPost("{lessonId}")]
         [Description("Add a lesson's comment.")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel commentInputModel)

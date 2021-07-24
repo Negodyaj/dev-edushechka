@@ -56,7 +56,7 @@ namespace DevEdu.DAL.Repositories
 
         public void AddCommentToLesson(int lessonId, int commentId)
         {
-            _connection.QueryFirst<int>(
+            _connection.Execute(
                 _commentAddToLessonProcedure,
                 new
                 {
