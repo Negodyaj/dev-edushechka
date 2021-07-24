@@ -23,7 +23,6 @@ namespace DevEdu.Business.ValidationHelpers
             var task = _taskRepository.GetTaskById(taskId);
             if (task == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), taskId));
-           //return task;
         }
 
         public void CheckTaskExistenceWithValidation(int taskId, int userId)
@@ -39,7 +38,7 @@ namespace DevEdu.Business.ValidationHelpers
 
             var result = grByT.FirstOrDefault(gt => grByU.Any(gu => gu.Id == gt.Id));
             if (result == default)
-                throw new AuthorizationException($"user with id = {userId} doesn't relate to task with id = {taskId}");
+                throw new AuthorizationException(string.Format(ServiceMessages.UserNotRelatedToTaskMessage, userId, taskId));
         }
     }
 }

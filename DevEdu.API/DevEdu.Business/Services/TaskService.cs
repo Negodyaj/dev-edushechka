@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
@@ -27,20 +28,20 @@ namespace DevEdu.Business.Services
             _taskValidationHelper = taskValidationHelper;
         }
 
+        public TaskDto GetTaskById(int id)
+        {
+            // check if task exists
+            _taskValidationHelper.CheckTaskExistence(id);
+            var taskDto = _taskRepository.GetTaskById(id);
+            return taskDto;
+        }
+
         public TaskDto GetTaskByIdWithValidation(int id, int userId)
         {
             _taskValidationHelper.CheckTaskExistenceWithValidation(id, userId);
 
             // check if task exists
             var taskDto = GetTaskById(id);
-            return taskDto;
-        }
-
-        public TaskDto GetTaskById(int id)
-        {
-            // check if task exists
-            _taskValidationHelper.CheckTaskExistence(id);
-            var taskDto = _taskRepository.GetTaskById(id);
             return taskDto;
         }
 
@@ -62,7 +63,7 @@ namespace DevEdu.Business.Services
         {
             var tasks = _taskRepository.GetTasks();
             if (tasks == default)
-                throw new EntityNotFoundException($"not found any task");
+                throw new EntityNotFoundException(ServiceMessages.NotFounAnyTaskMessage);
             return tasks;
         }
 

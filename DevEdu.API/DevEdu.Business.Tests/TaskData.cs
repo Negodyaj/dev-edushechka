@@ -6,7 +6,6 @@ namespace DevEdu.Business.Tests
     public static class TaskData
     {
         public const int expectedTaskId = 55;
-        public const int expectedUserId = 2;
 
         public static TaskDto GetTaskDtoWithoutTags()
         {

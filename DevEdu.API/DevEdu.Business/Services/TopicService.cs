@@ -1,7 +1,9 @@
 ﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.ValidationHelpers;
 
 namespace DevEdu.Business.Services
 {
@@ -9,14 +11,20 @@ namespace DevEdu.Business.Services
     {
         private readonly ITopicRepository _topicRepository;
         private readonly ITagRepository _tagRepository;
+        private readonly ITopicValidationHelper _topicValidationHelper;
+        private readonly ITagValidationHelper _tagValidationHelper;
 
         public TopicService(
             ITopicRepository topicRepository,
-            ITagRepository tagRepository
+            ITagRepository tagRepository,
+            ITopicValidationHelper topicValidationHelper,
+            ITagValidationHelper tagValidationHelper
             )
         {
             _topicRepository = topicRepository;
             _tagRepository = tagRepository;
+            _topicValidationHelper = topicValidationHelper;
+            _tagValidationHelper = tagValidationHelper;
         }
 
         public int AddTopic(TopicDto topicDto)
@@ -43,23 +51,15 @@ namespace DevEdu.Business.Services
 
         public int AddTagToTopic(int topicId, int tagId)
         {
-            var topic = _topicRepository.GetTopic(topicId);
-            if (topic == default)
-                throw new EntityNotFoundException($"topic with id = {topicId} was not found");
-            var tag = _tagRepository.SelectTagById(tagId);
-            if (tag == default)
-                throw new EntityNotFoundException($"tag with id = {tagId} was not found");
+            _topicValidationHelper.CheckTopicExistence(topicId);
+            _tagValidationHelper.CheckTagExistence(tagId);
             return _topicRepository.AddTagToTopic(topicId, tagId);
         }
 
         public int DeleteTagFromTopic(int topicId, int tagId)
         {
-            var topic = _topicRepository.GetTopic(topicId);
-            if (topic == default)
-                throw new EntityNotFoundException($"topic with id = {topicId} was not found");
-            var tag = _tagRepository.SelectTagById(tagId);
-            if (tag == default)
-                throw new EntityNotFoundException($"tag with id = {tagId} was not found");
+            _topicValidationHelper.CheckTopicExistence(topicId);
+            _tagValidationHelper.CheckTagExistence(tagId);
             return _topicRepository.DeleteTagFromTopic(topicId, tagId);
         }
     }
