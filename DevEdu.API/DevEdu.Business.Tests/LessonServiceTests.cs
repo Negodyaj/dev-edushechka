@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using DevEdu.Business.Services;
-using DevEdu.DAL.Models;
+﻿using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -10,15 +8,21 @@ namespace DevEdu.Business.Tests
 {
     public class LessonServiceTests
     {
-        private readonly Mock<ILessonRepository> _lessonRepoMock;
-        private readonly Mock<ICommentRepository> _commentRepoMock;
-        private readonly Mock<IUserRepository> _userRepoMock;
+        private Mock<ILessonRepository> _lessonRepoMock;
+        private Mock<ICommentRepository> _commentRepoMock;
+        private Mock<IUserRepository> _userRepoMock;
+        private Mock<IUserValidationHelper> _userValidationHelperMock;
+        private Mock<ILessonValidationHelper> _lessonValidationHelperMock;
 
-        public LessonServiceTests()
+
+        [SetUp]
+        public void Setup()
         {
             _lessonRepoMock = new Mock<ILessonRepository>();
             _commentRepoMock = new Mock<ICommentRepository>();
             _userRepoMock = new Mock<IUserRepository>();
+            _userValidationHelperMock = new Mock<IUserValidationHelper>();
+            _lessonValidationHelperMock = new Mock<ILessonValidationHelper>();
         }
 
         [Test]
@@ -31,7 +35,9 @@ namespace DevEdu.Business.Tests
 
             _lessonRepoMock.Setup(x => x.AddLesson(lessonDto)).Returns(expected);
 
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object);
+            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
+                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
+
             //When
             var actualId = sut.AddLesson(lessonDto);
 
@@ -50,7 +56,8 @@ namespace DevEdu.Business.Tests
 
             _lessonRepoMock.Setup(x => x.SelectAllLessonsByGroupId(groupId)).Returns(expected);
 
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object);
+            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
+                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
 
             //When
             var actual = sut.SelectAllLessonsByGroupId(groupId);
@@ -70,7 +77,8 @@ namespace DevEdu.Business.Tests
 
             _lessonRepoMock.Setup(x => x.SelectAllLessonsByTeacherId(teacherId)).Returns(expected);
 
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object);
+            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
+                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
 
             //When
             var actual = sut.SelectAllLessonsByTeacherId(teacherId);
@@ -90,7 +98,8 @@ namespace DevEdu.Business.Tests
 
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(expected);
 
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object);
+            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
+                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object); 
 
             //When
             var actual = sut.SelectLessonById(lessonId);
@@ -105,7 +114,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var lesson = LessonData.GetSelectedLessonDto();
-            var comments = CommentData.GetComments();
+            var comments = CommentData.GetListCommentsDto();
 
             var expected = lesson;
             expected.Comments = comments;
@@ -115,14 +124,15 @@ namespace DevEdu.Business.Tests
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lesson);
             _commentRepoMock.Setup(x => x.SelectCommentsFromLessonByLessonId(lessonId)).Returns(comments);
 
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object);
+            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
+                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
 
             //When
             var actual = sut.SelectLessonWithCommentsById(lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
-            _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.AtLeastOnce);
+            _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
             _commentRepoMock.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Once);
         }
 
@@ -131,7 +141,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var lesson = LessonData.GetSelectedLessonDto();
-            var comments = CommentData.GetComments();
+            var comments = CommentData.GetListCommentsDto();
             var students = LessonData.GetStudents();
 
             var expected = lesson;
@@ -144,15 +154,16 @@ namespace DevEdu.Business.Tests
             _commentRepoMock.Setup(x => x.SelectCommentsFromLessonByLessonId(lessonId)).Returns(comments);
             _lessonRepoMock.Setup(x => x.SelectStudentsLessonByLessonId(lessonId)).Returns(students);
 
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object);
+            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
+                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
 
             //When
             var actual = sut.SelectLessonWithCommentsAndStudentsById(lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
-            _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.AtLeastOnce);
-            _commentRepoMock.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.AtLeastOnce);
+            _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _commentRepoMock.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Once);
             _lessonRepoMock.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Once);
         }
 
@@ -168,14 +179,16 @@ namespace DevEdu.Business.Tests
             _lessonRepoMock.Setup(x => x.UpdateLesson(updatedLesson));
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(expected);
 
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object);
+            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
+                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
+
             //When
             var actual = sut.UpdateLesson(updatedLesson);
 
             //Then
             Assert.AreEqual(expected, actual);
             _lessonRepoMock.Verify(x => x.UpdateLesson(updatedLesson), Times.Once);
-            _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.AtLeastOnce);
+            _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
         }
 
     }
