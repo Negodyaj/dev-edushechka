@@ -1,5 +1,4 @@
-﻿using DevEdu.Business.Constants;
-using DevEdu.Business.Exceptions;
+﻿using DevEdu.Business.Exceptions;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
@@ -38,14 +37,10 @@ namespace DevEdu.Business.Services
 
         public UserDto SelectUserById(int id)
         {
-            if (id < 0)
-            {
-                throw new Exception($"{nameof(id)} less then 0");
-            }
+            _userValidationHelper.ChekUserIdDoesNotLessThenZero(id);
             _userValidationHelper.CheckUserExistence(id);
 
             var user = _userRepository.SelectUserById(id);
-            
             return user;
         }
 
@@ -58,18 +53,27 @@ namespace DevEdu.Business.Services
             return user;
         }
 
-        public List<UserDto> SelectUsers() => _userRepository.SelectUsers();
+        public List<UserDto> SelectUsers()
+        {
+            var list = _userRepository.SelectUsers();
+            if (list == default)
+                throw new Exception($"{nameof(list)} is empty");
+
+            return list;
+        }
 
         public UserDto UpdateUser(UserDto dto)
         {
             _userValidationHelper.CheckUserExistence(dto.Id);
 
             _userRepository.UpdateUser(dto);
-            return _userRepository.SelectUserById(dto.Id);
+            var user = _userRepository.SelectUserById(dto.Id);
+            return user;
         }
 
         public void DeleteUser(int id)
         {
+            _userValidationHelper.ChekUserIdDoesNotLessThenZero(id);
             _userValidationHelper.CheckUserExistence(id);
 
             _userRepository.DeleteUser(id);
@@ -77,6 +81,7 @@ namespace DevEdu.Business.Services
 
         public void AddUserRole(int userId, int roleId)
         {
+            _userValidationHelper.CheckUserIdAndRoleIdDoesNotLessThanZero(userId, roleId);
             _userValidationHelper.CheckUserExistence(userId);
             _userValidationHelper.ChekRoleExistence(roleId);
 
@@ -85,6 +90,7 @@ namespace DevEdu.Business.Services
 
         public void DeleteUserRole(int userId, int roleId)
         {
+            _userValidationHelper.CheckUserIdAndRoleIdDoesNotLessThanZero(userId, roleId);
             _userValidationHelper.CheckUserExistence(userId);
             _userValidationHelper.ChekRoleExistence(roleId);
 

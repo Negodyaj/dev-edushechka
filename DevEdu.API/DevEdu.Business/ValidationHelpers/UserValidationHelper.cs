@@ -28,5 +28,17 @@ namespace DevEdu.Business.ValidationHelpers
             if (role == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(role), roleId));
         }
+
+        public void CheckUserIdAndRoleIdDoesNotLessThanZero(int userId, int roleId)
+        {
+            if (userId < 0 || roleId < 0)
+                throw new Exception($"{nameof(userId)} or {nameof(roleId)} less then 0");
+        }
+
+        public void ChekUserIdDoesNotLessThenZero(int id)
+        {
+            if (id < 0)
+                throw new Exception($"{nameof(id)} less then 0");
+        }
     }
 }
