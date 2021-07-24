@@ -1,4 +1,6 @@
-﻿using DevEdu.Business.Exceptions;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
@@ -10,10 +12,12 @@ namespace DevEdu.Business.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserValidationHelper _userValidationHelper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IUserValidationHelper helper)
         {
             _userRepository = userRepository;
+            _userValidationHelper = helper;
         }
 
         public int AddUser(UserDto dto)
@@ -22,7 +26,7 @@ namespace DevEdu.Business.Services
 
             if (dto.Roles == null || dto.Roles.Count == 0)
             {
-                return addedUserId;
+                AddUserRole(addedUserId, ((int)Role.Student));
             }
 
             foreach (var role in dto.Roles)
@@ -34,10 +38,14 @@ namespace DevEdu.Business.Services
 
         public UserDto SelectUserById(int id)
         {
-            var user = _userRepository.SelectUserById(id);
-            if (user == default)
-                throw new EntityNotFoundException($"user with id = {id} was not found");
+            if (id < 0)
+            {
+                throw new Exception($"{nameof(id)} less then 0");
+            }
+            _userValidationHelper.CheckUserExistence(id);
 
+            var user = _userRepository.SelectUserById(id);
+            
             return user;
         }
 
@@ -54,9 +62,7 @@ namespace DevEdu.Business.Services
 
         public UserDto UpdateUser(UserDto dto)
         {
-            var user = _userRepository.SelectUserById(dto.Id);
-            if (user == default)
-                throw new EntityNotFoundException($"{nameof(user)} with id = {user.Id} was not found");
+            _userValidationHelper.CheckUserExistence(dto.Id);
 
             _userRepository.UpdateUser(dto);
             return _userRepository.SelectUserById(dto.Id);
@@ -64,35 +70,23 @@ namespace DevEdu.Business.Services
 
         public void DeleteUser(int id)
         {
-            var user = _userRepository.SelectUserById(id);
-            if (user == default)
-                throw new EntityNotFoundException($"{nameof(user)} with id = {id} was not found");
+            _userValidationHelper.CheckUserExistence(id);
 
             _userRepository.DeleteUser(id);
         }
 
         public void AddUserRole(int userId, int roleId)
         {
-            var user = _userRepository.SelectUserById(userId);
-            if (user == default)
-                throw new EntityNotFoundException($"{nameof(user)} with id = {userId} was not found");
-
-            var role = Enum.GetName(typeof(Role), roleId);
-            if (role == default)
-                throw new EntityNotFoundException($"{nameof(role)} with id = {roleId} was not found");
+            _userValidationHelper.CheckUserExistence(userId);
+            _userValidationHelper.ChekRoleExistence(roleId);
 
             _userRepository.AddUserRole(userId, roleId);
         }
 
         public void DeleteUserRole(int userId, int roleId)
         {
-            var user = _userRepository.SelectUserById(userId);
-            if (user == default)
-                throw new EntityNotFoundException($"{nameof(user)} with id = {userId} was not found");
-
-            var role = Enum.GetName(typeof(Role), roleId);
-            if (role == default)
-                throw new EntityNotFoundException($"{nameof(role)} with id = {roleId} was not found");
+            _userValidationHelper.CheckUserExistence(userId);
+            _userValidationHelper.ChekRoleExistence(roleId);
 
             _userRepository.DeleteUserRole(userId, roleId);
         }
