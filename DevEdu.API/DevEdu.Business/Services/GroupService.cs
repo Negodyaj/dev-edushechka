@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 
@@ -7,16 +8,25 @@ namespace DevEdu.Business.Services
     public class GroupService : IGroupService
     {
         private readonly IGroupRepository _groupRepository;
-        public GroupService(IGroupRepository groupRepository)
+        private readonly IUserRepository _userRepository;
+        public GroupService(IGroupRepository groupRepository, IUserRepository userRepository)
         {
             _groupRepository = groupRepository;
+            _userRepository = userRepository;
         }
 
         public int AddGroup(GroupDto groupDto) => _groupRepository.AddGroup(groupDto);
 
         public void DeleteGroup(int id) => _groupRepository.DeleteGroup(id);
 
-        public GroupDto GetGroup(int id) => _groupRepository.GetGroup(id);
+        public GroupDto GetGroup(int id)
+        {
+            var dto = _groupRepository.GetGroup(id);
+            dto.Students = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Student);
+            dto.Tutors = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Tutor);
+            dto.Teachers = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Teacher);
+            return dto;
+        }
 
         public List<GroupDto> GetGroups() => _groupRepository.GetGroups();
 

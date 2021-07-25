@@ -65,7 +65,7 @@ namespace DevEdu.API.Configuration
         {
             CreateMap<CourseDto, CourseInfoOutputModel>();
             CreateMap<GroupDto, GroupOutputBaseModel>();
-            CreateMap<GroupDto, GroupInputModel>()
+            CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<GroupDto, GroupFullOutputModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));

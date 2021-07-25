@@ -31,6 +31,8 @@ namespace DevEdu.DAL.Repositories
         private const string _taskGroupSelectByIdProcedure = "dbo.Group_Task_SelectById";
         private const string _taskGroupUpdateProcedure = "dbo.Group_Task_Update";
 
+        public GroupRepository() { }
+
         public int AddGroup(GroupDto groupDto)
         {
             return _connection.QuerySingle<int>
@@ -58,31 +60,15 @@ namespace DevEdu.DAL.Repositories
 
         public GroupDto GetGroup(int id)
         {
-            var userDictionary = new Dictionary<int, UserDto>();
-            GroupDto result = default;
-            UserDto resultUser = default;
-            int index = 0;
             return _connection
-                .Query<GroupDto, CourseDto, Role, UserDto, GroupDto>
+                .Query<GroupDto, CourseDto, GroupDto>
             (
                 _groupSelectByIdProcedure,
-                (group, course, role, user) =>
+                (group, course) =>
                 {
-                    if (!userDictionary.TryGetValue(user.Id, out resultUser))
-                    {
-                        result = group;
-                        result.Course = course;
-                        result.Users = new List<UserDto> { user };
-                        result.Users[index].Roles = new List<Role> { role };
-                        userDictionary.Add(user.Id, resultUser);
-                    }
-                    else
-                    {
-                        result.Users.Add(user);
-                        result.Users[index].Roles.Add(role);
-                    }
-                    index++;
-                    return result;
+                    GroupDto dto = group;
+                    group.Course = course;
+                    return dto;
                 },
                 new { id },
                 splitOn: "Id",
@@ -93,21 +79,16 @@ namespace DevEdu.DAL.Repositories
 
         public List<GroupDto> GetGroups()
         {
-            var groupDictionary = new Dictionary<int, GroupDto>();
-            GroupDto result = default;
             return _connection
                 .Query<GroupDto, CourseDto, GroupDto>
             (
                 _groupSelectAllProcedure,
                 (group, course) =>
                 {
-                    if (!groupDictionary.TryGetValue(group.Id, out result))
-                    {
-                        result = group;
-                        result.Course = course;
-                    }
-                    groupDictionary.Add(group.Id, result);              
-                    return result;
+                    GroupDto groupDto;
+                    groupDto = group;
+                    groupDto.Course = course;
+                    return groupDto;
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure

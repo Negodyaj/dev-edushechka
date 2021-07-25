@@ -26,21 +26,21 @@ namespace DevEdu.API.Controllers
         //  api/Group/5
         [HttpGet("{id}")]
         [Description("Return Group by id")]
-        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]  // todo
-        public GroupOutputModel GetGroup(int id)
+        [ProducesResponseType(typeof(GroupFullOutputModel), StatusCodes.Status200OK)]  // todo
+        public GroupFullOutputModel GetGroup(int id)
         {
             var dto = _groupService.GetGroup(id);
-            return _mapper.Map<GroupOutputModel>(dto);
+            return _mapper.Map<GroupFullOutputModel>(dto);
         }
 
         //  api/Group/
         [HttpGet]
         [Description("Get all Groups")]
-        [ProducesResponseType(typeof(List<GroupFullOutputModel>), StatusCodes.Status200OK)]
-        public List<GroupFullOutputModel> GetAllGroups()
+        [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
+        public List<GroupOutputModel> GetAllGroups()
         {
             var dto = _groupService.GetGroups();
-            return _mapper.Map<List<GroupFullOutputModel>>(dto);
+            return _mapper.Map<List<GroupOutputModel>>(dto);
         }
 
         //  api/Group
