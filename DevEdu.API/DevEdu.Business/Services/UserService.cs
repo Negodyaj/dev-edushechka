@@ -1,6 +1,7 @@
 ﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Services
 {
@@ -13,9 +14,11 @@ namespace DevEdu.Business.Services
             _userRepository = userRepository;
         }
 
-        public int AddUser(UserDto dto)
+        public int AddUser(UserDto dto, IAuthenticationService authenticationService)
         {
-            AuthenticationService authenticationService = new AuthenticationService();
+            if (dto.Roles.Count == 0)
+                dto.Roles.Add(Role.Student);
+
             dto.Password = authenticationService.HashPassword(dto.Password);
 
             var addedUserId = _userRepository.AddUser(dto);

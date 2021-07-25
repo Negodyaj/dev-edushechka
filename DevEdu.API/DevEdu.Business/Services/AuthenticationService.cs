@@ -12,7 +12,6 @@ namespace DevEdu.Business.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserService _userService;
-        public AuthenticationService(){}
 
         public AuthenticationService(IUserService userService)
         {
