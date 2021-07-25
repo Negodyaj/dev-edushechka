@@ -98,6 +98,7 @@ namespace DevEdu.DAL.Repositories
                 _paymentUpdateProcedure,
                 new
                 {
+                    paymentDto.Id,
                     paymentDto.Date,
                     paymentDto.Sum,
                     paymentDto.IsPaid

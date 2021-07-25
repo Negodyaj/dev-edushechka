@@ -27,6 +27,7 @@ namespace DevEdu.Business.Services
             var paymentInDb = _paymentRepository.GetPayment(id);
             if(paymentInDb.IsDeleted == true)  
             throw new EntityNotFoundException("This payment is deleted");
+            dto.User = new UserDto { Id = paymentInDb.User.Id };
             
             dto.Id = id;
             _paymentRepository.UpdatePayment(dto);

@@ -63,7 +63,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [Description("Update payment by id")]
-        public string UpdatePayment(int id, [FromBody] PaymentInputModel model)
+        public string UpdatePayment(int id, [FromBody] PaymentUpdateInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
             _paymentService.UpdatePayment(id, dto);
