@@ -3,6 +3,7 @@ using System.Globalization;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Models.OutputModels.Payment;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.API.Configuration
@@ -110,6 +111,8 @@ namespace DevEdu.API.Configuration
             CreateMap<GroupDto, GroupOutputMiniModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<TaskDto, TaskInfoOutputMiniModel>();
+            CreateMap<PaymentDto, PaymentOutputModel>()
+                .ForMember(dest => dest.Date , opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
         }
     }
 }

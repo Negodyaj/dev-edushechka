@@ -23,8 +23,4 @@
     <ProjectReference Include="..\DevEdu.DAL\DevEdu.DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\OutputModels\Payment\" />
-  </ItemGroup>
-
 </Project>

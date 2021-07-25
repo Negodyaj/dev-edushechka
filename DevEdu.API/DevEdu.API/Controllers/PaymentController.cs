@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels.Payment;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
@@ -41,35 +42,36 @@ namespace DevEdu.API.Controllers
 
         //  api/payment
         [HttpPost]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status201Created)]
         [Description("Add one payment")]
-        public int AddPayment([FromBody] PaymentInputModel model)
+        public PaymentOutputModel AddPayment([FromBody] PaymentInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
             int id = _paymentService.AddPayment(dto);
             dto = _paymentService.GetPayment(id);
-            return 1; 
+            
+            return _mapper.Map<PaymentOutputModel>(dto);
         }
 
         //  api/payment/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+        [ProducesResponseType (StatusCodes.Status204NoContent)]
         [Description("Delete payment by id")]
-        public string DeletePayment(int id)
+        public void DeletePayment(int id)
         {
             _paymentService.DeletePayment(id);
-            return $"deleted payment id: {id}";
         }
 
         //  api/payment/5
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [Description("Update payment by id")]
-        public string UpdatePayment(int id, [FromBody] PaymentUpdateInputModel model)
+        public PaymentOutputModel UpdatePayment(int id, [FromBody] PaymentUpdateInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
             _paymentService.UpdatePayment(id, dto);
-            return $"Text";
+            dto = _paymentService.GetPayment(id);
+            return _mapper.Map<PaymentOutputModel>(dto);
         }
         //  api/payment/bulk
         [HttpPost("bulk")]
