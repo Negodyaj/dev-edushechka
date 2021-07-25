@@ -79,20 +79,13 @@ namespace DevEdu.Business.Services
 
         public void AddCommentOnStudentAnswer(int taskstudentId, int commentId) => _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskstudentId, commentId);
 
-        public List<StudentAnswerOnTaskDto> GetAllStudentAswersOnTaskByGroupsAndTask(int groupId, int taskId)
-        {
-            StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
-            dto.Task = new TaskDto { Id = taskId };
-            dto.User = new UserDto();
-            dto.Comments = new List<CommentDto>();
-            return new List<StudentAnswerOnTaskDto>();
-        }
-
-        public List<StudentAnswerOnTaskDto> GetPresentGroupForStudentByUserId(int userId)
+        public List<StudentAnswerOnTaskDto> GetAnswersForStudentInGroup(int userId)
         {
             int groupId = _groupRepository.GetPresentGroupForStudentByUserId(userId);
+            var listTasksForGroup = _groupRepository.GetTaskGroupByGroupId(groupId);
+            var dto = _studentAnswerOnTaskRepository.GetStudentAnswersOnTasksByGroupId(groupId, userId, listTasksForGroup);
 
-
+            return dto;
         }
     }
 }

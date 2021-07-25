@@ -13,8 +13,6 @@ namespace DevEdu.Business.Services
         void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId);
         void UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto);
         void AddCommentOnStudentAnswer(int taskstudentId, int commentId);
-        List<StudentAnswerOnTaskDto> GetAllStudentAswersOnTaskByGroupsAndTask(int groupId, int taskId);
-
-        List<StudentAnswerOnTaskDto> GetPresentGroupForStudentByUserId(int userId);
+        List<StudentAnswerOnTaskDto> GetAnswersForStudentInGroup(int userId);
     }
 }

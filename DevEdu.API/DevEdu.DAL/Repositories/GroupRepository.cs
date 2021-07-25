@@ -204,7 +204,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection.QuerySingle<int>(
                    _groupSelectPresentGroupForStudentByUserId,
-                   new { userId },
+                   new { Id = userId },
                    commandType: CommandType.StoredProcedure
               );
         }

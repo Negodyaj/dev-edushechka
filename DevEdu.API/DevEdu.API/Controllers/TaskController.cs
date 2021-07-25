@@ -234,6 +234,8 @@ namespace DevEdu.API.Controllers
             var userDto = userService.SelectUserById(inputModel.UserId);
             commentDto.User = userDto;
 
+            _studentAnswerOnTaskService.AddCommentOnStudentAnswer(taskStudentId, commentId);
+
             var output = _commentRepository.GetComment(commentId);
             return _mapper.Map<CommentInfoOutputModel>(output);
         }
@@ -249,29 +251,16 @@ namespace DevEdu.API.Controllers
             return output;
         }
 
-        // api/task/{taskId}/group/{groupId}}
-        [HttpGet("{taskId}/group/{groupId}")]
-        [Description("Get all student task answers by group")]
-        [ProducesResponseType(typeof(List<StudentAnswerOnTaskFullOutputModel>), StatusCodes.Status200OK)]
-        public List<StudentAnswerOnTaskFullOutputModel> GetAllStudentAswersOnTaskByGroupsAndTask(int groupId, int taskId)
+        // api/task/group/user/answer-on-task-in-group}
+        [HttpGet("group/user/answer-on-task-in-group")]
+        [Description("Get all student task answers by groups")]
+        [ProducesResponseType(typeof(List<StudentAnswerOnlyAnswersOutputModel>), StatusCodes.Status200OK)]
+        public List<StudentAnswerOnlyAnswersOutputModel> GetAnswersForStudentInGroup(int userId)
         {
-            var dto = _studentAnswerOnTaskService.GetAllStudentAswersOnTaskByGroupsAndTask(groupId, taskId);
-            var output = _mapper.Map<List<StudentAnswerOnTaskFullOutputModel>>(dto);
+            var dto = _studentAnswerOnTaskService.GetAnswersForStudentInGroup(userId);
+            var output = _mapper.Map<List<StudentAnswerOnlyAnswersOutputModel>>(dto);
 
             return output;
         }
-
-        //// api/user/{userId}/answer-in-group}
-        //[HttpGet("{taskId}/group/{groupId}")]
-        //[Description("Get all student task answers by group")]
-        //[ProducesResponseType(typeof(List<StudentAnswerOnTaskFullOutputModel>), StatusCodes.Status200OK)]
-        //public List<StudentAnswerOnTaskFullOutputModel> GetAnswersForStudentInGroup(int userId)
-        //{
-        //    var dto = _groupService.GetAnswersForStudentInGroup(userId);
-
-
-        //    _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId);
- 
-        //}
     }
 }

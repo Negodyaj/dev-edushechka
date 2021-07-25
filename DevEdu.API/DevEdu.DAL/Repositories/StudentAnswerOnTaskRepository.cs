@@ -150,12 +150,12 @@ namespace DevEdu.DAL.Repositories
         
         public void AddCommentOnStudentAnswer(int taskstudentId, int commentId)
         {
-            _connection.Query<int>(
+            _connection.QuerySingle<int>(
                 _taskStudentCommentInsert,
                 new
                 {
-                    taskstudentId,
-                    commentId
+                    TaskStudentId = taskstudentId,
+                    CommentId = commentId
                 },
                 commandType: CommandType.StoredProcedure
            );
@@ -175,6 +175,51 @@ namespace DevEdu.DAL.Repositories
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure)
                 .ToList();
+        }
+
+        public List<StudentAnswerOnTaskDto> GetStudentAnswersOnTasksByGroupId(int groupId, int userId, List<GroupTaskDto> groupTaskDto)
+        {
+            List<StudentAnswerOnTaskDto> listResults = new List<StudentAnswerOnTaskDto>();
+            StudentAnswerOnTaskDto answer = new StudentAnswerOnTaskDto();
+
+            List<int> listTaskId = new List<int>();
+
+            foreach(GroupTaskDto gt in groupTaskDto)
+            {
+                listTaskId.Add(gt.Task.Id);
+            }
+
+
+            foreach (int taskId in listTaskId)
+            {
+                var mock = _connection.Query<StudentAnswerOnTaskDto, UserDto, StudentAnswerOnTaskDto>(
+                        _taskStudentSelectByTaskAndStudent,
+                        (answerDto, userDto) =>
+                        {
+                            if (listTaskId != null || listTaskId.Count == 0)
+                            {
+                                answer = answerDto;
+                                answer.User = userDto;
+                                listResults.Add(answer);
+                                return null;
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                        },
+                        new
+                        {
+                            taskId,
+                            StudentId = userId
+                        },
+                        splitOn: "Id",
+                        commandType: CommandType.StoredProcedure)
+                    .ToList();
+
+            }
+
+            return listResults;
         }
     }
 }
