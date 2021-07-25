@@ -133,7 +133,6 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddGroupLesson(int groupId, int lessonId)
         public int AddGroupToLesson(int groupId, int lessonId)
         {
             return _connection.Execute(

@@ -36,9 +36,9 @@ namespace DevEdu.Business.Services
         
         public List<GroupDto> GetGroups() => _groupRepository.GetGroups();
 
-        public void AddGroupLesson(int groupId, int lessonId) => _groupRepository.AddGroupLesson(groupId, lessonId);
+        public int AddGroupLesson(int groupId, int lessonId) => _groupRepository.AddGroupToLesson(groupId, lessonId);
 
-        public void RemoveGroupLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupLesson(groupId, lessonId);
+        public int RemoveGroupLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
 
         public GroupDto UpdateGroup(int id, GroupDto groupDto) => _groupRepository.UpdateGroup(id, groupDto);
         public GroupDto ChangeGroupStatus(int groupId, int statusId) => _groupRepository.ChangeGroupStatus(groupId, statusId);
