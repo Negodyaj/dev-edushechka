@@ -42,8 +42,9 @@ namespace DevEdu.Business.Services
             return materialId;
         }
 
-        public MaterialDto UpdateMaterial(MaterialDto dto)
+        public MaterialDto UpdateMaterial(int id, MaterialDto dto)
         {
+            dto.Id = id;
             _materialRepository.UpdateMaterial(dto);
             return _materialRepository.GetMaterialById(dto.Id);
         }

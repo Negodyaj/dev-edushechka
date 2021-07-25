@@ -23,9 +23,10 @@ namespace DevEdu.Business.Tests
         public void AddMaterial_MaterialDtoWithoutTags_MaterialCreated()
         {
             //Given
+            var expectedId = 66;
             var materialData = MaterialData.GetMaterialDtoWithoutTags();
 
-            _materialRepoMock.Setup(x => x.AddMaterial(materialData)).Returns(MaterialData.expectedId);
+            _materialRepoMock.Setup(x => x.AddMaterial(materialData)).Returns(expectedId);
             _materialRepoMock.Setup(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()));
 
             var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
@@ -34,7 +35,7 @@ namespace DevEdu.Business.Tests
             var actualId = sut.AddMaterial(materialData);
 
             //Then
-            Assert.AreEqual(MaterialData.expectedId, actualId);
+            Assert.AreEqual(expectedId, actualId);
             _materialRepoMock.Verify(x => x.AddMaterial(materialData), Times.Once);
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
@@ -43,10 +44,11 @@ namespace DevEdu.Business.Tests
         public void AddMaterial_MaterialDtoWithTags_MaterialWithTagsCreated()
         {
             //Given
+            var expectedId = 66;
             var materialData = MaterialData.GetMaterialDtoWithTags();
 
-            _materialRepoMock.Setup(x => x.AddMaterial(materialData)).Returns(MaterialData.expectedId);
-            _materialRepoMock.Setup(x => x.AddTagToMaterial(MaterialData.expectedId, It.IsAny<int>()));
+            _materialRepoMock.Setup(x => x.AddMaterial(materialData)).Returns(expectedId);
+            _materialRepoMock.Setup(x => x.AddTagToMaterial(expectedId, It.IsAny<int>()));
 
             var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
 
@@ -54,9 +56,9 @@ namespace DevEdu.Business.Tests
             var actualId = sut.AddMaterial(materialData);
 
             //Then
-            Assert.AreEqual(MaterialData.expectedId, actualId);
+            Assert.AreEqual(expectedId, actualId);
             _materialRepoMock.Verify(x => x.AddMaterial(materialData), Times.Once);
-            _materialRepoMock.Verify(x => x.AddTagToMaterial(MaterialData.expectedId, It.IsAny<int>()), Times.Exactly(3));
+            _materialRepoMock.Verify(x => x.AddTagToMaterial(expectedId, It.IsAny<int>()), Times.Exactly(materialData.Tags.Count));
         }
 
         [Test]
@@ -81,42 +83,44 @@ namespace DevEdu.Business.Tests
         public void GetMaterialById_MaterialId_MaterialWithTagsReturned()
         {
             //Given
+            var materialId = 66;
             var materialData = MaterialData.GetMaterialDtoWithTags();
 
-            _materialRepoMock.Setup(x => x.GetMaterialById(MaterialData.expectedId)).Returns(materialData);
+            _materialRepoMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialData);
 
             var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
 
             //When
-            var actual = sut.GetMaterialById(MaterialData.expectedId);
+            var actual = sut.GetMaterialById(materialId);
 
             //Then
             Assert.AreEqual(materialData, actual);
-            _materialRepoMock.Verify(x => x.GetMaterialById(MaterialData.expectedId), Times.Once);
+            _materialRepoMock.Verify(x => x.GetMaterialById(materialId), Times.Once);
         }
 
         [Test]
         public void GetMaterialByIdWithCoursesAndGroups_MaterialId_MaterialWithTagsCoursesAndGroupsReturned()
         {
             //Given
+            var materialId = 66;
             var materialData = MaterialData.GetMaterialDtoWithTags();
             var coursesData = MaterialData.GetListOfCourses();
             var groupsData = MaterialData.GetListOfGroups();
 
-            _materialRepoMock.Setup(x => x.GetMaterialById(MaterialData.expectedId)).Returns(materialData);
-            _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(MaterialData.expectedId)).Returns(coursesData);
-            _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(MaterialData.expectedId)).Returns(groupsData);
+            _materialRepoMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialData);
+            _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(materialId)).Returns(coursesData);
+            _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(materialId)).Returns(groupsData);
 
             var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
 
             //When
-            var actual = sut.GetMaterialByIdWithCoursesAndGroups(MaterialData.expectedId);
+            var actual = sut.GetMaterialByIdWithCoursesAndGroups(materialId);
 
             //Then
             Assert.AreEqual(materialData, actual);
-            _materialRepoMock.Verify(x => x.GetMaterialById(MaterialData.expectedId), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(MaterialData.expectedId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(MaterialData.expectedId), Times.Once);
+            _materialRepoMock.Verify(x => x.GetMaterialById(materialId), Times.Once);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(materialId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(materialId), Times.Once);
         }
 
         [Test]
@@ -132,7 +136,7 @@ namespace DevEdu.Business.Tests
             var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
 
             //When
-            var actual = sut.UpdateMaterial(materialData);
+            var actual = sut.UpdateMaterial(materialData.Id, materialData);
 
             //Then
             Assert.AreEqual(expectedMaterialData, actual);
@@ -144,18 +148,19 @@ namespace DevEdu.Business.Tests
         public void GetMaterialsByTagId_TagId_MaterialsWithTagsReturned()
         {
             //Given
+            var tagId = 66;
             var materialsData = MaterialData.GetListOfMaterials();
 
-            _materialRepoMock.Setup(x => x.GetMaterialsByTagId(MaterialData.tagId)).Returns(materialsData);
+            _materialRepoMock.Setup(x => x.GetMaterialsByTagId(tagId)).Returns(materialsData);
 
             var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
 
             //When
-            var actualList = sut.GetMaterialsByTagId(MaterialData.tagId);
+            var actualList = sut.GetMaterialsByTagId(tagId);
 
             //Then
             Assert.AreEqual(materialsData, actualList);
-            _materialRepoMock.Verify(x => x.GetMaterialsByTagId(MaterialData.tagId), Times.Once);
+            _materialRepoMock.Verify(x => x.GetMaterialsByTagId(tagId), Times.Once);
         }
     }
 }

@@ -9,9 +9,6 @@ namespace DevEdu.Business.Tests
 {
     public static class MaterialData
     {
-        public const int expectedId = 66;
-        public const int tagId = 5;
-
         public static MaterialDto GetMaterialDtoWithoutTags() => 
             new MaterialDto { Content = "Материал по ООП" };
 
