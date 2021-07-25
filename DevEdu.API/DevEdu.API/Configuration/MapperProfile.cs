@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Models.OutputModels.Lesson;
 using DevEdu.DAL.Models;
 using System;
 using System.Globalization;
@@ -116,6 +117,8 @@ namespace DevEdu.API.Configuration
             CreateMap<GroupDto, GroupOutputMiniModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<TaskDto, TaskInfoOutputMiniModel>();
+            CreateMap<StudentLessonDto, FeedbackOutputModel>();
+            CreateMap<StudentLessonDto, StudentLessonShortOutputModel>();
         }
     }
 }

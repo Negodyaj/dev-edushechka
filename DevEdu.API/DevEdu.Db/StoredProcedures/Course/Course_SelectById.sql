@@ -9,6 +9,7 @@ BEGIN
       ,C.IsDeleted
 	  ,G.Id
 	  ,G.Timetable
+	  ,G.PaymentPerMonth
 	  
 
   FROM [dbo].[Course] C WITH (NOLOCK)
