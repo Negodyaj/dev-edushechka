@@ -12,6 +12,6 @@ namespace DevEdu.Business.Services
         StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId);
         void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId);
         void UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto);
-        void AddCommentOnStudentAnswer(int taskstudentId, int commentId);
+        void AddCommentOnStudentAnswer(int taskStudentId, int commentId);
     }
 }

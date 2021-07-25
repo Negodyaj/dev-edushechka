@@ -175,27 +175,27 @@ namespace DevEdu.DAL.Repositories
 
         public LessonDto SelectLessonById(int id)
         {
-            LessonDto result = new LessonDto();
+            LessonDto result = default;
             _connection
                 .Query<LessonDto, UserDto, TopicDto, LessonDto>(
                     _lessonSelectByIdProcedure,
                     (lesson, teacher, topic)=>
                     {
-                        result = lesson;
-                        result.Teacher = teacher;
-                        if(result.Topics == null)
+                        if (result == null)
                         {
+                            result = lesson;
+                            result.Teacher = teacher;
                             result.Topics = new List<TopicDto>();
                         }
-                        result.Topics.Add(topic);
+                        if (topic != null)
+                            result.Topics.Add(topic);
+
                         return lesson;
                     },
                     new { id },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                )
-                .FirstOrDefault();
-
+                );
             return result;
         }
 

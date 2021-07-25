@@ -19,8 +19,6 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
             _paymentService = paymentService;
         }
-
-
         //  api/payment/5
         [HttpGet("{id}")]
         public PaymentDto GetPayment(int id)
