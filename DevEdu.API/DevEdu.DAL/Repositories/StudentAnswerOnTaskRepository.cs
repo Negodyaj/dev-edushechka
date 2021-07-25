@@ -150,7 +150,7 @@ namespace DevEdu.DAL.Repositories
         
         public void AddCommentOnStudentAnswer(int taskstudentId, int commentId)
         {
-            _connection.QuerySingle<int>(
+            _connection.Query(
                 _taskStudentCommentInsert,
                 new
                 {
