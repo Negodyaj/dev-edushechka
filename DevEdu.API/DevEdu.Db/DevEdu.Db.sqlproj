@@ -237,6 +237,8 @@
     <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Update.sql" />
     <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAnswersByTaskId.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectAllFeedbackByLessonId.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonAndUserId.sql" />
     <Build Include="StoredProcedures\Topic\Topic_SelectByCourseId.sql" />
     <Build Include="StoredProcedures\Task\Task_SelectByCourseId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByCourseId.sql" />

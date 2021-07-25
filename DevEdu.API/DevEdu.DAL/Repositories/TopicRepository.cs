@@ -65,9 +65,9 @@ namespace DevEdu.DAL.Repositories
               .AsList();
         }
 
-        public void UpdateTopic(TopicDto topicDto)
+        public int UpdateTopic(TopicDto topicDto)       
         {
-            _connection.Execute(
+           return _connection.Execute(
                 _topicUpdateProcedure,
                 new
                 {
