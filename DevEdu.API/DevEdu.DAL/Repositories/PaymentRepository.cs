@@ -125,5 +125,15 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 );
         }
+        public void SelectPaymentsBySeveralId(List<int> ids)
+        {
+            var table = new DataTable();
+            table.Columns.Add("Id");
+            foreach (var i in ids)
+            {
+                table.Rows.Add(i);
+            }
+
+        }
     }
 }

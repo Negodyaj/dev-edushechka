@@ -239,6 +239,8 @@
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAnswersByTaskId.sql" />
     <Build Include="Types\User-Defined Table Types\PaymentType.sql" />
     <Build Include="StoredProcedures\Payment\Insert_Payments.sql" />
+    <Build Include="Types\User-Defined Table Types\IdType.sql" />
+    <Build Include="StoredProcedures\Payment\Payment_SelectBySeveralId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />
