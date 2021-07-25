@@ -13,6 +13,8 @@ namespace DevEdu.Business.Tests
     {
         private  Mock<ICourseRepository> _courseRepositoryMock;
         private  Mock<ITopicRepository> _topicRepositoryMock;
+        private  Mock<ITaskRepository> _taskRepositoryMock;
+        private  Mock<IMaterialRepository> _materialRepositoryMock;
         private const string _validationExceptionMessageSamePositions = "the same positions of topics in the course";
         private const string _validationExceptionMessageSameTopics = "the same topics in the course";
 
@@ -21,6 +23,8 @@ namespace DevEdu.Business.Tests
         {
             _courseRepositoryMock = new Mock<ICourseRepository>();
             _topicRepositoryMock = new Mock<ITopicRepository>();
+            _taskRepositoryMock = new Mock<ITaskRepository>();
+            _materialRepositoryMock = new Mock<IMaterialRepository>();
         }
         [Test]
         public void AddTopicToCourse_WithCourseIdAndSimpleDto_TopicWasAdded() 
@@ -31,7 +35,7 @@ namespace DevEdu.Business.Tests
             var courseTopicDto = new CourseTopicDto { Position = 3 };
 
             _topicRepositoryMock.Setup(x => x.AddTopicToCourse(courseTopicDto));
-            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object, _taskRepositoryMock.Object, _materialRepositoryMock.Object);
             //When
             sut.AddTopicToCourse(givenCourseId, givenTopicId, courseTopicDto);
             //Then
@@ -46,7 +50,7 @@ namespace DevEdu.Business.Tests
             var topicsDto = CourseData.GetListCourseTopicDto();
 
             _topicRepositoryMock.Setup(x => x.AddTopicsToCourse(topicsDto));
-            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object, _taskRepositoryMock.Object, _materialRepositoryMock.Object);
             //When
             sut.AddTopicsToCourse(givenCourseId, topicsDto);
             //Then
@@ -60,7 +64,7 @@ namespace DevEdu.Business.Tests
             var givenTopicId = 7;
 
             _topicRepositoryMock.Setup(x => x.DeleteTopicFromCourse(givenCourseId, givenTopicId));
-            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object, _taskRepositoryMock.Object, _materialRepositoryMock.Object);
             //When
             sut.DeleteTopicFromCourse(givenCourseId, givenTopicId);
             //Then
@@ -73,7 +77,7 @@ namespace DevEdu.Business.Tests
             var givenCourseId = 4;
 
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId));
-            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object, _taskRepositoryMock.Object, _materialRepositoryMock.Object);
             //When
             sut.SelectAllTopicsByCourseId(givenCourseId);
             //Then
@@ -89,10 +93,11 @@ namespace DevEdu.Business.Tests
             var toicsFromDB = CourseData.GetListCourseTopicDtoFromDataBase(); 
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId)).Returns(toicsFromDB);
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
-            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object, _taskRepositoryMock.Object, _materialRepositoryMock.Object);
             //When
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate);
             //Then
+            _courseRepositoryMock.Verify(x => x.DeleteAllTopicsByCourseId(givenCourseId), Times.Never);
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Once);
 
         }
@@ -110,7 +115,7 @@ namespace DevEdu.Business.Tests
             var toicsFromDB = CourseData.GetListCourseTopicDtoFromDataBase();
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId)).Returns(toicsFromDB);
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
-            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object, _taskRepositoryMock.Object, _materialRepositoryMock.Object);
             //When
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate);
             //Then
@@ -126,10 +131,11 @@ namespace DevEdu.Business.Tests
             var toicsFromDB = new List<CourseTopicDto>();
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId)).Returns(toicsFromDB);
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
-            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object, _taskRepositoryMock.Object, _materialRepositoryMock.Object);
             //When
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate);
             //Then
+            _courseRepositoryMock.Verify(x => x.DeleteAllTopicsByCourseId(givenCourseId), Times.Never);
             _topicRepositoryMock.Verify(x => x.AddTopicsToCourse(givenTopicsToUpdate), Times.Once);
         }
         [Test]
@@ -141,10 +147,11 @@ namespace DevEdu.Business.Tests
             var toicsFromDB = CourseData.GetListCourseTopicDtoFromDataBase();
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId)).Returns(toicsFromDB);
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
-            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object, _taskRepositoryMock.Object, _materialRepositoryMock.Object);
             //When
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate);
             //Then
+            _courseRepositoryMock.Verify(x => x.DeleteAllTopicsByCourseId(givenCourseId), Times.Never);
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
         }
         [Test]
@@ -161,14 +168,14 @@ namespace DevEdu.Business.Tests
             var toicsFromDB = CourseData.GetListCourseTopicDtoFromDataBase();
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId)).Returns(toicsFromDB);
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
-            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object, _taskRepositoryMock.Object, _materialRepositoryMock.Object);
             //When
             var exception = Assert.Throws<ValidationException>(() => 
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate));
             //Then
             Assert.That(exception.Message, Is.EqualTo(_validationExceptionMessageSamePositions));
-            _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
             _courseRepositoryMock.Verify(x => x.DeleteAllTopicsByCourseId(givenCourseId), Times.Never);
+            _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
             
         }
         [Test]
@@ -184,7 +191,7 @@ namespace DevEdu.Business.Tests
             var toicsFromDB = CourseData.GetListCourseTopicDtoFromDataBase();
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId)).Returns(toicsFromDB);
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
-            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object);
+            var sut = new CourseService(_topicRepositoryMock.Object, _courseRepositoryMock.Object, _taskRepositoryMock.Object, _materialRepositoryMock.Object);
             //When
             var exception = Assert.Throws<ValidationException>(() => 
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate));
