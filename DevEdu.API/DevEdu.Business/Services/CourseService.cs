@@ -11,10 +11,17 @@ namespace DevEdu.Business.Services
     {
         private readonly ICourseRepository _courseRepository;
         private readonly ITopicRepository _topicRepository;
-        public CourseService(ITopicRepository topicRepository, ICourseRepository courseRepository)
+        private readonly ITaskRepository _taskRepository;
+        private readonly IMaterialRepository _materialRepository;
+        public CourseService(ITopicRepository topicRepository,
+                             ICourseRepository courseRepository,
+                             ITaskRepository taskRepository,
+                             IMaterialRepository materialRepository)
         {
             _topicRepository = topicRepository;
             _courseRepository = courseRepository;
+            _taskRepository = taskRepository;
+            _materialRepository = materialRepository;
         }
 
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
@@ -22,7 +29,20 @@ namespace DevEdu.Business.Services
         public void DeleteCourse(int id) => _courseRepository.GetCourse(id);
 
         public CourseDto GetCourse(int id) => _courseRepository.GetCourse(id);
+        public CourseDto GetFullCourseInfo(int id) 
+        {
+            var course = GetCourse(id);
+            course.Tasks = _taskRepository.GetTaskByCourseId(course.Id);
+            course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
+            course.Topics = _topicRepository.GetTopicsByCourseId(course.Id);
+            return course;
 
+        }
+        public List<CourseDto> GetCoursesForAdmin()
+        {
+            var courses = _courseRepository.GetCourses();
+            return courses;
+        }
         public List<CourseDto> GetCourses() => _courseRepository.GetCourses();
 
         public void UpdateCourse(int id, CourseDto courseDto)

@@ -13,5 +13,6 @@ namespace DevEdu.DAL.Repositories
         int AddTagToTask(int taskId, int tagId);
         void DeleteTagFromTask(int taskId, int tagId);
         List<GroupTaskDto> GetGroupsByTaskId(int groupId);
+        List<TaskDto> GetTaskByCourseId(int courseId);
     }
 }
