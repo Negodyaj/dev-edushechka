@@ -2,13 +2,13 @@
     @Id     int,
 	@IsPaid bit,
     @Sum decimal(6,2),
-	@Date		datetime
+    @Date date
 AS
 BEGIN
     UPDATE dbo.Payment
         SET
+        IsPaid = @IsPaid,
         [Sum] = @Sum,
-        Date = @Date,
-        IsPaid = @IsPaid
+        Date = @Date
     WHERE [Id] = @Id
 END

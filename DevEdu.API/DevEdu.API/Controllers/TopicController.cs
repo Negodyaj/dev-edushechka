@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.ComponentModel;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Repositories;
 using AutoMapper;
 using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
 {
@@ -56,8 +58,26 @@ namespace DevEdu.API.Controllers
         public void UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
             var dto = _mapper.Map<TopicDto>(model);
-           
+
             _topicService.UpdateTopic(id, dto);
-        }      
+        }
+
+        //  api/topic/{topicId}/tag/{tagId}
+        [HttpPost("{topicId}/tag/{tagId}")]
+        [Description("Add tag to topic")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public int AddTagToTopic(int topicId, int tagId)
+        {
+            return _topicService.AddTagToTopic(topicId, tagId);
+        }
+
+        //  api/opic/{topicId}/tag/{tagId}
+        [HttpDelete("{topicId}/tag/{tagId}")]
+        [Description("Delete tag from topic")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public int DeleteTagFromTopic(int topicId, int tagId)
+        {
+            return _topicService.DeleteTagFromTopic(topicId, tagId);
+        }
     }
 }

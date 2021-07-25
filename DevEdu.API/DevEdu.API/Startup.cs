@@ -1,12 +1,15 @@
+using DevEdu.API.Configuration;
 using DevEdu.Business.Services;
-using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using DevEdu.Business.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using NSwag.Generation.Processors.Security;
 
 namespace DevEdu.API
 {
@@ -31,9 +34,12 @@ namespace DevEdu.API
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
+            services.AddScoped<IRaitingRepository, RaitingRepository>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IGroupService, GroupService>();
@@ -41,20 +47,67 @@ namespace DevEdu.API
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ICourseService, CourseService>(); 
+            services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<IRaitingService, RaitingService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>(); 
 
-
-            services.AddScoped<ICourseService, CourseService>();
-            services.AddScoped<IMaterialService, MaterialService>();
+            services.AddScoped<ICommentValidationHelper, CommentValidationHelper>();
+            services.AddScoped<ICourseValidationHelper, CourseValidationHelper>();
+            services.AddScoped<IGroupValidationHelper, GroupValidationHelper>();
+            services.AddScoped<ILessonValidationHelper, LessonValidationHelper>();
+            services.AddScoped<IMaterialValidationHelper, MaterialValidationHelper>();
+            services.AddScoped<INotificationValidationHelper, NotificationValidationHelper>();
+            services.AddScoped<IPaymentValidationHelper, PaymentValidationHelper>();
+            services.AddScoped<IRaitingValidationHelper, RaitingValidationHelper>();
+            services.AddScoped<ITagValidationHelper, TagValidationHelper>();
+            services.AddScoped<ITaskValidationHelper, TaskValidationHelper>();
+            services.AddScoped<ITopicValidationHelper, TopicValidationHelper>();
+            services.AddScoped<IUserValidationHelper, UserValidationHelper>();
 
             services.AddControllers();
 
-            services.AddSwaggerDocument(settings => {
-                settings.Title = "DevEdu Education API";
-                settings.Version = "v8";
+            services.AddMvc();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = AuthOptions._issuer,
+                        ValidateAudience = true,
+                        ValidAudience = AuthOptions._audience,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        ValidateIssuerSigningKey = true
+                    };
+                });
+
+            services.AddSwaggerDocument(document =>
+            {
+                document.DocumentName = "Endpoints for DevEdu";
+                document.Title = "DevEdu Education API";
+                document.Version = "v8";
+                document.Description = "An interface for DevEdushechka.";
+
+                document.DocumentProcessors.Add(
+                    new SecurityDefinitionAppender("JWT token", new NSwag.OpenApiSecurityScheme
+                    {
+                        Type = NSwag.OpenApiSecuritySchemeType.ApiKey,
+                        Name = "Authorization",
+                        Description = "Copy 'Bearer ' + valid JWT token into field",
+                        In = NSwag.OpenApiSecurityApiKeyLocation.Header
+                    }));
+                document.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT token"));
             });
+
+            // Add framework services.
+            services.AddOptions();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +123,8 @@ namespace DevEdu.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

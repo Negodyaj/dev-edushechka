@@ -11,6 +11,7 @@ namespace DevEdu.DAL.Repositories
     {
         private const string _userAddProcedure = "dbo.User_Insert";
         private const string _userSelectByIdProcedure = "dbo.User_SelectById";
+        private const string _userSelectByEmailProcedure = "dbo.User_SelectByEmail";
         private const string _userSelectAllProcedure = "dbo.User_SelectAll";
         private const string _userUpdateProcedure = "dbo.User_Update";
         private const string _userDeleteProcedure = "dbo.User_Delete";
@@ -23,7 +24,7 @@ namespace DevEdu.DAL.Repositories
         public int AddUser(UserDto user)
         {
             return _connection.QuerySingle<int>(
-               _userAddProcedure,
+                _userAddProcedure,
                 new
                 {
                     user.FirstName,
@@ -33,13 +34,13 @@ namespace DevEdu.DAL.Repositories
                     user.Username,
                     user.Password,
                     user.ContractNumber,
-                    user.City,
+                    CityId = (int)user.City,
                     user.BirthDate,
                     user.GitHubAccount,
                     user.Photo,
                     user.PhoneNumber
                 },
-            commandType: CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure);
         }
 
         public UserDto SelectUserById(int id)
@@ -64,7 +65,33 @@ namespace DevEdu.DAL.Repositories
                 },
                 new { id },
                 splitOn: "id",
-            commandType: CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure)
+                .FirstOrDefault();
+        }
+
+        public UserDto SelectUserByEmail(string email)
+        {
+            UserDto result = default;
+            return _connection
+                .Query<UserDto, City, Role, UserDto>(
+                    _userSelectByEmailProcedure,
+                    (user, city, role) =>
+                    {
+                        if (result == null)
+                        {
+                            result = user;
+                            result.City = city;
+                            result.Roles = new List<Role> { role };
+                        }
+                        else
+                        {
+                            result.Roles.Add(role);
+                        }
+                        return result;
+                    },
+                    new { email },
+                    splitOn: "id",
+                    commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();
         }
 
@@ -92,7 +119,7 @@ namespace DevEdu.DAL.Repositories
                     return userEnrty;
                 },
                 splitOn: "Id",
-            commandType: CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure)
                 .Distinct<UserDto>()
                 .ToList<UserDto>();
         }
@@ -108,13 +135,12 @@ namespace DevEdu.DAL.Repositories
                     user.LastName,
                     user.Patronymic,
                     user.Username,
-                    user.City,
+                    CityId = (int)user.City,
                     user.GitHubAccount,
                     user.Photo,
                     user.PhoneNumber
                 },
-            commandType: CommandType.StoredProcedure
-            );
+                commandType: CommandType.StoredProcedure);
         }
 
         public void DeleteUser(int id)
@@ -122,13 +148,12 @@ namespace DevEdu.DAL.Repositories
             _connection.Execute(
                 _userDeleteProcedure,
                 new { id },
-            commandType: CommandType.StoredProcedure
-            );
+                commandType: CommandType.StoredProcedure);
         }
 
-        public int AddUserRole(int userId, int roleId)
+        public void AddUserRole(int userId, int roleId)
         {
-            return _connection.QuerySingleOrDefault<int>(
+            _connection.QuerySingleOrDefault<int>(
                 _userRoleAddProcedure,
                 new
                 {

@@ -17,7 +17,11 @@ namespace DevEdu.Business.Services
 
         public void DeleteTag(int id) => _repository.DeleteTag(id);
 
-        public void UpdateTag(TagDto dto) => _repository.UpdateTag(dto);
+        public void UpdateTag(TagDto dto, int id)
+        {
+            dto.Id = id;
+            _repository.UpdateTag(dto);
+        }
 
         public List<TagDto> GetAllTags() => _repository.SelectAllTags();
 

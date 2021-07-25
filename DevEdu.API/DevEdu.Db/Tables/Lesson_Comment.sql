@@ -20,3 +20,5 @@ ON UPDATE NO ACTION
 GO
 ALTER TABLE [Lesson_Comment] CHECK CONSTRAINT [Lesson_Comment_fk1]
 GO
+ALTER TABLE [Lesson_Comment] ADD CONSTRAINT UC_LessonId_CommentId UNIQUE(LessonId, CommentId)
+GO

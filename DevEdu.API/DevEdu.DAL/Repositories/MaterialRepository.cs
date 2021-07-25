@@ -47,8 +47,10 @@ namespace DevEdu.DAL.Repositories
                             materialEntry.Tags = new List<TagDto>();
                             materialDictionary.Add(material.Id, materialEntry);
                         }
-                        materialEntry.Tags.Add(tag);
-
+                        if(tag != null && tag.Name != null)
+                        {
+                            materialEntry.Tags.Add(tag);
+                        }
                         return materialEntry;
                     },
                     splitOn: "Id",
@@ -66,14 +68,17 @@ namespace DevEdu.DAL.Repositories
                     _materialSelectByIdProcedure,
                     (material, tag) =>
                     {
-                        if(result == null)
+                        if (result == null)
                         {
                             result = material;
                             result.Tags = new List<TagDto> { tag };
                         }
                         else
                         {
-                            result.Tags.Add(tag);
+                            if (tag != null && tag.Name != null)
+                            {
+                                result.Tags.Add(tag);
+                            }
                         }
 
                         return material;
@@ -104,8 +109,8 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection.Execute(
                 _materialDeleteProcedure,
-                new 
-                { 
+                new
+                {
                     id,
                     isDeleted
                 },
@@ -141,13 +146,29 @@ namespace DevEdu.DAL.Repositories
 
         public List<MaterialDto> GetMaterialsByTagId(int tagId)
         {
+            var materialDictionary = new Dictionary<int, MaterialDto>();
             return _connection
-                .Query<MaterialDto>(
+                .Query<MaterialDto, TagDto, MaterialDto>(
                     _materialSelectAllByTagIdProcedure,
+                    (material, tag) =>
+                    {
+                        MaterialDto materialEntry;
+                        if (!materialDictionary.TryGetValue(material.Id, out materialEntry))
+                        {
+                            materialEntry = material;
+                            materialEntry.Tags = new List<TagDto>();
+                            materialDictionary.Add(material.Id, materialEntry);
+                        }
+                        materialEntry.Tags.Add(tag);
+
+                        return materialEntry;
+                    },
                     new { tagId },
+                    splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                ).
-                ToList();
+                )
+                .Distinct()
+                .ToList();
         }
 
         public List<MaterialDto> GetMaterialsByCourseId(int courseId)

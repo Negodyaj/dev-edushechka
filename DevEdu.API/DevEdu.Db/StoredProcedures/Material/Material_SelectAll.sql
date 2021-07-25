@@ -4,11 +4,20 @@ BEGIN
 	SELECT 
 		m.Id, 
 		m.Content,
-		t.Id,
-		t.Name 
-	FROM dbo.Material m
-		left join dbo.Tag_Material tm on tm.MaterialId = m.Id
-		left join dbo.Tag t on t.Id = tm.TagId
-	WHERE m.IsDeleted = 0
+		x.Id,
+		x.Name,
+		x.IsDeleted
+	FROM dbo.Material m left join
+	(
+		SELECT
+			t.Id,
+			t.Name,
+			t.IsDeleted,
+			tm.MaterialId
+		FROM dbo.Tag t 
+			inner join dbo.Tag_Material tm on tm.TagId = t.Id
+			WHERE t.IsDeleted = 0
+	) x on x.MaterialId = m.Id
+	WHERE m.IsDeleted = 0 
 END
 

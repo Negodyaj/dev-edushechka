@@ -1,8 +1,13 @@
-﻿namespace DevEdu.API.Models.OutputModels
+﻿using System.ComponentModel;
+
+namespace DevEdu.API.Models.OutputModels
 {
     public class GroupInfoOutputModel
     {
-        public string Timetable { get; set; }
-        public string PaymentPerMonth { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string StartDate { get; set; }
+        [DefaultValue(false)]
+        public bool IsDeleted { get; set; }
     }
 }

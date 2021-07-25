@@ -13,5 +13,6 @@ namespace DevEdu.Business.Services
         void AddTagToMaterial(int materialId, int tagId);
         void DeleteTagFromMaterial(int materialId, int tagId);
         List<MaterialDto> GetMaterialsByTagId(int tagId);
+        public MaterialDto GetMaterialByIdWithCoursesAndGroups(int id);
     }
 }

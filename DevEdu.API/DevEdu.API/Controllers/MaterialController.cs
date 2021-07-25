@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +17,7 @@ namespace DevEdu.API.Controllers
         private readonly IMaterialService _materialService;
         private readonly IMapper _mapper;
 
-        public MaterialController(IMapper mapper, IMaterialService materialService) 
+        public MaterialController(IMapper mapper, IMaterialService materialService)
         {
             _materialService = materialService;
             _mapper = mapper;
@@ -24,36 +25,52 @@ namespace DevEdu.API.Controllers
 
         // api/material
         [HttpPost]
-        public int AddMaterial([FromBody] MaterialInputModel materialModel)
+        [Description("Add material")]
+        [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status201Created)]
+        public MaterialInfoOutputModel AddMaterial([FromBody] MaterialInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            return _materialService.AddMaterial(dto);
+            int id = _materialService.AddMaterial(dto);
+            dto = _materialService.GetMaterialById(id);
+            return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
         // api/material
         [HttpGet]
-        public List<MaterialDto> GetAllMaterials()
+        [Description("Get all materials with tags")]
+        [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
+        public List<MaterialInfoOutputModel> GetAllMaterials()
         {
-            return _materialService.GetAllMaterials();
+            var dto = _materialService.GetAllMaterials();
+            return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
         }
 
         // api/material/5
         [HttpGet("{id}")]
-        public MaterialDto GetMaterial(int id)
+        [Description("Get material by id with tags, courses and groups")]
+        [ProducesResponseType(typeof(MaterialInfoWithCoursesAndGroupsOutputModel), StatusCodes.Status200OK)]
+        public MaterialInfoWithCoursesAndGroupsOutputModel GetMaterial(int id)
         {
-            return _materialService.GetMaterialById(id);
+            var dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
+            return _mapper.Map<MaterialInfoWithCoursesAndGroupsOutputModel>(dto);
         }
 
         // api/material/5
-        [HttpPut("{id}")] 
-        public void UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
+        [HttpPut("{id}")]
+        [Description("Update material by id")]
+        [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
+        public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             _materialService.UpdateMaterial(id, dto);
+            dto = _materialService.GetMaterialById(id);
+            return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
         // api/material/5/isDeleted/True
         [HttpDelete("{id}/isDeleted/{isDeleted}")]
+        [Description("Delete material")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteMaterial(int id, bool isDeleted)
         {
             _materialService.DeleteMaterial(id, isDeleted);
@@ -72,7 +89,7 @@ namespace DevEdu.API.Controllers
         // api/material/{materialId}/tag/{tagId}
         [HttpDelete("{materialId}/tag/{tagId}")]
         [Description("Delete tag from material")]
-        [ProducesResponseType(typeof(string),StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public string DeleteTagFromMaterial(int materialId, int tagId)
         {
             _materialService.DeleteTagFromMaterial(materialId, tagId);
@@ -81,10 +98,12 @@ namespace DevEdu.API.Controllers
 
         // api/material/by-tag/1
         [HttpGet("by-tag/{tagId}")]
-        public List<MaterialDto> GetMaterialsByTagId(int tagId)
+        [Description("Get materials by tag id")]
+        [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
+        public List<MaterialInfoOutputModel> GetMaterialsByTagId(int tagId)
         {
-            return _materialService.GetMaterialsByTagId(tagId);
+            var dto = _materialService.GetMaterialsByTagId(tagId);
+            return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
         }
-
     }
 }

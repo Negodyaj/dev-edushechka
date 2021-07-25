@@ -3,6 +3,7 @@
 	Date datetime NOT NULL,
 	TeacherComment nvarchar(500),
 	TeacherId int NOT NULL,
+	LinkToRecord nvarchar(150),
 	IsDeleted bit NOT NULL DEFAULT '0',
   CONSTRAINT [PK_LESSON] PRIMARY KEY CLUSTERED
   (

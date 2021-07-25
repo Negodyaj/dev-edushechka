@@ -10,8 +10,9 @@ namespace DevEdu.DAL.Repositories
         int AddTask(TaskDto task);
         void UpdateTask(TaskDto task);
         void DeleteTask(int id);
-        int AddTagToTagTask(int taskId, int tagId);
+        int AddTagToTask(int taskId, int tagId);
         void DeleteTagFromTask(int taskId, int tagId);
+        List<GroupTaskDto> GetGroupsByTaskId(int groupId);
         List<TaskDto> GetTaskByCourseId(int courseId);
     }
 }

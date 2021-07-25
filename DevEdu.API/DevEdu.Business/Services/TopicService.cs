@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
 {
-         public class TopicService : ITopicService
+    public class TopicService : ITopicService
     {
         private readonly ITopicRepository _topicRepository;
 
@@ -13,7 +13,15 @@ namespace DevEdu.Business.Services
             _topicRepository = topicRepository;
         }
 
-        public int AddTopic(TopicDto topicDto) => _topicRepository.AddTopic(topicDto);
+        public int AddTopic(TopicDto topicDto)
+        {
+            var topicId = _topicRepository.AddTopic(topicDto);
+            if (topicDto.Tags == null || topicDto.Tags.Count == 0)
+                return topicId;
+
+            topicDto.Tags.ForEach(tag => AddTagToTopic(topicId, tag.Id));
+            return topicId;
+        }
 
         public void DeleteTopic(int id) => _topicRepository.DeleteTopic(id);
 
@@ -26,5 +34,9 @@ namespace DevEdu.Business.Services
             topicDto.Id = id;
             _topicRepository.UpdateTopic(topicDto);
         }
+
+        public int AddTagToTopic(int topicId, int tagId) => _topicRepository.AddTagToTopic(topicId, tagId);
+
+        public int DeleteTagFromTopic(int topicId, int tagId) => _topicRepository.DeleteTagFromTopic(topicId, tagId);
     }
 }

@@ -4,7 +4,7 @@
 	@Patronymic 		nvarchar(50),
 	@Email				nvarchar(50),
 	@Username			nvarchar(50),
-	@Password			nvarchar(30),
+	@Password			nvarchar(200),
 	@ContractNumber		nvarchar(50),
 	@CityId				int,
 	@BirthDate			date,
