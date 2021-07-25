@@ -1,4 +1,5 @@
-﻿using DevEdu.Business.Exceptions;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System;
@@ -14,8 +15,7 @@ namespace DevEdu.Business.Services
         private readonly ITopicRepository _topicRepository;
         private readonly ITaskRepository _taskRepository;
         private readonly IMaterialRepository _materialRepository;
-        private const string _validationExceptionMessageSamePositions = "the same positions of topics in the course";
-        private const string _validationExceptionMessageSameTopics = "the same topics in the course";
+        
         public CourseService(ITopicRepository topicRepository,
                              ICourseRepository courseRepository,
                              ITaskRepository taskRepository,
@@ -126,14 +126,14 @@ namespace DevEdu.Business.Services
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
-                throw new ValidationException(_validationExceptionMessageSamePositions);
+                throw new ValidationException(ServiceMessages.SamePositionsInCourseTopics);
             }
         }
         private void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
-                throw new ValidationException(_validationExceptionMessageSameTopics);
+                throw new ValidationException(ServiceMessages.SameTopicsInCourseTopics);
             }
         }
     }
