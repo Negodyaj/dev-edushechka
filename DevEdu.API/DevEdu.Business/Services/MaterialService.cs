@@ -48,16 +48,16 @@ namespace DevEdu.Business.Services
             return _materialRepository.GetMaterialById(dto.Id);
         }
 
-        public void DeleteMaterial(int id, bool isDeleted) => 
+        public void DeleteMaterial(int id, bool isDeleted) =>
             _materialRepository.DeleteMaterial(id, isDeleted);
 
-        public void AddTagToMaterial(int materialId, int tagId) => 
+        public void AddTagToMaterial(int materialId, int tagId) =>
             _materialRepository.AddTagToMaterial(materialId, tagId);
 
-        public void DeleteTagFromMaterial(int materialId, int tagId) => 
+        public void DeleteTagFromMaterial(int materialId, int tagId) =>
             _materialRepository.DeleteTagFromMaterial(materialId, tagId);
 
-        public List<MaterialDto> GetMaterialsByTagId(int tagId) => 
+        public List<MaterialDto> GetMaterialsByTagId(int tagId) =>
             _materialRepository.GetMaterialsByTagId(tagId);
     }
 }

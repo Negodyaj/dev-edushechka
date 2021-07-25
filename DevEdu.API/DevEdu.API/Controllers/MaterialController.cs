@@ -17,7 +17,7 @@ namespace DevEdu.API.Controllers
         private readonly IMaterialService _materialService;
         private readonly IMapper _mapper;
 
-        public MaterialController(IMapper mapper, IMaterialService materialService) 
+        public MaterialController(IMapper mapper, IMaterialService materialService)
         {
             _materialService = materialService;
             _mapper = mapper;
@@ -89,7 +89,7 @@ namespace DevEdu.API.Controllers
         // api/material/{materialId}/tag/{tagId}
         [HttpDelete("{materialId}/tag/{tagId}")]
         [Description("Delete tag from material")]
-        [ProducesResponseType(typeof(string),StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public string DeleteTagFromMaterial(int materialId, int tagId)
         {
             _materialService.DeleteTagFromMaterial(materialId, tagId);
@@ -105,6 +105,5 @@ namespace DevEdu.API.Controllers
             var dto = _materialService.GetMaterialsByTagId(tagId);
             return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
         }
-
     }
 }

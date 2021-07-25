@@ -81,7 +81,7 @@ namespace DevEdu.Business.Tests
 
             _userRepoMock.Setup(x => x.UpdateUser(expectedDto));
             _userRepoMock.Setup(x => x.SelectUserById(expectedDto.Id)).Returns(expectedAnotherDto);
-           
+
             var sut = new UserService(_userRepoMock.Object);
 
             //When
