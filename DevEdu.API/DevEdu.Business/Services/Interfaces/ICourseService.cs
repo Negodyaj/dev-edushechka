@@ -10,7 +10,7 @@ namespace DevEdu.Business.Services
         void DeleteCourse(int id);
         List<CourseDto> GetCourses();
         void UpdateCourse(int id, CourseDto courseDto);
-        int AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
+        void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
         void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto);
         void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics);
         void DeleteTopicFromCourse(int courseId, int topicId);

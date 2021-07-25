@@ -12,6 +12,8 @@ namespace DevEdu.Business.Services
     {
         private readonly ICourseRepository _courseRepository;
         private readonly ITopicRepository _topicRepository;
+        private const string _validationExceptionMessageSamePositions = "the same positions of topics in the course";
+        private const string _validationExceptionMessageSameTopics = "the same topics in the course";
         public CourseService(ITopicRepository topicRepository, ICourseRepository courseRepository)
         {
             _topicRepository = topicRepository;
@@ -32,12 +34,11 @@ namespace DevEdu.Business.Services
             _courseRepository.UpdateCourse(courseDto);
         }
 
-        public int AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
+        public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {
             dto.Course = new CourseDto() { Id = courseId };
             dto.Topic = new TopicDto { Id = topicId };
             _topicRepository.AddTopicToCourse(dto);
-            return 42;
         }
 
         public void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
@@ -105,14 +106,14 @@ namespace DevEdu.Business.Services
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
-                throw new ValidationException("the same positions of topics in the course");
+                throw new ValidationException(_validationExceptionMessageSamePositions);
             }
         }
         private void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
-                throw new ValidationException("the same topics  in the course");
+                throw new ValidationException(_validationExceptionMessageSameTopics);
             }
         }
     }
