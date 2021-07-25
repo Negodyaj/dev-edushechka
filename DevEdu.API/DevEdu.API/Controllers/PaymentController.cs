@@ -46,7 +46,9 @@ namespace DevEdu.API.Controllers
         public int AddPayment([FromBody] PaymentInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
-            return _paymentService.AddPayment(dto);
+            int id = _paymentService.AddPayment(dto);
+            dto = _paymentService.GetPayment(id);
+            return 1; 
         }
 
         //  api/payment/5
