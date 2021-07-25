@@ -9,6 +9,12 @@ namespace DevEdu.Business.Services
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IUserRepository _userRepository;
+
+        public GroupService(IGroupRepository groupRepository)
+        {
+            _groupRepository = groupRepository;
+        }
+
         public GroupService(IGroupRepository groupRepository, IUserRepository userRepository)
         {
             _groupRepository = groupRepository;
@@ -27,7 +33,7 @@ namespace DevEdu.Business.Services
             dto.Teachers = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Teacher);
             return dto;
         }
-
+        
         public List<GroupDto> GetGroups() => _groupRepository.GetGroups();
 
         public void AddGroupLesson(int groupId, int lessonId) => _groupRepository.AddGroupLesson(groupId, lessonId);

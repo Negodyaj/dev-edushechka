@@ -68,6 +68,9 @@ namespace DevEdu.DAL.Repositories
                 {
                     GroupDto dto = group;
                     group.Course = course;
+                    group.Students = new List<UserDto>();
+                    group.Teachers = new List<UserDto>();
+                    group.Tutors = new List<UserDto>();
                     return dto;
                 },
                 new { id },

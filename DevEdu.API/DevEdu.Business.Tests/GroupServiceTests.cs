@@ -1,4 +1,5 @@
 ﻿using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -8,12 +9,96 @@ namespace DevEdu.Business.Tests
     public class GroupServiceTests
     {
         private Mock<IGroupRepository> _groupRepoMock;
+        private Mock<IUserRepository> _userRepoMock;
 
         [SetUp]
         public void Setup()
         {
             _groupRepoMock = new Mock<IGroupRepository>();
+            _userRepoMock = new Mock<IUserRepository>();
         }
+
+        public void AddGroup()
+        {
+            //Given            
+
+
+            //When
+
+
+            //Then
+
+
+        }
+
+
+        [Test]
+        public void GetGroupById_WithListStudentsByRoleStudent()
+        {
+            //Given            
+            const int groupId = GroupData.GroupId;
+            var roleStudent = GroupData.RoleStudent;
+            var groupDto = GroupData.GetGroupDto();
+            var studentDtos = GroupData.GetUserForGroup();
+
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, roleStudent)).Returns(studentDtos);
+            groupDto.Students = studentDtos;
+
+            var sut = new GroupService(_groupRepoMock.Object, _userRepoMock.Object);
+
+            //When
+            var actualGroupDto = sut.GetGroup(groupId);
+
+            //Then
+            Assert.AreEqual(groupDto, actualGroupDto);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, roleStudent), Times.Once);
+        }
+
+        [Test]
+        public void GetGroups()
+        {
+            //Given            
+
+
+            //When
+
+
+            //Then
+
+
+        }
+
+        [Test]
+        public void UpdateGroup()
+        {
+            //Given            
+
+
+            //When
+
+
+            //Then
+
+
+        }
+
+        [Test]
+        public void ChangeGroupStatus()
+        {
+            //Given            
+
+
+            //When
+
+
+            //Then
+
+
+        }
+
+
 
         [Test]
         public void AddMaterialToGroup_IntGroupIdAndMaterialId_AddMaterialToGroup()
