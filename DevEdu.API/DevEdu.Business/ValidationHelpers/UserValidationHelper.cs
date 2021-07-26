@@ -1,6 +1,7 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System;
 
@@ -16,11 +17,13 @@ namespace DevEdu.Business.ValidationHelpers
             _userRepository = userRepository;
         }
 
-        public void CheckUserExistence(int userId)
+        public UserDto GetUserDtoByIdAndCheckUserExistence(int userId)
         {
             var user = _userRepository.SelectUserById(userId);
             if (user == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
+
+            return user;
         }
 
         public void ChekRoleExistence(int roleId)

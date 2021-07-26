@@ -38,9 +38,7 @@ namespace DevEdu.Business.Services
         public UserDto SelectUserById(int id)
         {
             _userValidationHelper.ChekIdDoesNotLessThenMinimum(id);
-            _userValidationHelper.CheckUserExistence(id);
-
-            var user = _userRepository.SelectUserById(id);
+            var user = _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(id);
             return user;
         }
 
@@ -64,7 +62,7 @@ namespace DevEdu.Business.Services
 
         public UserDto UpdateUser(UserDto dto)
         {
-            _userValidationHelper.CheckUserExistence(dto.Id);
+            _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(dto.Id);
 
             _userRepository.UpdateUser(dto);
             var user = _userRepository.SelectUserById(dto.Id);
@@ -74,7 +72,7 @@ namespace DevEdu.Business.Services
         public void DeleteUser(int id)
         {
             _userValidationHelper.ChekIdDoesNotLessThenMinimum(id);
-            _userValidationHelper.CheckUserExistence(id);
+            _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(id);
 
             _userRepository.DeleteUser(id);
         }
@@ -82,7 +80,7 @@ namespace DevEdu.Business.Services
         public void AddUserRole(int userId, int roleId)
         {
             _userValidationHelper.CheckUserIdAndRoleIdDoesNotLessThanMinimum(userId, roleId);
-            _userValidationHelper.CheckUserExistence(userId);
+            _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(userId);
             _userValidationHelper.ChekRoleExistence(roleId);
 
             _userRepository.AddUserRole(userId, roleId);
@@ -91,7 +89,7 @@ namespace DevEdu.Business.Services
         public void DeleteUserRole(int userId, int roleId)
         {
             _userValidationHelper.CheckUserIdAndRoleIdDoesNotLessThanMinimum(userId, roleId);
-            _userValidationHelper.CheckUserExistence(userId);
+            _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(userId);
             _userValidationHelper.ChekRoleExistence(roleId);
 
             _userRepository.DeleteUserRole(userId, roleId);
