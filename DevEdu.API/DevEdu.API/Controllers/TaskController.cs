@@ -96,10 +96,11 @@ namespace DevEdu.API.Controllers
         [HttpPost("teacher")]
         [Description("Add new task by teacher")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public TaskInfoOutputModel AddTaskByTeacher([FromBody] TaskInputModel model)
+        public TaskInfoOutputModel AddTaskByTeacher([FromBody] TaskByTeacherInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
-            var task = _taskService.AddTaskByTeacher(taskDto, model.Groups, model.Tags);
+            var groupTaskDto = _mapper.Map<GroupTaskDto>(model.GroupTask);
+            var task = _taskService.AddTaskByTeacher(taskDto, groupTaskDto, model.GroupId, model.Tags);
 
             return _mapper.Map<TaskInfoOutputModel>(task);
         }
@@ -109,10 +110,10 @@ namespace DevEdu.API.Controllers
         [HttpPost("methodist")]
         [Description("Add new task by methodist")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public TaskInfoOutputModel AddTaskByMethodist([FromBody] TaskInputModel model)
+        public TaskInfoOutputModel AddTaskByMethodist([FromBody] TaskByMethodistInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
-            var task = _taskService.AddTaskByMethodist(taskDto, model.Courses, model.Tags);
+            var task = _taskService.AddTaskByMethodist(taskDto, model.CoursesIds, model.Tags);
 
             return _mapper.Map<TaskInfoOutputModel>(task);
         }
@@ -122,7 +123,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{taskId}")]
         [Description("Update task")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskInputModel model)
+        public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskByTeacherInputModel model)
         {
             var userId = this.GetUserId();
             TaskDto taskDto = _mapper.Map<TaskDto>(model);

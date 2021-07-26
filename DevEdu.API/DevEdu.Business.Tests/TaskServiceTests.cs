@@ -17,6 +17,7 @@ namespace DevEdu.Business.Tests
         private Mock<ITaskRepository> _taskRepoMock;
         private Mock<ICourseRepository> _courseRepoMock;
         private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
+        private Mock<IGroupRepository> _groupRepoMock;
         private Mock<ITaskValidationHelper> _taskValidationHelperMock;
         private Mock<IUserValidationHelper> _userValidationHelperMock;
 
@@ -26,26 +27,29 @@ namespace DevEdu.Business.Tests
             _taskRepoMock = new Mock<ITaskRepository>();
             _courseRepoMock = new Mock<ICourseRepository>();
             _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
+            _groupRepoMock = new Mock<IGroupRepository>();
             _taskValidationHelperMock = new Mock<ITaskValidationHelper>();
             _userValidationHelperMock = new Mock<IUserValidationHelper>();
         }
 
 
         [Test]
-        public void AddTask_SimpleDtoWithoutTags_TaskCreated()
+        public void AddTaskByTeacher_SimpleDtoWithoutTags_TaskCreated()
         {
             //Given
             var taskDto = TaskData.GetTaskDtoWithoutTags();
             var expectedTaskId = 55;
+            var groupTask = GroupTaskData.GetGroupTaskWithGroupAndTask();
+            var expectedGroupId = 10;
 
             _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(expectedTaskId);
             _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskById(expectedTaskId)).Returns(taskDto);
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             //When
-            var actualTask = sut.AddTask(taskDto);
+            var actualTask = sut.AddTaskByTeacher(taskDto, groupTask, expectedGroupId, new List<int>());
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
@@ -55,20 +59,72 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTask_DtoWithTags_TaskWithTagsCreated()
+        public void AddTaskByTeacher_DtoWithTags_TaskWithTagsCreated()
         {
             //Given
             var taskDto = TaskData.GetTaskDtoWithTags();
             var expectedTaskId = 55;
+            var expectedGroupId = 10;
+            var groupTask = GroupTaskData.GetGroupTaskWithGroupAndTask();
+            var tagsIds = new List<int> {13, 15, 14};
 
             _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(expectedTaskId);
             _taskRepoMock.Setup(x => x.AddTagToTask(expectedTaskId, It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskById(expectedTaskId)).Returns(taskDto);
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             //When
-            var actualTask = sut.AddTask(taskDto);
+            var actualTask = sut.AddTaskByTeacher(taskDto, groupTask, expectedGroupId, tagsIds);
+
+            //Than
+            Assert.AreEqual(taskDto, actualTask);
+            _taskRepoMock.Verify(x => x.AddTask(taskDto), Times.Once);
+            _taskRepoMock.Verify(x => x.AddTagToTask(expectedTaskId, It.IsAny<int>()), Times.Exactly(taskDto.Tags.Count));
+            _taskRepoMock.Verify(x => x.GetTaskById(expectedTaskId), Times.Once);
+        }
+
+        [Test]
+        public void AddTaskByMethodist_SimpleDtoWithoutTags_TaskCreated()
+        {
+            //Given
+            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var expectedTaskId = 55;
+            var coursesIds = new List<int> { 1 };
+
+            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(expectedTaskId);
+            _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
+            _taskRepoMock.Setup(x => x.GetTaskById(expectedTaskId)).Returns(taskDto);
+
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+
+            //When
+            var actualTask = sut.AddTaskByMethodist(taskDto, coursesIds, new List<int>());
+
+            //Than
+            Assert.AreEqual(taskDto, actualTask);
+            _taskRepoMock.Verify(x => x.AddTask(taskDto), Times.Once);
+            _taskRepoMock.Verify(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _taskRepoMock.Verify(x => x.GetTaskById(expectedTaskId), Times.Once);
+        }
+
+        [Test]
+        public void AddTaskByMethodist_DtoWithTags_TaskWithTagsCreated()
+        {
+            //Given
+            var taskDto = TaskData.GetTaskDtoWithTags();
+            var expectedTaskId = 55;
+            var coursesIds = new List<int> { 1 };
+            var tagsIds = new List<int> { 13, 15, 14 };
+
+            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(expectedTaskId);
+            _taskRepoMock.Setup(x => x.AddTagToTask(expectedTaskId, It.IsAny<int>()));
+            _taskRepoMock.Setup(x => x.GetTaskById(expectedTaskId)).Returns(taskDto);
+
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+
+            //When
+            var actualTask = sut.AddTaskByMethodist(taskDto, coursesIds, tagsIds);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
@@ -88,7 +144,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskById(expectedTaskId)).Returns(taskDto);
             _taskValidationHelperMock.Setup(x => x.GetTaskByIdAndThrowIfNotFound(expectedTaskId)).Returns(taskDto);
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             //When
             var dto = sut.GetTaskById(expectedTaskId, expectedUserId);
@@ -109,7 +165,7 @@ namespace DevEdu.Business.Tests
             _taskValidationHelperMock.Setup(x => x.GetTaskByIdAndThrowIfNotFound(expectedTaskId)).Throws(
                 new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "task", expectedTaskId)));
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             EntityNotFoundException ex = Assert.Throws<EntityNotFoundException>(
                 () => sut.GetTaskById(expectedTaskId, expectedUserId));
@@ -131,7 +187,7 @@ namespace DevEdu.Business.Tests
                 new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", expectedUserId, "task", expectedTaskId)));
 
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             AuthorizationException ex = Assert.Throws<AuthorizationException>(
                 () => sut.GetTaskById(expectedTaskId, expectedUserId));
@@ -156,7 +212,7 @@ namespace DevEdu.Business.Tests
             _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskId(expectedTaskId)).Returns(courseDtos);
             taskDto.Courses = courseDtos;
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             //When
             var dto = sut.GetTaskWithCoursesById(expectedTaskId, expectedUserId);
@@ -178,7 +234,7 @@ namespace DevEdu.Business.Tests
             _taskValidationHelperMock.Setup(x => x.GetTaskByIdAndThrowIfNotFound(expectedTaskId)).Throws(
                 new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "task", expectedTaskId)));
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", expectedTaskId)), 
@@ -202,7 +258,7 @@ namespace DevEdu.Business.Tests
                 new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", expectedUserId, "task", expectedTaskId)));
 
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             AuthorizationException ex = Assert.Throws<AuthorizationException>(
                 () => sut.GetTaskWithCoursesById(expectedTaskId, expectedUserId));
@@ -226,7 +282,7 @@ namespace DevEdu.Business.Tests
             _studentAnswerRepoMock.Setup(x => x.GetStudentAnswersToTaskByTaskId(expectedTaskId)).Returns(studentAnswersDtos);
             taskDto.StudentAnswers = studentAnswersDtos;
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             //When
             var dto = sut.GetTaskWithAnswersById(expectedTaskId, expectedUserId);
@@ -248,7 +304,7 @@ namespace DevEdu.Business.Tests
             _taskValidationHelperMock.Setup(x => x.GetTaskByIdAndThrowIfNotFound(expectedTaskId)).Throws(
                 new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "task", expectedTaskId)));
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", expectedTaskId)), 
@@ -271,8 +327,7 @@ namespace DevEdu.Business.Tests
             _taskValidationHelperMock.Setup(x => x.CheckUserAccessToTask(expectedTaskId, expectedUserId)).Throws(
                 new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", expectedUserId, "task", expectedTaskId)));
 
-
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             AuthorizationException ex = Assert.Throws<AuthorizationException>(
                 () => sut.GetTaskWithAnswersById(expectedTaskId, expectedUserId));
@@ -291,7 +346,7 @@ namespace DevEdu.Business.Tests
 
             _taskRepoMock.Setup(x => x.GetTasks()).Returns(taskDtos);
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             //When
             var dtos = sut.GetTasks();
@@ -306,7 +361,7 @@ namespace DevEdu.Business.Tests
         {
             _taskRepoMock.Setup(x => x.GetTasks()).Throws(new EntityNotFoundException(ServiceMessages.TasksNotFoundMessage));
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(ServiceMessages.TasksNotFoundMessage), () => sut.GetTasks());
@@ -323,9 +378,9 @@ namespace DevEdu.Business.Tests
             var expectedUserId = 10;
 
             _taskRepoMock.Setup(x => x.UpdateTask(taskDto));
-            _taskRepoMock.Setup(x => x.GetTaskById(taskDto.Id)).Returns(expectedTaskDto);
+            _taskRepoMock.Setup(x => x.GetTaskById(expectedTaskId)).Returns(expectedTaskDto);
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             //When
             var actualTaskDto = sut.UpdateTask(taskDto, expectedTaskId, expectedUserId);
@@ -347,7 +402,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.UpdateTask(taskDto)).Throws(
                 new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "task", expectedTaskId)));
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                     .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", expectedTaskId)),
@@ -366,7 +421,7 @@ namespace DevEdu.Business.Tests
             _taskValidationHelperMock.Setup(x => x.GetTaskByIdAndThrowIfNotFound(expectedTaskId)).Throws(
                 new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "task", expectedTaskId)));
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                     .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", expectedTaskId)),
@@ -386,7 +441,7 @@ namespace DevEdu.Business.Tests
 
             _taskRepoMock.Setup(x => x.GetGroupTasksByTaskId(taskId)).Returns(groupTaskList);
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             //When
             var dto = sut.GetGroupTasksByTaskId(taskId);

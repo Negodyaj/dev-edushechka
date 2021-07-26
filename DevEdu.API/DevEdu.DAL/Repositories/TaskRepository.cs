@@ -49,7 +49,7 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
             return task;
         }
-        public List<TaskDto> GetTaskByCourseId(int courseId)
+        public List<TaskDto> GetTasksByCourseId(int courseId)
         {
            var taskList = new List<TaskDto>();
             return _connection.Query<TaskDto>(

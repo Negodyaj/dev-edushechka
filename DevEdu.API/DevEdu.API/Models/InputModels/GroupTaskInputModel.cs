@@ -13,6 +13,5 @@ namespace DevEdu.API.Models.InputModels
         [Required(ErrorMessage = EndDateRequired)]
         [CustomDateFormatAttribute(ErrorMessage = WrongFormatDate)]
         public string EndDate { get; set; }
-        public List<int> GroupsIds { get; set; }
     }
 }

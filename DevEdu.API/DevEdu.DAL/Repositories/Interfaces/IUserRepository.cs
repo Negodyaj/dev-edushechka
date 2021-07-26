@@ -14,5 +14,6 @@ namespace DevEdu.DAL.Repositories
         List<UserDto> SelectUsers();
         void UpdateUser(UserDto user);
         public List<GroupDto> GetGroupsByUserId(int userId);
+        List<UserDto> GetUsersByGroupIdAndRole(int GroupId, int Role);
     }
 }

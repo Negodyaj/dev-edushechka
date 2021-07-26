@@ -66,43 +66,38 @@ namespace DevEdu.Business.Services
         public TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds )
         {
             var taskId = _taskRepository.AddTask(taskDto);
-            if (tagsIds == null || tagsIds.Count == 0)
-                return _taskRepository.GetTaskById(taskId);
-            tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
-            if (coursesIds.Count == 0)
-                return _taskRepository.GetTaskById(taskId);
-            coursesIds.ForEach(courseId => _courseRepository.AddTaskToCourse(courseId, taskId));
+            var task = _taskRepository.GetTaskById(taskId);
+            if (tagsIds != null || tagsIds.Count != 0)
+                tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
+            if (coursesIds != null || coursesIds.Count != 0)
+                coursesIds.ForEach(courseId => _courseRepository.AddTaskToCourse(courseId, taskId));
 
-            return _taskRepository.GetTaskById(taskId);
+            return task;
         }
 
-        public TaskDto AddTaskByTeacher(TaskDto taskDto, List<int> groupsIds, List<int> tagsIds)
+        public TaskDto AddTaskByTeacher(TaskDto taskDto, GroupTaskDto groupTask, int groupId, List<int> tagsIds)
         {
             var taskId = _taskRepository.AddTask(taskDto);
-            if (tagsIds == null || tagsIds.Count == 0)
-                return _taskRepository.GetTaskById(taskId);
-            tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
-            if (groupsIds == 0)
-                return _taskRepository.GetTaskById(taskId);
-            foreach (var groupId in groupsIds)
+            var task = _taskRepository.GetTaskById(taskId);
+            if (tagsIds != null || tagsIds.Count != 0)
+                tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
+            if (groupTask != null)
             {
-                GroupTaskDto groupTaskDto = new GroupTaskDto();
-                groupTaskDto.Group = groupId;
-                groupTaskDto.Task = taskDto.Id;
-                    _groupRepository.AddTaskToGroup(groupTaskDto);
+                groupTask.Group = _groupRepository.GetGroup(groupId);
+                groupTask.Task = task;
+                _groupRepository.AddTaskToGroup(groupTask);
             }
-
-            return _taskRepository.GetTaskById(taskId);
+            return task;
         }
 
         public TaskDto UpdateTask(TaskDto taskDto, int taskId, int userId)
         {
-            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskDto.Id);
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
 
             taskDto.Id = taskId;
             _taskRepository.UpdateTask(taskDto);
-            return _taskRepository.GetTaskById(taskDto.Id);
+            return _taskRepository.GetTaskById(taskId);
         }
 
         public void DeleteTask(int taskId, int userId)

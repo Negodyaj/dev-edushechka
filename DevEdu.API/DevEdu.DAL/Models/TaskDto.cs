@@ -12,7 +12,6 @@ namespace DevEdu.DAL.Models
         public List<TagDto> Tags { get; set; }
         public List<StudentAnswerOnTaskForTaskDto> StudentAnswers { get; set; }
         public List<CourseDto> Courses { get; set; }
-        public List<GroupDto> Groups { get; set; }
 
         public override bool Equals(object obj)
         {
