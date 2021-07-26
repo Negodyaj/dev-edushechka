@@ -7,7 +7,9 @@ BEGIN
 	n.Text,
 	n.Date,
 	n.IsDeleted,
-	g.Id
+	g.Id,
+	g.Name,
+	g.StartDate
 	FROM dbo.Notification n
 		left join [Group] g on g.Id = n.GroupId
 	WHERE (n.GroupId = @GroupId AND n.IsDeleted=0)

@@ -22,9 +22,11 @@ namespace DevEdu.Business.Services
 
         public int AddNotification( NotificationDto dto)
         {
-            if(dto.Role!=0 && dto.User.Id!=0)
+            if (((dto.Role != 0) && (dto.User.Id != 0)) 
+                || ((dto.Role != 0) && (dto.Group.Id != 0)) 
+                || ((dto.User.Id != 0) && (dto.Group.Id != 0)))
             {
-
+                throw new System.Exception("Only one property (RoleId, UserId or GroupId) should have a value");
             }
            return  _notificationRepository.AddNotification(dto);
         }

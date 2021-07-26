@@ -23,8 +23,8 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     roleId = (notificationDto.Role == 0) ? null : (int?)notificationDto.Role,
-                    userId = (notificationDto.User.Id == 0) ? null : (int?)notificationDto.User.Id,
-                    groupId = (notificationDto.Group.Id == 0) ? null : (int?)notificationDto.Group.Id,
+                    userId = (notificationDto.User == null) ? null : (int?)notificationDto.User.Id,
+                    groupId = (notificationDto.Group == null) ? null : (int?)notificationDto.Group.Id,
                     notificationDto.Text
                 },
                 commandType: CommandType.StoredProcedure
@@ -49,7 +49,7 @@ namespace DevEdu.DAL.Repositories
                     (notification, role, user, group) =>
                     {
                         result = notification;
-                        result.Role = (role == 0) ? default : role;
+                        result.Role = (role == null) ? default : role;
                         result.User = user;
                         result.Group = group;
 
