@@ -169,25 +169,26 @@ namespace DevEdu.Business.Tests
             //Given
             var givenMaterialId = 5;
             var givenTagId = 11;
-            _materialRepositoryMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
-            var sut = new MaterialService(_materialRepositoryMock.Object, _courseRepositoryMock.Object, _groupRepositoryMock.Object);
+            _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
+            var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
             //When
             sut.AddTagToMaterial(givenMaterialId, givenTagId);
             //Then
-            _materialRepositoryMock.Verify(x => x.AddTagToMaterial(givenMaterialId, givenTagId), Times.Once);
+            _materialRepoMock.Verify(x => x.AddTagToMaterial(givenMaterialId, givenTagId), Times.Once);
         }
+
         [Test]
         public void DeleteTagFromMaterial_WithMaterialIdAndTopicId_Deleted()
         {
             //Given
             var givenMaterialId = 5;
             var givenTagId = 11;
-            _materialRepositoryMock.Setup(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId));
-            var sut = new MaterialService(_materialRepositoryMock.Object, _courseRepositoryMock.Object, _groupRepositoryMock.Object);
+            _materialRepoMock.Setup(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId));
+            var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
             //When
             sut.DeleteTagFromMaterial(givenMaterialId, givenTagId);
             //Then
-            _materialRepositoryMock.Verify(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId), Times.Once);
+            _materialRepoMock.Verify(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId), Times.Once);
         }
     }
 }
