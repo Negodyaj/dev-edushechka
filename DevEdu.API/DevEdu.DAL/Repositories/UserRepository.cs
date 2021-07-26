@@ -13,6 +13,7 @@ namespace DevEdu.DAL.Repositories
         private const string _userSelectByIdProcedure = "dbo.User_SelectById";
         private const string _userSelectByEmailProcedure = "dbo.User_SelectByEmail";
         private const string _userSelectAllProcedure = "dbo.User_SelectAll";
+        private const string _userSelectByGroupIdAndRole = "dbo.User_SelectByGroupIdAndRole";
         private const string _userUpdateProcedure = "dbo.User_Update";
         private const string _userDeleteProcedure = "dbo.User_Delete";
 
@@ -173,6 +174,20 @@ namespace DevEdu.DAL.Repositories
                     roleId
                 },
                 commandType: CommandType.StoredProcedure);
+        }
+
+        public List<UserDto> GetUsersByGroupIdAndRole(int groupId, int roleId)
+        {
+            return _connection.Query<UserDto>
+            (
+                _userSelectByGroupIdAndRole,
+                new
+                {
+                    groupId,
+                    roleId
+                },
+                commandType: CommandType.StoredProcedure
+            ).ToList();
         }
     }
 }
