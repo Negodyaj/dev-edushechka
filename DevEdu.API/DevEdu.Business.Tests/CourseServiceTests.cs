@@ -25,6 +25,49 @@ namespace DevEdu.Business.Tests
             _taskRepositoryMock = new Mock<ITaskRepository>();
             _materialRepositoryMock = new Mock<IMaterialRepository>();
         }
+
+        [Test]
+        public void AddCourse() 
+        {
+            
+        }
+
+        [Test]
+        public void DeleteCourse()
+        {
+
+        }
+
+        [Test]
+        public void GetCourse()
+        {
+
+        }
+
+        [Test] 
+        public void GetFullCourseInfo()
+        {
+
+        }
+
+        [Test]
+        public void GetCoursesForAdmin()
+        {
+
+        }
+
+        [Test]
+        public void GetCourses()
+        {
+
+        }
+
+        [Test]
+        public void UpdateCourse()
+        {
+
+        }
+
         [Test]
         public void AddTopicToCourse_WithCourseIdAndSimpleDto_TopicWasAdded() 
         {

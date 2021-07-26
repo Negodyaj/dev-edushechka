@@ -1,9 +1,5 @@
 ﻿using DevEdu.DAL.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -12,6 +8,122 @@ namespace DevEdu.Business.Tests
         public CourseData()
         {
 
+        }
+        public static CourseDto GetCourseDto()
+        {
+            return new CourseDto
+            {
+                Id = 1,
+                Name = "Web Api",
+                Description = "Entity Framework",
+                Groups = new List<GroupDto>
+                {
+                    new GroupDto
+                    {
+                        Id = 1,
+                        Name = "Volosatiye Zmei",
+                        PaymentPerMonth = 10000,
+                        Timetable = "Morning"
+                    },
+                    new GroupDto
+                    {
+                        Id = 2,
+                        Name = "Zhidkie Osnovi",
+                        PaymentPerMonth = 20000,
+                        Timetable = "Evening"
+                    }
+                },
+                Materials = new List<MaterialDto>
+                {
+                    new MaterialDto
+                    {
+                        Id = 1, Content = "Code First"
+                    },
+                    new MaterialDto
+                    {
+                        Id = 2, Content =   "Entity First"
+                    }
+                },
+                Tasks = new List<TaskDto>
+                {
+                    new TaskDto
+                    {
+                        Id = 1,
+                        Name = "New super task"
+                    },
+                    new TaskDto
+                    {
+                        Id = 2,
+                        Name = "Old super task"
+                    }
+                },
+                Topics = new List<TopicDto>
+                {
+                    new TopicDto
+                    {
+                        Id = 1,
+                        Name = "Scooter"
+                    },
+                    new TopicDto
+                    {
+                        Id = 2,
+                        Name = "E-e-e-e-a"
+                    }
+                }
+            };
+        }
+
+        public static List<CourseDto> GetListCourses()
+        {
+            return new List<CourseDto>
+            {
+                new CourseDto
+                {
+                    Id = 1,
+                    Name = "Web Api",
+                    Description = "Entity Framework",
+                    Groups = new List<GroupDto>
+                    {
+                        new GroupDto
+                        {
+                            Id = 1,
+                            Name = "Volosatiye Zmei",
+                            PaymentPerMonth = 10000,
+                            Timetable = "Morning"
+                        },
+                        new GroupDto
+                        {
+                            Id = 2,
+                            Name = "Zhidkie Osnovi",
+                            PaymentPerMonth = 20000,
+                            Timetable = "Evening"
+                        }
+                    }
+                },
+                new CourseDto
+                {
+                    Id = 2,
+                    Name = "Web Service",
+                    Description = "SOAP",
+                    Groups = new List<GroupDto>
+                    {
+                        new GroupDto
+                        {
+                            Id = 3,
+                            Name = "Krasnie shari",
+                            PaymentPerMonth = 30000,
+                            Timetable = "Mittag"
+                        },
+                        new GroupDto
+                        {
+                            Id = 4,
+                            Name = "Sinie priveti",
+                            PaymentPerMonth = 40000,
+                            Timetable = "MitNacht"
+                        }
+                    }
+                }
+            };
         }
         public static List<CourseTopicDto> GetListCourseTopicDto()
         {
