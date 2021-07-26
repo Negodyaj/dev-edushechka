@@ -108,7 +108,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
-        public void AddPayments(List<PaymentDto> payments)
+        public List<int> AddPayments(List<PaymentDto> payments)
         {
             var table = new DataTable();
             table.Columns.Add("Date");
@@ -121,11 +121,12 @@ namespace DevEdu.DAL.Repositories
             {
                 table.Rows.Add(bill.Date, bill.Sum, bill.User.Id, bill.IsPaid, bill.IsDeleted);
             }
-            _connection.Execute(
+             var response = _connection.Query<int>(
                 _addPaymentsProcedure,
                 new { tblPayment = table.AsTableValuedParameter(_paymentType) },
                 commandType: CommandType.StoredProcedure
-                );
+                ).ToList();
+            return response;
         }
         public List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids)
         {

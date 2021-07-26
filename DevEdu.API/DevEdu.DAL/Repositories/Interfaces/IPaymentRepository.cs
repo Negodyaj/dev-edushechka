@@ -10,7 +10,7 @@ namespace DevEdu.DAL.Repositories
         PaymentDto GetPayment(int id);
         List<PaymentDto> GetPaymentsByUser(int userId);
         void UpdatePayment(PaymentDto paymentDto);
-        void AddPayments(List<PaymentDto> payments);
+        List<int> AddPayments(List<PaymentDto> payments);
         List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids);
     }
 }

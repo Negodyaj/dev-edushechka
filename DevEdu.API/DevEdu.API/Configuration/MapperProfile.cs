@@ -112,7 +112,7 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<TaskDto, TaskInfoOutputMiniModel>();
             CreateMap<PaymentDto, PaymentOutputModel>()
-                .ForMember(dest => dest.Date , opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
         }
     }
 }

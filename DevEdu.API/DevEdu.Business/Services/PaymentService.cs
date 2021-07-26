@@ -32,9 +32,9 @@ namespace DevEdu.Business.Services
             dto.Id = id;
             _paymentRepository.UpdatePayment(dto);
         }
-        public void AddPayments(List<PaymentDto> payments)
+        public List<int> AddPayments(List<PaymentDto> payments)
         {
-            _paymentRepository.AddPayments(payments);
+            return _paymentRepository.AddPayments(payments);
         }
         public List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids)
         {
