@@ -30,13 +30,12 @@ namespace DevEdu.Business.Services
             return dto;
         }
 
-        public int AddMaterial(MaterialDto dto)
+        public int AddMaterial(MaterialDto dto, List<int> tags)
         {
             var materialId = _materialRepository.AddMaterial(dto);
-            if (dto.Tags == null || dto.Tags.Count == 0)
+            if (tags == null || tags.Count == 0)
                 return materialId;
-
-            dto.Tags.ForEach(tag => AddTagToMaterial(materialId, tag.Id));
+            tags.ForEach(tag => AddTagToMaterial(materialId, tag));
             return materialId;
         }
 

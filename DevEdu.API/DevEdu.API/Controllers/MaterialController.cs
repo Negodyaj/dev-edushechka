@@ -32,7 +32,7 @@ namespace DevEdu.API.Controllers
         public MaterialInfoOutputModel AddMaterial([FromBody] MaterialInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            int id = _materialService.AddMaterial(dto);
+            int id = _materialService.AddMaterial(dto, materialModel.TagsIds);
             dto = _materialService.GetMaterialById(id);
             return _mapper.Map<MaterialInfoOutputModel>(dto);
         }

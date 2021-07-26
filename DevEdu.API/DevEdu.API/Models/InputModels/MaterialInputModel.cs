@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
@@ -7,5 +8,6 @@ namespace DevEdu.API.Models.InputModels
     {
         [Required(ErrorMessage = ContentRequired)]
         public string Content { get; set; }
+        public List<int> TagsIds { get; set; }
     }
 }
