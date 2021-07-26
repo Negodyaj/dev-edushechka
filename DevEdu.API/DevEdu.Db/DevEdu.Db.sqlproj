@@ -15,12 +15,13 @@
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetLanguage>CS</TargetLanguage>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -44,6 +45,10 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>
+    </NoWarn>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <SuppressTSqlWarnings>70588;</SuppressTSqlWarnings>
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -237,6 +242,8 @@
     <Build Include="StoredProcedures\Topic\Topic_SelectByCourseId.sql" />
     <Build Include="StoredProcedures\Task\Task_SelectByCourseId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByCourseId.sql" />
+    <Build Include="StoredProcedures\Group\Group_UpdateGroupStatus.sql" />
+    <Build Include="StoredProcedures\User\User_SelectByGroupIdAndRole.sql" />
     <Build Include="Tables\RatingType.sql" />
     <Build Include="Tables\StudentRating.sql" />
     <Build Include="StoredProcedures\StudentRating\StudentRating_Insert.sql" />

@@ -13,5 +13,6 @@ namespace DevEdu.DAL.Repositories
         public UserDto SelectUserByEmail(string email);
         List<UserDto> SelectUsers();
         void UpdateUser(UserDto user);
+        List<UserDto> GetUsersByGroupIdAndRole(int GroupId, int Role);
     }
 }

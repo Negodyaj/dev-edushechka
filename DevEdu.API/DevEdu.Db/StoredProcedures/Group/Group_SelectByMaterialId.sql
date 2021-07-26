@@ -9,5 +9,5 @@ BEGIN
 	FROM dbo.Group_Material gm
 		left join dbo.[Group] g on g.Id = gm.GroupId
 	WHERE 
-		gm.MaterialId = @Id AND g.IsDeleted = 0 AND g.GroupStatusId = 1
+		gm.MaterialId = @Id AND g.IsDeleted = 0 AND g.GroupStatusId <> 4
 END

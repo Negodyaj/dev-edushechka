@@ -1,5 +1,6 @@
 ﻿using System;
 using DevEdu.DAL.Enums;
+using System.Collections.Generic;
 
 namespace DevEdu.DAL.Models
 {
@@ -11,5 +12,8 @@ namespace DevEdu.DAL.Models
         public DateTime StartDate { get; set; }
         public string Timetable { get; set; }
         public decimal PaymentPerMonth { get; set; }
+        public List<UserDto> Students { get; set; }
+        public List<UserDto> Tutors { get; set; }
+        public List<UserDto> Teachers { get; set; }
     }
 }
