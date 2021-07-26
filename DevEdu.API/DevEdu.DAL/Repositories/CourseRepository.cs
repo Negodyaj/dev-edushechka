@@ -227,9 +227,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int RemoveCourseMaterialReference(int courseId, int materialId)
+        public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
-            return _connection.Execute(
+             _connection.Execute(
                 _deleteCourseMaterial,
                 new
                 {

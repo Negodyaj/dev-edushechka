@@ -3,16 +3,16 @@
 AS
 BEGIN
 	SELECT 
-		gt.Id,
-		gt.StartDate,
-		gt.EndDate,
+		h.Id,
+		h.StartDate,
+		h.EndDate,
 		t.Id,
 		t.Name,
 		t.Description,
 		t.Links,
 		t.IsRequired,
 		t.IsDeleted
-	FROM dbo.Group_Task gt
-	inner join Task t on gt.TaskId=t.Id
-	WHERE (gt.GroupId = @GroupId and t.IsDeleted=0)
+	FROM dbo.Homework h
+	inner join Task t on h.TaskId=t.Id
+	WHERE (h.GroupId = @GroupId and t.IsDeleted=0)
 END

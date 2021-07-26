@@ -15,8 +15,6 @@ namespace DevEdu.DAL.Repositories
         private const string _lessonSelectByIdProcedure = "dbo.Lesson_SelectById";
         private const string _lessonUpdateProcedure = "dbo.Lesson_Update";
 
-        private const string _commentAddToLessonProcedure = "dbo.Lesson_Comment_Insert";
-        private const string _commentDeleteFromLessonProcedure = "dbo.Lesson_Comment_Delete";
         private const string _topicAddToLessonProcedure = "dbo.Lesson_Topic_Insert";
         private const string _topicDeleteFromLessonProcedure = "dbo.Lesson_Topic_Delete";
 
@@ -57,31 +55,6 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddCommentToLesson(int lessonId, int commentId)
-        {
-            _connection.QueryFirst<int>(
-                _commentAddToLessonProcedure,
-                new
-                {
-                    lessonId,
-                    commentId
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
-
-        public void DeleteCommentFromLesson(int lessonId, int commentId)
-        {
-            _connection.Execute(
-                _commentDeleteFromLessonProcedure,
-                new
-                {
-                    lessonId,
-                    commentId
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
         public int DeleteTopicFromLesson(int lessonId, int topicId)
         {
             return _connection.Execute(
@@ -299,7 +272,6 @@ namespace DevEdu.DAL.Repositories
              );
         }
 
-
         public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId)
         {
             StudentLessonDto result;
@@ -321,7 +293,6 @@ namespace DevEdu.DAL.Repositories
             return list;
         }
 
-
         public StudentLessonDto SelectByLessonAndUserId(int lessonId, int userId)      
         {
             return _connection.QuerySingleOrDefault<StudentLessonDto>(
@@ -336,5 +307,3 @@ namespace DevEdu.DAL.Repositories
         }
     }
 }
-
-

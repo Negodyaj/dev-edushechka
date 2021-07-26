@@ -4,9 +4,9 @@
 AS
 BEGIN
 	SELECT 
-		gt.Id,
-		gt.StartDate,
-		gt.EndDate,
+		h.Id,
+		h.StartDate,
+		h.EndDate,
 		t.Id,
 		t.Name,
 		t.Description,
@@ -18,8 +18,8 @@ BEGIN
 		g.StartDate,
 		g.IsDeleted,
 		g.GroupStatusId as id
-	FROM dbo.Group_Task gt
-	inner join Task t on gt.TaskId=t.Id
-	inner join [Group] g on gt.GroupId=g.Id
-	WHERE (gt.GroupId=@GroupId and gt.TaskId=@TaskId)
+	FROM dbo.Homework h
+	inner join Task t on h.TaskId=t.Id
+	inner join [Group] g on h.GroupId=g.Id
+	WHERE (h.GroupId=@GroupId and h.TaskId=@TaskId)
 END

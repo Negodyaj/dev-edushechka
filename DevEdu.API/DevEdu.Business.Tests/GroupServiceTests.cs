@@ -22,15 +22,14 @@ namespace DevEdu.Business.Tests
             const int groupId = GroupData.GroupId;
             const int materialId = GroupData.MaterialId;
 
-            _groupRepoMock.Setup(x => x.AddGroupMaterialReference(groupId, materialId)).Returns(GroupData.ExpectedAffectedRows);
+            _groupRepoMock.Setup(x => x.AddGroupMaterialReference(groupId, materialId));
 
             var sut = new GroupService(_groupRepoMock.Object);
 
             //When
-            var actualAffectedRows = sut.AddGroupMaterialReference(groupId, materialId);
+            sut.AddGroupMaterialReference(groupId, materialId);
 
             //Than
-            Assert.AreEqual(GroupData.ExpectedAffectedRows, actualAffectedRows);
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(groupId, materialId), Times.Once);
         }
 
@@ -41,15 +40,14 @@ namespace DevEdu.Business.Tests
             const int groupId = GroupData.GroupId;
             const int materialId = GroupData.MaterialId;
 
-            _groupRepoMock.Setup(x => x.RemoveGroupMaterialReference(groupId, materialId)).Returns(GroupData.ExpectedAffectedRows);
+            _groupRepoMock.Setup(x => x.RemoveGroupMaterialReference(groupId, materialId));
 
             var sut = new GroupService(_groupRepoMock.Object);
 
             //When
-            var actualAffectedRows = sut.RemoveGroupMaterialReference(groupId, materialId);
+            sut.RemoveGroupMaterialReference(groupId, materialId);
 
             //Than
-            Assert.AreEqual(GroupData.ExpectedAffectedRows, actualAffectedRows);
             _groupRepoMock.Verify(x => x.RemoveGroupMaterialReference(groupId, materialId), Times.Once);
         }
 

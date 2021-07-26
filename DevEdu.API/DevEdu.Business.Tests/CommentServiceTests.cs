@@ -1,4 +1,5 @@
 ﻿using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -8,29 +9,57 @@ namespace DevEdu.Business.Tests
     public class CommentServiceTests
     {
         private Mock<ICommentRepository> _commentRepoMock;
+        private Mock<ICommentValidationHelper> _commentValidationHelper;
 
         [SetUp]
         public void Setup()
         {
             _commentRepoMock = new Mock<ICommentRepository>();
+            _commentValidationHelper = new Mock<ICommentValidationHelper>();
         }
 
         [Test]
-        public void AddComment_CommentDto_CommentCreated()
+        public void AddCommentToLesson_CommentDto_CommentReturned()
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
+            var lessonId = 42;
+            var expectedCommentId = 1;
 
-            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(CommentData.ExpectedCommentId);
+            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
+            _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
 
-            var sut = new CommentService(_commentRepoMock.Object);
+            var sut = new CommentService(_commentRepoMock.Object, _commentValidationHelper.Object);
 
             //When
-            var actualCommentId = sut.AddComment(commentDto);
+            var actualComment = sut.AddCommentToLesson(lessonId, commentDto);
 
             //Than
-            Assert.AreEqual(CommentData.ExpectedCommentId, actualCommentId);
+            Assert.AreEqual(commentDto, actualComment);
             _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
+            _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
+        }
+
+        [Test]
+        public void AddCommentToStudentAnswer_CommentDto_CommentReturned()
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            var taskStudentId = 42;
+            var expectedCommentId = 1;
+
+            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
+            _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
+
+            var sut = new CommentService(_commentRepoMock.Object, _commentValidationHelper.Object);
+
+            //When
+            var actualComment = sut.AddCommentToLesson(taskStudentId, commentDto);
+
+            //Than
+            Assert.AreEqual(commentDto, actualComment);
+            _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
+            _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
         }
 
         [Test]
@@ -38,11 +67,11 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
-            const int commentId = CommentData.CommentId;
+            var commentId = 42;
 
             _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
 
-            var sut = new CommentService(_commentRepoMock.Object);
+            var sut = new CommentService(_commentRepoMock.Object, _commentValidationHelper.Object);
 
             //When
             var dto = sut.GetComment(commentId);
@@ -57,12 +86,12 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
-            const int commentId = CommentData.CommentId;
+            var commentId = 42;
 
             _commentRepoMock.Setup(x => x.UpdateComment(commentDto));
             _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
 
-            var sut = new CommentService(_commentRepoMock.Object);
+            var sut = new CommentService(_commentRepoMock.Object, _commentValidationHelper.Object);
 
             //When
             var dto = sut.UpdateComment(commentId, commentDto);
@@ -77,36 +106,17 @@ namespace DevEdu.Business.Tests
         public void DeleteComment_IntCommentId_DeleteComment()
         {
             //Given
-            const int commentId = CommentData.CommentId;
+            var commentId = 42;
 
             _commentRepoMock.Setup(x => x.DeleteComment(commentId));
 
-            var sut = new CommentService(_commentRepoMock.Object);
+            var sut = new CommentService(_commentRepoMock.Object, _commentValidationHelper.Object);
 
             //When
             sut.DeleteComment(commentId);
 
             //Than
             _commentRepoMock.Verify(x => x.DeleteComment(commentId), Times.Once);
-        }
-
-        [Test]
-        public void GetCommentByUserId_IntUserId_ReturnedListOfUserComments()
-        {
-            //Given
-            var commentsList = CommentData.GetListCommentsDto();
-            const int userId = CommentData.UserId;
-
-            _commentRepoMock.Setup(x => x.GetCommentsByUser(userId)).Returns(commentsList);
-
-            var sut = new CommentService(_commentRepoMock.Object);
-
-            //When
-            var listOfDto = sut.GetCommentsByUserId(userId);
-
-            //Than
-            Assert.AreEqual(commentsList, listOfDto);
-            _commentRepoMock.Verify(x => x.GetCommentsByUser(userId), Times.Once);
         }
     }
 }

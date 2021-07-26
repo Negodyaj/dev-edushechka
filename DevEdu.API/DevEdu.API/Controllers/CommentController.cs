@@ -5,6 +5,7 @@ using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/comment/5
+        [Authorize]
         [HttpGet("{id}")]
         [Description("Return comment by id")]
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
@@ -34,28 +36,34 @@ namespace DevEdu.API.Controllers
             return output;
         }
 
-        //  api/comment/by-user/1
-        [HttpGet("by-user/{userId}")]
-        [Description("Return comments by user")]
-        [ProducesResponseType(typeof(List<CommentInfoOutputModel>), StatusCodes.Status200OK)]
-        public List<CommentInfoOutputModel> GetCommentsByUserId(int userId)
+        //  api/comment/to-lesson/1
+        [Authorize]
+        [HttpPost("to-lesson/{lessonId}")]
+        [Description("Add new comment to lesson")]
+        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status201Created)]
+        public CommentInfoOutputModel AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel model)
         {
-            var dto = _commentService.GetCommentsByUserId(userId);
-            var output = _mapper.Map<List<CommentInfoOutputModel>>(dto);
+            var dto = _mapper.Map<CommentDto>(model);
+            var comment = _commentService.AddCommentToLesson(lessonId, dto);
+            var output = _mapper.Map<CommentInfoOutputModel>(comment);
             return output;
         }
 
-        //  api/comment
-        [HttpPost]
-        [Description("Add new comment")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
-        public int AddComment([FromBody] CommentAddInputModel model)
+        //  api/comment/to-student-answer/1
+        [Authorize]
+        [HttpPost("to-student-answer/{taskStudentId}")]
+        [Description("Add new comment to student answer")]
+        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status201Created)]
+        public CommentInfoOutputModel AddCommentToStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel model)
         {
             var dto = _mapper.Map<CommentDto>(model);
-            return _commentService.AddComment(dto);
+            var comment = _commentService.AddCommentToStudentAnswer(taskStudentId, dto);
+            var output = _mapper.Map<CommentInfoOutputModel>(comment);
+            return output;
         }
 
         //  api/comment/5
+        [Authorize]
         [HttpDelete("{id}")]
         [Description("Delete comment by id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -65,6 +73,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/comment/5
+        [Authorize]
         [HttpPut("{id}")]
         [Description("Update comment by id")]
         [ProducesResponseType(StatusCodes.Status200OK)]

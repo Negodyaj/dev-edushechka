@@ -5,7 +5,7 @@
 	@EndDate datetime
 AS
 BEGIN
-	INSERT INTO dbo.Group_Task (GroupId,TaskId,StartDate,EndDate)
+	INSERT INTO dbo.Homework (GroupId,TaskId,StartDate,EndDate)
 	VALUES (@GroupId, @TaskId, @StartDate, @EndDate)
 	SELECT @@IDENTITY
 END

@@ -5,7 +5,7 @@
 	@EndDate datetime
 AS
 BEGIN
-    UPDATE dbo.Group_Task
+    UPDATE dbo.Homework
     SET
     StartDate = @StartDate,
     EndDate = @EndDate

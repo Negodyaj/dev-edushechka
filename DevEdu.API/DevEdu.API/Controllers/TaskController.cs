@@ -198,17 +198,6 @@ namespace DevEdu.API.Controllers
             return statusId;
         }
 
-        // api/task/answer/{taskStudentId}/comment}
-        [HttpPost("answer/{taskStudentId}/comment")]
-        public int AddCommentOnStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel inputModel)
-        {
-            var commentDto = _mapper.Map<CommentDto>(inputModel);
-            int commentId = _commentRepository.AddComment(commentDto);
-            _studentAnswerOnTaskService.AddCommentOnStudentAnswer(taskStudentId, commentId);
-
-            return taskStudentId;
-        }
-
         //  api/task/1/group/
         [HttpGet("{taskId}/groups")]
         [Description("Get all groups by task")]

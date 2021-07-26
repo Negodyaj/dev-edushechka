@@ -18,6 +18,6 @@ namespace DevEdu.DAL.Repositories
         List<CourseDto> GetCoursesToTaskByTaskId(int id);
         public List<CourseDto> GetCoursesByMaterialId(int id);
         int AddCourseMaterialReference(int courseId, int materialId);
-        int RemoveCourseMaterialReference(int courseId, int materialId);
+        void RemoveCourseMaterialReference(int courseId, int materialId);
     }
 }

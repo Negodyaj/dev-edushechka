@@ -3,6 +3,6 @@
 	@TaskId int
 AS
 BEGIN
-	DELETE FROM dbo.Group_Task
+	DELETE FROM dbo.Homework
 	WHERE GroupId = @GroupId AND TaskId = @TaskId
 END

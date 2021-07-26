@@ -1,18 +1,13 @@
-﻿using DevEdu.DAL.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.Tests
 {
     public class CourseData
     {
-        public CourseData()
-        {
+        public const int CourseId = 1;
+        public const int MaterialId = 1;
 
-        }
         public static List<CourseTopicDto> GetListCourseTopicDto()
         {
             List<CourseTopicDto> courseTopicsDto = new List<CourseTopicDto>();

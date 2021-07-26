@@ -25,10 +25,21 @@ namespace DevEdu.API.Controllers
     public class LessonController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ILessonService _lessonService;        
+        private readonly ILessonService _lessonService;
+        private readonly ILessonRepository _lessonRepository;
+        private readonly ICommentService _commentService;
 
-        public LessonController(IMapper mapper, ILessonService lessonService)
+        public LessonController
+        (
+            ILessonRepository lessonRepository,
+            ILessonService lessonService,
+            ICommentService commentService,
+            IMapper mapper
+        )
         {
+            _lessonRepository = lessonRepository;
+            _lessonService = lessonService;
+            _commentService = commentService;
             _mapper = mapper;
             _lessonService = lessonService;            
         }
@@ -113,28 +124,6 @@ namespace DevEdu.API.Controllers
         {
             var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(id);
             return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel> (dto);
-        }
-
-        // api/lesson/{lessonId}/comment/{commentId}
-        [HttpPost("{lessonId}/comment/{commentId}")]
-        [Description("Add a lesson's comment.")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel commentInputModel)
-        {
-            CommentService commentService = new CommentService(new CommentRepository());
-            var dto = _mapper.Map<CommentDto>(commentInputModel);
-            int commentId = commentService.AddComment(dto);
-            
-            _lessonService.AddCommentToLesson(lessonId, commentId);
-        }
-
-        // api/lesson/{lessonId}/comment/{commentId}
-        [HttpDelete("{lessonId}/comment/{commentId}")]
-        [Description("Delete the lesson's comment.")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void DeleteLessonComment(int lessonId, int commentId)
-        {
-            _lessonService.DeleteCommentFromLesson(lessonId, commentId);            
         }
 
         // api/lesson/{lessonId}/topic/{toppicId}

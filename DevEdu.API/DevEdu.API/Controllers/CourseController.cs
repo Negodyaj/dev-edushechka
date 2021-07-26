@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using AutoMapper;
+using DevEdu.API.Common;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 
@@ -87,18 +89,21 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
+        [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher, Role.Tutor)]
         [HttpPost("{courseId}/material/{materialId}")]
         [Description("Add material to course")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public void AddMaterialToCourse(int courseId, int materialId)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public void AddCourseMaterialReference(int courseId, int materialId)
         {
             _courseService.AddCourseMaterialReference(courseId, materialId);
         }
 
+        //  api/course/{CourseId}/Material/{MaterialId}
+        [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher, Role.Tutor)]
         [HttpDelete("{courseId}/material/{materialId}")]
-        [Description("Delete material from course")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public void RemoveMaterialFromCourse(int courseId, int materialId)
+        [Description("Remove material from course")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
             _courseService.RemoveCourseMaterialReference(courseId, materialId);
         }

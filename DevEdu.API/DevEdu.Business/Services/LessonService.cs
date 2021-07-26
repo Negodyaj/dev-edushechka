@@ -29,11 +29,7 @@ namespace DevEdu.Business.Services
             _lessonValidationHelper = lessonValidationHelper;
         }
 
-        public void AddCommentToLesson(int lessonId, int commentId) => _lessonRepository.AddCommentToLesson(lessonId, commentId);
-
         public int AddLesson(LessonDto lessonDto) => _lessonRepository.AddLesson(lessonDto);
-
-        public void DeleteCommentFromLesson(int lessonId, int commentId) => _lessonRepository.DeleteCommentFromLesson(lessonId, commentId);
 
         public void DeleteLesson(int id) => _lessonRepository.DeleteLesson(id);
 

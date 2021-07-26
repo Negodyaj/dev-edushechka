@@ -9,8 +9,8 @@ namespace DevEdu.DAL.Repositories
         int DeleteUserFromGroup(int userId, int groupId);
         int AddGroupToLesson(int groupId, int lessonId);
         int RemoveGroupFromLesson(int groupId, int lessonId);
-        int AddGroupMaterialReference(int groupId, int materialId);
-        int RemoveGroupMaterialReference(int groupId, int materialId);
+        void AddGroupMaterialReference(int groupId, int materialId);
+        void RemoveGroupMaterialReference(int groupId, int materialId);
         int AddTaskToGroup(GroupTaskDto groupTaskDto);
         void DeleteTaskFromGroup(int groupId, int taskId);
         List<GroupTaskDto> GetTaskGroupByGroupId(int groupId);

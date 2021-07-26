@@ -49,9 +49,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int AddGroupMaterialReference(int groupId, int materialId)
+        public void AddGroupMaterialReference(int groupId, int materialId)
         {
-            return _connection.Execute(
+            _connection.Execute(
                 _insertGroupMaterial,
                 new
                 {
@@ -62,9 +62,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int RemoveGroupMaterialReference(int groupId, int materialId)
+        public void RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            return _connection.Execute(
+            _connection.Execute(
                 _deleteGroupMaterial,
                 new
                 {

@@ -87,7 +87,7 @@ namespace DevEdu.Business.Services
 
         public int AddCourseMaterialReference(int courseId, int materialId) => _courseRepository.AddCourseMaterialReference(courseId, materialId);
 
-        public int RemoveCourseMaterialReference(int courseId, int materialId) => _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
+        public void RemoveCourseMaterialReference(int courseId, int materialId) => _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
 
         public void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
         {

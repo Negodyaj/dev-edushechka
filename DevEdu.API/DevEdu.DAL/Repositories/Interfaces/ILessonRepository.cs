@@ -5,9 +5,7 @@ namespace DevEdu.DAL.Repositories
 {
     public interface ILessonRepository
     {
-        void AddCommentToLesson(int lessonId, int commentId);
         int AddLesson(LessonDto lessonDto);
-        void DeleteCommentFromLesson(int lessonId, int commentId);
         void DeleteLesson(int id);
         List<LessonDto> SelectAllLessonsByGroupId(int groupId);
         List<LessonDto> SelectAllLessonsByTeacherId(int teacherId);

@@ -74,9 +74,5 @@ namespace DevEdu.Business.Services
 
             _studentAnswerOnTaskRepository.UpdateStudentAnswerOnTask(taskAnswerDto);
         }
-
-        public void AddCommentOnStudentAnswer(int taskStudentId, int commentId) => _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskStudentId, commentId);
-
-
     }
 }

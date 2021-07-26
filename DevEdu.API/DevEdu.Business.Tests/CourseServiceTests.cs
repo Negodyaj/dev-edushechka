@@ -230,5 +230,46 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
         }
 
+        [Test]
+        public void AddMaterialToCourse_IntCourseIdAndMaterialId_AddMaterialToCourse()
+        {
+            //Given
+            const int courseId = CourseData.CourseId;
+            const int materialId = CourseData.MaterialId;
+
+            _courseRepositoryMock.Setup(x => x.AddCourseMaterialReference(courseId, materialId));
+
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                _courseRepositoryMock.Object,
+                _taskRepositoryMock.Object,
+                _materialRepositoryMock.Object);
+
+            //When
+            sut.AddCourseMaterialReference(courseId, materialId);
+
+            //Than
+            _courseRepositoryMock.Verify(x => x.AddCourseMaterialReference(courseId, materialId), Times.Once);
+        }
+
+        [Test]
+        public void DeleteMaterialFromCourse_IntCourseIdAndMaterialId_DeleteMaterialFromCourse()
+        {
+            //Given
+            const int courseId = CourseData.CourseId;
+            const int materialId = CourseData.MaterialId;
+
+            _courseRepositoryMock.Setup(x => x.RemoveCourseMaterialReference(courseId, materialId));
+
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                _courseRepositoryMock.Object,
+                _taskRepositoryMock.Object,
+                _materialRepositoryMock.Object);
+
+            //When
+            sut.RemoveCourseMaterialReference(courseId, materialId);
+
+            //Than
+            _courseRepositoryMock.Verify(x => x.RemoveCourseMaterialReference(courseId, materialId), Times.Once);
+        }
     }
 }
