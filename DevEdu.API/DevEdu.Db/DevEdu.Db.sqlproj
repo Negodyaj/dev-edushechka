@@ -237,7 +237,8 @@
     <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Update.sql" />
     <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAnswersByTaskId.sql" />
-    <Build Include="StoredProcedures\User_Group\User_Group_SelectAllByUserId.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectAllByUserId.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectAllByTaskId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />

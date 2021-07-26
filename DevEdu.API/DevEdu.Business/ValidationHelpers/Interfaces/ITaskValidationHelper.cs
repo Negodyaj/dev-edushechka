@@ -4,7 +4,7 @@ namespace DevEdu.Business.ValidationHelpers
 {
     public interface ITaskValidationHelper
     {
-        public void CheckTaskExistence(int taskId);
+        public TaskDto CheckTaskExistence(int taskId);
         public void CheckTaskExistenceWithValidation(int taskId, int userId);
     }
 }

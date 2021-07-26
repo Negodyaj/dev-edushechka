@@ -16,7 +16,7 @@ namespace DevEdu.DAL.Repositories
         private const string _taskUpdateProcedure = "dbo.Task_Update";
         private const string _tagTaskAddProcedure = "dbo.Tag_Task_Insert";
         private const string _tagTaskDeleteProcedure = "dbo.Tag_Task_Delete";
-        private const string _taskGroupSelectAllByTaskIdProcedure = "dbo.Group_Task_SelectAllByTaskId";
+        private const string _taskGroupSelectAllByTaskIdProcedure = "dbo.Group_SelectAllByTaskId";
 
         public TaskRepository()
         {
@@ -133,17 +133,16 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 );
         }
-        public List<GroupTaskDto> GetGroupsByTaskId(int taskId)
+        public List<GroupDto> GetGroupsByTaskId(int taskId)
         {
-            GroupTaskDto result;
+            GroupDto result;
             return _connection
-                .Query<GroupTaskDto, GroupDto, GroupStatus, GroupTaskDto>(
+                .Query<GroupDto, GroupStatus, GroupDto>(
                     _taskGroupSelectAllByTaskIdProcedure,
-                    (groupTask, group, groupStatus) =>
+                    (group, groupStatus) =>
                     {
-                        result = groupTask;
-                        result.Group = group;
-                        result.Group.GroupStatus = groupStatus;
+                        result = group;
+                        result.GroupStatus = groupStatus;
                         return result;
                     },
                     new { taskId },

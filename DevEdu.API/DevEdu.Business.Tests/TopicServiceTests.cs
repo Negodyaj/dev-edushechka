@@ -83,36 +83,42 @@ namespace DevEdu.Business.Tests
         [Test]
         public void AddTagToTopic_WhenTopicNotFound_EntityNotFoundException()
         {
-            _topicValidationHelperMock.Setup(x => x.CheckTopicExistence(TopicData.expectedTopicId)).Throws(
-                new EntityNotFoundException(string.Format(ServiceMessages.TopicNotFoundMessage, TopicData.expectedTopicId)));
+            var expectedTopicId = 77;
+            var expectedTagId = 55;
+
+            _topicValidationHelperMock.Setup(x => x.CheckTopicExistence(expectedTopicId)).Throws(
+                new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", expectedTopicId)));
 
             var sut = new TopicService(_topicRepoMock.Object, _tagRepoMock.Object, _topicValidationHelperMock.Object, _tagValidationHelperMock.Object);
 
             EntityNotFoundException ex = Assert.Throws<EntityNotFoundException>(
-                () => sut.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId));
-            Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.TopicNotFoundMessage, TopicData.expectedTopicId)));
+                () => sut.AddTagToTopic(expectedTopicId, expectedTagId));
+            Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", expectedTopicId)));
 
-            _topicRepoMock.Verify(x => x.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId), Times.Never);
-            _topicValidationHelperMock.Verify(x => x.CheckTopicExistence(TopicData.expectedTopicId), Times.Once);
-            _tagValidationHelperMock.Verify(x => x.CheckTagExistence(TagData.expectedTagId), Times.Never);
+            _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, expectedTagId), Times.Never);
+            _topicValidationHelperMock.Verify(x => x.CheckTopicExistence(expectedTopicId), Times.Once);
+            _tagValidationHelperMock.Verify(x => x.CheckTagExistence(expectedTagId), Times.Never);
         }
 
         [Test]
         public void AddTagToTopic_WhenTagNotFound_EntityNotFoundException()
         {
-            _tagValidationHelperMock.Setup(x => x.CheckTagExistence(TagData.expectedTagId)).Throws(
-                new EntityNotFoundException(string.Format(ServiceMessages.TagNotFoundMessage, TagData.expectedTagId)));
-            _topicRepoMock.Setup(x => x.GetTopic(TopicData.expectedTopicId)).Returns(TopicData.GetTopicDtoWithTags);
+            var expectedTopicId = 77;
+            var expectedTagId = 55;
+
+            _tagValidationHelperMock.Setup(x => x.CheckTagExistence(expectedTagId)).Throws(
+                new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "tag", expectedTagId)));
+            _topicRepoMock.Setup(x => x.GetTopic(expectedTopicId)).Returns(TopicData.GetTopicDtoWithTags);
 
             var sut = new TopicService(_topicRepoMock.Object, _tagRepoMock.Object, _topicValidationHelperMock.Object, _tagValidationHelperMock.Object);
 
             EntityNotFoundException ex = Assert.Throws<EntityNotFoundException>(
-                () => sut.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId));
-            Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.TagNotFoundMessage, TagData.expectedTagId)));
+                () => sut.AddTagToTopic(expectedTopicId, expectedTagId));
+            Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "tag", expectedTagId)));
 
-            _topicRepoMock.Verify(x => x.AddTagToTopic(TopicData.expectedTopicId, TagData.expectedTagId), Times.Never);
-            _topicValidationHelperMock.Verify(x => x.CheckTopicExistence(TopicData.expectedTopicId), Times.Once);
-            _tagValidationHelperMock.Verify(x => x.CheckTagExistence(TagData.expectedTagId), Times.Once);
+            _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, expectedTagId), Times.Never);
+            _topicValidationHelperMock.Verify(x => x.CheckTopicExistence(expectedTopicId), Times.Once);
+            _tagValidationHelperMock.Verify(x => x.CheckTagExistence(expectedTagId), Times.Once);
         }
     }
 }

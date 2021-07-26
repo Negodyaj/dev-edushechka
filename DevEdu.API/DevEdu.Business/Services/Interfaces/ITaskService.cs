@@ -5,16 +5,15 @@ namespace DevEdu.Business.Services
 {
     public interface ITaskService
     {
-        public TaskDto GetTaskByIdWithValidation(int id, int userId);
-        TaskDto GetTaskById(int id);
+        public TaskDto GetTaskById(int id, int userId);
         TaskDto GetTaskWithCoursesById(int id, int userId);
         public TaskDto GetTaskWithAnswersById(int id, int userId);
         List<TaskDto> GetTasks();
-        int AddTask(TaskDto taskDto);
-        public TaskDto UpdateTask(TaskDto taskDto);
+        public TaskDto AddTask(TaskDto taskDto);
+        public TaskDto UpdateTask(TaskDto taskDto, int taskId);
         void DeleteTask(int id);
         public int AddTagToTask(int taskId, int tagId);
         public void DeleteTagFromTask(int taskId, int tagId);
-        List<GroupTaskDto> GetGroupsByTaskId(int taskId);
+        public List<GroupDto> GetGroupsByTaskId(int taskId);
     }
 }

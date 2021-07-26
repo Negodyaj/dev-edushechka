@@ -8,11 +8,12 @@ using DevEdu.API.Common;
 using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
 namespace DevEdu.API.Controllers
 {
-    [AuthorizeRoles()]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TopicController : Controller

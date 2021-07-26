@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
-using AutoMapper.Internal;
-using Dapper;
 using DevEdu.API.Common;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Repositories;
@@ -27,20 +25,17 @@ namespace DevEdu.API.Controllers
         private readonly IMapper _mapper;
         private readonly ITaskService _taskService;
         private readonly IStudentAnswerOnTaskService _studentAnswerOnTaskService;
-        private readonly ITaskRepository _taskRepository;
         private readonly ICommentRepository _commentRepository;
 
         public TaskController(
             IMapper mapper, 
             ITaskService taskService,
-            IStudentAnswerOnTaskService studentAnswerOnTaskService, 
-            ITaskRepository taskRepository,
+            IStudentAnswerOnTaskService studentAnswerOnTaskService,
             ICommentRepository commentRepository)
         {
             _taskService = taskService;
             _mapper = mapper;
             _studentAnswerOnTaskService = studentAnswerOnTaskService;
-            _taskRepository = taskRepository;
             _commentRepository = commentRepository;
         }
 
@@ -51,8 +46,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public TaskInfoOutputModel GetTaskWithTags(int taskId)
         {
-            var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-            var taskDto = _taskService.GetTaskByIdWithValidation(taskId, userId);
+            var userId = GetUserId();
+            var taskDto = _taskService.GetTaskById(taskId, userId);
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
         }
 
@@ -63,7 +58,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
         public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
         {
-            var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            var userId = GetUserId();
             var taskDto = _taskService.GetTaskWithCoursesById(taskId, userId);
             return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
         }
@@ -75,7 +70,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithAnswersOutputModel))]
         public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
         {
-            var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            var userId = GetUserId();
             var taskDto = _taskService.GetTaskWithAnswersById(taskId, userId);
             return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
         }
@@ -87,9 +82,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
         public List<TaskInfoOutputModel> GetAllTasksWithTags()
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            //var userRoles = User.Claims(c => c.Role == ClaimTypes.Role)?.;
-            //var userRoles = claimsIdentity.FindAll(ClaimTypes.Role)?.AsList();
             var taskDtos = _taskService.GetTasks();
             return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
         }
@@ -102,9 +94,9 @@ namespace DevEdu.API.Controllers
         public TaskInfoOutputModel AddTask([FromBody] TaskInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
-            return _mapper.Map<TaskInfoOutputModel>(_taskService.GetTaskById(_taskService.AddTask(taskDto)));
+            var task = _taskService.AddTask(taskDto);
+            return _mapper.Map<TaskInfoOutputModel>(task);
         }
-
 
         // api/task/{taskId}
         [AuthorizeRoles(Role.Methodist, Role.Teacher)]
@@ -114,8 +106,7 @@ namespace DevEdu.API.Controllers
         public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
-            taskDto.Id = taskId;
-            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto));
+            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId));
         }
 
         // api/task/{taskId}
@@ -228,6 +219,12 @@ namespace DevEdu.API.Controllers
             var dto = _taskService.GetGroupsByTaskId(taskId);
             var output = _mapper.Map<List<GroupTaskInfoWithGroupOutputModel>>(dto);
             return output;
+        }
+
+        private int GetUserId()
+        {
+            var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            return userId;
         }
     }
 }

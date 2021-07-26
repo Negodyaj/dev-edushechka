@@ -6,8 +6,6 @@ namespace DevEdu.Business.Tests
 {
     public static class TopicData
     {
-        public const int expectedTopicId = 55;
-
         public static TopicDto GetTopicDtoWithoutTags()
         {
             return new TopicDto { Name = "Topic1", Duration = 5 };

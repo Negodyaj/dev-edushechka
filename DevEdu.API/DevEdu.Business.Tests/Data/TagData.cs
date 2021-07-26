@@ -5,6 +5,5 @@ namespace DevEdu.Business.Tests
 {
     public static class TagData
     {
-        public const int expectedTagId = 55;
     }
 }
