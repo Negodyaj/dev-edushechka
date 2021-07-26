@@ -242,6 +242,7 @@ namespace DevEdu.DAL.Repositories
                  },
                  commandType: CommandType.StoredProcedure
              );
+            
         }
 
         public void DeleteStudentFromLesson(StudentLessonDto dto)
@@ -324,15 +325,25 @@ namespace DevEdu.DAL.Repositories
 
         public StudentLessonDto SelectByLessonAndUserId(int lessonId, int userId)      
         {
-            return _connection.QuerySingleOrDefault<StudentLessonDto>(
+            StudentLessonDto result=default;
+            return _connection.Query<StudentLessonDto,  LessonDto, UserDto, StudentLessonDto>(
                 _selectByLessonAndUserIdProcedure,
-                new 
+                (studentLesson, lesson, user) =>
+                {
+                    result = studentLesson;
+                    result.Lesson = lesson;
+                    result.User = user;
+                    return result;
+                },
+                new
                 {
                     LessonId = lessonId,
-                    UserId= userId
+                    UserId = userId
                 },
+                splitOn: "Id",
                 commandType: CommandType.StoredProcedure
-            );
+            ).FirstOrDefault();
+            
         }
     }
 }

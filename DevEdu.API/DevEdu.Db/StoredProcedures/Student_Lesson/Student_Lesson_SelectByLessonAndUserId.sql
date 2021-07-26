@@ -4,10 +4,14 @@
 AS
 BEGIN
 	SELECT 
-		Id,
+		sl.Id,		
 		IsPresent,
 		Feedback,
-		AbsenceReason
-	FROM dbo.Student_Lesson
+		AbsenceReason,
+		l.Id,
+		u.Id
+	FROM dbo.Student_Lesson sl
+	inner join dbo.Lesson l on LessonId=l.Id
+	inner join dbo.[User] u on UserId=u.Id
 	WHERE UserId = @UserId AND LessonId = @LessonId
 END
