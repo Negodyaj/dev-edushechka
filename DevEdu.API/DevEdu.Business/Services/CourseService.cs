@@ -29,7 +29,7 @@ namespace DevEdu.Business.Services
 
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
 
-        public void DeleteCourse(int id) => _courseRepository.GetCourse(id);
+        public void DeleteCourse(int id) => _courseRepository.DeleteCourse(id);
 
         public CourseDto GetCourse(int id) => _courseRepository.GetCourse(id);
         public CourseDto GetFullCourseInfo(int id) 

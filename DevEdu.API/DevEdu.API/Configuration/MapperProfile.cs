@@ -66,7 +66,9 @@ namespace DevEdu.API.Configuration
             CreateMap<CommentDto, CommentInfoOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
-            CreateMap<CourseDto, CourseInfoBaseOutputModel>();
+            //CreateMap<CourseDto, CourseInfoBaseOutputModel>();
+            CreateMap<CourseDto, CourseInfoFullOutputModel>();
+            CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<MaterialDto, MaterialInfoOutputModel>();
             CreateMap<MaterialDto, MaterialInfoWithCoursesAndGroupsOutputModel>();
             CreateMap<UserDto, UserInfoOutPutModel>();
@@ -77,7 +79,6 @@ namespace DevEdu.API.Configuration
             CreateMap<UserDto, UserUpdateInfoOutPutModel>();
             CreateMap<UserDto, UserInfoOutPutModel>();
             CreateMap<UserDto, UserInfoShortOutputModel>();
-            CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<TaskDto, TaskInfoOutputModel>();
             CreateMap<TaskDto, TaskInfoWithCoursesOutputModel>();
             CreateMap<TaskDto, TaskInfoWithCoursesAndAnswersOutputModel>();
