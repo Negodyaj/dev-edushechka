@@ -24,17 +24,24 @@ namespace DevEdu.API.Controllers
         private readonly ITaskService _taskService;
         private readonly IStudentAnswerOnTaskService _studentAnswerOnTaskService;
         private readonly ICommentRepository _commentRepository;
+        private readonly IGroupService _groupService;
+        private readonly ICourseService _courseService;
 
         public TaskController(
             IMapper mapper, 
             ITaskService taskService,
             IStudentAnswerOnTaskService studentAnswerOnTaskService,
-            ICommentRepository commentRepository)
+            ICommentRepository commentRepository,
+            IGroupService groupService,
+            ICourseService courseService
+            )
         {
             _taskService = taskService;
             _mapper = mapper;
             _studentAnswerOnTaskService = studentAnswerOnTaskService;
             _commentRepository = commentRepository;
+            _groupService = groupService;
+            _courseService = courseService;
         }
 
         //  api/Task/1
@@ -49,7 +56,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
         }
 
-        //  api/Task/courses
+        //  api/Task/1/with-courses
         [AuthorizeRoles(Role.Methodist)]
         [HttpGet("{taskId}/with-courses")]
         [Description("Get task by Id with tags and courses")]
@@ -61,7 +68,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
         }
 
-        //  api/Task/answers
+        //  api/Task/1/with-answers
         [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [HttpGet("{taskId}/with-answers")]
         [Description("Get task by Id with tags and answers")]
@@ -84,15 +91,29 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
         }
 
-        // api/task
-        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
-        [HttpPost]
-        [Description("Add new task")]
+        // api/task/teacher
+        [AuthorizeRoles(Role.Teacher)]
+        [HttpPost("teacher")]
+        [Description("Add new task by teacher")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public TaskInfoOutputModel AddTask([FromBody] TaskInputModel model)
+        public TaskInfoOutputModel AddTaskByTeacher([FromBody] TaskInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
-            var task = _taskService.AddTask(taskDto);
+            var task = _taskService.AddTaskByTeacher(taskDto, model.Groups, model.Tags);
+
+            return _mapper.Map<TaskInfoOutputModel>(task);
+        }
+
+        // api/task/methodist
+        [AuthorizeRoles(Role.Methodist)]
+        [HttpPost("methodist")]
+        [Description("Add new task by methodist")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public TaskInfoOutputModel AddTaskByMethodist([FromBody] TaskInputModel model)
+        {
+            var taskDto = _mapper.Map<TaskDto>(model);
+            var task = _taskService.AddTaskByMethodist(taskDto, model.Courses, model.Tags);
+
             return _mapper.Map<TaskInfoOutputModel>(task);
         }
 
@@ -103,8 +124,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
+            var userId = this.GetUserId();
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
-            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId));
+            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId, userId));
         }
 
         // api/task/{taskId}
@@ -114,7 +136,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTask(int taskId)
         {
-            _taskService.DeleteTask(taskId);
+            var userId = this.GetUserId();
+            _taskService.DeleteTask(taskId, userId);
         }
 
         // api/task/{taskId}/tag/{tagId}
@@ -214,7 +237,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<GroupTaskInfoWithGroupOutputModel>), StatusCodes.Status200OK)]
         public List<GroupTaskInfoWithGroupOutputModel> GetGroupsByTaskId(int taskId)
         {
-            var dto = _taskService.GetGroupsByTaskId(taskId);
+            var dto = _taskService.GetGroupTasksByTaskId(taskId);
             var output = _mapper.Map<List<GroupTaskInfoWithGroupOutputModel>>(dto);
             return output;
         }

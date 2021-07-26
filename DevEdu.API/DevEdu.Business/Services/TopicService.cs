@@ -46,7 +46,7 @@ namespace DevEdu.Business.Services
         public int UpdateTopic(int id, TopicDto topicDto)
         {
             topicDto.Id = id;
-           return _topicRepository.UpdateTopic(topicDto);
+            return _topicRepository.UpdateTopic(topicDto);
         }
 
         public int AddTagToTopic(int topicId, int tagId)

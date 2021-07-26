@@ -160,5 +160,25 @@ namespace DevEdu.DAL.Repositories
                 )
                 .ToList();
         }
+
+        public List<GroupTaskDto> GetGroupTasksByTaskId(int taskId)
+        {
+            GroupTaskDto result;
+            return _connection
+                .Query<GroupTaskDto, GroupDto, GroupStatus, GroupTaskDto>(
+                    _taskGroupSelectAllByTaskIdProcedure,
+                    (groupTask, group, groupStatus) => 
+                    {
+                        result = groupTask;
+                        result.Group = group;
+                        result.Group.GroupStatus = groupStatus;
+                        return result;
+                    },
+                    new { taskId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using DevEdu.API.Common;
 using static DevEdu.API.Common.ValidationMessage;
 
@@ -12,5 +13,6 @@ namespace DevEdu.API.Models.InputModels
         [Required(ErrorMessage = EndDateRequired)]
         [CustomDateFormatAttribute(ErrorMessage = WrongFormatDate)]
         public string EndDate { get; set; }
+        public List<int> GroupsIds { get; set; }
     }
 }

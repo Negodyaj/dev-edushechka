@@ -5,12 +5,13 @@ using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.Tests
 {
-    public class GroupData
+    public static class GroupData
     {
         public const int ExpectedAffectedRows = 1;
         public const int GroupId = 1;
         public const int MaterialId = 1;
-
+        public const int RoleStudent = (int)Role.Student;
+        public const int StatusGroup = 1;
         public static List<GroupDto> GetListOfGroupDto()
         {
             return new List<GroupDto> {

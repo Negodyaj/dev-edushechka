@@ -13,13 +13,15 @@ namespace DevEdu.Business.Services
         private readonly ITaskRepository _taskRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
+        private readonly IGroupRepository _groupRepository;
         private readonly ITaskValidationHelper _taskValidationHelper;
         private readonly IUserValidationHelper _userValidationHelper;
 
         public TaskService(
             ITaskRepository taskRepository,
             ICourseRepository courseRepository,
-            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, 
+            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository,
+            IGroupRepository groupRepository,
             ITaskValidationHelper taskValidationHelper,
             IUserValidationHelper userValidationHelper
         )
@@ -27,6 +29,7 @@ namespace DevEdu.Business.Services
             _taskRepository = taskRepository;
             _courseRepository = courseRepository;
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
+            _groupRepository = groupRepository;
             _taskValidationHelper = taskValidationHelper;
             _userValidationHelper = userValidationHelper;
         }
@@ -34,8 +37,8 @@ namespace DevEdu.Business.Services
         public TaskDto GetTaskById(int id, int userId)
         {
             _userValidationHelper.CheckUserExistence(userId);
-            var taskDto = _taskValidationHelper.CheckTaskExistence(id);
-            _taskValidationHelper.CheckTaskExistenceWithValidation(id, userId);
+            var taskDto = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(id);
+            _taskValidationHelper.CheckUserAccessToTask(id, userId);
             // check if task exists
             return taskDto;
         }
@@ -60,33 +63,62 @@ namespace DevEdu.Business.Services
             return tasks;
         }
 
-        public TaskDto AddTask(TaskDto taskDto)
+        public TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds )
         {
             var taskId = _taskRepository.AddTask(taskDto);
-            if (taskDto.Tags == null || taskDto.Tags.Count == 0)
+            if (tagsIds == null || tagsIds.Count == 0)
                 return _taskRepository.GetTaskById(taskId);
+            tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
+            if (coursesIds.Count == 0)
+                return _taskRepository.GetTaskById(taskId);
+            coursesIds.ForEach(courseId => _courseRepository.AddTaskToCourse(courseId, taskId));
 
-            taskDto.Tags.ForEach(tag => AddTagToTask(taskId, tag.Id));
             return _taskRepository.GetTaskById(taskId);
         }
 
-        public TaskDto UpdateTask(TaskDto taskDto, int taskId)
+        public TaskDto AddTaskByTeacher(TaskDto taskDto, List<int> groupsIds, List<int> tagsIds)
         {
-            _taskValidationHelper.CheckTaskExistence(taskDto.Id);
+            var taskId = _taskRepository.AddTask(taskDto);
+            if (tagsIds == null || tagsIds.Count == 0)
+                return _taskRepository.GetTaskById(taskId);
+            tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
+            if (groupsIds == 0)
+                return _taskRepository.GetTaskById(taskId);
+            foreach (var groupId in groupsIds)
+            {
+                GroupTaskDto groupTaskDto = new GroupTaskDto();
+                groupTaskDto.Group = groupId;
+                groupTaskDto.Task = taskDto.Id;
+                    _groupRepository.AddTaskToGroup(groupTaskDto);
+            }
+
+            return _taskRepository.GetTaskById(taskId);
+        }
+
+        public TaskDto UpdateTask(TaskDto taskDto, int taskId, int userId)
+        {
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskDto.Id);
+            _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
+
             taskDto.Id = taskId;
             _taskRepository.UpdateTask(taskDto);
             return _taskRepository.GetTaskById(taskDto.Id);
         }
 
-        public void DeleteTask(int id)
+        public void DeleteTask(int taskId, int userId)
         {
-            _taskValidationHelper.CheckTaskExistence(id);
-            _taskRepository.DeleteTask(id);
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
+
+            _taskRepository.DeleteTask(taskId);
         }
 
-        public int AddTagToTask(int taskId, int tagId) => _taskRepository.AddTagToTask(taskId, tagId);
+        public int AddTagToTask(int taskId, int tagId)
+        {
+            return _taskRepository.AddTagToTask(taskId, tagId);
+        }
 
         public void DeleteTagFromTask(int taskId, int tagId) => _taskRepository.DeleteTagFromTask(taskId, tagId);
-        public List<GroupDto> GetGroupsByTaskId(int taskId) => _taskRepository.GetGroupsByTaskId(taskId);
+        public List<GroupTaskDto> GetGroupTasksByTaskId(int taskId) => _taskRepository.GetGroupTasksByTaskId(taskId);
     }
 }
