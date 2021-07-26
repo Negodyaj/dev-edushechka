@@ -233,6 +233,10 @@
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByTeacherId.sql" />
     <Build Include="StoredProcedures\Comment\Comment_SelectByLessonId.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAnswersByTaskId.sql" />
+    <Build Include="Types\User-Defined Table Types\PaymentType.sql" />
+    <Build Include="StoredProcedures\Payment\Payment_BulkInsert.sql" />
+    <Build Include="Types\User-Defined Table Types\IdType.sql" />
+    <Build Include="StoredProcedures\Payment\Payment_SelectBySeveralId.sql" />
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectAllFeedbackByLessonId.sql" />
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonAndUserId.sql" />
     <Build Include="StoredProcedures\Topic\Topic_SelectByCourseId.sql" />

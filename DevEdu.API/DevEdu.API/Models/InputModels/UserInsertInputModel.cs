@@ -1,7 +1,9 @@
 ﻿using DevEdu.API.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using DevEdu.DAL.Enums;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
@@ -48,5 +50,6 @@ namespace DevEdu.API.Models.InputModels
 
         [Required(ErrorMessage = PhoneNumberRequired)]
         public string PhoneNumber { get; set; }
+        public List<Role> Roles { get; set; }
     }
 }
