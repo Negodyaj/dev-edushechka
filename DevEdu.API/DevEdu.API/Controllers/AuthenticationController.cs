@@ -30,11 +30,12 @@ namespace DevEdu.API.Controllers
         public int Register([FromBody] UserInsertInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);
-            var addedUser = _userService.AddUser(dto, _authService);
+            dto.Password = _authService.HashPassword(dto.Password);
+            var addedUser = _userService.AddUser(dto);
             return addedUser;
         }
 
-        [HttpPost("/signin")]
+        [HttpPost("/sign-in")]
         public string SignIn(UserSignInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);

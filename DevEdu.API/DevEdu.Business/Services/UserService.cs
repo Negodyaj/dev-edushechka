@@ -14,12 +14,10 @@ namespace DevEdu.Business.Services
             _userRepository = userRepository;
         }
 
-        public int AddUser(UserDto dto, IAuthenticationService authenticationService)
+        public int AddUser(UserDto dto)
         {
             if (dto.Roles.Count == 0)
                 dto.Roles.Add(Role.Student);
-
-            dto.Password = authenticationService.HashPassword(dto.Password);
 
             var addedUserId = _userRepository.AddUser(dto);
 
