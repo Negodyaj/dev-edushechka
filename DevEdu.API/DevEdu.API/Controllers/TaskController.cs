@@ -1,12 +1,8 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using DevEdu.API.Common;
 using DevEdu.API.Extensions;
 using DevEdu.API.Models.OutputModels;
