@@ -1,4 +1,5 @@
 ﻿using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
@@ -9,11 +10,13 @@ namespace DevEdu.Business.Tests.Tag
     class TagServiceTests
     {
         private Mock<ITagRepository> _tagRepoMock;
+        private Mock<ITagValidationHelper> _tagValidationHelperMock;
 
         [SetUp]
         public void Setup()
         {
             _tagRepoMock = new Mock<ITagRepository>();
+            _tagValidationHelperMock = new Mock<ITagValidationHelper>();
         }
 
         [Test]
@@ -25,7 +28,7 @@ namespace DevEdu.Business.Tests.Tag
 
             _tagRepoMock.Setup(x => x.AddTag(tagDto)).Returns(expectedTagId);
 
-            var sut = new TagService(_tagRepoMock.Object);
+            var sut = new TagService(_tagRepoMock.Object, _tagValidationHelperMock.Object);
 
             //When
             var actualTagId = sut.AddTag(tagDto);
@@ -43,7 +46,7 @@ namespace DevEdu.Business.Tests.Tag
 
             _tagRepoMock.Setup(x => x.SelectAllTags()).Returns(expectedTagDtos);
 
-            var sut = new TagService(_tagRepoMock.Object);
+            var sut = new TagService(_tagRepoMock.Object, _tagValidationHelperMock.Object);
 
             //When
             var actualTagDtos = sut.GetAllTags();
@@ -62,7 +65,7 @@ namespace DevEdu.Business.Tests.Tag
 
             _tagRepoMock.Setup(x => x.SelectTagById(tagId)).Returns(expectedTagDto);
 
-            var sut = new TagService(_tagRepoMock.Object);
+            var sut = new TagService(_tagRepoMock.Object, _tagValidationHelperMock.Object);
 
             //When
             var actualTagDto = sut.GetTagById(tagId);
@@ -81,7 +84,7 @@ namespace DevEdu.Business.Tests.Tag
 
             _tagRepoMock.Setup(x => x.SelectTagById(tagId)).Returns(expectedTagDto);
 
-            var sut = new TagService(_tagRepoMock.Object);
+            var sut = new TagService(_tagRepoMock.Object, _tagValidationHelperMock.Object);
 
             //When
             var actualTagDto = sut.UpdateTag(TagData.GetListTagData()[2], tagId);

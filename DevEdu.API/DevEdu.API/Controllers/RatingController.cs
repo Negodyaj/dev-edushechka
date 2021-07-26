@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Security.Claims;
+using DevEdu.API.Extensions;
 
 namespace DevEdu.API.Controllers
 {
@@ -31,7 +34,8 @@ namespace DevEdu.API.Controllers
         public int AddStudentRating([FromBody] StudentRatingInputModel model)
         {
             var dto = _mapper.Map<StudentRatingDto>(model);
-            return _service.AddStudentRating(dto);
+            var authorUserId = this.GetUserId();
+            return _service.AddStudentRating(dto, authorUserId);
         }
 
         // api/rating/1
@@ -46,7 +50,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status200OK)]
         public StudentRatingOutputModel UpdateStudentRating(int id, int value, int periodNumber)
         {
-            var dto = _service.UpdateStudentRating(id, value, periodNumber);
+            var authorUserId = this.GetUserId();
+            var dto = _service.UpdateStudentRating(id, value, periodNumber, authorUserId);
             return _mapper.Map<StudentRatingOutputModel>(dto);
         }
 

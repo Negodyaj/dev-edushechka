@@ -1,4 +1,6 @@
-﻿using DevEdu.Business.Exceptions;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.ValidationHelpers
@@ -17,6 +19,22 @@ namespace DevEdu.Business.ValidationHelpers
             //var group = _groupRepository.GetGroup(groupId);
             //if (group == default)
             //    throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), groupId));
+        }
+        public void CheckUserBelongToGroup(int groupId, int userId, Role role)
+        {
+            var user_groupId = _groupRepository.GetUser_GroupByUserIdAndUserRoleAndGroupId(userId, role, groupId);
+            if (user_groupId == default)
+            {
+                throw new ValidationException(string.Format(ServiceMessages.UserDoesntBelongToGroup, role, userId, groupId));
+            }
+        }
+        public void CheckTeacherBelongToGroup(int groupId, int teacherId, Role role)
+        {
+            var user_groupId = _groupRepository.GetUser_GroupByUserIdAndUserRoleAndGroupId(teacherId, role, groupId);
+            if (user_groupId == default)
+            {
+                throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToGroup, role, teacherId, groupId));
+            }
         }
     }
 }

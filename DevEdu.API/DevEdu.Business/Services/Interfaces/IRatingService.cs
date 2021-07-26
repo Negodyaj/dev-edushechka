@@ -5,12 +5,12 @@ namespace DevEdu.Business.Services
 {
     public interface IRatingService
     {
-        int AddStudentRating(StudentRatingDto studentRatingDto);
+        int AddStudentRating(StudentRatingDto studentRatingDto, string authorUserId);
         void DeleteStudentRating(int id);
         List<StudentRatingDto> GetAllStudentRatings();
         StudentRatingDto GetStudentRatingById(int id);
         List<StudentRatingDto> GetStudentRatingByUserId(int userId);
         public List<StudentRatingDto> GetStudentRatingByGroupId(int groupId);
-        StudentRatingDto UpdateStudentRating(int id, int value, int periodNumber);
+        StudentRatingDto UpdateStudentRating(int id, int value, int periodNumber, string authorUserId);
     }
 }

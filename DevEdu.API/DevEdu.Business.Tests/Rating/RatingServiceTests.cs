@@ -1,4 +1,5 @@
 ﻿using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
@@ -9,11 +10,21 @@ namespace DevEdu.Business.Tests
     public class RatingServiceTests
     {
         private Mock<IRatingRepository> _ratingRepoMock;
+        private Mock<IUserRepository> _userRepoMock;
+        private Mock<IGroupRepository> _groupRepoMock;
+        private Mock<IRatingValidationHelper> _ratingValidationHelperMock;
+        private Mock<IUserValidationHelper> _userValidationHelperMock;
+        private Mock<IGroupValidationHelper> _groupValidationHelperMock;
 
         [SetUp]
         public void Setup()
         {
             _ratingRepoMock = new Mock<IRatingRepository>();
+            _userRepoMock = new Mock<IUserRepository>();
+            _groupRepoMock = new Mock<IGroupRepository>();
+            _ratingValidationHelperMock = new Mock<IRatingValidationHelper>();
+            _userValidationHelperMock = new Mock<IUserValidationHelper>();
+            _groupValidationHelperMock = new Mock<IGroupValidationHelper>();
         }
 
         [Test]
@@ -24,12 +35,16 @@ namespace DevEdu.Business.Tests
 
             var expectedStudentRatingId = RatingData.GetListOfStudentRatingDto()[0].Id;
 
+            var authorUserId = "1";
+
+            //_groupValidationHelperMock.Setup(x => x.CheckGroupExistence(studentRatingDto.Group.Id))
             _ratingRepoMock.Setup(x => x.AddStudentRating(studentRatingDto)).Returns(expectedStudentRatingId);
 
-            var sut = new RatingService(_ratingRepoMock.Object);
+            var sut = new RatingService(_ratingRepoMock.Object, _ratingValidationHelperMock.Object, _groupValidationHelperMock.Object,
+                _userValidationHelperMock.Object);
 
             //When
-            var actualStudentRatingId = sut.AddStudentRating(studentRatingDto);
+            var actualStudentRatingId = sut.AddStudentRating(studentRatingDto, authorUserId);
 
             //Than
             Assert.AreEqual(expectedStudentRatingId, actualStudentRatingId);
@@ -44,7 +59,8 @@ namespace DevEdu.Business.Tests
 
             _ratingRepoMock.Setup(x => x.SelectAllStudentRatings()).Returns(expectedStudentRatingDtos);
 
-            var sut = new RatingService(_ratingRepoMock.Object);
+            var sut = new RatingService(_ratingRepoMock.Object, _ratingValidationHelperMock.Object, _groupValidationHelperMock.Object,
+                _userValidationHelperMock.Object);
 
             //When
             var actualStudentRatingDtos = sut.GetAllStudentRatings();
@@ -64,7 +80,8 @@ namespace DevEdu.Business.Tests
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(expectedStudentRatingId)).Returns(expectedStudentRatingDto);
 
-            var sut = new RatingService(_ratingRepoMock.Object);
+            var sut = new RatingService(_ratingRepoMock.Object, _ratingValidationHelperMock.Object, _groupValidationHelperMock.Object,
+                _userValidationHelperMock.Object);
 
             //When
             var actualStudentRatingDto = sut.GetStudentRatingById(expectedStudentRatingId);
@@ -82,7 +99,8 @@ namespace DevEdu.Business.Tests
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingByUserId(UserData.expectedUserId)).Returns(expectedStudentRatingDtos);
 
-            var sut = new RatingService(_ratingRepoMock.Object);
+            var sut = new RatingService(_ratingRepoMock.Object, _ratingValidationHelperMock.Object, _groupValidationHelperMock.Object,
+                _userValidationHelperMock.Object);
 
             //When
             var actualStudentRatingDtos = sut.GetStudentRatingByUserId(UserData.expectedUserId);
@@ -101,7 +119,8 @@ namespace DevEdu.Business.Tests
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingByGroupId(groupId)).Returns(expectedStudentRatingDtos);
 
-            var sut = new RatingService(_ratingRepoMock.Object);
+            var sut = new RatingService(_ratingRepoMock.Object, _ratingValidationHelperMock.Object, _groupValidationHelperMock.Object,
+                _userValidationHelperMock.Object);
 
             //When
             var actualStudentRatingDtos = sut.GetStudentRatingByGroupId(groupId);
@@ -119,21 +138,23 @@ namespace DevEdu.Business.Tests
             var StudentRatingId = expectedStudentRatingDto.Id;
             var value = expectedStudentRatingDto.Rating;
             var periodNumber = expectedStudentRatingDto.ReportingPeriodNumber;
+            var authorUserId = "1";
 
             _ratingRepoMock.Setup(x => x.UpdateStudentRating(RatingData.GetListOfStudentRatingDto()[2]));
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(StudentRatingId))
                 .Returns(expectedStudentRatingDto);
 
-            var sut = new RatingService(_ratingRepoMock.Object);
+            var sut = new RatingService(_ratingRepoMock.Object, _ratingValidationHelperMock.Object, _groupValidationHelperMock.Object,
+                _userValidationHelperMock.Object);
 
             //When
-            var actualStudentRatingDto = sut.UpdateStudentRating(StudentRatingId, value, periodNumber);
+            var actualStudentRatingDto = sut.UpdateStudentRating(StudentRatingId, value, periodNumber, authorUserId);
 
             //Than
             Assert.AreEqual(expectedStudentRatingDto, actualStudentRatingDto);
             _ratingRepoMock.Verify(x => x.UpdateStudentRating(It.Is<StudentRatingDto>(dto => 
                 dto.Equals(RatingData.GetListOfStudentRatingDto()[2]))));
-            _ratingRepoMock.Verify(x => x.SelectStudentRatingById(StudentRatingId), Times.Once);
+            _ratingRepoMock.Verify(x => x.SelectStudentRatingById(StudentRatingId), Times.Exactly(2));
         }
     }
 }

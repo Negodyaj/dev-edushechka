@@ -23,6 +23,8 @@ namespace DevEdu.DAL.Repositories
         private const string _taskGroupSelectByIdProcedure = "dbo.Group_Task_SelectById";
         private const string _taskGroupUpdateProcedure = "dbo.Group_Task_Update";
 
+        private const string _userGroupSelectByUserIdAndUserRoleAndGroupIdProcedure = "dbo.User_Group_SelectByUserIdAndUserRoleAndGroupId";
+
         public int AddGroupToLesson(int groupId, int lessonId)
         {
             return _connection.Execute(
@@ -196,6 +198,20 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
+        }
+
+        public int GetUser_GroupByUserIdAndUserRoleAndGroupId(int userId, Role roleId, int groupId)
+        {
+            return _connection.QueryFirstOrDefault<int>(
+                    _userGroupSelectByUserIdAndUserRoleAndGroupIdProcedure,
+                    new
+                    {
+                        userId,
+                        roleId,
+                        groupId
+                    },
+                    commandType: CommandType.StoredProcedure
+                );
         }
     }    
 }
