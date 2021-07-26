@@ -15,12 +15,13 @@
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetLanguage>CS</TargetLanguage>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -44,6 +45,10 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>
+    </NoWarn>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <SuppressTSqlWarnings>70588;</SuppressTSqlWarnings>
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -85,7 +90,7 @@
     <Folder Include="StoredProcedures\Group_Task" />
     <Folder Include="Types" />
     <Folder Include="Types\User-Defined Table Types" />
-    <Folder Include="StoredProcedures\StudentRaiting" />
+    <Folder Include="StoredProcedures\StudentRating" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -227,21 +232,23 @@
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByGroupId.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByTeacherId.sql" />
     <Build Include="StoredProcedures\Comment\Comment_SelectByLessonId.sql" />
-    <Build Include="Tables\RaitingType.sql" />
-    <Build Include="Tables\StudentRaiting.sql" />
-    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Insert.sql" />
-    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Delete.sql" />
-    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectAll.sql" />
-    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectById.sql" />
-    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectByUserId.sql" />
-    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_Update.sql" />
-    <Build Include="StoredProcedures\StudentRaiting\StudentRaiting_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAnswersByTaskId.sql" />
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectAllFeedbackByLessonId.sql" />
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonAndUserId.sql" />
     <Build Include="StoredProcedures\Topic\Topic_SelectByCourseId.sql" />
     <Build Include="StoredProcedures\Task\Task_SelectByCourseId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByCourseId.sql" />
+    <Build Include="StoredProcedures\Group\Group_UpdateGroupStatus.sql" />
+    <Build Include="StoredProcedures\User\User_SelectByGroupIdAndRole.sql" />
+    <Build Include="Tables\RatingType.sql" />
+    <Build Include="Tables\StudentRating.sql" />
+    <Build Include="StoredProcedures\StudentRating\StudentRating_Insert.sql" />
+    <Build Include="StoredProcedures\StudentRating\StudentRating_Delete.sql" />
+    <Build Include="StoredProcedures\StudentRating\StudentRating_SelectAll.sql" />
+    <Build Include="StoredProcedures\StudentRating\StudentRating_SelectById.sql" />
+    <Build Include="StoredProcedures\StudentRating\StudentRating_SelectByUserId.sql" />
+    <Build Include="StoredProcedures\StudentRating\StudentRating_Update.sql" />
+    <Build Include="StoredProcedures\StudentRating\StudentRating_SelectByGroupId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />

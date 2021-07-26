@@ -1,30 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
   <Operation Name="Rename Refactor" Key="11809867-394c-4adb-878e-f0b920c33946" ChangeDateTime="07/14/2021 14:14:55">
-    <Property Name="ElementName" Value="[dbo].[StudentRaiting].[RaitingDate]" />
+    <Property Name="ElementName" Value="[dbo].[StudentRating].[RatingDate]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[StudentRaiting]" />
+    <Property Name="ParentElementName" Value="[dbo].[StudentRating]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="AssessedPeriod" />
   </Operation>
   <Operation Name="Rename Refactor" Key="7a6ee2d8-fba0-46fd-a264-0dc11bd05a20" ChangeDateTime="07/14/2021 14:45:03">
-    <Property Name="ElementName" Value="[dbo].[StudentRaiting].[AssessedPeriod]" />
+    <Property Name="ElementName" Value="[dbo].[StudentRating].[AssessedPeriod]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[StudentRaiting]" />
+    <Property Name="ParentElementName" Value="[dbo].[StudentRating]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="EstimatedPeriod" />
   </Operation>
   <Operation Name="Rename Refactor" Key="cd3cd64a-706d-4d51-98bd-2e509ff356fc" ChangeDateTime="07/15/2021 09:57:04">
-    <Property Name="ElementName" Value="[dbo].[StudentRaiting].[EstimatedPeriod]" />
+    <Property Name="ElementName" Value="[dbo].[StudentRating].[EstimatedPeriod]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[StudentRaiting]" />
+    <Property Name="ParentElementName" Value="[dbo].[StudentRating]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="ReportingPeriodNumber" />
   </Operation>
   <Operation Name="Rename Refactor" Key="15c3a5dc-d41b-4fa0-8a87-4d60fd392fbb" ChangeDateTime="07/15/2021 10:04:07">
-    <Property Name="ElementName" Value="[dbo].[StudentRaiting].[GroipId]" />
+    <Property Name="ElementName" Value="[dbo].[StudentRating].[GroipId]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[StudentRaiting]" />
+    <Property Name="ParentElementName" Value="[dbo].[StudentRating]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="GroupId" />
   </Operation>

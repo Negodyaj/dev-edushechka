@@ -6,23 +6,63 @@ using NUnit.Framework;
 
 namespace DevEdu.Business.Tests
 {
-    public class LessonServiceTests
+    class LessonServiceTests
     {
-        private Mock<ILessonRepository> _lessonRepoMock;
-        private Mock<ICommentRepository> _commentRepoMock;
-        private Mock<IUserRepository> _userRepoMock;
-        private Mock<IUserValidationHelper> _userValidationHelperMock;
-        private Mock<ILessonValidationHelper> _lessonValidationHelperMock;
-
+        private Mock<ILessonRepository> _lessonRepository;
+        private Mock<ICommentRepository> _commentRepository;
+        private Mock<IUserRepository> _userRepository;
+        private Mock<IUserValidationHelper> _userValidationHelper;
+        private Mock<ILessonValidationHelper> _lessonValidationHelper;
 
         [SetUp]
-        public void Setup()
+        public void SetUp()
         {
-            _lessonRepoMock = new Mock<ILessonRepository>();
-            _commentRepoMock = new Mock<ICommentRepository>();
-            _userRepoMock = new Mock<IUserRepository>();
-            _userValidationHelperMock = new Mock<IUserValidationHelper>();
-            _lessonValidationHelperMock = new Mock<ILessonValidationHelper>();
+            _lessonRepository = new Mock<ILessonRepository>();
+            _commentRepository = new Mock<ICommentRepository>();
+            _userRepository = new Mock<IUserRepository>();
+            _userValidationHelper = new Mock<IUserValidationHelper>();
+            _lessonValidationHelper = new Mock<ILessonValidationHelper>();
+        }
+
+        [Test]
+        public void AddTopicToLesson_LessonIdTopicId_TopicLessonReferenceCreated()
+        {
+            //Given
+            var lessonId = 5;
+            var topicId = 7;
+            _lessonRepository.Setup(x => x.AddTopicToLesson(lessonId, topicId));
+
+            var sut = new LessonService(_lessonRepository.Object, 
+                _commentRepository.Object, 
+                _userRepository.Object, 
+                _userValidationHelper.Object, 
+                _lessonValidationHelper.Object);
+
+            //When
+            sut.AddTopicToLesson(lessonId, topicId);
+
+            //Then
+            _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Once);
+        }
+
+        [Test]
+        public void DeleteTopicFromLesson_LessonIdTopicId_TopicLessonReferenceDeleted()
+        {
+            //Given
+            var lessonId = 5;
+            var topicId = 7;
+            _lessonRepository.Setup(x => x.DeleteTopicFromLesson(lessonId, topicId));
+
+            var sut = new LessonService(_lessonRepository.Object,
+                            _commentRepository.Object,
+                            _userRepository.Object,
+                            _userValidationHelper.Object,
+                            _lessonValidationHelper.Object);
+            //When
+            sut.DeleteTopicFromLesson(lessonId, topicId);
+
+            //Then
+            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lessonId, topicId), Times.Once);
         }
 
         [Test]
