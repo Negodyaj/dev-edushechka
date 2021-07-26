@@ -1,5 +1,4 @@
 ﻿using DevEdu.DAL.Models;
-using System;
 using System.Collections.Generic;
 
 namespace DevEdu.DAL.Repositories
@@ -22,5 +21,7 @@ namespace DevEdu.DAL.Repositories
         void UpdateStudentAbsenceReasonOnLesson(StudentLessonDto studentLessonDto);
         void UpdateStudentAttendanceOnLesson(StudentLessonDto studentLessonDto);
         void UpdateStudentFeedbackForLesson(StudentLessonDto studentLessonDto);
+        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);
+        StudentLessonDto SelectByLessonAndUserId(int lessonId, int userId);
     }
 }

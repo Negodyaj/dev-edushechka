@@ -1,5 +1,4 @@
 ﻿using DevEdu.DAL.Models;
-using System;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
@@ -23,5 +22,7 @@ namespace DevEdu.Business.Services
         void UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
         void UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
         void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
+        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);
+        StudentLessonDto GetStudenLessonByLessonAndUserId(int lessonId, int userId);
     }
 }

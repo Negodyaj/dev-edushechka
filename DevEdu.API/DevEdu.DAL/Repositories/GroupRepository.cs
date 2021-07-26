@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using Dapper;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
@@ -16,9 +17,15 @@ namespace DevEdu.DAL.Repositories
         private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
         private const string _groupSelectAllByMaterialIdProcedure = "dbo.Group_SelectByMaterialId";
 
-        public void AddGroupLesson(int groupId, int lessonId)
+        private const string _taskToGroupAddProcedure = "dbo.Group_Task_Insert";
+        private const string _taskFromGroupDeleteProcedure = "dbo.Group_Task_Delete";
+        private const string _taskGroupSelectAllByGroupIdProcedure = "dbo.Group_Task_SelectAllByGroupId";
+        private const string _taskGroupSelectByIdProcedure = "dbo.Group_Task_SelectById";
+        private const string _taskGroupUpdateProcedure = "dbo.Group_Task_Update";
+
+        public int AddGroupToLesson(int groupId, int lessonId)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 _insertGroupLesson,
                 new
                 {
@@ -29,9 +36,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void RemoveGroupLesson(int groupId, int lessonId)
+        public int RemoveGroupFromLesson(int groupId, int lessonId)
         {
-            _connection.Execute(
+           return  _connection.Execute(
                 _deleteGroupLesson,
                 new
                 {
@@ -95,6 +102,92 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
+        public int AddTaskToGroup(GroupTaskDto groupTaskDto)
+        {
+            return _connection.QuerySingle<int>(
+                _taskToGroupAddProcedure,
+                new
+                {
+                    GroupId = groupTaskDto.Group.Id,
+                    TaskId = groupTaskDto.Task.Id,
+                    groupTaskDto.StartDate,
+                    groupTaskDto.EndDate
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public void DeleteTaskFromGroup(int groupId, int taskId)
+        {
+            _connection.Execute(
+                _taskFromGroupDeleteProcedure,
+                new
+                {
+                    groupId,
+                    taskId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public List<GroupTaskDto> GetTaskGroupByGroupId(int groupId)
+        {
+            GroupTaskDto result;
+            return _connection
+                .Query<GroupTaskDto, TaskDto, GroupTaskDto>(
+                    _taskGroupSelectAllByGroupIdProcedure,
+                    (groupTask, task) =>
+                    {
+                        result = groupTask;
+                        result.Task = task;
+                        return result;
+                    },
+                    new { groupId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+
+        public GroupTaskDto GetGroupTask(int groupId, int taskId)
+        {
+            GroupTaskDto result = default;
+            return _connection
+                .Query<GroupTaskDto, TaskDto, GroupDto, GroupStatus, GroupTaskDto>(
+                    _taskGroupSelectByIdProcedure,
+                    (groupTask, task, group, groupStatus) =>
+                    {
+                        result = groupTask;
+                        result.Task = task;
+                        result.Group = group;
+                        result.Group.GroupStatus = groupStatus;
+                        return result;
+                    },
+                    new
+                    {
+                        groupId,
+                        taskId
+                    },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .FirstOrDefault();
+        }
+
+        public void UpdateGroupTask(GroupTaskDto groupTaskDto)
+        {
+            _connection.Execute(
+                _taskGroupUpdateProcedure,
+                new
+                {
+                    GroupId = groupTaskDto.Group.Id,
+                    TaskId = groupTaskDto.Task.Id,
+                    groupTaskDto.StartDate,
+                    groupTaskDto.EndDate
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
         public List<GroupDto> GetGroupsByMaterialId(int id)
         {
             return _connection.Query<GroupDto>(

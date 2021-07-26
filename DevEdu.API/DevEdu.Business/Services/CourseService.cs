@@ -1,4 +1,6 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,10 +13,18 @@ namespace DevEdu.Business.Services
     {
         private readonly ICourseRepository _courseRepository;
         private readonly ITopicRepository _topicRepository;
-        public CourseService(ITopicRepository topicRepository, ICourseRepository courseRepository)
+        private readonly ITaskRepository _taskRepository;
+        private readonly IMaterialRepository _materialRepository;
+        
+        public CourseService(ITopicRepository topicRepository,
+                             ICourseRepository courseRepository,
+                             ITaskRepository taskRepository,
+                             IMaterialRepository materialRepository)
         {
             _topicRepository = topicRepository;
             _courseRepository = courseRepository;
+            _taskRepository = taskRepository;
+            _materialRepository = materialRepository;
         }
 
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
@@ -22,7 +32,20 @@ namespace DevEdu.Business.Services
         public void DeleteCourse(int id) => _courseRepository.GetCourse(id);
 
         public CourseDto GetCourse(int id) => _courseRepository.GetCourse(id);
+        public CourseDto GetFullCourseInfo(int id) 
+        {
+            var course = GetCourse(id);
+            course.Tasks = _taskRepository.GetTaskByCourseId(course.Id);
+            course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
+            course.Topics = _topicRepository.GetTopicsByCourseId(course.Id);
+            return course;
 
+        }
+        public List<CourseDto> GetCoursesForAdmin()
+        {
+            var courses = _courseRepository.GetCourses();
+            return courses;
+        }
         public List<CourseDto> GetCourses() => _courseRepository.GetCourses();
 
         public void UpdateCourse(int id, CourseDto courseDto)
@@ -40,7 +63,7 @@ namespace DevEdu.Business.Services
 
         public void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
         {
-            foreach (var topic in listDto) 
+            foreach (var topic in listDto)
                 topic.Course = new CourseDto() { Id = courseId };
             _topicRepository.AddTopicsToCourse(listDto);
         }
@@ -75,7 +98,7 @@ namespace DevEdu.Business.Services
             CheckUniquenessTopics(topics);
             var topicsInDatabase = _courseRepository.SelectAllTopicsByCourseId(courseId);
             if (
-                topicsInDatabase != null && 
+                topicsInDatabase != null &&
                 topicsInDatabase.Count != 0 &&
                 topics.Count != topicsInDatabase.Count
             )
@@ -93,7 +116,7 @@ namespace DevEdu.Business.Services
                 {
                     topic.Course = new CourseDto() { Id = courseId };
                 }
-                _courseRepository.UpdateCourseTopicsByCourseId( topics);
+                _courseRepository.UpdateCourseTopicsByCourseId(topics);
             }
         }
 
@@ -103,14 +126,14 @@ namespace DevEdu.Business.Services
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
-                throw new Exception("the same positions of topics in the course");
+                throw new ValidationException(ServiceMessages.SamePositionsInCourseTopics);
             }
         }
         private void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
-            if(topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
+            if (topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
-                throw new Exception("the same topics  in the course");
+                throw new ValidationException(ServiceMessages.SameTopicsInCourseTopics);
             }
         }
     }

@@ -9,11 +9,11 @@ namespace DevEdu.DAL.Repositories
 {
     public class NotificationRepository : BaseRepository, INotificationRepository
     {
-        private const string _notificationInsertProcedure =             "dbo.Notification_Insert";
-        private const string _notificationDeleteProcedure =             "dbo.Notification_Delete";
-        private const string _notificationSelectByIdProcedure =         "dbo.Notification_SelectById";
-        private const string _notificationSelectAllByUserIdProcedure =  "dbo.Notification_SelectAllByUserId";
-        private const string _notificationUpdateProcedure =             "dbo.Notification_Update";
+        private const string _notificationInsertProcedure = "dbo.Notification_Insert";
+        private const string _notificationDeleteProcedure = "dbo.Notification_Delete";
+        private const string _notificationSelectByIdProcedure = "dbo.Notification_SelectById";
+        private const string _notificationSelectAllByUserProcedure = "dbo.Notification_SelectAllByUserId";
+        private const string _notificationUpdateProcedure = "dbo.Notification_Update";
         public int AddNotification(NotificationDto notificationDto)
         {
             return _connection.QuerySingle<int>(
@@ -65,7 +65,7 @@ namespace DevEdu.DAL.Repositories
 
             return _connection
                 .Query<NotificationDto, Role, UserDto, NotificationDto>(
-                    _notificationSelectAllByUserIdProcedure,
+                    _notificationSelectAllByUserProcedure,
                     (notification, role, user) =>
                     {
                         NotificationDto result;
@@ -84,7 +84,7 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public void UpdateNotification( NotificationDto notificationDto)
+        public void UpdateNotification(NotificationDto notificationDto)
         {
             _connection.Execute(
                 _notificationUpdateProcedure,
