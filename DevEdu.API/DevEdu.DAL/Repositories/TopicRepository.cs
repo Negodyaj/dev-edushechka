@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Dapper;
 using DevEdu.DAL.Models;
 
@@ -10,6 +11,7 @@ namespace DevEdu.DAL.Repositories
         private const string _topicInsertProcedure = "dbo.Topic_Insert";
         private const string _topicDeleteProcedure = "dbo.Topic_Delete";
         private const string _topicSelectByIdProcedure = "dbo.Topic_SelectById";
+        private const string _topicSelectByCourseIdProcedure = "dbo.Topic_SelectByCourseId";
         private const string _topicSelectAllProcedure = "dbo.Topic_SelectAll";
         private const string _topicUpdateProcedure = "dbo.Topic_Update";
         private const string _addTopicToCourseProcedure = "[dbo].[Course_Topic_Insert]";
@@ -63,9 +65,9 @@ namespace DevEdu.DAL.Repositories
               .AsList();
         }
 
-        public void UpdateTopic(TopicDto topicDto)
+        public int UpdateTopic(TopicDto topicDto)       
         {
-            _connection.Execute(
+           return _connection.Execute(
                 _topicUpdateProcedure,
                 new
                 {
@@ -135,6 +137,17 @@ namespace DevEdu.DAL.Repositories
                 new { tblCourseTopic = dt.AsTableValuedParameter(_course_TopicType) },
                 commandType: CommandType.StoredProcedure
                 );
+        }
+
+        public List<TopicDto> GetTopicsByCourseId(int courseId)
+        {
+            return _connection
+                .Query<TopicDto>(
+                    _topicSelectByCourseIdProcedure,
+                    new { courseId },
+                    commandType: CommandType.StoredProcedure
+                ).
+                ToList();
         }
     }
 }
