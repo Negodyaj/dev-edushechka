@@ -162,5 +162,32 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(materialsData, actualList);
             _materialRepoMock.Verify(x => x.GetMaterialsByTagId(tagId), Times.Once);
         }
+
+        [Test]
+        public void AddTagToMaterial_WithMaterialIdAndTopicId_Added()
+        {
+            //Given
+            var givenMaterialId = 5;
+            var givenTagId = 11;
+            _materialRepositoryMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
+            var sut = new MaterialService(_materialRepositoryMock.Object, _courseRepositoryMock.Object, _groupRepositoryMock.Object);
+            //When
+            sut.AddTagToMaterial(givenMaterialId, givenTagId);
+            //Then
+            _materialRepositoryMock.Verify(x => x.AddTagToMaterial(givenMaterialId, givenTagId), Times.Once);
+        }
+        [Test]
+        public void DeleteTagFromMaterial_WithMaterialIdAndTopicId_Deleted()
+        {
+            //Given
+            var givenMaterialId = 5;
+            var givenTagId = 11;
+            _materialRepositoryMock.Setup(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId));
+            var sut = new MaterialService(_materialRepositoryMock.Object, _courseRepositoryMock.Object, _groupRepositoryMock.Object);
+            //When
+            sut.DeleteTagFromMaterial(givenMaterialId, givenTagId);
+            //Then
+            _materialRepositoryMock.Verify(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId), Times.Once);
+        }
     }
 }

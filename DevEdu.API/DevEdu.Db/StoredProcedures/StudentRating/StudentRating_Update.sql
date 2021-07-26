@@ -1,12 +1,12 @@
-﻿CREATE PROCEDURE dbo.StudentRaiting_Update
+﻿CREATE PROCEDURE dbo.StudentRating_Update
 	@Id int,
-	@Raiting int,
+	@Rating int,
 	@ReportingPeriodNumber int
 AS
 BEGIN
-	UPDATE dbo.StudentRaiting 
+	UPDATE dbo.StudentRating 
 	SET 
-	Raiting = @Raiting,
+	Rating = @Rating,
 	ReportingPeriodNumber = @ReportingPeriodNumber
 	Where Id = @Id
 END

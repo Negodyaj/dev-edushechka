@@ -1,4 +1,6 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ namespace DevEdu.Business.Services
         private readonly ITopicRepository _topicRepository;
         private readonly ITaskRepository _taskRepository;
         private readonly IMaterialRepository _materialRepository;
+        
         public CourseService(ITopicRepository topicRepository,
                              ICourseRepository courseRepository,
                              ITaskRepository taskRepository,
@@ -51,7 +54,7 @@ namespace DevEdu.Business.Services
             _courseRepository.UpdateCourse(courseDto);
         }
 
-        public void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto)
+        public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {
             dto.Course = new CourseDto() { Id = courseId };
             dto.Topic = new TopicDto { Id = topicId };
@@ -123,14 +126,14 @@ namespace DevEdu.Business.Services
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
-                throw new Exception("the same positions of topics in the course");
+                throw new ValidationException(ServiceMessages.SamePositionsInCourseTopics);
             }
         }
         private void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
-                throw new Exception("the same topics in the course");
+                throw new ValidationException(ServiceMessages.SameTopicsInCourseTopics);
             }
         }
     }
