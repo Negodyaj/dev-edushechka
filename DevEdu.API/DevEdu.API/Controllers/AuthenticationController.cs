@@ -36,10 +36,10 @@ namespace DevEdu.API.Controllers
             return addedUser;
         }
 
-        [HttpPost("/signin/{username}/{password}")]
-        public string SignIn(string username, string password)
+        [HttpPost("/signin/{email}/{password}")]
+        public string SignIn(string email, string password)
         {
-            var identity = GetIdentity(username, password);
+            var identity = GetIdentity(email, password);
             if (identity == null)
             {
                 return null;
@@ -60,9 +60,9 @@ namespace DevEdu.API.Controllers
             return encodedJwt;
         }
 
-        private ClaimsIdentity GetIdentity(string username, string password)
+        private ClaimsIdentity GetIdentity(string email, string password)
         {
-            var user = _userService.SelectUserByEmail(username);
+            var user = _userService.SelectUserByEmail(email);
 
             var claims = new List<Claim>();
             if (user != null)
