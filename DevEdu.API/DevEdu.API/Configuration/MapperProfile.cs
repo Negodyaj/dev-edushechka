@@ -62,6 +62,7 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }))
                 .ForMember(dest => dest.Group, opt => opt.MapFrom(src => new GroupDto { Id = src.GroupId }))
                 .ForMember(dest => dest.RatingType, opt => opt.MapFrom(src => new RatingTypeDto { Id = src.RatingTypeId }));
+            CreateMap<UserSignInputModel, UserDto>();
             CreateMap<PaymentUpdateInputModel, PaymentDto>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)));
         }
