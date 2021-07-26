@@ -1,13 +1,9 @@
 ﻿using DevEdu.Business.Services;
-using DevEdu.DAL.Enums;
-using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
-namespace DevEdu.Business.Tests.Services
+namespace DevEdu.Business.Tests
 {
     public class UserServiceTests
     {

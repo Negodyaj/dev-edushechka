@@ -1,13 +1,13 @@
-using DevEdu.API.Configuration;
+using DevEdu.Business.Configuration;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
 
@@ -52,7 +52,8 @@ namespace DevEdu.API
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>(); 
+            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.AddScoped<ICommentValidationHelper, CommentValidationHelper>();
             services.AddScoped<ICourseValidationHelper, CourseValidationHelper>();
@@ -79,9 +80,9 @@ namespace DevEdu.API
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
-                        ValidIssuer = AuthOptions._issuer,
+                        ValidIssuer = AuthOptions.Issuer,
                         ValidateAudience = true,
-                        ValidAudience = AuthOptions._audience,
+                        ValidAudience = AuthOptions.Audience,
                         ValidateLifetime = true,
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true

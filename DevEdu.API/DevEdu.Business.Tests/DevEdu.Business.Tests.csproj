@@ -13,9 +13,9 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DevEdu.Business\DevEdu.Business.csproj" />
-    <ProjectReference Include="..\DevEdu.DAL\DevEdu.DAL.csproj" />
+  <ItemGroup>
+    <ProjectReference Include="..\DevEdu.API\DevEdu.API.csproj" />
+    <ProjectReference Include="..\DevEdu.Business\DevEdu.Business.csproj" />
   </ItemGroup>
 
 </Project>
