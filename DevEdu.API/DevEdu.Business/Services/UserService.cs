@@ -27,11 +27,6 @@ namespace DevEdu.Business.Services
             {
                 AddUserRole(addedUserId, ((int)Role.Student));
             }
-
-            foreach (var role in dto.Roles)
-            {
-                AddUserRole(addedUserId, (int)role);
-            }
             return addedUserId;
         }
 
@@ -80,7 +75,6 @@ namespace DevEdu.Business.Services
         public void AddUserRole(int userId, int roleId)
         {
             _userValidationHelper.CheckUserIdAndRoleIdDoesNotLessThanMinimum(userId, roleId);
-            _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(userId);
             _userValidationHelper.ChekRoleExistence(roleId);
 
             _userRepository.AddUserRole(userId, roleId);
