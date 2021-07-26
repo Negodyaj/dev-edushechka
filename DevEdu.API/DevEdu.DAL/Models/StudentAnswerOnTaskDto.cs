@@ -13,5 +13,6 @@ namespace DevEdu.DAL.Models
         public string Answer { get; set; }
         public DateTime? CompletedDate { get; set; }
         public List<CommentDto> Comments { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
