@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using DevEdu.API.Common;
+using DevEdu.API.Extensions;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.DAL.Repositories;
 using DevEdu.DAL.Models;
@@ -46,7 +48,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public TaskInfoOutputModel GetTaskWithTags(int taskId)
         {
-            var userId = GetUserId();
+            var userId = this.GetUserId();
             var taskDto = _taskService.GetTaskById(taskId, userId);
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
         }
@@ -58,7 +60,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
         public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
         {
-            var userId = GetUserId();
+            var userId = this.GetUserId();
             var taskDto = _taskService.GetTaskWithCoursesById(taskId, userId);
             return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
         }
@@ -70,7 +72,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithAnswersOutputModel))]
         public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
         {
-            var userId = GetUserId();
+            var userId = this.GetUserId();
             var taskDto = _taskService.GetTaskWithAnswersById(taskId, userId);
             return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
         }
@@ -219,12 +221,6 @@ namespace DevEdu.API.Controllers
             var dto = _taskService.GetGroupsByTaskId(taskId);
             var output = _mapper.Map<List<GroupTaskInfoWithGroupOutputModel>>(dto);
             return output;
-        }
-
-        private int GetUserId()
-        {
-            var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-            return userId;
         }
     }
 }
