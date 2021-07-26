@@ -39,9 +39,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
+        public int AddStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {
-            _connection.QuerySingle<string>(
+            return _connection.QuerySingle<int>(
                 _taskStudentInsert,
                 new
                 {

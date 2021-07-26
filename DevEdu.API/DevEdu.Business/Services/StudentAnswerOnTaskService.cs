@@ -16,12 +16,12 @@ namespace DevEdu.Business.Services
             _groupRepository = groupRepository;
         }
 
-        public void AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
+        public int AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
         {
             taskAnswerDto.Task = new TaskDto { Id = taskId };
             taskAnswerDto.User = new UserDto { Id = studentId };
 
-            _studentAnswerOnTaskRepository.AddStudentAnswerOnTask(taskAnswerDto);
+            return _studentAnswerOnTaskRepository.AddStudentAnswerOnTask(taskAnswerDto);
         }
 
         public void DeleteStudentAnswerOnTask(int taskId, int studentId)

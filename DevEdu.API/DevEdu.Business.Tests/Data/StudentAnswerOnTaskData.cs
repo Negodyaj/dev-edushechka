@@ -23,6 +23,11 @@ namespace DevEdu.Business.Tests.Data
                 {
                     Id = 1
                 }
+                //,
+                //Comments = new List<CommentDto>(),
+                //TaskStatus = (DAL.Enums.TaskStatus)1,
+                //CompletedDate = DateTime.Parse("01.01.2021"),
+                //IsDeleted = false
             };
         }
 

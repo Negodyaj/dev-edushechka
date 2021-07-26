@@ -5,7 +5,7 @@ namespace DevEdu.Business.Services
 {
     public interface IStudentAnswerOnTaskService
     {
-        void AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto);
+        int AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto);
         void DeleteStudentAnswerOnTask(int taskId, int studentId);
         List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTasks();
         List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId);
