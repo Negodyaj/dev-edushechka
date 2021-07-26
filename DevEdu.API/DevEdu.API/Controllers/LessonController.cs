@@ -40,7 +40,7 @@ namespace DevEdu.API.Controllers
         public int AddLesson([FromBody] LessonInputModel inputModel)
         {
             var dto = _mapper.Map<LessonDto>(inputModel);
-            return _lessonService.AddLesson(dto);
+            return _lessonService.AddLesson(dto, inputModel.TopicIds);
         }
 
         // api/lesson/{id}
@@ -59,8 +59,7 @@ namespace DevEdu.API.Controllers
         public LessonInfoOutputModel UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
         {
             var dto = _mapper.Map<LessonDto>(updateModel);
-            dto.Id = id;
-            var output = _lessonService.UpdateLesson(dto);
+            var output = _lessonService.UpdateLesson(dto, id);
             return _mapper.Map<LessonInfoOutputModel>(output);
         }
 

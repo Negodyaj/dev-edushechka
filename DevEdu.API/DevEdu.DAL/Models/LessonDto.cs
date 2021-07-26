@@ -8,7 +8,7 @@ namespace DevEdu.DAL.Models
         public DateTime Date { get; set; }
         public string TeacherComment { get; set; }
         public UserDto Teacher { get; set; }
-        public string LinkToRecord { get; set; }
+        public string? LinkToRecord { get; set; }
         public List<TopicDto> Topics { get; set; }
         public List<CommentDto> Comments { get; set; }
         public List<GroupDto> Groups { get; set; }
