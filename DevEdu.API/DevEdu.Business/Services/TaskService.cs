@@ -34,33 +34,48 @@ namespace DevEdu.Business.Services
             _userValidationHelper = userValidationHelper;
         }
 
-        public TaskDto GetTaskById(int id, int userId)
+        public TaskDto GetTaskById(int taskid, int userId)
         {
             _userValidationHelper.CheckUserExistence(userId);
-            var taskDto = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(id);
-            _taskValidationHelper.CheckUserAccessToTask(id, userId);
+            var taskDto = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskid);
+            _taskValidationHelper.CheckUserAccessToTask(taskid, userId);
             // check if task exists
             return taskDto;
         }
 
-        public TaskDto GetTaskWithCoursesById(int id, int userId)
+        public TaskDto GetTaskWithCoursesById(int taskid, int userId)
         {
-            var taskDto = GetTaskById(id, userId);
-            taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(id);
+            var taskDto = GetTaskById(taskid, userId);
+            taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(taskid);
             return taskDto;
         }
 
-        public TaskDto GetTaskWithAnswersById(int id, int userId)
+        public TaskDto GetTaskWithAnswersById(int taskid, int userId)
         {
-            var taskDto = GetTaskById(id, userId);
-            taskDto.StudentAnswers = _studentAnswerOnTaskRepository.GetStudentAnswersToTaskByTaskId(id);
+            var taskDto = GetTaskById(taskid, userId);
+            taskDto.StudentAnswers = _studentAnswerOnTaskRepository.GetStudentAnswersToTaskByTaskId(taskid);
             return taskDto;
         }
 
-        public List<TaskDto> GetTasks()
+        public TaskDto GetTaskWithGroupsById(int taskid, int userId)
         {
+            var taskDto = GetTaskById(taskid, userId);
+            taskDto.Groups = _taskRepository.GetGroupsByTaskId(taskid);
+            return taskDto;
+        }
+
+        public List<TaskDto> GetTasks(int userId)
+        {
+            _userValidationHelper.CheckUserExistence(userId);
             var tasks = _taskRepository.GetTasks();
-            return tasks;
+            var allowedTasks = new List<TaskDto>();
+            foreach (var task in tasks)
+            {
+                var allowedTask = _taskValidationHelper.GetTaskAllowedToUser(task.Id, userId);
+                if(allowedTask != null)
+                allowedTasks.Add(allowedTask);
+            }
+            return allowedTasks;
         }
 
         public TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds )

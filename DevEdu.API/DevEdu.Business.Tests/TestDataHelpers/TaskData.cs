@@ -7,12 +7,7 @@ namespace DevEdu.Business.Tests
     {
         public const int expectedTaskId = 55;
 
-        public static TaskDto GetTaskDtoWithoutTags()
-        {
-            return new TaskDto {Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true};
-        }
-
-        public static TaskDto GetTaskDtoWithTags()
+        public static TaskDto GetTaskDto()
         {
             return new TaskDto
             {
@@ -81,6 +76,16 @@ namespace DevEdu.Business.Tests
             };
         }
 
+        public static List<GroupDto> GetListOfGroups()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto {Id = 1},
+                new GroupDto {Id = 2},
+                new GroupDto {Id = 3}
+            };
+        }
+
         public static List<TaskDto> GetListOfTasks()
         {
             return new List<TaskDto>
@@ -93,9 +98,23 @@ namespace DevEdu.Business.Tests
                     IsRequired = true,
                     Tags = new List<TagDto>
                     {
-                        new TagDto {Id = 1},
-                        new TagDto {Id = 2},
-                        new TagDto {Id = 3}
+                        new TagDto
+                        {
+                            Id = 13,
+                            Name = "Tag",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 15,
+                            Name = "DevEdu",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 14,
+                            Name = "Tag"
+                        }
                     }
                 },
                 new TaskDto
@@ -106,9 +125,23 @@ namespace DevEdu.Business.Tests
                     IsRequired = true,
                     Tags = new List<TagDto>
                     {
-                        new TagDto {Id = 4},
-                        new TagDto {Id = 5},
-                        new TagDto {Id = 6}
+                        new TagDto
+                        {
+                            Id = 18,
+                            Name = "Tag",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 19,
+                            Name = "DevEdu",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 20,
+                            Name = "Tag"
+                        }
                     }
                 },
                 new TaskDto
@@ -119,9 +152,23 @@ namespace DevEdu.Business.Tests
                     IsRequired = true,
                     Tags = new List<TagDto>
                     {
-                        new TagDto {Id = 2},
-                        new TagDto {Id = 4},
-                        new TagDto {Id = 6}
+                        new TagDto
+                        {
+                            Id = 21,
+                            Name = "Tag",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 22,
+                            Name = "DevEdu",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 23,
+                            Name = "Tag"
+                        }
                     }
                 }
             };

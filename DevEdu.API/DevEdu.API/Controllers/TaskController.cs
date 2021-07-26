@@ -80,6 +80,18 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
         }
 
+        //  api/Task/1/with-courses
+        [AuthorizeRoles(Role.Teacher)]
+        [HttpGet("{taskId}/with-groups")]
+        [Description("Get task by Id with tags and groups")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
+        public TaskInfoWithGroupsOutputModel GetTaskWithTagsAndGroups(int taskId)
+        {
+            var userId = this.GetUserId();
+            var taskDto = _taskService.GetTaskWithGroupsById(taskId, userId);
+            return _mapper.Map<TaskInfoWithGroupsOutputModel>(taskDto);
+        }
+
         //  api/Task
         [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet]
@@ -87,7 +99,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
         public List<TaskInfoOutputModel> GetAllTasksWithTags()
         {
-            var taskDtos = _taskService.GetTasks();
+            var userId = this.GetUserId();
+            var taskDtos = _taskService.GetTasks(userId);
             return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
         }
 

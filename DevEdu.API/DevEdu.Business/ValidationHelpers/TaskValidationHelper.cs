@@ -35,5 +35,16 @@ namespace DevEdu.Business.ValidationHelpers
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId));
         }
+
+        public TaskDto GetTaskAllowedToUser(int taskId, int userId)
+        {
+            var groupsByTask = _taskRepository.GetGroupsByTaskId(taskId);
+            var groupsByUser = _userRepository.GetGroupsByUserId(userId);
+
+            var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
+            if (result == default)
+                return null;
+            return _taskRepository.GetTaskById(taskId);
+        }
     }
 }

@@ -34,10 +34,10 @@ namespace DevEdu.Business.Tests
 
 
         [Test]
-        public void AddTaskByTeacher_SimpleDtoWithoutTags_TaskCreated()
+        public void AddTaskByTeacher_WithoutTags_TaskCreated()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var expectedTaskId = 55;
             var groupTask = GroupTaskData.GetGroupTaskWithGroupAndTask();
             var expectedGroupId = 10;
@@ -59,10 +59,10 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTaskByTeacher_DtoWithTags_TaskWithTagsCreated()
+        public void AddTaskByTeacher_WithTags_TaskWithTagsCreated()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var expectedTaskId = 55;
             var expectedGroupId = 10;
             var groupTask = GroupTaskData.GetGroupTaskWithGroupAndTask();
@@ -85,10 +85,10 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTaskByMethodist_SimpleDtoWithoutTags_TaskCreated()
+        public void AddTaskByMethodist_WithoutTags_TaskCreated()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var expectedTaskId = 55;
             var coursesIds = new List<int> { 1 };
 
@@ -109,10 +109,10 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTaskByMethodist_DtoWithTags_TaskWithTagsCreated()
+        public void AddTaskByMethodist_WithTags_TaskWithTagsCreated()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var expectedTaskId = 55;
             var coursesIds = new List<int> { 1 };
             var tagsIds = new List<int> { 13, 15, 14 };
@@ -137,7 +137,7 @@ namespace DevEdu.Business.Tests
         public void GetTaskById_IntTaskId_ReturnedTaskDto()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var expectedTaskId = 55;
             var expectedUserId = 10;
 
@@ -203,7 +203,7 @@ namespace DevEdu.Business.Tests
         public void GetTaskWithCoursesById_IntTaskId_ReturnedTaskDtoWithCourses()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var courseDtos = TaskData.GetListOfCourses();
             var expectedTaskId = 55;
             var expectedUserId = 10;
@@ -249,7 +249,7 @@ namespace DevEdu.Business.Tests
         public void GetTaskWithCoursesById_WhenUserNotRelatedToTusk_AuthorizationException()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var expectedTaskId = 55;
             var expectedUserId = 10;
 
@@ -273,7 +273,7 @@ namespace DevEdu.Business.Tests
         public void GetTaskWithAnswersById_IntTaskId_ReturnedTaskDtoWithStudentAnswers()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var studentAnswersDtos = TaskData.GetListOfStudentAnswers();
             var expectedTaskId = 55;
             var expectedUserId = 10;
@@ -319,7 +319,7 @@ namespace DevEdu.Business.Tests
         public void GetTaskWithAnswersById_WhenUserNotRelatedToTusk_AuthorizationException()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var expectedTaskId = 55;
             var expectedUserId = 10;
 
@@ -339,40 +339,100 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
+        public void GetTaskWithGroupsById_IntTaskId_ReturnedTaskDtoWithCourses()
+        {
+            //Given
+            var taskDto = TaskData.GetTaskDto();
+            var groupDtos = TaskData.GetListOfGroups();
+            var expectedTaskId = 55;
+            var expectedUserId = 10;
+
+            _taskValidationHelperMock.Setup(x => x.GetTaskByIdAndThrowIfNotFound(expectedTaskId)).Returns(taskDto);
+            _taskRepoMock.Setup(x => x.GetGroupsByTaskId(expectedTaskId)).Returns(groupDtos);
+            taskDto.Groups = groupDtos;
+
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+
+            //When
+            var dto = sut.GetTaskWithGroupsById(expectedTaskId, expectedUserId);
+
+            //Than
+            Assert.AreEqual(taskDto, dto);
+            _taskRepoMock.Verify(x => x.GetTaskById(expectedTaskId), Times.Never);
+            _taskRepoMock.Verify(x => x.GetGroupsByTaskId(expectedTaskId), Times.Once);
+            _taskValidationHelperMock.Verify(x => x.GetTaskByIdAndThrowIfNotFound(expectedTaskId), Times.Once);
+            _taskValidationHelperMock.Verify(x => x.CheckUserAccessToTask(expectedTaskId, expectedUserId), Times.Once);
+        }
+
+        [Test]
+        public void GetTaskWithGroupsById_WhenTaskDoesNotExist_EntityNotFoundException()
+        {
+            var expectedTaskId = 55;
+            var expectedUserId = 10;
+
+            _taskValidationHelperMock.Setup(x => x.GetTaskByIdAndThrowIfNotFound(expectedTaskId)).Throws(
+                new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "task", expectedTaskId)));
+
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+
+            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", expectedTaskId)),
+                () => sut.GetTaskWithCoursesById(expectedTaskId, expectedUserId));
+
+            _taskRepoMock.Verify(x => x.GetTaskById(expectedTaskId), Times.Never);
+            _taskValidationHelperMock.Verify(x => x.GetTaskByIdAndThrowIfNotFound(expectedTaskId), Times.Once);
+            _taskValidationHelperMock.Verify(x => x.CheckUserAccessToTask(expectedTaskId, expectedUserId), Times.Never);
+        }
+
+        [Test]
+        public void GetTaskWithGroupsByIdd_WhenUserNotRelatedToTusk_AuthorizationException()
+        {
+            //Given
+            var taskDto = TaskData.GetTaskDto();
+            var expectedTaskId = 55;
+            var expectedUserId = 10;
+
+            _taskValidationHelperMock.Setup(x => x.GetTaskByIdAndThrowIfNotFound(expectedTaskId)).Returns(taskDto);
+            _taskValidationHelperMock.Setup(x => x.CheckUserAccessToTask(expectedTaskId, expectedUserId)).Throws(
+                new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", expectedUserId, "task", expectedTaskId)));
+
+
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
+
+            AuthorizationException ex = Assert.Throws<AuthorizationException>(
+                () => sut.GetTaskWithCoursesById(expectedTaskId, expectedUserId));
+            Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", expectedUserId, "task", expectedTaskId)));
+
+            _taskRepoMock.Verify(x => x.GetTaskById(expectedTaskId), Times.Never);
+            _taskValidationHelperMock.Verify(x => x.GetTaskByIdAndThrowIfNotFound(expectedTaskId), Times.Once);
+            _taskValidationHelperMock.Verify(x => x.CheckUserAccessToTask(expectedTaskId, expectedUserId), Times.Once);
+        }
+
+        [Test]
         public void GetTasks_NoEntry_ReturnedTaskDtos()
         {
             //Given
             var taskDtos = TaskData.GetListOfTasks();
+            var expectedUserId = 10;
 
             _taskRepoMock.Setup(x => x.GetTasks()).Returns(taskDtos);
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
 
             //When
-            var dtos = sut.GetTasks();
+            var dtos = sut.GetTasks(expectedUserId);
 
             //Than
             Assert.AreEqual(taskDtos, dtos);
             _taskRepoMock.Verify(x => x.GetTasks(), Times.Once);
-        }
-
-        [Test]
-        public void GetTasks_WhenDoesNotExistAnyTask_EntityNotFoundException()
-        {
-            _taskRepoMock.Setup(x => x.GetTasks()).Throws(new EntityNotFoundException(ServiceMessages.TasksNotFoundMessage));
-
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, _taskValidationHelperMock.Object, _userValidationHelperMock.Object);
-
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
-                .And.Message.EqualTo(ServiceMessages.TasksNotFoundMessage), () => sut.GetTasks());
-            _taskRepoMock.Verify(x => x.GetTasks(), Times.Once);
+            _taskValidationHelperMock.Verify(x => x.CheckUserAccessToTask(It.IsAny<int>(), expectedUserId), Times.Exactly(taskDtos.Count));
         }
 
         [Test]
         public void UpdateTask_TaskDto_ReturnUpdateTaskDto()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var expectedTaskDto = TaskData.GetAnotherTaskDtoWithTags();
             var expectedTaskId = 55;
             var expectedUserId = 10;
@@ -395,7 +455,7 @@ namespace DevEdu.Business.Tests
         [Test]
         public void UpdateTask_WhenTaskDoesNotExist_EntityNotFoundException()
         {
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var expectedTaskId = 55;
             var expectedUserId = 10;
 

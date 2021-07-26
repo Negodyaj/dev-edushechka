@@ -95,7 +95,7 @@ namespace DevEdu.API.Configuration
             CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<TaskDto, TaskInfoOutputModel>();
             CreateMap<TaskDto, TaskInfoWithCoursesOutputModel>();
-            CreateMap<TaskDto, TaskInfoWithCoursesAndAnswersOutputModel>();
+            CreateMap<TaskDto, TaskInfoWithGroupsOutputModel>();
             CreateMap<TaskDto, TaskInfoWithAnswersOutputModel>();
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<StudentAnswerOnTaskForTaskDto, StudentAnswerOnTaskInfoOutputModel>();
