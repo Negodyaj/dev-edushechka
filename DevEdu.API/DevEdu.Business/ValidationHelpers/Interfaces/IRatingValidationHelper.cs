@@ -1,6 +1,6 @@
 ﻿namespace DevEdu.Business.ValidationHelpers
 {
-    public interface IRaitingValidationHelper
+    public interface IRatingValidationHelper
     {
         void CheckRaitingExistence(int raitingId);
     }
