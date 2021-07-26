@@ -50,5 +50,7 @@
         public const string StudentAnswerRequired = "Answer of student must be provided";
         public const string CommentUserIdRequired = "UserId of comment must be provided";
         public const string CommentTextRequired = "Text of comment must be provided";
+        public const string GroupsRequired = "Groups Ids must be provided";
+        public const string CoursesRequired = "Courses Ids must be provided";
     }
 }

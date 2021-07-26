@@ -7,7 +7,8 @@ namespace DevEdu.Business.Services
     {
         List<MaterialDto> GetAllMaterials();
         MaterialDto GetMaterialById(int id);
-        int AddMaterial(MaterialDto dto, List<int> tags);
+        public int AddMaterialWithCourses(MaterialDto dto, List<int> tags, List<int> courses);
+        public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups);
         void UpdateMaterial(int id, MaterialDto dto);
         void DeleteMaterial(int id, bool isDeleted);
         void AddTagToMaterial(int materialId, int tagId);

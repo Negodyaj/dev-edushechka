@@ -30,11 +30,29 @@ namespace DevEdu.Business.Services
             return dto;
         }
 
-        public int AddMaterial(MaterialDto dto, List<int> tags)
+        public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups)
         {
             var materialId = _materialRepository.AddMaterial(dto);
+
+            groups.ForEach(group => _groupRepository.AddGroupMaterialReference(group, materialId));
+
             if (tags == null || tags.Count == 0)
                 return materialId;
+            //check that tags exist
+            tags.ForEach(tag => AddTagToMaterial(materialId, tag));
+            return materialId;
+        }
+
+        public int AddMaterialWithCourses(MaterialDto dto, List<int> tags, List<int> courses)
+        {
+            var materialId = _materialRepository.AddMaterial(dto);
+
+            courses.ForEach(course => _courseRepository.AddCourseMaterialReference(course, materialId));
+
+            if (tags == null || tags.Count == 0)
+                return materialId;
+
+            //check that tags exist
             tags.ForEach(tag => AddTagToMaterial(materialId, tag));
             return materialId;
         }

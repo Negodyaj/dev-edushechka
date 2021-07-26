@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using DevEdu.API.Common;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +13,7 @@ using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MaterialController : Controller
@@ -26,13 +28,27 @@ namespace DevEdu.API.Controllers
         }
 
         // api/material
+        //[AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [HttpPost]
-        [Description("Add material")]
+        [Description("Add material with groups")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status201Created)]
-        public MaterialInfoOutputModel AddMaterial([FromBody] MaterialInputModel materialModel)
+        public MaterialInfoOutputModel AddMaterialWithGroups([FromBody] MaterialWithGroupsInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            int id = _materialService.AddMaterial(dto, materialModel.TagsIds);
+            int id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds);
+            dto = _materialService.GetMaterialById(id);
+            return _mapper.Map<MaterialInfoOutputModel>(dto);
+        }
+
+        // api/material
+        //[AuthorizeRoles(Role.Methodist)]
+        [HttpPost]
+        [Description("Add material with courses")]
+        [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status201Created)]
+        public MaterialInfoOutputModel AddMaterialWithCourses([FromBody] MaterialWithCoursesInputModel materialModel)
+        {
+            var dto = _mapper.Map<MaterialDto>(materialModel);
+            int id = _materialService.AddMaterialWithCourses(dto, materialModel.TagsIds, materialModel.CoursesIds);
             dto = _materialService.GetMaterialById(id);
             return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
