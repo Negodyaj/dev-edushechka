@@ -83,6 +83,6 @@ namespace DevEdu.API.Controllers
             var listId = _paymentService.AddPayments(dto);
             dto = _paymentService.SelectPaymentsBySeveralId(listId);
             return _mapper.Map<List<PaymentOutputModel>>(dto);
-        }
+         }
     }
 }

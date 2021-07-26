@@ -13,10 +13,10 @@ namespace DevEdu.DAL.Repositories
         private const string _paymentSelectByIdProcedure = "dbo.Payment_SelectById";
         private const string _paymentAllByUserIdProcedure = "dbo.Payment_SelectAllByUserId";
         private const string _paymentUpdateProcedure = "dbo.Payment_Update";
-        private const string _addPaymentsProcedure = "[dbo].[Insert_Payments]";
+        private const string _addPaymentsProcedure = "[dbo].[Payment_BulkInsert]";
         private const string _selectPaymentsBySeveralId = "[dbo].[Payment_SelectBySeveralId]";
         private const string _paymentType = "[dbo].[PaymentType]";
-        private const string _idType = "dbo.IdType";
+        private const string _idType = "[dbo].[IdType]";
 
         public PaymentRepository() { }
 

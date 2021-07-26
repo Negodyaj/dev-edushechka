@@ -2,6 +2,6 @@
 	[Date] [datetime]  not null,
 	[Sum] decimal(6, 2) not null,
 	UserId [int] not null,
-	IsPaid [bit] not null,
-	IsDeleted [bit] not null
+	IsPaid [bit] not null
+	
 )
