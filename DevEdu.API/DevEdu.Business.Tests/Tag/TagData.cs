@@ -7,7 +7,6 @@ namespace DevEdu.Business.Tests.Tag
 {
     public class TagData
     {
-        public const int expectedTagId = 13;
         public static List<TagDto> GetListTagData()
         {
             return new List<TagDto>

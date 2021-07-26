@@ -6,29 +6,29 @@ using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Models
 {
-    public class StudentRaitingDto
+    public class StudentRatingDto
     {
         public int Id { get; set; }
         public UserDto User { get; set; }
         public GroupDto Group { get; set; }
-        public RaitingTypeDto RaitingType { get; set; }
-        public int Raiting { get; set; }
+        public RatingTypeDto RatingType { get; set; }
+        public int Rating { get; set; }
         public int ReportingPeriodNumber { get; set; }
 
         public override bool Equals(object obj)
         {
-            return obj is StudentRaitingDto dto &&
+            return obj is StudentRatingDto dto &&
                    Id == dto.Id &&
                    EqualityComparer<UserDto>.Default.Equals(User, dto.User) &&
                    EqualityComparer<GroupDto>.Default.Equals(Group, dto.Group) &&
-                   EqualityComparer<RaitingTypeDto>.Default.Equals(RaitingType, dto.RaitingType) &&
-                   Raiting == dto.Raiting &&
+                   EqualityComparer<RatingTypeDto>.Default.Equals(RatingType, dto.RatingType) &&
+                   Rating == dto.Rating &&
                    ReportingPeriodNumber == dto.ReportingPeriodNumber;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, User, Group, RaitingType, Raiting, ReportingPeriodNumber);
+            return HashCode.Combine(Id, User, Group, RatingType, Rating, ReportingPeriodNumber);
         }
     }
 }

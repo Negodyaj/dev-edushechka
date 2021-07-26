@@ -20,18 +20,19 @@ namespace DevEdu.Business.Tests.Tag
         public void AddTag_TagDto_TagCreated()
         {
             //Given
-            var TagDto = TagData.GetListTagData()[0];
+            var tagDto = TagData.GetListTagData()[0];
+            var expectedTagId = tagDto.Id;
 
-            _tagRepoMock.Setup(x => x.AddTag(TagDto)).Returns(TagData.expectedTagId);
+            _tagRepoMock.Setup(x => x.AddTag(tagDto)).Returns(expectedTagId);
 
             var sut = new TagService(_tagRepoMock.Object);
 
             //When
-            var actualTagId = sut.AddTag(TagDto);
+            var actualTagId = sut.AddTag(tagDto);
 
             //Than
-            Assert.AreEqual(TagData.expectedTagId, actualTagId);
-            _tagRepoMock.Verify(x => x.AddTag(TagDto), Times.Once);
+            Assert.AreEqual(expectedTagId, actualTagId);
+            _tagRepoMock.Verify(x => x.AddTag(tagDto), Times.Once);
         }
 
         [Test]
@@ -57,16 +58,18 @@ namespace DevEdu.Business.Tests.Tag
             //Given
             var expectedTagDto = TagData.GetListTagData()[0];
 
-            _tagRepoMock.Setup(x => x.SelectTagById(TagData.expectedTagId)).Returns(expectedTagDto);
+            var tagId = expectedTagDto.Id;
+
+            _tagRepoMock.Setup(x => x.SelectTagById(tagId)).Returns(expectedTagDto);
 
             var sut = new TagService(_tagRepoMock.Object);
 
             //When
-            var actualTagDto = sut.GetTagById(TagData.expectedTagId);
+            var actualTagDto = sut.GetTagById(tagId);
 
             //Than
             Assert.AreEqual(expectedTagDto, actualTagDto);
-            _tagRepoMock.Verify(x => x.SelectTagById(TagData.expectedTagId), Times.Once);
+            _tagRepoMock.Verify(x => x.SelectTagById(tagId), Times.Once);
         }
         [Test]
         public void UpdateTag_TagDto_Id_TagDto()
@@ -74,17 +77,19 @@ namespace DevEdu.Business.Tests.Tag
             //Given
             var expectedTagDto = TagData.GetListTagData()[0];
 
-            _tagRepoMock.Setup(x => x.SelectTagById(TagData.expectedTagId)).Returns(expectedTagDto);
+            var tagId = expectedTagDto.Id;
+
+            _tagRepoMock.Setup(x => x.SelectTagById(tagId)).Returns(expectedTagDto);
 
             var sut = new TagService(_tagRepoMock.Object);
 
             //When
-            var actualTagDto = sut.UpdateTag(TagData.GetListTagData()[2], TagData.expectedTagId);
+            var actualTagDto = sut.UpdateTag(TagData.GetListTagData()[2], tagId);
 
             //Than
             Assert.AreEqual(expectedTagDto, actualTagDto);
             _tagRepoMock.Verify(x => x.UpdateTag(It.Is<TagDto>(dto => dto.Equals(TagData.GetListTagData()[2]))), Times.Once);
-            _tagRepoMock.Verify(x => x.SelectTagById(TagData.expectedTagId), Times.Once);
+            _tagRepoMock.Verify(x => x.SelectTagById(tagId), Times.Once);
         }
     }
 }

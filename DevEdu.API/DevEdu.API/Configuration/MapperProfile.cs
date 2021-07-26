@@ -49,10 +49,10 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }));
             CreateMap<CourseTopicUpdateInputModel, CourseTopicDto>()
                 .ForMember(dest => dest.Topic, opt => opt.MapFrom(src => new TopicDto { Id = src.TopicId }));
-            CreateMap<StudentRaitingInputModel, StudentRaitingDto>()
+            CreateMap<StudentRatingInputModel, StudentRatingDto>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }))
                 .ForMember(dest => dest.Group, opt => opt.MapFrom(src => new GroupDto { Id = src.GroupId }))
-                .ForMember(dest => dest.RaitingType, opt => opt.MapFrom(src => new RaitingTypeDto { Id = src.RaitingTypeId }));
+                .ForMember(dest => dest.RatingType, opt => opt.MapFrom(src => new RatingTypeDto { Id = src.RatingTypeId }));
         }
 
         private void CreateMappingFromDto()
@@ -92,8 +92,8 @@ namespace DevEdu.API.Configuration
             CreateMap<LessonDto, LessonInfoWithStudentsAndCommentsOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<StudentLessonDto, StudentLessonOutputModel>();
-            CreateMap<StudentRaitingDto, StudentRaitingOutputModel>();
-            CreateMap<RaitingTypeDto, RaitingTypeOutputModel>();
+            CreateMap<StudentRatingDto, StudentRatingOutputModel>();
+            CreateMap<RatingTypeDto, RatingTypeOutputModel>();
         }
     }
 }

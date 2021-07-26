@@ -1,16 +1,14 @@
-﻿CREATE PROCEDURE dbo.StudentRaiting_SelectAll
+﻿CREATE PROCEDURE dbo.StudentRating_SelectById
+	@Id int
 	AS
 BEGIN
 	SELECT 
 	sr.Id,
-	sr.Raiting,
+	sr.Rating,
 	sr.ReportingPeriodNumber,
 	g.Id,
-	g.CourseId,
-	g.GroupStatusId,
-	g.PaymentPerMonth,
+	g.Name,
 	g.StartDate,
-	g.Timetable,
 	rt.Id,
 	rt.Name,
 	rt.Weight,
@@ -20,11 +18,10 @@ BEGIN
 	u.Email,
 	u.Photo,
 	ug.RoleId as Id
-	from dbo.StudentRaiting sr
+	from dbo.StudentRating sr
 	left join [dbo].[Group] g on sr.GroupId = g.Id
-	left join dbo.RaitingType rt on sr.RaitingTypeID = rt.Id
+	left join dbo.RatingType rt on sr.RatingTypeID = rt.Id
 	left join [dbo].[User] u on sr.UserID = u.Id
 	left join dbo.User_Group ug on ug.UserId = u.Id and ug.GroupId = g.Id
-	WHERE u.IsDeleted = 0
-	AND g.IsDeleted = 0
+	WHERE sr.Id = @Id
 END

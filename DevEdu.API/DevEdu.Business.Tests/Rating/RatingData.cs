@@ -4,53 +4,51 @@ using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
-    public class RaitingData
+    public class RatingData
     {
-        public const int expectedStudentRaitingId = 13;
-
-        public static List<StudentRaitingDto> GetListOfStudentRaitingDto()
+        public static List<StudentRatingDto> GetListOfStudentRatingDto()
         {
 
-            return new List<StudentRaitingDto>
+            return new List<StudentRatingDto>
                 {
-                    new StudentRaitingDto
+                    new StudentRatingDto
                     {
                         Id = 13,
                         Group = new GroupDto { Id = 1 },
                         User = UserData.GetAnotherUserDto(),
-                        RaitingType = GetRaitingTypeDtos()[0],
-                        Raiting = 80,
+                        RatingType = GetRatingTypeDtos()[0],
+                        Rating = 80,
                         ReportingPeriodNumber = 2
                     },
-                    new StudentRaitingDto
+                    new StudentRatingDto
                     {
                         Id = 14,
                         Group = new GroupDto { Id = 1 },
                         User = UserData.GetAnotherUserDto(),
-                        RaitingType = GetRaitingTypeDtos()[1],
-                        Raiting = 50,
+                        RatingType = GetRatingTypeDtos()[1],
+                        Rating = 50,
                         ReportingPeriodNumber = 2
                     },
-                    new StudentRaitingDto
+                    new StudentRatingDto
                     {
                         Id = 13,
-                        Raiting = 80,
+                        Rating = 80,
                         ReportingPeriodNumber = 2
                     }
             };
         }
 
-        public static List<RaitingTypeDto> GetRaitingTypeDtos()
+        public static List<RatingTypeDto> GetRatingTypeDtos()
         {
-            return new List<RaitingTypeDto>
+            return new List<RatingTypeDto>
             {
-                new RaitingTypeDto
+                new RatingTypeDto
                 {
                     Id = 1,
                     Name = "оценка преподавателя",
                     Weight = 20
                 },
-                new RaitingTypeDto
+                new RatingTypeDto
                 {
                     Id = 2,
                     Name = "оценка посещаемости",

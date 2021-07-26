@@ -4,7 +4,7 @@ using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class StudentRaitingInputModel
+    public class StudentRatingInputModel
     {
         [Required(ErrorMessage = UserIdRequired)]
         public int UserId { get; set; }
@@ -12,28 +12,28 @@ namespace DevEdu.API.Models.InputModels
         [Required(ErrorMessage = GroupIdRequired)]
         public int GroupId { get; set; }
 
-        [Required(ErrorMessage = RaitingTypeIdRequired)]
-        public int RaitingTypeId { get; set; }
+        [Required(ErrorMessage = RatingTypeIdRequired)]
+        public int RatingTypeId { get; set; }
 
-        [Required(ErrorMessage = RaitingRequired)]
-        public int Raiting { get; set; }
+        [Required(ErrorMessage = RatingRequired)]
+        public int Rating { get; set; }
 
         [Required(ErrorMessage = ReportingPeriodNumberRequired)]
         public int ReportingPeriodNumber { get; set; }
 
         public override bool Equals(object obj)
         {
-            return obj is StudentRaitingInputModel model &&
+            return obj is StudentRatingInputModel model &&
                    UserId == model.UserId &&
                    GroupId == model.GroupId &&
-                   RaitingTypeId == model.RaitingTypeId &&
-                   Raiting == model.Raiting &&
+                   RatingTypeId == model.RatingTypeId &&
+                   Rating == model.Rating &&
                    ReportingPeriodNumber == model.ReportingPeriodNumber;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(UserId, GroupId, RaitingTypeId, Raiting, ReportingPeriodNumber);
+            return HashCode.Combine(UserId, GroupId, RatingTypeId, Rating, ReportingPeriodNumber);
         }
     }
 }

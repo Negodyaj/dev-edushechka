@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Models
 {
-    public class RaitingTypeDto
+    public class RatingTypeDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -14,7 +14,7 @@ namespace DevEdu.DAL.Models
 
         public override bool Equals(object obj)
         {
-            return obj is RaitingTypeDto dto &&
+            return obj is RatingTypeDto dto &&
                    Id == dto.Id &&
                    Name == dto.Name &&
                    Weight == dto.Weight;

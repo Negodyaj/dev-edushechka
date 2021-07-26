@@ -38,7 +38,7 @@ namespace DevEdu.API
             services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
-            services.AddScoped<IRaitingRepository, RaitingRepository>();
+            services.AddScoped<IRatingRepository, RatingRepository>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IGroupService, GroupService>();
@@ -49,7 +49,7 @@ namespace DevEdu.API
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ITopicService, TopicService>();
-            services.AddScoped<IRaitingService, RaitingService>();
+            services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<INotificationService, NotificationService>();
 
             services.AddControllers();

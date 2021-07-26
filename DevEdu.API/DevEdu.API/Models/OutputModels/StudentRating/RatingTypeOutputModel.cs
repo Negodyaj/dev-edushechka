@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DevEdu.API.Models.OutputModels
 {
-    public class RaitingTypeOutputModel
+    public class RatingTypeOutputModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,7 +13,7 @@ namespace DevEdu.API.Models.OutputModels
 
         public override bool Equals(object obj)
         {
-            return obj is RaitingTypeOutputModel model &&
+            return obj is RatingTypeOutputModel model &&
                    Id == model.Id &&
                    Name == model.Name &&
                    Weight == model.Weight;
