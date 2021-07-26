@@ -7,5 +7,7 @@
         public const string EntityDoesntHaveAcessToMessage = "{0} with id = {1} does not have access to the {2} with id = {3}";
 
         public const string TasksNotFoundMessage = "tasks were not found";
+        public const string SamePositionsInCourseTopics = "the same positions of topics in the course";
+        public const string SameTopicsInCourseTopics = "the same topics in the course";
     }
 }

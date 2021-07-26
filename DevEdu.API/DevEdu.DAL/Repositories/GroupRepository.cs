@@ -23,9 +23,9 @@ namespace DevEdu.DAL.Repositories
         private const string _taskGroupSelectByIdProcedure = "dbo.Group_Task_SelectById";
         private const string _taskGroupUpdateProcedure = "dbo.Group_Task_Update";
 
-        public void AddGroupLesson(int groupId, int lessonId)
+        public int AddGroupToLesson(int groupId, int lessonId)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 _insertGroupLesson,
                 new
                 {
@@ -36,9 +36,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void RemoveGroupLesson(int groupId, int lessonId)
+        public int RemoveGroupFromLesson(int groupId, int lessonId)
         {
-            _connection.Execute(
+           return  _connection.Execute(
                 _deleteGroupLesson,
                 new
                 {
