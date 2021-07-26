@@ -25,6 +25,9 @@ namespace DevEdu.DAL.Repositories
         private const string _updateFeedbackProcedure = "dbo.Student_Lesson_UpdateFeedback";
         private const string _updateAbsenceReasonProcedure = "dbo.Student_Lesson_UpdateAbsenceReason";
         private const string _updateIsPresentProcedure = "dbo.Student_Lesson_UpdateIsPresent";
+        private const string _selectAllFeedbackByLessonIdProcedure = "dbo.Student_Lesson_SelectAllFeedbackByLessonId";
+        private const string _selectByLessonAndUserIdProcedure = "dbo.Student_Lesson_SelectByLessonAndUserId";
+
 
         public LessonRepository()
         {
@@ -295,5 +298,43 @@ namespace DevEdu.DAL.Repositories
                  commandType: CommandType.StoredProcedure
              );
         }
+
+
+        public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId)
+        {
+            StudentLessonDto result;
+            var list = _connection.Query<StudentLessonDto, UserDto, StudentLessonDto>(
+                _selectAllFeedbackByLessonIdProcedure,
+                (studentLesson, user) =>
+                {
+                    result = studentLesson;
+                    result.User = user;
+                    result.Feedback = studentLesson.Feedback;
+
+                    return result;
+                },
+                  new { lessonId },
+                  splitOn: "Id",
+                  commandType: CommandType.StoredProcedure
+                  )
+                  .ToList();
+            return list;
+        }
+
+
+        public StudentLessonDto SelectByLessonAndUserId(int lessonId, int userId)      
+        {
+            return _connection.QuerySingleOrDefault<StudentLessonDto>(
+                _selectByLessonAndUserIdProcedure,
+                new 
+                {
+                    LessonId = lessonId,
+                    UserId= userId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
     }
 }
+
+

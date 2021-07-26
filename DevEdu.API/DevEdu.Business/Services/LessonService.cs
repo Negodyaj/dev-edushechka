@@ -137,5 +137,11 @@ namespace DevEdu.Business.Services
             studentLessonDto.User = new UserDto { Id = userId };
             _lessonRepository.UpdateStudentAttendanceOnLesson(studentLessonDto);
         }
+
+        public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId)=>
+            _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
+
+        public StudentLessonDto GetStudenLessonByLessonAndUserId(int lessonId, int userId) =>
+            _lessonRepository.SelectByLessonAndUserId(lessonId, userId);
     }
 }
