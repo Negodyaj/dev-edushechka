@@ -13,5 +13,6 @@ namespace DevEdu.DAL.Repositories
         MaterialDto GetMaterialById(int id);
         int UpdateMaterial(MaterialDto material);
         List<MaterialDto> GetMaterialsByTagId(int tagId);
+        List<MaterialDto> GetMaterialsByCourseId(int courseId);
     }
 }
