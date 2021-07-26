@@ -89,7 +89,7 @@ namespace DevEdu.Business.Services
             byte[] hashBytes = Convert.FromBase64String(hashedPassword);
             byte[] salt = new byte[16];
             Array.Copy(hashBytes, 0, salt, 0, 16);
-            string result = HashPassword(userPasword, salt);
+            string result = HashPassword(userPassword, salt);
             return result == hashedPassword;
         }
 

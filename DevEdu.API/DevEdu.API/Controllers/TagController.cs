@@ -29,7 +29,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         public int AddTag([FromBody] TagInputModel model)
         {
-            var dto = _mapper.Map< TagDto>(model);            
+            var dto = _mapper.Map<TagDto>(model);
             return _service.AddTag(dto);
         }
 
@@ -46,8 +46,8 @@ namespace DevEdu.API.Controllers
         public TagOutputModel UpdateTag(int id, [FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
-            _service.UpdateTag(dto, id);
-            return GetTagById(id);
+            dto = _service.UpdateTag(dto, id);
+            return _mapper.Map<TagOutputModel>(dto);
         }
 
         // api/tag

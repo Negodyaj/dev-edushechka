@@ -6,7 +6,7 @@ using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
-    public class PaymentRepository : BaseRepository, IPaymentRepository     
+    public class PaymentRepository : BaseRepository, IPaymentRepository
     {
         private const string _paymentAddProcedure = "dbo.Payment_Insert";
         private const string _paymentDeleteProcedure = "dbo.Payment_Delete";
@@ -22,7 +22,7 @@ namespace DevEdu.DAL.Repositories
                 _paymentAddProcedure,
                 new
                 {
-                    userId=paymentDto.User.Id,
+                    userId = paymentDto.User.Id,
                     paymentDto.Date,
                     paymentDto.Sum,
                     paymentDto.IsPaid
@@ -54,9 +54,9 @@ namespace DevEdu.DAL.Repositories
                         result.User = user;
                     }
                     return result;
-                }, 
-                new { id},
-                splitOn:"Id",
+                },
+                new { id },
+                splitOn: "Id",
                     commandType: CommandType.StoredProcedure
             )
             .FirstOrDefault();

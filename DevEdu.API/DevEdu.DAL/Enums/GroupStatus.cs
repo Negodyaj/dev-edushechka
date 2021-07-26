@@ -2,7 +2,9 @@
 {
     public enum GroupStatus
     {
-        Active = 1,
-        Finished
+        Forming = 1,
+        ReadyToLearn,
+        Learning,
+        CompletedLearning
     }
 }

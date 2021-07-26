@@ -3,7 +3,7 @@ using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 
-namespace DevEdu.Business.Tests.Services
+namespace DevEdu.Business.Tests
 {
     public class UserServiceTests
     {
@@ -77,7 +77,7 @@ namespace DevEdu.Business.Tests.Services
 
             _userRepoMock.Setup(x => x.UpdateUser(expectedDto));
             _userRepoMock.Setup(x => x.SelectUserById(expectedDto.Id)).Returns(expectedAnotherDto);
-           
+
             var sut = new UserService(_userRepoMock.Object);
 
             //When

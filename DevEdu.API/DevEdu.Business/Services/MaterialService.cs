@@ -10,7 +10,9 @@ namespace DevEdu.Business.Services
         private readonly ICourseRepository _courseRepository;
         private readonly IGroupRepository _groupRepository;
 
-        public MaterialService(IMaterialRepository materialRepository, ICourseRepository courseRepository, 
+        public MaterialService(
+            IMaterialRepository materialRepository, 
+            ICourseRepository courseRepository, 
             IGroupRepository groupRepository)
         {
             _materialRepository = materialRepository;
@@ -40,22 +42,23 @@ namespace DevEdu.Business.Services
             return materialId;
         }
 
-        public void UpdateMaterial(int id, MaterialDto dto)
+        public MaterialDto UpdateMaterial(int id, MaterialDto dto)
         {
             dto.Id = id;
             _materialRepository.UpdateMaterial(dto);
+            return _materialRepository.GetMaterialById(dto.Id);
         }
 
-        public void DeleteMaterial(int id, bool isDeleted) => 
+        public void DeleteMaterial(int id, bool isDeleted) =>
             _materialRepository.DeleteMaterial(id, isDeleted);
 
-        public void AddTagToMaterial(int materialId, int tagId) => 
+        public void AddTagToMaterial(int materialId, int tagId) =>
             _materialRepository.AddTagToMaterial(materialId, tagId);
 
-        public void DeleteTagFromMaterial(int materialId, int tagId) => 
+        public void DeleteTagFromMaterial(int materialId, int tagId) =>
             _materialRepository.DeleteTagFromMaterial(materialId, tagId);
 
-        public List<MaterialDto> GetMaterialsByTagId(int tagId) => 
+        public List<MaterialDto> GetMaterialsByTagId(int tagId) =>
             _materialRepository.GetMaterialsByTagId(tagId);
     }
 }

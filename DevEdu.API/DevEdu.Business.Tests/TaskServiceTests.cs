@@ -177,7 +177,7 @@ namespace DevEdu.Business.Tests
             var taskDto = TaskData.GetTaskDtoWithTags();
             var expectedTaskDto = TaskData.GetAnotherTaskDtoWithTags();
 
-            _taskRepoMock.Setup(x => x.UpdateTask(taskDto));
+            //_taskRepoMock.Setup(x => x.UpdateTask(taskDto));
             _taskRepoMock.Setup(x => x.GetTaskById(taskDto.Id)).Returns(expectedTaskDto);
 
             var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
@@ -190,7 +190,23 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Verify(x => x.UpdateTask(taskDto), Times.Once);
             _taskRepoMock.Verify(x => x.GetTaskById(taskDto.Id), Times.Once);
         }
+        [Test]
+        public void GetGroupsByTaskId_IntTaskId_ReturnedListOfGroupTaskDtoWithTask()
+        {
+            //Given
+            var groupTaskList = GroupTaskData.GetListOfGroupTaskDtoWithGroup();
+            const int taskId = GroupTaskData.TaskId;
+
+            _taskRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupTaskList);
+
+            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object);
+
+            //When
+            var dto = sut.GetGroupsByTaskId(taskId);
+
+            //Than
+            Assert.AreEqual(groupTaskList, dto);
+            _taskRepoMock.Verify(x => x.GetGroupsByTaskId(taskId), Times.Once);
+        }
     }
-
-
 }
