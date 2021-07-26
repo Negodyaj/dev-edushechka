@@ -101,8 +101,8 @@ namespace DevEdu.API.Configuration
             CreateMap<LessonDto, LessonInfoWithStudentsAndCommentsOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<StudentLessonDto, StudentLessonOutputModel>();
-            CreateMap<StudentRaitingDto, StudentRaitingOutputModel>();
-            CreateMap<RaitingTypeDto, RaitingTypeOutputModel>();
+            CreateMap<StudentRatingDto, StudentRatingOutputModel>();
+            CreateMap<RatingTypeDto, RatingTypeOutputModel>();
             CreateMap<GroupTaskDto, GroupTaskInfoWithGroupOutputModel>();
             CreateMap<GroupTaskDto, GroupTaskInfoWithTaskOutputModel>();
             CreateMap<GroupTaskDto, GroupTaskInfoFullOutputModel>();

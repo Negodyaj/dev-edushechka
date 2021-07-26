@@ -115,11 +115,10 @@ namespace DevEdu.DAL.Repositories
             table.Columns.Add("Sum");
             table.Columns.Add("UserId");
             table.Columns.Add("IsPaid");
-            table.Columns.Add("IsDeleted");
 
             foreach (var bill in payments)
             {
-                table.Rows.Add(bill.Date, bill.Sum, bill.User.Id, bill.IsPaid, bill.IsDeleted);
+                table.Rows.Add(bill.Date, bill.Sum, bill.User.Id, bill.IsPaid);
             }
              var response = _connection.Query<int>(
                 _addPaymentsProcedure,

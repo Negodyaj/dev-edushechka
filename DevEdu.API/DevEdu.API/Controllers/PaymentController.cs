@@ -24,20 +24,22 @@ namespace DevEdu.API.Controllers
         }
         //  api/payment/5
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(PaymentDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [Description("Get payment by id")]
-        public PaymentDto GetPayment(int id)
+        public PaymentOutputModel GetPayment(int id)
         {
-            return _paymentService.GetPayment(id);
+            var payment = _paymentService.GetPayment(id);
+            return _mapper.Map<PaymentOutputModel>(payment);
         }
 
         //  api/payment/user/1
         [HttpGet("user/{userId}")]
-        [ProducesResponseType(typeof(List<PaymentDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [Description("Get all payments by user id")]
-        public List<PaymentDto> SelectAllPaymentsByUserId(int userId)
+        public List<PaymentOutputModel> SelectAllPaymentsByUserId(int userId)
         {
-            return _paymentService.GetPaymentsByUserId(userId);
+            var payment = _paymentService.GetPaymentsByUserId(userId);
+            return _mapper.Map<List<PaymentOutputModel>>(payment);
         }
 
         //  api/payment

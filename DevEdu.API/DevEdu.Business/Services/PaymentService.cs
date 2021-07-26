@@ -1,4 +1,5 @@
-﻿using DevEdu.Business.Exceptions;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
@@ -26,9 +27,9 @@ namespace DevEdu.Business.Services
         {
             var paymentInDb = _paymentRepository.GetPayment(id);
             if (paymentInDb == null || dto == null)
-                throw new EntityNotFoundException("Entity Not Found");
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             if (paymentInDb.IsDeleted)  
-            throw new EntityNotFoundException("This payment is deleted");
+            throw new EntityNotFoundException(ServiceMessages.PaymentDeleted);
             dto.User = new UserDto { Id = paymentInDb.User.Id };
             
             dto.Id = id;
