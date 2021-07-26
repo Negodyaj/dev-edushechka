@@ -14,7 +14,9 @@ namespace DevEdu.DAL.Repositories
         private const string _paymentAllByUserIdProcedure = "dbo.Payment_SelectAllByUserId";
         private const string _paymentUpdateProcedure = "dbo.Payment_Update";
         private const string _addPaymentsProcedure = "[dbo].[Insert_Payments]";
+        private const string _selectPaymentsBySeveralId = "[dbo].[Payment_SelectBySeveralId]";
         private const string _paymentType = "[dbo].[PaymentType]";
+        private const string _idType = "dbo.IdType";
 
         public PaymentRepository() { }
 
@@ -125,7 +127,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 );
         }
-        public void SelectPaymentsBySeveralId(List<int> ids)
+        public List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids)
         {
             var table = new DataTable();
             table.Columns.Add("Id");
@@ -133,7 +135,29 @@ namespace DevEdu.DAL.Repositories
             {
                 table.Rows.Add(i);
             }
+            var paymentDictionary = new Dictionary<int, PaymentDto>();
+            var response = _connection.Query<PaymentDto, UserDto, PaymentDto>(
+              _selectPaymentsBySeveralId,
+               (paymentDto, userDto) =>
+               {
+                   PaymentDto paymentEntity;
+                   if (!paymentDictionary.TryGetValue(paymentDto.Id, out paymentEntity))
+                   {
+                       paymentEntity = paymentDto;
+                       paymentEntity.User = userDto;
+                       paymentDictionary.Add(paymentEntity.Id, paymentEntity);
+                   }
+                   paymentEntity.User = userDto;
+                   return paymentEntity;
+               },
+               new { @tblIds = table.AsTableValuedParameter(_idType) },
+               splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .Distinct()
+                .ToList();
 
+            return response;
         }
     }
 }

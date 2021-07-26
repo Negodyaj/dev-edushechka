@@ -36,5 +36,10 @@ namespace DevEdu.Business.Services
         {
             _paymentRepository.AddPayments(payments);
         }
+        public List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids)
+        {
+            var list = _paymentRepository.SelectPaymentsBySeveralId(ids);
+            return list;
+        }
     }
 }

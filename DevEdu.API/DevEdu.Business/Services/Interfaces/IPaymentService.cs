@@ -11,5 +11,6 @@ namespace DevEdu.Business.Services
         List<PaymentDto> GetPaymentsByUserId(int userId);
         void UpdatePayment(int id, PaymentDto dto);
         void AddPayments(List<PaymentDto> payments);
+        List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids);
     }
 }

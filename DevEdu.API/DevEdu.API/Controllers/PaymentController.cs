@@ -80,7 +80,13 @@ namespace DevEdu.API.Controllers
         public string AddPayments([FromBody] List<PaymentInputModel> models)
         {
             var dto = _mapper.Map<List<PaymentDto>>(models);
-            _paymentService.AddPayments(dto);
+            //_paymentService.AddPayments(dto);
+            var list = new List<int>();
+            list.Add(7);
+            list.Add(8);
+            list.Add(9);
+            _paymentService.SelectPaymentsBySeveralId(list);
+
             return "Payments added";
         }
     }
