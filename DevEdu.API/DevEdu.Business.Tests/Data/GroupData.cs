@@ -11,6 +11,7 @@ namespace DevEdu.Business.Tests
         public const int GroupId = 1;
         public const int MaterialId = 1;
         public const int RoleStudent = (int)Role.Student;
+        public const int StatusGroup = 1;
 
         public static GroupDto GetGroupDto()
         {
@@ -26,6 +27,46 @@ namespace DevEdu.Business.Tests
                     Groups = null,
                     IsDeleted = false
                 },
+                GroupStatus = GroupStatus.Formed,
+                StartDate = DateTime.MaxValue,
+                Timetable = "Понедельник",
+                PaymentPerMonth = 1.0M,
+                Students = null,
+                Teachers = null,
+                Tutors = null
+            };
+        }
+
+        public static GroupDto GetUpdGroupDto()
+        {
+            return new GroupDto
+            {
+                Id = 1,
+                Name = "Пончики",
+                Course = new CourseDto
+                {
+                    Id = 1,
+                    Name = "Ололошки",
+                    Description = "Курс для котиков",
+                    Groups = null,
+                    IsDeleted = false
+                },
+                GroupStatus = GroupStatus.Formed,
+                StartDate = DateTime.MinValue,
+                Timetable = "Вторник",
+                PaymentPerMonth = 1.0M,
+                Students = null,
+                Teachers = null,
+                Tutors = null
+            };
+        }
+        public static GroupDto GetGroupDtoToUpdNameAndTimetable()
+        {
+            return new GroupDto
+            {
+                Id = 1,
+                Name = "Котейка",
+                Course = null,
                 GroupStatus = GroupStatus.Formed,
                 StartDate = DateTime.MaxValue,
                 Timetable = "Понедельник",
