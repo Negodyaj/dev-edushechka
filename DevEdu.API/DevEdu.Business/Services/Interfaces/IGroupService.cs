@@ -7,8 +7,14 @@ namespace DevEdu.Business.Services
     {
         void AddGroupMaterialReference(int groupId, int materialId);
         void RemoveGroupMaterialReference(int groupId, int materialId);
-        int AddGroupToLesson(int groupId, int materialId);
-        int RemoveGroupFromLesson(int groupId, int materialId);
+        int AddGroup(GroupDto groupDto);
+        void DeleteGroup(int id);
+        GroupDto GetGroup(int id);
+        List<GroupDto> GetGroups();
+        GroupDto UpdateGroup(int id, GroupDto groupDto);
+        GroupDto ChangeGroupStatus(int groupId, int statusId);
+        int AddGroupToLesson(int groupId, int lessonId);
+        int RemoveGroupFromLesson(int groupId, int lessonId);
         void AddUserToGroup(int groupId, int userId, int roleId);
         void DeleteUserFromGroup(int groupId, int userId);
         int AddTaskToGroup(int groupId, int taskId, GroupTaskDto dto);

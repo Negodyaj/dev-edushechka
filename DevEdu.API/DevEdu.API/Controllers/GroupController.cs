@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using AutoMapper;
-using DevEdu.API.Common;
-using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel;
+using DevEdu.API.Common;
 
 namespace DevEdu.API.Controllers
 {
@@ -19,62 +18,78 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IGroupService _groupService;
-        private readonly IGroupRepository _groupRepository;
 
-        public GroupController(IMapper mapper, IGroupService groupService, IGroupRepository groupRepository)
+        public GroupController(IMapper mapper, IGroupService service)
         {
             _mapper = mapper;
-            _groupService = groupService;
-            _groupRepository = groupRepository;
+            _groupService = service;
         }
 
         //  api/Group/5
         [HttpGet("{id}")]
-        public string GetGroupById(int id)
+        [Description("Return Group by id")]
+        [ProducesResponseType(typeof(GroupFullOutputModel), StatusCodes.Status200OK)]  // todo
+        public GroupFullOutputModel GetGroup(int id)
         {
-            return $"Group №{id}";
+            var dto = _groupService.GetGroup(id);
+            return _mapper.Map<GroupFullOutputModel>(dto);
         }
 
         //  api/Group/
         [HttpGet]
-        public string GetAllGroups()
+        [Description("Get all Groups")]
+        [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
+        public List<GroupOutputModel> GetAllGroups()
         {
-            return "All Groups";
+            var dto = _groupService.GetGroups();
+            return _mapper.Map<List<GroupOutputModel>>(dto);
         }
 
         //  api/Group
         [HttpPost]
-        public int AddGroup([FromBody] GroupInputModel model)
+        [Description("Add new Group")]
+        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status201Created)]
+        public GroupOutputModel AddGroup([FromBody] GroupInputModel model)
         {
-            return 1;
+            var dto = _mapper.Map<GroupDto>(model);
+            var result = _groupService.AddGroup(dto);
+            return _mapper.Map<GroupOutputModel>(result);
         }
 
         //  api/Group
         [HttpDelete("{id}")]
+        [Description("Delete Group by Id")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteGroup(int id)
         {
-
+            _groupService.DeleteGroup(id);
         }
 
         //  api/Group
         [HttpPut]
-        public string UpdateGroup(int id, [FromBody] GroupInputModel model)
+        [Description("Update Group by id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public GroupInfoOutputModel UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
-            return $"Group №{id} change courseId to {model.CourseId} and timetable to {model.Timetable} and startDate to {model.StartDate}" +
-                   $"and paymentPerMonth {model.PaymentPerMonth}";
+            var dto = _mapper.Map<GroupDto>(model);
+            var output = _groupService.UpdateGroup(id, dto);
+            return _mapper.Map<GroupInfoOutputModel>(output);
         }
 
         //  api/Group/{groupId}/change-status/{statusId}
         [HttpPut("{groupId}/change-status/{statusId}")]
-        public void ChangeGroupStatus(int groupId, int statusId)
+        [Description("Change group status by id")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public GroupOutputBaseModel ChangeGroupStatus(int groupId, int statusId)
         {
-
+            var output = _groupService.ChangeGroupStatus(groupId, statusId);
+            return _mapper.Map<GroupOutputBaseModel>(output);
         }
 
         //add group_lesson relation
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpPost("{groupId}/lesson/{lessonId}")]
-        [Description("Add lesson to group")]
+        [Description("Add group lesson reference")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public string AddGroupToLesson(int groupId, int lessonId)
         {
