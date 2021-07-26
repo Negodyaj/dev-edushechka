@@ -5,9 +5,6 @@ namespace DevEdu.API.Models.InputModels
 {
     public class LessonUpdateInputModel
     {
-        [Required(ErrorMessage = IdRequired)]
-        public int Id { get; set; }
-
         [Required(ErrorMessage = TeacherCommentRequired)]
         public string TeacherComment { get; set; }
 

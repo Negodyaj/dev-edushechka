@@ -50,13 +50,14 @@ namespace DevEdu.API.Controllers
             _lessonService.DeleteLesson(id);
         }
 
-        // api/lesson
-        [HttpPut]
+        // api/lesson/{id}
+        [HttpPut("{id}")]
         [Description("Update the lesson's teacher comment and link to record.")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public LessonInfoOutputModel UpdateLesson([FromBody] LessonUpdateInputModel updateModel)
+        public LessonInfoOutputModel UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
         {
             var dto = _mapper.Map<LessonDto>(updateModel);
+            dto.Id = id;
             var output = _lessonService.UpdateLesson(dto);
             return _mapper.Map<LessonInfoOutputModel>(output);
         }
@@ -113,7 +114,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{lessonId}
-        [HttpPost("{lessonId}")]
+        [HttpPost("{lessonId}/comment)")]
         [Description("Add a lesson's comment.")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel commentInputModel)

@@ -101,7 +101,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<StudentLessonDto> GetStudents() 
+        public static List<StudentLessonDto> GetAttendances() 
         {
             return new List<StudentLessonDto> {
                 new StudentLessonDto

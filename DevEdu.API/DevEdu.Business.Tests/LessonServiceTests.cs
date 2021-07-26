@@ -26,7 +26,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddLesson_SimpleDto_CreatedLesson()
+        public void AddLesson_SimpleDto_LessonAdded()
         {
             //Given
             var expected = LessonData.LessonId;
@@ -47,7 +47,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void SelectAllLessons_IntGroupId_ListOfLessonDto()
+        public void SelectAllLessonsByGroupId_ExistingGroupIdPassed_LessonsReturned()
         {
             //Given
             var expected = LessonData.GetLessons();
@@ -68,7 +68,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void SelectAllLessons_IntTeacherId_ListOfLessonDto()
+        public void SelectAllLessonsByTeacherId_ExistingTeacherIdPassed_LessonsReturned()
         {
             //Given
             var expected = LessonData.GetLessons();
@@ -89,7 +89,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void SelectLesson_IntLessonId_LessonDto()
+        public void SelectLessonById_ExistingLessonIdPassed_LessonReturned()
         {
             //Given
             var expected = LessonData.GetSelectedLessonDto();
@@ -110,7 +110,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void SelectLessonWithComments_IntLessonId_LessonDto()
+        public void SelectLessonWithCommentsById_ExistingLessonIdPassed_LessonWithCommentsReturned()
         {
             //Given
             var lesson = LessonData.GetSelectedLessonDto();
@@ -134,19 +134,20 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expected, actual);
             _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
             _commentRepoMock.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Once);
+            _lessonRepoMock.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Never);
         }
 
         [Test]
-        public void SelectLessonWithCommentsAndStudents_IntLessonId_LessonDto()
+        public void SelectLessonWithCommentsAndStudentsById_ExistingLessonIdPassed_LessonWithCommentsAndAttendancesReturned()
         {
             //Given
             var lesson = LessonData.GetSelectedLessonDto();
             var comments = CommentData.GetListCommentsDto();
-            var students = LessonData.GetStudents();
+            var students = LessonData.GetAttendances();
 
-            var expected = lesson;
-            expected.Comments = comments;
-            expected.Students = students;
+            var expectedLesson = lesson;
+            expectedLesson.Comments = comments;
+            expectedLesson.Students = students;
 
             var lessonId = LessonData.LessonId;
 
@@ -161,14 +162,14 @@ namespace DevEdu.Business.Tests
             var actual = sut.SelectLessonWithCommentsAndStudentsById(lessonId);
 
             //Then
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expectedLesson, actual);
             _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
             _commentRepoMock.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Once);
             _lessonRepoMock.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Once);
         }
 
         [Test]
-        public void UpdateLesson_SimlpeDtoWithoutTeacher_UpdatedLessonDto()
+        public void UpdateLesson_SimpleDtoWithoutTeacherPassed_UpdatedLessonReturned()
         {
             //Given
             var lessonId = LessonData.LessonId;
