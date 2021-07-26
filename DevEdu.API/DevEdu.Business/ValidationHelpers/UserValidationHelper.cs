@@ -9,6 +9,7 @@ namespace DevEdu.Business.ValidationHelpers
     public class UserValidationHelper : IUserValidationHelper
     {
         private readonly IUserRepository _userRepository;
+        private readonly int idMinimum = 1;
 
         public UserValidationHelper(IUserRepository userRepository)
         {
@@ -29,16 +30,16 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(role), roleId));
         }
 
-        public void CheckUserIdAndRoleIdDoesNotLessThanZero(int userId, int roleId)
+        public void CheckUserIdAndRoleIdDoesNotLessThanMinimum(int userId, int roleId)
         {
-            if (userId < 0 || roleId < 0)
-                throw new Exception($"{nameof(userId)} or {nameof(roleId)} less then 0");
+            if (userId < idMinimum || roleId < idMinimum)
+                throw new Exception(string.Format(ServiceMessages.MinimumAllowedValueMessage, nameof(userId), nameof(roleId), idMinimum));
         }
 
-        public void ChekUserIdDoesNotLessThenZero(int id)
+        public void ChekIdDoesNotLessThenMinimum(int id)
         {
-            if (id < 0)
-                throw new Exception($"{nameof(id)} less then 0");
+            if (id < idMinimum)
+                throw new Exception(string.Format(ServiceMessages.MinimumAllowedValueMessage, nameof(id), idMinimum));
         }
     }
 }
