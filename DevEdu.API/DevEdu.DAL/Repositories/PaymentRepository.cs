@@ -68,29 +68,18 @@ namespace DevEdu.DAL.Repositories
 
         public List<PaymentDto> GetPaymentsByUser(int userId)
         {
-            var paymentDictionary = new Dictionary<int, PaymentDto>();
-
             return _connection
                 .Query<PaymentDto, UserDto, PaymentDto>(
                     _paymentAllByUserIdProcedure,
                     (payment, user) =>
                     {
-                        PaymentDto result;
-
-                        if (!paymentDictionary.TryGetValue(payment.Id, out result))
-                        {
-                            result = payment;
-                            result.User = user;
-                            paymentDictionary.Add(payment.Id, result);
-                        }
-
-                        return result;
+                        payment.User = user;
+                        return payment;
                     },
                     new { userId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
-                .Distinct()
                 .ToList();
         }
 
@@ -135,26 +124,17 @@ namespace DevEdu.DAL.Repositories
             {
                 table.Rows.Add(i);
             }
-            var paymentDictionary = new Dictionary<int, PaymentDto>();
             var response = _connection.Query<PaymentDto, UserDto, PaymentDto>(
               _selectPaymentsBySeveralId,
                (paymentDto, userDto) =>
                {
-                   PaymentDto paymentEntity;
-                   if (!paymentDictionary.TryGetValue(paymentDto.Id, out paymentEntity))
-                   {
-                       paymentEntity = paymentDto;
-                       paymentEntity.User = userDto;
-                       paymentDictionary.Add(paymentEntity.Id, paymentEntity);
-                   }
-                   paymentEntity.User = userDto;
-                   return paymentEntity;
+                   paymentDto.User = userDto;
+                   return paymentDto;
                },
                new { @tblIds = table.AsTableValuedParameter(_idType) },
                splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
-                .Distinct()
                 .ToList();
 
             return response;
