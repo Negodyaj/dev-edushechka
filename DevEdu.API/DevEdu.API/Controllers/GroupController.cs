@@ -105,8 +105,6 @@ namespace DevEdu.API.Controllers
             return $"Group {groupId} remove  Lesson Id:{lessonId}";
         }
 
-
-
         // api/Group/{groupId}/material/{materialId}
         [HttpPost("{groupId}/material/{materialId}")]
         [Description("Add material to group")]

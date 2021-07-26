@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31321.278
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31521.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DevEdu.Db", "DevEdu.Db\DevEdu.Db.sqlproj", "{854E3208-BFEE-450B-9051-3C55D21D9279}"
 EndProject
@@ -16,6 +16,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEdu.Business.Tests", "De
 		{E46DE434-9A9B-4FA6-880E-64873889410B} = {E46DE434-9A9B-4FA6-880E-64873889410B}
 		{8792CAB0-58A2-4F9F-ADB5-2BE94B76D577} = {8792CAB0-58A2-4F9F-ADB5-2BE94B76D577}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEdu.API.IntegrationTests", "DevEdu.API.IntegrationTests\DevEdu.API.IntegrationTests.csproj", "{913568CA-2EC9-4FDA-85BE-1344171C04B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{1EEEC36C-0A40-479B-94A9-0F8ECA5CCFC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EEEC36C-0A40-479B-94A9-0F8ECA5CCFC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EEEC36C-0A40-479B-94A9-0F8ECA5CCFC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{913568CA-2EC9-4FDA-85BE-1344171C04B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{913568CA-2EC9-4FDA-85BE-1344171C04B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{913568CA-2EC9-4FDA-85BE-1344171C04B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{913568CA-2EC9-4FDA-85BE-1344171C04B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

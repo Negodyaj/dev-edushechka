@@ -28,9 +28,12 @@ namespace DevEdu.Business.Services
         public GroupDto GetGroup(int id)
         {
             var dto = _groupRepository.GetGroup(id);
-            dto.Students = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Student);
-            dto.Tutors = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Tutor);
-            dto.Teachers = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Teacher);
+            if(dto != null)
+            {
+                dto.Students = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Student);           
+                dto.Tutors = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Tutor);            
+                dto.Teachers = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Teacher);
+            }
             return dto;
         }
         
