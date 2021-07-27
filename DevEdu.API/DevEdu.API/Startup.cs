@@ -124,27 +124,9 @@ namespace DevEdu.API
                 app.UseOpenApi();
                 app.UseSwaggerUi3();
             }
-            else
-            {
-
-                app.UseExceptionHandler(options =>
-                {
-                    options.Run(
-                        async context =>
-                        {
-                            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                            context.Response.ContentType = "text/html";
-                            var exceptionObject = context.Features.Get<IExceptionHandlerFeature>();
-                            if (null != exceptionObject)
-                            {
-                                var errorMessage = $"<b>Exception Error: {exceptionObject.Error.Message} </b> {exceptionObject.Error.StackTrace}";
-                                await context.Response.WriteAsync(errorMessage).ConfigureAwait(false);
-                            }
-                        });
-                });
-                app.UseHsts(); //adds the Strict-Transport-Security header. 
-            }
-            app.UseExceptionHandlerMiddleware();
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<Middleware>();
+            
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
