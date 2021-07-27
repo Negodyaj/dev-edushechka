@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
+using System.ComponentModel;
 using DevEdu.API.Models.InputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using DevEdu.API.Models.OutputModels;
 
 namespace DevEdu.API.Controllers
 {
@@ -21,28 +24,63 @@ namespace DevEdu.API.Controllers
 
         //  api/notification/5
         [HttpGet("{id}")]
-        public NotificationDto GetNotification(int id)
+        [Description("Return notification by id")]
+        [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
+        public NotificationInfoOutputModel GetNotification(int id)
         {
-            return _notificationService.GetNotification(id);
+            var dto = _notificationService.GetNotification(id);
+            var output = _mapper.Map<NotificationInfoOutputModel>(dto);
+            return output;
         }
 
         //  api/notification/by-user/1
         [HttpGet("by-user/{userId}")]
-        public List<NotificationDto> GetAllNotificationsByUserId(int userId)
+        [Description("Return notifications by user")]
+        [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
+        public List<NotificationInfoOutputModel> GetAllNotificationsByUserId(int userId)
         {
-            return _notificationService.GetNotificationsByUserId(userId);
+            var dto = _notificationService.GetNotificationsByUserId(userId);
+            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
+            return output;
+        }
+
+        //  api/notification/by-group/1
+        [HttpGet("by-group/{groupId}")]
+        [Description("Return notifications by group")]
+        [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
+        public List<NotificationInfoOutputModel> GetAllNotificationsByGroupId(int groupId)
+        {
+            var dto = _notificationService.GetNotificationsByGroupId(groupId);
+            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
+            return output;
+        }
+
+        //  api/notification/by-role/1
+        [HttpGet("by-role/{roleId}")]
+        [Description("Return notifications by role")]
+        [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
+        public List<NotificationInfoOutputModel> GetAllNotificationsByRoleId(int roleId)
+        {
+            var dto = _notificationService.GetNotificationsByRoleId(roleId);
+            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
+            return output;
         }
 
         //  api/notification
         [HttpPost]
-        public int AddNotification([FromBody] NotificationAddInputModel model)
+        [Description("Add new notification")]
+        [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status201Created)]
+        public NotificationInfoOutputModel AddNotification([FromBody] NotificationAddInputModel model)
         {
             var dto = _mapper.Map<NotificationDto>(model);
-            return _notificationService.AddNotification(dto);
+            var output = _notificationService.AddNotification(dto);
+            return GetNotification(output);
         }
 
         //  api/notification/5
         [HttpDelete("{id}")]
+        [Description("Delete notification by id")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteNotification(int id)
         {
             _notificationService.DeleteNotification(id);
@@ -50,11 +88,13 @@ namespace DevEdu.API.Controllers
 
         //  api/notification/5
         [HttpPut("{id}")]
-        public string UpdateNotification(int id, [FromBody] NotificationUpdateInputModel model)
+        [Description("Update notification by id")]
+        [ProducesResponseType(typeof(NotificationInfoOutputModel),StatusCodes.Status200OK)]
+        public NotificationInfoOutputModel UpdateNotification(int id, [FromBody] NotificationUpdateInputModel model)
         {
             var dto = _mapper.Map<NotificationDto>(model);
-            _notificationService.UpdateNotification(id,dto);
-            return $"Text notification №{id} change to {model.Text}";
+            var output = _notificationService.UpdateNotification(id, dto);
+            return _mapper.Map<NotificationInfoOutputModel>(output);
         }
     }
 }
