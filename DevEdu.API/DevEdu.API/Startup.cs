@@ -1,4 +1,3 @@
-using DevEdu.API.Common;
 using DevEdu.API.Configuration;
 using DevEdu.Business.Configuration;
 using DevEdu.Business.Services;
@@ -6,12 +5,15 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
+using System.Net;
 
 namespace DevEdu.API
 {
@@ -122,15 +124,30 @@ namespace DevEdu.API
                 app.UseOpenApi();
                 app.UseSwaggerUi3();
             }
+            else
+            {
 
-            app.UseExceptionHandler(err => err.UseCustomErrors(env));
-
+                app.UseExceptionHandler(options =>
+                {
+                    options.Run(
+                        async context =>
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                            context.Response.ContentType = "text/html";
+                            var exceptionObject = context.Features.Get<IExceptionHandlerFeature>();
+                            if (null != exceptionObject)
+                            {
+                                var errorMessage = $"<b>Exception Error: {exceptionObject.Error.Message} </b> {exceptionObject.Error.StackTrace}";
+                                await context.Response.WriteAsync(errorMessage).ConfigureAwait(false);
+                            }
+                        });
+                });
+                app.UseHsts(); //adds the Strict-Transport-Security header. 
+            }
+            app.UseExceptionHandlerMiddleware();
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
