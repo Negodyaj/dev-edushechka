@@ -21,6 +21,7 @@ namespace DevEdu.API.Controllers
         private readonly IStudentAnswerOnTaskService _studentAnswerOnTaskService;
         private readonly ITaskRepository _taskRepository;
         private readonly ICommentRepository _commentRepository;
+        private readonly ICommentService _commentService;
         private readonly IUserService _userService;
         private readonly IGroupService _groupService;
 
@@ -29,13 +30,15 @@ namespace DevEdu.API.Controllers
             ITaskService taskService,
             IStudentAnswerOnTaskService studentAnswerOnTaskService,
             ITaskRepository taskRepository,
-            ICommentRepository commentRepository)
+            ICommentRepository commentRepository,
+            ICommentService commentService)
         {
             _taskService = taskService;
             _mapper = mapper;
             _studentAnswerOnTaskService = studentAnswerOnTaskService;
             _taskRepository = taskRepository;
             _commentRepository = commentRepository;
+            _commentService = commentService;
         }
 
         //  api/Task/1
@@ -141,24 +144,15 @@ namespace DevEdu.API.Controllers
         // api/task/{taskId}/student/{studentId}
         [HttpPost("{taskId}/student/{studentId}")]
         [Description("Add student answer on task")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public int AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
+        [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status201Created)]
+        public StudentAnswerOnTaskFullOutputModel AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
             _studentAnswerOnTaskService.AddStudentAnswerOnTask(taskId, studentId, taskAnswerDto);
+            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            var output = _mapper.Map<StudentAnswerOnTaskFullOutputModel>(studentAnswerDto);
 
-            return taskId;
-        }
-
-        // api/task/all-answers
-        [HttpGet("all-answers")]
-        [Description("Get all student answers on tasks")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTasks()
-        {
-            var studentAnswerDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTasks();
-
-            return studentAnswerDto;
+            return output;
         }
 
         // api/task/{taskId}/all-answers
@@ -176,7 +170,7 @@ namespace DevEdu.API.Controllers
         // api/task/{taskId}/student/{studentId}
         [HttpGet("{taskId}/student/{studentId}")]
         [Description("Get student answers on tasks by student and task")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
         public StudentAnswerOnTaskFullOutputModel GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
             var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
@@ -189,7 +183,7 @@ namespace DevEdu.API.Controllers
         // api/task/{taskId}/student/{studentId}
         [HttpPut("{taskId}/student/{studentId}")]
         [Description("Update student answer on task")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
         public StudentAnswerOnTaskFullOutputModel UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
@@ -211,7 +205,7 @@ namespace DevEdu.API.Controllers
         // api/task/{taskId}/student/{studentId}/change-status/{statusId}
         [HttpPut("{taskId}/student/{studentId}/change-status/{statusId}")]
         [Description("Update task status of student answer")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
         public StudentAnswerOnTaskFullOutputModel UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
             _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId);
@@ -223,20 +217,14 @@ namespace DevEdu.API.Controllers
         // api/task/answer/{taskStudentId}/comment}
         [HttpPost("answer/{taskStudentId}/comment")]
         [Description("Add comment on task student answer")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status204NoContent)]
         public CommentInfoOutputModel AddCommentOnStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel inputModel)
         {
-            CommentService commentService = new CommentService(new CommentRepository());
             var commentDto = _mapper.Map<CommentDto>(inputModel);
-            int commentId = commentService.AddComment(commentDto);
-
-            UserService userService = new UserService(new UserRepository());
-            var userDto = userService.SelectUserById(inputModel.UserId);
-            commentDto.User = userDto;
-
+            int commentId = _commentService.AddComment(commentDto);
             _studentAnswerOnTaskService.AddCommentOnStudentAnswer(taskStudentId, commentId);
 
-            var output = _commentRepository.GetComment(commentId);
+            var output = _commentService.GetComment(commentId);
             return _mapper.Map<CommentInfoOutputModel>(output);
         }
 
@@ -251,14 +239,14 @@ namespace DevEdu.API.Controllers
             return output;
         }
 
-        // api/task/group/user/answer-on-task-in-group}
-        [HttpGet("group/user/answer-on-task-in-group")]
-        [Description("Get all student task answers by groups")]
-        [ProducesResponseType(typeof(List<StudentAnswerOnlyAnswersOutputModel>), StatusCodes.Status200OK)]
-        public List<StudentAnswerOnlyAnswersOutputModel> GetAnswersForStudentInGroup(int userId)
+        // api/task/answer/by-user/42
+        [HttpGet("answer/by-user/{userId}")]
+        [Description("Get all answers of student")]
+        [ProducesResponseType(typeof(List<StudentAnswerOnTaskOutputModel>), StatusCodes.Status200OK)]
+        public List<StudentAnswerOnTaskOutputModel> GetAllAnswersByStudentId(int userId)
         {
-            var dto = _studentAnswerOnTaskService.GetAnswersForStudentInGroup(userId);
-            var output = _mapper.Map<List<StudentAnswerOnlyAnswersOutputModel>>(dto);
+            var answersDto = _studentAnswerOnTaskService.GetAllAnswersByStudentId(userId);
+            var output = _mapper.Map<List<StudentAnswerOnTaskOutputModel>>(answersDto);
 
             return output;
         }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DevEdu.API.Models.OutputModels
 {
-    public class StudentAnswerOnlyAnswersOutputModel
+    public class StudentAnswerOnTaskOutputModel
     {
         public int Id { get; set; }
         public string Answer { get; set; }
