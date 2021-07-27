@@ -30,71 +30,91 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
         }
 
-        //  api/Course/5
-        [HttpGet("{id}")]
-        public CourseDto GetCourse(int id)
+        [HttpGet("{id}/simple")]
+        [Description("Get course by id with groups")]
+        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
+        public CourseInfoFullOutputModel GetCourseSimple(int id)
         {
-            return _courseService.GetCourse(id);
+            var course = _courseService.GetCourse(id);
+            return _mapper.Map<CourseInfoFullOutputModel>(course);
         }
 
-        //  api/Course
+        [HttpGet("{id}/full")]
+        [Description("Get course by id full")]
+        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
+        public CourseInfoFullOutputModel GetCourseFull(int id)
+        {
+            var course = _courseService.GetFullCourseInfo(id);
+            return _mapper.Map<CourseInfoFullOutputModel>(course);
+        }
+
         [HttpGet]
-        [Description("Get all courses with topics")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CourseInfoOutputModel>))]
-        public List<CourseInfoOutputModel> GetAllCourses()
+        [Description("Get all courses")]
+        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
+        public List<CourseInfoFullOutputModel> GetAllCoursesWithGrops()
         {
-            var courses = _courseRepository.GetCourses();
-            return _mapper.Map<List<CourseInfoOutputModel>>(courses);
+            var courses = _courseService.GetCourses();
+            return _mapper.Map<List<CourseInfoFullOutputModel>>(courses);
         }
 
-        //  api/course
+
         [HttpPost]
-        public int AddCourse([FromBody] CourseInputModel model)
+        [Description("Create new course")]
+        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status201Created)]
+        public CourseInfoFullOutputModel AddCourse([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            return _courseService.AddCourse(dto);
+            int id = _courseService.AddCourse(dto);
+            return GetCourseSimple(id);
         }
 
-        //  api/course/5
         [HttpDelete("{id}")]
+        [Description("Delete course by id")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteCourse(int id)
         {
             _courseService.DeleteCourse(id);
         }
 
-        //  api/course/5
         [HttpPut("{id}")]
-        public string UpdateCourse(int id, [FromBody] CourseInputModel model)
+        [Description("Update course by Id")]
+        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
+        public CourseInfoFullOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
             _courseService.UpdateCourse(id, dto);
-            return $"Course №{id} change name to {model.Name} and description to {model.Description}";
+            return GetCourseSimple(id);
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpPost("{courseId}/material/{materialId}")]
-        public void AddCourseMaterialReference(int courseId, int materialId)
+        [Description("Add material to course")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public void AddMaterialToCourse(int courseId, int materialId)
         {
             _courseService.AddCourseMaterialReference(courseId, materialId);
         }
 
-        //  api/course/{CourseId}/Material/{MaterialId}
         [HttpDelete("{courseId}/material/{materialId}")]
-        public void RemoveCourseMaterialReference(int courseId, int materialId)
+        [Description("Delete material from course")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public void RemoveMaterialFromCourse(int courseId, int materialId)
         {
             _courseService.RemoveCourseMaterialReference(courseId, materialId);
         }
 
-        //  api/course/{CourseId}/Task/{TaskId}
         [HttpPost("{courseId}/task/{taskId}")]
+        [Description("Add task to course")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public string AddTaskToCourse(int courseId, int taskId)
         {
             _courseService.AddTaskToCourse(courseId, taskId);
             return $"Course {courseId} add  Task Id:{taskId}";
         }
 
-        //  api/course/{CourseId}/Task/{TaskId}
         [HttpDelete("{courseId}/task/{taskId}")]
+        [Description("Delete task from course")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public string RemoveTaskFromCourse(int courseId, int taskId)
         {
             _courseService.DeleteTaskFromCourse(courseId, taskId);

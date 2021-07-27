@@ -5,6 +5,14 @@ namespace DevEdu.Business.Services
 {
     public interface IGroupService
     {
+        int AddGroup(GroupDto groupDto);
+        void DeleteGroup(int id);
+        GroupDto GetGroup(int id);
+        List<GroupDto> GetGroups();
+        GroupDto UpdateGroup(int id, GroupDto groupDto);
+        GroupDto ChangeGroupStatus(int groupId, int statusId);
+        int AddGroupToLesson(int groupId, int lessonId);
+        int RemoveGroupFromLesson(int groupId, int lessonId);
         int AddGroupMaterialReference(int groupId, int materialId);
         int RemoveGroupMaterialReference(int groupId, int materialId);
         void AddUserToGroup(int groupId, int userId, int roleId);

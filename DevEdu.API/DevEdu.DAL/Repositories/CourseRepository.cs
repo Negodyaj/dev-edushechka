@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -58,7 +57,8 @@ namespace DevEdu.DAL.Repositories
         public CourseDto GetCourse(int id)
         {
             CourseDto result = default;
-            _connection.Query<CourseDto, GroupDto, CourseDto>(
+            return _connection
+                .Query<CourseDto, GroupDto, CourseDto>(
                 _courseSelectByIdProcedure,
                 (course, group) =>
                 {
@@ -78,16 +78,35 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 )
                 .FirstOrDefault();
-            return result;
         }
 
         public List<CourseDto> GetCourses()
         {
+            var courseDictionary = new Dictionary<int, CourseDto>();
+            CourseDto result;
             return _connection
-                .Query<CourseDto>(
+                .Query<CourseDto, GroupDto, CourseDto>(
                     _courseSelectAllProcedure,
+                    (course, group) =>
+                    {
+
+                        if (!courseDictionary.TryGetValue(course.Id, out result))
+                        {
+                            result = course;
+                            result.Groups = new List<GroupDto> { group };
+                            courseDictionary.Add(course.Id, result);
+                        }
+                        else
+                        {
+                            result.Groups.Add(group);
+                        }
+
+                        return result;
+                    },
+                    splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
+                .Distinct()
                 .ToList();
         }
 

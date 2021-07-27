@@ -23,16 +23,6 @@ namespace DevEdu.API.Controllers
             _userService = userService;
         }
 
-        // api/user
-        [HttpPost]
-        [Description("Add new user")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-        public int AddUser([FromBody] UserInsertInputModel model)
-        {
-            var dto = _mapper.Map<UserDto>(model);
-            return _userService.AddUser(dto);
-        }
-
         // api/user/userId
         [HttpPut("{userId}")]
         [Description("Update user")]
