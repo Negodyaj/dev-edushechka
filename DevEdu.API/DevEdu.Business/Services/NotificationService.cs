@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Services
 {
@@ -20,11 +19,11 @@ namespace DevEdu.Business.Services
         public List<NotificationDto> GetNotificationsByGroupId(int groupId) => _notificationRepository.GetNotificationsByGroupId(groupId);
         public List<NotificationDto> GetNotificationsByRoleId(int RoleId) =>    _notificationRepository.GetNotificationsByRoleId(RoleId);
 
-        public int AddNotification( NotificationDto dto)
+        public int AddNotification(NotificationDto dto)
         {
-            if (((dto.Role != 0) && (dto.User != null))
-                 || ((dto.Role != 0) && (dto.Group != null))
-                 || ((dto.User != null) && (dto.Group != null)))
+            if (dto.Role != null && dto.User != null
+                 || dto.Role != null && dto.Group != null
+                 || dto.User != null && dto.Group != null)
             {
                 throw new System.Exception("Only one property (RoleId, UserId or GroupId) should have a value");
             }

@@ -2,11 +2,11 @@
 using AutoMapper;
 using System.ComponentModel;
 using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using DevEdu.API.Models.OutputModels;
 
 namespace DevEdu.API.Controllers
 {

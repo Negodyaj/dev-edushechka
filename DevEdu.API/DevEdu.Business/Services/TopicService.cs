@@ -29,10 +29,10 @@ namespace DevEdu.Business.Services
 
         public List<TopicDto> GetAllTopics() => _topicRepository.GetAllTopics();
 
-        public void UpdateTopic(int id, TopicDto topicDto)
+        public int UpdateTopic(int id, TopicDto topicDto)
         {
             topicDto.Id = id;
-            _topicRepository.UpdateTopic(topicDto);
+           return _topicRepository.UpdateTopic(topicDto);
         }
 
         public int AddTagToTopic(int topicId, int tagId) => _topicRepository.AddTagToTopic(topicId, tagId);
