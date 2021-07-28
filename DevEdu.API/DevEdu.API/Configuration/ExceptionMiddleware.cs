@@ -36,7 +36,7 @@ namespace DevEdu.API.Configuration
             }
             catch (ValidationException ex)
             {
-                await HandlerExceptionMessageAsync(context, ex, ValidationCode, MessageValidation);
+                await HandleValidationExceptionMessageAsync(context, ex);
             }
             catch (EntityNotFoundException ex)
             {
@@ -63,50 +63,18 @@ namespace DevEdu.API.Configuration
             return context.Response.WriteAsync(result);
         }
 
-        //private static Task HandleAuthorizationExceptionMessageAsync(HttpContext context, Exception exception)
-        //{
-        //    context.Response.ContentType = "application/json";
-        //    var result = JsonConvert.SerializeObject(
-        //        new ExceptionResponse
-        //        {
-        //            Code = 1000,
-        //            Message = "Authorization exception",
-        //            Description = exception.Message
-        //        }
-        //    );
-        //    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-        //    return context.Response.WriteAsync(result);
-        //}
-
-        //private static Task HandleValidationExceptionMessageAsync(HttpContext context, Exception exception)
-        //{
-        //    context.Response.ContentType = "application/json";
-        //    var result = JsonConvert.SerializeObject(
-        //        new ExceptionResponse
-        //        {
-        //            Code = 1001,
-        //            Message = "Validation exception",
-        //            Description = exception.Message
-        //        }
-        //    );
-        //    context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
-        //    return context.Response.WriteAsync(result);
-        //}
-
-        //private static Task HandleEntityNotFoundExceptionMessageAsync(HttpContext context, Exception exception)
-        //{
-        //    context.Response.ContentType = "application/json";
-        //    var result = JsonConvert.SerializeObject(
-        //        new ExceptionResponse
-        //        {
-        //            Code = 1001,
-        //            Message = "Entity not found exception",
-        //            Description = exception.Message
-        //        }
-        //    );
-        //    context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-        //    return context.Response.WriteAsync(result);
-        //}
+        private static Task HandleValidationExceptionMessageAsync(HttpContext context, Exception exception)
+        {
+            context.Response.ContentType = "application/json";
+            var result = JsonConvert.SerializeObject(
+                new ValidationExceptionResponse
+                {
+                    //todo implement this
+                }
+            );
+            context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
+            return context.Response.WriteAsync(result);
+        }
 
         private static Task HandleExceptionMessageAsync(HttpContext context, Exception exception)
         {

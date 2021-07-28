@@ -140,8 +140,6 @@ namespace DevEdu.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-
-
             //This middleware is used to add Razor Pages endpoints to the request pipeline.   
             app.UseEndpoints(endpoints =>
             {

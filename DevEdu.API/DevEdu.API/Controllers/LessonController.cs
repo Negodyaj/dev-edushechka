@@ -176,8 +176,8 @@ namespace DevEdu.API.Controllers
         [HttpPut("{lessonId}/user/{userId}/feedback")]
         [Description("Update Feedback for lesson")]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
         public StudentLessonShortOutputModel UpdateStudentFeedbackForLesson(int lessonId,int userId, [FromBody] FeedbackInputModel model)
         {
