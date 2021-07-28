@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CourseController : Controller

@@ -258,21 +258,123 @@ namespace DevEdu.Business.Tests
         public void SelectAllTopicsByCourseId_CourseIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
         {
             //Given
-            var givenCourseId = 3;
+            var givenCourseId = 0;
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "course", givenCourseId);
             var sut = new CourseService(_topicRepositoryMock.Object,
                                         _courseRepositoryMock.Object,
                                         _taskRepositoryMock.Object,
                                         _materialRepositoryMock.Object,
-                                        _courseValidationHelperMock.Object,
-                                        _topicValidationHelperMock.Object);
+                                        new CourseValidationHelper(_courseRepositoryMock.Object),
+                                        new TopicValidationHelper(_topicRepositoryMock.Object));
+
+            _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId)).Throws(new EntityNotFoundException(exp));
+            _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId));
             //When
             var exception = Assert.Throws<EntityNotFoundException>(() =>
             sut.SelectAllTopicsByCourseId(givenCourseId));
             //Then
-            //Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(course), givenCourseId));
+            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage,"course", givenCourseId)));
             _courseRepositoryMock.Verify(x => x.SelectAllTopicsByCourseId(givenCourseId), Times.Never);
 
         }
+        [Test]
+        public void AddTopicToCourse_CourseIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var givenCourseId =3;
+            var givenTopicId = 0;
+            CourseTopicDto topic = default;
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "course", givenCourseId);
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                        _courseRepositoryMock.Object,
+                                        _taskRepositoryMock.Object,
+                                        _materialRepositoryMock.Object,
+                                        new CourseValidationHelper(_courseRepositoryMock.Object),
+                                        new TopicValidationHelper(_topicRepositoryMock.Object));
+            _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId)).Throws(new EntityNotFoundException(exp));
+            _topicRepositoryMock.Setup(x => x.AddTopicToCourse(topic));
+            //When
+            var exception = Assert.Throws<EntityNotFoundException>(() =>
+            sut.AddTopicToCourse(givenCourseId, givenTopicId,topic));
+            //Then
+            Assert.That(exception.Message, Is.EqualTo(exp));
+            _topicRepositoryMock.Verify(x => x.AddTopicToCourse(topic), Times.Never);
+        }
+        [Test]
+        public void AddTopicToCourse_TopicIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var givenCourseId = 3;
+            var givenTopicId = 0;
+            CourseTopicDto topic = default;
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", givenTopicId);
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                        _courseRepositoryMock.Object,
+                                        _taskRepositoryMock.Object,
+                                        _materialRepositoryMock.Object,
+                                        new CourseValidationHelper(_courseRepositoryMock.Object),
+                                        new TopicValidationHelper(_topicRepositoryMock.Object));
+            _courseRepositoryMock.Setup(x => x.GetCourse(givenCourseId)).Returns(new CourseDto() { Id = givenCourseId });
+            _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId));
+            _topicValidationHelperMock.Setup(x => x.CheckTopicExistence(givenTopicId)).Throws(new EntityNotFoundException(exp));
+            _topicRepositoryMock.Setup(x => x.AddTopicToCourse(topic));
+            //When
+            var exception = Assert.Throws<EntityNotFoundException>(() =>
+            sut.AddTopicToCourse(givenCourseId, givenTopicId, topic));
+            //Then
+            Assert.That(exception.Message, Is.EqualTo(exp));
+            _topicRepositoryMock.Verify(x => x.AddTopicToCourse(topic), Times.Never);
+        }
+        [Test]
+        public void AddTopicsToCourse_TopicIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
+        {
+            //Give
+            var givenCourseId = 2;
+            var courrseTopic = CourseData.GetListCourseTopicDto();
+            List<TopicDto> topicsInDB = CourseData.GetTopics();
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                        _courseRepositoryMock.Object,
+                                        _taskRepositoryMock.Object,
+                                        _materialRepositoryMock.Object,
+                                        new CourseValidationHelper(_courseRepositoryMock.Object),
+                                        new TopicValidationHelper(_topicRepositoryMock.Object));
+            _courseRepositoryMock.Setup(x => x.GetCourse(givenCourseId)).Returns(new CourseDto() { Id = givenCourseId });
+            _topicValidationHelperMock.Setup(x => x.CheckTopicsExistence(courrseTopic)).Throws(new EntityNotFoundException(ServiceMessages.EntityNotFound));
+            _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsInDB);
+            _topicRepositoryMock.Setup(x => x.AddTopicsToCourse(courrseTopic));
+            //When
+            var exp = Assert.Throws<EntityNotFoundException>(() =>
+            sut.AddTopicsToCourse(givenCourseId,courrseTopic));
+            //Then
+            Assert.That(ServiceMessages.EntityNotFound, Is.EqualTo(exp.Message));
+            _topicRepositoryMock.Verify(x => x.AddTopicsToCourse(courrseTopic), Times.Never);
+
+        }
+        [Test]
+        public void AddTopicsToCourse_CourseIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
+        {
+            var givenCourseId = 2;
+            var courrseTopic = CourseData.GetListCourseTopicDto();
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "course", givenCourseId);
+            List<TopicDto> topicsInDB = CourseData.GetTopicsFromBD();
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                        _courseRepositoryMock.Object,
+                                        _taskRepositoryMock.Object,
+                                        _materialRepositoryMock.Object,
+                                        new CourseValidationHelper(_courseRepositoryMock.Object),
+                                        new TopicValidationHelper(_topicRepositoryMock.Object));
+            _topicValidationHelperMock.Setup(x => x.CheckTopicsExistence(courrseTopic)).Throws(new EntityNotFoundException(exp));
+            _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsInDB);
+            _courseRepositoryMock.Setup(x => x.GetCourse(givenCourseId));
+            _topicRepositoryMock.Setup(x => x.AddTopicsToCourse(courrseTopic));
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() =>
+            sut.AddTopicsToCourse(givenCourseId, courrseTopic));
+            //Then
+            Assert.That(result.Message, Is.EqualTo(exp));
+            _topicRepositoryMock.Verify(x => x.AddTopicsToCourse(courrseTopic), Times.Never);
+        }
+
 
     }
 }

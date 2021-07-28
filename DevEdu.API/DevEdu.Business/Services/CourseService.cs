@@ -71,6 +71,7 @@ namespace DevEdu.Business.Services
 
         public void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
         {
+            _courseValidationHelper.CheckCourseExistence(courseId);
             _topicValidationHelper.CheckTopicsExistence(listDto);
             foreach (var topic in listDto)
             {
