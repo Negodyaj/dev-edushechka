@@ -16,10 +16,10 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddNotification_NotificationDto_NotificationCreated()
+        public void AddNotificationByRole_NotificationDto_NotificationCreated()
         {
             //Given
-            var notificationDto = NotificationData.GetNotificationDto();
+            var notificationDto = NotificationData.GetNotificationDtoByRole();
 
             _notificationRepoMock.Setup(x => x.AddNotification(notificationDto)).Returns(NotificationData.ExpectedNotificationId);
 
@@ -31,6 +31,154 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(NotificationData.ExpectedNotificationId, actualNotificationtId);
             _notificationRepoMock.Verify(x => x.AddNotification(notificationDto), Times.Once);
+        }
+        [Test]
+        public void AddNotificationByUser_NotificationDto_NotificationCreated()
+        {
+            //Given
+            var notificationDto = NotificationData.GetNotificationDtoByUser();
+
+            _notificationRepoMock.Setup(x => x.AddNotification(notificationDto)).Returns(NotificationData.ExpectedNotificationId);
+
+            var sut = new NotificationService(_notificationRepoMock.Object);
+
+            //When
+            var actualNotificationtId = sut.AddNotification(notificationDto);
+
+            //Than
+            Assert.AreEqual(NotificationData.ExpectedNotificationId, actualNotificationtId);
+            _notificationRepoMock.Verify(x => x.AddNotification(notificationDto), Times.Once);
+        }
+        [Test]
+        public void AddNotificationByGroup_NotificationDto_NotificationCreated()
+        {
+            //Given
+            var notificationDto = NotificationData.GetNotificationByGroupDto();
+
+            _notificationRepoMock.Setup(x => x.AddNotification(notificationDto)).Returns(NotificationData.ExpectedNotificationId);
+
+            var sut = new NotificationService(_notificationRepoMock.Object);
+
+            //When
+            var actualNotificationtId = sut.AddNotification(notificationDto);
+
+            //Than
+            Assert.AreEqual(NotificationData.ExpectedNotificationId, actualNotificationtId);
+            _notificationRepoMock.Verify(x => x.AddNotification(notificationDto), Times.Once);
+        }
+
+        [Test]
+        public void GetNotification_NotificationDto_GetNotification()
+        {
+            //Given
+            var notificationDto = NotificationData.GetNotificationDtoByRole();
+            const int notificationId = NotificationData.NotificationId;
+
+            _notificationRepoMock.Setup(x => x.GetNotification(notificationId)).Returns(notificationDto);
+
+            var sut = new NotificationService(_notificationRepoMock.Object);
+
+            //When
+            var dto = sut.GetNotification(notificationId);
+
+            //Than
+            Assert.AreEqual(notificationDto, dto);
+            _notificationRepoMock.Verify(x => x.GetNotification(notificationId), Times.Once);
+        }
+
+        [Test]
+        public void UpdateNotification_NotificationDto_ReturnUpdatedNotificationDto()
+        {
+            //Given
+            var notificationDto = NotificationData.GetNotificationDtoByRole();
+            const int notificationId = NotificationData.NotificationId;
+
+            _notificationRepoMock.Setup(x => x.UpdateNotification(notificationDto));
+            _notificationRepoMock.Setup(x => x.GetNotification(notificationId)).Returns(notificationDto);
+
+            var sut = new NotificationService(_notificationRepoMock.Object);
+
+            //When
+            var dto = sut.UpdateNotification(notificationId, notificationDto);
+
+            //Than
+            Assert.AreEqual(notificationDto, dto);
+            _notificationRepoMock.Verify(x => x.UpdateNotification(notificationDto), Times.Once);
+            _notificationRepoMock.Verify(x => x.GetNotification(notificationId), Times.Once);
+        }
+
+        [Test]
+        public void DeleteNotification_IntNotificationId_DeleteNotification()
+        {
+            //Given
+            const int notificationId = NotificationData.NotificationId;
+
+            _notificationRepoMock.Setup(x => x.DeleteNotification(notificationId));
+
+            var sut = new NotificationService(_notificationRepoMock.Object);
+
+            //When
+            sut.DeleteNotification(notificationId);
+
+            //Than
+            _notificationRepoMock.Verify(x => x.DeleteNotification(notificationId), Times.Once);
+        }
+
+        [Test]
+        public void GetNotificationByUserId_IntUserId_ReturnedListOfUserNotifications()
+        {
+            //Given
+            var notificationsList = NotificationData.GetListNotificationByUserDto();
+            const int userId = NotificationData.UserId;
+
+            _notificationRepoMock.Setup(x => x.GetNotificationsByUserId(userId)).Returns(notificationsList);
+
+            var sut = new NotificationService(_notificationRepoMock.Object);
+
+            //When
+            var listOfDto = sut.GetNotificationsByUserId(userId);
+
+            //Than
+            Assert.AreEqual(notificationsList, listOfDto);
+            _notificationRepoMock.Verify(x => x.GetNotificationsByUserId(userId), Times.Once);
+        }
+
+        [Test]
+        public void GetNotificationByGroupId_IntUserId_ReturnedListOfGroupNotifications()
+        {
+            //Given
+            var notificationsList = NotificationData.GetListNotificationByGroupDto();
+            const int userId = NotificationData.UserId;
+
+            _notificationRepoMock.Setup(x => x.GetNotificationsByGroupId(userId)).Returns(notificationsList);
+
+            var sut = new NotificationService(_notificationRepoMock.Object);
+
+            //When
+            var listOfDto = sut.GetNotificationsByGroupId(userId);
+
+            //Than
+            Assert.AreEqual(notificationsList, listOfDto);
+            _notificationRepoMock.Verify(x => x.GetNotificationsByGroupId(userId), Times.Once);
+        }
+
+        [Test]
+        public void GetNotificationByRoleId_IntUserId_ReturnedListOfRoleNotifications()
+        {
+            //Given
+            var notificationsList = NotificationData.GetListNotificationByRoleDto();
+            const int userId = NotificationData.UserId;
+
+            _notificationRepoMock.Setup(x => x.GetNotificationsByRoleId(userId)).Returns(notificationsList);
+
+            var sut = new NotificationService(_notificationRepoMock.Object);
+
+            //When
+            var listOfDto = sut.GetNotificationsByRoleId(userId);
+
+            //Than
+            Assert.AreEqual(notificationsList, listOfDto);
+            _notificationRepoMock.Verify(x => x.GetNotificationsByRoleId(userId), Times.Once);
         }
     }
 }

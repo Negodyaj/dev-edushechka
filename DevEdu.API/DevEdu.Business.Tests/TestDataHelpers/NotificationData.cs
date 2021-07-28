@@ -11,27 +11,47 @@ namespace DevEdu.Business.Tests
         public const int UserId = 1;
         public const int GroupId = 1;
 
-        public static NotificationDto GetNotificationDto()
+        public static NotificationDto GetNotificationDtoByRole()
         {
             return new NotificationDto
             {
                 Id = 1,
                 Text = "SimpleText",
-                //User = new UserDto
-                //{
-                //    Id = 1,
-                //    FirstName = "SimlpeUserName",
-                //    LastName = "SimplaeLastName",
-                //    Email = "simple@simple.net",
-                //    Photo = "simple.jpg"
-                //},
-                //Group = new GroupDto
-                //{
-                //    Id = 12,
-                //    Name = "SimpleGroupName",
-                //    StartDate = DateTime.Parse("01.01.1970")
-                //},
                 Role = DAL.Enums.Role.Student,
+                Date = DateTime.Parse("11.11.2011"),
+                IsDeleted = false
+            };
+        }
+        public static NotificationDto GetNotificationDtoByUser()
+        {
+            return new NotificationDto
+            {
+                Id = 1,
+                Text = "SimpleText",
+                User = new UserDto
+                {
+                    Id = 1,
+                    FirstName = "SimlpeUserName",
+                    LastName = "SimplaeLastName",
+                    Email = "simple@simple.net",
+                    Photo = "simple.jpg"
+                },
+                Date = DateTime.Parse("11.11.2011"),
+                IsDeleted = false
+            };
+        }
+        public static NotificationDto GetNotificationByGroupDto()
+        {
+            return new NotificationDto
+            {
+                Id = 1,
+                Text = "SimpleText",
+                Group = new GroupDto
+                {
+                    Id = 12,
+                    Name = "SimpleGroupName",
+                    StartDate = DateTime.Parse("01.01.1970")
+                },
                 Date = DateTime.Parse("11.11.2011"),
                 IsDeleted = false
             };
