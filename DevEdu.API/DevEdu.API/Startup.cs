@@ -124,14 +124,35 @@ namespace DevEdu.API
                 app.UseOpenApi();
                 app.UseSwaggerUi3();
             }
-            app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<Middleware>();
-            
+
+            app.UseStatusCodePagesWithReExecute("/error", "?code={0}");
+
+            app.Map("/error", ap => ap.Run(async context =>
+            {
+                await context.Response.WriteAsync($"Error: {context.Request.Query["code"]}");
+            }));
+
+            app.UseExceptionHandler(new ExceptionHandlerOptions
+            {
+                ExceptionHandler = new JsonExceptionMiddleware().Invoke
+            });
+
+            //This middleware is used to redirects HTTP requests to HTTPS.  
             app.UseHttpsRedirection();
+
+            //This middleware is used to returns static files and short-circuits further request processing.   
+            app.UseStaticFiles();
+
+            //This middleware is used to route requests.   
             app.UseRouting();
+
+            //This middleware is used to authorizes a user to access secure resources.  
             app.UseAuthentication();
             app.UseAuthorization();
 
+
+
+            //This middleware is used to add Razor Pages endpoints to the request pipeline.   
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
