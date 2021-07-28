@@ -39,7 +39,7 @@ namespace DevEdu.Business.Services
             _userValidationHelper.CheckUserExistence(userId);
             var taskDto = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskid);
             _taskValidationHelper.CheckUserAccessToTask(taskid, userId);
-            // check if task exists
+
             return taskDto;
         }
 

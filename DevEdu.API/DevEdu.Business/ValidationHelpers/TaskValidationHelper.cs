@@ -54,7 +54,6 @@ namespace DevEdu.Business.ValidationHelpers
             {
                 taskDtos.Add(GetTaskAllowedToUser(task.Id, userId));
             }
-
             return taskDtos;
         }
     }
