@@ -25,7 +25,7 @@ namespace DevEdu.Business.Services
             _userValidationHelper = userValidationHelper;
         }
 
-        public int AddStudentRating(StudentRatingDto studentRatingDto, string authorUserId)
+        public int AddStudentRating(StudentRatingDto studentRatingDto, int authorUserId)
         {
             _groupValidationHelper.CheckGroupExistence(studentRatingDto.Group.Id);
             _groupValidationHelper.CheckTeacherBelongToGroup(studentRatingDto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
@@ -34,9 +34,10 @@ namespace DevEdu.Business.Services
             return _repository.AddStudentRating(studentRatingDto);
         }
 
-        public void DeleteStudentRating(int id)
+        public void DeleteStudentRating(int id, int authorUserId)
         {
-            _ratingValidationHelper.CheckRaitingExistence(id);
+            var dto = GetStudentRatingById(id);
+            _groupValidationHelper.CheckTeacherBelongToGroup(dto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
             _repository.DeleteStudentRating(id);
         }
 
@@ -56,7 +57,7 @@ namespace DevEdu.Business.Services
 
         public List<StudentRatingDto> GetStudentRatingByGroupId(int groupId) => _repository.SelectStudentRatingByGroupId(groupId);
 
-        public StudentRatingDto UpdateStudentRating(int id, int value, int periodNumber, string authorUserId)
+        public StudentRatingDto UpdateStudentRating(int id, int value, int periodNumber, int authorUserId)
         {
             var dto = _repository.SelectStudentRatingById(id);
             if (dto == default)

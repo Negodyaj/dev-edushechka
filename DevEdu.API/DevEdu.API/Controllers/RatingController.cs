@@ -7,14 +7,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Security.Claims;
 using DevEdu.API.Extensions;
+using DevEdu.API.Common;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Tutor)]
     public class RatingController: Controller
     {
         private IRatingService _service;
@@ -31,6 +32,7 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         [Description("Add StudentRating to database")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [AuthorizeRoles(Role.Teacher)]
         public int AddStudentRating([FromBody] StudentRatingInputModel model)
         {
             var dto = _mapper.Map<StudentRatingDto>(model);
@@ -42,12 +44,18 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}")]
         [Description("Delete StudentRating from database")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void DeleteStudentRating(int id) => _service.DeleteStudentRating(id);
+        [AuthorizeRoles(Role.Teacher)]
+        public void DeleteStudentRating(int id)
+        {
+            var authorUserId = this.GetUserId();
+            _service.DeleteStudentRating(id, authorUserId);
+        }
 
         // api/rating/1/{periodNumber}/value/50
         [HttpPut("{id}/period/{periodNumber}/value/{value}")]
         [Description("Update StudentRating in database and return updated StudentRating")]
         [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status200OK)]
+        [AuthorizeRoles(Role.Teacher)]
         public StudentRatingOutputModel UpdateStudentRating(int id, int value, int periodNumber)
         {
             var authorUserId = this.GetUserId();

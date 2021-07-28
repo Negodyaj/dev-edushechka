@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using DevEdu.API.Common;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +29,7 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         [Description("Add tag to database")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Methodist)]
         public int AddTag([FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
@@ -35,14 +38,16 @@ namespace DevEdu.API.Controllers
 
         // api/tag/1
         [HttpDelete("{id}")]
-        [Description("Soft delete tag from database")]
+        [Description("Delete tag from database")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Methodist)]
         public void DeleteTag(int id) => _service.DeleteTag(id);
 
         // api/tag/1
         [HttpPut("{id}")]
         [Description("Update tag in database and return updated tag")]
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
+        [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Methodist)]
         public TagOutputModel UpdateTag(int id, [FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);

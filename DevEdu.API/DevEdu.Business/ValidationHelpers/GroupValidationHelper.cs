@@ -22,16 +22,16 @@ namespace DevEdu.Business.ValidationHelpers
         }
         public void CheckUserBelongToGroup(int groupId, int userId, Role role)
         {
-            var user_groupId = _groupRepository.GetUser_GroupByUserIdAndUserRoleAndGroupId(userId, role, groupId);
-            if (user_groupId == default)
+            var userGroupId = _groupRepository.GetUser_GroupByUserIdAndUserRoleAndGroupId(userId, role, groupId);
+            if (userGroupId == default)
             {
                 throw new ValidationException(string.Format(ServiceMessages.UserDoesntBelongToGroup, role, userId, groupId));
             }
         }
         public void CheckTeacherBelongToGroup(int groupId, int teacherId, Role role)
         {
-            var user_groupId = _groupRepository.GetUser_GroupByUserIdAndUserRoleAndGroupId(teacherId, role, groupId);
-            if (user_groupId == default)
+            var userGroupId = _groupRepository.GetUser_GroupByUserIdAndUserRoleAndGroupId(teacherId, role, groupId);
+            if (userGroupId == default)
             {
                 throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToGroup, role, teacherId, groupId));
             }
