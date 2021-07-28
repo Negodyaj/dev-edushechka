@@ -73,7 +73,7 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}/role/{roleId}
         [HttpPost("{userId}/role/{roleId}")]
         [Description("Add new role to user")]
-        [AuthorizeRoles(Role.Admin)]
+        [AuthorizeRoles()]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         public void AddRoleToUser(int userId, Role roleId)
         {
@@ -83,7 +83,7 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}/role/{roleId}
         [HttpDelete("{userId}/role/{roleId}")]
         [Description("Delete role from user")]
-        [AuthorizeRoles(Role.Admin)]
+        [AuthorizeRoles()]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteRoleFromUser(int userId, Role roleId)
         {
