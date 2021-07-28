@@ -11,7 +11,7 @@ namespace DevEdu.Business.Services
         public MaterialDto GetMaterialByIdWithCourses(int id);
         public int AddMaterialWithCourses(MaterialDto dto, List<int> tags, List<int> courses);
         public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups);
-        void UpdateMaterial(int id, MaterialDto dto);
+        MaterialDto UpdateMaterial(int id, MaterialDto dto);
         void DeleteMaterial(int id, bool isDeleted);
         void AddTagToMaterial(int materialId, int tagId);
         void DeleteTagFromMaterial(int materialId, int tagId);
