@@ -237,7 +237,8 @@ namespace DevEdu.DAL.Repositories
                 _studentLessonInsertProcedure,
                  new
                  {
-                    
+                     lessonId,
+                     userId
                  },
                  commandType: CommandType.StoredProcedure
              );
