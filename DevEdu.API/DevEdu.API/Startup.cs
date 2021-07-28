@@ -125,17 +125,7 @@ namespace DevEdu.API
                 app.UseSwaggerUi3();
             }
 
-            app.UseStatusCodePagesWithReExecute("/error", "?code={0}");
-
-            app.Map("/error", ap => ap.Run(async context =>
-            {
-                await context.Response.WriteAsync($"Error: {context.Request.Query["code"]}");
-            }));
-
-            app.UseExceptionHandler(new ExceptionHandlerOptions
-            {
-                ExceptionHandler = new JsonExceptionMiddleware().Invoke
-            });
+            app.UseMiddleware<ExceptionMiddleware>();
 
             //This middleware is used to redirects HTTP requests to HTTPS.  
             app.UseHttpsRedirection();
