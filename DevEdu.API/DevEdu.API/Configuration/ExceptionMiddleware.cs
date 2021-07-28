@@ -34,7 +34,7 @@ namespace DevEdu.API.Configuration
             {
                 await HandlerExceptionMessageAsync(context, ex, AuthorizationCode, MessageAuthorization);
             }
-            catch (ValidationException ex)
+            catch (ValidationExceptionResponse ex)
             {
                 await HandleValidationExceptionMessageAsync(context, ex);
             }
@@ -63,13 +63,14 @@ namespace DevEdu.API.Configuration
             return context.Response.WriteAsync(result);
         }
 
-        private static Task HandleValidationExceptionMessageAsync(HttpContext context, Exception exception)
+        private static Task HandleValidationExceptionMessageAsync(HttpContext context, ValidationExceptionResponse exception)
         {
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(
-                new ValidationExceptionResponse
+                new
                 {
-                    //todo implement this
+                    Code = exception.StatusCode,
+                    Message = exception.ErrorMessage
                 }
             );
             context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
