@@ -13,6 +13,7 @@ namespace DevEdu.Business.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserValidationHelper _userValidationHelper;
+        private bool IsInsert = default;
 
         public UserService(IUserRepository userRepository, IUserValidationHelper helper)
         {
@@ -22,16 +23,17 @@ namespace DevEdu.Business.Services
 
         public int AddUser(UserDto dto)
         {
-            if (dto.Roles.Count == 0)
+            if (dto.Roles.Count == 0 || dto.Roles is null)
                 dto.Roles.Add(Role.Student);
 
             var addedUserId = _userRepository.AddUser(dto);
+            IsInsert = true;
 
             foreach (var role in dto.Roles)
-                {
-                    AddUserRole(addedUserId, (int)role);
-                }
-            
+            {
+                AddUserRole(addedUserId, (int)role);
+            }
+
             return addedUserId;
         }
 
@@ -81,6 +83,11 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.CheckUserIdAndRoleIdDoesNotLessThanMinimum(userId, roleId);
             _userValidationHelper.ChekRoleExistence(roleId);
+
+            if (IsInsert != true)
+            {
+                _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(userId);
+            }
 
             _userRepository.AddUserRole(userId, roleId);
         }
