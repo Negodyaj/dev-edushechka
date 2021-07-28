@@ -19,8 +19,8 @@ BEGIN
 	FROM dbo.Lesson as l
 		inner join dbo.[User] u on l.TeacherId = u.Id  
 
-		inner join dbo.Lesson_Topic lt on l.Id = lt.LessonId
-		inner join dbo.Topic t on t.Id = lt.TopicId
+		left join dbo.Lesson_Topic lt on l.Id = lt.LessonId
+		left join dbo.Topic t on t.Id = lt.TopicId
 
 		inner join dbo.Group_Lesson gl on gl.LessonId = l.Id
 		inner join dbo.[Group] g on g.Id = gl.GroupId
