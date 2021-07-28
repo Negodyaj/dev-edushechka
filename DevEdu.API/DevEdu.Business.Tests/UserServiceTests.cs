@@ -7,6 +7,8 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
@@ -32,7 +34,6 @@ namespace DevEdu.Business.Tests
             var user = UserData.GetUserDto();
 
             _repoMock.Setup(x => x.AddUser(user)).Returns(UserData.expectedUserId);
-            _repoMock.Setup(x => x.SelectUserById(UserData.expectedUserId)).Returns(user);
             _repoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
 
             //When
@@ -41,7 +42,6 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(UserData.expectedUserId, actualId);
             _repoMock.Verify(x => x.AddUser(user), Times.Once);
-            _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.AtLeastOnce);
             _repoMock.Verify(x => x.AddUserRole(actualId, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
         }
 
@@ -117,7 +117,6 @@ namespace DevEdu.Business.Tests
             var user = UserData.GetAnotherUserDto();
 
             _repoMock.Setup(x => x.AddUser(user)).Returns(UserData.expectedUserId);
-            _repoMock.Setup(x => x.SelectUserById(UserData.expectedUserId)).Returns(user);
             _repoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
 
             //When
@@ -127,7 +126,6 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(UserData.expectedUserId, actualId);
             _repoMock.Verify(x => x.AddUser(user), Times.Once);
             _repoMock.Verify(x => x.AddUserRole(actualId, It.IsAny<int>()), Times.AtLeastOnce);
-            _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.AtLeastOnce);
         }
 
 
@@ -276,8 +274,6 @@ namespace DevEdu.Business.Tests
             var role = Enum.GetName(typeof(Role), roleId);
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(role), roleId);
 
-            _repoMock.Setup(x => x.SelectUserById(UserData.expectedUserId)).Returns(user);
-
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
                 () => _userService.AddUserRole(UserData.expectedUserId, roleId));
@@ -285,7 +281,6 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _repoMock.Verify(x => x.AddUserRole(UserData.expectedUserId, roleId), Times.Never);
-            _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.AtLeastOnce);
         }
 
         [TestCase(0, 0)]
