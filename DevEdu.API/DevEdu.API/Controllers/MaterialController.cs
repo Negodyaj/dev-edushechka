@@ -90,8 +90,7 @@ namespace DevEdu.API.Controllers
         public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            _materialService.UpdateMaterial(id, dto);
-            dto = _materialService.GetMaterialById(id);
+            dto = _materialService.UpdateMaterial(id, dto);
             return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
