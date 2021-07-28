@@ -17,7 +17,7 @@ namespace DevEdu.Business.ValidationHelpers
             _userRepository = userRepository;
         }
 
-        public UserDto GetUserDtoByIdAndCheckUserExistence(int userId)
+        public UserDto GetUserByIdAndThrowIfNotFound(int userId)
         {
             var user = _userRepository.SelectUserById(userId);
             if (user == default)

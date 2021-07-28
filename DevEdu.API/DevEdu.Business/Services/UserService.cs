@@ -12,7 +12,6 @@ namespace DevEdu.Business.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserValidationHelper _userValidationHelper;
-        private bool IsInsert = default;
 
         public UserService(IUserRepository userRepository, IUserValidationHelper helper)
         {
@@ -22,15 +21,14 @@ namespace DevEdu.Business.Services
 
         public int AddUser(UserDto dto)
         {
-            if (dto.Roles.Count == 0 || dto.Roles is null)
-                dto.Roles.Add(Role.Student);
+            if (dto.Roles == null || dto.Roles.Count == 0)
+                dto.Roles = new List<Role> { Role.Student };
 
             var addedUserId = _userRepository.AddUser(dto);
-            IsInsert = true;
 
             foreach (var role in dto.Roles)
             {
-                AddUserRole(addedUserId, (int)role);
+                _userRepository.AddUserRole(addedUserId, (int)role);
             }
 
             return addedUserId;
@@ -38,8 +36,7 @@ namespace DevEdu.Business.Services
 
         public UserDto SelectUserById(int id)
         {
-            _userValidationHelper.ChekIdDoesNotLessThenMinimum(id);
-            var user = _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(id);
+            var user = _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
             return user;
         }
 
@@ -63,7 +60,7 @@ namespace DevEdu.Business.Services
 
         public UserDto UpdateUser(UserDto dto)
         {
-            _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(dto.Id);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(dto.Id);
 
             _userRepository.UpdateUser(dto);
             var user = _userRepository.SelectUserById(dto.Id);
@@ -73,7 +70,7 @@ namespace DevEdu.Business.Services
         public void DeleteUser(int id)
         {
             _userValidationHelper.ChekIdDoesNotLessThenMinimum(id);
-            _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(id);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
 
             _userRepository.DeleteUser(id);
         }
@@ -82,11 +79,7 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.CheckUserIdAndRoleIdDoesNotLessThanMinimum(userId, roleId);
             _userValidationHelper.ChekRoleExistence(roleId);
-
-            if (IsInsert != true)
-            {
-                _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(userId);
-            }
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
 
             _userRepository.AddUserRole(userId, roleId);
         }
@@ -94,7 +87,7 @@ namespace DevEdu.Business.Services
         public void DeleteUserRole(int userId, int roleId)
         {
             _userValidationHelper.CheckUserIdAndRoleIdDoesNotLessThanMinimum(userId, roleId);
-            _userValidationHelper.GetUserDtoByIdAndCheckUserExistence(userId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
             _userValidationHelper.ChekRoleExistence(roleId);
 
             _userRepository.DeleteUserRole(userId, roleId);
