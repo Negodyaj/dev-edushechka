@@ -11,34 +11,8 @@ namespace DevEdu.Business.Tests
         }
         public const int ExpectedAffectedRows = 1;
         public const int CourseId = 1;
-        public static CourseDto GetCourseShortDto()
-        {
-            return new CourseDto
-            {
-                Id = 1,
-                Name = "Web Api",
-                Description = "Entity Framework",
-                Groups = new List<GroupDto>
-                {
-                    new GroupDto
-                    {
-                        Id = 1,
-                        Name = "Volosatiye Zmei",
-                        PaymentPerMonth = 10000,
-                        Timetable = "Morning"
-                    },
-                    new GroupDto
-                    {
-                        Id = 2,
-                        Name = "Zhidkie Osnovi",
-                        PaymentPerMonth = 20000,
-                        Timetable = "Evening"
-                    }
-                }
-            };
-        }
 
-        public static CourseDto GetUpdCourseShortDto()
+        public static CourseDto GetUpdCourseDto()
         {
             return new CourseDto
             {
@@ -65,7 +39,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static CourseDto GetCourseFullDto()
+        public static CourseDto GetCourseDto()
         {
             return new CourseDto
             {

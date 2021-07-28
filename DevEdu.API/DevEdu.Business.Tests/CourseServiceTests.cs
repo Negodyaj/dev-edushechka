@@ -30,7 +30,7 @@ namespace DevEdu.Business.Tests
         public void AddCourse_CourseInput_CourseCreated() 
         {
             //Given
-            var courseDto = CourseData.GetCourseShortDto();
+            var courseDto = CourseData.GetCourseDto();
             var courseId = CourseData.CourseId;
 
             _courseRepositoryMock.Setup(x => x.AddCourse(courseDto)).Returns(courseId);
@@ -43,7 +43,7 @@ namespace DevEdu.Business.Tests
             var actualCourse = sut.AddCourse(courseDto);
 
             //Than
-            Assert.AreEqual(1, actualCourse);
+            Assert.AreEqual(courseId, actualCourse);
             _courseRepositoryMock.Verify(x => x.AddCourse(courseDto), Times.Once());
         }
 
@@ -51,7 +51,7 @@ namespace DevEdu.Business.Tests
         public void DeleteCourse_IntCourseId_DeleteCourse()
         {
             //Given
-            var courseDto = CourseData.GetCourseShortDto();
+            var courseDto = CourseData.GetCourseDto();
             var courseId = CourseData.CourseId;
 
             _courseRepositoryMock.Setup(x => x.DeleteCourse(courseId));
@@ -71,7 +71,7 @@ namespace DevEdu.Business.Tests
         public void GetCourseById_IntCourseId_ReturnCourseWithGroups()
         {
             //Given
-            var courseDto = CourseData.GetCourseShortDto();
+            var courseDto = CourseData.GetCourseDto();
             var courseId = CourseData.CourseId;
             _courseRepositoryMock.Setup(x => x.GetCourse(courseId)).Returns(courseDto);
 
@@ -90,7 +90,7 @@ namespace DevEdu.Business.Tests
         public void GetCourseById_IntCourseId_ReturnCourseWithGroups_Topics_Materials_Tasks()
         {
             //Given
-            var courseDto = CourseData.GetCourseFullDto();
+            var courseDto = CourseData.GetCourseDto();
             var courseId = CourseData.CourseId;
             _courseRepositoryMock.Setup(x => x.AddCourse(courseDto)).Returns(courseId);
 
@@ -132,8 +132,8 @@ namespace DevEdu.Business.Tests
         {
             //When
             var courseId = CourseData.CourseId;
-            var courseDto = CourseData.GetCourseShortDto();
-            var updCourseDto = CourseData.GetUpdCourseShortDto();
+            var courseDto = CourseData.GetCourseDto();
+            var updCourseDto = CourseData.GetUpdCourseDto();
 
             _courseRepositoryMock.Setup(x => x.UpdateCourse(courseId, courseDto)).Returns(updCourseDto);
 
