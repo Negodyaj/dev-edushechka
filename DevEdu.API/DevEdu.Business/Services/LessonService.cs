@@ -14,6 +14,7 @@ namespace DevEdu.Business.Services
         private readonly IUserRepository _userRepository;
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly ILessonValidationHelper _lessonValidationHelper;
+
         public LessonService(
             ILessonRepository lessonRepository,
             ICommentRepository commentRepository,
@@ -29,9 +30,24 @@ namespace DevEdu.Business.Services
             _lessonValidationHelper = lessonValidationHelper;
         }
 
-        public void AddCommentToLesson(int lessonId, int commentId) => _lessonRepository.AddCommentToLesson(lessonId, commentId);
+        public void AddCommentToLesson(int lessonId, CommentDto commentDto)
+        {
+            int commentId =_commentRepository.AddComment(commentDto);
 
-        public int AddLesson(LessonDto lessonDto) => _lessonRepository.AddLesson(lessonDto);
+            _lessonRepository.AddCommentToLesson(lessonId, commentId);
+        }
+
+        public int AddLesson(LessonDto lessonDto, List<int> topicIds)
+        {
+            int lessonId = _lessonRepository.AddLesson(lessonDto);
+
+            if(topicIds != null)
+            {
+                topicIds.ForEach(topicId => _lessonRepository.AddTopicToLesson(lessonId, topicId));
+            }
+
+            return lessonId;
+        }
 
         public void DeleteCommentFromLesson(int lessonId, int commentId) => _lessonRepository.DeleteCommentFromLesson(lessonId, commentId);
 
@@ -61,10 +77,11 @@ namespace DevEdu.Business.Services
             return result;
         }
 
-        public void UpdateLesson(int id, LessonDto lessonDto)
+        public LessonDto UpdateLesson(LessonDto lessonDto, int id)
         {
             lessonDto.Id = id;
             _lessonRepository.UpdateLesson(lessonDto);
+            return _lessonRepository.SelectLessonById(lessonDto.Id);
         }
 
         public void DeleteTopicFromLesson(int lessonId, int topicId) => 
