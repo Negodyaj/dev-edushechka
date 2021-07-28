@@ -68,13 +68,7 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.CheckUserExistence(userId);
             var tasks = _taskRepository.GetTasks();
-            var allowedTasks = new List<TaskDto>();
-            foreach (var task in tasks)
-            {
-                var allowedTask = _taskValidationHelper.GetTaskAllowedToUser(task.Id, userId);
-                if(allowedTask != null)
-                allowedTasks.Add(allowedTask);
-            }
+            var allowedTasks = _taskValidationHelper.GetTasksAllowedToUser(tasks, userId);
             return allowedTasks;
         }
 
@@ -107,6 +101,7 @@ namespace DevEdu.Business.Services
 
         public TaskDto UpdateTask(TaskDto taskDto, int taskId, int userId)
         {
+            _userValidationHelper.CheckUserExistence(userId);
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
 
@@ -117,6 +112,7 @@ namespace DevEdu.Business.Services
 
         public void DeleteTask(int taskId, int userId)
         {
+            _userValidationHelper.CheckUserExistence(userId);
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
 
