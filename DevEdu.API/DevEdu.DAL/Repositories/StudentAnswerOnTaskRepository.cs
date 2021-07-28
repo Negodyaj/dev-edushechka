@@ -129,15 +129,15 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 );
         }
-        
-        public void AddCommentOnStudentAnswer(int taskstudentId, int commentId)
+
+        public void AddCommentOnStudentAnswer(int taskStudentId, int commentId)
         {
             _connection.Query(
                 _taskStudentCommentInsert,
                 new
                 {
-                    TaskStudentId = taskstudentId,
-                    CommentId = commentId
+                    taskStudentId,
+                    commentId
                 },
                 commandType: CommandType.StoredProcedure
            );
