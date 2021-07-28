@@ -21,13 +21,16 @@ namespace DevEdu.Business.Services
 
         public int AddNotification(NotificationDto dto)
         {
+            if (((dto.Role != 0) && (dto.User != null))
+                 || ((dto.Role != 0) && (dto.Group != null))
+                 || ((dto.User != null) && (dto.Group != null)))
             if (dto.Role != null && dto.User != null
                  || dto.Role != null && dto.Group != null
                  || dto.User != null && dto.Group != null)
             {
                 throw new System.Exception("Only one property (RoleId, UserId or GroupId) should have a value");
             }
-           return  _notificationRepository.AddNotification(dto);
+            return  _notificationRepository.AddNotification(dto);
         }
 
         public void DeleteNotification(int id) => _notificationRepository.DeleteNotification(id);

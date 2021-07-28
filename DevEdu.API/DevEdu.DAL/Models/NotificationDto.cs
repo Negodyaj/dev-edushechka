@@ -12,3 +12,4 @@ namespace DevEdu.DAL.Models
         public UserDto User { get; set; }
         public GroupDto Group { get; set; }
     }
+}
