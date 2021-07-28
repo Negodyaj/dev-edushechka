@@ -27,7 +27,7 @@ namespace DevEdu.Business.Tests
                     Groups = null,
                     IsDeleted = false
                 },
-                GroupStatus = GroupStatus.Formed,
+                GroupStatus = GroupStatus.Forming,
                 StartDate = DateTime.MaxValue,
                 Timetable = "Понедельник",
                 PaymentPerMonth = 1.0M,
@@ -51,7 +51,7 @@ namespace DevEdu.Business.Tests
                     Groups = null,
                     IsDeleted = false
                 },
-                GroupStatus = GroupStatus.Formed,
+                GroupStatus = GroupStatus.Forming,
                 StartDate = DateTime.MinValue,
                 Timetable = "Вторник",
                 PaymentPerMonth = 1.0M,
@@ -67,7 +67,7 @@ namespace DevEdu.Business.Tests
                 Id = 1,
                 Name = "Котейка",
                 Course = null,
-                GroupStatus = GroupStatus.Formed,
+                GroupStatus = GroupStatus.Forming,
                 StartDate = DateTime.MaxValue,
                 Timetable = "Понедельник",
                 PaymentPerMonth = 1.0M,
@@ -93,7 +93,7 @@ namespace DevEdu.Business.Tests
                         Groups = null,
                         IsDeleted = false
                     },
-                    GroupStatus = GroupStatus.Formed,
+                    GroupStatus = GroupStatus.Forming,
                     StartDate = DateTime.MaxValue,
                     Timetable = "Понедельник 10-20",
                     PaymentPerMonth = 5479.0M,
@@ -114,7 +114,7 @@ namespace DevEdu.Business.Tests
                         Groups = null,
                         IsDeleted = false
                     },
-                    GroupStatus = GroupStatus.Formed,
+                    GroupStatus = GroupStatus.Forming,
                     StartDate = DateTime.MaxValue,
                     Timetable = "Понедельник 10-20",
                     PaymentPerMonth = 5479.0M,
@@ -135,7 +135,7 @@ namespace DevEdu.Business.Tests
                         Groups = null,
                         IsDeleted = false
                     },
-                    GroupStatus = GroupStatus.Formed,
+                    GroupStatus = GroupStatus.Forming,
                     StartDate = DateTime.MaxValue,
                     Timetable = "Понедельник 10-20",
                     PaymentPerMonth = 5479.0M,
