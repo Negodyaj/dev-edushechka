@@ -9,5 +9,5 @@ namespace DevEdu.DAL.Models
         public string Text { get; set; }
         public Role? Role { get; set; }
         public UserDto User { get; set; }
+        public GroupDto Group { get; set; }
     }
-}
