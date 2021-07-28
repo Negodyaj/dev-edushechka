@@ -74,29 +74,14 @@ namespace DevEdu.Business.Services
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
 
         public StudentLessonDto AddStudentToLesson(int lessonId, int userId)
-        {
-            var studentLessonDto =
-               new StudentLessonDto
-               {
-                   User = new UserDto { Id = userId },
-                   Lesson = new LessonDto { Id = lessonId }
-               };
-            _lessonRepository.AddStudentToLesson(studentLessonDto);
-            var o = GetStudenLessonByLessonAndUserId(lessonId, userId);
-
-            return o;
-
+        {         
+            _lessonRepository.AddStudentToLesson(lessonId, userId);
+            return GetStudenLessonByLessonAndUserId(lessonId, userId);           
         }
 
         public void DeleteStudentFromLesson(int lessonId, int userId)
-        {
-            var studentLessonDto =
-                new StudentLessonDto
-                {
-                    User = new UserDto { Id = userId },
-                    Lesson = new LessonDto { Id = lessonId }
-                };
-            _lessonRepository.DeleteStudentFromLesson(studentLessonDto);               
+        {            
+            _lessonRepository.DeleteStudentFromLesson(lessonId, userId);               
         }
 
         public StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)

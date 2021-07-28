@@ -16,8 +16,8 @@ namespace DevEdu.DAL.Repositories
         public void UpdateLesson(LessonDto lessonDto);
         int DeleteTopicFromLesson(int lessonId, int topicId);
         void AddTopicToLesson(int lessonId, int topicId);
-        void AddStudentToLesson(StudentLessonDto dto);
-        void DeleteStudentFromLesson(StudentLessonDto dto);
+        void AddStudentToLesson(int lessonId, int userId);
+        void DeleteStudentFromLesson(int lessonId, int userId);
         void UpdateStudentAbsenceReasonOnLesson(StudentLessonDto studentLessonDto);
         void UpdateStudentAttendanceOnLesson(StudentLessonDto studentLessonDto);
         void UpdateStudentFeedbackForLesson(StudentLessonDto studentLessonDto);

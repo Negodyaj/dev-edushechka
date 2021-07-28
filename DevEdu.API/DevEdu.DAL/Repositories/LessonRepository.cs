@@ -231,28 +231,27 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddStudentToLesson(StudentLessonDto dto)
+        public void AddStudentToLesson(int lessonId, int userId)
         {
             _connection.Execute(
                 _studentLessonInsertProcedure,
                  new
                  {
-                     LessonId = dto.Lesson.Id,
-                     UserId = dto.User.Id
+                    
                  },
                  commandType: CommandType.StoredProcedure
              );
             
         }
 
-        public void DeleteStudentFromLesson(StudentLessonDto dto)
+        public void DeleteStudentFromLesson(int lessonId, int userId)
         {
             _connection.Execute(
                 _studentLessonDeleteProcedure,
                  new
                  {
-                     LessonId = dto.Lesson.Id,
-                     UserId = dto.User.Id
+                     lessonId,
+                     userId
                  },
                  commandType: CommandType.StoredProcedure
              );

@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -30,10 +31,11 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
+            
             var lessonId = LessonData.LessonId;
             var userId = LessonData.UserId;
 
-            _lessonRepoMock.Setup(x => x.AddStudentToLesson(studentLessonDto));
+            _lessonRepoMock.Setup(x => x.AddStudentToLesson(lessonId, userId));
             _lessonRepoMock.Setup(x => x.SelectByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
 
             var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
@@ -44,8 +46,7 @@ namespace DevEdu.Business.Tests
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
-            _lessonRepoMock.Verify(x => x.AddStudentToLesson(studentLessonDto), Times.Once);
-           // _lessonRepoMock.Verify(x => x.SelectByLessonAndUserId(lessonId, userId),Times.Once);
+            _lessonRepoMock.Verify(x => x.AddStudentToLesson(lessonId, userId), Times.Once);           
         }
 
         [Test]
@@ -56,7 +57,7 @@ namespace DevEdu.Business.Tests
             var lessonId = LessonData.LessonId;
             var userId = LessonData.UserId;
 
-            _lessonRepoMock.Setup(x => x.DeleteStudentFromLesson(studentLessonDto));
+            _lessonRepoMock.Setup(x => x.DeleteStudentFromLesson(lessonId, userId));
 
             var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
                 _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
@@ -65,7 +66,7 @@ namespace DevEdu.Business.Tests
             sut.DeleteStudentFromLesson(lessonId,userId);
 
             //Than
-            _lessonRepoMock.Verify(x => x.DeleteStudentFromLesson(studentLessonDto), Times.Once);
+            _lessonRepoMock.Verify(x => x.DeleteStudentFromLesson(lessonId, userId), Times.Once);
         }
 
 
