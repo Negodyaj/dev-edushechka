@@ -148,13 +148,13 @@ namespace DevEdu.DAL.Repositories
                 );
         }
 
-        public void AddCommentOnStudentAnswer(int taskstudentId, int commentId)
+        public void AddCommentOnStudentAnswer(int taskStudentId, int commentId)
         {
             _connection.QuerySingle<int>(
                 _taskStudentCommentInsert,
                 new
                 {
-                    taskstudentId,
+                    taskStudentId,
                     commentId
                 },
                 commandType: CommandType.StoredProcedure
