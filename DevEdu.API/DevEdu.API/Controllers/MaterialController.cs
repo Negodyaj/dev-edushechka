@@ -13,7 +13,7 @@ using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MaterialController : Controller
@@ -28,32 +28,33 @@ namespace DevEdu.API.Controllers
         }
 
         // api/material
-        //[AuthorizeRoles(Role.Teacher, Role.Tutor)]
-        [HttpPost]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
+        [HttpPost("with-groups")]
         [Description("Add material with groups")]
-        [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status201Created)]
-        public MaterialInfoOutputModel AddMaterialWithGroups([FromBody] MaterialWithGroupsInputModel materialModel)
+        [ProducesResponseType(typeof(MaterialInfoWithGroupsOutputModel), StatusCodes.Status201Created)]
+        public MaterialInfoWithGroupsOutputModel AddMaterialWithGroups([FromBody] MaterialWithGroupsInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             int id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds);
-            dto = _materialService.GetMaterialById(id);
-            return _mapper.Map<MaterialInfoOutputModel>(dto);
+            dto = _materialService.GetMaterialByIdWithGroups(id);
+            return _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
         }
 
         // api/material
-        //[AuthorizeRoles(Role.Methodist)]
-        [HttpPost]
+        [AuthorizeRoles(Role.Methodist)]
+        [HttpPost("with-courses")]
         [Description("Add material with courses")]
-        [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status201Created)]
-        public MaterialInfoOutputModel AddMaterialWithCourses([FromBody] MaterialWithCoursesInputModel materialModel)
+        [ProducesResponseType(typeof(MaterialInfoWithCoursesOutputModel), StatusCodes.Status201Created)]
+        public MaterialInfoWithCoursesOutputModel AddMaterialWithCourses([FromBody] MaterialWithCoursesInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             int id = _materialService.AddMaterialWithCourses(dto, materialModel.TagsIds, materialModel.CoursesIds);
-            dto = _materialService.GetMaterialById(id);
-            return _mapper.Map<MaterialInfoOutputModel>(dto);
+            dto = _materialService.GetMaterialByIdWithCourses(id);
+            return _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
         }
 
         // api/material
+        [AuthorizeRoles(Role.Methodist)]
         [HttpGet]
         [Description("Get all materials with tags")]
         [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
@@ -63,17 +64,26 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
         }
 
+        //сделать эндпоинт для получения материалов доступных студенту по его id (со всех его групп и курсов)
+        //сделать эндпоинт для материалов доступных тутору и тичеру (по их группам и курсам, в которых их группы)
+        
         // api/material/5
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist, Role.Student)]
+        //у студента проверять, доступен ли ему материал с этим id
+        //у тичера и тутора проверять достыпные им материалы (по группам и курсам)
         [HttpGet("{id}")]
         [Description("Get material by id with tags, courses and groups")]
-        [ProducesResponseType(typeof(MaterialInfoWithCoursesAndGroupsOutputModel), StatusCodes.Status200OK)]
-        public MaterialInfoWithCoursesAndGroupsOutputModel GetMaterial(int id)
+        [ProducesResponseType(typeof(MaterialInfoFullOutputModel), StatusCodes.Status200OK)]
+        public MaterialInfoFullOutputModel GetMaterial(int id)
         {
             var dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
-            return _mapper.Map<MaterialInfoWithCoursesAndGroupsOutputModel>(dto);
+            return _mapper.Map<MaterialInfoFullOutputModel>(dto);
         }
 
         // api/material/5
+        [AuthorizeRoles(Role.Teacher, Role.Methodist)]
+        //для методиста проверять, что материал имеет связь с каким-нибудь курсом
+        //для тичера проверять, что материал имеет связь с доступными им группами
         [HttpPut("{id}")]
         [Description("Update material by id")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
@@ -86,6 +96,10 @@ namespace DevEdu.API.Controllers
         }
 
         // api/material/5/isDeleted/True
+        [AuthorizeRoles(Role.Teacher, Role.Methodist)]
+        //для методиста проверять, что материал имеет связь с каким-нибудь курсом
+        //для тичера проверять, что материал имеет связь с доступными им группами
+        [AuthorizeRoles(Role.Methodist)]
         [HttpDelete("{id}/isDeleted/{isDeleted}")]
         [Description("Delete material")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -115,6 +129,9 @@ namespace DevEdu.API.Controllers
         }
 
         // api/material/by-tag/1
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist, Role.Student)]
+        //у студента проверять, доступен ли ему материал с этим id
+        //у тичера и тутора проверять достыпные им материалы (по группам и курсам)
         [HttpGet("by-tag/{tagId}")]
         [Description("Get materials by tag id")]
         [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]

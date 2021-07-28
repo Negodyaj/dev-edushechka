@@ -30,6 +30,20 @@ namespace DevEdu.Business.Services
             return dto;
         }
 
+        public MaterialDto GetMaterialByIdWithCourses(int id)
+        {
+            var dto = _materialRepository.GetMaterialById(id);
+            dto.Courses = _courseRepository.GetCoursesByMaterialId(id);
+            return dto;
+        }
+
+        public MaterialDto GetMaterialByIdWithGroups(int id)
+        {
+            var dto = _materialRepository.GetMaterialById(id);
+            dto.Groups = _groupRepository.GetGroupsByMaterialId(id);
+            return dto;
+        }
+
         public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups)
         {
             var materialId = _materialRepository.AddMaterial(dto);
@@ -38,7 +52,7 @@ namespace DevEdu.Business.Services
 
             if (tags == null || tags.Count == 0)
                 return materialId;
-            //check that tags exist
+
             tags.ForEach(tag => AddTagToMaterial(materialId, tag));
             return materialId;
         }
@@ -52,7 +66,6 @@ namespace DevEdu.Business.Services
             if (tags == null || tags.Count == 0)
                 return materialId;
 
-            //check that tags exist
             tags.ForEach(tag => AddTagToMaterial(materialId, tag));
             return materialId;
         }
