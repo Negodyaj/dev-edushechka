@@ -5,6 +5,7 @@ using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace DevEdu.API.Controllers
         // api/user/userId
         [HttpPut("{userId}")]
         [Description("Update user")]
-        [AuthorizeRolesAttribute(Role.Manager)]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(UserUpdateInfoOutPutModel), StatusCodes.Status200OK)]
         public UserUpdateInfoOutPutModel UpdateUserById([FromBody] UserUpdateInputModel model)
         {
@@ -40,7 +41,7 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}
         [HttpGet("{userId}")]
         [Description("Return user by id")]
-        [AuthorizeRolesAttribute(Role.Manager)]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
         public UserFullInfoOutPutModel GetUserById(int userId)
         {
@@ -51,7 +52,7 @@ namespace DevEdu.API.Controllers
         // api/user
         [HttpGet]
         [Description("Return list users")]
-        [AuthorizeRolesAttribute(Role.Manager)]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(List<UserInfoOutPutModel>), StatusCodes.Status200OK)]
         public List<UserInfoOutPutModel> GetAllUsers()
         {
@@ -62,7 +63,7 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}
         [HttpDelete("{userId}")]
         [Description("Delete user by id")]
-        [AuthorizeRolesAttribute(Role.Manager)]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteUser(int userId)                       
         {
@@ -72,21 +73,21 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}/role/{roleId}
         [HttpPost("{userId}/role/{roleId}")]
         [Description("Add new role to user")]
-        [AuthorizeRolesAttribute(Role.Admin)]
+        [AuthorizeRoles(Role.Admin)]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-        public void AddRoleToUser(int userId, int roleId)
+        public void AddRoleToUser(int userId, Role roleId)
         {
-            _userService.AddUserRole(userId, roleId);
+            _userService.AddUserRole(userId, (int)roleId);
         }
 
         // api/user/{userId}/role/{roleId}
         [HttpDelete("{userId}/role/{roleId}")]
         [Description("Delete role from user")]
-        [AuthorizeRolesAttribute(Role.Admin)]
+        [AuthorizeRoles(Role.Admin)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void DeleteRoleFromUser(int userId, int roleId)
+        public void DeleteRoleFromUser(int userId, Role roleId)
         {
-            _userService.DeleteUserRole(userId, roleId);
+            _userService.DeleteUserRole(userId, (int)roleId);
         }
     }
 }

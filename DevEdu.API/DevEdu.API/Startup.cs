@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
+using System.Text.Json.Serialization;
 
 namespace DevEdu.API
 {
@@ -70,7 +71,12 @@ namespace DevEdu.API
 
             services.AddControllers();
 
-            services.AddMvc();
+            services
+                .AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
