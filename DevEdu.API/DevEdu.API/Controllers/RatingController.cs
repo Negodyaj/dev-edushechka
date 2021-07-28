@@ -12,7 +12,7 @@ namespace DevEdu.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RatingController: Controller
+    public class RatingController : Controller
     {
         private IRatingService _service;
 

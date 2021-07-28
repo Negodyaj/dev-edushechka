@@ -109,11 +109,11 @@ namespace DevEdu.DAL.Repositories
             {
                 table.Rows.Add(bill.Date, bill.Sum, bill.User.Id, bill.IsPaid);
             }
-             var response = _connection.Query<int>(
-                _addPaymentsProcedure,
-                new { tblPayment = table.AsTableValuedParameter(_paymentType) },
-                commandType: CommandType.StoredProcedure
-                ).ToList();
+            var response = _connection.Query<int>(
+               _addPaymentsProcedure,
+               new { tblPayment = table.AsTableValuedParameter(_paymentType) },
+               commandType: CommandType.StoredProcedure
+               ).ToList();
             return response;
         }
         public List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids)

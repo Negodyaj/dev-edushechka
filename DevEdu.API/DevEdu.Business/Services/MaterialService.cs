@@ -11,8 +11,8 @@ namespace DevEdu.Business.Services
         private readonly IGroupRepository _groupRepository;
 
         public MaterialService(
-            IMaterialRepository materialRepository, 
-            ICourseRepository courseRepository, 
+            IMaterialRepository materialRepository,
+            ICourseRepository courseRepository,
             IGroupRepository groupRepository)
         {
             _materialRepository = materialRepository;

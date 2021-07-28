@@ -53,7 +53,7 @@ namespace DevEdu.DAL.Repositories
             _connection.Execute
             (
                 _groupDeleteProcedure,
-                new { Id = id},
+                new { Id = id },
                 commandType: CommandType.StoredProcedure
             );
         }
@@ -148,15 +148,15 @@ namespace DevEdu.DAL.Repositories
 
         public int RemoveGroupFromLesson(int groupId, int lessonId)
         {
-           return  _connection.Execute(
-                _deleteGroupLesson,
-                new
-                {
-                    groupId,
-                    lessonId
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            return _connection.Execute(
+                 _deleteGroupLesson,
+                 new
+                 {
+                     groupId,
+                     lessonId
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
         public int AddGroupMaterialReference(int groupId, int materialId)
@@ -307,5 +307,5 @@ namespace DevEdu.DAL.Repositories
                 )
                 .ToList();
         }
-    }    
+    }
 }

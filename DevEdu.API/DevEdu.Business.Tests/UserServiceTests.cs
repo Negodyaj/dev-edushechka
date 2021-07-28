@@ -327,7 +327,7 @@ namespace DevEdu.Business.Tests
             var user = UserData.GetUserDto();
             var role = Enum.GetName(typeof(Role), roleId);
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(role), roleId);
-           
+
             _repoMock.Setup(x => x.SelectUserById(UserData.expectedUserId)).Returns(user);
 
             //When

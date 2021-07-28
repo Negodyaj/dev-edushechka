@@ -1,8 +1,6 @@
-﻿using DevEdu.Business.Exceptions;
-using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
-using System.Linq;
 using DevEdu.Business.ValidationHelpers;
 
 namespace DevEdu.Business.Services
@@ -32,7 +30,7 @@ namespace DevEdu.Business.Services
 
         public void AddCommentToLesson(int lessonId, CommentDto commentDto)
         {
-            int commentId =_commentRepository.AddComment(commentDto);
+            int commentId = _commentRepository.AddComment(commentDto);
 
             _lessonRepository.AddCommentToLesson(lessonId, commentId);
         }
@@ -41,7 +39,7 @@ namespace DevEdu.Business.Services
         {
             int lessonId = _lessonRepository.AddLesson(lessonDto);
 
-            if(topicIds != null)
+            if (topicIds != null)
             {
                 topicIds.ForEach(topicId => _lessonRepository.AddTopicToLesson(lessonId, topicId));
             }
@@ -84,7 +82,7 @@ namespace DevEdu.Business.Services
             return _lessonRepository.SelectLessonById(lessonDto.Id);
         }
 
-        public void DeleteTopicFromLesson(int lessonId, int topicId) => 
+        public void DeleteTopicFromLesson(int lessonId, int topicId) =>
             _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
 
         public void AddTopicToLesson(int lessonId, int topicId) =>
@@ -150,7 +148,7 @@ namespace DevEdu.Business.Services
             _lessonRepository.UpdateStudentAttendanceOnLesson(studentLessonDto);
         }
 
-        public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId)=>
+        public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId) =>
             _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
 
         public StudentLessonDto GetStudenLessonByLessonAndUserId(int lessonId, int userId) =>

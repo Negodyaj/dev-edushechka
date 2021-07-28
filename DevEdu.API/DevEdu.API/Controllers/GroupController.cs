@@ -101,7 +101,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public string RemoveGroupFromLesson(int groupId, int lessonId)
         {
-            _groupService.RemoveGroupFromLesson(groupId,    lessonId);
+            _groupService.RemoveGroupFromLesson(groupId, lessonId);
             return $"Group {groupId} remove  Lesson Id:{lessonId}";
         }
 
