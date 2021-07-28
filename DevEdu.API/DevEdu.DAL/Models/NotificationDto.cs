@@ -2,6 +2,7 @@
 using DevEdu.DAL.Enums;
 
 namespace DevEdu.DAL.Models
+    
 {
     public class NotificationDto : BaseDto
     {

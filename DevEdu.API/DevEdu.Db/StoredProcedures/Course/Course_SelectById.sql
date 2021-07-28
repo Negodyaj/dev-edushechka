@@ -3,13 +3,12 @@
 AS
 BEGIN
 	SELECT 
-	   C.Id
-      ,C.Name
-      ,C.Description
-      ,C.IsDeleted
-	  ,G.Id
-	  ,G.Timetable
-	  ,G.PaymentPerMonth
+	  C.Id,
+      C.Name,
+      C.Description,
+      C.IsDeleted,
+	  G.Id,
+	  G.Timetable
 	  
 
   FROM [dbo].[Course] C WITH (NOLOCK)
