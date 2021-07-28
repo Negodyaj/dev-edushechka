@@ -111,13 +111,13 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public void UpdateCourse(CourseDto courseDto)
+        public CourseDto UpdateCourse(int courseId, CourseDto courseDto)
         {
-            _connection.Execute(
+            return _connection.QuerySingle<CourseDto>(
                 _courseUpdateProcedure,
                 new
                 {
-                    courseDto.Id,
+                    courseId,
                     courseDto.Name,
                     courseDto.Description
                 },

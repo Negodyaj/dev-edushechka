@@ -16,8 +16,8 @@ namespace DevEdu.Business.Services
         private readonly ITaskRepository _taskRepository;
         private readonly IMaterialRepository _materialRepository;
         
-        public CourseService(ITopicRepository topicRepository,
-                             ICourseRepository courseRepository,
+        public CourseService(ICourseRepository courseRepository,
+                             ITopicRepository topicRepository,
                              ITaskRepository taskRepository,
                              IMaterialRepository materialRepository)
         {
@@ -48,11 +48,7 @@ namespace DevEdu.Business.Services
         }
         public List<CourseDto> GetCourses() => _courseRepository.GetCourses();
 
-        public void UpdateCourse(int id, CourseDto courseDto)
-        {
-            courseDto.Id = id;
-            _courseRepository.UpdateCourse(courseDto);
-        }
+        public CourseDto UpdateCourse(int id, CourseDto courseDto) => _courseRepository.UpdateCourse(id, courseDto);
 
         public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {

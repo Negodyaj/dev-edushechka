@@ -9,7 +9,63 @@ namespace DevEdu.Business.Tests
         {
 
         }
-        public static CourseDto GetCourseDto()
+        public const int ExpectedAffectedRows = 1;
+        public const int CourseId = 1;
+        public static CourseDto GetCourseShortDto()
+        {
+            return new CourseDto
+            {
+                Id = 1,
+                Name = "Web Api",
+                Description = "Entity Framework",
+                Groups = new List<GroupDto>
+                {
+                    new GroupDto
+                    {
+                        Id = 1,
+                        Name = "Volosatiye Zmei",
+                        PaymentPerMonth = 10000,
+                        Timetable = "Morning"
+                    },
+                    new GroupDto
+                    {
+                        Id = 2,
+                        Name = "Zhidkie Osnovi",
+                        PaymentPerMonth = 20000,
+                        Timetable = "Evening"
+                    }
+                }
+            };
+        }
+
+        public static CourseDto GetUpdCourseShortDto()
+        {
+            return new CourseDto
+            {
+                Id = 1,
+                Name = "C#",
+                Description = "api",
+                Groups = new List<GroupDto>
+                {
+                    new GroupDto
+                    {
+                        Id = 1,
+                        Name = "Volosatiye Zmei",
+                        PaymentPerMonth = 10000,
+                        Timetable = "Morning"
+                    },
+                    new GroupDto
+                    {
+                        Id = 2,
+                        Name = "Zhidkie Osnovi",
+                        PaymentPerMonth = 20000,
+                        Timetable = "Evening"
+                    }
+                }
+            };
+        }
+
+        public static CourseDto GetCourseFullDto()
         {
             return new CourseDto
             {

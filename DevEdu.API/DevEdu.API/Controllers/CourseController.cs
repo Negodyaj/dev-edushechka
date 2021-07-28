@@ -82,8 +82,8 @@ namespace DevEdu.API.Controllers
         public CourseInfoShortOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            _courseService.UpdateCourse(id, dto);
-            return GetCourseSimple(id);
+            var updDto =  _courseService.UpdateCourse(id, dto);
+            return _mapper.Map<CourseInfoShortOutputModel>(updDto);
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}

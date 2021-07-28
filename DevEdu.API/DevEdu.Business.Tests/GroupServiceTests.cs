@@ -152,5 +152,42 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(groupTaskList, dto);
             _groupRepoMock.Verify(x => x.GetTaskGroupByGroupId(groupId), Times.Once);
         }
+        [Test]
+        public void AddGroupToLesson_IntGroupIdAndLessonId_AddLessonToGroup()
+        {
+            //Given
+            const int groupId = GroupData.GroupId;
+            const int lessonId = GroupData.LessonId;
+
+            _groupRepoMock.Setup(x => x.AddGroupToLesson(groupId, lessonId)).Returns(GroupData.ExpectedAffectedRows);
+
+            var sut = new GroupService(_groupRepoMock.Object);
+
+            //When
+            var actualAffectedRows = sut.AddGroupToLesson(groupId, lessonId);
+
+            //Than
+            Assert.AreEqual(GroupData.ExpectedAffectedRows, actualAffectedRows);
+            _groupRepoMock.Verify(x => x.AddGroupToLesson(groupId, lessonId), Times.Once);
+        }
+
+        [Test]
+        public void RemoveGroupFromLesson_IntGroupIdAndLessonId_DeleteMaterialFromGroup()
+        {
+            //Given
+            const int groupId = GroupData.GroupId;
+            const int lessonId = GroupData.LessonId;
+
+            _groupRepoMock.Setup(x => x.RemoveGroupFromLesson(groupId, lessonId)).Returns(GroupData.ExpectedAffectedRows);
+
+            var sut = new GroupService(_groupRepoMock.Object);
+
+            //When
+            var actualAffectedRows = sut.RemoveGroupFromLesson(groupId, lessonId);
+
+            //Than
+            Assert.AreEqual(GroupData.ExpectedAffectedRows, actualAffectedRows);
+            _groupRepoMock.Verify(x => x.RemoveGroupFromLesson(groupId, lessonId), Times.Once);
+        }
     }
 }
