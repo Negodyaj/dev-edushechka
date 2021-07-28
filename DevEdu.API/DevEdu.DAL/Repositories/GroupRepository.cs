@@ -98,20 +98,21 @@ namespace DevEdu.DAL.Repositories
             .ToList();
         }
 
-        public GroupDto UpdateGroup(int id, GroupDto groupDto)
+        public GroupDto UpdateGroup(GroupDto groupDto)
         {
+            
             return _connection.QuerySingle<GroupDto>
             (
                 _groupUpdateByIdProcedure,
                 new
                 {
-                    id,
-                    groupDto.Name,
-                    groupDto.Course,
-                    groupDto.GroupStatus,
-                    groupDto.StartDate,
-                    groupDto.Timetable,
-                    groupDto.PaymentPerMonth
+                    Id = groupDto.Id,
+                    Name = groupDto.Name,
+                    CourseId = groupDto.Course.Id,
+                    GroupStatusId = (int)groupDto.GroupStatus,
+                    StartDate = groupDto.StartDate,
+                    Timetable = groupDto.Timetable,
+                    PaymentPerMonth = groupDto.PaymentPerMonth
                 },
                 commandType: CommandType.StoredProcedure
             );

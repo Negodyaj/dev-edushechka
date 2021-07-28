@@ -201,7 +201,7 @@
     <Build Include="StoredProcedures\Task_Student\Task_Student_UpdateStatusId.sql" />
     <Build Include="StoredProcedures\Group\Group_Delete.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectById.sql" />
-    <Build Include="StoredProcedures\Group\Group_Update.sql" />
+    <Build Include="StoredProcedures\Group\Group_UpdateById.sql" />
     <Build Include="StoredProcedures\Group\Group_Insert.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAll.sql" />
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_Delete.sql" />

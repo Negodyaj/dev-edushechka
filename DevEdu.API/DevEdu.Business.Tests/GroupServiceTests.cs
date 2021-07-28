@@ -85,9 +85,10 @@ namespace DevEdu.Business.Tests
             //Given
             var groupId = GroupData.GroupId;
             var groupDto = GroupData.GetGroupDtoToUpdNameAndTimetable();
+            groupDto.Id = groupId;
             var updGroupDto = GroupData.GetUpdGroupDto();
 
-            _groupRepoMock.Setup(x => x.UpdateGroup(groupId, groupDto)).Returns(updGroupDto);
+            _groupRepoMock.Setup(x => x.UpdateGroup(groupDto)).Returns(updGroupDto);
 
             var sut = new GroupService(_groupRepoMock.Object);
 
@@ -96,7 +97,7 @@ namespace DevEdu.Business.Tests
 
             //Then
             Assert.AreEqual(updGroupDto, actualGroupDto);
-            _groupRepoMock.Verify(x => x.UpdateGroup(groupId, groupDto), Times.Once);
+            _groupRepoMock.Verify(x => x.UpdateGroup(groupDto), Times.Once);
         }
 
         [Test]

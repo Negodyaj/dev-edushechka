@@ -63,8 +63,8 @@ namespace DevEdu.API.Controllers
             _groupService.DeleteGroup(id);
         }
 
-        //  api/Group
-        [HttpPut]
+        //  api/Group/{Id}
+        [HttpPut("{id}")]
         [Description("Update Group by id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public GroupInfoOutputModel UpdateGroup(int id, [FromBody] GroupInputModel model)

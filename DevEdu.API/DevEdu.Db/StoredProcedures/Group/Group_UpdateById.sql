@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.Group_Update
+﻿CREATE PROCEDURE dbo.Group_UpdateById
     @Id int,
     @Name nvarchar(50),
     @CourseId int,
@@ -16,5 +16,12 @@ BEGIN
         [StartDate] = @StartDate,
         [Timetable] = @Timetable,
         [PaymentPerMonth] = @PaymentPerMonth
+    OUTPUT INSERTED.[id],
+           INSERTED.[Name],
+           INSERTED.[CourseId],
+           INSERTED.[GroupStatusId],
+           INSERTED.[StartDate],
+           INSERTED.[Timetable],
+           INSERTED.[PaymentPerMonth]
     WHERE Id = @Id
 END

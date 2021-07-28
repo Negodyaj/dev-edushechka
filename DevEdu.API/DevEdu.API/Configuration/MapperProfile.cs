@@ -29,6 +29,7 @@ namespace DevEdu.API.Configuration
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<GroupInputModel, GroupDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
+                .ForMember(dest => dest.Course, opt => opt.MapFrom(src => src.CourseId != null ? new CourseDto { Id = (int)src.CourseId } : null))
                 .ForMember(dest => dest.GroupStatus, opt => opt.MapFrom(src => src.GroupStatusId != null ? src.GroupStatusId : null));
             CreateMap<GroupTaskInputModel, GroupTaskDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
