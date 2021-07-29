@@ -147,7 +147,7 @@ namespace DevEdu.API.Controllers
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
             _studentAnswerOnTaskService.AddStudentAnswerOnTask(taskId, studentId, taskAnswerDto);
-            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId, new StudentAnswerOnTaskDto());
             var output = _mapper.Map<StudentAnswerOnTaskFullOutputModel>(studentAnswerDto);
 
             return output;
@@ -171,7 +171,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
         public StudentAnswerOnTaskFullOutputModel GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
-            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId, new StudentAnswerOnTaskDto());
             var output = _mapper.Map<StudentAnswerOnTaskFullOutputModel>(studentAnswerDto);
 
             return output;
@@ -206,7 +206,7 @@ namespace DevEdu.API.Controllers
         public StudentAnswerOnTaskFullOutputModel UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
             _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId);
-            var output = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            var output = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId, new StudentAnswerOnTaskDto());
 
             return _mapper.Map<StudentAnswerOnTaskFullOutputModel>(output);
         }

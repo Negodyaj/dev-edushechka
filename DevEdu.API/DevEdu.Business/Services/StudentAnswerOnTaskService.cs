@@ -45,19 +45,21 @@ namespace DevEdu.Business.Services
             return _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
         }
 
-        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId, StudentAnswerOnTaskDto ddd)
         {
-            StudentAnswerOnTaskDto studentAnswerDto =
-                new StudentAnswerOnTaskDto
-                {
-                    Task = new TaskDto { Id = taskId },
-                    User = new UserDto { Id = studentId },
-                    Comments = new List<CommentDto>()
-                };
+            //StudentAnswerOnTaskDto studentAnswerDto =
+            //    new StudentAnswerOnTaskDto
+            //    {
+            //        Task = new TaskDto { Id = taskId },
+            //        User = new UserDto { Id = studentId },
+            //        Comments = new List<CommentDto>()
+            //    };
+            ddd.Task = new TaskDto { Id = taskId };
+            ddd.User = new UserDto { Id = studentId };
+            ddd.Comments = new List<CommentDto>();
 
 
-
-            var answerDto = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(studentAnswerDto);
+            var answerDto = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(ddd);
             return answerDto;
         }
 

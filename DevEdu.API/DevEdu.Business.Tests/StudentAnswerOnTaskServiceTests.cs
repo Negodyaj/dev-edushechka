@@ -78,7 +78,7 @@ namespace DevEdu.Business.Tests
 
             // When
             //sut.GetAllStudentAnswersOnTask(dtoForTaskIdAndUserId.Task.Id);
-            var dto = sut.GetStudentAnswerOnTaskByTaskIdAndStudentId(dtoForTaskIdAndUserId.Task.Id, dtoForTaskIdAndUserId.User.Id);
+            var dto = sut.GetStudentAnswerOnTaskByTaskIdAndStudentId(dtoForTaskIdAndUserId.Task.Id, dtoForTaskIdAndUserId.User.Id, dtoForTaskIdAndUserId);
 
             // Then
             Assert.AreEqual(studentAnswerDto, dto);
