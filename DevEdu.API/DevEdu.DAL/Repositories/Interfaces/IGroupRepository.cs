@@ -1,28 +1,29 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
     public interface IGroupRepository
     {
-        int AddGroup(GroupDto groupDto);
-        void DeleteGroup(int id);
-        GroupDto GetGroup(int id);
-        List<GroupDto> GetGroups();
-        GroupDto UpdateGroup(GroupDto groupDto);
-        int AddUserToGroup(int groupId, int userId, int roleId);
-        int DeleteUserFromGroup(int userId, int groupId);
-        int AddGroupToLesson(int groupId, int lessonId);
-        void RemoveGroupFromLesson(int groupId, int lessonId);
-        GroupDto ChangeGroupStatus(int groupId, int statusId);
-        int AddGroupMaterialReference(int groupId, int materialId);
-        int RemoveGroupMaterialReference(int groupId, int materialId);
-        int AddTaskToGroup(GroupTaskDto groupTaskDto);
-        void DeleteTaskFromGroup(int groupId, int taskId);
-        List<GroupTaskDto> GetTaskGroupByGroupId(int groupId);
-        GroupTaskDto GetGroupTask(int groupId, int taskId);
-        void UpdateGroupTask(GroupTaskDto groupTaskDto);
-        public List<GroupDto> GetGroupsByMaterialId(int id);
-        int GetPresentGroupForStudentByUserId(int userId);
+        Task<int> AddGroup(GroupDto groupDto);
+        Task DeleteGroup(int id);
+        Task<GroupDto> GetGroup(int id);
+        Task<List<GroupDto>> GetGroups();
+        Task<GroupDto> UpdateGroup(GroupDto groupDto);
+        Task<int> AddUserToGroup(int groupId, int userId, int roleId);
+        Task<int> DeleteUserFromGroup(int userId, int groupId);
+        Task<int> AddGroupToLesson(int groupId, int lessonId);
+        Task RemoveGroupFromLesson(int groupId, int lessonId);
+        Task<GroupDto> ChangeGroupStatus(int groupId, int statusId);
+        Task<int> AddGroupMaterialReference(int groupId, int materialId);
+        Task<int> RemoveGroupMaterialReference(int groupId, int materialId);
+        Task<int> AddTaskToGroup(GroupTaskDto groupTaskDto);
+        Task DeleteTaskFromGroup(int groupId, int taskId);
+        Task<List<GroupTaskDto>> GetTaskGroupByGroupId(int groupId);
+        Task<GroupTaskDto> GetGroupTask(int groupId, int taskId);
+        Task UpdateGroupTask(GroupTaskDto groupTaskDto);
+        List<GroupDto> GetGroupsByMaterialId(int id);
+        Task<int> GetPresentGroupForStudentByUserId(int userId);
     }
 }

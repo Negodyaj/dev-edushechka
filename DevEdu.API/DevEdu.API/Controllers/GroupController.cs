@@ -14,6 +14,8 @@ using System.ComponentModel;
 using System.IdentityModel.Tokens.Jwt;
 //using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using static Dapper.SqlMapper;
 
 namespace DevEdu.API.Controllers
 {
@@ -41,10 +43,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public GroupOutputModel AddGroup([FromBody] GroupInputModel model)
-        {
+        public async Task<GroupOutputModel> AddGroup([FromBody] GroupInputModel model)
+{
             var dto = _mapper.Map<GroupDto>(model);
-            var result = _groupService.AddGroup(dto);
+            var result = await _groupService.AddGroup(dto);
             return _mapper.Map<GroupOutputModel>(result);
         }
 
@@ -56,11 +58,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public GroupFullOutputModel GetGroup(int id)
+        public async Task<GroupFullOutputModel> GetGroup(int id)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
             
-            var dto = _groupService.GetGroup(id, userId);
+            var dto = await _groupService.GetGroup(id, userId);
             return _mapper.Map<GroupFullOutputModel>(dto);
         }
 
@@ -72,9 +74,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public List<GroupOutputModel> GetAllGroups()
+        public async Task<List<GroupOutputModel>> GetAllGroups()
         {
-            var dto = _groupService.GetGroups();
+            var dto = await _groupService.GetGroups();
             return _mapper.Map<List<GroupOutputModel>>(dto);
         }
 
@@ -87,9 +89,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public void DeleteGroup(int id)
+        public async Task DeleteGroup(int id)
         {
-            _groupService.DeleteGroup(id);
+            await _groupService.DeleteGroup(id);
         }
 
         //  api/Group/{Id}
@@ -100,12 +102,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public GroupInfoOutputModel UpdateGroup(int id, [FromBody] GroupInputModel model)
+        public async Task<GroupInfoOutputModel> UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
             var dto = _mapper.Map<GroupDto>(model);
-            var output = _groupService.UpdateGroup(id, dto, userId);
+            var output = await _groupService.UpdateGroup(id, dto, userId);
             return _mapper.Map<GroupInfoOutputModel>(output);
         }
 
@@ -117,9 +119,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public GroupOutputBaseModel ChangeGroupStatus(int groupId, GroupStatus statusId)
+        public async Task<GroupOutputBaseModel> ChangeGroupStatus(int groupId, GroupStatus statusId)
         {
-            var output = _groupService.ChangeGroupStatus(groupId, statusId);
+            var output = await _groupService.ChangeGroupStatus(groupId, statusId);
             return _mapper.Map<GroupOutputBaseModel>(output);
         }
 
@@ -132,11 +134,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public string AddGroupToLesson(int groupId, int lessonId)
+        public async Task<string> AddGroupToLesson(int groupId, int lessonId)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
-            _groupService.AddGroupToLesson(groupId, lessonId, userId);
+            await _groupService.AddGroupToLesson(groupId, lessonId, userId);
             return $"Group {groupId} add  Lesson Id:{lessonId}";
         }
 
@@ -148,11 +150,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public string RemoveGroupFromLesson(int groupId, int lessonId)
+        public async Task<string> RemoveGroupFromLesson(int groupId, int lessonId)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
-            _groupService.RemoveGroupFromLesson(groupId, lessonId, userId);
+            await _groupService.RemoveGroupFromLesson(groupId, lessonId, userId);
             return $"Group {groupId} remove  Lesson Id:{lessonId}";
         }
 
@@ -164,11 +166,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public int AddGroupMaterialReference(int groupId, int materialId)
+        public async Task<int> AddGroupMaterialReference(int groupId, int materialId)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
-            return _groupService.AddGroupMaterialReference(groupId, materialId, userId);
+            return await _groupService.AddGroupMaterialReference(groupId, materialId, userId);
         }
 
         // api/Group/{groupId}/material/{materialId}
@@ -179,11 +181,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public int RemoveGroupMaterialReference(int groupId, int materialId)
+        public async Task<int> RemoveGroupMaterialReference(int groupId, int materialId)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
-            return _groupService.RemoveGroupMaterialReference(groupId, materialId, userId);
+            return await _groupService.RemoveGroupMaterialReference(groupId, materialId, userId);
         }
 
         //  api/group/1/user/2/role/1
@@ -194,11 +196,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public void AddUserToGroup(int groupId, int userId, Role roleId)
+        public async Task AddUserToGroup(int groupId, int userId, Role roleId)
         {
             var currentUserId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
-            _groupService.AddUserToGroup(groupId, userId, roleId, currentUserId);
+            await _groupService.AddUserToGroup(groupId, userId, roleId, currentUserId);
         }
 
         //  api/group/1/user/2
@@ -209,11 +211,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public void DeleteUserFromGroup(int userId, int groupId)
+        public async Task DeleteUserFromGroup(int userId, int groupId)
         {
             var currentUserId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
-            _groupService.DeleteUserFromGroup(userId, groupId, currentUserId);
+            await _groupService.DeleteUserFromGroup(userId, groupId, currentUserId);
         }
 
         //  api/group/1/task/1
@@ -224,11 +226,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public GroupTaskInfoFullOutputModel GetGroupTask(int groupId, int taskId)
+        public async Task<GroupTaskInfoFullOutputModel> GetGroupTask(int groupId, int taskId)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
-            var dto = _groupService.GetGroupTask(groupId, taskId, userId);
+            var dto = await _groupService.GetGroupTask(groupId, taskId, userId);
             var output = _mapper.Map<GroupTaskInfoFullOutputModel>(dto);
             return output;
         }
@@ -241,11 +243,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public List<GroupTaskInfoWithTaskOutputModel> GetTasksByGroupId(int groupId)
+        public async Task<List<GroupTaskInfoWithTaskOutputModel>> GetTasksByGroupId(int groupId)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
-            var dto = _groupService.GetTasksByGroupId(groupId, userId);
+            var dto = await _groupService.GetTasksByGroupId(groupId, userId);
             var output = _mapper.Map<List<GroupTaskInfoWithTaskOutputModel>>(dto);
             return output;
         }
@@ -258,12 +260,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public int AddTaskToGroup(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
+        public async Task<int> AddTaskToGroup(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
             var dto = _mapper.Map<GroupTaskDto>(model);
-            return _groupService.AddTaskToGroup(groupId, taskId, dto, userId);
+            return await _groupService.AddTaskToGroup(groupId, taskId, dto, userId);
         }
 
         //  api/group/1/task/1
@@ -274,11 +276,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public void DeleteTaskFromGroup(int groupId, int taskId)
+        public async Task DeleteTaskFromGroup(int groupId, int taskId)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
-            _groupService.DeleteTaskFromGroup(groupId, taskId, userId);
+            await _groupService.DeleteTaskFromGroup(groupId, taskId, userId);
         }
 
         //  api/comment/5
@@ -289,12 +291,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public GroupTaskInfoOutputModel UpdateGroupTask(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
+        public async Task<GroupTaskInfoOutputModel> UpdateGroupTask(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
 
             var dto = _mapper.Map<GroupTaskDto>(model);
-            var output = _groupService.UpdateGroupTask(groupId, taskId, dto, userId);
+            var output = await _groupService.UpdateGroupTask(groupId, taskId, dto, userId);
             return _mapper.Map<GroupTaskInfoOutputModel>(output);
         }
     }
