@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -13,6 +14,7 @@ namespace DevEdu.Business.Tests
         private Mock<IGroupRepository> _groupRepoMock;
         private Mock<IMaterialValidationHelper> _materialValidationHelperMock;
         private Mock<ITagValidationHelper> _tagValidationHelperMock;
+        private Mock<ITagRepository> _tagRepositoryMock;
 
         [SetUp]
         public void SetUp()
@@ -22,6 +24,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock = new Mock<IGroupRepository>();
             _materialValidationHelperMock = new Mock<IMaterialValidationHelper>();
             _tagValidationHelperMock = new Mock<ITagValidationHelper>();
+            _tagRepositoryMock = new Mock<ITagRepository>();
         }
 
         [Test]
@@ -197,17 +200,20 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTagToMaterial_WithMaterialIdAndTopicId_Added()
+        public void AddTagToMaterial_WithMaterialIdAndTagId_Added()
         {
             //Given
             var givenMaterialId = 5;
-            var givenTagId = 11;
+            var givenTagId = 2;
+            var tags = MaterialData.GetTags();
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
+            _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId });
+            _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
             var sut = new MaterialService(_materialRepoMock.Object,
                                           _courseRepoMock.Object,
                                           _groupRepoMock.Object,
-                                          _materialValidationHelperMock.Object,
-                                          _tagValidationHelperMock.Object);
+                                          new MaterialValidationHelper(_materialRepoMock.Object),
+                                          new TagValidationHelper(_tagRepositoryMock.Object));
             //When
             sut.AddTagToMaterial(givenMaterialId, givenTagId);
             //Then
@@ -215,17 +221,20 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteTagFromMaterial_WithMaterialIdAndTopicId_Deleted()
+        public void DeleteTagFromMaterial_WithMaterialIdAndTagId_Deleted()
         {
             //Given
             var givenMaterialId = 5;
-            var givenTagId = 11;
+            var givenTagId = 2;
+            _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
+            _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId });
+            _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
             _materialRepoMock.Setup(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId));
             var sut = new MaterialService(_materialRepoMock.Object,
                                           _courseRepoMock.Object,
                                           _groupRepoMock.Object,
-                                          _materialValidationHelperMock.Object,
-                                          _tagValidationHelperMock.Object);
+                                          new MaterialValidationHelper(_materialRepoMock.Object),
+                                          new TagValidationHelper(_tagRepositoryMock.Object));
             //When
             sut.DeleteTagFromMaterial(givenMaterialId, givenTagId);
             //Then

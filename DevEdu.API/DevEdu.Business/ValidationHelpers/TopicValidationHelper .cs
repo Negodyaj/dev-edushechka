@@ -30,7 +30,6 @@ namespace DevEdu.Business.ValidationHelpers
             {
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             }
-
         }
     }
 }
