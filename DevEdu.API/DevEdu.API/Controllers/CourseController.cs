@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CourseController : Controller
@@ -152,7 +152,7 @@ namespace DevEdu.API.Controllers
 
         // api/course/{courseId}/topic/{topicId}
         [HttpDelete("{courseId}/topic/{topicId}")]
-        //[AuthorizeRoles(Role.Manager, Role.Methodist)]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("Delete topic from course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public string DeleteTopicFromCourse(int courseId, int topicId)
