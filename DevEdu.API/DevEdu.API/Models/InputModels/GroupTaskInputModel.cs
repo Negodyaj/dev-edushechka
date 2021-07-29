@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using DevEdu.API.Common;
+﻿using DevEdu.API.Common;
+using System.ComponentModel.DataAnnotations;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels

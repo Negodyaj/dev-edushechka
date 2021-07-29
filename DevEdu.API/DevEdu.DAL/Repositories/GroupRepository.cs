@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Dapper;
+﻿using Dapper;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -53,7 +53,7 @@ namespace DevEdu.DAL.Repositories
             _connection.Execute
             (
                 _groupDeleteProcedure,
-                new { Id = id},
+                new { Id = id },
                 commandType: CommandType.StoredProcedure
             );
         }
@@ -100,7 +100,7 @@ namespace DevEdu.DAL.Repositories
 
         public GroupDto UpdateGroup(GroupDto groupDto)
         {
-            
+
             return _connection.QuerySingle<GroupDto>
             (
                 _groupUpdateByIdProcedure,
@@ -147,15 +147,15 @@ namespace DevEdu.DAL.Repositories
 
         public void RemoveGroupFromLesson(int groupId, int lessonId)
         {
-           _connection.Execute(
-                _deleteGroupLesson,
-                new
-                {
-                    groupId,
-                    lessonId
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            _connection.Execute(
+                 _deleteGroupLesson,
+                 new
+                 {
+                     groupId,
+                     lessonId
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
         public int AddGroupMaterialReference(int groupId, int materialId)
@@ -315,5 +315,5 @@ namespace DevEdu.DAL.Repositories
                    commandType: CommandType.StoredProcedure
               );
         }
-    }    
+    }
 }

@@ -1,6 +1,5 @@
 ﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 using System;
 using System.Collections.Generic;
 
@@ -148,7 +147,7 @@ namespace DevEdu.Business.Tests
                     Teachers = null,
                     Tutors = null,
                     IsDeleted = false
-                }                
+                }
             };
         }
 
@@ -175,7 +174,7 @@ namespace DevEdu.Business.Tests
                     PhoneNumber = null,
                     Roles = null,
                     IsDeleted = false
-                }                
+                }
             };
         }
     }

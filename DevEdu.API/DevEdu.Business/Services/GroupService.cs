@@ -3,7 +3,6 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -46,20 +45,21 @@ namespace DevEdu.Business.Services
             _groupRepository.DeleteGroup(id);
         }
 
-        public GroupDto GetGroup(int id)
+        public GroupDto GetGroup(int id, int userId)
         {
             _groupHelper.CheckGroupExistence(id);
+            _groupHelper.CheckGroupExistence(userId);
 
             var dto = _groupRepository.GetGroup(id);
-            if(dto != null)
+            if (dto != null)
             {
-                dto.Students = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Student);           
-                dto.Tutors = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Tutor);            
+                dto.Students = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Student);
+                dto.Tutors = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Tutor);
                 dto.Teachers = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Teacher);
             }
             return dto;
         }
-        
+
         public List<GroupDto> GetGroups() => _groupRepository.GetGroups();
 
         public int AddGroupLesson(int groupId, int lessonId)
@@ -129,7 +129,7 @@ namespace DevEdu.Business.Services
         {
             _groupHelper.CheckGroupExistence(groupId);
             _userHelper.CheckUserExistence(userId);
-            
+
 
             _groupRepository.AddUserToGroup(groupId, userId, (int)roleId);
         }

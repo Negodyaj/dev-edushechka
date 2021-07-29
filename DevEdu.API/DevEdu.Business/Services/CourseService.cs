@@ -2,7 +2,6 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +14,7 @@ namespace DevEdu.Business.Services
         private readonly ITopicRepository _topicRepository;
         private readonly ITaskRepository _taskRepository;
         private readonly IMaterialRepository _materialRepository;
-        
+
         public CourseService(ITopicRepository topicRepository,
                              ICourseRepository courseRepository,
                              ITaskRepository taskRepository,
@@ -32,7 +31,7 @@ namespace DevEdu.Business.Services
         public void DeleteCourse(int id) => _courseRepository.GetCourse(id);
 
         public CourseDto GetCourse(int id) => _courseRepository.GetCourse(id);
-        public CourseDto GetFullCourseInfo(int id) 
+        public CourseDto GetFullCourseInfo(int id)
         {
             var course = GetCourse(id);
             course.Tasks = _taskRepository.GetTaskByCourseId(course.Id);
@@ -54,7 +53,7 @@ namespace DevEdu.Business.Services
             _courseRepository.UpdateCourse(courseDto);
         }
 
-        public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
+        public void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto)
         {
             dto.Course = new CourseDto() { Id = courseId };
             dto.Topic = new TopicDto { Id = topicId };

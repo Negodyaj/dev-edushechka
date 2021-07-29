@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using DevEdu.DAL.Enums;
+﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
 {
@@ -8,7 +8,7 @@ namespace DevEdu.Business.Services
     {
         int AddGroup(GroupDto groupDto);
         void DeleteGroup(int id);
-        GroupDto GetGroup(int id);
+        GroupDto GetGroup(int id, int userId);
         List<GroupDto> GetGroups();
         GroupDto UpdateGroup(int id, GroupDto groupDto);
         GroupDto ChangeGroupStatus(int groupId, GroupStatus statusId);

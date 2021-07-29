@@ -19,5 +19,10 @@ namespace DevEdu.Business.ValidationHelpers
             if (group == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), groupId));
         }
+
+        public void CheckAuthorizationException(int userId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

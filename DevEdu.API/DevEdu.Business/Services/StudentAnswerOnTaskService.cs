@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
-using DevEdu.DAL.Enums;
+﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
 {
-    public class StudentAnswerOnTaskService: IStudentAnswerOnTaskService
+    public class StudentAnswerOnTaskService : IStudentAnswerOnTaskService
     {
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
         private readonly IGroupRepository _groupRepository;
 
         public StudentAnswerOnTaskService(
-            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, 
+            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository,
             IGroupRepository groupRepository)
         {
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
@@ -58,7 +58,7 @@ namespace DevEdu.Business.Services
             return _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(dto);
         }
 
-        public void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId) 
+        public void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId)
         {
             StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
             dto.Task = new TaskDto { Id = taskId };

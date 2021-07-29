@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Dapper;
+﻿using Dapper;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -66,9 +66,9 @@ namespace DevEdu.DAL.Repositories
         {
 
             return _connection
-                .Query<NotificationDto, UserDto,  NotificationDto>(
+                .Query<NotificationDto, UserDto, NotificationDto>(
                     _notificationSelectAllByUserIdProcedure,
-                    (notification, user ) =>
+                    (notification, user) =>
                     {
                         NotificationDto result;
                         {

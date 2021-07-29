@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using AutoMapper;
+﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels.Payment;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
@@ -51,13 +51,13 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<PaymentDto>(model);
             int id = _paymentService.AddPayment(dto);
             dto = _paymentService.GetPayment(id);
-            
+
             return _mapper.Map<PaymentOutputModel>(dto);
         }
 
         //  api/payment/5
         [HttpDelete("{id}")]
-        [ProducesResponseType (StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [Description("Delete payment by id")]
         public void DeletePayment(int id)
         {
@@ -85,6 +85,6 @@ namespace DevEdu.API.Controllers
             var listId = _paymentService.AddPayments(dto);
             dto = _paymentService.SelectPaymentsBySeveralId(listId);
             return _mapper.Map<List<PaymentOutputModel>>(dto);
-         }
+        }
     }
 }

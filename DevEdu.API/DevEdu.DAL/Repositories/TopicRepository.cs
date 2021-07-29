@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Dapper;
+using DevEdu.DAL.Models;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Dapper;
-using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -65,18 +65,18 @@ namespace DevEdu.DAL.Repositories
               .AsList();
         }
 
-        public int UpdateTopic(TopicDto topicDto)       
+        public int UpdateTopic(TopicDto topicDto)
         {
-           return _connection.Execute(
-                _topicUpdateProcedure,
-                new
-                {
-                    topicDto.Id,
-                    topicDto.Name,
-                    topicDto.Duration
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            return _connection.Execute(
+                 _topicUpdateProcedure,
+                 new
+                 {
+                     topicDto.Id,
+                     topicDto.Name,
+                     topicDto.Duration
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
         }
         public int AddTopicToCourse(CourseTopicDto dto)
         {

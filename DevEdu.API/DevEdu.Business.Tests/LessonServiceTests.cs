@@ -1,6 +1,5 @@
 ﻿using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
-using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -34,10 +33,10 @@ namespace DevEdu.Business.Tests
             var topicId = 7;
             _lessonRepository.Setup(x => x.AddTopicToLesson(lessonId, topicId));
 
-            var sut = new LessonService(_lessonRepository.Object, 
-                _commentRepository.Object, 
-                _userRepository.Object, 
-                _userValidationHelper.Object, 
+            var sut = new LessonService(_lessonRepository.Object,
+                _commentRepository.Object,
+                _userRepository.Object,
+                _userValidationHelper.Object,
                 _lessonValidationHelper.Object);
 
             //When
@@ -73,7 +72,7 @@ namespace DevEdu.Business.Tests
             //Given
             var expectedId = LessonData.LessonId;
             var lessonDto = LessonData.GetAddedLessonDto();
-            var topicIds = new List<int>(){ 6, 7};
+            var topicIds = new List<int>() { 6, 7 };
 
             _lessonRepository.Setup(x => x.AddLesson(lessonDto)).Returns(expectedId);
             foreach (int topicId in topicIds)
@@ -149,7 +148,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(expected);
 
             var sut = new LessonService(_lessonRepository.Object, _commentRepository.Object, _userRepository.Object,
-                _userValidationHelper.Object, _lessonValidationHelper.Object); 
+                _userValidationHelper.Object, _lessonValidationHelper.Object);
 
             //When
             var actual = sut.SelectLessonById(lessonId);

@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using DevEdu.DAL.Enums;
-using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Models;
+using System.Collections.Generic;
 
 namespace DevEdu.DAL.Repositories
 {

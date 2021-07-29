@@ -1,8 +1,8 @@
-﻿using System;
-using DevEdu.DAL.Enums;
+﻿using DevEdu.DAL.Enums;
+using System;
 
 namespace DevEdu.DAL.Models
-    
+
 {
     public class NotificationDto : BaseDto
     {
@@ -11,7 +11,7 @@ namespace DevEdu.DAL.Models
         public Role? Role { get; set; }
         public UserDto User { get; set; }
         public GroupDto Group { get; set; }
-       
-       
+
+
     }
 }

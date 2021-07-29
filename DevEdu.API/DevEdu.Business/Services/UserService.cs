@@ -1,7 +1,7 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Services
 {
@@ -22,10 +22,10 @@ namespace DevEdu.Business.Services
             var addedUserId = _userRepository.AddUser(dto);
 
             foreach (var role in dto.Roles)
-                {
-                    AddUserRole(addedUserId, (int)role);
-                }
-            
+            {
+                AddUserRole(addedUserId, (int)role);
+            }
+
             return addedUserId;
         }
 

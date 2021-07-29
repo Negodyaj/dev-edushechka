@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Dapper;
+﻿using Dapper;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -51,7 +51,7 @@ namespace DevEdu.DAL.Repositories
         }
         public List<TaskDto> GetTaskByCourseId(int courseId)
         {
-           var taskList = new List<TaskDto>();
+            var taskList = new List<TaskDto>();
             return _connection.Query<TaskDto>(
                     _taskSelectByCourseIdProcedure,
                     new { courseId },

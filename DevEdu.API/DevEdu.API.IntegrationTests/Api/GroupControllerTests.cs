@@ -296,7 +296,7 @@ namespace DevEdu.API.IntegrationTests
         {
             // Arrange
             var request = new
-            { 
+            {
                 Url = $"api/Group/{groupId}/task/{taskId}",
                 Body = new
                 {

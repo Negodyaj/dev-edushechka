@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using DevEdu.DAL.Enums;
+﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {

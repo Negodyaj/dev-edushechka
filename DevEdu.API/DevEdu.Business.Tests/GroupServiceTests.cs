@@ -1,6 +1,5 @@
 ﻿using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
-using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -57,6 +56,7 @@ namespace DevEdu.Business.Tests
             var roleStudent = GroupData.RoleStudent;
             var groupDto = GroupData.GetGroupDto();
             var studentDtos = GroupData.GetUserForGroup();
+            var userId = GroupData.UserId;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
@@ -66,7 +66,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, userRepository: _userRepoMock.Object);
 
             //When
-            var actualGroupDto = sut.GetGroup(groupId);
+            var actualGroupDto = sut.GetGroup(groupId, userId);
 
             //Then
             Assert.AreEqual(groupDto, actualGroupDto);

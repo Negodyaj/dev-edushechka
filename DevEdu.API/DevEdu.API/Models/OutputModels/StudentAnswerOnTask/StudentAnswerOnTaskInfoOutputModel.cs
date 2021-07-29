@@ -1,7 +1,4 @@
-﻿using DevEdu.DAL.Enums;
-using System;
-
-namespace DevEdu.API.Models.OutputModels
+﻿namespace DevEdu.API.Models.OutputModels
 {
     public class StudentAnswerOnTaskInfoOutputModel
     {
