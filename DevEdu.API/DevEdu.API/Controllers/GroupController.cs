@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevEdu.API.Common;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
@@ -27,6 +28,7 @@ namespace DevEdu.API.Controllers
         //  api/Group/5
         [HttpGet("{id}")]
         [Description("Return Group by id")]
+        [AuthorizeRoles()]
         [ProducesResponseType(typeof(GroupFullOutputModel), StatusCodes.Status200OK)]  // todo
         public GroupFullOutputModel GetGroup(int id)
         {
@@ -37,6 +39,7 @@ namespace DevEdu.API.Controllers
         //  api/Group/
         [HttpGet]
         [Description("Get all Groups")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
         public List<GroupOutputModel> GetAllGroups()
         {
@@ -47,6 +50,7 @@ namespace DevEdu.API.Controllers
         //  api/Group
         [HttpPost]
         [Description("Add new Group")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status201Created)]
         public GroupOutputModel AddGroup([FromBody] GroupInputModel model)
         {
@@ -58,6 +62,7 @@ namespace DevEdu.API.Controllers
         //  api/Group
         [HttpDelete("{id}")]
         [Description("Delete Group by Id")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteGroup(int id)
         {
@@ -67,6 +72,7 @@ namespace DevEdu.API.Controllers
         //  api/Group/{Id}
         [HttpPut("{id}")]
         [Description("Update Group by id")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public GroupInfoOutputModel UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
@@ -78,6 +84,7 @@ namespace DevEdu.API.Controllers
         //  api/Group/{groupId}/change-status/{statusId}
         [HttpPut("{groupId}/change-status/{statusId}")]
         [Description("Change group status by id")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public GroupOutputBaseModel ChangeGroupStatus(int groupId, GroupStatus statusId)
         {
@@ -89,6 +96,7 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpPost("{groupId}/lesson/{lessonId}")]
         [Description("Add group lesson reference")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public string AddGroupToLesson(int groupId, int lessonId)
         {
@@ -99,6 +107,7 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
         [Description("Delete lesson from groupId")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public string RemoveGroupFromLesson(int groupId, int lessonId)
         {
@@ -109,6 +118,7 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/material/{materialId}
         [HttpPost("{groupId}/material/{materialId}")]
         [Description("Add material to group")]
+        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public int AddGroupMaterialReference(int groupId, int materialId)
         {
@@ -118,6 +128,7 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/material/{materialId}
         [HttpDelete("{groupId}/material/{materialId}")]
         [Description("Remove material from group")]
+        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public int RemoveGroupMaterialReference(int groupId, int materialId)
         {
@@ -127,18 +138,21 @@ namespace DevEdu.API.Controllers
         //  api/group/1/user/2/role/1
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
         [Description("Add user to group")]
+        [AuthorizeRoles(Role.Manager, Role.Teacher)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void AddUserToGroup(int groupId, int userId, Role roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
 
         //  api/group/1/user/2
         [HttpDelete("{groupId}/user/{userId}")]
         [Description("Delete user from group")]
+        [AuthorizeRoles(Role.Manager, Role.Teacher)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
 
         //  api/group/1/task/1
         [HttpGet("{groupId}/task/{taskId}")]
         [Description("Return task group by both id")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [ProducesResponseType(typeof(GroupTaskInfoFullOutputModel), StatusCodes.Status200OK)]
         public GroupTaskInfoFullOutputModel GetGroupTask(int groupId, int taskId)
         {
@@ -150,6 +164,7 @@ namespace DevEdu.API.Controllers
         //  api/group/1/task/
         [HttpGet("{groupId}/tasks")]
         [Description("Get all tasks by group")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [ProducesResponseType(typeof(List<GroupTaskInfoWithTaskOutputModel>), StatusCodes.Status200OK)]
         public List<GroupTaskInfoWithTaskOutputModel> GetTasksByGroupId(int groupId)
         {
@@ -161,6 +176,7 @@ namespace DevEdu.API.Controllers
         //  api/group/1/task/1
         [HttpPost("{groupId}/task/{taskId}")]
         [Description("Add task to group")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         public int AddTaskToGroup(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
@@ -171,6 +187,7 @@ namespace DevEdu.API.Controllers
         //  api/group/1/task/1
         [HttpDelete("{groupId}/task/{taskId}")]
         [Description("Delete task from group")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTaskFromGroup(int groupId, int taskId)
         {
@@ -180,6 +197,7 @@ namespace DevEdu.API.Controllers
         //  api/comment/5
         [HttpPut("{groupId}/task/{taskId}")]
         [Description("Update task by group")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public GroupTaskInfoOutputModel UpdateGroupTask(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
