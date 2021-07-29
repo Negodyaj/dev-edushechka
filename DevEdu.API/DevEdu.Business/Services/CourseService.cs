@@ -134,13 +134,11 @@ namespace DevEdu.Business.Services
                 _courseRepository.UpdateCourseTopicsByCourseId(topics);
             }
         }
-
         public void DeleteAllTopicsByCourseId(int courseId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
             _courseRepository.DeleteAllTopicsByCourseId(courseId);
         }
-
         private void CheckUniquenessPositions(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
