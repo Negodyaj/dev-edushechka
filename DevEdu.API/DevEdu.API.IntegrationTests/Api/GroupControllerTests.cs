@@ -46,7 +46,7 @@ namespace DevEdu.API.IntegrationTests
             {
                 Name = "Котейкин дом",
                 CourseId = 1,
-                GroupStatusId = DAL.Enums.GroupStatus.Formed,
+                GroupStatusId = DAL.Enums.GroupStatus.Forming,
                 PaymentPerMonth = 3500.0M,
                 StartDate = "21.03.2000",
                 Timetable = "День"
@@ -97,7 +97,7 @@ namespace DevEdu.API.IntegrationTests
             {
                 Name = "Котейкин дом",
                 CourseId = 1,
-                GroupStatusId = DAL.Enums.GroupStatus.Formed,
+                GroupStatusId = DAL.Enums.GroupStatus.Forming,
                 PaymentPerMonth = 3500.0M,
                 StartDate = "21.03.2000",
                 Timetable = "День"
