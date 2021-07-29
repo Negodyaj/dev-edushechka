@@ -86,12 +86,5 @@ namespace DevEdu.Business.Tests
                 new GroupDto {Id = 2},
                 new GroupDto {Id = 3}
             };
-        public static List<TagDto> GetTags() =>
-        new List<TagDto>
-        {
-            new TagDto {Id = 1},
-            new TagDto {Id = 2},
-            new TagDto {Id = 3}
-        };
     }
 }

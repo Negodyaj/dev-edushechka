@@ -206,7 +206,6 @@ namespace DevEdu.Business.Tests
             //Given
             var givenMaterialId = 5;
             var givenTagId = 2;
-            var tags = MaterialData.GetTags();
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
             _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId });
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
