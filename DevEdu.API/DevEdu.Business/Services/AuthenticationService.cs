@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace DevEdu.Business.Services
 {
-    public class AuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         public byte[] GetSalt()
         {
@@ -26,7 +26,7 @@ namespace DevEdu.Business.Services
             string hashedPassword = Convert.ToBase64String(hashBytes);
             return hashedPassword;
         }
-                                                                                    
+
         public bool Verify(string hashedPassword, string userPassword)
         {
             byte[] hashBytes = Convert.FromBase64String(hashedPassword);
