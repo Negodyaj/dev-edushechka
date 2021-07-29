@@ -9,6 +9,9 @@ using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using DevEdu.API.Common;
+using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Controllers
 {
@@ -124,16 +127,24 @@ namespace DevEdu.API.Controllers
         // api/task/{taskId}/tag/{tagId}
         [HttpPost("{taskId}/tag/{tagId}")]
         [Description("Add tag to task")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void AddTagToTask(int taskId, int tagId)
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public int AddTagToTask(int taskId, int tagId)
         {
-            _taskService.AddTagToTask(taskId, tagId);
+            return _taskService.AddTagToTask(taskId, tagId);
         }
 
         // api/task/{taskId}/tag/{tagId}
         [HttpDelete("{taskId}/tag/{tagId}")]
         [Description("Delete tag from task")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteTagFromTask(int taskId, int tagId)
         {
             _taskService.DeleteTagFromTask(taskId, tagId);

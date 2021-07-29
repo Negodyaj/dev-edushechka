@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 
@@ -9,12 +10,23 @@ namespace DevEdu.Business.Services
         private readonly ITaskRepository _taskRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
+        private readonly ITaskValidationHelper _taskHelper;
+        private readonly ITagValidationHelper _tagHelper;
 
-        public TaskService(ITaskRepository taskRepository, ICourseRepository courseRepository, IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
+        public TaskService
+        (
+            ITaskRepository taskRepository,
+            ICourseRepository courseRepository,
+            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository,
+            ITaskValidationHelper taskHelper,
+            ITagValidationHelper tagHelper
+        )
         {
             _taskRepository = taskRepository;
             _courseRepository = courseRepository;
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
+            _taskHelper = taskHelper;
+            _tagHelper = tagHelper;
         }
 
         public TaskDto GetTaskById(int id) => _taskRepository.GetTaskById(id);
@@ -61,9 +73,22 @@ namespace DevEdu.Business.Services
 
         public void DeleteTask(int id) => _taskRepository.DeleteTask(id);
 
-        public int AddTagToTask(int taskId, int tagId) => _taskRepository.AddTagToTask(taskId, tagId);
+        public int AddTagToTask(int taskId, int tagId)
+        {
+            _taskHelper.CheckTaskExistence(taskId);
+            _tagHelper.CheckTagExistence(tagId);
 
-        public void DeleteTagFromTask(int taskId, int tagId) => _taskRepository.DeleteTagFromTask(taskId, tagId);
+            return _taskRepository.AddTagToTask(taskId, tagId);
+        }
+
+        public void DeleteTagFromTask(int taskId, int tagId)
+        {
+            _taskHelper.CheckTaskExistence(taskId);
+            _tagHelper.CheckTagExistence(tagId);
+
+            _taskRepository.DeleteTagFromTask(taskId, tagId);
+        }
+
         public List<GroupTaskDto> GetGroupsByTaskId(int taskId) => _taskRepository.GetGroupsByTaskId(taskId);
     }
 }
