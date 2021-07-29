@@ -1,5 +1,6 @@
 ﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 using System;
 using System.Collections.Generic;
 
@@ -9,8 +10,12 @@ namespace DevEdu.Business.Tests
     {
         public const int ExpectedAffectedRows = 1;
         public const int GroupId = 1;
+        public const int LessonId = 1;
+        public const int TaskId = 1;
+        public const int UserId = 1;
         public const int MaterialId = 1;
-        public const int RoleStudent = (int)Role.Student;
+        public const Role RoleStudent = Role.Student;
+        public static string Answer = $"Group {GroupId} remove  Lesson Id:{LessonId}";
         public const GroupStatus StatusGroup = GroupStatus.Forming;
 
         public static GroupDto GetGroupDto()

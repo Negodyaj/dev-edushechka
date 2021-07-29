@@ -11,11 +11,11 @@ namespace DevEdu.DAL.Repositories
         GroupDto GetGroup(int id);
         List<GroupDto> GetGroups();
         GroupDto UpdateGroup(GroupDto groupDto);
-        int AddUserToGroup(int groupId, int userId, Role roleId);
+        int AddUserToGroup(int groupId, int userId, int roleId);
         int DeleteUserFromGroup(int userId, int groupId);
         int AddGroupToLesson(int groupId, int lessonId);
-        int RemoveGroupFromLesson(int groupId, int lessonId);
-        GroupDto ChangeGroupStatus(int groupId, GroupStatus statusId);
+        void RemoveGroupFromLesson(int groupId, int lessonId);
+        GroupDto ChangeGroupStatus(int groupId, int statusId);
         int AddGroupMaterialReference(int groupId, int materialId);
         int RemoveGroupMaterialReference(int groupId, int materialId);
         int AddTaskToGroup(GroupTaskDto groupTaskDto);

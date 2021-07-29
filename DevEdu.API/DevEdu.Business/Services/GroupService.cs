@@ -70,12 +70,12 @@ namespace DevEdu.Business.Services
             return _groupRepository.AddGroupToLesson(groupId, lessonId);
         }
 
-        public int RemoveGroupLesson(int groupId, int lessonId)
+        public void RemoveGroupLesson(int groupId, int lessonId)
         {
             _groupHelper.CheckGroupExistence(groupId);
             _lessonHelper.CheckLessonExistence(lessonId);
 
-            return _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
+            _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
         }
 
         public GroupDto UpdateGroup(int id, GroupDto groupDto)
@@ -90,7 +90,7 @@ namespace DevEdu.Business.Services
         {
             _groupHelper.CheckGroupExistence(groupId);
 
-            return _groupRepository.ChangeGroupStatus(groupId, statusId);
+            return _groupRepository.ChangeGroupStatus(groupId, (int)statusId);
         }
 
         public int AddGroupMaterialReference(int groupId, int materialId)
@@ -117,20 +117,21 @@ namespace DevEdu.Business.Services
             return _groupRepository.AddGroupToLesson(groupId, lessonId);
         }
 
-        public int RemoveGroupFromLesson(int groupId, int lessonId)
+        public void RemoveGroupFromLesson(int groupId, int lessonId)
         {
             _groupHelper.CheckGroupExistence(groupId);
             _lessonHelper.CheckLessonExistence(lessonId);
 
-            return _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
+            _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
         }
 
         public void AddUserToGroup(int groupId, int userId, Role roleId)
         {
             _groupHelper.CheckGroupExistence(groupId);
             _userHelper.CheckUserExistence(userId);
+            
 
-            _groupRepository.AddUserToGroup(groupId, userId, roleId);
+            _groupRepository.AddUserToGroup(groupId, userId, (int)roleId);
         }
 
         public void DeleteUserFromGroup(int groupId, int userId)

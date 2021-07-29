@@ -13,7 +13,7 @@ namespace DevEdu.Business.Services
         GroupDto UpdateGroup(int id, GroupDto groupDto);
         GroupDto ChangeGroupStatus(int groupId, GroupStatus statusId);
         int AddGroupToLesson(int groupId, int lessonId);
-        int RemoveGroupFromLesson(int groupId, int lessonId);
+        void RemoveGroupFromLesson(int groupId, int lessonId);
         int AddGroupMaterialReference(int groupId, int materialId);
         int RemoveGroupMaterialReference(int groupId, int materialId);
         void AddUserToGroup(int groupId, int userId, Role roleId);

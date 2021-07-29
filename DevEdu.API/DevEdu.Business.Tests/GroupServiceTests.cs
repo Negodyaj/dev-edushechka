@@ -60,7 +60,7 @@ namespace DevEdu.Business.Tests
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, roleStudent)).Returns(studentDtos);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)roleStudent)).Returns(studentDtos);
             groupDto.Students = studentDtos;
 
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, userRepository: _userRepoMock.Object);
@@ -72,7 +72,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(groupDto, actualGroupDto);
             _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, roleStudent), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)roleStudent), Times.Once);
         }
 
         [Test]
@@ -91,6 +91,25 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(groupDtos, actualGroupDtos);
             _groupRepoMock.Verify(x => x.GetGroups(), Times.Once);
+        }
+
+        [Test]
+        public void DeleteGroup_ById_ReturnVoid()
+        {
+            //Given
+            var groupId = GroupData.GroupId;
+
+            _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
+            _groupRepoMock.Setup(x => x.DeleteGroup(groupId));
+
+            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object);
+
+            //When
+            sut.DeleteGroup(groupId);
+
+            //Then
+            _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
+            _groupRepoMock.Verify(x => x.DeleteGroup(groupId), Times.Once);
         }
 
         [Test]
@@ -125,7 +144,7 @@ namespace DevEdu.Business.Tests
             var groupDto = GroupData.GetGroupDto();
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
-            _groupRepoMock.Setup(x => x.ChangeGroupStatus(groupId, groupStatus)).Returns(groupDto);
+            _groupRepoMock.Setup(x => x.ChangeGroupStatus(groupId, (int)groupStatus)).Returns(groupDto);
 
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object);
 
@@ -135,8 +154,53 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(groupDto, actualGroupDto);
             _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
-            _groupRepoMock.Verify(x => x.ChangeGroupStatus(groupId, groupStatus), Times.Once);
+            _groupRepoMock.Verify(x => x.ChangeGroupStatus(groupId, (int)groupStatus), Times.Once);
         }
+
+        [Test]
+        public void AddGroupToLesson_ByGroupIdAndLessonId_ReturnString()
+        {
+            //Given
+            var groupId = GroupData.GroupId;
+            var lessonId = GroupData.LessonId;
+
+            _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
+            _lessonHelper.Setup(x => x.CheckLessonExistence(lessonId));
+            _groupRepoMock.Setup(x => x.AddGroupToLesson(groupId, lessonId));
+
+            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, lessonHelper: _lessonHelper.Object);
+
+            //When
+            sut.AddGroupToLesson(groupId, lessonId);
+
+            //Then
+            _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
+            _lessonHelper.Verify(x => x.CheckLessonExistence(lessonId), Times.Once);
+            _groupRepoMock.Verify(x => x.AddGroupToLesson(groupId, lessonId), Times.Once);
+        }
+
+        [Test]
+        public void RemoveGroupFromLesson_ByGroupIdAndLessonId_ReturnVoid()
+        {
+            //Given
+            var groupId = GroupData.GroupId;
+            var lessonId = GroupData.LessonId;
+
+            _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
+            _lessonHelper.Setup(x => x.CheckLessonExistence(lessonId));
+            _groupRepoMock.Setup(x => x.RemoveGroupFromLesson(groupId, lessonId));
+
+            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, lessonHelper: _lessonHelper.Object);
+
+            //When
+            sut.RemoveGroupFromLesson(groupId, lessonId);
+
+            //Then
+            _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
+            _lessonHelper.Verify(x => x.CheckLessonExistence(lessonId), Times.Once);
+            _groupRepoMock.Verify(x => x.RemoveGroupFromLesson(groupId, lessonId), Times.Once);
+        }
+
 
         [Test]
         public void AddMaterialToGroup_IntGroupIdAndMaterialId_AddMaterialToGroup()
@@ -184,6 +248,52 @@ namespace DevEdu.Business.Tests
             _materialHelper.Verify(x => x.CheckMaterialExistence(materialId), Times.Once);
             _groupRepoMock.Verify(x => x.RemoveGroupMaterialReference(groupId, materialId), Times.Once);
         }
+
+        [Test]
+        public void AddUserToGroup_ByGroupIdAndLessonIdAndRole_ReturnVoid()
+        {
+            //Given
+            var groupId = GroupData.GroupId;
+            var userId = GroupData.UserId;
+            var role = GroupData.RoleStudent;
+
+            _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
+            _userHelper.Setup(x => x.CheckUserExistence(userId));
+            _groupRepoMock.Setup(x => x.AddUserToGroup(groupId, userId, (int)role));
+
+            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, userHelper: _userHelper.Object);
+
+            //When
+            sut.AddUserToGroup(groupId, userId, role);
+
+            //Then
+            _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
+            _userHelper.Verify(x => x.CheckUserExistence(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.AddUserToGroup(groupId, userId, (int)role), Times.Once);
+        }
+
+        [Test]
+        public void DeleteUserFromGroup_ByGroupIdAndUserId_ReturnVoid()
+        {
+            //Given
+            var groupId = GroupData.GroupId;
+            var userId = GroupData.UserId;
+
+            _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
+            _userHelper.Setup(x => x.CheckUserExistence(userId));
+            _groupRepoMock.Setup(x => x.DeleteUserFromGroup(groupId, userId));
+
+            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, userHelper: _userHelper.Object);
+
+            //When
+            sut.DeleteUserFromGroup(groupId, userId);
+
+            //Then
+            _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
+            _userHelper.Verify(x => x.CheckUserExistence(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.RemoveGroupFromLesson(groupId, userId), Times.Never);
+        }
+
 
         [Test]
         public void AddTaskToGroup_GroupTaskDto_GroupTaskCreated()

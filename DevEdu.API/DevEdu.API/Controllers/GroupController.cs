@@ -26,6 +26,21 @@ namespace DevEdu.API.Controllers
             _groupService = service;
         }
 
+        //  api/Group
+        [HttpPost]
+        [Description("Add new Group")]
+        [AuthorizeRoles(Role.Manager)]
+        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public GroupOutputModel AddGroup([FromBody] GroupInputModel model)
+        {
+            var dto = _mapper.Map<GroupDto>(model);
+            var result = _groupService.AddGroup(dto);
+            return _mapper.Map<GroupOutputModel>(result);
+        }
+
         //  api/Group/5
         [HttpGet("{id}")]
         [Description("Return Group by id")]
@@ -54,20 +69,6 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<GroupOutputModel>>(dto);
         }
 
-        //  api/Group
-        [HttpPost]
-        [Description("Add new Group")]
-        [AuthorizeRoles(Role.Manager)]
-        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public GroupOutputModel AddGroup([FromBody] GroupInputModel model)
-        {
-            var dto = _mapper.Map<GroupDto>(model);
-            var result = _groupService.AddGroup(dto);
-            return _mapper.Map<GroupOutputModel>(result);
-        }
 
         //  api/Group
         [HttpDelete("{id}")]
@@ -136,7 +137,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public string RemoveGroupFromLesson(int groupId, int lessonId)
         {
-            _groupService.RemoveGroupFromLesson(groupId,    lessonId);
+            _groupService.RemoveGroupFromLesson(groupId, lessonId);
             return $"Group {groupId} remove  Lesson Id:{lessonId}";
         }
 
