@@ -14,13 +14,15 @@ namespace DevEdu.Business.Services
         private readonly IUserRepository _userRepository;
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly ILessonValidationHelper _lessonValidationHelper;
+        private readonly ITopicValidationHelper _topicValidationHelper;
 
         public LessonService(
             ILessonRepository lessonRepository,
             ICommentRepository commentRepository,
             IUserRepository userRepository,
             IUserValidationHelper userValidationHelper,
-            ILessonValidationHelper lessonValidationHelper
+            ILessonValidationHelper lessonValidationHelper,
+            ITopicValidationHelper topicValidationHelper
         )
         {
             _lessonRepository = lessonRepository;
@@ -28,6 +30,7 @@ namespace DevEdu.Business.Services
             _userRepository = userRepository;
             _userValidationHelper = userValidationHelper;
             _lessonValidationHelper = lessonValidationHelper;
+            _topicValidationHelper = topicValidationHelper;
         }
 
         public void AddCommentToLesson(int lessonId, CommentDto commentDto)
@@ -84,11 +87,19 @@ namespace DevEdu.Business.Services
             return _lessonRepository.SelectLessonById(lessonDto.Id);
         }
 
-        public void DeleteTopicFromLesson(int lessonId, int topicId) => 
+        public void DeleteTopicFromLesson(int lessonId, int topicId)
+        {
+            _lessonValidationHelper.CheckLessonExistence(lessonId);
+            _topicValidationHelper.CheckTopicExistence(topicId);
             _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
+        }
 
-        public void AddTopicToLesson(int lessonId, int topicId) =>
+        public void AddTopicToLesson(int lessonId, int topicId)
+        {
+            _lessonValidationHelper.CheckLessonExistence(lessonId);
+            _topicValidationHelper.CheckTopicExistence(topicId);
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
+        }
 
         public void AddStudentToLesson(int lessonId, int userId)
         {
