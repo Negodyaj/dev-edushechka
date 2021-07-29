@@ -3,6 +3,8 @@
 	@StudentId int
 AS
 BEGIN
-	DELETE FROM dbo.Task_Student
-	WHERE TaskId = @TaskId AND StudentId = @StudentId
+    UPDATE dbo.Task_Student
+    SET
+        IsDeleted = 1
+    WHERE TaskId = @TaskId AND StudentId = @StudentId
 END
