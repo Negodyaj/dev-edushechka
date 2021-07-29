@@ -45,17 +45,17 @@ namespace DevEdu.Business.Services
             _groupRepository.DeleteGroup(id);
         }
 
-        public GroupDto GetGroup(int id, int userId)
+        public GroupDto GetGroup(int groupId, int userId)
         {
-            _groupHelper.CheckGroupExistence(id);
-            _groupHelper.CheckGroupExistence(userId);
+            _groupHelper.CheckGroupExistence(groupId);
+            _groupHelper.CheckAccessGetGroupMembers(groupId, userId);
 
-            var dto = _groupRepository.GetGroup(id);
+            var dto = _groupRepository.GetGroup(groupId);
             if (dto != null)
             {
-                dto.Students = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Student);
-                dto.Tutors = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Tutor);
-                dto.Teachers = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Teacher);
+                dto.Students = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)Role.Student);
+                dto.Tutors = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)Role.Tutor);
+                dto.Teachers = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher);
             }
             return dto;
         }

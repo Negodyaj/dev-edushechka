@@ -3,6 +3,6 @@
     public interface IGroupValidationHelper
     {
         void CheckGroupExistence(int groupId);
-        void CheckAuthorizationException(int userId);
+        void CheckAccessGetGroupMembers(int groupId, int userId);
     }
 }

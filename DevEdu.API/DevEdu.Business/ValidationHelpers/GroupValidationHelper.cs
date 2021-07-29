@@ -20,9 +20,9 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), groupId));
         }
 
-        public void CheckAuthorizationException(int userId)
+        public void CheckAccessGetGroupMembers(int groupId, int userId)
         {
-            throw new System.NotImplementedException();
+            throw new AuthorizationException(string.Format(ServiceMessages.AccessDeniedForGetGroupMembers, groupId));
         }
     }
 }

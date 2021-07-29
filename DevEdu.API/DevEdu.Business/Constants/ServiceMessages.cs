@@ -7,6 +7,6 @@
         public const string SameTopicsInCourseTopics = "the same topics in the course";
         public const string EntityNotFound = "Entity Not Found";
         public const string PaymentDeleted = "This payment is deleted";
-
+        public const string AccessDeniedForGetGroupMembers = "Access denied for GroupId = {0}";
     }
 }
