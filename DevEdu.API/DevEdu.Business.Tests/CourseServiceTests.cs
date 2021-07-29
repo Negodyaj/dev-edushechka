@@ -299,7 +299,7 @@ namespace DevEdu.Business.Tests
                                         new CourseValidationHelper(_courseRepositoryMock.Object),
                                         new TopicValidationHelper(_topicRepositoryMock.Object));
 
-            _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId)).Throws(new EntityNotFoundException(exp));
+            _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId));
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId));
             //When
             var exception = Assert.Throws<EntityNotFoundException>(() =>
@@ -324,7 +324,7 @@ namespace DevEdu.Business.Tests
                                         _materialRepositoryMock.Object,
                                         new CourseValidationHelper(_courseRepositoryMock.Object),
                                         new TopicValidationHelper(_topicRepositoryMock.Object));
-            _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId)).Throws(new EntityNotFoundException(exp));
+            _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId));
             _topicRepositoryMock.Setup(x => x.AddTopicToCourse(topic));
             //When
             var exception = Assert.Throws<EntityNotFoundException>(() =>
@@ -349,7 +349,7 @@ namespace DevEdu.Business.Tests
                                         new TopicValidationHelper(_topicRepositoryMock.Object));
             _courseRepositoryMock.Setup(x => x.GetCourse(givenCourseId)).Returns(new CourseDto() { Id = givenCourseId });
             _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId));
-            _topicValidationHelperMock.Setup(x => x.CheckTopicExistence(givenTopicId)).Throws(new EntityNotFoundException(exp));
+            _topicValidationHelperMock.Setup(x => x.CheckTopicExistence(givenTopicId));
             _topicRepositoryMock.Setup(x => x.AddTopicToCourse(topic));
             //When
             var exception = Assert.Throws<EntityNotFoundException>(() =>
@@ -372,7 +372,7 @@ namespace DevEdu.Business.Tests
                                         new CourseValidationHelper(_courseRepositoryMock.Object),
                                         new TopicValidationHelper(_topicRepositoryMock.Object));
             _courseRepositoryMock.Setup(x => x.GetCourse(givenCourseId)).Returns(new CourseDto() { Id = givenCourseId });
-            _topicValidationHelperMock.Setup(x => x.CheckTopicsExistence(courrseTopic)).Throws(new EntityNotFoundException(ServiceMessages.EntityNotFound));
+            _topicValidationHelperMock.Setup(x => x.CheckTopicsExistence(courrseTopic));
             _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsInDB);
             _topicRepositoryMock.Setup(x => x.AddTopicsToCourse(courrseTopic));
             //When
@@ -396,7 +396,7 @@ namespace DevEdu.Business.Tests
                                         _materialRepositoryMock.Object,
                                         new CourseValidationHelper(_courseRepositoryMock.Object),
                                         new TopicValidationHelper(_topicRepositoryMock.Object));
-            _topicValidationHelperMock.Setup(x => x.CheckTopicsExistence(courrseTopic)).Throws(new EntityNotFoundException(exp));
+            _topicValidationHelperMock.Setup(x => x.CheckTopicsExistence(courrseTopic));
             _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsInDB);
             _courseRepositoryMock.Setup(x => x.GetCourse(givenCourseId));
             _topicRepositoryMock.Setup(x => x.AddTopicsToCourse(courrseTopic));
@@ -421,7 +421,7 @@ namespace DevEdu.Business.Tests
                                         new CourseValidationHelper(_courseRepositoryMock.Object),
                                         new TopicValidationHelper(_topicRepositoryMock.Object));
             _courseRepositoryMock.Setup(x => x.GetCourse(givenCourseId));
-            _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId)).Throws(new EntityNotFoundException(exp));
+            _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId));
             //When
             var result = Assert.Throws<EntityNotFoundException>(() =>
             sut.DeleteTopicFromCourse(givenCourseId, givenTopicId));
@@ -443,7 +443,7 @@ namespace DevEdu.Business.Tests
                                         new CourseValidationHelper(_courseRepositoryMock.Object),
                                         new TopicValidationHelper(_topicRepositoryMock.Object));
             _courseRepositoryMock.Setup(x => x.GetCourse(givenCourseId)).Returns(new CourseDto() { Id = givenCourseId });
-            _topicValidationHelperMock.Setup(x => x.CheckTopicExistence(givenTopicId)).Throws(new EntityNotFoundException(exp));
+            _topicValidationHelperMock.Setup(x => x.CheckTopicExistence(givenTopicId));
             //When
             var result = Assert.Throws<EntityNotFoundException>(() =>
             sut.DeleteTopicFromCourse(givenCourseId, givenTopicId));
@@ -465,7 +465,7 @@ namespace DevEdu.Business.Tests
                                         new CourseValidationHelper(_courseRepositoryMock.Object),
                                         new TopicValidationHelper(_topicRepositoryMock.Object));
             _courseRepositoryMock.Setup(x => x.GetCourse(givenCourseId));
-            _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId)).Throws(new EntityNotFoundException(exp));
+            _courseValidationHelperMock.Setup(x => x.CheckCourseExistence(givenCourseId));
             //When
             var result = Assert.Throws<EntityNotFoundException>(() =>
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenCourseTopic));
