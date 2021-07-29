@@ -41,7 +41,6 @@ namespace DevEdu.DAL.Repositories
                 _groupInsertProcedure,
                 new
                 {
-                    groupDto.Id,
                     groupDto.Name,
                     groupDto.Course
                 },
