@@ -36,5 +36,26 @@ namespace DevEdu.Business.Tests
             Assert.Throws<EntityNotFoundException>(() => sut.CheckRaitingExistence(studentRatingId));
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Exactly(1));
         }
+
+
+        [Test]
+        public void CheckRaitingExistence_StudentRatingId_ReturnStudentRatingDto()
+        {
+            //Given
+            var expectedStudentRatingDto = RatingData.GetListOfStudentRatingDto()[0];
+
+            var studentRatingId = expectedStudentRatingDto.Id;
+
+            _ratingRepoMock.Setup(x => x.SelectStudentRatingById(studentRatingId)).Returns(expectedStudentRatingDto);
+
+            var sut = new RatingValidationHelper(_ratingRepoMock.Object);
+
+            //When
+            var actualStudentRatingDto = sut.CheckRaitingExistence(studentRatingId);
+
+            //Than
+            Assert.AreEqual(expectedStudentRatingDto, actualStudentRatingDto);
+            _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Once);
+        }
     }
 }

@@ -15,8 +15,8 @@ namespace DevEdu.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Tutor)]
-    public class RatingController: Controller
+    [AuthorizeRoles(Role.Teacher, Role.Manager)]
+    public class RatingController : Controller
     {
         private IRatingService _service;
 
@@ -33,11 +33,12 @@ namespace DevEdu.API.Controllers
         [Description("Add StudentRating to database")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [AuthorizeRoles(Role.Teacher)]
-        public int AddStudentRating([FromBody] StudentRatingInputModel model)
+        public StudentRatingOutputModel AddStudentRating([FromBody] StudentRatingInputModel model)
         {
             var dto = _mapper.Map<StudentRatingDto>(model);
             var authorUserId = this.GetUserId();
-            return _service.AddStudentRating(dto, authorUserId);
+            dto = _service.AddStudentRating(dto, authorUserId);
+            return _mapper.Map<StudentRatingOutputModel>(dto);
         }
 
         // api/rating/1
@@ -67,6 +68,7 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         [Description("Get all StudentRatings from database")]
         [ProducesResponseType(typeof(List<StudentRatingOutputModel>), StatusCodes.Status200OK)]
+        [AuthorizeRoles(Role.Manager)]
         public List<StudentRatingOutputModel> GetAllStudentRatings()
         {
             var dto = _service.GetAllStudentRatings();
@@ -80,7 +82,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status200OK)]
         public List<StudentRatingOutputModel> GetStudentRatingByGroupID(int groupId)
         {
-            var dto = _service.GetStudentRatingByGroupId(groupId);
+            var authorUserId = this.GetUserId();
+            var authRoles = this.GetUserRoles();
+            var dto = _service.GetStudentRatingByGroupId(groupId, authorUserId, authRoles);
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
 
@@ -88,6 +92,7 @@ namespace DevEdu.API.Controllers
         [HttpGet("by-user/{userid}")]
         [Description("Get StudentRatings from database by UserID")]
         [ProducesResponseType(typeof(List<StudentRatingOutputModel>), StatusCodes.Status200OK)]
+        [AuthorizeRoles(Role.Manager)]
         public List<StudentRatingOutputModel> GetStudentRatingByUserId(int userid)
         {
             var dto = _service.GetStudentRatingByUserId(userid);

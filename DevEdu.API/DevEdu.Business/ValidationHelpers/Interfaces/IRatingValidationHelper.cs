@@ -1,7 +1,9 @@
-﻿namespace DevEdu.Business.ValidationHelpers
+﻿using DevEdu.DAL.Models;
+
+namespace DevEdu.Business.ValidationHelpers
 {
     public interface IRatingValidationHelper
     {
-        void CheckRaitingExistence(int raitingId);
+        StudentRatingDto CheckRaitingExistence(int raitingId);
     }
 }

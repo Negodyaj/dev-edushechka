@@ -1,10 +1,12 @@
 ﻿using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
@@ -67,27 +69,6 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetStudentRatingById_Id_ReturnStudentRatingDto()
-        {
-            //Given
-            var expectedStudentRatingDto = RatingData.GetListOfStudentRatingDto()[0];
-
-            var expectedStudentRatingId = expectedStudentRatingDto.Id;
-
-            _ratingRepoMock.Setup(x => x.SelectStudentRatingById(expectedStudentRatingId)).Returns(expectedStudentRatingDto);
-
-            var sut = new RatingService(_ratingRepoMock.Object, _ratingValidationHelperMock.Object, _groupValidationHelperMock.Object,
-                _userValidationHelperMock.Object);
-
-            //When
-            var actualStudentRatingDto = sut.GetStudentRatingById(expectedStudentRatingId);
-
-            //Than
-            Assert.AreEqual(expectedStudentRatingDto, actualStudentRatingDto);
-            _ratingRepoMock.Verify(x => x.SelectStudentRatingById(expectedStudentRatingId), Times.Once);
-        }
-
-        [Test]
         public void GetStudentRatingByUserId_UserId_ReturnListOfStudentRatingDto()
         {
             //Given
@@ -112,6 +93,8 @@ namespace DevEdu.Business.Tests
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
             var groupId = expectedStudentRatingDtos[0].Group.Id;
+            var authorUserId = 1;
+            var authorUserRoles = new List<Role> { Role.Manager };
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingByGroupId(groupId)).Returns(expectedStudentRatingDtos);
 
@@ -119,7 +102,7 @@ namespace DevEdu.Business.Tests
                 _userValidationHelperMock.Object);
 
             //When
-            var actualStudentRatingDtos = sut.GetStudentRatingByGroupId(groupId);
+            var actualStudentRatingDtos = sut.GetStudentRatingByGroupId(groupId, authorUserId, authorUserRoles);
 
             //Than
             Assert.AreEqual(expectedStudentRatingDtos, actualStudentRatingDtos);
@@ -154,26 +137,6 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetStudentRatingById_Id_EntityNotFoundException()
-        {
-            //Given
-            StudentRatingDto expectedStudentRatingDto = default;
-
-            var studentRatingId = 0;
-
-            _ratingRepoMock.Setup(x => x.SelectStudentRatingById(It.IsAny<int>())).Returns(expectedStudentRatingDto);
-
-            var sut = new RatingService(_ratingRepoMock.Object, _ratingValidationHelperMock.Object, _groupValidationHelperMock.Object,
-                _userValidationHelperMock.Object);
-
-            //When
-
-            //Than
-            Assert.Throws<EntityNotFoundException>(() => sut.GetStudentRatingById(studentRatingId));
-            _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Once);
-        }
-
-        [Test]
         public void UpdateStudentRating_Id_Value_PeriodNumber_EntityNotFoundException()
         {
             //Given
@@ -192,7 +155,7 @@ namespace DevEdu.Business.Tests
 
             //Than
             Assert.Throws<EntityNotFoundException>(() => sut.UpdateStudentRating(studentRatingId, value, periodNumber, authorUserId));
-            _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Exactly(1));
+            _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Once);
         }
     }
 }

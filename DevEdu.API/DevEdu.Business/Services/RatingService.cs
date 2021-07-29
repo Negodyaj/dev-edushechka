@@ -25,37 +25,43 @@ namespace DevEdu.Business.Services
             _userValidationHelper = userValidationHelper;
         }
 
-        public int AddStudentRating(StudentRatingDto studentRatingDto, int authorUserId)
+        public StudentRatingDto AddStudentRating(StudentRatingDto studentRatingDto, int authorUserId)
         {
             _groupValidationHelper.CheckGroupExistence(studentRatingDto.Group.Id);
             _groupValidationHelper.CheckTeacherBelongToGroup(studentRatingDto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
             _userValidationHelper.CheckUserExistence(studentRatingDto.User.Id);
             _groupValidationHelper.CheckUserBelongToGroup(studentRatingDto.Group.Id, studentRatingDto.User.Id, Role.Student);
-            return _repository.AddStudentRating(studentRatingDto);
+            var id = _repository.AddStudentRating(studentRatingDto);
+            return _repository.SelectStudentRatingById(id);
         }
 
         public void DeleteStudentRating(int id, int authorUserId)
         {
-            var dto = GetStudentRatingById(id);
+            var dto = _ratingValidationHelper.CheckRaitingExistence(id);
             _groupValidationHelper.CheckTeacherBelongToGroup(dto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
             _repository.DeleteStudentRating(id);
         }
 
-        public List<StudentRatingDto> GetAllStudentRatings() => _repository.SelectAllStudentRatings();
-
-        public StudentRatingDto GetStudentRatingById(int id)
+        public List<StudentRatingDto> GetAllStudentRatings()
         {
-            var dto = _repository.SelectStudentRatingById(id);
-            if (dto == default)
-            {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(dto), id));
-            }
-            return dto;
+            return _repository.SelectAllStudentRatings();
         }
 
-        public List<StudentRatingDto> GetStudentRatingByUserId(int userId) => _repository.SelectStudentRatingByUserId(userId);
+        public List<StudentRatingDto> GetStudentRatingByUserId(int userId)
+        {
+            _userValidationHelper.CheckUserExistence(userId);
+            return _repository.SelectStudentRatingByUserId(userId);
+        }
 
-        public List<StudentRatingDto> GetStudentRatingByGroupId(int groupId) => _repository.SelectStudentRatingByGroupId(groupId);
+        public List<StudentRatingDto> GetStudentRatingByGroupId(int groupId, int authorUserId, List<Role> authRoles)
+        {
+            if (!(authRoles.Contains(Role.Manager) || authRoles.Contains(Role.Admin)))
+            {
+                _groupValidationHelper.CheckTeacherBelongToGroup(groupId, Convert.ToInt32(authorUserId), Role.Teacher);
+            }
+            _groupValidationHelper.CheckGroupExistence(groupId);
+            return _repository.SelectStudentRatingByGroupId(groupId);
+        }
 
         public StudentRatingDto UpdateStudentRating(int id, int value, int periodNumber, int authorUserId)
         {
@@ -72,7 +78,7 @@ namespace DevEdu.Business.Services
                 ReportingPeriodNumber = periodNumber
             };
             _repository.UpdateStudentRating(dto);
-            return GetStudentRatingById(id);
+            return _repository.SelectStudentRatingById(id);
         }
     }
 }
