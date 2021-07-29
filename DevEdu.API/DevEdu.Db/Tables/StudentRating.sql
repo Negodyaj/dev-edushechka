@@ -1,9 +1,9 @@
 ﻿CREATE TABLE [dbo].[StudentRating]
 (
 	[Id] INT NOT NULL IDENTITY(1,1), 
-    [UserID] INT NOT NULL, 
+    [UserId] INT NOT NULL, 
     [GroupId] INT NOT NULL, 
-    [RatingTypeID] INT NOT NULL, 
+    [RatingTypeId] INT NOT NULL, 
     [Rating] INT NOT NULL,
     [ReportingPeriodNumber] INT NOT NULL,
     CONSTRAINT [PK_StudentRating] PRIMARY KEY CLUSTERED
