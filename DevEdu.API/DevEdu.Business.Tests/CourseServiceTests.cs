@@ -230,5 +230,39 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
         }
 
+        [Test]
+        public void AddTaskToCourse_WithTaskIdAndCourseId_Added()
+        {
+            //Given
+            var givenCourseId = 3;
+            var givenTaskId = 8;
+            _courseRepositoryMock.Setup(x => x.AddTaskToCourse(givenCourseId, givenTaskId));
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                        _courseRepositoryMock.Object,
+                                        _taskRepositoryMock.Object,
+                                        _materialRepositoryMock.Object);
+            //When
+            sut.AddTaskToCourse(givenCourseId, givenTaskId);
+            //Then
+            _courseRepositoryMock.Verify(x => x.AddTaskToCourse(givenCourseId, givenTaskId), Times.Once);
+        }
+
+        [Test]
+        public void DeleteTaskFromCourse_WithTaskIdAndCourseId_Deleted()
+        {
+            //Given
+            var givenCourseId = 3;
+            var givenTaskId = 8;
+            _courseRepositoryMock.Setup(x => x.DeleteTaskFromCourse(givenCourseId, givenTaskId));
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                        _courseRepositoryMock.Object,
+                                        _taskRepositoryMock.Object,
+                                        _materialRepositoryMock.Object);
+            //When
+            sut.DeleteTaskFromCourse(givenCourseId, givenTaskId);
+            //Then
+            _courseRepositoryMock.Verify(x => x.DeleteTaskFromCourse(givenCourseId, givenTaskId), Times.Once);
+        }
+
     }
 }
