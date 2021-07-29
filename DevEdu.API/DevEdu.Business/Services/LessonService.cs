@@ -4,6 +4,7 @@ using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.Business.Constants;
 
 namespace DevEdu.Business.Services
 {
@@ -91,13 +92,17 @@ namespace DevEdu.Business.Services
         {
             _lessonValidationHelper.CheckLessonExistence(lessonId);
             _topicValidationHelper.CheckTopicExistence(topicId);
-            _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
+            if(_lessonRepository.DeleteTopicFromLesson(lessonId, topicId) == 0)
+            {
+                throw new ValidationException(string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId));
+            }
         }
 
         public void AddTopicToLesson(int lessonId, int topicId)
         {
             _lessonValidationHelper.CheckLessonExistence(lessonId);
             _topicValidationHelper.CheckTopicExistence(topicId);
+            _lessonValidationHelper.CheckTopicLessonReferenceIsUnique(lessonId, topicId);
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
         }
 

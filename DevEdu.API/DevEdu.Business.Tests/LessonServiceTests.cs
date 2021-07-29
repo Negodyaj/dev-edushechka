@@ -1,6 +1,7 @@
-﻿using DevEdu.Business.Services;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
+using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
-using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -16,6 +17,7 @@ namespace DevEdu.Business.Tests
         private Mock<IUserValidationHelper> _userValidationHelper;
         private Mock<ILessonValidationHelper> _lessonValidationHelper;
         private Mock<ITopicValidationHelper> _topicValidationHelper;
+        private LessonService _sut;
 
         [SetUp]
         public void SetUp()
@@ -26,48 +28,172 @@ namespace DevEdu.Business.Tests
             _userValidationHelper = new Mock<IUserValidationHelper>();
             _lessonValidationHelper = new Mock<ILessonValidationHelper>();
             _topicValidationHelper = new Mock<ITopicValidationHelper>();
+            _sut = new LessonService(_lessonRepository.Object,
+                _commentRepository.Object,
+                _userRepository.Object,
+                _userValidationHelper.Object,
+                _lessonValidationHelper.Object,
+                _topicValidationHelper.Object);
         }
 
         [Test]
-        public void AddTopicToLesson_LessonIdTopicId_TopicLessonReferenceCreated()
+        public void AddTopicToLesson_WhenLessonIdAndTopicIdAreValid_TopicLessonReferenceCreated()
         {
             //Given
             var lessonId = 5;
             var topicId = 7;
             _lessonRepository.Setup(x => x.AddTopicToLesson(lessonId, topicId));
 
-            var sut = new LessonService(_lessonRepository.Object, 
-                _commentRepository.Object, 
-                _userRepository.Object, 
-                _userValidationHelper.Object, 
-                _lessonValidationHelper.Object,
-                _topicValidationHelper.Object);
-
             //When
-            sut.AddTopicToLesson(lessonId, topicId);
+            _sut.AddTopicToLesson(lessonId, topicId);
 
             //Then
+            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
+            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
+            _lessonValidationHelper.Verify(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId), Times.Once);
             _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Once);
         }
 
         [Test]
-        public void DeleteTopicFromLesson_LessonIdTopicId_TopicLessonReferenceDeleted()
+        public void AddTopicToLesson_WhenLessonWithGivenIdDoesNotExist_EntityNotFoundExceptionThrown()
         {
             //Given
             var lessonId = 5;
             var topicId = 7;
-            _lessonRepository.Setup(x => x.DeleteTopicFromLesson(lessonId, topicId));
-
-            var sut = new LessonService(_lessonRepository.Object,
-                            _commentRepository.Object,
-                            _userRepository.Object,
-                            _userValidationHelper.Object,
-                            _lessonValidationHelper.Object,
-                            _topicValidationHelper.Object);
+            _lessonValidationHelper.Setup(x => x.CheckLessonExistence(lessonId))
+                .Throws(new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId)));
+            
             //When
-            sut.DeleteTopicFromLesson(lessonId, topicId);
+            var exception = Assert.Throws<EntityNotFoundException>(() =>
+                _sut.AddTopicToLesson(lessonId, topicId));
 
             //Then
+            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId)));
+            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
+            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Never);
+            _lessonValidationHelper.Verify(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId), Times.Never);
+            _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Never);
+        }
+
+        [Test]
+        public void AddTopicToLesson_WhenTopicWithGivenIdDoesNotExist_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var lessonId = 5;
+            var topicId = 7;
+            _topicValidationHelper.Setup(x => x.CheckTopicExistence(topicId))
+                .Throws(new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId)));
+
+            //When
+            var exception = Assert.Throws<EntityNotFoundException>(() =>
+                _sut.AddTopicToLesson(lessonId, topicId));
+
+            //Then
+            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId)));
+            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
+            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
+            _lessonValidationHelper.Verify(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId), Times.Never);
+            _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Never);
+        }
+
+        [Test]
+        public void AddTopicToLesson_WhenTopicLessonReferenceAlreadyExists_ValidationExceptionThrown()
+        {
+            //Given
+            var lessonId = 5;
+            var topicId = 7;
+            _lessonValidationHelper.Setup(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId))
+                .Throws(new ValidationException(string.Format(ServiceMessages.SameTopicsInLesson, lessonId, topicId)));
+
+            //When
+            var exception = Assert.Throws<ValidationException>(() =>
+                _sut.AddTopicToLesson(lessonId, topicId));
+
+            //Then
+            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.SameTopicsInLesson, lessonId, topicId)));
+            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
+            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
+            _lessonValidationHelper.Verify(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId), Times.Once);
+            _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Never);
+        }
+
+        [Test]
+        public void DeleteTopicFromLesson_WhenLessonIdAndTopicIdAreValid_TopicLessonReferenceDeleted()
+        {
+            //Given
+            var lessonId = 4;
+            var topicId = 7;
+            var rowsAffected = 1;
+            _lessonRepository.Setup(x => x.DeleteTopicFromLesson(lessonId, topicId)).Returns(rowsAffected);
+
+            //When
+            _sut.DeleteTopicFromLesson(lessonId, topicId);
+
+            //Then
+            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
+            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
+            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lessonId, topicId), Times.Once);
+        }
+
+        [Test]
+        public void DeleteTopicFromLesson_WhenLessonWithGivenIdDoesNotExist_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var lessonId = 4;
+            var topicId = 7;
+
+            _lessonValidationHelper.Setup(x => x.CheckLessonExistence(lessonId))
+                .Throws(new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId)));
+
+            //When
+            var exception = Assert.Throws<EntityNotFoundException>(() =>
+                _sut.DeleteTopicFromLesson(lessonId, topicId));
+
+            //Then
+            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId)));
+            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
+            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Never);
+            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lessonId, topicId), Times.Never);
+        }
+
+        [Test]
+        public void DeleteTopicFromLesson_WhenTopicWithGivenIdDoesNotExist_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var lessonId = 4;
+            var topicId = 7;
+
+            _topicValidationHelper.Setup(x => x.CheckTopicExistence(topicId))
+                .Throws(new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId)));
+
+            //When
+            var exception = Assert.Throws<EntityNotFoundException>(() =>
+                _sut.DeleteTopicFromLesson(lessonId, topicId));
+
+            //Then
+            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId)));
+            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
+            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
+            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lessonId, topicId), Times.Never);
+        }
+
+        [Test]
+        public void DeleteTopicFromLesson_WhenTopicLessonReferenceDoesNotExist_ValidationExceptionThrown()
+        {
+            //Given
+            var lessonId = 4;
+            var topicId = 7;
+            _lessonRepository.Setup(x => x.DeleteTopicFromLesson(lessonId, topicId)).
+                Throws(new ValidationException(string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId)));
+
+            //When
+            var exception = Assert.Throws<ValidationException>(() =>
+                _sut.DeleteTopicFromLesson(lessonId, topicId));
+
+            //Then
+            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId)));
+            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
+            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
             _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lessonId, topicId), Times.Once);
         }
 
