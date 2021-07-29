@@ -24,5 +24,10 @@ namespace DevEdu.Business.ValidationHelpers
         {
             throw new AuthorizationException(string.Format(ServiceMessages.AccessDeniedForGetGroupMembers, groupId));
         }
+
+        public void TmpAccess(int id, int id2, int id3 = 0)
+        {
+            throw new AuthorizationException("");
+        }
     }
 }

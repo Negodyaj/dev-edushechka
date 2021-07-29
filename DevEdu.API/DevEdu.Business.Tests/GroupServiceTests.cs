@@ -120,6 +120,7 @@ namespace DevEdu.Business.Tests
             var groupDto = GroupData.GetGroupDtoToUpdNameAndTimetable();
             groupDto.Id = groupId;
             var updGroupDto = GroupData.GetUpdGroupDto();
+            var userId = GroupData.UserIdAuthorization;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _groupRepoMock.Setup(x => x.UpdateGroup(groupDto)).Returns(updGroupDto);
@@ -127,7 +128,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object);
 
             //When
-            var actualGroupDto = sut.UpdateGroup(groupId, groupDto);
+            var actualGroupDto = sut.UpdateGroup(groupId, groupDto, userId);
 
             //Then
             Assert.AreEqual(updGroupDto, actualGroupDto);
@@ -167,11 +168,12 @@ namespace DevEdu.Business.Tests
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _lessonHelper.Setup(x => x.CheckLessonExistence(lessonId));
             _groupRepoMock.Setup(x => x.AddGroupToLesson(groupId, lessonId));
+            var userId = GroupData.UserIdAuthorization;
 
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, lessonHelper: _lessonHelper.Object);
 
             //When
-            sut.AddGroupToLesson(groupId, lessonId);
+            sut.AddGroupToLesson(groupId, lessonId, userId);
 
             //Then
             _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
@@ -185,6 +187,7 @@ namespace DevEdu.Business.Tests
             //Given
             var groupId = GroupData.GroupId;
             var lessonId = GroupData.LessonId;
+            var userId = GroupData.UserIdAuthorization;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _lessonHelper.Setup(x => x.CheckLessonExistence(lessonId));
@@ -193,7 +196,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, lessonHelper: _lessonHelper.Object);
 
             //When
-            sut.RemoveGroupFromLesson(groupId, lessonId);
+            sut.RemoveGroupFromLesson(groupId, lessonId, userId);
 
             //Then
             _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
@@ -208,6 +211,7 @@ namespace DevEdu.Business.Tests
             //Given
             const int groupId = GroupData.GroupId;
             const int materialId = GroupData.MaterialId;
+            var userId = GroupData.UserIdAuthorization;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _materialHelper.Setup(x => x.CheckMaterialExistence(materialId));
@@ -216,7 +220,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, materialHelper: _materialHelper.Object);
 
             //When
-            var actualAffectedRows = sut.AddGroupMaterialReference(groupId, materialId);
+            var actualAffectedRows = sut.AddGroupMaterialReference(groupId, materialId, userId);
 
             //Than
             Assert.AreEqual(GroupData.ExpectedAffectedRows, actualAffectedRows);
@@ -232,6 +236,7 @@ namespace DevEdu.Business.Tests
             //Given
             const int groupId = GroupData.GroupId;
             const int materialId = GroupData.MaterialId;
+            var userId = GroupData.UserIdAuthorization;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _materialHelper.Setup(x => x.CheckMaterialExistence(materialId));
@@ -240,7 +245,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, materialHelper: _materialHelper.Object);
 
             //When
-            var actualAffectedRows = sut.RemoveGroupMaterialReference(groupId, materialId);
+            var actualAffectedRows = sut.RemoveGroupMaterialReference(groupId, materialId, userId);
 
             //Than
             Assert.AreEqual(GroupData.ExpectedAffectedRows, actualAffectedRows);
@@ -256,6 +261,7 @@ namespace DevEdu.Business.Tests
             var groupId = GroupData.GroupId;
             var userId = GroupData.UserId;
             var role = GroupData.RoleStudent;
+            var currentUserId = GroupData.UserIdAuthorization;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _userHelper.Setup(x => x.CheckUserExistence(userId));
@@ -264,7 +270,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, userHelper: _userHelper.Object);
 
             //When
-            sut.AddUserToGroup(groupId, userId, role);
+            sut.AddUserToGroup(groupId, userId, role, currentUserId);
 
             //Then
             _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
@@ -278,6 +284,7 @@ namespace DevEdu.Business.Tests
             //Given
             var groupId = GroupData.GroupId;
             var userId = GroupData.UserId;
+            var currentUserId = GroupData.UserIdAuthorization;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _userHelper.Setup(x => x.CheckUserExistence(userId));
@@ -286,7 +293,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, userHelper: _userHelper.Object);
 
             //When
-            sut.DeleteUserFromGroup(groupId, userId);
+            sut.DeleteUserFromGroup(groupId, userId, currentUserId);
 
             //Then
             _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
@@ -302,6 +309,7 @@ namespace DevEdu.Business.Tests
             var groupTaskDto = GroupTaskData.GetGroupTaskWithoutGroupAndTask();
             const int groupId = GroupTaskData.GroupId;
             const int taskId = GroupTaskData.TaskId;
+            var userId = GroupData.UserIdAuthorization;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _taskHelper.Setup(x => x.CheckTaskExistence(taskId));
@@ -310,7 +318,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, taskHelper: _taskHelper.Object);
 
             //When
-            var actualGroupTaskId = sut.AddTaskToGroup(groupId, taskId, groupTaskDto);
+            var actualGroupTaskId = sut.AddTaskToGroup(groupId, taskId, groupTaskDto, userId);
 
             //Than
             Assert.AreEqual(GroupTaskData.ExpectedGroupTaskId, actualGroupTaskId);
@@ -326,6 +334,7 @@ namespace DevEdu.Business.Tests
             var groupTaskDto = GroupTaskData.GetGroupTaskWithGroupAndTask();
             const int groupId = GroupTaskData.GroupId;
             const int taskId = GroupTaskData.TaskId;
+            var userId = GroupData.UserIdAuthorization;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _taskHelper.Setup(x => x.CheckTaskExistence(taskId));
@@ -334,7 +343,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, taskHelper: _taskHelper.Object);
 
             //When
-            var dto = sut.GetGroupTask(groupId, taskId);
+            var dto = sut.GetGroupTask(groupId, taskId, userId);
 
             //Than
             Assert.AreEqual(groupTaskDto, dto);
@@ -350,6 +359,7 @@ namespace DevEdu.Business.Tests
             var groupTaskDto = GroupTaskData.GetGroupTaskWithoutGroupAndTask();
             const int groupId = GroupTaskData.GroupId;
             const int taskId = GroupTaskData.TaskId;
+            var userId = GroupData.UserIdAuthorization;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _taskHelper.Setup(x => x.CheckTaskExistence(taskId));
@@ -359,7 +369,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, taskHelper: _taskHelper.Object);
 
             //When
-            var actualGroupTaskDto = sut.UpdateGroupTask(groupId, taskId, groupTaskDto);
+            var actualGroupTaskDto = sut.UpdateGroupTask(groupId, taskId, groupTaskDto, userId);
 
             //Then
             Assert.AreEqual(groupTaskDto, actualGroupTaskDto);
@@ -376,6 +386,7 @@ namespace DevEdu.Business.Tests
             var groupTaskDto = GroupTaskData.GetGroupTaskWithoutGroupAndTask();
             const int groupId = GroupTaskData.GroupId;
             const int taskId = GroupTaskData.TaskId;
+            var userId = GroupData.UserIdAuthorization;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _taskHelper.Setup(x => x.CheckTaskExistence(taskId));
@@ -384,7 +395,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, taskHelper: _taskHelper.Object);
 
             //When
-            sut.DeleteTaskFromGroup(groupId, taskId);
+            sut.DeleteTaskFromGroup(groupId, taskId, userId);
 
             //Then
             _groupHelper.Verify(x => x.CheckGroupExistence(groupId), Times.Once);
@@ -397,7 +408,8 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var groupTaskList = GroupTaskData.GetListOfGroupTaskDtoWithTask();
-            const int groupId = GroupTaskData.GroupId;
+            var groupId = GroupTaskData.GroupId;
+            var userId = GroupData.UserIdAuthorization;
 
             _groupHelper.Setup(x => x.CheckGroupExistence(groupId));
             _groupRepoMock.Setup(x => x.GetTaskGroupByGroupId(groupId)).Returns(groupTaskList);
@@ -405,7 +417,7 @@ namespace DevEdu.Business.Tests
             var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object);
 
             //When
-            var dto = sut.GetTasksByGroupId(groupId);
+            var dto = sut.GetTasksByGroupId(groupId, userId);
 
             //Than
             Assert.AreEqual(groupTaskList, dto);

@@ -78,9 +78,10 @@ namespace DevEdu.Business.Services
             _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
         }
 
-        public GroupDto UpdateGroup(int id, GroupDto groupDto)
+        public GroupDto UpdateGroup(int id, GroupDto groupDto, int userId)
         {
             _groupHelper.CheckGroupExistence(id);
+            _groupHelper.TmpAccess(id, userId);
 
             groupDto.Id = id;
             return _groupRepository.UpdateGroup(groupDto);
@@ -93,59 +94,66 @@ namespace DevEdu.Business.Services
             return _groupRepository.ChangeGroupStatus(groupId, (int)statusId);
         }
 
-        public int AddGroupMaterialReference(int groupId, int materialId)
+        public int AddGroupMaterialReference(int groupId, int materialId, int userId)
         {
             _groupHelper.CheckGroupExistence(groupId);
             _materialHelper.CheckMaterialExistence(materialId);
+            _groupHelper.TmpAccess(groupId, materialId, userId);
 
             return _groupRepository.AddGroupMaterialReference(groupId, materialId);
         }
 
-        public int RemoveGroupMaterialReference(int groupId, int materialId)
+        public int RemoveGroupMaterialReference(int groupId, int materialId, int userId)
         {
             _groupHelper.CheckGroupExistence(groupId);
             _materialHelper.CheckMaterialExistence(materialId);
+            _groupHelper.TmpAccess(groupId, materialId, userId);
 
             return _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
         }
 
-        public int AddGroupToLesson(int groupId, int lessonId)
+        public int AddGroupToLesson(int groupId, int lessonId, int userId)
         {
             _groupHelper.CheckGroupExistence(groupId);
             _lessonHelper.CheckLessonExistence(lessonId);
+            _groupHelper.TmpAccess(groupId, lessonId, userId);
 
             return _groupRepository.AddGroupToLesson(groupId, lessonId);
         }
 
-        public void RemoveGroupFromLesson(int groupId, int lessonId)
+        public void RemoveGroupFromLesson(int groupId, int lessonId, int userId)
         {
             _groupHelper.CheckGroupExistence(groupId);
             _lessonHelper.CheckLessonExistence(lessonId);
+            _groupHelper.TmpAccess(groupId, lessonId, userId);
 
             _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
         }
 
-        public void AddUserToGroup(int groupId, int userId, Role roleId)
+        public void AddUserToGroup(int groupId, int userId, Role roleId, int currentUserId)
         {
             _groupHelper.CheckGroupExistence(groupId);
             _userHelper.CheckUserExistence(userId);
+            _groupHelper.TmpAccess(groupId, userId, currentUserId);
 
 
             _groupRepository.AddUserToGroup(groupId, userId, (int)roleId);
         }
 
-        public void DeleteUserFromGroup(int groupId, int userId)
+        public void DeleteUserFromGroup(int userId, int groupId, int currentUserId)
         {
             _groupHelper.CheckGroupExistence(groupId);
             _userHelper.CheckUserExistence(userId);
+            _groupHelper.TmpAccess(userId, groupId, currentUserId);
 
             _groupRepository.DeleteUserFromGroup(userId, groupId);
         }
 
 
-        public int AddTaskToGroup(int groupId, int taskId, GroupTaskDto dto)
+        public int AddTaskToGroup(int groupId, int taskId, GroupTaskDto dto, int userId)
         {
             _groupHelper.CheckGroupExistence(groupId);
+            _groupHelper.TmpAccess(groupId, taskId, userId);
             _taskHelper.CheckTaskExistence(taskId);
 
             dto.Group = new GroupDto { Id = groupId };
@@ -153,32 +161,36 @@ namespace DevEdu.Business.Services
             return _groupRepository.AddTaskToGroup(dto);
         }
 
-        public void DeleteTaskFromGroup(int groupId, int taskId)
+        public void DeleteTaskFromGroup(int groupId, int taskId, int userId)
         {
             _groupHelper.CheckGroupExistence(groupId);
+            _groupHelper.TmpAccess(groupId, taskId, userId);
             _taskHelper.CheckTaskExistence(taskId);
 
             _groupRepository.DeleteTaskFromGroup(groupId, taskId);
         }
 
-        public List<GroupTaskDto> GetTasksByGroupId(int groupId)
+        public List<GroupTaskDto> GetTasksByGroupId(int groupId, int userId)
         {
             _groupHelper.CheckGroupExistence(groupId);
+            _groupHelper.TmpAccess(groupId, userId);
 
             return _groupRepository.GetTaskGroupByGroupId(groupId);
         }
 
-        public GroupTaskDto GetGroupTask(int groupId, int taskId)
+        public GroupTaskDto GetGroupTask(int groupId, int taskId, int userId)
         {
             _groupHelper.CheckGroupExistence(groupId);
+            _groupHelper.TmpAccess(groupId, taskId, userId);
             _taskHelper.CheckTaskExistence(taskId);
 
             return _groupRepository.GetGroupTask(groupId, taskId);
         }
 
-        public GroupTaskDto UpdateGroupTask(int groupId, int taskId, GroupTaskDto dto)
+        public GroupTaskDto UpdateGroupTask(int groupId, int taskId, GroupTaskDto dto, int userId)
         {
             _groupHelper.CheckGroupExistence(groupId);
+            _groupHelper.TmpAccess(groupId, taskId, userId);
             _taskHelper.CheckTaskExistence(taskId);
 
             dto.Group = new GroupDto { Id = groupId };

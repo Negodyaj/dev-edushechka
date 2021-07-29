@@ -10,18 +10,18 @@ namespace DevEdu.Business.Services
         void DeleteGroup(int id);
         GroupDto GetGroup(int id, int userId);
         List<GroupDto> GetGroups();
-        GroupDto UpdateGroup(int id, GroupDto groupDto);
+        GroupDto UpdateGroup(int id, GroupDto groupDto, int userId);
         GroupDto ChangeGroupStatus(int groupId, GroupStatus statusId);
-        int AddGroupToLesson(int groupId, int lessonId);
-        void RemoveGroupFromLesson(int groupId, int lessonId);
-        int AddGroupMaterialReference(int groupId, int materialId);
-        int RemoveGroupMaterialReference(int groupId, int materialId);
-        void AddUserToGroup(int groupId, int userId, Role roleId);
-        void DeleteUserFromGroup(int groupId, int userId);
-        int AddTaskToGroup(int groupId, int taskId, GroupTaskDto dto);
-        void DeleteTaskFromGroup(int groupId, int taskId);
-        List<GroupTaskDto> GetTasksByGroupId(int groupId);
-        GroupTaskDto GetGroupTask(int id, int taskId);
-        GroupTaskDto UpdateGroupTask(int groupId, int taskId, GroupTaskDto groupTaskDto);
+        int AddGroupToLesson(int groupId, int lessonId, int userId);
+        void RemoveGroupFromLesson(int groupId, int lessonId, int userId);
+        int AddGroupMaterialReference(int groupId, int materialId, int userId);
+        int RemoveGroupMaterialReference(int groupId, int materialId, int userId);
+        void AddUserToGroup(int groupId, int userId, Role roleId, int currentUserId);
+        void DeleteUserFromGroup(int userId, int groupId, int currentUserId);
+        int AddTaskToGroup(int groupId, int taskId, GroupTaskDto dto, int userId);
+        void DeleteTaskFromGroup(int groupId, int taskId, int userId);
+        List<GroupTaskDto> GetTasksByGroupId(int groupId, int userId);
+        GroupTaskDto GetGroupTask(int id, int taskId, int userId);
+        GroupTaskDto UpdateGroupTask(int groupId, int taskId, GroupTaskDto groupTaskDto, int userId);
     }
 }

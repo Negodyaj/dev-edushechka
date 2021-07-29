@@ -12,6 +12,7 @@ namespace DevEdu.Business.Tests
         public const int LessonId = 1;
         public const int TaskId = 1;
         public const int UserId = 1;
+        public const int UserIdAuthorization = 1;
         public const int MaterialId = 1;
         public const Role RoleStudent = Role.Student;
         public static string Answer = $"Group {GroupId} remove  Lesson Id:{LessonId}";
