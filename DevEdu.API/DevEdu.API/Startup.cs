@@ -1,14 +1,19 @@
 using DevEdu.API.Configuration;
+using DevEdu.Business.Configuration;
 using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
+using System.Net;
 
 namespace DevEdu.API
 {
@@ -38,7 +43,7 @@ namespace DevEdu.API
             services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
-            services.AddScoped<IRaitingRepository, RaitingRepository>();
+            services.AddScoped<IRatingRepository, RatingRepository>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IGroupService, GroupService>();
@@ -49,9 +54,23 @@ namespace DevEdu.API
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ITopicService, TopicService>();
-            services.AddScoped<IRaitingService, RaitingService>();
+            services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>(); 
+            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+            services.AddScoped<ICommentValidationHelper, CommentValidationHelper>();
+            services.AddScoped<ICourseValidationHelper, CourseValidationHelper>();
+            services.AddScoped<IGroupValidationHelper, GroupValidationHelper>();
+            services.AddScoped<ILessonValidationHelper, LessonValidationHelper>();
+            services.AddScoped<IMaterialValidationHelper, MaterialValidationHelper>();
+            services.AddScoped<INotificationValidationHelper, NotificationValidationHelper>();
+            services.AddScoped<IPaymentValidationHelper, PaymentValidationHelper>();
+            services.AddScoped<IRatingValidationHelper, RatingValidationHelper>();
+            services.AddScoped<ITagValidationHelper, TagValidationHelper>();
+            services.AddScoped<ITaskValidationHelper, TaskValidationHelper>();
+            services.AddScoped<ITopicValidationHelper, TopicValidationHelper>();
+            services.AddScoped<IUserValidationHelper, UserValidationHelper>();
 
             services.AddControllers();
 
@@ -65,9 +84,9 @@ namespace DevEdu.API
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
-                        ValidIssuer = AuthOptions._issuer,
+                        ValidIssuer = AuthOptions.Issuer,
                         ValidateAudience = true,
-                        ValidAudience = AuthOptions._audience,
+                        ValidAudience = AuthOptions.Audience,
                         ValidateLifetime = true,
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true
@@ -106,14 +125,22 @@ namespace DevEdu.API
                 app.UseSwaggerUi3();
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
+
+            //This middleware is used to redirects HTTP requests to HTTPS.  
             app.UseHttpsRedirection();
 
+            //This middleware is used to returns static files and short-circuits further request processing.   
+            app.UseStaticFiles();
+
+            //This middleware is used to route requests.   
             app.UseRouting();
 
+            //This middleware is used to authorizes a user to access secure resources.  
             app.UseAuthentication();
-
             app.UseAuthorization();
 
+            //This middleware is used to add Razor Pages endpoints to the request pipeline.   
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

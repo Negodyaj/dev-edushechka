@@ -22,7 +22,6 @@ namespace DevEdu.DAL.Models
         public City City { get; set; }
         public List<Role> Roles { get; set; }
 
-
         public override bool Equals(object obj)
         {
             return obj is UserDto dto &&
