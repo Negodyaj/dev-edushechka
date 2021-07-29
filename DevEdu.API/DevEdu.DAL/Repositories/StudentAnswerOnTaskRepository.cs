@@ -77,16 +77,19 @@ namespace DevEdu.DAL.Repositories
 
         public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto)
         {
-            var result = _connection
+
+            StudentAnswerOnTaskDto result = default;
+            return _connection
                 .Query<StudentAnswerOnTaskDto, UserDto, TaskDto, TaskStatus, StudentAnswerOnTaskDto>(
                 _taskStudentSelectByTaskAndStudent,
                 (studentAnswer, user, task, taskStatus) =>
                 {
-                    studentAnswer.User = user;
-                    studentAnswer.Task = task;
-                    studentAnswer.TaskStatus = taskStatus;
+                    result = studentAnswer;
+                    result.User = user;
+                    result.Task = task;
+                    result.TaskStatus = taskStatus;
 
-                    return studentAnswer;
+                    return result;
                 },
                 new
                 {
@@ -97,13 +100,11 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
              )
              .FirstOrDefault();
-
-            return result;
         }
 
         public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {
-            _connection.Execute(
+             _connection.Execute(
                 _taskStudentUpdateAnswer,
                 new
                 {
@@ -161,16 +162,12 @@ namespace DevEdu.DAL.Repositories
 
         public List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId)
         {
-            StudentAnswerOnTaskDto answer = new StudentAnswerOnTaskDto();
-
             return _connection.Query<StudentAnswerOnTaskDto, TaskStatus, StudentAnswerOnTaskDto>(
                     _taskStudentSelectAnswersByUserId,
                     (answerDto, taskStatus) =>
                     {
-                        answer = answerDto;
-                        answer.TaskStatus = taskStatus;
-
-                        return answer;
+                        answerDto.TaskStatus = taskStatus;
+                        return answerDto;
                     },
                     new
                     {

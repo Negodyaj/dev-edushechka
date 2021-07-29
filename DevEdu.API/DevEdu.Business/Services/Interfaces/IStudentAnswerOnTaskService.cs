@@ -9,8 +9,8 @@ namespace DevEdu.Business.Services
         void DeleteStudentAnswerOnTask(int taskId, int studentId);
         List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId);
         StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId);
-        void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId);
-        void UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto);
+        int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId);
+        StudentAnswerOnTaskDto UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto);
         void AddCommentOnStudentAnswer(int taskStudentId, int commentId);
         List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId);
     }
