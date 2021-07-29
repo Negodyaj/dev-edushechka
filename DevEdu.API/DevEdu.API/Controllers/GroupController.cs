@@ -44,7 +44,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupOutputModel> AddGroup([FromBody] GroupInputModel model)
-{
+        {
             var dto = _mapper.Map<GroupDto>(model);
             var result = await _groupService.AddGroup(dto);
             return _mapper.Map<GroupOutputModel>(result);
