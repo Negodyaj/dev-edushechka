@@ -168,7 +168,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<StudentLessonDto>(model);
             _lessonService.UpdateStudentFeedbackForLesson(lessonId, userId, dto);
-            return GetStudenLessonByLessonAndUserId(lessonId, userId);
+            return GetStudentLessonByLessonAndUserId(lessonId, userId);
         }
 
         // api/lesson/{lessonId}/user/{userId}/absenceReason
@@ -179,7 +179,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<StudentLessonDto>(model);
             _lessonService.UpdateStudentAbsenceReasonOnLesson(lessonId, userId, dto);
-            return GetStudenLessonByLessonAndUserId(lessonId, userId);
+            return GetStudentLessonByLessonAndUserId(lessonId, userId);
         }
 
         // api/lesson/{lessonId}/user/{userId}/attendance
@@ -190,7 +190,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<StudentLessonDto>(model);
             _lessonService.UpdateStudentAttendanceOnLesson(lessonId, userId, dto);            
-            return GetStudenLessonByLessonAndUserId(lessonId, userId);
+            return GetStudentLessonByLessonAndUserId(lessonId, userId);
         }
 
         // api/lesson/{lessonId}/feedback
@@ -206,9 +206,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("{lessonId}/user/{userId}")]
         [Description("Get StudenLesson by lesson and user")]
         [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
-        public StudentLessonShortOutputModel GetStudenLessonByLessonAndUserId(int lessonId, int userId)
+        public StudentLessonShortOutputModel GetStudentLessonByLessonAndUserId(int lessonId, int userId)
         {
-            var output =_lessonService.GetStudenLessonByLessonAndUserId(lessonId, userId);
+            var output =_lessonService.GetStudentLessonByLessonAndUserId(lessonId, userId);
             return _mapper.Map<StudentLessonShortOutputModel>(output);
         }
     }

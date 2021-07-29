@@ -5,15 +5,11 @@ using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.Tests
 {
-    public static class GroupTaskData
+    public static class HomeworkData
     {
-        public const int ExpectedGroupTaskId = 42;
-        public const int TaskId = 1;
-        public const int GroupId = 1;
-
-        public static GroupTaskDto GetGroupTaskWithoutGroupAndTask()
+        public static HomeworkDto GetGroupTaskWithoutGroupAndTask()
         {
-            return new GroupTaskDto
+            return new HomeworkDto
             {
                 Id = 1,
                 StartDate = DateTime.Parse("28.10.2020"),
@@ -21,9 +17,9 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static GroupTaskDto GetGroupTaskWithGroupAndTask()
+        public static HomeworkDto GetGroupTaskWithGroupAndTask()
         {
-            return new GroupTaskDto
+            return new HomeworkDto
             {
                 Id = 1,
                 Task = new TaskDto
@@ -48,11 +44,11 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<GroupTaskDto> GetListOfGroupTaskDtoWithTask()
+        public static List<HomeworkDto> GetListOfGroupTaskDtoWithTask()
         {
-            return new List<GroupTaskDto>
+            return new List<HomeworkDto>
             {
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 1,
                     Task = new TaskDto
@@ -67,7 +63,7 @@ namespace DevEdu.Business.Tests
                     StartDate = DateTime.Parse("28.10.2020"),
                     EndDate = DateTime.Parse("28.10.2021")
                 },
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 2,
                     Task = new TaskDto
@@ -82,7 +78,7 @@ namespace DevEdu.Business.Tests
                     StartDate = DateTime.Parse("22.10.2020"),
                     EndDate = DateTime.Parse("22.10.2021")
                 },
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 3,
                     Task = new TaskDto
@@ -100,11 +96,11 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<GroupTaskDto> GetListOfGroupTaskDtoWithGroup()
+        public static List<HomeworkDto> GetListOfGroupTaskDtoWithGroup()
         {
-            return new List<GroupTaskDto>
+            return new List<HomeworkDto>
             {
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 1,
                     Group = new GroupDto
@@ -118,7 +114,7 @@ namespace DevEdu.Business.Tests
                     StartDate = DateTime.Parse("28.10.2020"),
                     EndDate = DateTime.Parse("28.10.2021")
                 },
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 2,
                     Group = new GroupDto
@@ -132,7 +128,7 @@ namespace DevEdu.Business.Tests
                     StartDate = DateTime.Parse("22.10.2020"),
                     EndDate = DateTime.Parse("22.10.2021")
                 },
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 3,
                     Group = new GroupDto

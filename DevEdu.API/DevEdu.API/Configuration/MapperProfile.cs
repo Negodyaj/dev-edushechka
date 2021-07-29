@@ -31,7 +31,7 @@ namespace DevEdu.API.Configuration
             CreateMap<GroupInputModel, GroupDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
                 .ForMember(dest => dest.GroupStatus, opt => opt.MapFrom(src => src.GroupStatusId != null ? src.GroupStatusId : null));
-            CreateMap<GroupTaskInputModel, GroupTaskDto>()
+            CreateMap<HomeworkInputModel, HomeworkDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.EndDate, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<MaterialInputModel, MaterialDto>();
@@ -113,10 +113,10 @@ namespace DevEdu.API.Configuration
             CreateMap<StudentLessonDto, StudentLessonOutputModel>();
             CreateMap<StudentRatingDto, StudentRatingOutputModel>();
             CreateMap<RatingTypeDto, RatingTypeOutputModel>();
-            CreateMap<GroupTaskDto, GroupTaskInfoWithGroupOutputModel>();
-            CreateMap<GroupTaskDto, GroupTaskInfoWithTaskOutputModel>();
-            CreateMap<GroupTaskDto, GroupTaskInfoFullOutputModel>();
-            CreateMap<GroupTaskDto, GroupTaskInfoOutputModel>()
+            CreateMap<HomeworkDto, HomeworkInfoWithGroupOutputModel>();
+            CreateMap<HomeworkDto, HomeworkInfoWithTaskOutputModel>();
+            CreateMap<HomeworkDto, HomeworkInfoFullOutputModel>();
+            CreateMap<HomeworkDto, HomeworkInfoOutputModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString(_dateFormat)));
             CreateMap<GroupDto, GroupOutputMiniModel>()

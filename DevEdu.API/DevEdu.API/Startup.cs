@@ -26,6 +26,7 @@ namespace DevEdu.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+
             services.AddScoped<IMaterialRepository, MaterialRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IStudentAnswerOnTaskRepository, StudentAnswerOnTaskRepository>();
@@ -40,6 +41,8 @@ namespace DevEdu.API
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
             services.AddScoped<IRatingRepository, RatingRepository>();
+            services.AddScoped<IHomeworkRepository, HomeworkRepository>();
+
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IGroupService, GroupService>();
@@ -54,6 +57,7 @@ namespace DevEdu.API
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IHomeworkService, HomeworkService>();
 
             services.AddScoped<ICommentValidationHelper, CommentValidationHelper>();
             services.AddScoped<ICourseValidationHelper, CourseValidationHelper>();
@@ -68,6 +72,7 @@ namespace DevEdu.API
             services.AddScoped<ITaskValidationHelper, TaskValidationHelper>();
             services.AddScoped<ITopicValidationHelper, TopicValidationHelper>();
             services.AddScoped<IUserValidationHelper, UserValidationHelper>();
+            services.AddScoped<IHomeworkValidationHelper, HomeworkValidationHelper>();
 
             services.AddControllers();
 

@@ -85,7 +85,7 @@
     <Folder Include="StoredProcedures\User_Role" />
     <Folder Include="StoredProcedures\Group" />
     <Folder Include="StoredProcedures\Course_Topic" />
-    <Folder Include="StoredProcedures\Group_Task" />
+    <Folder Include="StoredProcedures\Homework" />
     <Folder Include="Types" />
     <Folder Include="Types\User-Defined Table Types" />
     <Folder Include="StoredProcedures\StudentRating" />
@@ -204,12 +204,12 @@
     <Build Include="StoredProcedures\User_Role\User_Role_Insert.sql" />
     <Build Include="StoredProcedures\User_Role\User_Role_Delete.sql" />
     <Build Include="Tables\Homework.sql" />
-    <Build Include="StoredProcedures\Group_Task\Homework_Delete.sql" />
-    <Build Include="StoredProcedures\Group_Task\Homework_Insert.sql" />
-    <Build Include="StoredProcedures\Group_Task\Homework_Update.sql" />
-    <Build Include="StoredProcedures\Group_Task\Homework_SelectAllByGroupId.sql" />
-    <Build Include="StoredProcedures\Group_Task\Homework_SelectById.sql" />
-    <Build Include="StoredProcedures\Group_Task\Homework_SelectAllByTaskId.sql" />
+    <Build Include="StoredProcedures\Homework\Homework_Delete.sql" />
+    <Build Include="StoredProcedures\Homework\Homework_Insert.sql" />
+    <Build Include="StoredProcedures\Homework\Homework_Update.sql" />
+    <Build Include="StoredProcedures\Homework\Homework_SelectAllByGroupId.sql" />
+    <Build Include="StoredProcedures\Homework\Homework_SelectById.sql" />
+    <Build Include="StoredProcedures\Homework\Homework_SelectAllByTaskId.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectByTaskId.sql" />
     <Build Include="StoredProcedures\Course\Course_SelectByTaskId.sql" />
     <Build Include="StoredProcedures\Course\Course_SelectByMaterialId.sql" />
@@ -245,6 +245,7 @@
     <Build Include="StoredProcedures\StudentRating\StudentRating_SelectByUserId.sql" />
     <Build Include="StoredProcedures\StudentRating\StudentRating_Update.sql" />
     <Build Include="StoredProcedures\StudentRating\StudentRating_SelectByGroupId.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectById.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />

@@ -4,7 +4,6 @@ using Dapper;
 using DevEdu.DAL.Models;
 using System.Linq;
 using DevEdu.DAL.Enums;
-using System;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -17,6 +16,7 @@ namespace DevEdu.DAL.Repositories
         private const string _taskStudentUpdateAnswer = "dbo.Task_Student_UpdateAnswer";
         private const string _taskStudentUpdateStatusId = "dbo.Task_Student_UpdateStatusId";
         private const string _taskStudentSelectAllAnswersByTaskId = "dbo.Task_Student_SelectAllAnswersByTaskId";
+        private const string _taskStudentSelectById = "dbo.Task_Student_SelectById";
 
         private const string _task_Student_SelectByTaskIdProcedure = "dbo.Task_Student_SelectByTaskId";
 
@@ -46,7 +46,7 @@ namespace DevEdu.DAL.Repositories
                 {
                     TaskId = dto.Task.Id,
                     StudentId = dto.User.Id,
-                    Answer = dto.Answer
+                    dto.Answer
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -160,6 +160,27 @@ namespace DevEdu.DAL.Repositories
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure)
                 .ToList();
+        }
+
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskById(int id)
+        {
+            var result = _connection
+                .Query<StudentAnswerOnTaskDto, UserDto, TaskDto, TaskStatus, StudentAnswerOnTaskDto>(
+                    _taskStudentSelectById,
+                    (studentAnswer, user, task, taskStatus) =>
+                    {
+                        studentAnswer.User = user;
+                        studentAnswer.Task = task;
+                        studentAnswer.TaskStatus = taskStatus;
+
+                        return studentAnswer;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .FirstOrDefault();
+            return result;
         }
     }
 }

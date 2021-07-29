@@ -17,8 +17,7 @@ namespace DevEdu.DAL.Repositories
         private const string _taskUpdateProcedure = "dbo.Task_Update";
         private const string _tagTaskAddProcedure = "dbo.Tag_Task_Insert";
         private const string _tagTaskDeleteProcedure = "dbo.Tag_Task_Delete";
-        private const string _taskGroupSelectAllByTaskIdProcedure = "dbo.Group_Task_SelectAllByTaskId";
-
+        
         public TaskRepository()
         {
 
@@ -49,6 +48,7 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
             return task;
         }
+
         public List<TaskDto> GetTaskByCourseId(int courseId)
         {
            var taskList = new List<TaskDto>();
@@ -58,6 +58,7 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure)
                 .ToList();
         }
+
         public List<TaskDto> GetTasks()
         {
             var taskDictionary = new Dictionary<int, TaskDto>();
@@ -83,7 +84,6 @@ namespace DevEdu.DAL.Repositories
                 .ToList<TaskDto>();
             return list;
         }
-
         public int AddTask(TaskDto taskDto)
         {
             int taskId = _connection.QuerySingle<int>(
@@ -99,7 +99,6 @@ namespace DevEdu.DAL.Repositories
                 );
             return taskId;
         }
-
         public void UpdateTask(TaskDto taskDto)
         {
             _connection.Execute(
@@ -141,25 +140,6 @@ namespace DevEdu.DAL.Repositories
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure
                 );
-        }
-        public List<GroupTaskDto> GetGroupsByTaskId(int taskId)
-        {
-            GroupTaskDto result;
-            return _connection
-                .Query<GroupTaskDto, GroupDto, GroupStatus, GroupTaskDto>(
-                    _taskGroupSelectAllByTaskIdProcedure,
-                    (groupTask, group, groupStatus) =>
-                    {
-                        result = groupTask;
-                        result.Group = group;
-                        result.Group.GroupStatus = groupStatus;
-                        return result;
-                    },
-                    new { taskId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
-                .ToList();
         }
     }
 }

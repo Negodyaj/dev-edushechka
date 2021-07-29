@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Linq;
 using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
@@ -69,6 +69,15 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteComment(int id)
         {
+            //var claims=User.Identities.ToList();
+            //var userId = claims[0].Claims.ToList()[0].Value;
+            //var ss = claims[0].Name;
+            //var bb = User.Claims.ToList();
+            //var cc =bb[0].Value;
+            //var ll = claims[0].GetType();
+            //var handler = new JwtSecurityTokenHandler();
+            //var decode = handler.ReadJwtToken();
+            //var sss=User.Identities[0];
             _commentService.DeleteComment(id);
         }
 
@@ -82,6 +91,11 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<CommentDto>(model);
             var output= _commentService.UpdateComment(id, dto);
             return _mapper.Map<CommentInfoOutputModel>(output);
+        }
+
+        protected int GetUserId()
+        {
+            return int.Parse(this.User.Claims.First(i => i.Type == "NameId").Value);
         }
     }
 }

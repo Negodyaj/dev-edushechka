@@ -11,6 +11,10 @@ namespace DevEdu.Business.Tests
             return new CommentDto
             {
                 Id = 1,
+                Lesson = new LessonDto
+                {
+                    Id = 1
+                },
                 Text = "comment1",
                 User = new UserDto
                 {
@@ -22,6 +26,30 @@ namespace DevEdu.Business.Tests
                 },
                 Date = DateTime.Parse("19.07.2021"),
                 IsDeleted = false
+            };
+        }
+
+        public static LessonDto GetLessonDto()
+        {
+            return new LessonDto
+            {
+                Id = 1
+            };
+        }
+
+        public static StudentLessonDto GetStudentLessonDto()
+        {
+            return new StudentLessonDto
+            {
+                Id = 1
+            };
+        }
+
+        public static StudentAnswerOnTaskDto GetStudentAnswerOnTaskDto()
+        {
+            return new StudentAnswerOnTaskDto
+            {
+                Id = 1
             };
         }
     }

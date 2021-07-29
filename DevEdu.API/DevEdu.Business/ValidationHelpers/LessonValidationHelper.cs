@@ -19,5 +19,11 @@ namespace DevEdu.Business.ValidationHelpers
             if (lesson == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(lesson), lessonId));
         }
+        public void CheckUserInLessonExistence(int lessonId, int userId)
+        {
+            var studentLesson = _lessonRepository.SelectByLessonAndUserId(lessonId, userId);
+            if (studentLesson == default)
+                throw new EntityNotFoundException(string.Format(ServiceMessages.UserOnLessonNotFoundMessage, userId, lessonId));
+        }
     }
 }

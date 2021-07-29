@@ -53,12 +53,11 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         [Description("Get all courses")]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
-        public List<CourseInfoFullOutputModel> GetAllCoursesWithGrops()
+        public List<CourseInfoFullOutputModel> GetAllCoursesWithGroups()
         {
             var courses = _courseService.GetCourses();
             return _mapper.Map<List<CourseInfoFullOutputModel>>(courses);
         }
-
 
         [HttpPost]
         [Description("Create new course")]

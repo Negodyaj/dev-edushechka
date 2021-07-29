@@ -1,6 +1,5 @@
-﻿CREATE PROCEDURE dbo.Group_Task_Update
-	@GroupId int,
-	@TaskId int,
+﻿CREATE PROCEDURE dbo.Homework_Update
+	@Id int,
     @StartDate datetime,
 	@EndDate datetime
 AS
@@ -9,5 +8,5 @@ BEGIN
     SET
     StartDate = @StartDate,
     EndDate = @EndDate
-    WHERE GroupId = @GroupId AND TaskId = @TaskId
+    WHERE Id = @Id
 END

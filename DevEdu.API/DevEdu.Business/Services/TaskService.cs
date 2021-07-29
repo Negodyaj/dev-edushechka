@@ -64,6 +64,5 @@ namespace DevEdu.Business.Services
         public int AddTagToTask(int taskId, int tagId) => _taskRepository.AddTagToTask(taskId, tagId);
 
         public void DeleteTagFromTask(int taskId, int tagId) => _taskRepository.DeleteTagFromTask(taskId, tagId);
-        public List<GroupTaskDto> GetGroupsByTaskId(int taskId) => _taskRepository.GetGroupsByTaskId(taskId);
     }
 }

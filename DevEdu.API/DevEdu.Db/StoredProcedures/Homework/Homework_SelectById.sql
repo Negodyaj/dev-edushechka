@@ -1,6 +1,5 @@
-﻿CREATE PROCEDURE dbo.Group_Task_SelectById
-	@GroupId int,
-	@TaskId int
+﻿CREATE PROCEDURE dbo.Homework_SelectById
+	@Id int
 AS
 BEGIN
 	SELECT 
@@ -17,9 +16,9 @@ BEGIN
 		g.Name,
 		g.StartDate,
 		g.IsDeleted,
-		g.GroupStatusId as id
+		g.GroupStatusId as Id
 	FROM dbo.Homework h
 	inner join Task t on h.TaskId=t.Id
 	inner join [Group] g on h.GroupId=g.Id
-	WHERE (h.GroupId=@GroupId and h.TaskId=@TaskId)
+	WHERE (h.Id=@Id)
 END

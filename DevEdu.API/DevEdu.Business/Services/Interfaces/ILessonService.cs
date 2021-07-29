@@ -21,6 +21,6 @@ namespace DevEdu.Business.Services
         void UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
         void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
         List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);
-        StudentLessonDto GetStudenLessonByLessonAndUserId(int lessonId, int userId);
+        StudentLessonDto GetStudentLessonByLessonAndUserId(int lessonId, int userId);
     }
 }

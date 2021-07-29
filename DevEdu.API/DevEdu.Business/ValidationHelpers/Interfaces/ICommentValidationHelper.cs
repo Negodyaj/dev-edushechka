@@ -2,6 +2,6 @@
 {
     public interface ICommentValidationHelper
     {
-        void CheckCommentExistence(int courseId);
+        void CheckCommentExistence(int commentId);
     }
 }

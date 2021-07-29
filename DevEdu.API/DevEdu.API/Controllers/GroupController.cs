@@ -107,8 +107,6 @@ namespace DevEdu.API.Controllers
             return $"Group {groupId} remove  Lesson Id:{lessonId}";
         }
 
-
-
         // api/Group/{groupId}/material/{materialId}
         [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
         [HttpPost("{groupId}/material/{materialId}")]
@@ -140,62 +138,5 @@ namespace DevEdu.API.Controllers
         [Description("Delete user from group")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
-
-        //  api/group/1/task/1
-        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor, Role.Student)]
-        [HttpGet("{groupId}/task/{taskId}")]
-        [Description("Return task group by both id")]
-        [ProducesResponseType(typeof(GroupTaskInfoFullOutputModel), StatusCodes.Status200OK)]
-        public GroupTaskInfoFullOutputModel GetGroupTask(int groupId, int taskId)
-        {
-            var dto = _groupService.GetGroupTask(groupId, taskId);
-            var output = _mapper.Map<GroupTaskInfoFullOutputModel>(dto);
-            return output;
-        }
-
-        //  api/group/1/task/
-        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor, Role.Student)]
-        [HttpGet("{groupId}/tasks")]
-        [Description("Get all tasks by group")]
-        [ProducesResponseType(typeof(List<GroupTaskInfoWithTaskOutputModel>), StatusCodes.Status200OK)]
-        public List<GroupTaskInfoWithTaskOutputModel> GetTasksByGroupId(int groupId)
-        {
-            var dto = _groupService.GetTasksByGroupId(groupId);
-            var output = _mapper.Map<List<GroupTaskInfoWithTaskOutputModel>>(dto);
-            return output;
-        }
-
-        //  api/group/1/task/1
-        [AuthorizeRoles(Role.Manager, Role.Teacher)]
-        [HttpPost("{groupId}/task/{taskId}")]
-        [Description("Add task to group")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
-        public int AddTaskToGroup(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
-        {
-            var dto = _mapper.Map<GroupTaskDto>(model);
-            return _groupService.AddTaskToGroup(groupId, taskId, dto);
-        }
-
-        //  api/group/1/task/1
-        [AuthorizeRoles(Role.Manager, Role.Teacher)]
-        [HttpDelete("{groupId}/task/{taskId}")]
-        [Description("Delete task from group")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void DeleteTaskFromGroup(int groupId, int taskId)
-        {
-            _groupService.DeleteTaskFromGroup(groupId, taskId);
-        }
-
-        //  api/comment/5
-        [AuthorizeRoles(Role.Manager, Role.Teacher)]
-        [HttpPut("{groupId}/task/{taskId}")]
-        [Description("Update task by group")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public GroupTaskInfoOutputModel UpdateGroupTask(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
-        {
-            var dto = _mapper.Map<GroupTaskDto>(model);
-            var output = _groupService.UpdateGroupTask(groupId, taskId, dto);
-            return _mapper.Map<GroupTaskInfoOutputModel>(output);
-        }
     }
 }

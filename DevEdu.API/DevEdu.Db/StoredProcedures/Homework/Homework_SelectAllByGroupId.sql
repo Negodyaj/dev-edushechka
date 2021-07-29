@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.Group_Task_SelectAllByGroupId
+﻿CREATE PROCEDURE dbo.Homework_SelectAllByGroupId
 	@GroupId int
 AS
 BEGIN

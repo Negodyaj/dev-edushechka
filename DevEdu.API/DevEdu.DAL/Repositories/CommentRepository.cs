@@ -84,9 +84,16 @@ namespace DevEdu.DAL.Repositories
 
         public List<CommentDto> SelectCommentsFromLessonByLessonId(int lessonId)
         {
+            CommentDto result = default;
             return _connection
-                .Query<CommentDto>(
+                .Query<CommentDto, UserDto, CommentDto>(
                     _commentsFromLessonSelectByLessonIdProcedure,
+                    (comment, user) =>
+                    {
+                        result = comment;
+                        result.User = user;
+                        return result;
+                    },
                     new { lessonId },
                     commandType: CommandType.StoredProcedure
                 )

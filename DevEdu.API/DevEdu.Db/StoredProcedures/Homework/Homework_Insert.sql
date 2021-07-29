@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.Group_Task_Insert
+﻿CREATE PROCEDURE dbo.Homework_Insert
 	@GroupId int,
 	@TaskId int,
 	@StartDate datetime,

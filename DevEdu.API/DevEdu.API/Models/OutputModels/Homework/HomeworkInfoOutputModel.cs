@@ -1,6 +1,6 @@
 ﻿namespace DevEdu.API.Models.OutputModels
 {
-    public class GroupTaskInfoOutputModel
+    public class HomeworkInfoOutputModel
     {
         public int Id { get; set; }
         public string StartDate { get; set; }
