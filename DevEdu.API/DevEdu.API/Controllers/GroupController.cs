@@ -2,6 +2,7 @@
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -78,7 +79,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{groupId}/change-status/{statusId}")]
         [Description("Change group status by id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public GroupOutputBaseModel ChangeGroupStatus(int groupId, int statusId)
+        public GroupOutputBaseModel ChangeGroupStatus(int groupId, GroupStatus statusId)
         {
             var output = _groupService.ChangeGroupStatus(groupId, statusId);
             return _mapper.Map<GroupOutputBaseModel>(output);
@@ -127,7 +128,7 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
         [Description("Add user to group")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void AddUserToGroup(int groupId, int userId, int roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
+        public void AddUserToGroup(int groupId, int userId, Role roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
 
         //  api/group/1/user/2
         [HttpDelete("{groupId}/user/{userId}")]

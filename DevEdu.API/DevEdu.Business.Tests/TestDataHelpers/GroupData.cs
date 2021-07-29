@@ -11,7 +11,7 @@ namespace DevEdu.Business.Tests
         public const int GroupId = 1;
         public const int MaterialId = 1;
         public const int RoleStudent = (int)Role.Student;
-        public const int StatusGroup = 1;
+        public const GroupStatus StatusGroup = GroupStatus.Forming;
 
         public static GroupDto GetGroupDto()
         {

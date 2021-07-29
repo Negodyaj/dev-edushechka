@@ -118,8 +118,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public GroupDto ChangeGroupStatus(int groupId, int statusId)
+        public GroupDto ChangeGroupStatus(int groupId, GroupStatus status)
         {
+            var statusId = (int)status;
             return _connection.QuerySingle<GroupDto>
             (
                 _groupUpdateGroupStatusProcedure,
@@ -184,8 +185,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int AddUserToGroup(int groupId, int userId, int roleId)
+        public int AddUserToGroup(int groupId, int userId, Role role)
         {
+            var roleId = (int)role;
             return _connection.Execute(
                 _userGroupInsertProcedure,
                 new

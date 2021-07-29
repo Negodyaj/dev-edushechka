@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.Services
@@ -10,12 +11,12 @@ namespace DevEdu.Business.Services
         GroupDto GetGroup(int id);
         List<GroupDto> GetGroups();
         GroupDto UpdateGroup(int id, GroupDto groupDto);
-        GroupDto ChangeGroupStatus(int groupId, int statusId);
+        GroupDto ChangeGroupStatus(int groupId, GroupStatus statusId);
         int AddGroupToLesson(int groupId, int lessonId);
         int RemoveGroupFromLesson(int groupId, int lessonId);
         int AddGroupMaterialReference(int groupId, int materialId);
         int RemoveGroupMaterialReference(int groupId, int materialId);
-        void AddUserToGroup(int groupId, int userId, int roleId);
+        void AddUserToGroup(int groupId, int userId, Role roleId);
         void DeleteUserFromGroup(int groupId, int userId);
         int AddTaskToGroup(int groupId, int taskId, GroupTaskDto dto);
         void DeleteTaskFromGroup(int groupId, int taskId);
