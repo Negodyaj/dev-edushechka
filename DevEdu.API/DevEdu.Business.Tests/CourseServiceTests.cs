@@ -254,6 +254,129 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Verify(x => x.DeleteAllTopicsByCourseId(givenCourseId), Times.Never);
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
         }
+        [Test]
+        public void AddCourseMaterialReference_ValidCourseIdAndMaterialId_MaterialWasAddedToCourse()
+        {
+            var courseId = 2;
+            var materialId = 4;
+            var materialDto = MaterialData.GetMaterialDtoWithoutTags();
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                       _courseRepositoryMock.Object,
+                                       _taskRepositoryMock.Object,
+                                       _materialRepositoryMock.Object,
+                                        new CourseValidationHelper(_courseRepositoryMock.Object),
+                                        new MaterialValidationHelper(_materialRepositoryMock.Object));
+            _courseRepositoryMock.Setup(x => x.GetCourse(courseId)).Returns(new CourseDto() { Id = courseId });
+            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialDto);
+            //When
+            sut.AddCourseMaterialReference(courseId, materialId);
+            //Then
+            _courseRepositoryMock.Verify(x => x.AddCourseMaterialReference(courseId, materialId), Times.Once);
+        }
+        [Test]
+        public void AddCourseMaterialReference_NotValidCourseId_EntityNotFoundExceptionThrown()
+        {
+            var courseId = 2;
+            var materialId = 4;
+            var materialDto = MaterialData.GetMaterialDtoWithoutTags();
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "course", courseId);
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                       _courseRepositoryMock.Object,
+                                       _taskRepositoryMock.Object,
+                                       _materialRepositoryMock.Object,
+                                        new CourseValidationHelper(_courseRepositoryMock.Object),
+                                        new MaterialValidationHelper(_materialRepositoryMock.Object));
+            _courseRepositoryMock.Setup(x => x.GetCourse(courseId));
+            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialDto);
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() => sut.AddCourseMaterialReference(courseId, materialId));
+            //Then
+            _courseRepositoryMock.Verify(x => x.AddCourseMaterialReference(courseId, materialId), Times.Never);
+            Assert.That(result.Message, Is.EqualTo(exp));
+        }
+        [Test]
+        public void AddCourseMaterialReference_NotValidMaterialId_EntityNotFoundExceptionThrown()
+        {
+            var courseId = 2;
+            var materialId = 4;
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", materialId);
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                       _courseRepositoryMock.Object,
+                                       _taskRepositoryMock.Object,
+                                       _materialRepositoryMock.Object,
+                                        new CourseValidationHelper(_courseRepositoryMock.Object),
+                                        new MaterialValidationHelper(_materialRepositoryMock.Object));
+            _courseRepositoryMock.Setup(x => x.GetCourse(courseId)).Returns(new CourseDto() { Id = courseId }); ;
+            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId));
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() => sut.AddCourseMaterialReference(courseId, materialId));
+            //Then
+            _courseRepositoryMock.Verify(x => x.AddCourseMaterialReference(courseId, materialId), Times.Never);
+            Assert.That(result.Message, Is.EqualTo(exp));
+        }
+        [Test]
+        public void RemoveCourseMaterialReference_ValidCourseIdAndMaterialId_MaterialWasDeletedFromCourse()
+        {
+            //Given
+            var courseId = 2;
+            var materialId = 4;
+            var materialDto = MaterialData.GetMaterialDtoWithoutTags();
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                       _courseRepositoryMock.Object,
+                                       _taskRepositoryMock.Object,
+                                       _materialRepositoryMock.Object,
+                                        new CourseValidationHelper(_courseRepositoryMock.Object),
+                                        new MaterialValidationHelper(_materialRepositoryMock.Object));
+            _courseRepositoryMock.Setup(x => x.GetCourse(courseId)).Returns(new CourseDto() { Id = courseId });
+            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialDto);
+            //When
+            sut.RemoveCourseMaterialReference(courseId, materialId);
+            //Then
+            _courseRepositoryMock.Verify(x => x.RemoveCourseMaterialReference(courseId, materialId), Times.Once);
+        }
+        [Test]
+        public void RemoveCourseMaterialReference_NotValidCourseId_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var courseId = 2;
+            var materialId = 4;
+            var materialDto = MaterialData.GetMaterialDtoWithoutTags();
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "course", courseId);
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                       _courseRepositoryMock.Object,
+                                       _taskRepositoryMock.Object,
+                                       _materialRepositoryMock.Object,
+                                        new CourseValidationHelper(_courseRepositoryMock.Object),
+                                        new MaterialValidationHelper(_materialRepositoryMock.Object));
+            _courseRepositoryMock.Setup(x => x.GetCourse(courseId));
+            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialDto);
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() => sut.RemoveCourseMaterialReference(courseId, materialId));
+            //Then
+            _courseRepositoryMock.Verify(x => x.RemoveCourseMaterialReference(courseId, materialId), Times.Never);
+            Assert.That(result.Message, Is.EqualTo(exp));
+        }
+        [Test]
+        public void RemoveCourseMaterialReference_NotValidMaterialId_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var courseId = 2;
+            var materialId = 4;
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", materialId);
+            var sut = new CourseService(_topicRepositoryMock.Object,
+                                       _courseRepositoryMock.Object,
+                                       _taskRepositoryMock.Object,
+                                       _materialRepositoryMock.Object,
+                                        new CourseValidationHelper(_courseRepositoryMock.Object),
+                                        new MaterialValidationHelper(_materialRepositoryMock.Object));
+            _courseRepositoryMock.Setup(x => x.GetCourse(courseId)).Returns(new CourseDto() { Id = courseId }); ;
+            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId));
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() => sut.RemoveCourseMaterialReference(courseId, materialId));
+            //Then
+            _courseRepositoryMock.Verify(x => x.RemoveCourseMaterialReference(courseId, materialId), Times.Never);
+            Assert.That(result.Message, Is.EqualTo(exp));
+        }
 
     }
 }
