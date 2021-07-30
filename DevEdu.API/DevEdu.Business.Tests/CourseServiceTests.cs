@@ -86,13 +86,13 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(courseDto, dto);
             _courseRepositoryMock.Verify(x => x.GetCourse(1));
         }
-
+        [Test]
         public void GetCourseById_IntCourseId_ReturnCourseWithGroups_Topics_Materials_Tasks()
         {
             //Given
             var courseDto = CourseData.GetCourseDto();
             var courseId = CourseData.CourseId;
-            _courseRepositoryMock.Setup(x => x.AddCourse(courseDto)).Returns(courseId);
+            _courseRepositoryMock.Setup(x => x.GetCourse(courseId)).Returns(courseDto);
 
             var sut = new CourseService(_courseRepositoryMock.Object,
                                         _topicRepositoryMock.Object,
