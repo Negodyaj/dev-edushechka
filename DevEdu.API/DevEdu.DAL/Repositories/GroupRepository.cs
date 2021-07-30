@@ -32,7 +32,7 @@ namespace DevEdu.DAL.Repositories
         private const string _taskGroupSelectByIdProcedure = "dbo.Group_Task_SelectById";
         private const string _taskGroupUpdateProcedure = "dbo.Group_Task_Update";
 
-        public GroupRepository() { }
+        private const string _groupSelectPresentGroupForStudentByUserId = "dbo.Group_SelectPresentGroupForStudentByUserId";
 
         public int AddGroup(GroupDto groupDto)
         {
@@ -54,7 +54,7 @@ namespace DevEdu.DAL.Repositories
             _connection.Execute
             (
                 _groupDeleteProcedure,
-                new { Id = id},
+                new { Id = id },
                 commandType: CommandType.StoredProcedure
             );
         }
@@ -149,15 +149,15 @@ namespace DevEdu.DAL.Repositories
 
         public int RemoveGroupFromLesson(int groupId, int lessonId)
         {
-           return  _connection.Execute(
-                _deleteGroupLesson,
-                new
-                {
-                    groupId,
-                    lessonId
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            return _connection.Execute(
+                 _deleteGroupLesson,
+                 new
+                 {
+                     groupId,
+                     lessonId
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
         public int AddGroupMaterialReference(int groupId, int materialId)
@@ -345,6 +345,15 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
+        }  
+
+        public int GetPresentGroupForStudentByUserId(int userId)
+        {
+            return _connection.QuerySingle<int>(
+                   _groupSelectPresentGroupForStudentByUserId,
+                   new { Id = userId },
+                   commandType: CommandType.StoredProcedure
+              );
         }
-    }    
+    }
 }
