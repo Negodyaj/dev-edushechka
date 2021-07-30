@@ -8,9 +8,13 @@ using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using DevEdu.API.Common;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CourseController : Controller
@@ -88,6 +92,7 @@ namespace DevEdu.API.Controllers
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpPost("{courseId}/material/{materialId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("Add material to course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public void AddMaterialToCourse(int courseId, int materialId)
@@ -96,6 +101,7 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpDelete("{courseId}/material/{materialId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("Delete material from course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public void RemoveMaterialFromCourse(int courseId, int materialId)
