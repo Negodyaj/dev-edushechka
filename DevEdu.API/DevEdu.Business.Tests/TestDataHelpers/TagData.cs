@@ -7,7 +7,7 @@ namespace DevEdu.Business.Tests.Tag
 {
     public class TagData
     {
-        public static List<TagDto> GetListTagData()
+        public static List<TagDto> GetListTagDto()
         {
             return new List<TagDto>
             {
@@ -26,6 +26,10 @@ namespace DevEdu.Business.Tests.Tag
                 new TagDto
                 {
                     Id = 13,
+                    Name = "Tag"
+                },
+                new TagDto
+                {
                     Name = "Tag"
                 }
             };

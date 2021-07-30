@@ -9,19 +9,17 @@ namespace DevEdu.Business.ValidationHelpers
     public class GroupValidationHelper : IGroupValidationHelper
     {
         private readonly IGroupRepository _groupRepository;
-        private readonly IUserRepository _userRepository;
 
-        public GroupValidationHelper(IGroupRepository groupRepository, IUserRepository userRepository)
+        public GroupValidationHelper(IGroupRepository groupRepository)
         {
             _groupRepository = groupRepository;
-            _userRepository = userRepository;
         }
 
         public void CheckGroupExistence(int groupId)
         {
-            //var group = _groupRepository.GetGroup(groupId);
-            //if (group == default)
-            //    throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), groupId));
+            var group = _groupRepository.GetGroup(groupId);
+            if (group == default)
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), groupId));
         }
     }
 }

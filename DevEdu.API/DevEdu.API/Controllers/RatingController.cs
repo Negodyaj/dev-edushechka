@@ -31,7 +31,7 @@ namespace DevEdu.API.Controllers
         // api/rating
         [HttpPost]
         [Description("Add StudentRating to database")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status201Created)]
         [AuthorizeRoles(Role.Teacher)]
         public StudentRatingOutputModel AddStudentRating([FromBody] StudentRatingInputModel model)
         {

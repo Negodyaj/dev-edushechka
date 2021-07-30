@@ -18,7 +18,11 @@ namespace DevEdu.Business.Services
             _tagValidationHelper = tagValidationHelper;
         }
 
-        public int AddTag(TagDto dto) => _repository.AddTag(dto);
+        public TagDto AddTag(TagDto dto)
+        {
+            dto.Id = _repository.AddTag(dto);
+            return dto;
+        }
 
         public void DeleteTag(int id)
         {

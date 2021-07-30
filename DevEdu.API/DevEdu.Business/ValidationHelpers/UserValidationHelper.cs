@@ -27,7 +27,7 @@ namespace DevEdu.Business.ValidationHelpers
             var usersInGroup = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
             if (usersInGroup == default || usersInGroup.FirstOrDefault(u => u.Id == userId) == default)
             {
-                throw new ValidationException(string.Format(ServiceMessages.UserDoesntBelongToGroup, role, userId, groupId));
+                throw new ValidationException(string.Format(ServiceMessages.UserDoesntBelongToGroup, role.ToString(), userId, groupId));
             }
         }
         public void CheckAuthorizationUserToGroup(int groupId, int userId, Role role)
@@ -35,7 +35,7 @@ namespace DevEdu.Business.ValidationHelpers
             var usersInGroup = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
             if (usersInGroup == default || usersInGroup.FirstOrDefault(u => u.Id == userId) == default)
             {
-                throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToGroup, role, userId, groupId));
+                throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntAuthorizeToGroup, userId , groupId, role.ToString()));
             }
         }
     }

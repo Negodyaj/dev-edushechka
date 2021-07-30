@@ -28,12 +28,13 @@ namespace DevEdu.API.Controllers
         // api/tag
         [HttpPost]
         [Description("Add tag to database")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status201Created)]
         [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Methodist)]
-        public int AddTag([FromBody] TagInputModel model)
+        public TagOutputModel AddTag([FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
-            return _service.AddTag(dto);
+            dto = _service.AddTag(dto);
+            return _mapper.Map<TagOutputModel>(dto);
         }
 
         // api/tag/1
