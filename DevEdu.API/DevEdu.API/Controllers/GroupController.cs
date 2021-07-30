@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.API.Configuration.ExceptionResponses;
-using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
@@ -24,7 +23,7 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IGroupService _groupService;
-        private ClaimsIdentity _claimsIdentity;
+        private readonly ClaimsIdentity _claimsIdentity;
 
         public GroupController(IMapper mapper, IGroupService service)
         {

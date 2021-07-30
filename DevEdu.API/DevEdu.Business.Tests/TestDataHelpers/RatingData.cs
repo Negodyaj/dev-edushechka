@@ -1,5 +1,4 @@
-﻿
-using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
