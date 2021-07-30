@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using AutoMapper;
+using DevEdu.API.Common;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels.Payment;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevEdu.API.Controllers
 {
+    [AuthorizeRoles(Role.Manager)]
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentController : Controller
@@ -34,6 +38,7 @@ namespace DevEdu.API.Controllers
 
         //  api/payment/user/1
         [HttpGet("user/{userId}")]
+        [AuthorizeRoles(Role.Student)]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [Description("Get all payments by user id")]
         public List<PaymentOutputModel> SelectAllPaymentsByUserId(int userId)

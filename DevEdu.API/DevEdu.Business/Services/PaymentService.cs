@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
@@ -9,13 +10,19 @@ namespace DevEdu.Business.Services
     public class PaymentService : IPaymentService
     {
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IPaymentValidationHelper _paymentValidationHelper;
 
-        public PaymentService(IPaymentRepository paymentRepository)
+        public PaymentService(IPaymentRepository paymentRepository,
+                              IPaymentValidationHelper paymentValidationHelper)
         {
             _paymentRepository = paymentRepository;
+            _paymentValidationHelper = paymentValidationHelper;
         }
 
-        public PaymentDto GetPayment(int id) => _paymentRepository.GetPayment(id);
+        public PaymentDto GetPayment(int id)
+        {
+            _paymentRepository.GetPayment(id);
+        }
 
         public List<PaymentDto> GetPaymentsByUserId(int userId) => _paymentRepository.GetPaymentsByUser(userId);
 

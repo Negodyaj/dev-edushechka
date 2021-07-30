@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.ValidationHelpers
@@ -13,11 +14,12 @@ namespace DevEdu.Business.ValidationHelpers
             _paymentRepository = paymentRepository;
         }
 
-        public void CheckPaymentExistence(int paymentId)
+        public PaymentDto GetPaymentByIdAndThrowIfNotFound(int paymentId)
         {
             var payment = _paymentRepository.GetPayment(paymentId);
             if (payment == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(payment), paymentId));
+            return payment;
         }
     }
 }
