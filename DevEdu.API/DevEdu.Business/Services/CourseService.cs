@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System;
@@ -15,16 +16,23 @@ namespace DevEdu.Business.Services
         private readonly ITopicRepository _topicRepository;
         private readonly ITaskRepository _taskRepository;
         private readonly IMaterialRepository _materialRepository;
-        
+
+        private readonly ICourseValidationHelper _courseValidationHelper;
+        private readonly IMaterialValidationHelper _materialValidationHelper;
+
         public CourseService(ITopicRepository topicRepository,
                              ICourseRepository courseRepository,
                              ITaskRepository taskRepository,
-                             IMaterialRepository materialRepository)
+                             IMaterialRepository materialRepository,
+                             ICourseValidationHelper courseValidationHelper,
+                             IMaterialValidationHelper materialValidationHelper)
         {
             _topicRepository = topicRepository;
             _courseRepository = courseRepository;
             _taskRepository = taskRepository;
             _materialRepository = materialRepository;
+            _courseValidationHelper = courseValidationHelper;
+            _materialValidationHelper = materialValidationHelper;
         }
 
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
@@ -85,9 +93,16 @@ namespace DevEdu.Business.Services
         public void AddTaskToCourse(int courseId, int taskId) =>
             _courseRepository.AddTaskToCourse(courseId, taskId);
 
-        public int AddCourseMaterialReference(int courseId, int materialId) => _courseRepository.AddCourseMaterialReference(courseId, materialId);
-
-        public int RemoveCourseMaterialReference(int courseId, int materialId) => _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
+        public int AddCourseMaterialReference(int courseId, int materialId)
+        {
+            CheckCourseAndMaterialExistences(courseId, materialId);
+            return _courseRepository.AddCourseMaterialReference(courseId, materialId);
+        }
+        public int RemoveCourseMaterialReference(int courseId, int materialId)
+        {
+            CheckCourseAndMaterialExistences(courseId, materialId);
+            return _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
+        }
 
         public void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
         {
@@ -119,9 +134,7 @@ namespace DevEdu.Business.Services
                 _courseRepository.UpdateCourseTopicsByCourseId(topics);
             }
         }
-
         public void DeleteAllTopicsByCourseId(int courseId) => _courseRepository.DeleteAllTopicsByCourseId(courseId);
-
         private void CheckUniquenessPositions(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
@@ -135,6 +148,11 @@ namespace DevEdu.Business.Services
             {
                 throw new ValidationException(ServiceMessages.SameTopicsInCourseTopics);
             }
+        }
+        private void CheckCourseAndMaterialExistences(int courseId, int materialId)
+        {
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _materialValidationHelper.CheckMaterialExistence(materialId);
         }
     }
 }
