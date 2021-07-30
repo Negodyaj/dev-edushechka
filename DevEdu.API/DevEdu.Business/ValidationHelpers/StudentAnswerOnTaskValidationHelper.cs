@@ -18,7 +18,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var studentAnswerOnTask = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(dto);
             if (studentAnswerOnTask == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTask), dto)); // Andrey im so sorry =0
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(studentAnswerOnTask), dto)); // Andrey im so sorry =0
         }
     }
 }

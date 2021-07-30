@@ -5,6 +5,5 @@ namespace DevEdu.Business.ValidationHelpers
     public interface IUserValidationHelper
     {
         UserDto GetUserByIdAndThrowIfNotFound(int userId);
-        void ChekRoleExistence(int roleId);
     }
 }

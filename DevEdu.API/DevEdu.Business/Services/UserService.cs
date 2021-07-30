@@ -1,4 +1,5 @@
-﻿using DevEdu.Business.Exceptions;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
@@ -44,7 +45,7 @@ namespace DevEdu.Business.Services
         {
             var user = _userRepository.SelectUserByEmail(email);
             if (user == default)
-                throw new EntityNotFoundException($"{nameof(user)} with email = {email} was not found");
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithEmailNotFoundMessage, nameof(user), email));
 
             return user;
         }
@@ -75,7 +76,6 @@ namespace DevEdu.Business.Services
 
         public void AddUserRole(int userId, int roleId)
         {
-            _userValidationHelper.ChekRoleExistence(roleId);
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
 
             _userRepository.AddUserRole(userId, roleId);
@@ -84,7 +84,6 @@ namespace DevEdu.Business.Services
         public void DeleteUserRole(int userId, int roleId)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-            _userValidationHelper.ChekRoleExistence(roleId);
 
             _userRepository.DeleteUserRole(userId, roleId);
         }
