@@ -1,17 +1,15 @@
 ﻿using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.API.Extensions;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IdentityModel.Tokens.Jwt;
-//using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -27,10 +25,8 @@ namespace DevEdu.API.Controllers
 
         public GroupController(IMapper mapper, IGroupService service)
         {
-            _claimsIdentity = this.User.Identity as ClaimsIdentity;
             _mapper = mapper;
             _groupService = service;
-            //var role = _claimsIdentity.FindAll(ClaimsIdentity.DefaultRoleClaimType)?.ToList(); // Над проверить, но по идеи получу список ролей
         }
 
         //  api/Group
@@ -58,7 +54,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupFullOutputModel> GetGroup(int id)
         {
-            var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var userId = BaseControllerExtensions.GetUserId(this);
 
             var dto = await _groupService.GetGroup(id, userId);
             return _mapper.Map<GroupFullOutputModel>(dto);
@@ -102,7 +98,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupInfoOutputModel> UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
-            var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var userId = BaseControllerExtensions.GetUserId(this);
 
             var dto = _mapper.Map<GroupDto>(model);
             var output = await _groupService.UpdateGroup(id, dto, userId);
@@ -134,7 +130,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<string> AddGroupToLesson(int groupId, int lessonId)
         {
-            var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var userId = BaseControllerExtensions.GetUserId(this);
 
             await _groupService.AddGroupToLesson(groupId, lessonId, userId);
             return $"Group {groupId} add  Lesson Id:{lessonId}";
@@ -150,7 +146,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<string> RemoveGroupFromLesson(int groupId, int lessonId)
         {
-            var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var userId = BaseControllerExtensions.GetUserId(this);
 
             await _groupService.RemoveGroupFromLesson(groupId, lessonId, userId);
             return $"Group {groupId} remove  Lesson Id:{lessonId}";
@@ -166,7 +162,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<int> AddGroupMaterialReference(int groupId, int materialId)
         {
-            var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var userId = BaseControllerExtensions.GetUserId(this);
 
             return await _groupService.AddGroupMaterialReference(groupId, materialId, userId);
         }
@@ -181,7 +177,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<int> RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var userId = BaseControllerExtensions.GetUserId(this);
 
             return await _groupService.RemoveGroupMaterialReference(groupId, materialId, userId);
         }
@@ -196,7 +192,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task AddUserToGroup(int groupId, int userId, Role roleId)
         {
-            var currentUserId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var currentUserId = BaseControllerExtensions.GetUserId(this);
 
             await _groupService.AddUserToGroup(groupId, userId, roleId, currentUserId);
         }
@@ -211,7 +207,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task DeleteUserFromGroup(int userId, int groupId)
         {
-            var currentUserId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var currentUserId = BaseControllerExtensions.GetUserId(this);
 
             await _groupService.DeleteUserFromGroup(userId, groupId, currentUserId);
         }
@@ -226,7 +222,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupTaskInfoFullOutputModel> GetGroupTask(int groupId, int taskId)
         {
-            var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var userId = BaseControllerExtensions.GetUserId(this);
 
             var dto = await _groupService.GetGroupTask(groupId, taskId, userId);
             var output = _mapper.Map<GroupTaskInfoFullOutputModel>(dto);
@@ -243,7 +239,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<List<GroupTaskInfoWithTaskOutputModel>> GetTasksByGroupId(int groupId)
         {
-            var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var userId = BaseControllerExtensions.GetUserId(this);
 
             var dto = await _groupService.GetTasksByGroupId(groupId, userId);
             var output = _mapper.Map<List<GroupTaskInfoWithTaskOutputModel>>(dto);
@@ -260,7 +256,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<int> AddTaskToGroup(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
-            var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var userId = BaseControllerExtensions.GetUserId(this);
 
             var dto = _mapper.Map<GroupTaskDto>(model);
             return await _groupService.AddTaskToGroup(groupId, taskId, dto, userId);
@@ -276,7 +272,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task DeleteTaskFromGroup(int groupId, int taskId)
         {
-            var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var userId = BaseControllerExtensions.GetUserId(this);
 
             await _groupService.DeleteTaskFromGroup(groupId, taskId, userId);
         }
@@ -291,7 +287,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupTaskInfoOutputModel> UpdateGroupTask(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
-            var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
+            var userId = BaseControllerExtensions.GetUserId(this);
 
             var dto = _mapper.Map<GroupTaskDto>(model);
             var output = await _groupService.UpdateGroupTask(groupId, taskId, dto, userId);

@@ -151,32 +151,5 @@ namespace DevEdu.Business.Tests
                 }
             };
         }
-
-        public static List<UserDto> GetUserForGroup()
-        {
-            return new List<UserDto>
-            {
-                new UserDto
-                {
-                    Id = 1,
-                    FirstName = "Котафей",
-                    LastName = "Котофеевич",
-                    Email = "kots@ya.ru",
-                    RegistrationDate = DateTime.MinValue,
-                    BirthDate = DateTime.MaxValue,
-                    Photo = @"url/worldMap",
-                    ExileDate = DateTime.MaxValue,
-                    City = City.SaintPetersburg,
-                    Patronymic = null,
-                    Username = null,
-                    Password = null,
-                    ContractNumber = null,
-                    GitHubAccount = null,
-                    PhoneNumber = null,
-                    Roles = null,
-                    IsDeleted = false
-                }
-            };
-        }
     }
 }

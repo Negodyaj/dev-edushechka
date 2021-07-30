@@ -17,6 +17,9 @@ namespace DevEdu.Business.Services
         private readonly IMaterialValidationHelper _materialHelper;
         private readonly IUserValidationHelper _userHelper;
         private readonly ITaskValidationHelper _taskHelper;
+        private readonly ILessonRepository _lessonRepository;
+        private readonly IMaterialRepository _materialRepository;
+        private readonly ITaskRepository _taskRepository;
 
         public GroupService
         (
@@ -26,7 +29,10 @@ namespace DevEdu.Business.Services
             ILessonValidationHelper lessonHelper = default,
             IMaterialValidationHelper materialHelper = default,
             IUserValidationHelper userHelper = default,
-            ITaskValidationHelper taskHelper = default
+            ITaskValidationHelper taskHelper = default,
+            ILessonRepository lessonRepository = default,
+            IMaterialRepository materialRepository = default,
+            ITaskRepository taskRepository = default
         )
         {
             _groupRepository = groupRepository;
@@ -36,6 +42,9 @@ namespace DevEdu.Business.Services
             _materialHelper = materialHelper;
             _userHelper = userHelper;
             _taskHelper = taskHelper;
+            _lessonRepository = lessonRepository;
+            _materialRepository = materialRepository;
+            _taskRepository = taskRepository;
         }
 
         public async Task<int> AddGroup(GroupDto groupDto) => await _groupRepository.AddGroup(groupDto);
