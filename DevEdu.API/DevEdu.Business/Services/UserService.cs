@@ -69,15 +69,12 @@ namespace DevEdu.Business.Services
 
         public void DeleteUser(int id)
         {
-            _userValidationHelper.ChekIdDoesNotLessThenMinimum(id);
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
-
             _userRepository.DeleteUser(id);
         }
 
         public void AddUserRole(int userId, int roleId)
         {
-            _userValidationHelper.CheckUserIdAndRoleIdDoesNotLessThanMinimum(userId, roleId);
             _userValidationHelper.ChekRoleExistence(roleId);
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
 
@@ -86,7 +83,6 @@ namespace DevEdu.Business.Services
 
         public void DeleteUserRole(int userId, int roleId)
         {
-            _userValidationHelper.CheckUserIdAndRoleIdDoesNotLessThanMinimum(userId, roleId);
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
             _userValidationHelper.ChekRoleExistence(roleId);
 

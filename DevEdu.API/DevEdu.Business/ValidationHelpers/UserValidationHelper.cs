@@ -10,7 +10,6 @@ namespace DevEdu.Business.ValidationHelpers
     public class UserValidationHelper : IUserValidationHelper
     {
         private readonly IUserRepository _userRepository;
-        private readonly int idMinimum = 1;
 
         public UserValidationHelper(IUserRepository userRepository)
         {
@@ -31,18 +30,6 @@ namespace DevEdu.Business.ValidationHelpers
             var role = Enum.GetName(typeof(Role), roleId);
             if (role == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(role), roleId));
-        }
-
-        public void CheckUserIdAndRoleIdDoesNotLessThanMinimum(int userId, int roleId)
-        {
-            if (userId < idMinimum || roleId < idMinimum)
-                throw new Exception(string.Format(ServiceMessages.MinimumAllowedValueMessage, nameof(userId), nameof(roleId), idMinimum));
-        }
-
-        public void ChekIdDoesNotLessThenMinimum(int id)
-        {
-            if (id < idMinimum)
-                throw new Exception(string.Format(ServiceMessages.MinimumAllowedValueMessage, nameof(id), idMinimum));
         }
     }
 }
