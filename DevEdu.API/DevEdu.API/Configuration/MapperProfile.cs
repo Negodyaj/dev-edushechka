@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
-using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
-using DevEdu.API.Models.OutputModels.Lesson;
-using DevEdu.API.Models.OutputModels.Payment;
+using DevEdu.API.Models;
 using DevEdu.DAL.Models;
 using System;
 using System.Globalization;
@@ -30,7 +27,7 @@ namespace DevEdu.API.Configuration
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<GroupInputModel, GroupDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
-                .ForMember(dest => dest.Course, opt => opt.MapFrom(src => src.CourseId != null ? new CourseDto { Id = src.CourseId } : null))
+                .ForMember(dest => dest.Course, opt => opt.MapFrom(src => new CourseDto { Id = src.CourseId }))
                 .ForMember(dest => dest.GroupStatus, opt => opt.MapFrom(src => src.GroupStatusId != null ? src.GroupStatusId : null));
             CreateMap<GroupTaskInputModel, GroupTaskDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
@@ -146,7 +143,6 @@ namespace DevEdu.API.Configuration
             CreateMap<StudentLessonDto, StudentLessonShortOutputModel>();
             CreateMap<StudentRatingDto, StudentRatingOutputModel>();
             CreateMap<RatingTypeDto, RatingTypeOutputModel>();
-
         }
     }
 }

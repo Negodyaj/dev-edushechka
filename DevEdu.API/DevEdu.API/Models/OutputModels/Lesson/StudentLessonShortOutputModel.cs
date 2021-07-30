@@ -1,4 +1,4 @@
-﻿namespace DevEdu.API.Models.OutputModels.Lesson
+﻿namespace DevEdu.API.Models
 {
     public class StudentLessonShortOutputModel
     {

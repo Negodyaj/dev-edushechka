@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace DevEdu.API.Models.OutputModels
+namespace DevEdu.API.Models
 {
     public class TagOutputModel
     {

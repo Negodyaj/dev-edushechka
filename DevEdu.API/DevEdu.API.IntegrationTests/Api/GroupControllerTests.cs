@@ -1,4 +1,4 @@
-﻿using DevEdu.API.Models.InputModels;
+﻿using DevEdu.API.Models;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -56,12 +56,12 @@ namespace DevEdu.API.IntegrationTests
                 Url = $"api/Group/",
                 Body = new
                 {
-                    Name = model.Name,
-                    CourseId = model.CourseId,
-                    GroupStatusId = model.GroupStatusId,
-                    StartDate = model.StartDate,
-                    Timetable = model.Timetable,
-                    PaymentPerMonth = model.PaymentPerMonth
+                    model.Name,
+                    model.CourseId,
+                    model.GroupStatusId,
+                    model.StartDate,
+                    model.Timetable,
+                    model.PaymentPerMonth
                 }
             };
 
@@ -108,12 +108,12 @@ namespace DevEdu.API.IntegrationTests
                 Url = $"api/Group/{id}",
                 Body = new
                 {
-                    Name = model.Name,
-                    CourseId = model.CourseId,
-                    GroupStatusId = model.GroupStatusId,
-                    StartDate = model.StartDate,
-                    Timetable = model.Timetable,
-                    PaymentPerMonth = model.PaymentPerMonth
+                    model.Name,
+                    model.CourseId,
+                    model.GroupStatusId,
+                    model.StartDate,
+                    model.Timetable,
+                    model.PaymentPerMonth
                 }
             };
 

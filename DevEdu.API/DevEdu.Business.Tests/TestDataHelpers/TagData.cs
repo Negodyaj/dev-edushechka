@@ -1,9 +1,7 @@
-﻿
-
-using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
-namespace DevEdu.Business.Tests.Tag
+namespace DevEdu.Business.Tests
 {
     public class TagData
     {
