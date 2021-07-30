@@ -1,6 +1,7 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
@@ -16,6 +17,8 @@ namespace DevEdu.Business.Tests
         private  Mock<ITopicRepository> _topicRepositoryMock;
         private  Mock<ITaskRepository> _taskRepositoryMock;
         private  Mock<IMaterialRepository> _materialRepositoryMock;
+        private  Mock<ICourseValidationHelper> _courseValidationHelper;
+        private  Mock<IMaterialValidationHelper> _materialValidationHelper;
 
         [SetUp]
         public void Setup()
@@ -24,6 +27,8 @@ namespace DevEdu.Business.Tests
             _topicRepositoryMock = new Mock<ITopicRepository>();
             _taskRepositoryMock = new Mock<ITaskRepository>();
             _materialRepositoryMock = new Mock<IMaterialRepository>();
+            _courseValidationHelper = new Mock<ICourseValidationHelper>();
+            _materialValidationHelper = new Mock<IMaterialValidationHelper>();
         }
         [Test]
         public void AddTopicToCourse_WithCourseIdAndSimpleDto_TopicWasAdded() 
@@ -37,7 +42,9 @@ namespace DevEdu.Business.Tests
             var sut = new CourseService(_topicRepositoryMock.Object, 
                                         _courseRepositoryMock.Object, 
                                         _taskRepositoryMock.Object, 
-                                        _materialRepositoryMock.Object);
+                                        _materialRepositoryMock.Object,
+                                        _courseValidationHelper.Object,
+                                        _materialValidationHelper.Object);
             //When
             sut.AddTopicToCourse(givenCourseId, givenTopicId, courseTopicDto);
             //Then
@@ -55,7 +62,9 @@ namespace DevEdu.Business.Tests
             var sut = new CourseService(_topicRepositoryMock.Object, 
                                         _courseRepositoryMock.Object, 
                                         _taskRepositoryMock.Object, 
-                                        _materialRepositoryMock.Object);
+                                        _materialRepositoryMock.Object,
+                                        _courseValidationHelper.Object,
+                                        _materialValidationHelper.Object);
             //When
             sut.AddTopicsToCourse(givenCourseId, topicsDto);
             //Then
@@ -72,7 +81,9 @@ namespace DevEdu.Business.Tests
             var sut = new CourseService(_topicRepositoryMock.Object, 
                                         _courseRepositoryMock.Object, 
                                         _taskRepositoryMock.Object, 
-                                        _materialRepositoryMock.Object);
+                                        _materialRepositoryMock.Object,
+                                        _courseValidationHelper.Object,
+                                        _materialValidationHelper.Object);
             //When
             sut.DeleteTopicFromCourse(givenCourseId, givenTopicId);
             //Then
@@ -88,7 +99,9 @@ namespace DevEdu.Business.Tests
             var sut = new CourseService(_topicRepositoryMock.Object, 
                                         _courseRepositoryMock.Object, 
                                         _taskRepositoryMock.Object, 
-                                        _materialRepositoryMock.Object);
+                                        _materialRepositoryMock.Object,
+                                        _courseValidationHelper.Object,
+                                        _materialValidationHelper.Object);
             //When
             sut.SelectAllTopicsByCourseId(givenCourseId);
             //Then
@@ -107,7 +120,9 @@ namespace DevEdu.Business.Tests
             var sut = new CourseService(_topicRepositoryMock.Object, 
                                         _courseRepositoryMock.Object, 
                                         _taskRepositoryMock.Object, 
-                                        _materialRepositoryMock.Object);
+                                        _materialRepositoryMock.Object,
+                                        _courseValidationHelper.Object,
+                                        _materialValidationHelper.Object);
             //When
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate);
             //Then
@@ -132,7 +147,9 @@ namespace DevEdu.Business.Tests
             var sut = new CourseService(_topicRepositoryMock.Object, 
                                         _courseRepositoryMock.Object, 
                                         _taskRepositoryMock.Object, 
-                                        _materialRepositoryMock.Object);
+                                        _materialRepositoryMock.Object,
+                                        _courseValidationHelper.Object,
+                                        _materialValidationHelper.Object);
             //When
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate);
             //Then
@@ -151,7 +168,9 @@ namespace DevEdu.Business.Tests
             var sut = new CourseService(_topicRepositoryMock.Object, 
                                         _courseRepositoryMock.Object, 
                                         _taskRepositoryMock.Object, 
-                                        _materialRepositoryMock.Object);
+                                        _materialRepositoryMock.Object,
+                                        _courseValidationHelper.Object,
+                                        _materialValidationHelper.Object);
             //When
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate);
             //Then
@@ -170,7 +189,9 @@ namespace DevEdu.Business.Tests
             var sut = new CourseService(_topicRepositoryMock.Object, 
                                         _courseRepositoryMock.Object, 
                                         _taskRepositoryMock.Object, 
-                                        _materialRepositoryMock.Object);
+                                        _materialRepositoryMock.Object,
+                                        _courseValidationHelper.Object,
+                                        _materialValidationHelper.Object);
             //When
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate);
             //Then
@@ -194,7 +215,9 @@ namespace DevEdu.Business.Tests
             var sut = new CourseService(_topicRepositoryMock.Object, 
                                         _courseRepositoryMock.Object, 
                                         _taskRepositoryMock.Object, 
-                                        _materialRepositoryMock.Object);
+                                        _materialRepositoryMock.Object,
+                                        _courseValidationHelper.Object,
+                                        _materialValidationHelper.Object);
             //When
             var exception = Assert.Throws<ValidationException>(() => 
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate));
@@ -220,7 +243,9 @@ namespace DevEdu.Business.Tests
             var sut = new CourseService(_topicRepositoryMock.Object, 
                                         _courseRepositoryMock.Object, 
                                         _taskRepositoryMock.Object, 
-                                        _materialRepositoryMock.Object);
+                                        _materialRepositoryMock.Object,
+                                        _courseValidationHelper.Object,
+                                        _materialValidationHelper.Object);
             //When
             var exception = Assert.Throws<ValidationException>(() => 
             sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate));
