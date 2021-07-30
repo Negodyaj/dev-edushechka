@@ -16,8 +16,6 @@ namespace DevEdu.DAL.Repositories
         private const string _userSelectByGroupIdAndRole = "dbo.User_SelectByGroupIdAndRole";
         private const string _userUpdateProcedure = "dbo.User_Update";
         private const string _userDeleteProcedure = "dbo.User_Delete";
-        private const string _userSelectGroupsByUserIdProcedure = "dbo.Group_SelectAllByUserId";
-
         private const string _userRoleAddProcedure = "dbo.User_Role_Insert";
         private const string _userRoleDeleteProcedure = "dbo.User_Role_Delete";
 
@@ -189,25 +187,6 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             ).ToList();
-        }
-
-        public List<GroupDto> GetGroupsByUserId(int userId)
-        {
-            GroupDto result;
-            return _connection
-                .Query<GroupDto, GroupStatus, GroupDto>(
-                    _userSelectGroupsByUserIdProcedure,
-                    (group, groupStatus) =>
-                    {
-                        result = group;
-                        result.GroupStatus = groupStatus;
-                        return result;
-                    },
-                    new { userId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
-                .ToList();
         }
     }
 }

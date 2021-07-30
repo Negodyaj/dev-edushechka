@@ -17,73 +17,11 @@ namespace DevEdu.DAL.Repositories
         private const string _taskUpdateProcedure = "dbo.Task_Update";
         private const string _tagTaskAddProcedure = "dbo.Tag_Task_Insert";
         private const string _tagTaskDeleteProcedure = "dbo.Tag_Task_Delete";
-        private const string _taskGroupSelectAllByTaskIdProcedure = "dbo.Group_SelectAllByTaskId";
 
         public TaskRepository()
         {
 
         }
-
-        public TaskDto GetTaskById(int id)
-        {
-            TaskDto task = default;
-            _connection.Query<TaskDto, TagDto, TaskDto>(
-                _taskSelectByIdProcedure,
-                (taskDto, TagDto) =>
-                {
-                    if (task == null)
-                    {
-                        task = taskDto;
-                        task.Tags = new List<TagDto> { TagDto };
-                    }
-                    else
-                    {
-                        task.Tags.Add(TagDto);
-                    }
-
-                    return taskDto;
-                },
-                new { id },
-                splitOn: "Id",
-                commandType: CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return task;
-        }
-        public List<TaskDto> GetTasksByCourseId(int courseId)
-        {
-           var taskList = new List<TaskDto>();
-            return _connection.Query<TaskDto>(
-                    _taskSelectByCourseIdProcedure,
-                    new { courseId },
-                    commandType: CommandType.StoredProcedure)
-                .ToList();
-        }
-        public List<TaskDto> GetTasks()
-        {
-            var taskDictionary = new Dictionary<int, TaskDto>();
-
-            var list = _connection.Query<TaskDto, TagDto, TaskDto>(
-                    _taskSelectAlldProcedure,
-                (taskDto, TagDto) =>
-                {
-                    TaskDto taskDtoEntry;
-
-                    if (!taskDictionary.TryGetValue(taskDto.Id, out taskDtoEntry))
-                    {
-                        taskDtoEntry = taskDto;
-                        taskDtoEntry.Tags = new List<TagDto>();
-                        taskDictionary.Add(taskDtoEntry.Id, taskDtoEntry);
-                    }
-                    taskDtoEntry.Tags.Add(TagDto);
-                    return taskDtoEntry;
-                },
-                splitOn: "Id",
-                commandType: CommandType.StoredProcedure)
-                .Distinct()
-                .ToList<TaskDto>();
-            return list;
-        }
-
         public int AddTask(TaskDto taskDto)
         {
             int taskId = _connection.QuerySingle<int>(
@@ -124,6 +62,65 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 );
         }
+        public TaskDto GetTaskById(int id)
+        {
+            TaskDto task = default;
+            _connection.Query<TaskDto, TagDto, TaskDto>(
+                _taskSelectByIdProcedure,
+                (taskDto, TagDto) =>
+                {
+                    if (task == null)
+                    {
+                        task = taskDto;
+                        task.Tags = new List<TagDto> { TagDto };
+                    }
+                    else
+                    {
+                        task.Tags.Add(TagDto);
+                    }
+
+                    return taskDto;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return task;
+        }
+        public List<TaskDto> GetTasksByCourseId(int courseId)
+        {
+            var taskList = new List<TaskDto>();
+            return _connection.Query<TaskDto>(
+                    _taskSelectByCourseIdProcedure,
+                    new { courseId },
+                    commandType: CommandType.StoredProcedure)
+                .ToList();
+        }
+        public List<TaskDto> GetTasks()
+        {
+            var taskDictionary = new Dictionary<int, TaskDto>();
+
+            var list = _connection.Query<TaskDto, TagDto, TaskDto>(
+                    _taskSelectAlldProcedure,
+                (taskDto, TagDto) =>
+                {
+                    TaskDto taskDtoEntry;
+
+                    if (!taskDictionary.TryGetValue(taskDto.Id, out taskDtoEntry))
+                    {
+                        taskDtoEntry = taskDto;
+                        taskDtoEntry.Tags = new List<TagDto>();
+                        taskDictionary.Add(taskDtoEntry.Id, taskDtoEntry);
+                    }
+                    taskDtoEntry.Tags.Add(TagDto);
+                    return taskDtoEntry;
+                },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure)
+                .Distinct()
+                .ToList<TaskDto>();
+            return list;
+        }
 
         public int AddTagToTask(int taskId, int tagId)
         {
@@ -141,44 +138,6 @@ namespace DevEdu.DAL.Repositories
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure
                 );
-        }
-        public List<GroupDto> GetGroupsByTaskId(int taskId)
-        {
-            GroupDto result;
-            return _connection
-                .Query<GroupDto, GroupStatus, GroupDto>(
-                    _taskGroupSelectAllByTaskIdProcedure,
-                    (group, groupStatus) =>
-                    {
-                        result = group;
-                        result.GroupStatus = groupStatus;
-                        return result;
-                    },
-                    new { taskId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
-                .ToList();
-        }
-
-        public List<GroupTaskDto> GetGroupTasksByTaskId(int taskId)
-        {
-            GroupTaskDto result;
-            return _connection
-                .Query<GroupTaskDto, GroupDto, GroupStatus, GroupTaskDto>(
-                    _taskGroupSelectAllByTaskIdProcedure,
-                    (groupTask, group, groupStatus) => 
-                    {
-                        result = groupTask;
-                        result.Group = group;
-                        result.Group.GroupStatus = groupStatus;
-                        return result;
-                    },
-                    new { taskId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
-                .ToList();
         }
     }
 }

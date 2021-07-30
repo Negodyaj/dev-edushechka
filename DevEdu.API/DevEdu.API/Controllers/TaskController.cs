@@ -44,6 +44,57 @@ namespace DevEdu.API.Controllers
             _courseService = courseService;
         }
 
+        // api/task/teacher
+        [AuthorizeRoles(Role.Teacher)]
+        [HttpPost("teacher")]
+        [Description("Add new task by teacher")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public TaskInfoOutputModel AddTaskByTeacher([FromBody] TaskByTeacherInputModel model)
+        {
+            var taskDto = _mapper.Map<TaskDto>(model);
+            var groupTaskDto = _mapper.Map<GroupTaskDto>(model.GroupTask);
+            var task = _taskService.AddTaskByTeacher(taskDto, groupTaskDto, model.GroupId, model.Tags);
+
+            return _mapper.Map<TaskInfoOutputModel>(task);
+        }
+
+        // api/task/methodist
+        [AuthorizeRoles(Role.Methodist)]
+        [HttpPost("methodist")]
+        [Description("Add new task by methodist")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public TaskInfoOutputModel AddTaskByMethodist([FromBody] TaskByMethodistInputModel model)
+        {
+            var taskDto = _mapper.Map<TaskDto>(model);
+            var task = _taskService.AddTaskByMethodist(taskDto, model.CoursesIds, model.Tags);
+
+            return _mapper.Map<TaskInfoOutputModel>(task);
+        }
+
+        // api/task/{taskId}
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
+        [HttpPut("{taskId}")]
+        [Description("Update task")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskByTeacherInputModel model)
+        {
+            var userId = this.GetUserId();
+            TaskDto taskDto = _mapper.Map<TaskDto>(model);
+            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId, userId));
+        }
+
+        // api/task/{taskId}
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
+        [HttpDelete("{taskId}")]
+        [Description("Delete task with selected Id")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public void DeleteTask(int taskId)
+        {
+            var userId = this.GetUserId();
+            _taskService.DeleteTask(taskId, userId);
+        }
+
+
         //  api/Task/1
         [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet("{taskId}")]
@@ -102,56 +153,6 @@ namespace DevEdu.API.Controllers
             var userId = this.GetUserId();
             var taskDtos = _taskService.GetTasks(userId);
             return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
-        }
-
-        // api/task/teacher
-        [AuthorizeRoles(Role.Teacher)]
-        [HttpPost("teacher")]
-        [Description("Add new task by teacher")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public TaskInfoOutputModel AddTaskByTeacher([FromBody] TaskByTeacherInputModel model)
-        {
-            var taskDto = _mapper.Map<TaskDto>(model);
-            var groupTaskDto = _mapper.Map<GroupTaskDto>(model.GroupTask);
-            var task = _taskService.AddTaskByTeacher(taskDto, groupTaskDto, model.GroupId, model.Tags);
-
-            return _mapper.Map<TaskInfoOutputModel>(task);
-        }
-
-        // api/task/methodist
-        [AuthorizeRoles(Role.Methodist)]
-        [HttpPost("methodist")]
-        [Description("Add new task by methodist")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public TaskInfoOutputModel AddTaskByMethodist([FromBody] TaskByMethodistInputModel model)
-        {
-            var taskDto = _mapper.Map<TaskDto>(model);
-            var task = _taskService.AddTaskByMethodist(taskDto, model.CoursesIds, model.Tags);
-
-            return _mapper.Map<TaskInfoOutputModel>(task);
-        }
-
-        // api/task/{taskId}
-        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
-        [HttpPut("{taskId}")]
-        [Description("Update task")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskByTeacherInputModel model)
-        {
-            var userId = this.GetUserId();
-            TaskDto taskDto = _mapper.Map<TaskDto>(model);
-            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId, userId));
-        }
-
-        // api/task/{taskId}
-        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
-        [HttpDelete("{taskId}")]
-        [Description("Delete task with selected Id")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void DeleteTask(int taskId)
-        {
-            var userId = this.GetUserId();
-            _taskService.DeleteTask(taskId, userId);
         }
 
         // api/task/{taskId}/tag/{tagId}
@@ -243,17 +244,6 @@ namespace DevEdu.API.Controllers
             _studentAnswerOnTaskService.AddCommentOnStudentAnswer(taskStudentId, commentId);
 
             return taskStudentId;
-        }
-
-        //  api/task/1/group/
-        [HttpGet("{taskId}/groups")]
-        [Description("Get all groups by task")]
-        [ProducesResponseType(typeof(List<GroupTaskInfoWithGroupOutputModel>), StatusCodes.Status200OK)]
-        public List<GroupTaskInfoWithGroupOutputModel> GetGroupsByTaskId(int taskId)
-        {
-            var dto = _taskService.GetGroupTasksByTaskId(taskId);
-            var output = _mapper.Map<List<GroupTaskInfoWithGroupOutputModel>>(dto);
-            return output;
         }
     }
 }

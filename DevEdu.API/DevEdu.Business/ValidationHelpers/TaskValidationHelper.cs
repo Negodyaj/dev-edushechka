@@ -10,12 +10,12 @@ namespace DevEdu.Business.ValidationHelpers
     public class TaskValidationHelper : ITaskValidationHelper
     {
         private readonly ITaskRepository _taskRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IGroupRepository _groupRepository;
 
-        public TaskValidationHelper(ITaskRepository taskRepository, IUserRepository userRepository)
+        public TaskValidationHelper(ITaskRepository taskRepository, IGroupRepository groupRepository)
         {
             _taskRepository = taskRepository;
-            _userRepository = userRepository;
+            _groupRepository = groupRepository;
         }
 
         public TaskDto GetTaskByIdAndThrowIfNotFound(int taskId)
@@ -28,8 +28,8 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckUserAccessToTask(int taskId, int userId)
         {
-            var groupsByTask = _taskRepository.GetGroupsByTaskId(taskId);
-            var groupsByUser = _userRepository.GetGroupsByUserId(userId);
+            var groupsByTask = _groupRepository.GetGroupsByTaskId(taskId);
+            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
 
             var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
             if (result == default)
@@ -38,8 +38,8 @@ namespace DevEdu.Business.ValidationHelpers
 
         public TaskDto GetTaskAllowedToUser(int taskId, int userId)
         {
-            var groupsByTask = _taskRepository.GetGroupsByTaskId(taskId);
-            var groupsByUser = _userRepository.GetGroupsByUserId(userId);
+            var groupsByTask = _groupRepository.GetGroupsByTaskId(taskId);
+            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
 
             var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
             if (result == default)

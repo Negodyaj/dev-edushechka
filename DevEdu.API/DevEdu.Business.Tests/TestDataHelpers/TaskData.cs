@@ -86,12 +86,23 @@ namespace DevEdu.Business.Tests
             };
         }
 
+        public static List<GroupDto> GetListOfSameGroups()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto {Id = 1},
+                new GroupDto {Id = 2},
+                new GroupDto {Id = 3}
+            };
+        }
+
         public static List<TaskDto> GetListOfTasks()
         {
             return new List<TaskDto>
             {
                 new TaskDto
                 {
+                    Id = 1,
                     Name = "Task1",
                     Description = "Description1",
                     Links = "noLinks",
@@ -119,6 +130,7 @@ namespace DevEdu.Business.Tests
                 },
                 new TaskDto
                 {
+                     Id = 2,
                     Name = "Task2",
                     Description = "Description2",
                     Links = "noLinks",
@@ -146,6 +158,7 @@ namespace DevEdu.Business.Tests
                 },
                 new TaskDto
                 {
+                    Id = 3,
                     Name = "Task3",
                     Description = "Description3",
                     Links = "noLinks",
