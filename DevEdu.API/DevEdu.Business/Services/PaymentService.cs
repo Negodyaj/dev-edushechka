@@ -11,34 +11,35 @@ namespace DevEdu.Business.Services
     {
         private readonly IPaymentRepository _paymentRepository;
         private readonly IPaymentValidationHelper _paymentValidationHelper;
-
+        private readonly IUserValidationHelper _userValidationHelper;
         public PaymentService(IPaymentRepository paymentRepository,
-                              IPaymentValidationHelper paymentValidationHelper)
+                              IPaymentValidationHelper paymentValidationHelper,
+                              IUserValidationHelper userValidationHelper)
         {
             _paymentRepository = paymentRepository;
             _paymentValidationHelper = paymentValidationHelper;
+            _userValidationHelper = userValidationHelper;
         }
 
-        public PaymentDto GetPayment(int id)
+        public PaymentDto GetPayment(int id) => _paymentValidationHelper.GetPaymentByIdAndThrowIfNotFound(id);
+        public List<PaymentDto> GetPaymentsByUserId(int userId)
         {
-            _paymentRepository.GetPayment(id);
+            _userValidationHelper.CheckUserExistence(userId);
+            return _paymentValidationHelper.GetPaymentsByUserIdAndThrowIfNotFound(userId);
         }
-
-        public List<PaymentDto> GetPaymentsByUserId(int userId) => _paymentRepository.GetPaymentsByUser(userId);
-
         public int AddPayment(PaymentDto dto) => _paymentRepository.AddPayment(dto);
 
-        public void DeletePayment(int id) => _paymentRepository.DeletePayment(id);
-
+        public void DeletePayment(int id)
+        {
+            _paymentValidationHelper.GetPaymentByIdAndThrowIfNotFound(id);
+            _paymentRepository.DeletePayment(id);
+        }
         public void UpdatePayment(int id, PaymentDto dto)
         {
-            var paymentInDb = _paymentRepository.GetPayment(id);
-            if (paymentInDb == null || dto == null)
+            var paymentInDb = _paymentValidationHelper.GetPaymentByIdAndThrowIfNotFound(id);
+            if (dto == null)
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
-            if (paymentInDb.IsDeleted)  
-            throw new EntityNotFoundException(ServiceMessages.PaymentDeleted);
             dto.User = new UserDto { Id = paymentInDb.User.Id };
-            
             dto.Id = id;
             _paymentRepository.UpdatePayment(dto);
         }
@@ -48,7 +49,7 @@ namespace DevEdu.Business.Services
         }
         public List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids)
         {
-            var list = _paymentRepository.SelectPaymentsBySeveralId(ids);
+            var list = _paymentValidationHelper.SelectPaymentsBySeveralIdAndThrowIfNotFound(ids);
             return list;
         }
     }

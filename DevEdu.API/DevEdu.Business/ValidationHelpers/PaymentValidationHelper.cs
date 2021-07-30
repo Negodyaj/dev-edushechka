@@ -2,6 +2,7 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -20,6 +21,20 @@ namespace DevEdu.Business.ValidationHelpers
             if (payment == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(payment), paymentId));
             return payment;
+        }
+        public List<PaymentDto> GetPaymentsByUserIdAndThrowIfNotFound(int userId)
+        {
+            var payments = _paymentRepository.GetPaymentsByUser(userId);
+            if(payments == default)
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundByUserId, nameof(payments), userId));
+            return payments;
+        }
+        public List<PaymentDto> SelectPaymentsBySeveralIdAndThrowIfNotFound(List<int> ids)
+        {
+            var payments = _paymentRepository.SelectPaymentsBySeveralId(ids);
+            if (payments == default)
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFound));
+            return payments;
         }
     }
 }
