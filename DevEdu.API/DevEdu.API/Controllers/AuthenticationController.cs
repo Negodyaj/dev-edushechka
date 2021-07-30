@@ -4,6 +4,7 @@ using AutoMapper;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
+using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {
@@ -27,6 +28,9 @@ namespace DevEdu.API.Controllers
 
         [HttpPost("/register")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public int Register([FromBody] UserInsertInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);
@@ -36,6 +40,9 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpPost("/sign-in")]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public string SignIn(UserSignInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);
