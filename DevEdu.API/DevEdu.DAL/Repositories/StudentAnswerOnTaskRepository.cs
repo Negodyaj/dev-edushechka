@@ -75,7 +75,7 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto)
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
 
             StudentAnswerOnTaskDto result = default;
@@ -93,8 +93,8 @@ namespace DevEdu.DAL.Repositories
                 },
                 new
                 {
-                    TaskId = dto.Task.Id,
-                    StudentId = dto.User.Id
+                    TaskId = taskId,
+                    StudentId = studentId
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
@@ -116,7 +116,7 @@ namespace DevEdu.DAL.Repositories
                 );
         }
 
-        public void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
+        public int ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {
             _connection.Execute(
                 _taskStudentUpdateStatusId,
@@ -129,9 +129,11 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
                 );
+
+            return (int)(dto.TaskStatus);
         }
 
-        public void AddCommentOnStudentAnswer(int taskStudentId, int commentId)
+        public int AddCommentOnStudentAnswer(int taskStudentId, int commentId)
         {
             _connection.Query(
                 _taskStudentCommentInsert,
@@ -142,7 +144,9 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
            );
-             
+
+            return taskStudentId;
+
         }
 
         public List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskByTaskId(int id)

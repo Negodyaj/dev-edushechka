@@ -2,6 +2,7 @@
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System;
 
 namespace DevEdu.Business.Tests
 {
@@ -71,22 +72,19 @@ namespace DevEdu.Business.Tests
             dtoForTaskIdAndUserId.Task.Id = taskId;
             dtoForTaskIdAndUserId.User.Id = userId;
 
-            //_studentAnswerOnTaskRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(dtoForTaskIdAndUserId.Task.Id)).Returns(listAnswersDot);
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(dtoForTaskIdAndUserId)).Returns(studentAnswerDto);
+            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId)).Returns(studentAnswerDto);
 
             var sut = new StudentAnswerOnTaskService(_studentAnswerOnTaskRepoMock.Object);
 
             // When
-            //sut.GetAllStudentAnswersOnTask(dtoForTaskIdAndUserId.Task.Id);
-            var dto = sut.GetStudentAnswerOnTaskByTaskIdAndStudentId(dtoForTaskIdAndUserId.Task.Id, dtoForTaskIdAndUserId.User.Id, dtoForTaskIdAndUserId);
+            var dto = sut.GetStudentAnswerOnTaskByTaskIdAndStudentId(dtoForTaskIdAndUserId.Task.Id, dtoForTaskIdAndUserId.User.Id);
 
             // Then
             Assert.AreEqual(studentAnswerDto, dto);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(dtoForTaskIdAndUserId), Times.Once);
+            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Once);
 
         }
 
-        //public void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId);
         [Test]
         public void ChangeStatusOfStudentAnswerOnTask_ExistingTaskIdStudentIdAndStatusIdPassed_StatusChangeded()
         {
@@ -97,20 +95,45 @@ namespace DevEdu.Business.Tests
             int statusId = StudentAnswerOnTaskData.ReturnedStatus;
             var inputIds = StudentAnswerOnTaskData.GetTaskIdStudentIdAndStatusIdDto();
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(inputIds));
+            _studentAnswerOnTaskRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(inputIds)).Returns((int)inputIds.TaskStatus);
 
             var sut = new StudentAnswerOnTaskService(_studentAnswerOnTaskRepoMock.Object);
 
             // When
-            var actualStatusId = sut.ChangeStatusOfStudentAnswerOnTask(taskId, userId, statusId);
+            var actualStatusId = sut.ChangeStatusOfStudentAnswerOnTask(taskId, userId, statusId, inputIds);
 
             // Then
             Assert.AreEqual(statusId, actualStatusId);
             _studentAnswerOnTaskRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTask(inputIds), Times.Once);
-
         }
 
-        //public void UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto);
+        [Test]
+        public void ChangeStatusOfStudentAnswerOnTask_ExistingTaskIdStudentIdAndTaskStatusAcceptedPassed_CompletedDateChanged()
+        {
+            // Given
+            var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            var acceptedStatusDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskWithAcceptedTaskStatusDto();
+            int taskId = StudentAnswerOnTaskData.TaskId;
+            int userId = StudentAnswerOnTaskData.UserId;
+            int statusId = StudentAnswerOnTaskData.AcceptedStatus;
+            var inputIds = StudentAnswerOnTaskData.GetTaskIdStudentIdAndStatusIdDto();
+
+            _studentAnswerOnTaskRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(inputIds)).Returns((int)inputIds.TaskStatus);
+            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId)).Returns(acceptedStatusDto);
+
+            var sut = new StudentAnswerOnTaskService(_studentAnswerOnTaskRepoMock.Object);
+
+            // When
+            var actualStatusId = sut.ChangeStatusOfStudentAnswerOnTask(taskId, userId, statusId, inputIds);
+            var dto = sut.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId);
+
+            // Then
+            Assert.AreEqual(acceptedStatusDto.CompletedDate, dto.CompletedDate);
+            _studentAnswerOnTaskRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTask(inputIds), Times.Once);
+            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Once);
+        }
+
+
         [Test]
         public void UpdateStudentAnswerOnTask_ExistingTaskIdStudentIdAndTaskAnswerDtoPassed_ReturnStudentAnswerOnTaskDto()
         {
@@ -122,9 +145,9 @@ namespace DevEdu.Business.Tests
             var onlyAnswer = StudentAnswerOnTaskData.GetAnswerOfStudent();
             var inputIds = StudentAnswerOnTaskData.GetTaskIdStudentIdAndStatusIdDto();
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(inputIds)).Returns(studentAnswerDto);
+            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId)).Returns(studentAnswerDto);
             _studentAnswerOnTaskRepoMock.Setup(x => x.UpdateStudentAnswerOnTask(onlyAnswer));
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(inputIds)).Returns(changedStudentAnswerDto);
+            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId)).Returns(changedStudentAnswerDto);
 
             var sut = new StudentAnswerOnTaskService(_studentAnswerOnTaskRepoMock.Object);
 
@@ -134,24 +157,52 @@ namespace DevEdu.Business.Tests
 
             // Then
             Assert.AreEqual(changedStudentAnswerDto, actualDto);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(inputIds), Times.Once);
+            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Once);
             _studentAnswerOnTaskRepoMock.Verify(x => x.UpdateStudentAnswerOnTask(onlyAnswer), Times.Once);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(inputIds), Times.Once);
+            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Once);
 
         }
 
-        //public void AddCommentOnStudentAnswer(int taskStudentId, int commentId);
-        //[Test]
+
+        [Test]
         public void AddCommentOnStudentAnswer_ExistingTaskStudentIdAndcommentIdPassed_CommentWasAdded()
         {
+            // Given
+            var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            var answerAddedForTaskStudent = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDtoWithAddedComment();
+            int taskStudentId = 1;
+            int commentId = 4;
 
+            _studentAnswerOnTaskRepoMock.Setup(x => x.AddCommentOnStudentAnswer(taskStudentId, commentId)).Returns(taskStudentId);
+
+            var sut = new StudentAnswerOnTaskService(_studentAnswerOnTaskRepoMock.Object);
+
+            // When
+            var actualTaskStudentId = sut.AddCommentOnStudentAnswer(taskStudentId, commentId);
+
+            // Then
+            Assert.AreEqual(taskStudentId, actualTaskStudentId);
+            _studentAnswerOnTaskRepoMock.Verify(x => x.AddCommentOnStudentAnswer(taskStudentId, commentId), Times.Once);
         }
 
-        //public List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId);
-        //[Test]
+        
+        [Test]
         public void GetAllAnswersByStudentId_ExistingUserIdPassed_ReturnListOfStudentAnswerOnTaskDto()
         {
+            // Given
+            var studentAnswersListDto = StudentAnswerOnTaskData.GetAllAnswerOfStudent();
+            int userId = StudentAnswerOnTaskData.UserId;
 
+            _studentAnswerOnTaskRepoMock.Setup(x => x.GetAllAnswersByStudentId(userId)).Returns(studentAnswersListDto);
+
+            var sut = new StudentAnswerOnTaskService(_studentAnswerOnTaskRepoMock.Object);
+
+            // When
+            var dto = sut.GetAllAnswersByStudentId(userId);
+
+            // Then
+            Assert.AreEqual(studentAnswersListDto, dto);
+            _studentAnswerOnTaskRepoMock.Verify(x => x.GetAllAnswersByStudentId(userId), Times.Once);
         }
 
     }

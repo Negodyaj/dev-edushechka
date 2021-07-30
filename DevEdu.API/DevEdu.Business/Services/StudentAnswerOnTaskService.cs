@@ -45,37 +45,24 @@ namespace DevEdu.Business.Services
             return _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
         }
 
-        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId, StudentAnswerOnTaskDto ddd)
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
-            //StudentAnswerOnTaskDto studentAnswerDto =
-            //    new StudentAnswerOnTaskDto
-            //    {
-            //        Task = new TaskDto { Id = taskId },
-            //        User = new UserDto { Id = studentId },
-            //        Comments = new List<CommentDto>()
-            //    };
-            ddd.Task = new TaskDto { Id = taskId };
-            ddd.User = new UserDto { Id = studentId };
-            ddd.Comments = new List<CommentDto>();
-
-
-            var answerDto = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(ddd);
+            var answerDto = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
             return answerDto;
         }
 
-        public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId) 
+        public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId, StudentAnswerOnTaskDto dto) 
         {
-            StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
-            dto.Task = new TaskDto { Id = taskId };
-            dto.User = new UserDto { Id = studentId };
+            dto.Task.Id = taskId;
+            dto.User.Id = statusId;
             dto.TaskStatus = (TaskStatus)statusId;
 
             if (dto.TaskStatus == TaskStatus.Accepted)
                 dto.CompletedDate = System.DateTime.Now;
 
-            _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(dto);
+            var status = _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(dto);
 
-            return (int)dto.TaskStatus;
+            return status;
         }
 
         public StudentAnswerOnTaskDto UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
@@ -85,10 +72,10 @@ namespace DevEdu.Business.Services
 
             _studentAnswerOnTaskRepository.UpdateStudentAnswerOnTask(taskAnswerDto);
 
-            return _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskAnswerDto);
+            return _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
         }
 
-        public void AddCommentOnStudentAnswer(int taskStudentId, int commentId) => _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskStudentId, commentId);
+        public int AddCommentOnStudentAnswer(int taskStudentId, int commentId) => _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskStudentId, commentId);
 
         public List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId)
         {

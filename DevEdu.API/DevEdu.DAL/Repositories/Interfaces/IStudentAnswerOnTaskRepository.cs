@@ -8,10 +8,10 @@ namespace DevEdu.DAL.Repositories
         int AddStudentAnswerOnTask(StudentAnswerOnTaskDto taskAnswerDto);
         void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId);
-        StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto);
-        void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
+        StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId);
+        int ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
-        void AddCommentOnStudentAnswer(int taskstudentId, int commentId);
+        int AddCommentOnStudentAnswer(int taskstudentId, int commentId);
         List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskByTaskId(int id);
         List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId);
     }
