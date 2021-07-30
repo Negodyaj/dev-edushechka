@@ -122,7 +122,7 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddTopicsToCourse(List<CourseTopicDto> dto)
+        public List<int> AddTopicsToCourse(List<CourseTopicDto> dto)
         {
             var dt = new DataTable();
             dt.Columns.Add("CourseId");
@@ -133,11 +133,11 @@ namespace DevEdu.DAL.Repositories
             {
                 dt.Rows.Add(topic.Course.Id, topic.Topic.Id, topic.Position);
             }
-            _connection.Execute(
+            return _connection.Query<int>(
                 _addMultipleTopicsToCourseProcedure,
                 new { tblCourseTopic = dt.AsTableValuedParameter(_course_TopicType) },
                 commandType: CommandType.StoredProcedure
-                );
+                ).ToList();
         }
 
         public List<TopicDto> GetTopicsByCourseId(int courseId)

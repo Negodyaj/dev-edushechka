@@ -131,14 +131,13 @@ namespace DevEdu.API.Controllers
         [HttpPost("{courseId}/topic/{topicId}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [Description("Add topic to course")]
-        public string AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
+        public CourseTopicOutputModel AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
         {
             var dto = _mapper.Map<CourseTopicDto>(inputModel);
 
             var id = _courseService.AddTopicToCourse(courseId, topicId, dto);
-            //dto = _courseService.Get
-            
-            return $"Topic Id:{topicId} added in course Id:{courseId} on {inputModel.Position} position";
+            dto = _courseService.GetCourseTopicById(id);
+            return _mapper.Map<CourseTopicOutputModel>(dto);
         }
 
         [HttpPost("{courseId}/select-topics")]
@@ -148,8 +147,9 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<List<CourseTopicDto>>(inputModel);
 
-            _courseService.AddTopicsToCourse(courseId, dto);
-            return "done";
+            var id =_courseService.AddTopicsToCourse(courseId, dto);
+            dto = 
+            return _mapper<List<CourseTopicOutputModel>>(dto);
         }
 
         // api/course/{courseId}/topic/{topicId}

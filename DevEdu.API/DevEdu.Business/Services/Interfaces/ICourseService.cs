@@ -13,7 +13,7 @@ namespace DevEdu.Business.Services
         List<CourseDto> GetCoursesForAdmin();
         void UpdateCourse(int id, CourseDto courseDto);
         int AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
-        void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto);
+        List<int> AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto);
         void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics);
         void DeleteTopicFromCourse(int courseId, int topicId);
         List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId);
@@ -21,5 +21,6 @@ namespace DevEdu.Business.Services
         public void AddTaskToCourse(int courseId, int taskId);
         int AddCourseMaterialReference(int courseId, int materialId);
         int RemoveCourseMaterialReference(int courseId, int materialId);
+        CourseTopicDto GetCourseTopicById(int id);
     }
 }

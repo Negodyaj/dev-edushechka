@@ -1,0 +1,17 @@
+﻿--CREATE PROCEDURE [dbo].[Course_Topic_SelectBySeveralId]
+--	@tblIds dbo.IdType readonly
+--as
+--Begin
+--	select 
+--		ct.Id,
+--		ct.CourseId,
+--		t.Id,
+--		t.Name,
+--		ct.Position,
+--		t.Duration
+--From dbo.Course_Topic ct
+--	inner join @tblIds ids
+--	on ct.Id = ids.Id
+--	inner join [dbo].[Topic] t 
+--	on UserId = t.Id
+--End 
