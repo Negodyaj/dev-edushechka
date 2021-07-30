@@ -15,7 +15,6 @@ using System.IdentityModel.Tokens.Jwt;
 //using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using static Dapper.SqlMapper;
 
 namespace DevEdu.API.Controllers
 {
@@ -32,7 +31,7 @@ namespace DevEdu.API.Controllers
             _claimsIdentity = this.User.Identity as ClaimsIdentity;
             _mapper = mapper;
             _groupService = service;
-            //var role = _claimsIdentity.FindAll(ClaimsIdentity.DefaultRoleClaimType)?.ToList();  Над проверить, но по идеи получу список ролей
+            //var role = _claimsIdentity.FindAll(ClaimsIdentity.DefaultRoleClaimType)?.ToList(); // Над проверить, но по идеи получу список ролей
         }
 
         //  api/Group
@@ -44,7 +43,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupOutputModel> AddGroup([FromBody] GroupInputModel model)
-{
+        {
             var dto = _mapper.Map<GroupDto>(model);
             var result = await _groupService.AddGroup(dto);
             return _mapper.Map<GroupOutputModel>(result);
@@ -61,7 +60,7 @@ namespace DevEdu.API.Controllers
         public async Task<GroupFullOutputModel> GetGroup(int id)
         {
             var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
-            
+
             var dto = await _groupService.GetGroup(id, userId);
             return _mapper.Map<GroupFullOutputModel>(dto);
         }
