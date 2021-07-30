@@ -16,14 +16,14 @@ namespace DevEdu.Business.Tests
 
         private Mock<IUserRepository> _repoMock;
         private UserValidationHelper _validationHelper;
-        private UserService _userService;
+        private UserService _sut;
 
         [SetUp]
         public void Setup()
         {
             _repoMock = new Mock<IUserRepository>();
             _validationHelper = new UserValidationHelper(_repoMock.Object);
-            _userService = new UserService(_repoMock.Object, _validationHelper);
+            _sut = new UserService(_repoMock.Object, _validationHelper);
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace DevEdu.Business.Tests
             _repoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
 
             //When
-            var actualId = _userService.AddUser(user);
+            var actualId = _sut.AddUser(user);
 
             //Then
             Assert.AreEqual(UserData.expectedUserId, actualId);
@@ -52,7 +52,7 @@ namespace DevEdu.Business.Tests
             _repoMock.Setup(x => x.SelectUserById(UserData.expectedUserId)).Returns(expectedDto);
 
             //When
-            var actualDto = _userService.SelectUserById(UserData.expectedUserId);
+            var actualDto = _sut.SelectUserById(UserData.expectedUserId);
 
             //Then
             Assert.AreEqual(expectedDto, actualDto);
@@ -67,7 +67,7 @@ namespace DevEdu.Business.Tests
             _repoMock.Setup(x => x.SelectUserByEmail(user.Email)).Returns(user);
 
             //When
-            var actualUser = _userService.SelectUserByEmail(user.Email);
+            var actualUser = _sut.SelectUserByEmail(user.Email);
 
             //Then
             Assert.AreEqual(user, actualUser);
@@ -82,7 +82,7 @@ namespace DevEdu.Business.Tests
             _repoMock.Setup(x => x.SelectUsers()).Returns(expectedList);
 
             //When
-            var actualList = _userService.SelectUsers();
+            var actualList = _sut.SelectUsers();
 
             //Then
             Assert.AreEqual(expectedList, actualList);
@@ -101,7 +101,7 @@ namespace DevEdu.Business.Tests
             _repoMock.Setup(x => x.SelectUserById(expectedDto.Id)).Returns(expectedAnotherDto);
 
             //When
-            var actualDto = _userService.UpdateUser(expectedDto);
+            var actualDto = _sut.UpdateUser(expectedDto);
 
             //Then
             Assert.AreEqual(expectedAnotherDto, actualDto);
@@ -119,7 +119,7 @@ namespace DevEdu.Business.Tests
             _repoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
 
             //When
-            var actualId = _userService.AddUser(user);
+            var actualId = _sut.AddUser(user);
 
             //Then
             Assert.AreEqual(UserData.expectedUserId, actualId);
@@ -137,7 +137,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _userService.SelectUserById(userId));
+                () => _sut.SelectUserById(userId));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -153,7 +153,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _userService.SelectUserByEmail(user.Email));
+                () => _sut.SelectUserByEmail(user.Email));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -169,7 +169,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<Exception>(
-                () => _userService.SelectUsers());
+                () => _sut.SelectUsers());
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -185,7 +185,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _userService.UpdateUser(user));
+                () => _sut.UpdateUser(user));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -204,7 +204,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _userService.DeleteUser(id));
+                () => _sut.DeleteUser(id));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -221,7 +221,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _userService.AddUserRole(userId, roleId));
+                () => _sut.AddUserRole(userId, roleId));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -238,7 +238,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _userService.DeleteUserRole(userId, roleId));
+                () => _sut.DeleteUserRole(userId, roleId));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
