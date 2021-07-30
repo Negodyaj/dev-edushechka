@@ -22,15 +22,16 @@ namespace DevEdu.API.Controllers
     public class LessonController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ILessonService _lessonService;        
+        private readonly ILessonService _lessonService;
 
         public LessonController(IMapper mapper, ILessonService lessonService)
         {
             _mapper = mapper;
-            _lessonService = lessonService;            
+            _lessonService = lessonService;
         }
 
         // api/lesson
+        [AuthorizeRolesAttribute(Role.Teacher)]
         [HttpPost]
         [Description("Add a lesson.")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
@@ -41,6 +42,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{id}
+        [AuthorizeRolesAttribute(Role.Teacher)]
         [HttpDelete("{id}")]
         [Description("Delete the lesson by id.")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -51,6 +53,7 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/{id}
         [HttpPut("{id}")]
+        [AuthorizeRolesAttribute(Role.Teacher)]
         [Description("Update the lesson's teacher comment and link to record.")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public LessonInfoOutputModel UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
@@ -62,6 +65,7 @@ namespace DevEdu.API.Controllers
 
         // api/lesson/groupId/{id}
         [HttpGet("/by-groupId/{id}")]
+        [AuthorizeRolesAttribute(Role.Teacher, Role.Student)]
         [Description("Get all lessons by groupId.")]
         [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
         public List<LessonInfoOutputModel> GetAllLessonsByGroupId(int id)
@@ -71,6 +75,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/teacherId/{id}
+        [AuthorizeRolesAttribute(Role.Manager, Role.Methodist)]
         [HttpGet("/by-teacherId/{id}")]
         [Description("Get all lessons by teacherId.")]
         [ProducesResponseType(typeof(List<LessonInfoWithCourseOutputModel>), StatusCodes.Status200OK)]
@@ -80,17 +85,8 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<LessonInfoWithCourseOutputModel>>(dto);
         }
 
-        // api/lesson/{id}
-        [HttpGet("{id}")]
-        [Description("Get the lesson by id.")]
-        [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status200OK)]
-        public LessonInfoOutputModel GetLessonById(int id)
-        {
-            var dto = _lessonService.SelectLessonById(id);
-            return _mapper.Map<LessonInfoOutputModel>(dto);
-        }
-
         // api/lesson/{id}/with-comments
+        [AuthorizeRoles(Role.Manager)]
         [HttpGet("{id}/with-comments")]
         [Description("Get the lesson with comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
@@ -101,7 +97,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{id}/full-info"
-        [AuthorizeRoles(Role.Student, Role.Teacher)]
+        [AuthorizeRoles(Role.Teacher)]
         [HttpGet("{id}/full-info")]
         [Description("Get the lesson with students and comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
