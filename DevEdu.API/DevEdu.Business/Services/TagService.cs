@@ -31,7 +31,7 @@ namespace DevEdu.Business.Services
             _tagValidationHelper.CheckTagExistence(id);
             dto.Id = id;
             _repository.UpdateTag(dto);
-            return GetTagById(id);
+            return _repository.SelectTagById(id);
         }
 
         public List<TagDto> GetAllTags() => _repository.SelectAllTags();
