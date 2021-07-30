@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using AutoMapper;
+using DevEdu.API.Configuration;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
@@ -27,6 +28,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         [Description("Return comment by id")]
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel GetComment(int id)
         {
             var dto = _commentService.GetComment(id);
@@ -38,6 +42,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("by-user/{userId}")]
         [Description("Return comments by user")]
         [ProducesResponseType(typeof(List<CommentInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<CommentInfoOutputModel> GetCommentsByUserId(int userId)
         {
             var dto = _commentService.GetCommentsByUserId(userId);
@@ -49,6 +56,9 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         [Description("Add new comment")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public int AddComment([FromBody] CommentAddInputModel model)
         {
             var dto = _mapper.Map<CommentDto>(model);
@@ -59,6 +69,9 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}")]
         [Description("Delete comment by id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteComment(int id)
         {
             _commentService.DeleteComment(id);
@@ -68,6 +81,9 @@ namespace DevEdu.API.Controllers
         [HttpPut("{id}")]
         [Description("Update comment by id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
         {
             var dto = _mapper.Map<CommentDto>(model);

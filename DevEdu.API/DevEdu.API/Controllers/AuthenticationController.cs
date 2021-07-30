@@ -1,10 +1,10 @@
 ﻿using DevEdu.Business.Services;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using DevEdu.API.Configuration;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
-using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {

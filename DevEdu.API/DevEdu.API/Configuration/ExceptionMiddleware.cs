@@ -2,7 +2,6 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.Business.Exceptions;
 using Newtonsoft.Json;
 

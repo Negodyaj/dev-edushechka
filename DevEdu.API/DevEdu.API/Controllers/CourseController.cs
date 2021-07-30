@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using AutoMapper;
+using DevEdu.API.Configuration;
 using DevEdu.API.Models.InputModels;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -90,6 +91,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("{courseId}/material/{materialId}")]
         [Description("Add material to course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void AddMaterialToCourse(int courseId, int materialId)
         {
             _courseService.AddCourseMaterialReference(courseId, materialId);
@@ -98,6 +102,9 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{courseId}/material/{materialId}")]
         [Description("Delete material from course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void RemoveMaterialFromCourse(int courseId, int materialId)
         {
             _courseService.RemoveCourseMaterialReference(courseId, materialId);

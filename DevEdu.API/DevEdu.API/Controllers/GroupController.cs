@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
@@ -109,6 +110,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/material/{materialId}")]
         [Description("Add material to group")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public int AddGroupMaterialReference(int groupId, int materialId)
         {
             return _groupService.AddGroupMaterialReference(groupId, materialId);
@@ -118,6 +122,9 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{groupId}/material/{materialId}")]
         [Description("Remove material from group")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public int RemoveGroupMaterialReference(int groupId, int materialId)
         {
             return _groupService.RemoveGroupMaterialReference(groupId, materialId);

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
