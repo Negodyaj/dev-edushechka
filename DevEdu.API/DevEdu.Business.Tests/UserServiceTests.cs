@@ -127,6 +127,22 @@ namespace DevEdu.Business.Tests
             _repoMock.Verify(x => x.AddUserRole(actualId, It.IsAny<int>()), Times.AtLeastOnce);
         }
 
+        [TestCase(1)]
+        [TestCase(100)]
+        public void SelectUserById_WhenDoNotHaveMatchesInDataBase_EntityNotFoundException(int userId)
+        {
+            //Given
+            var user = UserData.GetUserDto();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId);
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _userService.SelectUserById(userId));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
         [Test]
         public void SelectUserByEmail_WhenDoNotHaveMatchesInDataBase_EntityNotFoundException()
         {
@@ -192,40 +208,6 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _repoMock.Verify(x => x.DeleteUser(id), Times.Never);
-        }
-
-        [TestCase(0)]
-        [TestCase(-100500)]
-        public void DeleteUser_WhenIdLessThanMinimumAllowedValue_Exception(int id)
-        {
-            //Given
-            var expectedException = string.Format(ServiceMessages.MinimumAllowedValueMessage, nameof(id), UserData.idMinimum);
-
-            //When
-            var ex = Assert.Throws<Exception>(
-                () => _userService.DeleteUser(id));
-
-            //Then
-            Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _repoMock.Verify(x => x.DeleteUser(id), Times.Never);
-        }
-
-        [TestCase(0, 0)]
-        [TestCase(-100500, 0)]
-        [TestCase(0, -100500)]
-        public void AddUserRole_WhenIdLessThanMinimumAllowedValue_Exception(int userId, int roleId)
-        {
-            //Given
-            var expectedException = string.Format(ServiceMessages.MinimumAllowedValueMessage, nameof(userId), nameof(roleId), UserData.idMinimum);
-            _repoMock.Setup(x => x.AddUserRole(userId, roleId)).Throws(new Exception(""));
-
-            //When
-            var ex = Assert.Throws<Exception>(
-                () => _userService.AddUserRole(userId, roleId));
-
-            //Then
-            Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _repoMock.Verify(x => x.AddUserRole(userId, roleId), Times.Never);
         }
 
         [TestCase(100)]
