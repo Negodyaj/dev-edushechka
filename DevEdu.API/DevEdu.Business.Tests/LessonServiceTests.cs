@@ -103,14 +103,14 @@ namespace DevEdu.Business.Tests
             var lessonId = 5;
             var topicId = 7;
             _lessonValidationHelper.Setup(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId))
-                .Throws(new ValidationException(string.Format(ServiceMessages.SameTopicsInLesson, lessonId, topicId)));
+                .Throws(new ValidationException(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lessonId, topicId)));
 
             //When
             var exception = Assert.Throws<ValidationException>(() =>
                 _sut.AddTopicToLesson(lessonId, topicId));
 
             //Then
-            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.SameTopicsInLesson, lessonId, topicId)));
+            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lessonId, topicId)));
             _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
             _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
             _lessonValidationHelper.Verify(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId), Times.Once);

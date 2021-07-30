@@ -25,7 +25,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var lesson = _lessonRepository.SelectLessonById(lessonId);
             if (lesson.Topics.Any(topic => topic.Id == topicId))
-                throw new ValidationException(string.Format(ServiceMessages.SameTopicsInLesson, lessonId, topicId));
+                throw new ValidationException(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lessonId, topicId));
         }
     }
 }

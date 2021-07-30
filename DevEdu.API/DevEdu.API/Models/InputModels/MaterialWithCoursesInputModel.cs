@@ -6,7 +6,7 @@ namespace DevEdu.API.Models.InputModels
 {
     public class MaterialWithCoursesInputModel : MaterialInputModel
     {
-        [Required(ErrorMessage = CoursesRequired)]
+        [MinLength(1, ErrorMessage = CoursesRequired)]
         public List<int> CoursesIds { get; set; }
     }
 }

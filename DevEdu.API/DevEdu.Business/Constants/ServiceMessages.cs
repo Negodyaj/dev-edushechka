@@ -8,7 +8,9 @@
         public const string EntityNotFound = "Entity Not Found";
         public const string PaymentDeleted = "This payment is deleted";
         public const string LessonTopicReferenceNotFound = "No reference between lesson with id = {0} and topic with id = {1} was found";
-        public const string SameTopicsInLesson = "Reference between lesson with id = {0} and topic with id = {1} already exists";
-
+        public const string LessonTopicReferenceAlreadyExists = "Reference between lesson with id = {0} and topic with id = {1} already exists";
+        public const string DuplicateCoursesValuesProvided = "Courses with same Ids were provided";
+        public const string DuplicateGroupsValuesProvided = "Groups with same Ids were provided";
+        public const string DuplicateTagsValuesProvided = "Tags with same Ids were provided";
     }
 }

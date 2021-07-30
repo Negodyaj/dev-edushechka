@@ -6,7 +6,7 @@ namespace DevEdu.API.Models.InputModels
 {
     public class MaterialWithGroupsInputModel : MaterialInputModel
     {
-        [Required(ErrorMessage = GroupsRequired)]
+        [MinLength(1, ErrorMessage = GroupsRequired)]
         public List<int> GroupsIds { get; set; }
     }
 }

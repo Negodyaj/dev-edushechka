@@ -1,4 +1,5 @@
 ﻿using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -10,6 +11,9 @@ namespace DevEdu.Business.Tests
         private Mock<IMaterialRepository> _materialRepoMock;
         private Mock<ICourseRepository> _courseRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
+        private Mock<IGroupValidationHelper> _groupValidationHelper;
+        private Mock<ITagValidationHelper> _tagValidationHelper; 
+        private MaterialService _sut;
 
         [SetUp]
         public void SetUp()
@@ -17,6 +21,14 @@ namespace DevEdu.Business.Tests
             _materialRepoMock = new Mock<IMaterialRepository>();
             _courseRepoMock = new Mock<ICourseRepository>();
             _groupRepoMock = new Mock<IGroupRepository>();
+            _groupValidationHelper = new Mock<IGroupValidationHelper>();
+            _tagValidationHelper = new Mock<ITagValidationHelper>();
+            _sut = new MaterialService(
+                _materialRepoMock.Object, 
+                _courseRepoMock.Object, 
+                _groupRepoMock.Object,
+                _groupValidationHelper.Object,
+                _tagValidationHelper.Object);
         }
 
         //[Test]
@@ -29,10 +41,8 @@ namespace DevEdu.Business.Tests
         //    _materialRepoMock.Setup(x => x.AddMaterial(materialData)).Returns(expectedId);
         //    _materialRepoMock.Setup(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()));
 
-        //    var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
-
         //    //When
-        //    var actualId = sut.AddMaterial(materialData);
+        //    var actualId = _sut.AddMaterial(materialData);
 
         //    //Then
         //    Assert.AreEqual(expectedId, actualId);
@@ -50,10 +60,8 @@ namespace DevEdu.Business.Tests
         //    _materialRepoMock.Setup(x => x.AddMaterial(materialData)).Returns(expectedId);
         //    _materialRepoMock.Setup(x => x.AddTagToMaterial(expectedId, It.IsAny<int>()));
 
-        //    var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
-
         //    //When
-        //    var actualId = sut.AddMaterial(materialData);
+        //    var actualId = _sut.AddMaterial(materialData);
 
         //    //Then
         //    Assert.AreEqual(expectedId, actualId);
@@ -69,10 +77,8 @@ namespace DevEdu.Business.Tests
 
             _materialRepoMock.Setup(x => x.GetAllMaterials()).Returns(materialsData);
 
-            var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
-
             //When
-            var actualList = sut.GetAllMaterials();
+            var actualList = _sut.GetAllMaterials();
 
             //Then
             Assert.AreEqual(materialsData, actualList);
@@ -88,10 +94,8 @@ namespace DevEdu.Business.Tests
 
             _materialRepoMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialData);
 
-            var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
-
             //When
-            var actual = sut.GetMaterialById(materialId);
+            var actual = _sut.GetMaterialById(materialId);
 
             //Then
             Assert.AreEqual(materialData, actual);
@@ -111,10 +115,8 @@ namespace DevEdu.Business.Tests
             _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(materialId)).Returns(coursesData);
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(materialId)).Returns(groupsData);
 
-            var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
-
             //When
-            var actual = sut.GetMaterialByIdWithCoursesAndGroups(materialId);
+            var actual = _sut.GetMaterialByIdWithCoursesAndGroups(materialId);
 
             //Then
             Assert.AreEqual(materialData, actual);
@@ -133,10 +135,8 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.UpdateMaterial(materialData));
             _materialRepoMock.Setup(x => x.GetMaterialById(materialData.Id)).Returns(expectedMaterialData);
 
-            var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
-
             //When
-            var actual = sut.UpdateMaterial(materialData.Id, materialData);
+            var actual = _sut.UpdateMaterial(materialData.Id, materialData);
 
             //Then
             Assert.AreEqual(expectedMaterialData, actual);
@@ -153,10 +153,8 @@ namespace DevEdu.Business.Tests
 
             _materialRepoMock.Setup(x => x.GetMaterialsByTagId(tagId)).Returns(materialsData);
 
-            var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
-
             //When
-            var actualList = sut.GetMaterialsByTagId(tagId);
+            var actualList = _sut.GetMaterialsByTagId(tagId);
 
             //Then
             Assert.AreEqual(materialsData, actualList);
@@ -170,9 +168,9 @@ namespace DevEdu.Business.Tests
             var givenMaterialId = 5;
             var givenTagId = 11;
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
-            var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
+
             //When
-            sut.AddTagToMaterial(givenMaterialId, givenTagId);
+            _sut.AddTagToMaterial(givenMaterialId, givenTagId);
             //Then
             _materialRepoMock.Verify(x => x.AddTagToMaterial(givenMaterialId, givenTagId), Times.Once);
         }
@@ -184,9 +182,9 @@ namespace DevEdu.Business.Tests
             var givenMaterialId = 5;
             var givenTagId = 11;
             _materialRepoMock.Setup(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId));
-            var sut = new MaterialService(_materialRepoMock.Object, _courseRepoMock.Object, _groupRepoMock.Object);
+
             //When
-            sut.DeleteTagFromMaterial(givenMaterialId, givenTagId);
+            _sut.DeleteTagFromMaterial(givenMaterialId, givenTagId);
             //Then
             _materialRepoMock.Verify(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId), Times.Once);
         }
