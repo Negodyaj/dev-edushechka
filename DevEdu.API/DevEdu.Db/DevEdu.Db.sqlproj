@@ -259,7 +259,6 @@
     <Build Include="StoredProcedures\StudentRating\StudentRating_SelectByUserId.sql" />
     <Build Include="StoredProcedures\StudentRating\StudentRating_Update.sql" />
     <Build Include="StoredProcedures\StudentRating\StudentRating_SelectByGroupId.sql" />
-    <Build Include="StoredProcedures\User_Group\User_Group_SelectByUserIdAndUserRoleAndGroupId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />

@@ -1,4 +1,5 @@
-﻿using DevEdu.Business.Services;
+﻿using DevEdu.Business.Exceptions;
+using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
@@ -74,6 +75,26 @@ namespace DevEdu.Business.Tests.Tag
             Assert.AreEqual(expectedTagDto, actualTagDto);
             _tagRepoMock.Verify(x => x.SelectTagById(tagId), Times.Once);
         }
+
+        [Test]
+        public void GetTagById_TagDoesntExist_EntityNotFoundException()
+        {
+            //Given
+            TagDto expectedTagDto = default;
+
+            var tagId = 0;
+
+            _tagRepoMock.Setup(x => x.SelectTagById(tagId)).Returns(expectedTagDto);
+
+            var sut = new TagService(_tagRepoMock.Object, _tagValidationHelperMock.Object);
+
+            //When
+            Assert.Throws<EntityNotFoundException>(() => sut.GetTagById(tagId));
+
+            //Than
+            _tagRepoMock.Verify(x => x.SelectTagById(tagId), Times.Once);
+        }
+
         [Test]
         public void UpdateTag_TagDto_Id_TagDto()
         {

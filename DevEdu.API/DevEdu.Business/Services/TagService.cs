@@ -1,4 +1,6 @@
-﻿using DevEdu.Business.ValidationHelpers;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
@@ -34,6 +36,14 @@ namespace DevEdu.Business.Services
 
         public List<TagDto> GetAllTags() => _repository.SelectAllTags();
 
-        public TagDto GetTagById(int id) => _repository.SelectTagById(id);
+        public TagDto GetTagById(int id)
+        {
+            var dto = _repository.SelectTagById(id);
+            if (dto == default)
+            {
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(dto), id));
+            }
+            return dto;
+        }
     }
 }

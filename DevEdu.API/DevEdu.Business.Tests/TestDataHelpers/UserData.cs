@@ -59,6 +59,7 @@ namespace DevEdu.Business.Tests
             {
                 new UserDto
                 {
+                    Id = 1,
                     FirstName = "Admin",
                         LastName = "Adminov",
                         Patronymic = "Adminovich",
@@ -79,6 +80,7 @@ namespace DevEdu.Business.Tests
                 },
                 new UserDto
                 {
+                    Id = 2,
                     FirstName = "Student",
                     LastName = "Studentov",
                     Patronymic = "Studentovich",
@@ -95,6 +97,7 @@ namespace DevEdu.Business.Tests
                 },
                 new UserDto
                 {
+                    Id = 3,
                     FirstName = "Manager",
                     LastName = "Managerov",
                     Patronymic = "Managerovich",

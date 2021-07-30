@@ -2,16 +2,19 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
+using System.Linq;
 
 namespace DevEdu.Business.ValidationHelpers
 {
     public class GroupValidationHelper : IGroupValidationHelper
     {
         private readonly IGroupRepository _groupRepository;
+        private readonly IUserRepository _userRepository;
 
-        public GroupValidationHelper(IGroupRepository groupRepository)
+        public GroupValidationHelper(IGroupRepository groupRepository, IUserRepository userRepository)
         {
             _groupRepository = groupRepository;
+            _userRepository = userRepository;
         }
 
         public void CheckGroupExistence(int groupId)
@@ -19,22 +22,6 @@ namespace DevEdu.Business.ValidationHelpers
             //var group = _groupRepository.GetGroup(groupId);
             //if (group == default)
             //    throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), groupId));
-        }
-        public void CheckUserBelongToGroup(int groupId, int userId, Role role)
-        {
-            var userGroupId = _groupRepository.GetUser_GroupByUserIdAndUserRoleAndGroupId(userId, role, groupId);
-            if (userGroupId == default)
-            {
-                throw new ValidationException(string.Format(ServiceMessages.UserDoesntBelongToGroup, role, userId, groupId));
-            }
-        }
-        public void CheckTeacherBelongToGroup(int groupId, int teacherId, Role role)
-        {
-            var userGroupId = _groupRepository.GetUser_GroupByUserIdAndUserRoleAndGroupId(teacherId, role, groupId);
-            if (userGroupId == default)
-            {
-                throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToGroup, role, teacherId, groupId));
-            }
         }
     }
 }

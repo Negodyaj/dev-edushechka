@@ -14,12 +14,11 @@ namespace DevEdu.Business.ValidationHelpers
             _ratingRepository = ratingRepository;
         }
 
-        public StudentRatingDto CheckRaitingExistence(int ratingId)
+        public void CheckRaitingExistence(int ratingId)
         {
             var rating = _ratingRepository.SelectStudentRatingById(ratingId);
             if (rating == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(rating), ratingId));
-            return rating;
         }
     }
 }
