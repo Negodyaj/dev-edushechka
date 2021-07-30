@@ -17,6 +17,7 @@ namespace DevEdu.DAL.Repositories
         private const string _addTopicToCourseProcedure = "[dbo].[Course_Topic_Insert]";
         private const string _addMultipleTopicsToCourseProcedure = "[dbo].[Course_Topic_AddMultiple]";
         private const string _deleteTopicToCourseProcedure = "[dbo].[Course_Topic_Delete]";
+        private const string _getCourseTopicByIdProcedure = "[dbo].[Course_Topic_SelectById]";
         private const string _course_TopicType = "dbo.Course_TopicType";
 
         private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
@@ -148,6 +149,21 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure
                 ).
                 ToList();
+        }
+        public CourseTopicDto GetCourseTopicById(int id)
+        {
+            var response = _connection.Query<CourseTopicDto, TopicDto, CourseTopicDto>(
+                _getCourseTopicByIdProcedure,
+                (course, topic) =>
+                {
+                    course.Topic = topic;
+                    return course;
+                },
+                new { id },
+                splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                ).FirstOrDefault();
+            return response; 
         }
     }
 }

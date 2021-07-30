@@ -135,7 +135,9 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<CourseTopicDto>(inputModel);
 
-            _courseService.AddTopicToCourse(courseId, topicId, dto);
+            var id = _courseService.AddTopicToCourse(courseId, topicId, dto);
+            //dto = _courseService.Get
+            
             return $"Topic Id:{topicId} added in course Id:{courseId} on {inputModel.Position} position";
         }
 

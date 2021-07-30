@@ -62,11 +62,11 @@ namespace DevEdu.Business.Services
             _courseRepository.UpdateCourse(courseDto);
         }
 
-        public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
+        public int AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {
             dto.Course = new CourseDto() { Id = courseId };
             dto.Topic = new TopicDto { Id = topicId };
-            _topicRepository.AddTopicToCourse(dto);
+            return _topicRepository.AddTopicToCourse(dto);
         }
 
         public void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
