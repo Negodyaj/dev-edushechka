@@ -11,8 +11,9 @@ namespace DevEdu.Business.Tests
         private Mock<ITaskRepository> _taskRepoMock;
         private Mock<ICourseRepository> _courseRepoMock;
         private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
-        private Mock<TaskValidationHelper> _taskHelper;
-        private Mock<TagValidationHelper> _tagHelper;
+        private Mock<ITaskValidationHelper> _taskHelper;
+        private Mock<ITagValidationHelper> _tagHelper;
+        private TaskService _sut;
 
         [SetUp]
         public void Setup()
@@ -20,10 +21,10 @@ namespace DevEdu.Business.Tests
             _taskRepoMock = new Mock<ITaskRepository>();
             _courseRepoMock = new Mock<ICourseRepository>();
             _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
-            _taskHelper = new Mock<TaskValidationHelper>();
-            _tagHelper = new Mock<TagValidationHelper>();
+            _taskHelper = new Mock<ITaskValidationHelper>();
+            _tagHelper = new Mock<ITagValidationHelper>();
+            _sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper.Object, _tagHelper.Object);
         }
-
 
         [Test]
         public void AddTask_SimpleDtoWithoutTags_TaskCreated()
@@ -34,10 +35,8 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(TaskData.expectedTaskId);
             _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper.Object, _tagHelper.Object);
-
             //When
-            var actualTaskId = sut.AddTask(taskDto);
+            var actualTaskId = _sut.AddTask(taskDto);
 
             //Than
             Assert.AreEqual(TaskData.expectedTaskId, actualTaskId);
@@ -54,10 +53,8 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(TaskData.expectedTaskId);
             _taskRepoMock.Setup(x => x.AddTagToTask(TaskData.expectedTaskId, It.IsAny<int>()));
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper.Object, _tagHelper.Object);
-
             //When
-            var actualTaskId = sut.AddTask(taskDto);
+            var actualTaskId = _sut.AddTask(taskDto);
 
             //Than
             Assert.AreEqual(TaskData.expectedTaskId, actualTaskId);
@@ -73,10 +70,8 @@ namespace DevEdu.Business.Tests
 
             _taskRepoMock.Setup(x => x.GetTaskById(TaskData.expectedTaskId)).Returns(taskDto);
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper.Object, _tagHelper.Object);
-
             //When
-            var dto = sut.GetTaskById(TaskData.expectedTaskId);
+            var dto = _sut.GetTaskById(TaskData.expectedTaskId);
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -95,10 +90,8 @@ namespace DevEdu.Business.Tests
             _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskId(TaskData.expectedTaskId)).Returns(courseDtos);
             taskDto.Courses = courseDtos;
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper.Object, _tagHelper.Object);
-
             //When
-            var dto = sut.GetTaskWithCoursesById(TaskData.expectedTaskId);
+            var dto = _sut.GetTaskWithCoursesById(TaskData.expectedTaskId);
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -118,10 +111,8 @@ namespace DevEdu.Business.Tests
             _studentAnswerRepoMock.Setup(x => x.GetStudentAnswersToTaskByTaskId(TaskData.expectedTaskId)).Returns(studentAnswersDtos);
             taskDto.StudentAnswers = studentAnswersDtos;
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper.Object, _tagHelper.Object);
-
             //When
-            var dto = sut.GetTaskWithAnswersById(TaskData.expectedTaskId);
+            var dto = _sut.GetTaskWithAnswersById(TaskData.expectedTaskId);
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -145,10 +136,8 @@ namespace DevEdu.Business.Tests
             _studentAnswerRepoMock.Setup(x => x.GetStudentAnswersToTaskByTaskId(TaskData.expectedTaskId)).Returns(studentAnswersDtos);
             taskDto.StudentAnswers = studentAnswersDtos;
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper.Object, _tagHelper.Object);
-
             //When
-            var dto = sut.GetTaskWithCoursesAndAnswersById(TaskData.expectedTaskId);
+            var dto = _sut.GetTaskWithCoursesAndAnswersById(TaskData.expectedTaskId);
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -165,10 +154,8 @@ namespace DevEdu.Business.Tests
 
             _taskRepoMock.Setup(x => x.GetTasks()).Returns(taskDtos);
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper.Object, _tagHelper.Object);
-
             //When
-            var dtos = sut.GetTasks();
+            var dtos = _sut.GetTasks();
 
             //Than
             Assert.AreEqual(taskDtos, dtos);
@@ -185,16 +172,15 @@ namespace DevEdu.Business.Tests
             //_taskRepoMock.Setup(x => x.UpdateTask(taskDto));
             _taskRepoMock.Setup(x => x.GetTaskById(taskDto.Id)).Returns(expectedTaskDto);
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper.Object, _tagHelper.Object);
-
             //When
-            var actualTaskDto = sut.UpdateTask(taskDto);
+            var actualTaskDto = _sut.UpdateTask(taskDto);
 
             //Then
             Assert.AreEqual(expectedTaskDto, actualTaskDto);
             _taskRepoMock.Verify(x => x.UpdateTask(taskDto), Times.Once);
             _taskRepoMock.Verify(x => x.GetTaskById(taskDto.Id), Times.Once);
         }
+
         [Test]
         public void GetGroupsByTaskId_IntTaskId_ReturnedListOfGroupTaskDtoWithTask()
         {
@@ -204,10 +190,8 @@ namespace DevEdu.Business.Tests
 
             _taskRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupTaskList);
 
-            var sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper.Object, _tagHelper.Object);
-
             //When
-            var dto = sut.GetGroupsByTaskId(taskId);
+            var dto = _sut.GetGroupsByTaskId(taskId);
 
             //Than
             Assert.AreEqual(groupTaskList, dto);
