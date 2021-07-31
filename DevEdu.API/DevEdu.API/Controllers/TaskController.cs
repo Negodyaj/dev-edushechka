@@ -108,7 +108,9 @@ namespace DevEdu.API.Controllers
         public TaskInfoOutputModel GetTaskWithTags(int taskId)
         {
             var userId = this.GetUserId();
-            var taskDto = _taskService.GetTaskById(taskId, userId);
+            var roles = this.GetUserRoles();
+            bool isAdmin = roles.Contains(Role.Admin);
+            var taskDto = _taskService.GetTaskById(taskId, userId, isAdmin);
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
         }
 
@@ -120,7 +122,9 @@ namespace DevEdu.API.Controllers
         public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
         {
             var userId = this.GetUserId();
-            var taskDto = _taskService.GetTaskWithCoursesById(taskId, userId);
+            var roles = this.GetUserRoles();
+            bool isAdmin = roles.Contains(Role.Admin);
+            var taskDto = _taskService.GetTaskWithCoursesById(taskId, userId, isAdmin);
             return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
         }
 
@@ -132,7 +136,9 @@ namespace DevEdu.API.Controllers
         public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
         {
             var userId = this.GetUserId();
-            var taskDto = _taskService.GetTaskWithAnswersById(taskId, userId);
+            var roles = this.GetUserRoles();
+            bool isAdmin = roles.Contains(Role.Admin);
+            var taskDto = _taskService.GetTaskWithAnswersById(taskId, userId, isAdmin);
             return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
         }
 
@@ -144,7 +150,9 @@ namespace DevEdu.API.Controllers
         public TaskInfoWithGroupsOutputModel GetTaskWithTagsAndGroups(int taskId)
         {
             var userId = this.GetUserId();
-            var taskDto = _taskService.GetTaskWithGroupsById(taskId, userId);
+            var roles = this.GetUserRoles();
+            bool isAdmin = roles.Contains(Role.Admin);
+            var taskDto = _taskService.GetTaskWithGroupsById(taskId, userId, isAdmin);
             return _mapper.Map<TaskInfoWithGroupsOutputModel>(taskDto);
         }
 
@@ -156,7 +164,9 @@ namespace DevEdu.API.Controllers
         public List<TaskInfoOutputModel> GetAllTasksWithTags()
         {
             var userId = this.GetUserId();
-            var taskDtos = _taskService.GetTasks(userId);
+            var roles = this.GetUserRoles();
+            bool isAdmin = roles.Contains(Role.Admin);
+            var taskDtos = _taskService.GetTasks(userId, isAdmin);
             return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
         }
 

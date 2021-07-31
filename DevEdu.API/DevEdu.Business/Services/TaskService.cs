@@ -92,42 +92,49 @@ namespace DevEdu.Business.Services
             _taskRepository.DeleteTask(taskId);
         }
 
-        public TaskDto GetTaskById(int taskid, int userId)
+        public TaskDto GetTaskById(int taskid, int userId, bool isAdmin)
         {
             _userValidationHelper.CheckUserExistence(userId);
             var taskDto = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskid);
+            if(!isAdmin)
             _taskValidationHelper.CheckUserAccessToTask(taskid, userId);
 
             return taskDto;
         }
 
-        public TaskDto GetTaskWithCoursesById(int taskid, int userId)
+        public TaskDto GetTaskWithCoursesById(int taskid, int userId, bool isAdmin)
         {
-            var taskDto = GetTaskById(taskid, userId);
+            var taskDto = GetTaskById(taskid, userId, isAdmin);
             taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(taskid);
             return taskDto;
         }
 
-        public TaskDto GetTaskWithAnswersById(int taskid, int userId)
+        public TaskDto GetTaskWithAnswersById(int taskid, int userId, bool isAdmin)
         {
-            var taskDto = GetTaskById(taskid, userId);
+            var taskDto = GetTaskById(taskid, userId, isAdmin);
             taskDto.StudentAnswers = _studentAnswerOnTaskRepository.GetStudentAnswersToTaskByTaskId(taskid);
             return taskDto;
         }
 
-        public TaskDto GetTaskWithGroupsById(int taskid, int userId)
+        public TaskDto GetTaskWithGroupsById(int taskid, int userId, bool isAdmin)
         {
-            var taskDto = GetTaskById(taskid, userId);
+            var taskDto = GetTaskById(taskid, userId, isAdmin);
             taskDto.Groups = _groupRepository.GetGroupsByTaskId(taskid);
             return taskDto;
         }
 
-        public List<TaskDto> GetTasks(int userId)
+        public List<TaskDto> GetTasks(int userId, bool isAdmin)
         {
             _userValidationHelper.CheckUserExistence(userId);
             var tasks = _taskRepository.GetTasks();
-            var allowedTasks = _taskValidationHelper.GetTasksAllowedToUser(tasks, userId);
-            return allowedTasks;
+            var allowedTaskDtos = new List<TaskDto>();
+            if (!isAdmin)
+                return tasks;
+            foreach (var task in tasks)
+            {
+                allowedTaskDtos.Add(_taskValidationHelper.GetTaskAllowedToUser(task.Id, userId));
+            }
+            return allowedTaskDtos;
         }
 
         public int AddTagToTask(int taskId, int tagId)

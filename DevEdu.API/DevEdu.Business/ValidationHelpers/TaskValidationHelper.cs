@@ -52,15 +52,5 @@ namespace DevEdu.Business.ValidationHelpers
                 return null;
             return _taskRepository.GetTaskById(taskId);
         }
-
-        public List<TaskDto> GetTasksAllowedToUser(List<TaskDto> tasks, int userId)
-        {
-            var taskDtos = new List<TaskDto>();
-            foreach (var task in tasks)
-            {
-                taskDtos.Add(GetTaskAllowedToUser(task.Id, userId));
-            }
-            return taskDtos;
-        }
     }
 }

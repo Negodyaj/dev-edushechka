@@ -304,7 +304,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupDtos);
 
             //When
-            var dto = sut.GetTaskById(taskId, userId);
+            var dto = sut.GetTaskById(taskId, userId, false);
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -322,7 +322,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(userDto);
 
             EntityNotFoundException ex = Assert.Throws<EntityNotFoundException>(
-                () => sut.GetTaskById(taskId, userId));
+                () => sut.GetTaskById(taskId, userId, false));
 
             Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)));
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
@@ -346,7 +346,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             AuthorizationException ex = Assert.Throws<AuthorizationException>(
-                () => sut.GetTaskById(taskId, userId));
+                () => sut.GetTaskById(taskId, userId, false));
             Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
@@ -372,7 +372,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupDtos);
             //When
-            var dto = sut.GetTaskWithCoursesById(taskId, userId);
+            var dto = sut.GetTaskWithCoursesById(taskId, userId, false);
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -392,7 +392,7 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)), 
-                () => sut.GetTaskWithCoursesById(taskId, userId));
+                () => sut.GetTaskWithCoursesById(taskId, userId, false));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
             _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
@@ -415,7 +415,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             AuthorizationException ex = Assert.Throws<AuthorizationException>(
-                () => sut.GetTaskWithCoursesById(taskId, userId));
+                () => sut.GetTaskWithCoursesById(taskId, userId, false));
             Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
@@ -441,7 +441,7 @@ namespace DevEdu.Business.Tests
             taskDto.StudentAnswers = studentAnswersDtos;
 
             //When
-            var dto = sut.GetTaskWithAnswersById(taskId, userId);
+            var dto = sut.GetTaskWithAnswersById(taskId, userId, false);
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -461,7 +461,7 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)), 
-                () => sut.GetTaskWithAnswersById(taskId, userId));
+                () => sut.GetTaskWithAnswersById(taskId, userId, false));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
             _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
@@ -484,7 +484,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             AuthorizationException ex = Assert.Throws<AuthorizationException>(
-                () => sut.GetTaskWithAnswersById(taskId, userId));
+                () => sut.GetTaskWithAnswersById(taskId, userId, false));
             Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
@@ -508,7 +508,7 @@ namespace DevEdu.Business.Tests
             taskDto.Groups = groupDtos;
 
             //When
-            var dto = sut.GetTaskWithGroupsById(taskId, userId);
+            var dto = sut.GetTaskWithGroupsById(taskId, userId, false);
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -527,7 +527,7 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
-                () => sut.GetTaskWithCoursesById(taskId, userId));
+                () => sut.GetTaskWithCoursesById(taskId, userId, false));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
             _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
@@ -550,7 +550,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             AuthorizationException ex = Assert.Throws<AuthorizationException>(
-                () => sut.GetTaskWithCoursesById(taskId, userId));
+                () => sut.GetTaskWithCoursesById(taskId, userId, false));
             Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
@@ -576,7 +576,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTasks()).Returns(taskDtos);
 
             //When
-            var dtos = sut.GetTasks(userId);
+            var dtos = sut.GetTasks(userId, false);
 
             //Than
             Assert.AreEqual(taskDtos, dtos);

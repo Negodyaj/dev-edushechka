@@ -9,6 +9,5 @@ namespace DevEdu.Business.ValidationHelpers
         public void CheckUserAccessToTask(int taskId, int userId);
         public void CheckMethodistAccessToTask(TaskDto taskDto, int userId);
         public TaskDto GetTaskAllowedToUser(int taskId, int userId);
-        public List<TaskDto> GetTasksAllowedToUser(List<TaskDto> tasks, int userId);
     }
 }
