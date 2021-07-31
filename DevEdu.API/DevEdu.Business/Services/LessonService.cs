@@ -76,7 +76,7 @@ namespace DevEdu.Business.Services
         public StudentLessonDto AddStudentToLesson(int lessonId, int userId)
         {         
             _lessonRepository.AddStudentToLesson(lessonId, userId);
-            return GetStudenLessonByLessonAndUserId(lessonId, userId);           
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);           
         }
 
         public void DeleteStudentFromLesson(int lessonId, int userId)
@@ -106,7 +106,7 @@ namespace DevEdu.Business.Services
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.User = new UserDto { Id = userId };
             _lessonRepository.UpdateStudentFeedbackForLesson(studentLessonDto);
-            return GetStudenLessonByLessonAndUserId(lessonId, userId);
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
         }
 
         public StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
@@ -114,7 +114,7 @@ namespace DevEdu.Business.Services
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.User = new UserDto { Id = userId };
             _lessonRepository.UpdateStudentAbsenceReasonOnLesson(studentLessonDto);
-            return GetStudenLessonByLessonAndUserId(lessonId, userId);
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
         }
 
         public StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
@@ -122,16 +122,10 @@ namespace DevEdu.Business.Services
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.User = new UserDto { Id = userId };
             _lessonRepository.UpdateStudentAttendanceOnLesson(studentLessonDto);
-            return GetStudenLessonByLessonAndUserId(lessonId, userId);
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
         }
 
         public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId)=>
-            _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
-
-        public StudentLessonDto GetStudenLessonByLessonAndUserId(int lessonId, int userId)
-        {
-                var o=_lessonRepository.SelectByLessonAndUserId(lessonId, userId);
-            return o;
-        }
+            _lessonRepository.SelectAllFeedbackByLessonId(lessonId);       
     }
 }

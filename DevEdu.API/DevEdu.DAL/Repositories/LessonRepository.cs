@@ -323,14 +323,13 @@ namespace DevEdu.DAL.Repositories
         }
 
 
-        public StudentLessonDto SelectByLessonAndUserId(int lessonId, int userId)      
-        {
-            StudentLessonDto result=default;
-            return _connection.Query<StudentLessonDto,  LessonDto, UserDto, StudentLessonDto>(
+        public StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int userId)      
+        {            
+            return _connection.Query<StudentLessonDto, LessonDto, UserDto, StudentLessonDto>(
                 _selectByLessonAndUserIdProcedure,
                 (studentLesson, lesson, user) =>
                 {
-                    result = studentLesson;
+                    var result = studentLesson;
                     result.Lesson = lesson;
                     result.User = user;
                     return result;
@@ -342,7 +341,7 @@ namespace DevEdu.DAL.Repositories
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
-            ).FirstOrDefault();
+            ).First();
             
         }
     }

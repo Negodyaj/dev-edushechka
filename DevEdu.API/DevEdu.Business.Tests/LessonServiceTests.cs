@@ -12,9 +12,9 @@ namespace DevEdu.Business.Tests
         private Mock<ILessonRepository> _lessonRepoMock;
         private Mock<ICommentRepository> _commentRepoMock;
         private Mock<IUserRepository> _userRepoMock;
-        private Mock<IUserValidationHelper> _userValidationHelperMock;
-        private Mock<ILessonValidationHelper> _lessonValidationHelperMock;
-
+       // private UserValidationHelper _userValidationHelperMock;
+       // private LessonValidationHelper _lessonValidationHelperMock;
+        private LessonService _sut;
 
         [SetUp]
         public void Setup()
@@ -22,8 +22,9 @@ namespace DevEdu.Business.Tests
             _lessonRepoMock = new Mock<ILessonRepository>();
             _commentRepoMock = new Mock<ICommentRepository>();
             _userRepoMock = new Mock<IUserRepository>();
-            _userValidationHelperMock = new Mock<IUserValidationHelper>();
-            _lessonValidationHelperMock = new Mock<ILessonValidationHelper>();
+        
+            _sut= new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
+                new UserValidationHelper(_userRepoMock.Object), new LessonValidationHelper(_lessonRepoMock.Object));
         }
 
         [Test]
@@ -32,17 +33,14 @@ namespace DevEdu.Business.Tests
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
             
-            var lessonId = LessonData.LessonId;
-            var userId = LessonData.UserId;
+            var lessonId = 30;
+            var userId = 42;
 
             _lessonRepoMock.Setup(x => x.AddStudentToLesson(lessonId, userId));
-            _lessonRepoMock.Setup(x => x.SelectByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
-
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
-                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
+            _lessonRepoMock.Setup(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);            
 
             //When
-            var dto = sut.AddStudentToLesson(lessonId, userId);
+            var dto = _sut.AddStudentToLesson(lessonId, userId);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
@@ -54,16 +52,14 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
-            var lessonId = LessonData.LessonId;
-            var userId = LessonData.UserId;
+            var lessonId = 30;
+            var userId = 42;
 
             _lessonRepoMock.Setup(x => x.DeleteStudentFromLesson(lessonId, userId));
 
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
-                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
 
             //When
-            sut.DeleteStudentFromLesson(lessonId,userId);
+            _sut.DeleteStudentFromLesson(lessonId,userId);
 
             //Than
             _lessonRepoMock.Verify(x => x.DeleteStudentFromLesson(lessonId, userId), Times.Once);
@@ -75,22 +71,19 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
-            var lessonId = LessonData.LessonId;
-            var userId = LessonData.UserId;
+            var lessonId = 30;
+            var userId = 42;
 
             _lessonRepoMock.Setup(x => x.UpdateStudentFeedbackForLesson(studentLessonDto));
-            _lessonRepoMock.Setup(x => x.SelectByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
-
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
-                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
-
+            _lessonRepoMock.Setup(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
+                       
             //When
-            var dto = sut.UpdateStudentFeedbackForLesson(lessonId, userId, studentLessonDto);
+            var dto = _sut.UpdateStudentFeedbackForLesson(lessonId, userId, studentLessonDto);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
             _lessonRepoMock.Verify(x => x.UpdateStudentFeedbackForLesson(studentLessonDto), Times.Once);
-            _lessonRepoMock.Verify(x => x.SelectByLessonAndUserId(lessonId, userId), Times.Once);
+            _lessonRepoMock.Verify(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId), Times.Once);
         }
 
         [Test]
@@ -98,22 +91,19 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
-            var lessonId = LessonData.LessonId;
-            var userId = LessonData.UserId;
+            var lessonId = 30;
+            var userId = 42;
 
             _lessonRepoMock.Setup(x => x.UpdateStudentAbsenceReasonOnLesson(studentLessonDto));
-            _lessonRepoMock.Setup(x => x.SelectByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
-
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
-                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
+            _lessonRepoMock.Setup(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
 
             //When
-            var dto = sut.UpdateStudentAbsenceReasonOnLesson(lessonId, userId, studentLessonDto);
+            var dto = _sut.UpdateStudentAbsenceReasonOnLesson(lessonId, userId, studentLessonDto);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
             _lessonRepoMock.Verify(x => x.UpdateStudentAbsenceReasonOnLesson(studentLessonDto), Times.Once);
-            _lessonRepoMock.Verify(x => x.SelectByLessonAndUserId(lessonId, userId), Times.Once);
+            _lessonRepoMock.Verify(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId), Times.Once);
         }
 
         [Test]
@@ -121,65 +111,37 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
-            var lessonId = LessonData.LessonId;
-            var userId = LessonData.UserId;
+            var lessonId = 30;
+            var userId = 42;
 
             _lessonRepoMock.Setup(x => x.UpdateStudentAttendanceOnLesson(studentLessonDto));
-            _lessonRepoMock.Setup(x => x.SelectByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
+            _lessonRepoMock.Setup(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
 
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
-                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
 
             //When
-            var dto = sut.UpdateStudentAttendanceOnLesson(lessonId, userId, studentLessonDto);
+            var dto = _sut.UpdateStudentAttendanceOnLesson(lessonId, userId, studentLessonDto);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
             _lessonRepoMock.Verify(x => x.UpdateStudentAttendanceOnLesson(studentLessonDto), Times.Once);
-            _lessonRepoMock.Verify(x => x.SelectByLessonAndUserId(lessonId, userId), Times.Once);
+            _lessonRepoMock.Verify(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId), Times.Once);
         }
 
         [Test]
         public void GetAllFeedback_IntLessonId_ReturnedListStuentLessenDto()
         {
             //Given
-            var lessonId = LessonData.LessonId;
+            var lessonId = 30;
             var listStudentLessonDto = LessonData.GetListStudentDto();
 
             _lessonRepoMock.Setup(x => x.SelectAllFeedbackByLessonId(lessonId)).Returns(listStudentLessonDto);
              
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
-                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
-
             //When
-            var listOfDto = sut.SelectAllFeedbackByLessonId(lessonId);
+            var listOfDto = _sut.SelectAllFeedbackByLessonId(lessonId);
 
             //Than
             Assert.AreEqual(listStudentLessonDto, listOfDto);
             _lessonRepoMock.Verify(x => x.SelectAllFeedbackByLessonId(lessonId), Times.Once);
         }
-        [Test]
-        public void GetStudenLessonByLessonAndUserId_IntLessonIdAndUserId_ReturnStudentLessontDto()
-        {
-            //Given
-            var studentLessonDto = LessonData.GetStudentLessonDto();
-            var lessonId = LessonData.LessonId;
-            var userId = LessonData.UserId;
-                        
-            _lessonRepoMock.Setup(x => x.SelectByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
-
-            var sut = new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
-                _userValidationHelperMock.Object, _lessonValidationHelperMock.Object);
-
-            //When
-            var dto = sut.GetStudenLessonByLessonAndUserId(lessonId, userId);
-
-            //Than
-            Assert.AreEqual(studentLessonDto, dto);            
-            _lessonRepoMock.Verify(x => x.SelectByLessonAndUserId(lessonId, userId), Times.Once);
-        }
-
-
-
     }
 }

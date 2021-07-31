@@ -41,18 +41,18 @@ namespace DevEdu.Business.Tests.Data
             {
                 new TopicDto
                 {
-                Name = "Topic1",
-                Duration = 5,
+                    Name = "Topic1",
+                    Duration = 5,
                 },
                 new TopicDto
                 {
-                Name = "Topic2",
-                Duration = 2,
+                    Name = "Topic2",
+                    Duration = 2,
                 },
                 new TopicDto
                 {
-                Name = "Topic3",
-                Duration = 9,
+                    Name = "Topic3",
+                    Duration = 9,
                 },
 
             };

@@ -7,17 +7,15 @@ namespace DevEdu.Business.Tests
 {
     public static class LessonData
     {
-        public const int ExpectedStudentLeesontId = 42;
-        public static int LessonId = 30;
-        public static int UserId = 42;
+        public const int ExpectedStudentLeesontId = 42;        
 
         public static StudentLessonDto GetStudentLessonDto()
         {
             return new StudentLessonDto
             {
                 Id = 42,
-                User = new UserDto { Id = UserId },
-                Lesson= new LessonDto { Id=LessonId},
+                User = new UserDto { Id = 42 },
+                Lesson= new LessonDto { Id=30},
                 Feedback = "feedback",
                 IsPresent = true,
                 AbsenceReason = ""
@@ -30,24 +28,24 @@ namespace DevEdu.Business.Tests
             {
                 new StudentLessonDto
                 {
-                Id = 42,
-                Feedback = "feedback",
-                IsPresent = true,
-                AbsenceReason = ""
+                    Id = 42,
+                    Feedback = "feedback",
+                    IsPresent = true,
+                    AbsenceReason = ""
                 },
                  new StudentLessonDto
                 {
-                Id = 42,
-                Feedback = "feedback2",
-                IsPresent = true,
-                AbsenceReason = ""
+                    Id = 42,
+                    Feedback = "feedback2",
+                    IsPresent = true,
+                    AbsenceReason = ""
                 },
                   new StudentLessonDto
                 {
-                Id = 42,
-                Feedback = "feedback3",
-                IsPresent = false,
-                AbsenceReason = "Slept"
+                    Id = 42,
+                    Feedback = "feedback3",
+                    IsPresent = false,
+                    AbsenceReason = "Slept"
                 },
             };
         }

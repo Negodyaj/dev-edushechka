@@ -9,7 +9,11 @@ BEGIN
 		Feedback,
 		AbsenceReason,
 		l.Id,
-		u.Id
+		u.Id,
+		u.FirstName,
+		u.LastName,
+		u.Email,
+		u.Photo
 	FROM dbo.Student_Lesson sl
 	inner join dbo.Lesson l on LessonId=l.Id
 	inner join dbo.[User] u on UserId=u.Id
