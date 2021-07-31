@@ -6,6 +6,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DevEdu.Business.Tests
@@ -60,17 +61,17 @@ namespace DevEdu.Business.Tests
             //Given
             var expectedId = 66;
             var materialData = MaterialData.GetMaterialDtoWithTags();
+            var tags = materialData.Tags;
 
             _materialRepoMock.Setup(x => x.AddMaterial(materialData)).Returns(expectedId);
             _materialRepoMock.Setup(x => x.AddTagToMaterial(expectedId, It.IsAny<int>()));
             _materialRepoMock.Setup(x => x.GetMaterialById(expectedId)).Returns(new MaterialDto() { Id = expectedId });
-            _tagRepositoryMock.Setup(x => x.SelectTagById(materialData.Tags.First().Id)).Returns(new TagDto() { Id = materialData.Tags.First().Id });
-            //var sut = new MaterialService(_materialRepoMock.Object,
-            //                              _courseRepoMock.Object,
-            //                              _groupRepoMock.Object,
-            //                              _materialValidationHelperMock.Object,
-            //                              _tagValidationHelperMock.Object);
 
+            for(int id =0; id < materialData.Tags.Count; id++)
+            {
+                _tagRepositoryMock.SetupSequence(x => x.SelectTagById(materialData.Tags[id].Id))
+                .Returns(new TagDto { Id = id });
+            }
             //When
             var actualId = _sut.AddMaterial(materialData);
 
