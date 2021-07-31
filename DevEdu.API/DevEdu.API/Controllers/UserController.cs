@@ -31,7 +31,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status500InternalServerError)]
         public UserUpdateInfoOutPutModel UpdateUserById([FromBody] UserUpdateInputModel model)
         {
             var dtoEntry = _mapper.Map<UserDto>(model);
@@ -45,7 +44,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status500InternalServerError)]
         public UserFullInfoOutPutModel GetUserById(int userId)
         {
             var dto = _userService.SelectUserById(userId);
@@ -58,7 +56,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<UserInfoOutPutModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status500InternalServerError)]
         public List<UserInfoOutPutModel> GetAllUsers()
         {
             var listDto = _userService.SelectUsers();
@@ -71,7 +68,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status500InternalServerError)]
         public void DeleteUser(int userId)
         {
             _userService.DeleteUser(userId);
@@ -83,7 +79,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status500InternalServerError)]
         public void AddRoleToUser(int userId, int roleId)
         {
             _userService.AddUserRole(userId, roleId);
@@ -95,7 +90,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status500InternalServerError)]
         public void DeleteRoleFromUser(int userId, int roleId)
         {
             _userService.DeleteUserRole(userId, roleId);
