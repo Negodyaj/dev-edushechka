@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
+using DevEdu.DAL.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevEdu.API.Extensions
@@ -13,6 +13,11 @@ namespace DevEdu.API.Extensions
         {
             var userId = Convert.ToInt32(controller.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
             return userId;
+        }
+
+        public static List<Role> GetUserRoles(this Controller controller)
+        {
+            return controller.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => (Role)Enum.Parse(typeof(Role), c.Value)).ToList();
         }
     }
 }

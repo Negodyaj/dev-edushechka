@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.Services
@@ -7,8 +8,8 @@ namespace DevEdu.Business.Services
     {
         public TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds);
         public TaskDto AddTaskByTeacher(TaskDto taskDto, GroupTaskDto groupTask, int groupId, List<int> tagsIds);
-        public TaskDto UpdateTask(TaskDto taskDto, int taskId, int userId);
-        public void DeleteTask(int taskId, int userId);
+        public TaskDto UpdateTask(TaskDto taskDto, int taskId, int userId, List<Role> roles);
+        public void DeleteTask(int taskId, int userId, List<Role> roles);
         public TaskDto GetTaskById(int taskid, int userId);
         TaskDto GetTaskWithCoursesById(int taskid, int userId);
         public TaskDto GetTaskWithAnswersById(int taskid, int userId);

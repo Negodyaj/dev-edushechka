@@ -3,6 +3,7 @@ using System.Linq;
 using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 
@@ -61,22 +62,32 @@ namespace DevEdu.Business.Services
             return task;
         }
 
-        public TaskDto UpdateTask(TaskDto taskDto, int taskId, int userId)
+        public TaskDto UpdateTask(TaskDto taskDto, int taskId, int userId, List<Role> roles)
         {
             _userValidationHelper.CheckUserExistence(userId);
-            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
+            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            if(roles.Contains(Role.Teacher))
+                _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
+            if(roles.Contains(Role.Methodist))
+            {
+                _taskValidationHelper.CheckMethodistAccessToTask(task, userId);
+            }
 
             taskDto.Id = taskId;
             _taskRepository.UpdateTask(taskDto);
             return _taskRepository.GetTaskById(taskId);
         }
 
-        public void DeleteTask(int taskId, int userId)
+        public void DeleteTask(int taskId, int userId, List<Role> roles)
         {
             _userValidationHelper.CheckUserExistence(userId);
-            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
+            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            if (roles.Contains(Role.Teacher))
+                _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
+            if (roles.Contains(Role.Methodist))
+            {
+                _taskValidationHelper.CheckMethodistAccessToTask(task, userId);
+            }
 
             _taskRepository.DeleteTask(taskId);
         }

@@ -11,6 +11,7 @@ namespace DevEdu.Business.Tests
         {
             return new TaskDto
             {
+                Id = 1,
                 Name = "Task1",
                 Description = "Description1",
                 Links = "noLinks",
@@ -42,6 +43,7 @@ namespace DevEdu.Business.Tests
         {
             return new TaskDto
             {
+                Id = 1,
                 Name = "Task2",
                 Description = "Description2",
                 Links = "noLinks",

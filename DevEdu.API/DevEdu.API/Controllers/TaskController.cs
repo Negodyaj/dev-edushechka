@@ -82,8 +82,9 @@ namespace DevEdu.API.Controllers
         public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskByTeacherInputModel model)
         {
             var userId = this.GetUserId();
+            var roles = this.GetUserRoles();
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
-            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId, userId));
+            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId, userId, roles));
         }
 
         // api/task/{taskId}
@@ -93,8 +94,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteTask(int taskId)
         {
+            var roles = this.GetUserRoles();
             var userId = this.GetUserId();
-            _taskService.DeleteTask(taskId, userId);
+            _taskService.DeleteTask(taskId, userId, roles);
         }
 
 
