@@ -12,8 +12,8 @@ namespace DevEdu.Business.Tests
         private Mock<ILessonRepository> _lessonRepoMock;
         private Mock<ICommentRepository> _commentRepoMock;
         private Mock<IUserRepository> _userRepoMock;
-       // private UserValidationHelper _userValidationHelperMock;
-       // private LessonValidationHelper _lessonValidationHelperMock;
+        private UserValidationHelper _userValidationHelper;
+        private LessonValidationHelper _lessonValidationHelper;
         private LessonService _sut;
 
         [SetUp]
@@ -22,9 +22,16 @@ namespace DevEdu.Business.Tests
             _lessonRepoMock = new Mock<ILessonRepository>();
             _commentRepoMock = new Mock<ICommentRepository>();
             _userRepoMock = new Mock<IUserRepository>();
-        
-            _sut= new LessonService(_lessonRepoMock.Object, _commentRepoMock.Object, _userRepoMock.Object,
-                new UserValidationHelper(_userRepoMock.Object), new LessonValidationHelper(_lessonRepoMock.Object));
+            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object);
+            _userValidationHelper = new UserValidationHelper(_userRepoMock.Object);
+
+
+            _sut = new LessonService(
+                    _lessonRepoMock.Object,
+                    _commentRepoMock.Object,
+                    _userRepoMock.Object,
+                    _userValidationHelper,
+                    _lessonValidationHelper);
         }
 
         [Test]
