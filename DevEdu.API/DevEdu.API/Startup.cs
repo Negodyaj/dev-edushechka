@@ -1,4 +1,5 @@
 using DevEdu.API.Configuration;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.Business.Configuration;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
@@ -8,11 +9,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
+using System;
+using System.Linq;
 using System.Net;
 
 namespace DevEdu.API
@@ -74,7 +78,17 @@ namespace DevEdu.API
 
             services.AddControllers();
 
-            services.AddMvc();
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = true;
+                });
+            //services.Configure<ApiBehaviorOptions>(o =>
+            //{
+            //    o.InvalidModelStateResponseFactory = actionContext =>
+            //        new UnprocessableEntityObjectResult(actionContext.ModelState);
+            //});
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -115,6 +129,14 @@ namespace DevEdu.API
             services.AddOptions();
         }
 
+        private BadRequestObjectResult CustomErrorResponse(ActionContext actionContext)
+        {
+            return new BadRequestObjectResult(actionContext.ModelState
+             .Where(modelError => modelError.Value.Errors.Count > 0)
+             .Select(modelError => new ValidationExceptionResponse(actionContext.ModelState)
+             ).ToList());
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -125,7 +147,6 @@ namespace DevEdu.API
                 app.UseSwaggerUi3();
             }
 
-            app.UseMiddleware<ExceptionMiddleware>();
 
             //This middleware is used to redirects HTTP requests to HTTPS.  
             app.UseHttpsRedirection();
@@ -140,6 +161,7 @@ namespace DevEdu.API
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseMiddleware<ExceptionMiddleware>();
             //This middleware is used to add Razor Pages endpoints to the request pipeline.   
             app.UseEndpoints(endpoints =>
             {
