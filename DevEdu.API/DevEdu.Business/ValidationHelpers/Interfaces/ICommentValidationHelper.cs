@@ -1,7 +1,11 @@
-﻿namespace DevEdu.Business.ValidationHelpers
+﻿using DevEdu.DAL.Models;
+
+namespace DevEdu.Business.ValidationHelpers
 {
     public interface ICommentValidationHelper
     {
-        void CheckCommentExistence(int commentId);
+        CommentDto CheckCommentExistence(int commentId);
+        void CheckUserForCommentAccess(CommentDto dto, int userId);
+        void CheckUser(CommentDto dto, int userId);
     }
 }

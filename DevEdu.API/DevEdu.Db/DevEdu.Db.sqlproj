@@ -246,6 +246,8 @@
     <Build Include="StoredProcedures\StudentRating\StudentRating_Update.sql" />
     <Build Include="StoredProcedures\StudentRating\StudentRating_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectById.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectAllByUserId.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectAllByLessonId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />

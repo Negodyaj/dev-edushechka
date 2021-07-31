@@ -92,6 +92,5 @@ namespace DevEdu.Business.Services
             string result = HashPassword(userPassword, salt);
             return result == hashedPassword;
         }
-
     }
 }

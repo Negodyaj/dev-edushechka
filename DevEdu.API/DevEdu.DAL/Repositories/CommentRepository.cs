@@ -46,15 +46,17 @@ namespace DevEdu.DAL.Repositories
         {
             CommentDto result = default;
             return _connection
-                .Query<CommentDto, UserDto, Role, CommentDto>(
+                .Query<CommentDto, UserDto, Role, LessonDto, StudentAnswerOnTaskDto, CommentDto>(
                     _commentSelectByIdProcedure,
-                    (comment, user, role) =>
+                    (comment, user, role, lesson, studentAnswer) =>
                     {
                         if (result == null)
                         {
                             result = comment;
                             result.User = user;
                             result.User.Roles = new List<Role> { role };
+                            result.Lesson = lesson;
+                            result.StudentAnswer = studentAnswer;
                         }
                         else
                         {

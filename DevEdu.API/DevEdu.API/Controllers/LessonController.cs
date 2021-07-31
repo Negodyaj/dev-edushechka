@@ -37,7 +37,7 @@ namespace DevEdu.API.Controllers
             _lessonService = lessonService;
             _commentService = commentService;
             _mapper = mapper;
-            _lessonService = lessonService;            
+            _lessonService = lessonService;
         }
 
         // api/lesson
@@ -78,7 +78,7 @@ namespace DevEdu.API.Controllers
         public List<LessonInfoOutputModel> GetAllLessonsByGroupId(int id)
         {
             var dto = _lessonService.SelectAllLessonsByGroupId(id);
-            return  _mapper.Map<List<LessonInfoOutputModel>>(dto);
+            return _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
         // api/lesson/teacherId/{id}
@@ -119,7 +119,7 @@ namespace DevEdu.API.Controllers
         public LessonInfoWithStudentsAndCommentsOutputModel GetAllLessonsWithStudentsAndComments(int id)
         {
             var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(id);
-            return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel> (dto);
+            return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel>(dto);
         }
 
         // api/lesson/{lessonId}/topic/{toppicId}
@@ -144,11 +144,10 @@ namespace DevEdu.API.Controllers
         [HttpPost("{lessonId}/user/{userId}")]
         [Description("Adds student to lesson")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void AddStudentToLesson(int lessonId, int userId )
+        public void AddStudentToLesson(int lessonId, int userId)
         {
             _lessonService.AddStudentToLesson(lessonId, userId);
         }
-
 
         // api/lesson/{lessonId}/user/{userId}
         [HttpDelete("{lessonId}/user/{userId}")]
@@ -156,7 +155,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteStudentFromLesson(int lessonId, int userId)
         {
-            _lessonService.DeleteStudentFromLesson(lessonId, userId); 
+            _lessonService.DeleteStudentFromLesson(lessonId, userId);
         }
 
         // api/lesson/{lessonId}/user/{userId}/feedback
@@ -164,7 +163,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{lessonId}/user/{userId}/feedback")]
         [Description("Update Feedback for lesson")]
         [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
-        public StudentLessonShortOutputModel UpdateStudentFeedbackForLesson(int lessonId,int userId, [FromBody] FeedbackInputModel model)
+        public StudentLessonShortOutputModel UpdateStudentFeedbackForLesson(int lessonId, int userId, [FromBody] FeedbackInputModel model)
         {
             var dto = _mapper.Map<StudentLessonDto>(model);
             _lessonService.UpdateStudentFeedbackForLesson(lessonId, userId, dto);
@@ -175,7 +174,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{lessonId}/user/{userId}/absenceReason")]
         [Description("Update AbsenceReason for lesson")]
         [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
-        public StudentLessonShortOutputModel UpdateStudentAbsenceReasonOnLesson(int lessonId,int userId, [FromBody] AbsenceReasonInputModel model)
+        public StudentLessonShortOutputModel UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, [FromBody] AbsenceReasonInputModel model)
         {
             var dto = _mapper.Map<StudentLessonDto>(model);
             _lessonService.UpdateStudentAbsenceReasonOnLesson(lessonId, userId, dto);
@@ -185,11 +184,11 @@ namespace DevEdu.API.Controllers
         // api/lesson/{lessonId}/user/{userId}/attendance
         [HttpPut("{lessonId}/user/{userId}/attendance")]
         [Description("Update Attendance for lesson")]
-        [ProducesResponseType(typeof(StudentLessonShortOutputModel),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
         public StudentLessonShortOutputModel UpdateStudentAttendanceOnLesson(int lessonId, int userId, [FromBody] AttendanceInputModel model)
         {
             var dto = _mapper.Map<StudentLessonDto>(model);
-            _lessonService.UpdateStudentAttendanceOnLesson(lessonId, userId, dto);            
+            _lessonService.UpdateStudentAttendanceOnLesson(lessonId, userId, dto);
             return GetStudentLessonByLessonAndUserId(lessonId, userId);
         }
 
@@ -199,16 +198,16 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<FeedbackOutputModel>), StatusCodes.Status200OK)]
         public List<FeedbackOutputModel> GetAllFeedbackByLessonId(int lessonId)
         {
-            var dto =_lessonService.SelectAllFeedbackByLessonId(lessonId);
+            var dto = _lessonService.SelectAllFeedbackByLessonId(lessonId);
             return _mapper.Map<List<FeedbackOutputModel>>(dto);
         }
         // api/lesson/{lessonId}/user/{userId}
         [HttpGet("{lessonId}/user/{userId}")]
-        [Description("Get StudenLesson by lesson and user")]
+        [Description("Get StudentLesson by lesson and user")]
         [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
         public StudentLessonShortOutputModel GetStudentLessonByLessonAndUserId(int lessonId, int userId)
         {
-            var output =_lessonService.GetStudentLessonByLessonAndUserId(lessonId, userId);
+            var output = _lessonService.GetStudentLessonByLessonAndUserId(lessonId, userId);
             return _mapper.Map<StudentLessonShortOutputModel>(output);
         }
     }

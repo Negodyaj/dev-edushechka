@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.ValidationHelpers
@@ -13,11 +14,25 @@ namespace DevEdu.Business.ValidationHelpers
             _commentRepository = commentRepository;
         }
 
-        public void CheckCommentExistence(int commentId)
+        public CommentDto CheckCommentExistence(int commentId)
         {
             var comment = _commentRepository.GetComment(commentId);
             if (comment == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), commentId));
+            return comment;
+        }
+
+        public void CheckUserForCommentAccess(CommentDto dto, int userId)
+        {
+            var comment = dto;
+            if (comment == default)
+                throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
+        }
+
+        public void CheckUser(CommentDto dto, int userId)
+        {
+            if (dto.User.Id != userId)
+                throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
         }
     }
 }

@@ -5,6 +5,7 @@ namespace DevEdu.Business.ValidationHelpers
     public interface IStudentAnswerOnTaskValidationHelper
     {
         void CheckStudentAnswerOnTaskExistence(StudentAnswerOnTaskDto dto);
-        void CheckStudentAnswerOnTaskExistence(int id);
+        StudentAnswerOnTaskDto CheckStudentAnswerOnTaskExistence(int id);
+        void CheckUserInStudentAnswerAccess(int studentId, int userId);
     }
 }

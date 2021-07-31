@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using DevEdu.API.Common;
+using DevEdu.API.Extensions;
 
 namespace DevEdu.API.Controllers
 {
@@ -103,28 +105,32 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public string RemoveGroupFromLesson(int groupId, int lessonId)
         {
-            _groupService.RemoveGroupFromLesson(groupId,    lessonId);
+            _groupService.RemoveGroupFromLesson(groupId, lessonId);
             return $"Group {groupId} remove  Lesson Id:{lessonId}";
         }
 
         // api/Group/{groupId}/material/{materialId}
-        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [HttpPost("{groupId}/material/{materialId}")]
         [Description("Add material to group")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void AddGroupMaterialReference(int groupId, int materialId)
-        { 
-            _groupService.AddGroupMaterialReference(groupId, materialId);
+        {
+            var userId = this.GetUserId();
+            var roles = this.GetUserRoles();
+            _groupService.AddGroupMaterialReference(groupId, materialId, userId, roles);
         }
 
         // api/Group/{groupId}/material/{materialId}
-        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [HttpDelete("{groupId}/material/{materialId}")]
         [Description("Remove material from group")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void RemoveGroupMaterialReference(int groupId, int materialId)
-        { 
-            _groupService.RemoveGroupMaterialReference(groupId, materialId);
+        {
+            var userId = this.GetUserId();
+            var roles = this.GetUserRoles();
+            _groupService.RemoveGroupMaterialReference(groupId, materialId, userId, roles);
         }
 
         //  api/group/1/user/2/role/1

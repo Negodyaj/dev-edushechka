@@ -6,6 +6,5 @@ namespace DevEdu.API.Models.OutputModels
     {
         public List<CommentInfoOutputModel> Comments { get; set; }
         public List<StudentLessonOutputModel> Students { get; set; }
-
     }
 }

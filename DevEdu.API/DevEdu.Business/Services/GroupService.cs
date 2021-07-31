@@ -2,6 +2,7 @@
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.Business.ValidationHelpers;
 
 namespace DevEdu.Business.Services
 {
@@ -9,16 +10,26 @@ namespace DevEdu.Business.Services
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IGroupValidationHelper _groupValidationHelper;
+        private readonly IMaterialValidationHelper _materialValidationHelper;
 
         public GroupService(IGroupRepository groupRepository)
         {
             _groupRepository = groupRepository;
         }
 
-        public GroupService(IGroupRepository groupRepository, IUserRepository userRepository)
+        public GroupService
+        (
+            IGroupRepository groupRepository,
+            IUserRepository userRepository,
+            IGroupValidationHelper groupValidationHelper,
+            IMaterialValidationHelper materialValidationHelper
+        )
         {
             _groupRepository = groupRepository;
             _userRepository = userRepository;
+            _groupValidationHelper = groupValidationHelper;
+            _materialValidationHelper = materialValidationHelper;
         }
 
         public int AddGroup(GroupDto groupDto) => _groupRepository.AddGroup(groupDto);
@@ -43,12 +54,32 @@ namespace DevEdu.Business.Services
         public GroupDto UpdateGroup(int id, GroupDto groupDto) => _groupRepository.UpdateGroup(id, groupDto);
         public GroupDto ChangeGroupStatus(int groupId, int statusId) => _groupRepository.ChangeGroupStatus(groupId, statusId);
 
-        public void AddGroupMaterialReference(int groupId, int materialId) => _groupRepository.AddGroupMaterialReference(groupId, materialId);
+        public void AddGroupMaterialReference(int groupId, int materialId, int userId, List<Role> roles)
+        {
+            Check(groupId, materialId, userId, roles);
 
-        public void RemoveGroupMaterialReference(int groupId, int materialId) => _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
+            _groupRepository.AddGroupMaterialReference(groupId, materialId);
+        }
+
+        public void RemoveGroupMaterialReference(int groupId, int materialId, int userId, List<Role> roles)
+        {
+            Check(groupId, materialId, userId, roles);
+
+            _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
+        }
+
         public int AddGroupToLesson(int groupId, int lessonId) => _groupRepository.AddGroupToLesson(groupId, lessonId);
         public int RemoveGroupFromLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupFromLesson(groupId, lessonId);  
         public void AddUserToGroup(int groupId, int userId, int roleId) => _groupRepository.AddUserToGroup(groupId, userId, roleId);
         public void DeleteUserFromGroup(int groupId, int userId) => _groupRepository.DeleteUserFromGroup(userId, groupId);
+
+        private void Check(int groupId, int materialId, int userId, List<Role> roles)
+        {
+            if (!CheckerRole.Admin(roles))
+                _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
+
+            _groupValidationHelper.CheckGroupExistence(groupId);
+            _materialValidationHelper.CheckMaterialExistence(materialId);
+        }
     }
 }

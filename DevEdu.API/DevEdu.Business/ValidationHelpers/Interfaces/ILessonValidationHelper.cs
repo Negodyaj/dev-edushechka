@@ -3,6 +3,6 @@
     public interface ILessonValidationHelper
     {
         void CheckLessonExistence(int lessonId);
-        void CheckUserInLessonExistence(int lessonId, int userId);
+        void CheckUserInLessonAccess(int lessonId, int userId);
     }
 }

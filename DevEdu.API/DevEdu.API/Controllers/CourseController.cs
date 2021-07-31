@@ -88,7 +88,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
-        [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher, Role.Tutor)]
+        [AuthorizeRoles(Role.Methodist)]
         [HttpPost("{courseId}/material/{materialId}")]
         [Description("Add material to course")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -98,7 +98,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
-        [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher, Role.Tutor)]
+        [AuthorizeRoles(Role.Methodist)]
         [HttpDelete("{courseId}/material/{materialId}")]
         [Description("Remove material from course")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
