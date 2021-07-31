@@ -104,10 +104,11 @@ namespace DevEdu.Business.Services
             return _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
         }
 
-        public void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
+        public List<int> UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
         {
+            List<int> response;
             if (topics == null || topics.Count == 0)
-                return;
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
 
             CheckUniquenessPositions(topics);
             CheckUniquenessTopics(topics);
@@ -119,24 +120,32 @@ namespace DevEdu.Business.Services
             )
             {
                 DeleteAllTopicsByCourseId(courseId);
-                AddTopicsToCourse(courseId, topics);
+                response = AddTopicsToCourse(courseId, topics);
             }
             else if (topicsInDatabase == null || topicsInDatabase.Count == 0)
             {
-                AddTopicsToCourse(courseId, topics);
+                response = AddTopicsToCourse(courseId, topics);
             }
             else
             {
+                response = new List<int>();
                 foreach (var topic in topics)
                 {
                     topic.Course = new CourseDto() { Id = courseId };
+                    response.Add(topic.Id);
                 }
                 _courseRepository.UpdateCourseTopicsByCourseId(topics);
+
             }
+            return response;
         }
         public CourseTopicDto GetCourseTopicById(int id)
         {
             return _topicRepository.GetCourseTopicById(id);
+        }
+        public List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids)
+        {
+            return _topicRepository.GetCourseTopicBuSevealId(ids);
         }
         public void DeleteAllTopicsByCourseId(int courseId) => _courseRepository.DeleteAllTopicsByCourseId(courseId);
         private void CheckUniquenessPositions(List<CourseTopicDto> topics)

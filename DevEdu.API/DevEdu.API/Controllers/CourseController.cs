@@ -140,16 +140,16 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<CourseTopicOutputModel>(dto);
         }
 
-        [HttpPost("{courseId}/select-topics")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [HttpPost("{courseId}/add-topics")]
+        [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]
         [Description("Add topics to course")]
-        public string AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
+        public List<CourseTopicOutputModel> AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
         {
             var dto = _mapper.Map<List<CourseTopicDto>>(inputModel);
 
             var id =_courseService.AddTopicsToCourse(courseId, dto);
-            dto = 
-            return _mapper<List<CourseTopicOutputModel>>(dto);
+            dto = _courseService.GetCourseTopicBuSevealId(id);
+            return _mapper.Map<List<CourseTopicOutputModel>>(dto);
         }
 
         // api/course/{courseId}/topic/{topicId}
@@ -175,12 +175,13 @@ namespace DevEdu.API.Controllers
         // api/course/{courseId}/program
         [HttpPut("{courseId}/program")]
         [Description("updates topics in the course")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public string UpdateCourseTopicsByCourseId(int courseId, [FromBody] List<CourseTopicUpdateInputModel> topics)
+        [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]
+        public List<CourseTopicOutputModel> UpdateCourseTopicsByCourseId(int courseId, [FromBody] List<CourseTopicUpdateInputModel> topics)
         {
             var list = _mapper.Map<List<CourseTopicDto>>(topics);
-            _courseService.UpdateCourseTopicsByCourseId(courseId, list);
-            return "updated";
+            var ids = _courseService.UpdateCourseTopicsByCourseId(courseId, list);
+            list = _courseService.GetCourseTopicBuSevealId(ids);
+            return _mapper.Map<List<CourseTopicOutputModel>>(list);
         }
     }
 }

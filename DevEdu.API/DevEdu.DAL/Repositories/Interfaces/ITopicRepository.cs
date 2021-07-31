@@ -17,5 +17,6 @@ namespace DevEdu.DAL.Repositories
         int AddTagToTopic(int topicId, int tagId);
         int DeleteTagFromTopic(int topicId, int tagId);
         CourseTopicDto GetCourseTopicById(int id);
+        List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids);
     }
 }

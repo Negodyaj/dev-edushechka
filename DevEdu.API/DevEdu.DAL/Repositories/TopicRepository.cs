@@ -18,7 +18,9 @@ namespace DevEdu.DAL.Repositories
         private const string _addMultipleTopicsToCourseProcedure = "[dbo].[Course_Topic_AddMultiple]";
         private const string _deleteTopicToCourseProcedure = "[dbo].[Course_Topic_Delete]";
         private const string _getCourseTopicByIdProcedure = "[dbo].[Course_Topic_SelectById]";
+        private const string _getCourseTopicBuSevealIdProcedure = "[dbo].[Course_Topic_SelectBySeveralId]";
         private const string _course_TopicType = "dbo.Course_TopicType";
+        private const string _idType = "[dbo].[IdType]";
 
         private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
         private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
@@ -164,6 +166,27 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure
                 ).FirstOrDefault();
             return response; 
+        }
+        public List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids)
+        {
+            var table = new DataTable();
+            table.Columns.Add("Id");
+            foreach (var i in ids)
+            {
+                table.Rows.Add(i);
+            }
+            var response = _connection.Query<CourseTopicDto, TopicDto, CourseTopicDto>(
+                _getCourseTopicBuSevealIdProcedure,
+                (course, topic) =>
+                {
+                    course.Topic = topic;
+                    return course;
+                },
+                new { @tblIds = table.AsTableValuedParameter(_idType) },
+                splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                ).ToList();
+            return response;
         }
     }
 }
