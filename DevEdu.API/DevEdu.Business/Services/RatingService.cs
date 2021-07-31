@@ -59,7 +59,7 @@ namespace DevEdu.Business.Services
 
         public List<StudentRatingDto> GetStudentRatingByGroupId(int groupId, int authorUserId, List<Role> authRoles)
         {
-            if (!(authRoles.Contains(Role.Manager) || authRoles.Contains(Role.Admin)))
+            if (authRoles.Contains(Role.Teacher))
             {
                 _userValidationHelper.CheckAuthorizationUserToGroup(groupId, Convert.ToInt32(authorUserId), Role.Teacher);
             }

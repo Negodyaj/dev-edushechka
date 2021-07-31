@@ -29,12 +29,12 @@ namespace DevEdu.Business.Tests
                         Rating = 50,
                         ReportingPeriodNumber = 2
                     },
-                    new StudentRatingDto
-                    {
-                        Id = 1,
-                        Rating = 80,
-                        ReportingPeriodNumber = 2
-                    },
+                    //new StudentRatingDto
+                    //{
+                    //    Id = 1,
+                    //    Rating = 80,
+                    //    ReportingPeriodNumber = 2
+                    //},
                     new StudentRatingDto
                     {
                         Id = 3,
@@ -47,6 +47,61 @@ namespace DevEdu.Business.Tests
                         Rating = 50,
                         ReportingPeriodNumber = 2
                     }
+            };
+        }
+
+        public static StudentRatingDto GetInputStudentRatingDto()
+        {
+
+            return new StudentRatingDto
+                    {
+                        Group = new GroupDto { Id = 1 },
+                        User = UserData.GetAnotherUserDto(),
+                        RatingType = GetRatingTypeDtos()[0],
+                        Rating = 80,
+                        ReportingPeriodNumber = 2
+                    };
+        }
+
+        public static StudentRatingDto GetOutputStudentRatingDto()
+        {
+
+            return new StudentRatingDto
+            {
+                Id = 1,
+                Group = new GroupDto { Id = 1 },
+                User = UserData.GetAnotherUserDto(),
+                RatingType = GetRatingTypeDtos()[0],
+                Rating = 80,
+                ReportingPeriodNumber = 2
+            };
+        }
+
+        public static StudentRatingDto GetStudentRatingDtoForUpdate()
+        {
+
+            return new StudentRatingDto
+            {
+                Id = 1,
+                Rating = 80,
+                ReportingPeriodNumber = 2
+            };
+        }
+
+        public static StudentRatingDto GetStudentRatingDto()
+        {
+
+            return new StudentRatingDto
+            {
+                Id = 3,
+                Group = new GroupDto { Id = 1 },
+                User = new UserDto
+                {
+                    Id = 10
+                },
+                RatingType = GetRatingTypeDtos()[1],
+                Rating = 50,
+                ReportingPeriodNumber = 2
             };
         }
 
