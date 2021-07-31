@@ -193,10 +193,12 @@ namespace DevEdu.Business.Tests
                                         _courseValidationHelper.Object,
                                         _materialValidationHelper.Object);
             //When
-            sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate);
+            var result = Assert.Throws<EntityNotFoundException>(() =>
+            sut.UpdateCourseTopicsByCourseId(givenCourseId, givenTopicsToUpdate));
             //Then
             _courseRepositoryMock.Verify(x => x.DeleteAllTopicsByCourseId(givenCourseId), Times.Never);
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
+            Assert.That(result.Message, Is.EqualTo(ServiceMessages.EntityNotFound));
         }
         [Test]
         public void UpdateCourseTopicsByCourseId_WhenPositionsAreNotUnique_ValidationExceptionThrown()
