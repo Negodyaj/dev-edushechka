@@ -38,7 +38,7 @@ namespace DevEdu.API.Configuration
             {
                 await HandleValidationExceptionMessageAsync(context, ex);
             }
-            catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException ex) //404
             {
                 await HandlerExceptionMessageAsync(context, ex, EntityCode, MessageEntity);
             }

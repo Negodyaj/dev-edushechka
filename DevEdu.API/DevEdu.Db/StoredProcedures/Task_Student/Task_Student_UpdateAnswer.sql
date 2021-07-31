@@ -7,5 +7,5 @@ BEGIN
 	UPDATE dbo.Task_Student
 	SET 
 		Answer = @Answer
-	WHERE TaskId = @TaskId AND StudentId = @StudentId
+	WHERE TaskId = @TaskId AND StudentId = @StudentId AND IsDeleted = 0
 END
