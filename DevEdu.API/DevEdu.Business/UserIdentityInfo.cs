@@ -3,7 +3,7 @@ using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business
 {
-    public class UserToken
+    public class UserIdentityInfo
     {
         public int UserId { get; set; }
         public List<Role> Roles { get; set; }

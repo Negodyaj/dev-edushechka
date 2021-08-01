@@ -49,19 +49,19 @@ namespace DevEdu.Business.Services
         public GroupDto UpdateGroup(int id, GroupDto groupDto) => _groupRepository.UpdateGroup(id, groupDto);
         public GroupDto ChangeGroupStatus(int groupId, int statusId) => _groupRepository.ChangeGroupStatus(groupId, statusId);
 
-        public void AddGroupMaterialReference(int groupId, int materialId, UserToken userToken)
+        public void AddGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userIdentityInfo)
         {
-            var userId = userToken.UserId;
-            var roles = userToken.Roles;
+            var userId = userIdentityInfo.UserId;
+            var roles = userIdentityInfo.Roles;
             CheckAccessAndExistence(groupId, materialId, userId, roles);
 
             _groupRepository.AddGroupMaterialReference(groupId, materialId);
         }
 
-        public void RemoveGroupMaterialReference(int groupId, int materialId, UserToken userToken)
+        public void RemoveGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userIdentityInfo)
         {
-            var userId = userToken.UserId;
-            var roles = userToken.Roles;
+            var userId = userIdentityInfo.UserId;
+            var roles = userIdentityInfo.Roles;
             CheckAccessAndExistence(groupId, materialId, userId, roles);
 
             _groupRepository.RemoveGroupMaterialReference(groupId, materialId);

@@ -1,6 +1,7 @@
-﻿using DevEdu.Business.Services;
+﻿using System;
+using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
-using DevEdu.DAL.Models;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -118,15 +119,15 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.ChangeGroupStatus(groupId, groupStatus), Times.Once);
         }
 
-        [TestCase(4)]
-        [TestCase(5)]
-        [TestCase(6)]
-        public void AddMaterialToGroup_IntGroupIdAndMaterialId_AddMaterialToGroup(int role)
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddMaterialToGroup_ExistingGroupIdAndMaterialIdPassed_AddMaterialToGroup(Enum role)
         {
             //Given
             const int groupId = 1;
             const int materialId = 1;
-            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
             var userId = userToken.UserId;
 
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
@@ -147,15 +148,15 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(groupId, materialId), Times.Once);
         }
 
-        [TestCase(4)]
-        [TestCase(5)]
-        [TestCase(6)]
-        public void DeleteMaterialFromGroup_IntGroupIdAndMaterialId_DeleteMaterialFromGroup(int role)
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void DeleteMaterialFromGroup_ExistingGroupIdAndMaterialIdPassed_DeleteMaterialFromGroup(Enum role)
         {
             //Given
             const int groupId = 1;
             const int materialId = 1;
-            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
             var userId = userToken.UserId;
 
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);

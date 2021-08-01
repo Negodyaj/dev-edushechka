@@ -219,7 +219,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddMaterialToCourse_IntCourseIdAndMaterialId_AddMaterialToCourse()
+        public void AddMaterialToCourse_ExistingCourseIdAndMaterialIdIdPassed_AddMaterialToCourse()
         {
             //Given
             const int courseId = 1;
@@ -239,7 +239,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteMaterialFromCourse_IntCourseIdAndMaterialId_DeleteMaterialFromCourse()
+        public void DeleteMaterialFromCourse_ExistingCourseIdAndMaterialIdIdPassed_DeleteMaterialFromCourse()
         {
             //Given
             const int courseId = 1;

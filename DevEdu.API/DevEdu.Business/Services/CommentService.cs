@@ -27,10 +27,10 @@ namespace DevEdu.Business.Services
             _studentAnswerValidationHelper = studentAnswerValidationHelper;
         }
 
-        public CommentDto AddCommentToLesson(int lessonId, CommentDto dto, UserToken userToken)
+        public CommentDto AddCommentToLesson(int lessonId, CommentDto dto, UserIdentityInfo userIdentityInfo)
         {
-            var userId = userToken.UserId;
-            var roles = userToken.Roles;
+            var userId = userIdentityInfo.UserId;
+            var roles = userIdentityInfo.Roles;
             _lessonValidationHelper.CheckLessonExistence(lessonId);
             if (!CheckerRole.IsAdmin(roles))
                 _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
@@ -41,10 +41,10 @@ namespace DevEdu.Business.Services
             return _commentRepository.GetComment(id);
         }
 
-        public CommentDto AddCommentToStudentAnswer(int taskStudentId, CommentDto dto, UserToken userToken)
+        public CommentDto AddCommentToStudentAnswer(int taskStudentId, CommentDto dto, UserIdentityInfo userIdentityInfo)
         {
-            var userId = userToken.UserId;
-            var roles = userToken.Roles;
+            var userId = userIdentityInfo.UserId;
+            var roles = userIdentityInfo.Roles;
             var studentAnswer = _studentAnswerValidationHelper.CheckStudentAnswerOnTaskExistence(taskStudentId);
             var studentId = studentAnswer.User.Id;
             if (!CheckerRole.IsAdmin(roles))
@@ -55,28 +55,28 @@ namespace DevEdu.Business.Services
             return _commentRepository.GetComment(id);
         }
 
-        public CommentDto GetComment(int commentId, UserToken userToken)
+        public CommentDto GetComment(int commentId, UserIdentityInfo userIdentityInfo)
         {
-            var userId = userToken.UserId;
-            var roles = userToken.Roles;
+            var userId = userIdentityInfo.UserId;
+            var roles = userIdentityInfo.Roles;
             var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
             CheckUserAccessByRoleAndId(userId, roles, checkedDto);
             return checkedDto;
         }
 
-        public void DeleteComment(int commentId, UserToken userToken)
+        public void DeleteComment(int commentId, UserIdentityInfo userIdentityInfo)
         {
-            var userId = userToken.UserId;
-            var roles = userToken.Roles;
+            var userId = userIdentityInfo.UserId;
+            var roles = userIdentityInfo.Roles;
             var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
             CheckUserAccessByRoleAndId(userId, roles, checkedDto);
             _commentRepository.DeleteComment(commentId);
         }
 
-        public CommentDto UpdateComment(int commentId, CommentDto dto, UserToken userToken)
+        public CommentDto UpdateComment(int commentId, CommentDto dto, UserIdentityInfo userIdentityInfo)
         {
-            var userId = userToken.UserId;
-            var roles = userToken.Roles;
+            var userId = userIdentityInfo.UserId;
+            var roles = userIdentityInfo.Roles;
             var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
             CheckUserAccessByRoleAndId(userId, roles, checkedDto);
             dto.Id = commentId;

@@ -5,8 +5,8 @@ namespace DevEdu.Business.Services
 {
     public interface IGroupService
     {
-        void AddGroupMaterialReference(int groupId, int materialId, UserToken userToken);
-        void RemoveGroupMaterialReference(int groupId, int materialId, UserToken userToken);
+        void AddGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userIdentityInfo);
+        void RemoveGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userIdentityInfo);
         int AddGroup(GroupDto groupDto);
         void DeleteGroup(int id);
         GroupDto GetGroup(int id);

@@ -29,7 +29,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddHomework_Homework_HomeworkCreated()
+        public void AddHomework_HomeworkDtoAndExistingGroupIdAndTaskIdPassed_HomeworkCreated()
         {
             //Given
             var groupTaskDto = HomeworkData.GetHomeworkDtokWithoutGroupAndTask();
@@ -59,7 +59,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkById_IntGroupIdAndTaskId_ReturnedHomeworkDto()
+        public void GetHomeworkById_ExistingHomeworkIdPassed_ReturnedHomeworkDto()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtokWithGroupAndTask();
@@ -82,7 +82,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateHomework_HomeworkDto_ReturnUpdatedHomeworkDto()
+        public void UpdateHomework_HomeworkDtoAndExistingHomeworkIdPassed_ReturnUpdatedHomeworkDto()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtokWithGroupAndTask();
@@ -109,7 +109,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteHomework_IntGroupIdAndTaskId_DeleteHomework()
+        public void DeleteHomework_ExistingHomeworkIdPassed_DeleteHomework()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtokWithGroupAndTask();
@@ -135,7 +135,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkByGroupId_IntGroupId_ReturnedListOfHomeworkDtoByGroupId()
+        public void GetHomeworkByGroupId_ExistingGroupIdPassed_ReturnedListOfHomeworkDtoByGroupId()
         {
             //Given
             var groupTaskList = HomeworkData.GetListOfHomeworkDtoWithTask();
@@ -157,7 +157,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkByTaskId_IntTaskId_ReturnedListOfHomeworkDtoByTaskId()
+        public void GetHomeworkByTaskId_ExistingTaskIdPassed_ReturnedListOfHomeworkDtoByTaskId()
         {
             //Given
             var groupTaskList = HomeworkData.GetListOfHomeworkDtoWithGroup();

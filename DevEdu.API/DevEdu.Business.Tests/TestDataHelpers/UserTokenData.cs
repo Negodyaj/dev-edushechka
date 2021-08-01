@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Tests
 {
     public class UserTokenData
     {
-        public static UserToken GetUserTokenWithCustomRole(int role)
+        public static UserIdentityInfo GetUserIdentityWithRole(Enum role)
         {
-            return new UserToken
+            return new UserIdentityInfo
             {
                 UserId = 1,
                 Roles = new List<Role>
@@ -17,9 +18,9 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserToken GetUserTokenWithAdminRole()
+        public static UserIdentityInfo GetUserTokenWithAdminRole()
         {
-            return new UserToken
+            return new UserIdentityInfo
             {
                 UserId = 1,
                 Roles = new List<Role>
@@ -29,9 +30,9 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserToken GetUserTokenWithManagerRole()
+        public static UserIdentityInfo GetUserTokenWithManagerRole()
         {
-            return new UserToken
+            return new UserIdentityInfo
             {
                 UserId = 1,
                 Roles = new List<Role>
@@ -41,9 +42,9 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserToken GetUserTokenWithMethodistRole()
+        public static UserIdentityInfo GetUserTokenWithMethodistRole()
         {
-            return new UserToken
+            return new UserIdentityInfo
             {
                 UserId = 1,
                 Roles = new List<Role>
@@ -53,9 +54,9 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserToken GetUserTokenWithTeacherRole()
+        public static UserIdentityInfo GetUserTokenWithTeacherRole()
         {
-            return new UserToken
+            return new UserIdentityInfo
             {
                 UserId = 1,
                 Roles = new List<Role>
@@ -65,9 +66,9 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserToken GetUserTokenWithTutorRole()
+        public static UserIdentityInfo GetUserTokenWithTutorRole()
         {
-            return new UserToken
+            return new UserIdentityInfo
             {
                 UserId = 1,
                 Roles = new List<Role>
@@ -77,9 +78,9 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserToken GetUserTokenWithStudentRole()
+        public static UserIdentityInfo GetUserTokenWithStudentRole()
         {
-            return new UserToken
+            return new UserIdentityInfo
             {
                 UserId = 1,
                 Roles = new List<Role>

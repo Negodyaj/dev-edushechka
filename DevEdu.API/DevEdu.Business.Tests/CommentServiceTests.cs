@@ -1,5 +1,7 @@
-﻿using DevEdu.Business.Services;
+﻿using System;
+using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -30,17 +32,17 @@ namespace DevEdu.Business.Tests
             _sut = new CommentService(_commentRepoMock.Object, _commentValidationHelper, _lessonValidationHelper, _studentAnswerValidationHelper);
         }
 
-        [TestCase(4)]
-        [TestCase(5)]
-        [TestCase(6)]
-        public void AddCommentToLesson_CommentDto_CommentReturned(int role)
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddCommentToLesson_CommentDtoAndExistingLessonInPassed_AddCommentAndReturned(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
             const int lessonId = 1;
             const int expectedCommentId = 1;
             var lessonDto = CommentData.GetLessonDto();
-            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
             var userId = userToken.UserId;
 
             _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
@@ -61,10 +63,10 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
         }
 
-        [TestCase(4)]
-        [TestCase(5)]
-        [TestCase(6)]
-        public void AddCommentToStudentAnswer_CommentDto_CommentReturned(int role)
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddCommentToStudentAnswer_CommentDtoAndExistingStudentAnswerIdPassed_CommentReturned(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
@@ -72,7 +74,7 @@ namespace DevEdu.Business.Tests
             const int expectedCommentId = 1;
             const int expectedStudentAnswerOnTaskId = 1;
             var getStudentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
-            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
             var userId = userToken.UserId;
 
             _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
@@ -92,14 +94,14 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(getStudentAnswerOnTaskDto.User.Id), Times.Exactly(2));
         }
 
-        [TestCase(4)]
-        [TestCase(5)]
-        [TestCase(6)]
-        public void GetComment_IntCommentId_GetComment(int role)
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void GetComment_ExistingCommentIdPassed_GetComment(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
-            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
             var userId = userToken.UserId;
             const int commentId = 1;
 
@@ -117,14 +119,14 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
         }
 
-        [TestCase(4)]
-        [TestCase(5)]
-        [TestCase(6)]
-        public void UpdateComment_CommentDto_ReturnUpdatedCommentDto(int role)
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void UpdateComment_CommentDtoAndExistingCommentIdPassed_ReturnUpdatedCommentDto(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
-            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
             var userId = userToken.UserId;
             const int commentId = 1;
 
@@ -144,14 +146,14 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
         }
 
-        [TestCase(4)]
-        [TestCase(5)]
-        [TestCase(6)]
-        public void DeleteComment_IntCommentId_DeleteComment(int role)
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void DeleteComment_ExistingCommentIdPassed_DeleteComment(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
-            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
             var userId = userToken.UserId;
             const int commentId = 1;
 
