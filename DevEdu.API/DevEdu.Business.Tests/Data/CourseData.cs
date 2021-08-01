@@ -9,8 +9,6 @@ namespace DevEdu.Business.Tests
         {
 
         }
-        public const int ExpectedAffectedRows = 1;
-        public const int CourseId = 1;
 
         public static CourseDto GetUpdCourseDto()
         {

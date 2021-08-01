@@ -195,7 +195,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var groupTaskList = GroupTaskData.GetListOfGroupTaskDtoWithGroup();
-            const int taskId = GroupTaskData.TaskId;
+            const int taskId = 1;
 
             _taskRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupTaskList);
 

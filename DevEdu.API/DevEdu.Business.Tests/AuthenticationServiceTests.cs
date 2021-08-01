@@ -11,11 +11,11 @@ namespace DevEdu.Business.Tests
 {
     class AuthenticationServiceTests
     {
-        private AuthenticationService _auth;
+        private AuthenticationService _sut;
         [SetUp]
         public void Setup()
         {
-            _auth = new AuthenticationService();
+            _sut = new AuthenticationService();
         }
         [Test]
         public void HashPassword_PasswordAndSalt_ReturnSalt()
@@ -25,7 +25,7 @@ namespace DevEdu.Business.Tests
             byte[] salt = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
             string expected = "AAECAwQFBgcICQoLDA0ODyT2cCjwnE2JIl0Ka2bvFeMtEwX+";
             //When
-            var actual = _auth.HashPassword(password, salt);
+            var actual = _sut.HashPassword(password, salt);
             //Than
             Assert.AreEqual(expected, actual);
         }
@@ -35,7 +35,7 @@ namespace DevEdu.Business.Tests
             string password = "password";
             byte[] salt = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
             
-            Assert.Throws<ArgumentException>(() => _auth.HashPassword(password, salt));
+            Assert.Throws<ArgumentException>(() => _sut.HashPassword(password, salt));
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace DevEdu.Business.Tests
             string hashedPassword = "AAECAwQFBgcICQoLDA0ODyT2cCjwnE2JIl0Ka2bvFeMtEwX+";
             string userPassword = "password";
             //When
-            var actual = _auth.Verify(hashedPassword, userPassword);
+            var actual = _sut.Verify(hashedPassword, userPassword);
             //Than
             Assert.AreEqual(expected, actual);
         }
@@ -58,7 +58,7 @@ namespace DevEdu.Business.Tests
             string hashedPassword = "AAECAwQFBgcICQoLDA0ODyT2cCjwnE2JIl0Ka2bvFeMtEwX";
             string userPassword = "password";
 
-            Assert.Throws<FormatException>(() => _auth.Verify(hashedPassword, userPassword)); ;
+            Assert.Throws<FormatException>(() => _sut.Verify(hashedPassword, userPassword)); ;
         }
     }
 }
