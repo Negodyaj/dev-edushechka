@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.Tests
@@ -49,7 +50,35 @@ namespace DevEdu.Business.Tests
         {
             return new StudentAnswerOnTaskDto
             {
-                Id = 1
+                Id = 1,
+                User=new UserDto
+                {
+                    Id = 1
+                }
+            };
+        }
+
+        public static List<Role> GetStudentRole()
+        {
+            return new List<Role>
+            {
+                Role.Student
+            };
+        }
+
+        public static List<GroupDto> GetGroupsDto()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto
+                {
+                    Id = 1
+                },
+
+                new GroupDto
+                {
+                    Id = 2
+                }
             };
         }
     }

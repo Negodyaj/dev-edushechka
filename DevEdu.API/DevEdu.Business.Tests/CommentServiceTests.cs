@@ -1,137 +1,163 @@
-﻿//using System.Security.Cryptography.X509Certificates;
-//using DevEdu.Business.Services;
-//using DevEdu.Business.ValidationHelpers;
-//using DevEdu.DAL.Repositories;
-//using Moq;
-//using NUnit.Framework;
+﻿using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Repositories;
+using Moq;
+using NUnit.Framework;
 
-//namespace DevEdu.Business.Tests
-//{
-//    public class CommentServiceTests
-//    {
-//        private Mock<ICommentRepository> _commentRepoMock;
-//        private Mock<ILessonRepository> _lessonRepoMock;
-//        private Mock<IUserRepository> _userRepoMock;
-//        private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
-//        private CommentValidationHelper _commentValidationHelper;
-//        private LessonValidationHelper _lessonValidationHelper;
-//        private StudentAnswerOnTaskValidationHelper _studentAnswerValidationHelper;
-//        private CommentService _sut;
+namespace DevEdu.Business.Tests
+{
+    public class CommentServiceTests
+    {
+        private Mock<ICommentRepository> _commentRepoMock;
+        private Mock<ILessonRepository> _lessonRepoMock;
+        private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
+        private Mock<IGroupRepository> _groupRepoMock;
+        private CommentValidationHelper _commentValidationHelper;
+        private LessonValidationHelper _lessonValidationHelper;
+        private StudentAnswerOnTaskValidationHelper _studentAnswerValidationHelper;
+        private CommentService _sut;
 
-//        [SetUp]
-//        public void Setup()
-//        {
-//            _commentRepoMock = new Mock<ICommentRepository>();
-//            _lessonRepoMock = new Mock<ILessonRepository>();
-//            _userRepoMock = new Mock<IUserRepository>();
-//            _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
-//            _commentValidationHelper = new CommentValidationHelper(_commentRepoMock.Object);
-//            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object);
-//            _studentAnswerValidationHelper = new StudentAnswerOnTaskValidationHelper(_studentAnswerRepoMock.Object);
-//            _sut = new CommentService(_commentRepoMock.Object, _commentValidationHelper, _lessonValidationHelper, _studentAnswerValidationHelper);
-//        }
+        [SetUp]
+        public void Setup()
+        {
+            _commentRepoMock = new Mock<ICommentRepository>();
+            _lessonRepoMock = new Mock<ILessonRepository>();
+            _groupRepoMock = new Mock<IGroupRepository>();
+            _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
+            _commentValidationHelper = new CommentValidationHelper(_commentRepoMock.Object);
+            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object);
+            _studentAnswerValidationHelper = new StudentAnswerOnTaskValidationHelper(_studentAnswerRepoMock.Object, _groupRepoMock.Object);
+            _sut = new CommentService(_commentRepoMock.Object, _commentValidationHelper, _lessonValidationHelper, _studentAnswerValidationHelper);
+        }
 
-//        [Test]
-//        public void AddCommentToLesson_CommentDto_CommentReturned()
-//        {
-//            //Given
-//            var commentDto = CommentData.GetCommentDto();
-//            var lessonId = 1;
-//            var expectedCommentId = 1;
-//            var lessonDto = CommentData.GetLessonDto();
-//            var userId = 1;
-//            var studentLessonDto = CommentData.GetStudentLessonDto();
+        [Test]
+        public void AddCommentToLesson_CommentDto_CommentReturned()
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            const int lessonId = 1;
+            const int expectedCommentId = 1;
+            var lessonDto = CommentData.GetLessonDto();
+            const int userId = 1;
+            var roles = CommentData.GetStudentRole();
 
-//            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
-//            _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
-//            _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
-//            _lessonRepoMock.Setup(x => x.SelectByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
+            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
+            _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
+            _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByLessonId(lessonId)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
 
+            //When
+            var actualComment = _sut.AddCommentToLesson(lessonId, commentDto, userId, roles);
 
+            //Than
+            Assert.AreEqual(commentDto, actualComment);
+            _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
+            _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
+            _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByLessonId(lessonId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+        }
 
-//            //When
-//            var actualComment = _sut.AddCommentToLesson(lessonId, commentDto);
+        [Test]
+        public void AddCommentToStudentAnswer_CommentDto_CommentReturned()
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            const int taskStudentId = 1;
+            const int expectedCommentId = 1;
+            const int expectedStudentAnswerOnTaskId = 1;
+            var getStudentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
+            const int userId = 1;
+            var roles = CommentData.GetStudentRole();
 
-//            //Than
-//            Assert.AreEqual(commentDto, actualComment);
-//            _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
-//            _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
-//        }
+            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
+            _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
+            _studentAnswerRepoMock.Setup(x => x.GetStudentAnswerOnTaskById(expectedStudentAnswerOnTaskId)).Returns(getStudentAnswerOnTaskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(getStudentAnswerOnTaskDto.User.Id)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
 
-//        [Test]
-//        public void AddCommentToStudentAnswer_CommentDto_CommentReturned()
-//        {
-//            //Given
-//            var commentDto = CommentData.GetCommentDto();
-//            var taskStudentId = 1;
-//            var expectedCommentId = 1;
-//            var expectedStudentAnswerOnTaskId = 1;
-//            var getStudentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
+            //When
+            var actualComment = _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userId, roles);
 
-//            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
-//            _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
-//            _studentAnswerRepoMock.Setup(x => x.GetStudentAnswerOnTaskById(expectedStudentAnswerOnTaskId)).Returns(getStudentAnswerOnTaskDto);
+            //Than
+            Assert.AreEqual(commentDto, actualComment);
+            _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
+            _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
+            _studentAnswerRepoMock.Verify(x => x.GetStudentAnswerOnTaskById(expectedStudentAnswerOnTaskId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(getStudentAnswerOnTaskDto.User.Id), Times.Exactly(2));
+        }
 
-//            //When
-//            var actualComment = _sut.AddCommentToStudentAnswer(taskStudentId, commentDto);
+        [Test]
+        public void GetComment_IntCommentId_GetComment()
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            const int commentId = 1;
+            const int userId = 1;
+            var roles = CommentData.GetStudentRole();
 
-//            //Than
-//            Assert.AreEqual(commentDto, actualComment);
-//            _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
-//            _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
-//        }
+            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByLessonId(commentDto.Lesson.Id)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
 
-//        [Test]
-//        public void GetComment_IntCommentId_GetComment()
-//        {
-//            //Given
-//            var commentDto = CommentData.GetCommentDto();
-//            var commentId = 1;
+            //When
+            var dto = _sut.GetComment(commentId, userId, roles);
 
-//            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+            //Than
+            Assert.AreEqual(commentDto, dto);
+            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByLessonId(commentDto.Lesson.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+        }
 
-//            //When
-//            var dto = _sut.GetComment(commentId);
+        [Test]
+        public void UpdateComment_CommentDto_ReturnUpdatedCommentDto()
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            const int commentId = 1;
+            const int userId = 1;
+            var roles = CommentData.GetStudentRole();
 
-//            //Than
-//            Assert.AreEqual(commentDto, dto);
-//            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Exactly(2));
-//        }
+            _commentRepoMock.Setup(x => x.UpdateComment(commentDto));
+            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByLessonId(commentDto.Lesson.Id)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
 
-//        [Test]
-//        public void UpdateComment_CommentDto_ReturnUpdatedCommentDto()
-//        {
-//            //Given
-//            var commentDto = CommentData.GetCommentDto();
-//            var commentId = 1;
+            //When
+            var dto = _sut.UpdateComment(commentId, commentDto, userId, roles);
 
-//            _commentRepoMock.Setup(x => x.UpdateComment(commentDto));
-//            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+            //Than
+            Assert.AreEqual(commentDto, dto);
+            _commentRepoMock.Verify(x => x.UpdateComment(commentDto), Times.Once);
+            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Exactly(2));
+            _groupRepoMock.Verify(x => x.GetGroupsByLessonId(commentDto.Lesson.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+        }
 
-//            //When
-//            var dto = _sut.UpdateComment(commentId, commentDto);
+        [Test]
+        public void DeleteComment_IntCommentId_DeleteComment()
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            const int commentId = 1;
+            const int userId = 1;
+            var roles = CommentData.GetStudentRole();
 
-//            //Than
-//            Assert.AreEqual(commentDto, dto);
-//            _commentRepoMock.Verify(x => x.UpdateComment(commentDto), Times.Once);
-//            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Exactly(2));
-//        }
+            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+            _commentRepoMock.Setup(x => x.DeleteComment(commentId));
+            _groupRepoMock.Setup(x => x.GetGroupsByLessonId(commentDto.Lesson.Id)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
 
-//        [Test]
-//        public void DeleteComment_IntCommentId_DeleteComment()
-//        {
-//            //Given
-//            var commentDto = CommentData.GetCommentDto();
-//            var commentId = 1;
+            //When
+            _sut.DeleteComment(commentId, userId, roles);
 
-//            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
-//            _commentRepoMock.Setup(x => x.DeleteComment(commentId));
-
-//            //When
-//            _sut.DeleteComment(commentId);
-
-//            //Than
-//            _commentRepoMock.Verify(x => x.DeleteComment(commentId), Times.Once);
-//        }
-//    }
-//}
+            //Than
+            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
+            _commentRepoMock.Verify(x => x.DeleteComment(commentId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByLessonId(commentDto.Lesson.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+        }
+    }
+}

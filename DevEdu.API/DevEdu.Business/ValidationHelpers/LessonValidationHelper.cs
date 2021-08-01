@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
-using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.ValidationHelpers
@@ -10,7 +9,6 @@ namespace DevEdu.Business.ValidationHelpers
     {
         private readonly ILessonRepository _lessonRepository;
         private readonly IGroupRepository _groupRepository;
-
 
         public LessonValidationHelper
         (

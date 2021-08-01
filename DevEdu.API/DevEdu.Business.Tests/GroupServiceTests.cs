@@ -1,158 +1,175 @@
-﻿//using DevEdu.Business.Services;
-//using DevEdu.DAL.Models;
-//using DevEdu.DAL.Repositories;
-//using Moq;
-//using NUnit.Framework;
+﻿using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
+using Moq;
+using NUnit.Framework;
 
-//namespace DevEdu.Business.Tests
-//{
-//    public class GroupServiceTests
-//    {
-//        private Mock<IGroupRepository> _groupRepoMock;
-//        private Mock<IUserRepository> _userRepoMock;
+namespace DevEdu.Business.Tests
+{
+    public class GroupServiceTests
+    {
+        private Mock<IGroupRepository> _groupRepoMock;
+        private Mock<IMaterialRepository> _materialRepoMock;
+        private Mock<IUserRepository> _userRepoMock;
+        private GroupValidationHelper _groupValidationHelper;
+        private MaterialValidationHelper _materialValidationHelper;
+        private GroupService _sut;
 
-//        [SetUp]
-//        public void Setup()
-//        {
-//            _groupRepoMock = new Mock<IGroupRepository>();
-//            _userRepoMock = new Mock<IUserRepository>();
-//        }
+        [SetUp]
+        public void Setup()
+        {
+            _groupRepoMock = new Mock<IGroupRepository>();
+            _userRepoMock = new Mock<IUserRepository>();
+            _materialRepoMock = new Mock<IMaterialRepository>();
+            _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
+            _materialValidationHelper = new MaterialValidationHelper(_materialRepoMock.Object);
+            _sut = new GroupService(_groupRepoMock.Object, _userRepoMock.Object,_groupValidationHelper,_materialValidationHelper);
+        }
 
-//        [Test]
-//        public void AddGroup_NotParams_ReturnGroupId()
-//        {
-//            //Given            
-//            var groupDto = GroupData.GetGroupDto();
-//            var groupId = GroupData.GroupId;
+        [Test]
+        public void AddGroup_NotParams_ReturnGroupId()
+        {
+            //Given            
+            var groupDto = GroupData.GetGroupDto();
+            var groupId = GroupData.GroupId;
 
-//            _groupRepoMock.Setup(x => x.AddGroup(groupDto)).Returns(groupId);
+            _groupRepoMock.Setup(x => x.AddGroup(groupDto)).Returns(groupId);
 
-//            var sut = new GroupService(_groupRepoMock.Object);
+            //When
+            var actualGroupId = _sut.AddGroup(groupDto);
 
-//            //When
-//            var actualGroupId = sut.AddGroup(groupDto);
+            //Then
+            Assert.AreEqual(groupId, actualGroupId);
+            _groupRepoMock.Verify(x => x.AddGroup(groupDto), Times.Once);
+        }
 
-//            //Then
-//            Assert.AreEqual(groupId, actualGroupId);
-//            _groupRepoMock.Verify(x => x.AddGroup(groupDto), Times.Once);
-//        }
+        [Test]
+        public void GetGroupWithListStudents_ByIdAndByRoleStudent_ReturnGroupDto()
+        {
+            //Given            
+            var groupId = GroupData.GroupId;
+            var roleStudent = GroupData.RoleStudent;
+            var groupDto = GroupData.GetGroupDto();
+            var studentDtos = GroupData.GetUserForGroup();
 
-//        [Test]
-//        public void GetGroupWithListStudents_ByIdAndByRoleStudent_ReturnGroupDto()
-//        {
-//            //Given            
-//            var groupId = GroupData.GroupId;
-//            var roleStudent = GroupData.RoleStudent;
-//            var groupDto = GroupData.GetGroupDto();
-//            var studentDtos = GroupData.GetUserForGroup();
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, roleStudent)).Returns(studentDtos);
+            groupDto.Students = studentDtos;
 
-//            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
-//            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, roleStudent)).Returns(studentDtos);
-//            groupDto.Students = studentDtos;
+            //When
+            var actualGroupDto = _sut.GetGroup(groupId);
 
-//            var sut = new GroupService(_groupRepoMock.Object, _userRepoMock.Object);
+            //Then
+            Assert.AreEqual(groupDto, actualGroupDto);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, roleStudent), Times.Once);
+        }
 
-//            //When
-//            var actualGroupDto = sut.GetGroup(groupId);
+        [Test]
+        public void GetGroups_NotParams_ReturnListGroupDto()
+        {
+            //Given
+            var groupDtos = GroupData.GetGroupsDto();
 
-//            //Then
-//            Assert.AreEqual(groupDto, actualGroupDto);
-//            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-//            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, roleStudent), Times.Once);
-//        }
+            _groupRepoMock.Setup(x => x.GetGroups()).Returns(groupDtos);
 
-//        [Test]
-//        public void GetGroups_NotParams_ReturnListGroupDto()
-//        {
-//            //Given
-//            var groupDtos = GroupData.GetGroupsDto();
+            //When
+            var actualGroupDtos = _sut.GetGroups();
 
-//            _groupRepoMock.Setup(x => x.GetGroups()).Returns(groupDtos);
+            //Then
+            Assert.AreEqual(groupDtos, actualGroupDtos);
+            _groupRepoMock.Verify(x => x.GetGroups(), Times.Once);
+        }
 
-//            var sut = new GroupService(_groupRepoMock.Object);
+        [Test]
+        public void UpdateGroupNameAndTimetable_ByIdAndGroupDto_ReturnGroupDto()
+        {
+            //Given
+            var groupId = GroupData.GroupId;
+            var groupDto = GroupData.GetGroupDtoToUpdNameAndTimetable();
+            var updGroupDto = GroupData.GetUpdGroupDto();
 
-//            //When
-//            var actualGroupDtos = sut.GetGroups();
+            _groupRepoMock.Setup(x => x.UpdateGroup(groupId, groupDto)).Returns(updGroupDto);
 
-//            //Then
-//            Assert.AreEqual(groupDtos, actualGroupDtos);
-//            _groupRepoMock.Verify(x => x.GetGroups(), Times.Once);
-//        }
+            //When
+            var actualGroupDto = _sut.UpdateGroup(groupId, groupDto);
 
-//        [Test]
-//        public void UpdateGroupNameAndTimetable_ByIdAndGroupDto_ReturnGroupDto()
-//        {
-//            //Given
-//            var groupId = GroupData.GroupId;
-//            var groupDto = GroupData.GetGroupDtoToUpdNameAndTimetable();
-//            var updGroupDto = GroupData.GetUpdGroupDto();
+            //Then
+            Assert.AreEqual(updGroupDto, actualGroupDto);
+            _groupRepoMock.Verify(x => x.UpdateGroup(groupId, groupDto), Times.Once);
+        }
 
-//            _groupRepoMock.Setup(x => x.UpdateGroup(groupId, groupDto)).Returns(updGroupDto);
+        [Test]
+        public void ChangeGroupStatus_ByGroupIdAndStatusId_ReturnGroupDto()
+        {
+            //Given            
+            var groupId = GroupData.GroupId;
+            var groupStatus = GroupData.StatusGroup;
+            var groupDto = GroupData.GetGroupDto();
 
-//            var sut = new GroupService(_groupRepoMock.Object);
+            _groupRepoMock.Setup(x => x.ChangeGroupStatus(groupId, groupStatus)).Returns(groupDto);
 
-//            //When
-//            var actualGroupDto = sut.UpdateGroup(groupId, groupDto);
+            //When
+            var actualGroupDto = _sut.ChangeGroupStatus(groupId, groupStatus);
 
-//            //Then
-//            Assert.AreEqual(updGroupDto, actualGroupDto);
-//            _groupRepoMock.Verify(x => x.UpdateGroup(groupId, groupDto), Times.Once);
-//        }
+            //Then
+            Assert.AreEqual(groupDto, actualGroupDto);
+            _groupRepoMock.Verify(x => x.ChangeGroupStatus(groupId, groupStatus), Times.Once);
+        }
 
-//        [Test]
-//        public void ChangeGroupStatus_ByGroupIdAndStatusId_ReturnGroupDto()
-//        {
-//            //Given            
-//            var groupId = GroupData.GroupId;
-//            var groupStatus = GroupData.StatusGroup;
-//            var groupDto = GroupData.GetGroupDto();
+        [Test]
+        public void AddMaterialToGroup_IntGroupIdAndMaterialId_AddMaterialToGroup()
+        {
+            //Given
+            const int groupId = 1;
+            const int materialId = 1;
+            const int userId = 1;
+            var roles = GroupData.GetStudentRole();
 
-//            _groupRepoMock.Setup(x => x.ChangeGroupStatus(groupId, groupStatus)).Returns(groupDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+            _materialRepoMock.Setup(x => x.GetMaterialById(materialId)).Returns(MaterialData.GetMaterialDtoWithoutTags);
 
-//            var sut = new GroupService(_groupRepoMock.Object);
+            _groupRepoMock.Setup(x => x.AddGroupMaterialReference(groupId, materialId));
 
-//            //When
-//            var actualGroupDto = sut.ChangeGroupStatus(groupId, groupStatus);
+            //When
+            _sut.AddGroupMaterialReference(groupId, materialId, userId, roles);
 
-//            //Then
-//            Assert.AreEqual(groupDto, actualGroupDto);
-//            _groupRepoMock.Verify(x => x.ChangeGroupStatus(groupId, groupStatus), Times.Once);
-//        }
+            //Than
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Exactly(2));
+            _materialRepoMock.Verify(x => x.GetMaterialById(materialId), Times.Once);
 
-//        [Test]
-//        public void AddMaterialToGroup_IntGroupIdAndMaterialId_AddMaterialToGroup()
-//        {
-//            //Given
-//            const int groupId = GroupData.GroupId;
-//            const int materialId = GroupData.MaterialId;
+            _groupRepoMock.Verify(x => x.AddGroupMaterialReference(groupId, materialId), Times.Once);
+        }
 
-//            _groupRepoMock.Setup(x => x.AddGroupMaterialReference(groupId, materialId));
+        [Test]
+        public void DeleteMaterialFromGroup_IntGroupIdAndMaterialId_DeleteMaterialFromGroup()
+        {
+            //Given
+            const int groupId = 1;
+            const int materialId = 1;
+            const int userId = 1;
+            var roles = GroupData.GetStudentRole();
 
-//            var sut = new GroupService(_groupRepoMock.Object);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+            _materialRepoMock.Setup(x => x.GetMaterialById(materialId)).Returns(MaterialData.GetMaterialDtoWithoutTags);
 
-//            //When
-//            sut.AddGroupMaterialReference(groupId, materialId);
+            _groupRepoMock.Setup(x => x.RemoveGroupMaterialReference(groupId, materialId));
 
-//            //Than
-//            _groupRepoMock.Verify(x => x.AddGroupMaterialReference(groupId, materialId), Times.Once);
-//        }
+            //When
+            _sut.RemoveGroupMaterialReference(groupId, materialId, userId, roles);
 
-//        [Test]
-//        public void DeleteMaterialFromGroup_IntGroupIdAndMaterialId_DeleteMaterialFromGroup()
-//        {
-//            //Given
-//            const int groupId = GroupData.GroupId;
-//            const int materialId = GroupData.MaterialId;
+            //Than
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Exactly(2));
+            _materialRepoMock.Verify(x => x.GetMaterialById(materialId), Times.Once);
 
-//            _groupRepoMock.Setup(x => x.RemoveGroupMaterialReference(groupId, materialId));
-
-//            var sut = new GroupService(_groupRepoMock.Object);
-
-//            //When
-//            sut.RemoveGroupMaterialReference(groupId, materialId);
-
-//            //Than
-//            _groupRepoMock.Verify(x => x.RemoveGroupMaterialReference(groupId, materialId), Times.Once);
-//        }
-//    }
-//}
+            _groupRepoMock.Verify(x => x.RemoveGroupMaterialReference(groupId, materialId), Times.Once);
+        }
+    }
+}

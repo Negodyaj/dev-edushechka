@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
@@ -32,7 +30,7 @@ namespace DevEdu.Business.Services
         public CommentDto AddCommentToLesson(int lessonId, CommentDto dto, int userId, List<Role> roles)
         {
             _lessonValidationHelper.CheckLessonExistence(lessonId);
-            if (!CheckerRole.Admin(roles))
+            if (!CheckerRole.IsAdmin(roles))
                 _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
 
             dto.User = new UserDto { Id = userId };
@@ -45,7 +43,7 @@ namespace DevEdu.Business.Services
         {
             var studentAnswer = _studentAnswerValidationHelper.CheckStudentAnswerOnTaskExistence(taskStudentId);
             var studentId = studentAnswer.User.Id;
-            if (!CheckerRole.Admin(roles))
+            if (!CheckerRole.IsAdmin(roles))
                 _studentAnswerValidationHelper.CheckUserInStudentAnswerAccess(studentId, userId);
 
             dto.StudentAnswer = new StudentAnswerOnTaskDto { Id = taskStudentId };
@@ -55,26 +53,45 @@ namespace DevEdu.Business.Services
 
         public CommentDto GetComment(int commentId, int userId, List<Role> roles)
         {
-            return CheckerRole.Admin(roles) ? _commentRepository.GetComment(commentId) : CheckAccessAndExistence(commentId, userId);
+            var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
+            CheckUserAccessByRoleAndId(userId, roles, checkedDto);
+            return checkedDto;
         }
 
         public void DeleteComment(int commentId, int userId, List<Role> roles)
         {
-            CheckAccess(commentId, userId, roles);
+            var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
+            CheckUserAccessByRoleAndId(userId, roles, checkedDto);
             _commentRepository.DeleteComment(commentId);
         }
 
         public CommentDto UpdateComment(int commentId, CommentDto dto, int userId, List<Role> roles)
         {
-            CheckAccess(commentId, userId, roles);
+            var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
+            CheckUserAccessByRoleAndId(userId, roles, checkedDto);
             dto.Id = commentId;
             _commentRepository.UpdateComment(dto);
             return _commentRepository.GetComment(commentId);
         }
 
-        private CommentDto CheckAccessAndExistence(int commentId, int userId)
+        private void CheckUserAccessByRoleAndId(int userId, List<Role> roles, CommentDto dto)
         {
-            var dto = _commentValidationHelper.CheckCommentExistence(commentId);
+
+            if (CheckerRole.IsAdmin(roles))
+            {
+                return;
+            }
+
+            CheckUserAccessToGroupData(dto, userId);
+
+            if (CheckerRole.IsStudent(roles))
+            {
+                _commentValidationHelper.UserComplianceCheck(dto, userId);
+            }
+        }
+
+        private void CheckUserAccessToGroupData(CommentDto dto, int userId)
+        {
             if (dto.Lesson != default)
             {
                 var lessonId = dto.Lesson.Id;
@@ -84,18 +101,6 @@ namespace DevEdu.Business.Services
             {
                 var studentId = dto.StudentAnswer.Id;
                 _studentAnswerValidationHelper.CheckUserInStudentAnswerAccess(studentId, userId);
-            }
-            return dto;
-        }
-
-        private void CheckAccess(int commentId, int userId, List<Role> roles)
-        {
-            if (CheckerRole.Admin(roles)) return;
-
-            var checkedDto = CheckAccessAndExistence(commentId, userId);
-            if (CheckerRole.Student(roles))
-            {
-                _commentValidationHelper.CheckUser(checkedDto, userId);
             }
         }
     }

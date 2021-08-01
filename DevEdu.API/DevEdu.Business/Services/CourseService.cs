@@ -20,16 +20,16 @@ namespace DevEdu.Business.Services
 
         public CourseService
         (
-            ITopicRepository topicRepository,
             ICourseRepository courseRepository,
+            ITopicRepository topicRepository,
             ITaskRepository taskRepository,
             IMaterialRepository materialRepository,
             ICourseValidationHelper courseValidationHelper,
             IMaterialValidationHelper materialValidationHelper
         )
         {
-            _topicRepository = topicRepository;
             _courseRepository = courseRepository;
+            _topicRepository = topicRepository;
             _taskRepository = taskRepository;
             _materialRepository = materialRepository;
             _courseValidationHelper = courseValidationHelper;

@@ -6,39 +6,40 @@ namespace DevEdu.Business
 {
     public static class CheckerRole
     {
-        public static bool Admin(List<Role> roles)
+        public static bool IsAdmin(List<Role> roles)
         {
             var admin = roles.FirstOrDefault(r => r == Role.Admin);
             return admin != default;
         }
 
-        public static bool Manager(List<Role> roles)
+        public static bool IsManager(List<Role> roles)
         {
-            var admin = roles.FirstOrDefault(r => r == Role.Manager);
-            return admin != default;
+            var manager = roles.FirstOrDefault(r => r == Role.Manager);
+            return manager != default;
         }
 
-        public static bool Methodist(List<Role> roles)
+        public static bool IsMethodist(List<Role> roles)
         {
-            var admin = roles.FirstOrDefault(r => r == Role.Methodist);
-            return admin != default;
-        }
-        public static bool Teacher(List<Role> roles)
-        {
-            var admin = roles.FirstOrDefault(r => r == Role.Teacher);
-            return admin != default;
+            var methodist = roles.FirstOrDefault(r => r == Role.Methodist);
+            return methodist != default;
         }
 
-        public static bool Tutor(List<Role> roles)
+        public static bool IsTeacher(List<Role> roles)
         {
-            var admin = roles.FirstOrDefault(r => r == Role.Tutor);
-            return admin != default;
+            var teacher = roles.FirstOrDefault(r => r == Role.Teacher);
+            return teacher != default;
         }
 
-        public static bool Student(List<Role> roles)
+        public static bool IsTutor(List<Role> roles)
         {
-            var admin = roles.FirstOrDefault(r => r == Role.Student);
-            return admin != default;
+            var tutor = roles.FirstOrDefault(r => r == Role.Tutor);
+            return tutor != default;
+        }
+
+        public static bool IsStudent(List<Role> roles)
+        {
+            var student = roles.FirstOrDefault(r => r == Role.Student);
+            return student != default;
         }
     }
 }

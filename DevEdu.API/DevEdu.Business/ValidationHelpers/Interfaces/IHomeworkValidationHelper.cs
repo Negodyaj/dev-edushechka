@@ -1,7 +1,9 @@
-﻿namespace DevEdu.Business.ValidationHelpers
+﻿using DevEdu.DAL.Models;
+
+namespace DevEdu.Business.ValidationHelpers
 {
     public interface IHomeworkValidationHelper
     {
-        void CheckCommentExistence(int homeworkId);
+        HomeworkDto GetHomeworkByIdAndThrowIfNotFound(int homeworkId);
     }
 }

@@ -14,7 +14,7 @@ namespace DevEdu.Business.ValidationHelpers
             _commentRepository = commentRepository;
         }
 
-        public CommentDto CheckCommentExistence(int commentId)
+        public CommentDto GetCommentByIdAndThrowIfNotFound(int commentId)
         {
             var comment = _commentRepository.GetComment(commentId);
             if (comment == default)
@@ -22,14 +22,7 @@ namespace DevEdu.Business.ValidationHelpers
             return comment;
         }
 
-        public void CheckUserForCommentAccess(CommentDto dto, int userId)
-        {
-            var comment = dto;
-            if (comment == default)
-                throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
-        }
-
-        public void CheckUser(CommentDto dto, int userId)
+        public void UserComplianceCheck(CommentDto dto, int userId)
         {
             if (dto.User.Id != userId)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));

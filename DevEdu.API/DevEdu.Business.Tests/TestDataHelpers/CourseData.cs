@@ -5,8 +5,16 @@ namespace DevEdu.Business.Tests
 {
     public class CourseData
     {
-        public const int CourseId = 1;
-        public const int MaterialId = 1;
+        public static CourseDto GetCourseDto()
+        {
+            return new CourseDto
+            {
+                Id = 1,
+                Name = "Rock-hard Back",
+                Description = "Back with rock-n-roll",
+                IsDeleted = false
+            };
+        }
 
         public static List<CourseTopicDto> GetListCourseTopicDto()
         {
@@ -18,6 +26,7 @@ namespace DevEdu.Business.Tests
 
             return courseTopicsDto;
         }
+
         public static List<CourseTopicDto> GetListCourseTopicDtoFromDataBase()
         {
             List<CourseTopicDto> courseTopicsDto = new List<CourseTopicDto>();

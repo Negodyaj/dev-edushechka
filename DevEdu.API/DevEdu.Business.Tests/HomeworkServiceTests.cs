@@ -1,4 +1,5 @@
 ﻿using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -8,118 +9,170 @@ namespace DevEdu.Business.Tests
     public class HomeworkServiceTests
     {
         private Mock<IHomeworkRepository> _homeworkRepoMock;
+        private Mock<IGroupRepository> _groupRepoMock;
+        private Mock<ITaskRepository> _taskRepoMock;
+        private HomeworkValidationHelper _homeworkValidationHelper;
+        private GroupValidationHelper _groupValidationHelper;
+        private TaskValidationHelper _taskValidationHelper;
         private HomeworkService _sut;
 
         [SetUp]
         public void Setup()
         {
             _homeworkRepoMock = new Mock<IHomeworkRepository>();
-            _sut = new HomeworkService(_homeworkRepoMock.Object);
+            _groupRepoMock = new Mock<IGroupRepository>();
+            _taskRepoMock = new Mock<ITaskRepository>();
+            _homeworkValidationHelper = new HomeworkValidationHelper(_homeworkRepoMock.Object);
+            _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
+            _taskValidationHelper = new TaskValidationHelper(_taskRepoMock.Object);
+            _sut = new HomeworkService(_homeworkRepoMock.Object,_homeworkValidationHelper,_groupValidationHelper,_taskValidationHelper);
         }
 
         [Test]
-        public void AddTaskToGroup_GroupTaskDto_GroupTaskCreated()
+        public void AddHomework_Homework_HomeworkCreated()
         {
             //Given
-            var groupTaskDto = HomeworkData.GetGroupTaskWithoutGroupAndTask();
-            var groupId = 1;
-            var taskId = 2;
-            var expectedGroupTaskId = 1;
+            var groupTaskDto = HomeworkData.GetHomeworkDtokWithoutGroupAndTask();
+            const int groupId = 1;
+            const int taskId = 1;
+            const int expectedGroupTaskId = 1;
+            const int userId = 1;
+
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(TaskData.GetTaskDtoWithoutTags());
 
             _homeworkRepoMock.Setup(x => x.AddHomework(groupTaskDto)).Returns(expectedGroupTaskId);
             _homeworkRepoMock.Setup(x => x.GetHomework(expectedGroupTaskId)).Returns(groupTaskDto);
 
             //When
-            var actualGroupTaskDto = _sut.AddHomework(groupId, taskId, groupTaskDto);
+            var actualGroupTaskDto = _sut.AddHomework(groupId, taskId, groupTaskDto, userId);
 
             //Than
             Assert.AreEqual(groupTaskDto, actualGroupTaskDto);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Exactly(2));
+            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+
             _homeworkRepoMock.Verify(x => x.AddHomework(groupTaskDto), Times.Once);
             _homeworkRepoMock.Verify(x => x.GetHomework(expectedGroupTaskId), Times.Once);
         }
 
         [Test]
-        public void GetGroupTaskByBothId_IntGroupIdAndTaskId_ReturnedGroupTasDto()
+        public void GetHomeworkById_IntGroupIdAndTaskId_ReturnedHomeworkDto()
         {
             //Given
-            var groupTaskDto = HomeworkData.GetGroupTaskWithGroupAndTask();
-            var homeworkId = 1;
+            var homeworkDto = HomeworkData.GetHomeworkDtokWithGroupAndTask();
+            const int homeworkId = 1;
+            const int userId = 1;
+            const int groupId = 1;
 
-            _homeworkRepoMock.Setup(x => x.GetHomework(homeworkId)).Returns(groupTaskDto);
+            _homeworkRepoMock.Setup(x => x.GetHomework(homeworkId)).Returns(homeworkDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
 
             //When
-            var dto = _sut.GetHomework(homeworkId);
+            var dto = _sut.GetHomework(homeworkId, userId);
 
             //Than
-            Assert.AreEqual(groupTaskDto, dto);
+            Assert.AreEqual(homeworkDto, dto);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
             _homeworkRepoMock.Verify(x => x.GetHomework(homeworkId), Times.Once);
         }
 
         [Test]
-        public void UpdateGroupTask_GroupTaskDto_ReturnUpdatedGroupTaskDto()
+        public void UpdateHomework_HomeworkDto_ReturnUpdatedHomeworkDto()
         {
             //Given
-            var groupTaskDto = HomeworkData.GetGroupTaskWithoutGroupAndTask();
-            var homeworkId = 1;
+            var homeworkDto = HomeworkData.GetHomeworkDtokWithGroupAndTask();
+            const int homeworkId = 1;
+            const int userId = 1;
+            const int groupId = 1;
 
-            _homeworkRepoMock.Setup(x => x.UpdateHomework(groupTaskDto));
-            _homeworkRepoMock.Setup(x => x.GetHomework(homeworkId)).Returns(groupTaskDto);
+            _homeworkRepoMock.Setup(x => x.GetHomework(homeworkId)).Returns(homeworkDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+
+            _homeworkRepoMock.Setup(x => x.UpdateHomework(homeworkDto));
 
             //When
-            var actualGroupTaskDto = _sut.UpdateHomework(homeworkId, groupTaskDto);
+            var actualGroupTaskDto = _sut.UpdateHomework(homeworkId, homeworkDto, userId);
 
             //Then
-            Assert.AreEqual(groupTaskDto, actualGroupTaskDto);
-            _homeworkRepoMock.Verify(x => x.UpdateHomework(groupTaskDto), Times.Once);
-            _homeworkRepoMock.Verify(x => x.GetHomework(homeworkId), Times.Once);
+            Assert.AreEqual(homeworkDto, actualGroupTaskDto);
+            _homeworkRepoMock.Verify(x => x.GetHomework(homeworkId), Times.Exactly(2));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+
+            _homeworkRepoMock.Verify(x => x.UpdateHomework(homeworkDto), Times.Once);
         }
 
         [Test]
-        public void DeleteGroupTask_IntGroupIdAndTaskId_DeleteGroupTask()
+        public void DeleteHomework_IntGroupIdAndTaskId_DeleteHomework()
         {
             //Given
-            var homeworkId = 1;
+            var homeworkDto = HomeworkData.GetHomeworkDtokWithGroupAndTask();
+            const int homeworkId = 1;
+            const int userId = 1;
+            const int groupId = 1;
+
+            _homeworkRepoMock.Setup(x => x.GetHomework(homeworkId)).Returns(homeworkDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
 
             _homeworkRepoMock.Setup(x => x.DeleteHomework(homeworkId));
 
             //When
-            _sut.DeleteHomework(homeworkId);
+            _sut.DeleteHomework(homeworkId, userId);
 
             //Then
+            _homeworkRepoMock.Verify(x => x.GetHomework(homeworkId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+
             _homeworkRepoMock.Verify(x => x.DeleteHomework(homeworkId), Times.Once);
         }
 
         [Test]
-        public void GetTasksByGroupId_IntGroupId_ReturnedListOfGroupTaskDtoWithTask()
+        public void GetHomeworkByGroupId_IntGroupId_ReturnedListOfHomeworkDtoByGroupId()
         {
             //Given
-            var groupTaskList = HomeworkData.GetListOfGroupTaskDtoWithTask();
-            var groupId = 1;
+            var groupTaskList = HomeworkData.GetListOfHomeworkDtoWithTask();
+            const int groupId = 1;
+            const int userId = 1;
 
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
             _homeworkRepoMock.Setup(x => x.GetHomeworkByGroupId(groupId)).Returns(groupTaskList);
 
             //When
-            var dto = _sut.GetHomeworkByGroupId(groupId);
+            var dto = _sut.GetHomeworkByGroupId(groupId, userId);
 
             //Than
             Assert.AreEqual(groupTaskList, dto);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Exactly(2));
             _homeworkRepoMock.Verify(x => x.GetHomeworkByGroupId(groupId), Times.Once);
         }
 
         [Test]
-        public void GetGroupsByTaskId_IntTaskId_ReturnedListOfGroupTaskDtoWithTask()
+        public void GetHomeworkByTaskId_IntTaskId_ReturnedListOfHomeworkDtoByTaskId()
         {
             //Given
-            var groupTaskList = HomeworkData.GetListOfGroupTaskDtoWithGroup();
-            var taskId = 2;
+            var groupTaskList = HomeworkData.GetListOfHomeworkDtoWithGroup();
+            const int taskId = 1;
+            const int userId = 1;
 
+            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(TaskData.GetTaskDtoWithoutTags());
             _homeworkRepoMock.Setup(x => x.GetHomeworkByTaskId(taskId)).Returns(groupTaskList);
 
             //When
-            var dto = _sut.GetHomeworkByTaskId(taskId);
+            var dto = _sut.GetHomeworkByTaskId(taskId, userId);
 
             //Than
             Assert.AreEqual(groupTaskList, dto);
+            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
             _homeworkRepoMock.Verify(x => x.GetHomeworkByTaskId(taskId), Times.Once);
         }
     }

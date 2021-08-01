@@ -13,11 +13,6 @@ namespace DevEdu.Business.Services
         private readonly IGroupValidationHelper _groupValidationHelper;
         private readonly IMaterialValidationHelper _materialValidationHelper;
 
-        public GroupService(IGroupRepository groupRepository)
-        {
-            _groupRepository = groupRepository;
-        }
-
         public GroupService
         (
             IGroupRepository groupRepository,
@@ -56,14 +51,14 @@ namespace DevEdu.Business.Services
 
         public void AddGroupMaterialReference(int groupId, int materialId, int userId, List<Role> roles)
         {
-            Check(groupId, materialId, userId, roles);
+            CheckAccessAndExistence(groupId, materialId, userId, roles);
 
             _groupRepository.AddGroupMaterialReference(groupId, materialId);
         }
 
         public void RemoveGroupMaterialReference(int groupId, int materialId, int userId, List<Role> roles)
         {
-            Check(groupId, materialId, userId, roles);
+            CheckAccessAndExistence(groupId, materialId, userId, roles);
 
             _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
         }
@@ -73,9 +68,9 @@ namespace DevEdu.Business.Services
         public void AddUserToGroup(int groupId, int userId, int roleId) => _groupRepository.AddUserToGroup(groupId, userId, roleId);
         public void DeleteUserFromGroup(int groupId, int userId) => _groupRepository.DeleteUserFromGroup(userId, groupId);
 
-        private void Check(int groupId, int materialId, int userId, List<Role> roles)
+        private void CheckAccessAndExistence(int groupId, int materialId, int userId, List<Role> roles)
         {
-            if (!CheckerRole.Admin(roles))
+            if (!CheckerRole.IsAdmin(roles))
                 _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
 
             _groupValidationHelper.CheckGroupExistence(groupId);

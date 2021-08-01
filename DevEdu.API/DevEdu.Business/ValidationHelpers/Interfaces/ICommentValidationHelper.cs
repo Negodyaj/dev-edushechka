@@ -4,8 +4,7 @@ namespace DevEdu.Business.ValidationHelpers
 {
     public interface ICommentValidationHelper
     {
-        CommentDto CheckCommentExistence(int commentId);
-        void CheckUserForCommentAccess(CommentDto dto, int userId);
-        void CheckUser(CommentDto dto, int userId);
+        CommentDto GetCommentByIdAndThrowIfNotFound(int commentId);
+        void UserComplianceCheck(CommentDto dto, int userId);
     }
 }

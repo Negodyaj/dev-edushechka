@@ -7,7 +7,6 @@ namespace DevEdu.Business.Tests
 {
     public class GroupData
     {
-        public const int ExpectedAffectedRows = 1;
         public const int GroupId = 1;
         public const int MaterialId = 1;
         public const int RoleStudent = (int)Role.Student;
@@ -171,6 +170,13 @@ namespace DevEdu.Business.Tests
                     Roles = null,
                     IsDeleted = false
                 }                
+            };
+        }
+        public static List<Role> GetStudentRole()
+        {
+            return new List<Role>
+            {
+                Role.Student
             };
         }
     }
