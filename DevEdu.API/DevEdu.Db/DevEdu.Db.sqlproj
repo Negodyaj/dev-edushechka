@@ -218,7 +218,6 @@
     <Build Include="StoredProcedures\Group_Task\Group_Task_SelectAllByGroupId.sql" />
     <Build Include="StoredProcedures\Group_Task\Group_Task_SelectById.sql" />
     <Build Include="StoredProcedures\Group_Task\Group_Task_SelectAllByTaskId.sql" />
-    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectByTaskId.sql" />
     <Build Include="StoredProcedures\Course\Course_SelectByTaskId.sql" />
     <Build Include="StoredProcedures\Course\Course_SelectByMaterialId.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectByMaterialId.sql" />

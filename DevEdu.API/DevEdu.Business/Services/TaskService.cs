@@ -112,7 +112,7 @@ namespace DevEdu.Business.Services
         public TaskDto GetTaskWithAnswersById(int taskid, int userId, bool isAdmin)
         {
             var taskDto = GetTaskById(taskid, userId, isAdmin);
-            taskDto.StudentAnswers = _studentAnswerOnTaskRepository.GetStudentAnswersToTaskByTaskId(taskid);
+            taskDto.StudentAnswers = _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskid);
             return taskDto;
         }
 

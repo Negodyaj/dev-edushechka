@@ -12,7 +12,6 @@ namespace DevEdu.DAL.Repositories
         void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         void AddCommentOnStudentAnswer(int taskstudentId, int commentId);
-        List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskByTaskId(int id);
         List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId);
     }
 }

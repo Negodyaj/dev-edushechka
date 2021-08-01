@@ -438,7 +438,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupDtos);
-            _studentAnswerRepoMock.Setup(x => x.GetStudentAnswersToTaskByTaskId(taskId)).Returns(studentAnswersDtos);
+            _studentAnswerRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(taskId)).Returns(studentAnswersDtos);
             taskDto.StudentAnswers = studentAnswersDtos;
 
             //When
@@ -447,7 +447,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(taskDto, dto);
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
-            _studentAnswerRepoMock.Verify(x => x.GetStudentAnswersToTaskByTaskId(taskId), Times.Once);
+            _studentAnswerRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(taskId), Times.Once);
             _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
         }
 

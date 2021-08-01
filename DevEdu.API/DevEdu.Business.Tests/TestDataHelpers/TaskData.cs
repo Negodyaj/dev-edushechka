@@ -68,13 +68,13 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<StudentAnswerOnTaskForTaskDto> GetListOfStudentAnswers()
+        public static List<StudentAnswerOnTaskDto> GetListOfStudentAnswers()
         {
-            return new List<StudentAnswerOnTaskForTaskDto>
+            return new List<StudentAnswerOnTaskDto>
             {
-                new StudentAnswerOnTaskForTaskDto {Id = 1},
-                new StudentAnswerOnTaskForTaskDto {Id = 2},
-                new StudentAnswerOnTaskForTaskDto {Id = 3}
+                new StudentAnswerOnTaskDto {Id = 1},
+                new StudentAnswerOnTaskDto {Id = 2},
+                new StudentAnswerOnTaskDto {Id = 3}
             };
         }
 
