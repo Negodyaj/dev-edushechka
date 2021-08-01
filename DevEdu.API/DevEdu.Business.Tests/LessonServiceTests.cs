@@ -83,6 +83,8 @@ namespace DevEdu.Business.Tests
 
             _lessonRepoMock.Setup(x => x.UpdateStudentFeedbackForLesson(studentLessonDto));
             _lessonRepoMock.Setup(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
+            _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(LessonData.GetLessonDto);
+            _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(LessonData.GetUserDto);
                        
             //When
             var dto = _sut.UpdateStudentFeedbackForLesson(lessonId, userId, studentLessonDto);
@@ -91,6 +93,8 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(studentLessonDto, dto);
             _lessonRepoMock.Verify(x => x.UpdateStudentFeedbackForLesson(studentLessonDto), Times.Once);
             _lessonRepoMock.Verify(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId), Times.Once);
+            _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
         }
 
         [Test]

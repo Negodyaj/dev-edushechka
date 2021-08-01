@@ -47,6 +47,22 @@ namespace DevEdu.Business.Tests
                     IsPresent = false,
                     AbsenceReason = "Slept"
                 },
+            };          
+
+        }
+
+        public static LessonDto GetLessonDto()
+        {
+            return new LessonDto
+            {
+                Id = 30
+            };
+        }
+        public static UserDto GetUserDto()
+        {
+            return new UserDto
+            {
+                Id = 42
             };
         }
 
