@@ -118,14 +118,16 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.ChangeGroupStatus(groupId, groupStatus), Times.Once);
         }
 
-        [Test]
-        public void AddMaterialToGroup_IntGroupIdAndMaterialId_AddMaterialToGroup()
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(6)]
+        public void AddMaterialToGroup_IntGroupIdAndMaterialId_AddMaterialToGroup(int role)
         {
             //Given
             const int groupId = 1;
             const int materialId = 1;
-            const int userId = 1;
-            var roles = GroupData.GetStudentRole();
+            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userId = userToken.UserId;
 
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
@@ -135,7 +137,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.AddGroupMaterialReference(groupId, materialId));
 
             //When
-            _sut.AddGroupMaterialReference(groupId, materialId, userId, roles);
+            _sut.AddGroupMaterialReference(groupId, materialId, userToken);
 
             //Than
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
@@ -145,14 +147,16 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(groupId, materialId), Times.Once);
         }
 
-        [Test]
-        public void DeleteMaterialFromGroup_IntGroupIdAndMaterialId_DeleteMaterialFromGroup()
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(6)]
+        public void DeleteMaterialFromGroup_IntGroupIdAndMaterialId_DeleteMaterialFromGroup(int role)
         {
             //Given
             const int groupId = 1;
             const int materialId = 1;
-            const int userId = 1;
-            var roles = GroupData.GetStudentRole();
+            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userId = userToken.UserId;
 
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
@@ -162,7 +166,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.RemoveGroupMaterialReference(groupId, materialId));
 
             //When
-            _sut.RemoveGroupMaterialReference(groupId, materialId, userId, roles);
+            _sut.RemoveGroupMaterialReference(groupId, materialId, userToken);
 
             //Than
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);

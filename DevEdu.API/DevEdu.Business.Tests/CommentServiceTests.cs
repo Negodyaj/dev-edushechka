@@ -30,16 +30,18 @@ namespace DevEdu.Business.Tests
             _sut = new CommentService(_commentRepoMock.Object, _commentValidationHelper, _lessonValidationHelper, _studentAnswerValidationHelper);
         }
 
-        [Test]
-        public void AddCommentToLesson_CommentDto_CommentReturned()
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(6)]
+        public void AddCommentToLesson_CommentDto_CommentReturned(int role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
             const int lessonId = 1;
             const int expectedCommentId = 1;
             var lessonDto = CommentData.GetLessonDto();
-            const int userId = 1;
-            var roles = CommentData.GetStudentRole();
+            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userId = userToken.UserId;
 
             _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
             _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
@@ -48,7 +50,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
 
             //When
-            var actualComment = _sut.AddCommentToLesson(lessonId, commentDto, userId, roles);
+            var actualComment = _sut.AddCommentToLesson(lessonId, commentDto, userToken);
 
             //Than
             Assert.AreEqual(commentDto, actualComment);
@@ -59,8 +61,10 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
         }
 
-        [Test]
-        public void AddCommentToStudentAnswer_CommentDto_CommentReturned()
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(6)]
+        public void AddCommentToStudentAnswer_CommentDto_CommentReturned(int role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
@@ -68,8 +72,8 @@ namespace DevEdu.Business.Tests
             const int expectedCommentId = 1;
             const int expectedStudentAnswerOnTaskId = 1;
             var getStudentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
-            const int userId = 1;
-            var roles = CommentData.GetStudentRole();
+            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userId = userToken.UserId;
 
             _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
             _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
@@ -78,7 +82,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
 
             //When
-            var actualComment = _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userId, roles);
+            var actualComment = _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userToken);
 
             //Than
             Assert.AreEqual(commentDto, actualComment);
@@ -88,21 +92,23 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(getStudentAnswerOnTaskDto.User.Id), Times.Exactly(2));
         }
 
-        [Test]
-        public void GetComment_IntCommentId_GetComment()
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(6)]
+        public void GetComment_IntCommentId_GetComment(int role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
+            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userId = userToken.UserId;
             const int commentId = 1;
-            const int userId = 1;
-            var roles = CommentData.GetStudentRole();
 
             _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
             _groupRepoMock.Setup(x => x.GetGroupsByLessonId(commentDto.Lesson.Id)).Returns(CommentData.GetGroupsDto());
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
 
             //When
-            var dto = _sut.GetComment(commentId, userId, roles);
+            var dto = _sut.GetComment(commentId, userToken);
 
             //Than
             Assert.AreEqual(commentDto, dto);
@@ -111,14 +117,16 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
         }
 
-        [Test]
-        public void UpdateComment_CommentDto_ReturnUpdatedCommentDto()
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(6)]
+        public void UpdateComment_CommentDto_ReturnUpdatedCommentDto(int role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
+            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userId = userToken.UserId;
             const int commentId = 1;
-            const int userId = 1;
-            var roles = CommentData.GetStudentRole();
 
             _commentRepoMock.Setup(x => x.UpdateComment(commentDto));
             _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
@@ -126,7 +134,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
 
             //When
-            var dto = _sut.UpdateComment(commentId, commentDto, userId, roles);
+            var dto = _sut.UpdateComment(commentId, commentDto, userToken);
 
             //Than
             Assert.AreEqual(commentDto, dto);
@@ -136,14 +144,16 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
         }
 
-        [Test]
-        public void DeleteComment_IntCommentId_DeleteComment()
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(6)]
+        public void DeleteComment_IntCommentId_DeleteComment(int role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
+            var userToken = UserTokenData.GetUserTokenWithCustomRole(role);
+            var userId = userToken.UserId;
             const int commentId = 1;
-            const int userId = 1;
-            var roles = CommentData.GetStudentRole();
 
             _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
             _commentRepoMock.Setup(x => x.DeleteComment(commentId));
@@ -151,7 +161,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
 
             //When
-            _sut.DeleteComment(commentId, userId, roles);
+            _sut.DeleteComment(commentId, userToken);
 
             //Than
             _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);

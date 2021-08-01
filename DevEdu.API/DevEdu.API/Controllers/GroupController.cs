@@ -116,9 +116,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void AddGroupMaterialReference(int groupId, int materialId)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
-            _groupService.AddGroupMaterialReference(groupId, materialId, userId, roles);
+            var userToken = this.GetUserIdAndRoles();
+            _groupService.AddGroupMaterialReference(groupId, materialId, userToken);
         }
 
         // api/Group/{groupId}/material/{materialId}
@@ -128,9 +127,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
-            _groupService.RemoveGroupMaterialReference(groupId, materialId, userId, roles);
+            var userToken = this.GetUserIdAndRoles();
+            _groupService.RemoveGroupMaterialReference(groupId, materialId, userToken);
         }
 
         //  api/group/1/user/2/role/1

@@ -32,9 +32,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
         public CommentInfoOutputModel GetComment(int id)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
-            var dto = _commentService.GetComment(id, userId, roles);
+            var userToken = this.GetUserIdAndRoles();
+            var dto = _commentService.GetComment(id, userToken);
             var output = _mapper.Map<CommentInfoOutputModel>(dto);
             return output;
         }
@@ -46,10 +45,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status201Created)]
         public CommentInfoOutputModel AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel model)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
+            var userToken = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var comment = _commentService.AddCommentToLesson(lessonId, dto, userId, roles);
+            var comment = _commentService.AddCommentToLesson(lessonId, dto, userToken);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
             return output;
         }
@@ -61,10 +59,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status201Created)]
         public CommentInfoOutputModel AddCommentToStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel model)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
+            var userToken = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var comment = _commentService.AddCommentToStudentAnswer(taskStudentId, dto, userId, roles);
+            var comment = _commentService.AddCommentToStudentAnswer(taskStudentId, dto, userToken);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
             return output;
         }
@@ -76,9 +73,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteComment(int id)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
-            _commentService.DeleteComment(id, userId, roles);
+            var userToken = this.GetUserIdAndRoles();
+            _commentService.DeleteComment(id, userToken);
         }
 
         //  api/comment/5
@@ -88,10 +84,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
+            var userToken = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var output= _commentService.UpdateComment(id, dto, userId, roles);
+            var output= _commentService.UpdateComment(id, dto, userToken);
             return _mapper.Map<CommentInfoOutputModel>(output);
         }
     }

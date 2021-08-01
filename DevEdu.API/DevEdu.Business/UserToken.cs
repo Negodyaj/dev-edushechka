@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DevEdu.DAL.Enums;
 
-namespace DevEdu.API.Models
+namespace DevEdu.Business
 {
     public class UserToken
     {

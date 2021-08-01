@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.Services
 {
     public interface IGroupService
     {
-        void AddGroupMaterialReference(int groupId, int materialId, int userId, List<Role> roles);
-        void RemoveGroupMaterialReference(int groupId, int materialId, int userId, List<Role> roles);
+        void AddGroupMaterialReference(int groupId, int materialId, UserToken userToken);
+        void RemoveGroupMaterialReference(int groupId, int materialId, UserToken userToken);
         int AddGroup(GroupDto groupDto);
         void DeleteGroup(int id);
         GroupDto GetGroup(int id);
