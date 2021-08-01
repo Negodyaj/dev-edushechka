@@ -84,7 +84,6 @@ namespace DevEdu.Business.Tests
             // Then
             Assert.AreEqual(studentAnswerDto, dto);
             _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Once);
-
         }
 
         [Test]
@@ -113,30 +112,15 @@ namespace DevEdu.Business.Tests
         public void ChangeStatusOfStudentAnswerOnTask_ExistingTaskIdStudentIdAndTaskStatusAcceptedPassed_CompletedDateChanged()
         {
             // Given
-            var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var acceptedStatusDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskWithAcceptedTaskStatusDto();
             int taskId = 1;
             int userId = 1;
-
-
-            //var t = DateTime.Parse("01.01.2021");
-
-            var sss = StudentAnswerOnTaskData.GetStudentAnswerOnTaskWithChangedCompletedDateDto();
             int acceptedSatusId = (int)TaskStatus.Accepted;
-            int returnedSatusId = (int)TaskStatus.Returned;
+            DateTime dateNow = DateTime.Now;
+            var dateString = dateNow.ToString("dd.MM.yyyy HH:mm");
+            DateTime dateTime = Convert.ToDateTime(dateString);
 
-            DateTime CompletedDate = default;
-
-
-            var rrrrrrr = DateTime.Now;
-            
-            var ddd = rrrrrrr.ToString("dd.MM.yyyy");
-
-            var _qqq = Convert.ToDateTime(ddd);
-
-            //DateTime.ParseExact(null, "dd.MM.yyyy", CultureInfo.InvariantCulture);
-
-            _studentAnswerOnTaskRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(taskId, userId, acceptedSatusId, _qqq)).Returns(acceptedSatusId);
+            _studentAnswerOnTaskRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(taskId, userId, acceptedSatusId, dateTime)).Returns(acceptedSatusId);
             _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId)).Returns(acceptedStatusDto);
 
             var sut = new StudentAnswerOnTaskService(_studentAnswerOnTaskRepoMock.Object);
@@ -146,12 +130,9 @@ namespace DevEdu.Business.Tests
             var dto = sut.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId);
 
             // Then
-            Assert.AreEqual(DateTime.Now.ToString("dd.MM.yyyy"), (dto.CompletedDate != null ? ((DateTime)dto.CompletedDate).ToString("dd.MM.yyyy") : null));
-            //Assert.AreEqual(DateTime.Now, dto.CompletedDate);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTask(taskId, userId, acceptedSatusId, _qqq), Times.Once);
+            Assert.AreEqual(DateTime.Now.ToString("dd.MM.yyyy HH:mm"), (dto.CompletedDate != null ? ((DateTime)dto.CompletedDate).ToString("dd.MM.yyyy HH:mm") : null));
+            _studentAnswerOnTaskRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTask(taskId, userId, acceptedSatusId, dateTime), Times.Once);
             _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Once);
-
-            
         }
 
 

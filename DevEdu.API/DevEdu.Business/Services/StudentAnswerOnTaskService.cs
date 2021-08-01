@@ -58,7 +58,7 @@ namespace DevEdu.Business.Services
             if (statusId == (int)TaskStatus.Accepted)
                 CompletedDate = System.DateTime.Now;
 
-            var stringTime = CompletedDate.ToString("dd.MM.yyyy");
+            var stringTime = CompletedDate.ToString("dd.MM.yyyy HH:mm");
             var time = Convert.ToDateTime(stringTime);
 
             var status = _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId, time);
