@@ -160,6 +160,7 @@ namespace DevEdu.Business.Tests
             var taskId = 1;
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
+            var groupsByUser = TaskData.GetListOfSameGroups();
             var roles = new List<Role>() { Role.Teacher };
             var userDto = UserData.GetUserDto();
 
@@ -253,7 +254,6 @@ namespace DevEdu.Business.Tests
             var userDto = UserData.GetUserDto();
 
             _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(userDto);
-
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
@@ -276,6 +276,7 @@ namespace DevEdu.Business.Tests
             var roles = new List<Role>() { Role.Methodist };
             var userDto = UserData.GetUserDto();
 
+            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
             _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(userDto);
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 

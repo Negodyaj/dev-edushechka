@@ -12,6 +12,7 @@ using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
 using DevEdu.Business.Services;
 using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {
@@ -83,7 +84,9 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpPost("{topicId}/tag/{tagId}")]
         [Description("Add tag to topic")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public int AddTagToTopic(int topicId, int tagId)
         {
             return _topicService.AddTagToTopic(topicId, tagId);
@@ -93,7 +96,9 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpDelete("{topicId}/tag/{tagId}")]
         [Description("Delete tag from topic")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public int DeleteTagFromTopic(int topicId, int tagId)
         {
             return _topicService.DeleteTagFromTopic(topicId, tagId);

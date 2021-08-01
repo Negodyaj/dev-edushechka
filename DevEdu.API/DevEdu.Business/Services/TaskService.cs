@@ -66,9 +66,9 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.CheckUserExistence(userId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if(roles.Contains(Role.Teacher) || !roles.Contains(Role.Admin))
+            if(roles.Contains(Role.Teacher) && !roles.Contains(Role.Admin))
                 _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
-            if(roles.Contains(Role.Methodist) || !roles.Contains(Role.Admin))
+            if(roles.Contains(Role.Methodist) && !roles.Contains(Role.Admin))
             {
                 _taskValidationHelper.CheckMethodistAccessToTask(task, userId);
             }
@@ -82,9 +82,9 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.CheckUserExistence(userId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if (roles.Contains(Role.Teacher) || !roles.Contains(Role.Admin))
+            if (roles.Contains(Role.Teacher) && !roles.Contains(Role.Admin))
                 _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
-            if (roles.Contains(Role.Methodist) || !roles.Contains(Role.Admin))
+            if (roles.Contains(Role.Methodist) && !roles.Contains(Role.Admin))
             {
                 _taskValidationHelper.CheckMethodistAccessToTask(task, userId);
             }
