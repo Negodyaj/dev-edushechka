@@ -25,9 +25,9 @@ namespace DevEdu.Business.ValidationHelpers
         public void CheckTopicsExistence(List<CourseTopicDto> topics)
         {
             var topicsFromBd = _topicRepository.GetAllTopics();
-            var AreTopicsInDataBase = topics.All(d => topicsFromBd.Any(t => t.Id == d.Id));
+            var areTopicsInDataBase = topics.All(d => topicsFromBd.Any(t => t.Id == d.Id));
 
-            if (!AreTopicsInDataBase)
+            if (!areTopicsInDataBase)
             {
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             }

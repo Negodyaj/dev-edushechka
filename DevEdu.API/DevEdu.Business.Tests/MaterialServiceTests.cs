@@ -17,8 +17,6 @@ namespace DevEdu.Business.Tests
         private Mock<ICourseRepository> _courseRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
         private Mock<ITagRepository> _tagRepositoryMock;
-        private Mock<IMaterialValidationHelper> _materialValidationHelperMock;
-        private Mock<ITagValidationHelper> _tagValidationHelperMock;
 
         private MaterialService _sut;
 
@@ -66,12 +64,8 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.AddMaterial(materialData)).Returns(expectedId);
             _materialRepoMock.Setup(x => x.AddTagToMaterial(expectedId, It.IsAny<int>()));
             _materialRepoMock.Setup(x => x.GetMaterialById(expectedId)).Returns(new MaterialDto() { Id = expectedId });
+            _tagRepositoryMock.Setup(x => x.SelectTagById(It.IsAny<int>())).Returns(new TagDto { Id = 1});
 
-            for(int id =0; id < materialData.Tags.Count; id++)
-            {
-                _tagRepositoryMock.SetupSequence(x => x.SelectTagById(materialData.Tags[id].Id))
-                .Returns(new TagDto { Id = id });
-            }
             //When
             var actualId = _sut.AddMaterial(materialData);
 
