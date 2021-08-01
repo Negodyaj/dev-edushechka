@@ -14,15 +14,13 @@ namespace DevEdu.Business.Services
         private readonly IUserRepository _userRepository;
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly ILessonValidationHelper _lessonValidationHelper;
-        private readonly ITopicValidationHelper _topicValidationHelper;
 
         public LessonService(
             ILessonRepository lessonRepository,
             ICommentRepository commentRepository,
             IUserRepository userRepository,
             IUserValidationHelper userValidationHelper,
-            ILessonValidationHelper lessonValidationHelper,
-            ITopicValidationHelper topicValidationHelper
+            ILessonValidationHelper lessonValidationHelper
         )
         {
             _lessonRepository = lessonRepository;
@@ -30,7 +28,6 @@ namespace DevEdu.Business.Services
             _userRepository = userRepository;
             _userValidationHelper = userValidationHelper;
             _lessonValidationHelper = lessonValidationHelper;
-            _topicValidationHelper = topicValidationHelper;
         }
 
         public void AddCommentToLesson(int lessonId, CommentDto commentDto)
@@ -46,11 +43,7 @@ namespace DevEdu.Business.Services
 
             if(topicIds != null)
             {
-               foreach(int topicId in topicIds)
-                {
-                    _topicValidationHelper.CheckTopicExistence(topicId);
-                    topicIds.ForEach(topicId => _lessonRepository.AddTopicToLesson(lessonId, topicId));
-                }                
+                topicIds.ForEach(topicId => _lessonRepository.AddTopicToLesson(lessonId, topicId));
             }
 
             return lessonId;
@@ -58,30 +51,14 @@ namespace DevEdu.Business.Services
 
         public void DeleteCommentFromLesson(int lessonId, int commentId) => _lessonRepository.DeleteCommentFromLesson(lessonId, commentId);
 
-        public void DeleteLesson(int id)
-        {
-            _lessonValidationHelper.CheckLessonExistence(id);
-            _lessonRepository.DeleteLesson(id);
-        }
+        public void DeleteLesson(int id) => _lessonRepository.DeleteLesson(id);
 
-        public List<LessonDto> SelectAllLessonsByGroupId(int id)
-        {
-            _lessonValidationHelper.CheckLessonExistence(id);
-            return _lessonRepository.SelectAllLessonsByGroupId(id);
-        }
-
-        public List<LessonDto> SelectAllLessonsByTeacherId(int id)
-        {
-            _lessonValidationHelper.CheckLessonExistence(id);
-            return _lessonRepository.SelectAllLessonsByTeacherId(id);
-        }
-
-        public LessonDto SelectLessonById(int id)
-        {
-            _lessonValidationHelper.CheckLessonExistence(id);
-            return _lessonRepository.SelectLessonById(id);
-        }
-
+        public List<LessonDto> SelectAllLessonsByGroupId(int id) => _lessonRepository.SelectAllLessonsByGroupId(id);
+        
+        public List<LessonDto> SelectAllLessonsByTeacherId(int id) => _lessonRepository.SelectAllLessonsByTeacherId(id);
+        
+        public LessonDto SelectLessonById(int id) => _lessonRepository.SelectLessonById(id);
+        
         public LessonDto SelectLessonWithCommentsById(int id)
         {
             LessonDto result = _lessonRepository.SelectLessonById(id);
@@ -93,9 +70,8 @@ namespace DevEdu.Business.Services
 
         public LessonDto SelectLessonWithCommentsAndStudentsById(int id)
         {
-            _lessonValidationHelper.CheckLessonExistence(id);
             LessonDto result = SelectLessonWithCommentsById(id);
-            //check comments
+
             result.Students = _lessonRepository.SelectStudentsLessonByLessonId(id);
 
             return result;
@@ -103,7 +79,6 @@ namespace DevEdu.Business.Services
 
         public LessonDto UpdateLesson(LessonDto lessonDto, int id)
         {
-            _lessonValidationHelper.CheckLessonExistence(id);
             lessonDto.Id = id;
             _lessonRepository.UpdateLesson(lessonDto);
             return _lessonRepository.SelectLessonById(lessonDto.Id);
