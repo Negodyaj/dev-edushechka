@@ -51,16 +51,17 @@ namespace DevEdu.Business.Services
             return answerDto;
         }
 
-        public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId, StudentAnswerOnTaskDto dto) 
+        public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId) 
         {
-            dto.Task.Id = taskId;
-            dto.User.Id = statusId;
-            dto.TaskStatus = (TaskStatus)statusId;
+            DateTime CompletedDate = default;
 
-            if (dto.TaskStatus == TaskStatus.Accepted)
-                dto.CompletedDate = System.DateTime.Now;
+            if (statusId == (int)TaskStatus.Accepted)
+                CompletedDate = System.DateTime.Now;
 
-            var status = _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(dto);
+            var stringTime = CompletedDate.ToString("dd.MM.yyyy");
+            var time = Convert.ToDateTime(stringTime);
+
+            var status = _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId, time);
 
             return status;
         }

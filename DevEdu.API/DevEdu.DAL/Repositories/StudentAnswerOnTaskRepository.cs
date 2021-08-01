@@ -116,21 +116,21 @@ namespace DevEdu.DAL.Repositories
                 );
         }
 
-        public int ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
+        public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId, DateTime completedDate)
         {
             _connection.Execute(
                 _taskStudentUpdateStatusId,
                 new
                 {
-                    TaskId = dto.Task.Id,
-                    StudentId = dto.User.Id,
-                    StatusId = (int)(dto.TaskStatus),
-                    dto.CompletedDate
+                    TaskId = taskId,
+                    StudentId = studentId,
+                    StatusId = statusId,
+                    CompletedDate = completedDate
                 },
                 commandType: CommandType.StoredProcedure
                 );
 
-            return (int)(dto.TaskStatus);
+            return statusId;
         }
 
         public int AddCommentOnStudentAnswer(int taskStudentId, int commentId)
@@ -146,7 +146,6 @@ namespace DevEdu.DAL.Repositories
            );
 
             return taskStudentId;
-
         }
 
         public List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskByTaskId(int id)
