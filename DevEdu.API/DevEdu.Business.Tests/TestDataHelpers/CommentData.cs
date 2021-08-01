@@ -53,7 +53,7 @@ namespace DevEdu.Business.Tests
                 Id = 1,
                 User=new UserDto
                 {
-                    Id = 1
+                    Id = 10
                 }
             };
         }
@@ -72,12 +72,12 @@ namespace DevEdu.Business.Tests
             {
                 new GroupDto
                 {
-                    Id = 1
+                    Id = 10
                 },
 
                 new GroupDto
                 {
-                    Id = 2
+                    Id = 20
                 }
             };
         }

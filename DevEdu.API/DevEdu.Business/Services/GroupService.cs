@@ -74,11 +74,10 @@ namespace DevEdu.Business.Services
 
         private void CheckAccessAndExistence(int groupId, int materialId, int userId, List<Role> roles)
         {
-            if (!CheckerRole.IsAdmin(roles))
-                _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
-
             _groupValidationHelper.CheckGroupExistence(groupId);
             _materialValidationHelper.CheckMaterialExistence(materialId);
+            if (!CheckerRole.IsAdmin(roles))
+                _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
         }
     }
 }

@@ -257,5 +257,73 @@ namespace DevEdu.Business.Tests
             _materialRepositoryMock.Verify(x => x.GetMaterialById(materialId), Times.Once);
             _courseRepositoryMock.Verify(x => x.RemoveCourseMaterialReference(courseId, materialId), Times.Once);
         }
+
+        [Test]
+        public void AddMaterialToCourse_WhenCourseIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        {
+            //Given
+            var course = CourseData.GetCourseDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(course), course.Id);
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.AddCourseMaterialReference(course.Id, material.Id));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [Test]
+        public void AddMaterialToCourse_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        {
+            //Given
+            var course = CourseData.GetCourseDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
+            _courseRepositoryMock.Setup(x => x.GetCourse(course.Id)).Returns(CourseData.GetCourseDto());
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.AddCourseMaterialReference(course.Id, material.Id));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _courseRepositoryMock.Verify(x => x.GetCourse(course.Id), Times.Once);
+        }
+
+        [Test]
+        public void DeleteMaterialToCourse_WhenCourseIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        {
+            //Given
+            var course = CourseData.GetCourseDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(course), course.Id);
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.RemoveCourseMaterialReference(course.Id, material.Id));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [Test]
+        public void DeleteMaterialToCourse_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        {
+            //Given
+            var course = CourseData.GetCourseDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
+            _courseRepositoryMock.Setup(x => x.GetCourse(course.Id)).Returns(CourseData.GetCourseDto());
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.RemoveCourseMaterialReference(course.Id, material.Id));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _courseRepositoryMock.Verify(x => x.GetCourse(course.Id), Times.Once);
+        }
     }
 }

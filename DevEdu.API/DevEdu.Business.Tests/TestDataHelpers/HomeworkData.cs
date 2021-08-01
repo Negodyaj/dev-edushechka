@@ -7,19 +7,16 @@ namespace DevEdu.Business.Tests
 {
     public static class HomeworkData
     {
-        public static HomeworkDto GetHomeworkDtokWithoutGroupAndTask()
+        public static HomeworkDto GetHomeworkDtoWithoutGroupAndTask()
         {
             return new HomeworkDto
             {
                 Id = 1,
                 StartDate = DateTime.Parse("28.10.2020"),
-                //EndDate = DateTime.Parse("28.10.2021"),
-                //Group = new GroupDto { Id = 1 },
-                //Task = new TaskDto { Id = 1 }
             };
         }
 
-        public static HomeworkDto GetHomeworkDtokWithGroupAndTask()
+        public static HomeworkDto GetHomeworkDtoWithGroupAndTask()
         {
             return new HomeworkDto
             {

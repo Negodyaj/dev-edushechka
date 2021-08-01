@@ -13,6 +13,7 @@ namespace DevEdu.Business.Tests
         {
             return new UserDto
             {
+                Id = 1,
                 FirstName = "IsAdmin",
                 LastName = "Adminov",
                 Patronymic = "Adminovich",

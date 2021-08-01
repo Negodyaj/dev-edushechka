@@ -172,11 +172,36 @@ namespace DevEdu.Business.Tests
                 }                
             };
         }
+
         public static List<Role> GetStudentRole()
         {
             return new List<Role>
             {
                 Role.Student
+            };
+        }
+
+        public static GroupDto GetAnotherGroupDto()
+        {
+            return new GroupDto
+            {
+                Id = 100,
+                Name = "Котейка",
+                Course = new CourseDto
+                {
+                    Id = 1,
+                    Name = "Ололошки",
+                    Description = "Курс для котиков",
+                    Groups = null,
+                    IsDeleted = false
+                },
+                GroupStatus = GroupStatus.Forming,
+                StartDate = DateTime.MaxValue,
+                Timetable = "Понедельник",
+                PaymentPerMonth = 1.0M,
+                Students = null,
+                Teachers = null,
+                Tutors = null
             };
         }
     }

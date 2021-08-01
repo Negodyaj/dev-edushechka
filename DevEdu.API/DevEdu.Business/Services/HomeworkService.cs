@@ -28,7 +28,9 @@ namespace DevEdu.Business.Services
 
         public HomeworkDto GetHomework(int homeworkId, int userId)
         {
-            return CheckAccessAndExistence(homeworkId, userId);
+            var dto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
+            CheckAccessAndExistence(homeworkId, userId, dto);
+            return dto;
         }
 
         public List<HomeworkDto> GetHomeworkByGroupId(int groupId, int userId)
@@ -38,7 +40,7 @@ namespace DevEdu.Business.Services
             return _homeworkRepository.GetHomeworkByGroupId(groupId);
         }
 
-        public List<HomeworkDto> GetHomeworkByTaskId(int taskId, int userId)
+        public List<HomeworkDto> GetHomeworkByTaskId(int taskId)
         {
             _taskValidationHelper.CheckTaskExistence(taskId);
             return _homeworkRepository.GetHomeworkByTaskId(taskId);
@@ -57,26 +59,26 @@ namespace DevEdu.Business.Services
 
         public void DeleteHomework(int homeworkId, int userId)
         {
-            CheckAccessAndExistence(homeworkId, userId);
+            var dto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
+            CheckAccessAndExistence(homeworkId, userId, dto);
 
             _homeworkRepository.DeleteHomework(homeworkId);
         }
 
         public HomeworkDto UpdateHomework(int homeworkId, HomeworkDto dto, int userId)
         {
-            CheckAccessAndExistence(homeworkId, userId);
+            _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
+            CheckAccessAndExistence(homeworkId, userId, dto);
 
             dto.Id = homeworkId;
             _homeworkRepository.UpdateHomework(dto);
             return _homeworkRepository.GetHomework(homeworkId);
         }
 
-        private HomeworkDto CheckAccessAndExistence(int homeworkId, int userId)
+        private void CheckAccessAndExistence(int homeworkId, int userId, HomeworkDto dto)
         {
-            var dtoChecked = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            var groupId = dtoChecked.Group.Id;
+            var groupId = dto.Group.Id;
             _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
-            return dtoChecked;
         }
     }
 }

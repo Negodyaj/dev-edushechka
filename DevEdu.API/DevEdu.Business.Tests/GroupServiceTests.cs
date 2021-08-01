@@ -1,4 +1,6 @@
 ﻿using System;
+using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
@@ -175,6 +177,141 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.GetMaterialById(materialId), Times.Once);
 
             _groupRepoMock.Verify(x => x.RemoveGroupMaterialReference(groupId, materialId), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddMaterialToGroup_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundException(Enum role)
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), group.Id);
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userToken));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddMaterialToGroup_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundException(Enum role)
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+
+            _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetGroupDto());
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userToken));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddMaterialToGroup_WhenUserDoNotHaveAccess_AuthorizationException(Enum role)
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+            var user = UserData.GetUserDto();
+            var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, user.Id, group.Id);
+
+            _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetAnotherGroupDto());
+            _materialRepoMock.Setup(x => x.GetMaterialById(material.Id)).Returns(MaterialData.GetMaterialDtoWithoutTags);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.Id)).Returns(GroupData.GetGroupsDto);
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(
+                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userToken));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Exactly(2));
+            _materialRepoMock.Verify(x => x.GetMaterialById(material.Id), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void DeleteMaterialFromGroup_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundException(Enum role)
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), group.Id);
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userToken));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void DeleteMaterialFromGroup_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundException(Enum role)
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+
+            _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetGroupDto());
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userToken));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void DeleteMaterialFromGroup_WhenUserDoNotHaveAccess_AuthorizationException(Enum role)
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+            var user = UserData.GetUserDto();
+            var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, user.Id, group.Id);
+
+            _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetAnotherGroupDto());
+            _materialRepoMock.Setup(x => x.GetMaterialById(material.Id)).Returns(MaterialData.GetMaterialDtoWithoutTags);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.Id)).Returns(GroupData.GetGroupsDto);
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(
+                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userToken));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Exactly(2));
+            _materialRepoMock.Verify(x => x.GetMaterialById(material.Id), Times.Once);
         }
     }
 }

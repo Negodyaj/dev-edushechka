@@ -59,8 +59,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<HomeworkInfoWithGroupOutputModel>), StatusCodes.Status200OK)]
         public List<HomeworkInfoWithGroupOutputModel> GetHomeworkByTaskId(int taskId)
         {
-            var userId = this.GetUserId();
-            var dto = _homeworkService.GetHomeworkByTaskId(taskId, userId);
+            var dto = _homeworkService.GetHomeworkByTaskId(taskId);
             var output = _mapper.Map<List<HomeworkInfoWithGroupOutputModel>>(dto);
             return output;
         }
