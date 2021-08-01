@@ -8,6 +8,12 @@ using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using DevEdu.API.Configuration.ExceptionResponses;
+using System;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using DevEdu.API.Extensions;
 
 namespace DevEdu.API.Controllers
 {
@@ -18,6 +24,7 @@ namespace DevEdu.API.Controllers
         private readonly IMapper _mapper;
         private readonly ICourseRepository _courseRepository;
         private readonly ICourseService _courseService;
+        //private readonly ClaimsIdentity _claimsIdentity;
 
         public CourseController(
             IMapper mapper,
@@ -28,29 +35,41 @@ namespace DevEdu.API.Controllers
             _courseRepository = courseRepository;
             _courseService = courseService;
             _mapper = mapper;
+            //_claimsIdentity = this.User.Identity as ClaimsIdentity;
         }
 
         [HttpGet("{id}/simple")]
         [Description("Get course by id with groups")]
+        [Authorize]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public CourseInfoFullOutputModel GetCourseSimple(int id)
         {
+            //var userToken = this.GetUserIdAndRoles();
             var course = _courseService.GetCourse(id);
             return _mapper.Map<CourseInfoFullOutputModel>(course);
         }
 
         [HttpGet("{id}/full")]
         [Description("Get course by id full")]
+        [Authorize(Roles = "Admin, Manager, Teacher, Tutor, Student")]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public CourseInfoFullOutputModel GetCourseFull(int id)
         {
+            //var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
             var course = _courseService.GetFullCourseInfo(id);
             return _mapper.Map<CourseInfoFullOutputModel>(course);
         }
 
         [HttpGet]
         [Description("Get all courses")]
+        [Authorize]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<CourseInfoFullOutputModel> GetAllCoursesWithGrops()
         {
             var courses = _courseService.GetCourses();
@@ -60,7 +79,10 @@ namespace DevEdu.API.Controllers
 
         [HttpPost]
         [Description("Create new course")]
+        [Authorize(Roles = "Admin, Manager, Teacher")]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public CourseInfoFullOutputModel AddCourse([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
@@ -70,7 +92,10 @@ namespace DevEdu.API.Controllers
 
         [HttpDelete("{id}")]
         [Description("Delete course by id")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteCourse(int id)
         {
             _courseService.DeleteCourse(id);
@@ -78,7 +103,10 @@ namespace DevEdu.API.Controllers
 
         [HttpPut("{id}")]
         [Description("Update course by Id")]
+        [Authorize(Roles = "Admin, Manager")]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public CourseInfoFullOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);

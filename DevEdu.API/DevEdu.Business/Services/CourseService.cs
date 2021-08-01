@@ -1,8 +1,8 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,23 +15,31 @@ namespace DevEdu.Business.Services
         private readonly ITopicRepository _topicRepository;
         private readonly ITaskRepository _taskRepository;
         private readonly IMaterialRepository _materialRepository;
-        
+        private readonly ICourseValidationHelper _courseValidation;
+
         public CourseService(ITopicRepository topicRepository,
                              ICourseRepository courseRepository,
                              ITaskRepository taskRepository,
-                             IMaterialRepository materialRepository)
+                             IMaterialRepository materialRepository,
+                             ICourseValidationHelper courseValidation)
         {
             _topicRepository = topicRepository;
             _courseRepository = courseRepository;
             _taskRepository = taskRepository;
             _materialRepository = materialRepository;
+            _courseValidation = courseValidation;
         }
 
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
 
         public void DeleteCourse(int id) => _courseRepository.GetCourse(id);
 
-        public CourseDto GetCourse(int id) => _courseRepository.GetCourse(id);
+        public CourseDto GetCourse(int id)
+        {
+            CourseDto course = _courseRepository.GetCourse(id);
+            _courseValidation.CheckCourseExistence(course);
+            return course;
+        }
         public CourseDto GetFullCourseInfo(int id) 
         {
             var course = GetCourse(id);

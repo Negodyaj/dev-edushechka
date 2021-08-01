@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.ValidationHelpers
@@ -13,11 +14,17 @@ namespace DevEdu.Business.ValidationHelpers
             _courseRepository = courseRepository;
         }
 
-        public void CheckCourseExistence(int courseId)
+        public void CheckCourseExistence(CourseDto course)
         {
-            var course = _courseRepository.GetCourse(courseId);
             if (course == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(course), courseId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(course), course.Id));
+        }
+
+        public void CourseAccessValidate(CourseDto dto, int userId)
+        {
+            var course = dto;
+            if (course == default)
+                throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
         }
     }
 }
