@@ -1,11 +1,12 @@
 ﻿CREATE PROCEDURE [dbo].[Notification_Insert]
-	@UserId		int = null,
 	@RoleId		int = null,
+	@UserId		int = null,
+	@GroupId	int = null,
 	@Text		nvarchar(max)
 
 AS
 BEGIN
-	INSERT INTO dbo.Notification (Text, Date, UserId, RoleId)
-	VALUES (@Text, getdate(),@UserId,@RoleId)
+	INSERT INTO dbo.Notification (Text, Date, RoleId, UserId, GroupId)
+	VALUES (@Text, getdate(), @RoleId, @UserId, @GroupId)
 	SELECT @@IDENTITY
 END

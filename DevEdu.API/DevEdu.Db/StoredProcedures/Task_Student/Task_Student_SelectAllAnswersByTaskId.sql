@@ -1,9 +1,9 @@
-﻿CREATE PROCEDURE dbo.Task_Student_SelectAll
+﻿CREATE PROCEDURE dbo.Task_Student_SelectAllAnswersByTaskId
+	@TaskId int
 AS
 BEGIN
 	SELECT
 		tstud.Id,
-		tstud.TaskId,
 		tstud.StudentId,
 		tstud.Answer,
 		tstud.CompletedDate,
@@ -16,5 +16,6 @@ BEGIN
 		us.GitHubAccount,
 		us.Photo
 	FROM dbo.Task_Student tstud
-		inner JOIN dbo.[User] us on us.Id = tstud.StatusId
+		inner JOIN dbo.[User] us on us.Id = tstud.StudentId
+	WHERE tstud.TaskId = @TaskId
 END
