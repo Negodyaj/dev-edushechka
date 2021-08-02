@@ -69,7 +69,8 @@ namespace DevEdu.API.Configuration
             var result = JsonConvert.SerializeObject(
                 new ValidationExceptionResponse
                 {
-                    //todo implement this
+                    Message = exception.Message,
+                    Description = exception.Message
                 }
             );
             context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;

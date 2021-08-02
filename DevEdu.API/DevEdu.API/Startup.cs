@@ -1,3 +1,4 @@
+using DevEdu.API.Common;
 using DevEdu.API.Configuration;
 using DevEdu.Business.Configuration;
 using DevEdu.Business.Services;
@@ -8,11 +9,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
+using System;
+using System.Linq;
 using System.Net;
 
 namespace DevEdu.API
@@ -74,7 +78,15 @@ namespace DevEdu.API
 
             services.AddControllers();
 
-            services.AddMvc();
+            services.AddMvc()
+
+          .ConfigureApiBehaviorOptions(options =>
+          {
+              options.InvalidModelStateResponseFactory = actionContext =>
+              {
+                  return CustomErrorResponse(actionContext);
+              };
+          });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -113,6 +125,18 @@ namespace DevEdu.API
 
             // Add framework services.
             services.AddOptions();
+        }
+
+        private UnprocessableEntityObjectResult CustomErrorResponse(ActionContext actionContext)
+        {  
+            return new UnprocessableEntityObjectResult(actionContext.ModelState
+                
+             .Where(modelError => modelError.Value.Errors.Count > 0)
+             .Select(modelError => new Error
+             {
+                 ErrorField = modelError.Key,
+                 ErrorDescription = modelError.Value.Errors.FirstOrDefault().ErrorMessage
+             }).ToList());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
