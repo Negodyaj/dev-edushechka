@@ -7,7 +7,7 @@ namespace DevEdu.DAL.Models
     {
 
         public DateTime Date { get; set; }
-        public int Sum { get; set; }
+        public decimal Sum { get; set; }
         public UserDto User { get; set; }
         public bool IsPaid { get; set; }
 
