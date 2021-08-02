@@ -26,8 +26,8 @@ namespace DevEdu.Business.Services
                     AddUserRole(addedUserId, (int)role);
                 }
 
-            var i =_userRepository.SelectUserById(addedUserId);
-            return i;
+            var response =_userRepository.SelectUserById(addedUserId);
+            return response;
         }
 
         public UserDto SelectUserById(int id) => _userRepository.SelectUserById(id);
