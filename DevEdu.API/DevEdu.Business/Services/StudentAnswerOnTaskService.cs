@@ -1,4 +1,6 @@
-﻿using DevEdu.DAL.Enums;
+﻿using System;
+using System.Collections.Generic;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
@@ -8,14 +10,10 @@ namespace DevEdu.Business.Services
     public class StudentAnswerOnTaskService : IStudentAnswerOnTaskService
     {
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
-        private readonly IGroupRepository _groupRepository;
 
-        public StudentAnswerOnTaskService(
-            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository,
-            IGroupRepository groupRepository)
+        public StudentAnswerOnTaskService(IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
         {
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
-            _groupRepository = groupRepository;
         }
 
         public int AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
@@ -50,33 +48,33 @@ namespace DevEdu.Business.Services
 
         public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
-            StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
-            dto.Task = new TaskDto { Id = taskId };
-            dto.User = new UserDto { Id = studentId };
-            dto.Comments = new List<CommentDto>();
-
-            return _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(dto);
+            var answerDto = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            return answerDto;
         }
 
-        public void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId)
+        public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId)
         {
-            StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
-            dto.Task = new TaskDto { Id = taskId };
-            dto.User = new UserDto { Id = studentId };
-            dto.TaskStatus = (TaskStatus)statusId;
+            DateTime CompletedDate = default;
 
-            if (dto.TaskStatus == TaskStatus.Accepted)
-                dto.CompletedDate = System.DateTime.Now;
+            if (statusId == (int)TaskStatus.Accepted)
+                CompletedDate = DateTime.Now;
 
-            _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(dto);
+            var stringTime = CompletedDate.ToString("dd.MM.yyyy HH:mm");
+            var time = Convert.ToDateTime(stringTime);
+
+            var status = _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId, time);
+
+            return status;
         }
 
-        public void UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
+        public StudentAnswerOnTaskDto UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
         {
             taskAnswerDto.Task = new TaskDto { Id = taskId };
             taskAnswerDto.User = new UserDto { Id = studentId };
 
             _studentAnswerOnTaskRepository.UpdateStudentAnswerOnTask(taskAnswerDto);
+
+            return _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
         }
 
         public List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId)

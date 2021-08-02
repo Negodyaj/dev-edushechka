@@ -74,7 +74,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<NotificationDto>(model);
             var output = _notificationService.AddNotification(dto);
-            return GetNotification(output);
+            return _mapper.Map<NotificationInfoOutputModel>(output);
         }
 
         //  api/notification/5

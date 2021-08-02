@@ -1,4 +1,6 @@
-﻿namespace DevEdu.Business.ValidationHelpers
+﻿using DevEdu.DAL.Enums;
+
+namespace DevEdu.Business.ValidationHelpers
 {
     public interface IGroupValidationHelper
     {

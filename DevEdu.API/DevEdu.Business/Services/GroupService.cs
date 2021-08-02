@@ -1,4 +1,6 @@
-﻿using DevEdu.Business.ValidationHelpers;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
@@ -12,6 +14,7 @@ namespace DevEdu.Business.Services
         private readonly IUserRepository _userRepository;
         private readonly IGroupValidationHelper _groupValidationHelper;
         private readonly IMaterialValidationHelper _materialValidationHelper;
+        private readonly IUserValidationHelper _userValidationHelper;
 
         public GroupService
         (
@@ -25,6 +28,7 @@ namespace DevEdu.Business.Services
             _userRepository = userRepository;
             _groupValidationHelper = groupValidationHelper;
             _materialValidationHelper = materialValidationHelper;
+            _userValidationHelper = userValidationHelper;
         }
 
         public int AddGroup(GroupDto groupDto) => _groupRepository.AddGroup(groupDto);
@@ -63,8 +67,32 @@ namespace DevEdu.Business.Services
 
         public int AddGroupToLesson(int groupId, int lessonId) => _groupRepository.AddGroupToLesson(groupId, lessonId);
         public int RemoveGroupFromLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
-        public void AddUserToGroup(int groupId, int userId, int roleId) => _groupRepository.AddUserToGroup(groupId, userId, roleId);
-        public void DeleteUserFromGroup(int groupId, int userId) => _groupRepository.DeleteUserFromGroup(userId, groupId);
+        public void AddUserToGroup(int groupId, int userId, int roleId)
+        {
+            _groupValidationHelper.CheckGroupExistence(groupId);
+            var user = _userRepository.SelectUserById(userId);
+            if (user ==default)
+            {
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
+            }
+            if (!user.Roles.Contains((Role)roleId))
+            {
+                throw new ValidationException(string.Format(ServiceMessages.UserDoesntHaveRole, userId, (Role)roleId));
+            }
+            _groupRepository.AddUserToGroup(groupId, userId, roleId);
+        }
+
+        public void DeleteUserFromGroup(int groupId, int userId)
+        {
+            _groupValidationHelper.CheckGroupExistence(groupId);
+            var user = _userRepository.SelectUserById(userId);
+            if (user == default)
+            {
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
+            }
+            _userValidationHelper.CheckUserBelongToGroup(groupId, userId, user.Roles);
+            _groupRepository.DeleteUserFromGroup(userId, groupId);
+        }
 
         private void CheckAccessAndExistence(int groupId, int materialId, UserIdentityInfo userInfo)
         {
@@ -75,5 +103,20 @@ namespace DevEdu.Business.Services
             if (!userInfo.IsAdmin())
                 _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
         }
+
+        public void DeleteTaskFromGroup(int groupId, int taskId) => _groupRepository.DeleteTaskFromGroup(groupId, taskId);
+
+        public List<GroupTaskDto> GetTasksByGroupId(int groupId) => _groupRepository.GetTaskGroupByGroupId(groupId);
+
+        public GroupTaskDto GetGroupTask(int groupId, int taskId) => _groupRepository.GetGroupTask(groupId, taskId);
+
+        public GroupTaskDto UpdateGroupTask(int groupId, int taskId, GroupTaskDto dto)
+        {
+            dto.Group = new GroupDto { Id = groupId };
+            dto.Task = new TaskDto { Id = taskId };
+            _groupRepository.UpdateGroupTask(dto);
+            return _groupRepository.GetGroupTask(groupId, taskId);
+        }
+
     }
 }
