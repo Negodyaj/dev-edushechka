@@ -84,11 +84,6 @@ namespace DevEdu.API
                 {
                     options.SuppressModelStateInvalidFilter = true;
                 });
-            //services.Configure<ApiBehaviorOptions>(o =>
-            //{
-            //    o.InvalidModelStateResponseFactory = actionContext =>
-            //        new UnprocessableEntityObjectResult(actionContext.ModelState);
-            //});
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

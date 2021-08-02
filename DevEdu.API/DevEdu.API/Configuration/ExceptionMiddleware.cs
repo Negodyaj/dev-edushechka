@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.Business.Exceptions;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Configuration
 {
@@ -69,8 +70,7 @@ namespace DevEdu.API.Configuration
             var result = JsonConvert.SerializeObject(
                 new
                 {
-                    Code = exception.StatusCode,
-                    Message = exception.ErrorMessage
+                exception.ValidationErrors
                 }
             );
             context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
