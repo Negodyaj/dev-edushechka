@@ -5,6 +5,8 @@ namespace DevEdu.Business.Services
     public interface IAuthenticationService
     {
         string SignIn(UserDto dto);
-        string HashPassword(string pass, byte[] salt = default);
+        byte[] GetSalt();
+        string HashPassword(string pass, byte[] salt = null);
+        bool Verify(string hashedPassword, string userPassword);
     }
 }
