@@ -22,11 +22,12 @@ namespace DevEdu.Business.Services
             var addedUserId = _userRepository.AddUser(dto);
 
             foreach (var role in dto.Roles)
-                {
-                    AddUserRole(addedUserId, (int)role);
-                }
+            {
+                AddUserRole(addedUserId, (int)role);
+            }
 
-            return _userRepository.SelectUserById(addedUserId);
+            var response = _userRepository.SelectUserById(addedUserId);
+            return response;
         }
 
         public UserDto SelectUserById(int id) => _userRepository.SelectUserById(id);
