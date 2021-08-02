@@ -9,6 +9,7 @@ using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
@@ -143,6 +144,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("{taskId}/student/{studentId}")]
         [Description("Add student answer on task")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public StudentAnswerOnTaskFullOutputModel AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
@@ -157,6 +161,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("{taskId}/all-answers")]
         [Description("Get all student answers on tasks by task")]
         [ProducesResponseType(typeof(List<StudentAnswerOnTaskFullOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<StudentAnswerOnTaskFullOutputModel> GetAllStudentAnswersOnTask(int taskId)
         {
             var studentAnswersDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTask(taskId);
@@ -169,6 +176,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("{taskId}/student/{studentId}")]
         [Description("Get student answers on tasks by student and task")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public StudentAnswerOnTaskFullOutputModel GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
             var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
@@ -182,6 +192,9 @@ namespace DevEdu.API.Controllers
         [HttpPut("{taskId}/student/{studentId}")]
         [Description("Update student answer on task")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public StudentAnswerOnTaskFullOutputModel UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
@@ -195,6 +208,9 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{taskId}/student/{studentId}")]
         [Description("Delete student answer on task")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
             _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(taskId, studentId);
@@ -204,6 +220,9 @@ namespace DevEdu.API.Controllers
         [HttpPut("{taskId}/student/{studentId}/change-status/{statusId}")]
         [Description("Update task status of student answer")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public StudentAnswerOnTaskFullOutputModel UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
             _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId);
@@ -216,6 +235,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("answer/{taskStudentId}/comment")]
         [Description("Add comment on task student answer")]
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel AddCommentOnStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel inputModel)
         {
             var commentDto = _mapper.Map<CommentDto>(inputModel);
@@ -241,6 +263,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("answer/by-user/{userId}")]
         [Description("Get all answers of student")]
         [ProducesResponseType(typeof(List<StudentAnswerOnTaskOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<StudentAnswerOnTaskOutputModel> GetAllAnswersByStudentId(int userId)
         {
             var answersDto = _studentAnswerOnTaskService.GetAllAnswersByStudentId(userId);
