@@ -3,8 +3,7 @@ using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
-
+using System.Collections.Generic;using System.Linq;
 namespace DevEdu.Business.ValidationHelpers
 {
     public class UserValidationHelper : IUserValidationHelper
@@ -23,6 +22,39 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(user), userId));
 
             return user;
+        }
+
+        public void CheckUserBelongToGroup(int groupId, int userId, Role role)
+        {
+            var usersInGroup = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
+            if (usersInGroup == default || usersInGroup.FirstOrDefault(u => u.Id == userId) == default)
+            {
+                throw new ValidationException(string.Format(ServiceMessages.UserWithRoleDoesntBelongToGroup, role.ToString(), userId, groupId));
+            }
+        }
+        public void CheckUserBelongToGroup(int groupId, int userId, List<Role> roles)
+        {
+            var checkResult = false;
+            foreach (var role in roles)
+            {
+                var usersInGroup = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
+                if (usersInGroup != default && usersInGroup.FirstOrDefault(u => u.Id == userId) != default)
+                {
+                    checkResult = true;
+                }
+            }
+            if (!checkResult)
+            {
+                throw new ValidationException(string.Format(ServiceMessages.UserDoesntBelongToGroup, userId, groupId));
+            }
+        }
+        public void CheckAuthorizationUserToGroup(int groupId, int userId, Role role)
+        {
+            var usersInGroup = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
+            if (usersInGroup == default || usersInGroup.FirstOrDefault(u => u.Id == userId) == default)
+            {
+                throw new AuthorizationException(string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, userId, groupId, role.ToString()));
+            }
         }
     }
 }
