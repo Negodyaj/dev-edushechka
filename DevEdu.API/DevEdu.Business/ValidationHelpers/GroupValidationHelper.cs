@@ -21,12 +21,12 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), groupId));
         }
 
-        public void CheckAccessGetGroupMembers(int groupId, int userId)
+        public void CheckAccessGetGroupMembers(int groupId, UserIdentityInfo userInfo)
         {
             throw new AuthorizationException(string.Format(ServiceMessages.AccessDeniedForGetGroupMembers, groupId));
         }
 
-        public void TmpAccess(int id, int id2, int id3 = 0)
+        public void TmpAccess(UserIdentityInfo userInfo, int id2, int id3 = 0)
         {
             throw new AuthorizationException("");
         }

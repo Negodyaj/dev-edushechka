@@ -9,20 +9,20 @@ namespace DevEdu.Business.Services
     {
         Task<int> AddGroup(GroupDto groupDto);
         Task DeleteGroup(int id);
-        Task<GroupDto> GetGroup(int id, int userId);
+        Task<GroupDto> GetGroup(int id, UserIdentityInfo userInfo);
         Task<List<GroupDto>> GetGroups();
-        Task<GroupDto> UpdateGroup(int id, GroupDto groupDto, int userId);
+        Task<GroupDto> UpdateGroup(int id, GroupDto groupDto, UserIdentityInfo userInfo);
         Task<GroupDto> ChangeGroupStatus(int groupId, GroupStatus statusId);
-        Task<int> AddGroupToLesson(int groupId, int lessonId, int userId);
-        Task RemoveGroupFromLesson(int groupId, int lessonId, int userId);
-        Task<int> AddGroupMaterialReference(int groupId, int materialId, int userId);
-        Task<int> RemoveGroupMaterialReference(int groupId, int materialId, int userId);
-        Task AddUserToGroup(int groupId, int userId, Role roleId, int currentUserId);
-        Task DeleteUserFromGroup(int userId, int groupId, int currentUserId);
-        Task<int> AddTaskToGroup(int groupId, int taskId, GroupTaskDto dto, int userId);
-        Task DeleteTaskFromGroup(int groupId, int taskId, int userId);
-        Task<List<GroupTaskDto>> GetTasksByGroupId(int groupId, int userId);
-        Task<GroupTaskDto> GetGroupTask(int id, int taskId, int userId);
-        Task<GroupTaskDto> UpdateGroupTask(int groupId, int taskId, GroupTaskDto groupTaskDto, int userId);
+        Task<int> AddGroupToLesson(int groupId, int lessonId, UserIdentityInfo userInfo);
+        Task RemoveGroupFromLesson(int groupId, int lessonId, UserIdentityInfo userInfo);
+        Task<int> AddGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo);
+        Task<int> RemoveGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo);
+        Task AddUserToGroup(int groupId, int userId, Role roleId, UserIdentityInfo userInfo);
+        Task DeleteUserFromGroup(int userId, int groupId, UserIdentityInfo userInfo);
+        Task<int> AddTaskToGroup(int groupId, int taskId, GroupTaskDto dto, UserIdentityInfo userInfo);
+        Task DeleteTaskFromGroup(int groupId, int taskId, UserIdentityInfo userInfo);
+        Task<List<GroupTaskDto>> GetTasksByGroupId(int groupId, UserIdentityInfo userInfo);
+        Task<GroupTaskDto> GetGroupTask(int id, int taskId, UserIdentityInfo userInfo);
+        Task<GroupTaskDto> UpdateGroupTask(int groupId, int taskId, GroupTaskDto groupTaskDto, UserIdentityInfo userInfo);
     }
 }

@@ -21,7 +21,6 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IGroupService _groupService;
-        private readonly ClaimsIdentity _claimsIdentity;
 
         public GroupController(IMapper mapper, IGroupService service)
         {
@@ -54,9 +53,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupFullOutputModel> GetGroup(int id)
         {
-            var userId = BaseControllerExtensions.GetUserId(this);
+            var userToken = this.GetUserIdAndRoles();
 
-            var dto = await _groupService.GetGroup(id, userId);
+            var dto = await _groupService.GetGroup(id, userToken);
             return _mapper.Map<GroupFullOutputModel>(dto);
         }
 
@@ -98,10 +97,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupInfoOutputModel> UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
-            var userId = BaseControllerExtensions.GetUserId(this);
+            var userToken = this.GetUserIdAndRoles();
 
             var dto = _mapper.Map<GroupDto>(model);
-            var output = await _groupService.UpdateGroup(id, dto, userId);
+            var output = await _groupService.UpdateGroup(id, dto, userToken);
             return _mapper.Map<GroupInfoOutputModel>(output);
         }
 
@@ -130,9 +129,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<string> AddGroupToLesson(int groupId, int lessonId)
         {
-            var userId = BaseControllerExtensions.GetUserId(this);
+            var userInfo = this.GetUserIdAndRoles();
 
-            await _groupService.AddGroupToLesson(groupId, lessonId, userId);
+            await _groupService.AddGroupToLesson(groupId, lessonId, userInfo);
             return $"Group {groupId} add  Lesson Id:{lessonId}";
         }
 
@@ -146,9 +145,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<string> RemoveGroupFromLesson(int groupId, int lessonId)
         {
-            var userId = BaseControllerExtensions.GetUserId(this);
+            var userInfo = this.GetUserIdAndRoles();
 
-            await _groupService.RemoveGroupFromLesson(groupId, lessonId, userId);
+            await _groupService.RemoveGroupFromLesson(groupId, lessonId, userInfo);
             return $"Group {groupId} remove  Lesson Id:{lessonId}";
         }
 
@@ -162,9 +161,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<int> AddGroupMaterialReference(int groupId, int materialId)
         {
-            var userId = BaseControllerExtensions.GetUserId(this);
+            var userInfo = this.GetUserIdAndRoles();
 
-            return await _groupService.AddGroupMaterialReference(groupId, materialId, userId);
+            return await _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
         }
 
         // api/Group/{groupId}/material/{materialId}
@@ -177,9 +176,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<int> RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            var userId = BaseControllerExtensions.GetUserId(this);
+            var userInfo = this.GetUserIdAndRoles();
 
-            return await _groupService.RemoveGroupMaterialReference(groupId, materialId, userId);
+            return await _groupService.RemoveGroupMaterialReference(groupId, materialId, userInfo);
         }
 
         //  api/group/1/user/2/role/1
@@ -192,9 +191,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task AddUserToGroup(int groupId, int userId, Role roleId)
         {
-            var currentUserId = BaseControllerExtensions.GetUserId(this);
+            var userInfo = this.GetUserIdAndRoles();
 
-            await _groupService.AddUserToGroup(groupId, userId, roleId, currentUserId);
+            await _groupService.AddUserToGroup(groupId, userId, roleId, userInfo);
         }
 
         //  api/group/1/user/2
@@ -207,9 +206,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task DeleteUserFromGroup(int userId, int groupId)
         {
-            var currentUserId = BaseControllerExtensions.GetUserId(this);
+            var userInfo = this.GetUserIdAndRoles();
 
-            await _groupService.DeleteUserFromGroup(userId, groupId, currentUserId);
+            await _groupService.DeleteUserFromGroup(userId, groupId, userInfo);
         }
 
         //  api/group/1/task/1
@@ -222,9 +221,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupTaskInfoFullOutputModel> GetGroupTask(int groupId, int taskId)
         {
-            var userId = BaseControllerExtensions.GetUserId(this);
+            var userInfo = this.GetUserIdAndRoles();
 
-            var dto = await _groupService.GetGroupTask(groupId, taskId, userId);
+            var dto = await _groupService.GetGroupTask(groupId, taskId, userInfo);
             var output = _mapper.Map<GroupTaskInfoFullOutputModel>(dto);
             return output;
         }
@@ -239,9 +238,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<List<GroupTaskInfoWithTaskOutputModel>> GetTasksByGroupId(int groupId)
         {
-            var userId = BaseControllerExtensions.GetUserId(this);
+            var userInfo = this.GetUserIdAndRoles();
 
-            var dto = await _groupService.GetTasksByGroupId(groupId, userId);
+            var dto = await _groupService.GetTasksByGroupId(groupId, userInfo);
             var output = _mapper.Map<List<GroupTaskInfoWithTaskOutputModel>>(dto);
             return output;
         }
@@ -256,10 +255,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<int> AddTaskToGroup(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
-            var userId = BaseControllerExtensions.GetUserId(this);
+            var userInfo = this.GetUserIdAndRoles();
 
             var dto = _mapper.Map<GroupTaskDto>(model);
-            return await _groupService.AddTaskToGroup(groupId, taskId, dto, userId);
+            return await _groupService.AddTaskToGroup(groupId, taskId, dto, userInfo);
         }
 
         //  api/group/1/task/1
@@ -272,9 +271,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task DeleteTaskFromGroup(int groupId, int taskId)
         {
-            var userId = BaseControllerExtensions.GetUserId(this);
+            var userInfo = this.GetUserIdAndRoles();
 
-            await _groupService.DeleteTaskFromGroup(groupId, taskId, userId);
+            await _groupService.DeleteTaskFromGroup(groupId, taskId, userInfo);
         }
 
         //  api/comment/5
@@ -287,10 +286,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupTaskInfoOutputModel> UpdateGroupTask(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
-            var userId = BaseControllerExtensions.GetUserId(this);
+            var userInfo = this.GetUserIdAndRoles();
 
             var dto = _mapper.Map<GroupTaskDto>(model);
-            var output = await _groupService.UpdateGroupTask(groupId, taskId, dto, userId);
+            var output = await _groupService.UpdateGroupTask(groupId, taskId, dto, userInfo);
             return _mapper.Map<GroupTaskInfoOutputModel>(output);
         }
     }
