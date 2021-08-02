@@ -34,11 +34,11 @@ namespace DevEdu.API.Configuration
             {
                 await HandlerExceptionMessageAsync(context, ex, AuthorizationCode, MessageAuthorization);
             }
-            catch (ValidationException ex)
+            catch (ValidationException ex) //422
             {
                 await HandleValidationExceptionMessageAsync(context, ex);
             }
-            catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException ex) //404
             {
                 await HandlerExceptionMessageAsync(context, ex, EntityCode, MessageEntity);
             }

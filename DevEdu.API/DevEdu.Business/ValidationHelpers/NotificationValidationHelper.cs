@@ -17,7 +17,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var notification = _notificationRepository.GetNotification(notificationId);
             if (notification == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(notification), notificationId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(notification), notificationId));
         }
     }
 }

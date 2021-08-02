@@ -28,10 +28,10 @@ namespace DevEdu.Business.Services
             var paymentInDb = _paymentRepository.GetPayment(id);
             if (paymentInDb == null || dto == null)
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
-            if (paymentInDb.IsDeleted)  
-            throw new EntityNotFoundException(ServiceMessages.PaymentDeleted);
+            if (paymentInDb.IsDeleted)
+                throw new EntityNotFoundException(ServiceMessages.PaymentDeleted);
             dto.User = new UserDto { Id = paymentInDb.User.Id };
-            
+
             dto.Id = id;
             _paymentRepository.UpdatePayment(dto);
         }

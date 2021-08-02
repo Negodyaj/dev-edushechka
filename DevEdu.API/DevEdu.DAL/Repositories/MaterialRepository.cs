@@ -47,7 +47,7 @@ namespace DevEdu.DAL.Repositories
                             materialEntry.Tags = new List<TagDto>();
                             materialDictionary.Add(material.Id, materialEntry);
                         }
-                        if(tag != null && tag.Name != null)
+                        if (tag != null && tag.Name != null)
                         {
                             materialEntry.Tags.Add(tag);
                         }

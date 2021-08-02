@@ -8,9 +8,13 @@ using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
+using DevEdu.API.Common;
+using DevEdu.DAL.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CourseController : Controller
@@ -32,11 +36,11 @@ namespace DevEdu.API.Controllers
 
         [HttpGet("{id}/simple")]
         [Description("Get course by id with groups")]
-        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
-        public CourseInfoFullOutputModel GetCourseSimple(int id)
+        [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
+        public CourseInfoShortOutputModel GetCourseSimple(int id)
         {
             var course = _courseService.GetCourse(id);
-            return _mapper.Map<CourseInfoFullOutputModel>(course);
+            return _mapper.Map<CourseInfoShortOutputModel>(course);
         }
 
         [HttpGet("{id}/full")]
@@ -60,8 +64,8 @@ namespace DevEdu.API.Controllers
 
         [HttpPost]
         [Description("Create new course")]
-        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status201Created)]
-        public CourseInfoFullOutputModel AddCourse([FromBody] CourseInputModel model)
+        [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status201Created)]
+        public CourseInfoShortOutputModel AddCourse([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
             int id = _courseService.AddCourse(dto);
@@ -78,12 +82,12 @@ namespace DevEdu.API.Controllers
 
         [HttpPut("{id}")]
         [Description("Update course by Id")]
-        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
-        public CourseInfoFullOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
+        [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
+        public CourseInfoShortOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            _courseService.UpdateCourse(id, dto);
-            return GetCourseSimple(id);
+            var updDto =  _courseService.UpdateCourse(id, dto);
+            return _mapper.Map<CourseInfoShortOutputModel>(updDto);
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
@@ -123,6 +127,7 @@ namespace DevEdu.API.Controllers
 
         // api/course/{courseId}/topic/{topicId}
         [HttpPost("{courseId}/topic/{topicId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [Description("Add topic to course")]
         public string AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
@@ -134,6 +139,7 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpPost("{courseId}/select-topics")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [Description("Add topics to course")]
         public string AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
@@ -146,6 +152,7 @@ namespace DevEdu.API.Controllers
 
         // api/course/{courseId}/topic/{topicId}
         [HttpDelete("{courseId}/topic/{topicId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("Delete topic from course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public string DeleteTopicFromCourse(int courseId, int topicId)
@@ -166,6 +173,7 @@ namespace DevEdu.API.Controllers
 
         // api/course/{courseId}/program
         [HttpPut("{courseId}/program")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("updates topics in the course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public string UpdateCourseTopicsByCourseId(int courseId, [FromBody] List<CourseTopicUpdateInputModel> topics)
