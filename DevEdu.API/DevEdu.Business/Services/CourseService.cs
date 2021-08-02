@@ -36,7 +36,7 @@ namespace DevEdu.Business.Services
 
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
 
-        public void DeleteCourse(int id) => _courseRepository.GetCourse(id);
+        public void DeleteCourse(int id) => _courseRepository.DeleteCourse(id);
 
         public CourseDto GetCourse(int id) => _courseRepository.GetCourse(id);
         public CourseDto GetFullCourseInfo(int id) 
@@ -55,11 +55,7 @@ namespace DevEdu.Business.Services
         }
         public List<CourseDto> GetCourses() => _courseRepository.GetCourses();
 
-        public void UpdateCourse(int id, CourseDto courseDto)
-        {
-            courseDto.Id = id;
-            _courseRepository.UpdateCourse(courseDto);
-        }
+        public CourseDto UpdateCourse(int id, CourseDto courseDto) => _courseRepository.UpdateCourse(id, courseDto);
 
         public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
         {
