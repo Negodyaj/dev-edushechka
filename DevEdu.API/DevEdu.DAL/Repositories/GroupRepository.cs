@@ -15,6 +15,7 @@ namespace DevEdu.DAL.Repositories
         private const string _groupSelectAllProcedure = "dbo.Group_SelectAll";
         private const string _groupUpdateByIdProcedure = "dbo.Group_UpdateById";
         private const string _groupUpdateGroupStatusProcedure = "dbo.Group_UpdateGroupStatus";
+        private const string _groupSelectByCourse = "dbo.Group_SelectByCourseId";
 
 
         private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
@@ -315,6 +316,16 @@ namespace DevEdu.DAL.Repositories
                    new { Id = userId },
                    commandType: CommandType.StoredProcedure
               );
+        }
+
+        public List<GroupDto> GetGroupByCourseId(int courseId)
+        {
+            var groupList = new List<GroupDto>();
+            return _connection.Query<GroupDto>(
+                    _groupSelectByCourse,
+                    new { courseId },
+                    commandType: CommandType.StoredProcedure)
+                .ToList();
         }
     }
 }

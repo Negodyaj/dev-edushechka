@@ -16,18 +16,21 @@ namespace DevEdu.Business.Services
         private readonly ITaskRepository _taskRepository;
         private readonly IMaterialRepository _materialRepository;
         private readonly ICourseValidationHelper _courseValidation;
+        private readonly IGroupRepository _groupRepository;
 
         public CourseService(ITopicRepository topicRepository,
                              ICourseRepository courseRepository,
                              ITaskRepository taskRepository,
                              IMaterialRepository materialRepository,
-                             ICourseValidationHelper courseValidation)
+                             ICourseValidationHelper courseValidation,
+                             IGroupRepository groupRepository)
         {
             _topicRepository = topicRepository;
             _courseRepository = courseRepository;
             _taskRepository = taskRepository;
             _materialRepository = materialRepository;
             _courseValidation = courseValidation;
+            _groupRepository = groupRepository;
         }
 
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
@@ -45,7 +48,7 @@ namespace DevEdu.Business.Services
             var course = GetCourse(id);
             course.Tasks = _taskRepository.GetTaskByCourseId(course.Id);
             course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
-            course.Topics = _topicRepository.GetTopicsByCourseId(course.Id);
+            course.Groups = _groupRepository.GetGroupByCourseId(course.Id);
             return course;
 
         }

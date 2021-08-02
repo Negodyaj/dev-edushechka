@@ -58,18 +58,18 @@ namespace DevEdu.DAL.Repositories
         {
             CourseDto result = default;
             return _connection
-                .Query<CourseDto, GroupDto, CourseDto>(
+                .Query<CourseDto, TopicDto, CourseDto>(
                 _courseSelectByIdProcedure,
-                (course, group) =>
+                (course, topic) =>
                 {
                     if (result == null)
                     {
                         result = course;
-                        result.Groups = new List<GroupDto> { group };
+                        result.Topics = new List<TopicDto> { topic };
                     }
                     else
                     {
-                        result.Groups.Add(group);
+                        result.Topics.Add(topic);
                     }
                     return result;
                 },
@@ -85,20 +85,20 @@ namespace DevEdu.DAL.Repositories
             var courseDictionary = new Dictionary<int, CourseDto>();
             CourseDto result;
             return _connection
-                .Query<CourseDto, GroupDto, CourseDto>(
+                .Query<CourseDto, TopicDto, CourseDto>(
                     _courseSelectAllProcedure,
-                    (course, group) =>
+                    (course, topic) =>
                     {
 
                         if (!courseDictionary.TryGetValue(course.Id, out result))
                         {
                             result = course;
-                            result.Groups = new List<GroupDto> { group };
+                            result.Topics = new List<TopicDto> { topic };
                             courseDictionary.Add(course.Id, result);
                         }
                         else
                         {
-                            result.Groups.Add(group);
+                            result.Topics.Add(topic);
                         }
 
                         return result;
