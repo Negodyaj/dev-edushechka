@@ -16,16 +16,16 @@ namespace DevEdu.Business.Services
 
         public int AddUser(UserDto dto)
         {
-            if (dto.Roles.Count == 0)
-                dto.Roles.Add(Role.Student);
+            if (dto.Roles == null || dto.Roles.Count == 0)
+                dto.Roles = new List<Role> { Role.Student };
 
             var addedUserId = _userRepository.AddUser(dto);
 
             foreach (var role in dto.Roles)
-                {
-                    AddUserRole(addedUserId, (int)role);
-                }
-            
+            {
+                _userRepository.AddUserRole(addedUserId, (int)role);
+            }
+
             return addedUserId;
         }
 

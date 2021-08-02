@@ -51,7 +51,7 @@ namespace DevEdu.DAL.Repositories
 
         public List<TaskDto> GetTaskByCourseId(int courseId)
         {
-           var taskList = new List<TaskDto>();
+            var taskList = new List<TaskDto>();
             return _connection.Query<TaskDto>(
                     _taskSelectByCourseIdProcedure,
                     new { courseId },

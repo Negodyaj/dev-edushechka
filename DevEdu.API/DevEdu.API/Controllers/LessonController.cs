@@ -10,6 +10,7 @@ using DevEdu.API.Models.OutputModels;
 using Microsoft.AspNetCore.Authorization;
 using DevEdu.DAL.Enums;
 using DevEdu.API.Common;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.Business.Services;
 using DevEdu.API.Models.OutputModels.Lesson;
 
@@ -47,7 +48,7 @@ namespace DevEdu.API.Controllers
         public int AddLesson([FromBody] LessonInputModel inputModel)
         {
             var dto = _mapper.Map<LessonDto>(inputModel);
-            return _lessonService.AddLesson(dto);
+            return _lessonService.AddLesson(dto, inputModel.TopicIds);
         }
 
         // api/lesson/{id}
@@ -66,8 +67,7 @@ namespace DevEdu.API.Controllers
         public LessonInfoOutputModel UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
         {
             var dto = _mapper.Map<LessonDto>(updateModel);
-            _lessonService.UpdateLesson(id, dto);
-            var output = _lessonService.SelectLessonById(id);
+            var output = _lessonService.UpdateLesson(dto, id);
             return _mapper.Map<LessonInfoOutputModel>(output);
         }
 
@@ -112,7 +112,6 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{id}/full-info"
-        [AuthorizeRoles(Role.Student, Role.Teacher)]
         [HttpGet("{id}/full-info")]
         [Description("Get the lesson with students and comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
@@ -162,6 +161,9 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Student)]
         [HttpPut("{lessonId}/user/{userId}/feedback")]
         [Description("Update Feedback for lesson")]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
         public StudentLessonShortOutputModel UpdateStudentFeedbackForLesson(int lessonId, int userId, [FromBody] FeedbackInputModel model)
         {

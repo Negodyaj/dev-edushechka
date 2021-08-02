@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
@@ -14,8 +16,9 @@ namespace DevEdu.API.Models.InputModels
         [Required(ErrorMessage = TeacherIdRequired)]
         public int TeacherId { get; set; }
 
-        [Required(ErrorMessage = LinkToRecordIdRequired)]
         [Url]
-        public string LinkToRecord { get; set; }
+        public string? LinkToRecord { get; set; }
+
+        public List<int> TopicIds { get; set; }
     }
 }

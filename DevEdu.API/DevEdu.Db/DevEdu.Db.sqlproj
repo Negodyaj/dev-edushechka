@@ -153,7 +153,6 @@
     <Build Include="StoredProcedures\Tag\Tag_Update.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_Insert.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_Delete.sql" />
-    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAll.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectByTaskAndStudent.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_UpdateAnswer.sql" />
     <Build Include="StoredProcedures\Lesson_Topic\Lesson_Topic_Insert.sql" />
@@ -223,7 +222,12 @@
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByGroupId.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByTeacherId.sql" />
     <Build Include="StoredProcedures\Comment\Comment_SelectByLessonId.sql" />
-    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAnswersByTaskId.sql" />
+    <Build Include="StoredProcedures\Notification\Notification_SelectAllByRoleId.sql" />
+    <Build Include="StoredProcedures\Notification\Notification_SelectAllByGroupId.sql" />
+    <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonId.sql" />
+    <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByGroupId.sql" />
+    <Build Include="StoredProcedures\Comment\Comment_SelectByLessonId.sql" />
+    <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByTeacherId.sql" />
     <Build Include="Types\User-Defined Table Types\PaymentType.sql" />
     <Build Include="StoredProcedures\Payment\Payment_BulkInsert.sql" />
     <Build Include="Types\User-Defined Table Types\IdType.sql" />
@@ -245,6 +249,8 @@
     <Build Include="StoredProcedures\StudentRating\StudentRating_SelectByUserId.sql" />
     <Build Include="StoredProcedures\StudentRating\StudentRating_Update.sql" />
     <Build Include="StoredProcedures\StudentRating\StudentRating_SelectByGroupId.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAllAnswersByTaskId.sql" />
+    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAllAnswersByUserId.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectById.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAllByUserId.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAllByLessonId.sql" />
