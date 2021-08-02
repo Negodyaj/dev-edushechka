@@ -8,6 +8,9 @@ using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
 using DevEdu.Business.Services;
 using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Common;
+using DevEdu.DAL.Enums;
+using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
@@ -72,6 +75,30 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<TopicDto>(model);           
             _topicService.UpdateTopic(id, dto);
             return GetTopicById(id);
-        }      
+        }
+
+        //  api/topic/{topicId}/tag/{tagId}
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
+        [HttpPost("{topicId}/tag/{tagId}")]
+        [Description("Add tag to topic")]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public int AddTagToTopic(int topicId, int tagId)
+        {
+            return _topicService.AddTagToTopic(topicId, tagId);
+        }
+
+        //  api/opic/{topicId}/tag/{tagId}
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
+        [HttpDelete("{topicId}/tag/{tagId}")]
+        [Description("Delete tag from topic")]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public int DeleteTagFromTopic(int topicId, int tagId)
+        {
+            return _topicService.DeleteTagFromTopic(topicId, tagId);
+        }
     }
 }
