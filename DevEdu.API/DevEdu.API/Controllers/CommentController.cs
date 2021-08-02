@@ -36,8 +36,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel GetComment(int id)
         {
-            var userToken = this.GetUserIdAndRoles();
-            var dto = _commentService.GetComment(id, userToken);
+            var userInfo = this.GetUserIdAndRoles();
+            var dto = _commentService.GetComment(id, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(dto);
             return output;
         }
@@ -52,9 +52,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel model)
         {
-            var userToken = this.GetUserIdAndRoles();
+            var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var comment = _commentService.AddCommentToLesson(lessonId, dto, userToken);
+            var comment = _commentService.AddCommentToLesson(lessonId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
             return output;
         }
@@ -69,9 +69,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel AddCommentToStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel model)
         {
-            var userToken = this.GetUserIdAndRoles();
+            var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var comment = _commentService.AddCommentToStudentAnswer(taskStudentId, dto, userToken);
+            var comment = _commentService.AddCommentToStudentAnswer(taskStudentId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
             return output;
         }
@@ -86,8 +86,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteComment(int id)
         {
-            var userToken = this.GetUserIdAndRoles();
-            _commentService.DeleteComment(id, userToken);
+            var userInfo = this.GetUserIdAndRoles();
+            _commentService.DeleteComment(id, userInfo);
         }
 
         //  api/comment/5
@@ -100,9 +100,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
         {
-            var userToken = this.GetUserIdAndRoles();
+            var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var output = _commentService.UpdateComment(id, dto, userToken);
+            var output = _commentService.UpdateComment(id, dto, userInfo);
             return _mapper.Map<CommentInfoOutputModel>(output);
         }
     }

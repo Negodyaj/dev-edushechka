@@ -27,12 +27,11 @@ namespace DevEdu.Business.Services
             _studentAnswerValidationHelper = studentAnswerValidationHelper;
         }
 
-        public CommentDto AddCommentToLesson(int lessonId, CommentDto dto, UserIdentityInfo userIdentityInfo)
+        public CommentDto AddCommentToLesson(int lessonId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
+            var userId = userInfo.UserId;
             _lessonValidationHelper.CheckLessonExistence(lessonId);
-            if (!CheckerRole.IsAdmin(roles))
+            if (!userInfo.IsAdmin())
                 _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
 
             dto.User = new UserDto { Id = userId };
@@ -41,13 +40,12 @@ namespace DevEdu.Business.Services
             return _commentRepository.GetComment(id);
         }
 
-        public CommentDto AddCommentToStudentAnswer(int taskStudentId, CommentDto dto, UserIdentityInfo userIdentityInfo)
+        public CommentDto AddCommentToStudentAnswer(int taskStudentId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
+            var userId = userInfo.UserId;
             var studentAnswer = _studentAnswerValidationHelper.CheckStudentAnswerOnTaskExistence(taskStudentId);
             var studentId = studentAnswer.User.Id;
-            if (!CheckerRole.IsAdmin(roles))
+            if (!userInfo.IsAdmin())
                 _studentAnswerValidationHelper.CheckUserInStudentAnswerAccess(studentId, userId);
 
             dto.StudentAnswer = new StudentAnswerOnTaskDto { Id = taskStudentId };
@@ -55,46 +53,41 @@ namespace DevEdu.Business.Services
             return _commentRepository.GetComment(id);
         }
 
-        public CommentDto GetComment(int commentId, UserIdentityInfo userIdentityInfo)
+        public CommentDto GetComment(int commentId, UserIdentityInfo userInfo)
         {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
             var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
-            CheckUserAccessByRoleAndId(userId, roles, checkedDto);
+            CheckUserAccessByRoleAndId(userInfo, checkedDto);
             return checkedDto;
         }
 
-        public void DeleteComment(int commentId, UserIdentityInfo userIdentityInfo)
+        public void DeleteComment(int commentId, UserIdentityInfo userInfo)
         {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
             var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
-            CheckUserAccessByRoleAndId(userId, roles, checkedDto);
+            CheckUserAccessByRoleAndId(userInfo, checkedDto);
             _commentRepository.DeleteComment(commentId);
         }
 
-        public CommentDto UpdateComment(int commentId, CommentDto dto, UserIdentityInfo userIdentityInfo)
+        public CommentDto UpdateComment(int commentId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
             var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
-            CheckUserAccessByRoleAndId(userId, roles, checkedDto);
+            CheckUserAccessByRoleAndId(userInfo, checkedDto);
             dto.Id = commentId;
             _commentRepository.UpdateComment(dto);
             return _commentRepository.GetComment(commentId);
         }
 
-        private void CheckUserAccessByRoleAndId(int userId, List<Role> roles, CommentDto dto)
+        private void CheckUserAccessByRoleAndId(UserIdentityInfo userInfo, CommentDto dto)
         {
+            var userId = userInfo.UserId;
 
-            if (CheckerRole.IsAdmin(roles))
+            if (userInfo.IsAdmin())
             {
                 return;
             }
 
             CheckUserAccessToGroupData(dto, userId);
 
-            if (CheckerRole.IsStudent(roles))
+            if (userInfo.IsStudent())
             {
                 _commentValidationHelper.UserComplianceCheck(dto, userId);
             }

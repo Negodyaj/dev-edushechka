@@ -1,5 +1,4 @@
-﻿using DevEdu.API.Configuration.ExceptionResponses;
-using DevEdu.Business.Exceptions;
+﻿using DevEdu.Business.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;

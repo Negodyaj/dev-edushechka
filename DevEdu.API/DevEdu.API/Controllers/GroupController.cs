@@ -119,8 +119,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void AddGroupMaterialReference(int groupId, int materialId)
         {
-            var userToken = this.GetUserIdAndRoles();
-            _groupService.AddGroupMaterialReference(groupId, materialId, userToken);
+            var userInfo = this.GetUserIdAndRoles();
+            _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
         }
 
         // api/Group/{groupId}/material/{materialId}
@@ -133,8 +133,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            var userToken = this.GetUserIdAndRoles();
-            _groupService.RemoveGroupMaterialReference(groupId, materialId, userToken);
+            var userInfo = this.GetUserIdAndRoles();
+            _groupService.RemoveGroupMaterialReference(groupId, materialId, userInfo);
         }
 
         //  api/group/1/user/2/role/1

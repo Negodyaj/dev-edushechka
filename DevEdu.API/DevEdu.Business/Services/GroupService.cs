@@ -49,21 +49,15 @@ namespace DevEdu.Business.Services
         public GroupDto UpdateGroup(int id, GroupDto groupDto) => _groupRepository.UpdateGroup(id, groupDto);
         public GroupDto ChangeGroupStatus(int groupId, int statusId) => _groupRepository.ChangeGroupStatus(groupId, statusId);
 
-        public void AddGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userIdentityInfo)
+        public void AddGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
         {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
-            CheckAccessAndExistence(groupId, materialId, userId, roles);
-
+            CheckAccessAndExistence(groupId, materialId, userInfo);
             _groupRepository.AddGroupMaterialReference(groupId, materialId);
         }
 
-        public void RemoveGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userIdentityInfo)
+        public void RemoveGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
         {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
-            CheckAccessAndExistence(groupId, materialId, userId, roles);
-
+            CheckAccessAndExistence(groupId, materialId, userInfo);
             _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
         }
 
@@ -72,11 +66,13 @@ namespace DevEdu.Business.Services
         public void AddUserToGroup(int groupId, int userId, int roleId) => _groupRepository.AddUserToGroup(groupId, userId, roleId);
         public void DeleteUserFromGroup(int groupId, int userId) => _groupRepository.DeleteUserFromGroup(userId, groupId);
 
-        private void CheckAccessAndExistence(int groupId, int materialId, int userId, List<Role> roles)
+        private void CheckAccessAndExistence(int groupId, int materialId, UserIdentityInfo userInfo)
         {
+            var userId = userInfo.UserId;
+            var roles = userInfo.Roles;
             _groupValidationHelper.CheckGroupExistence(groupId);
             _materialValidationHelper.CheckMaterialExistence(materialId);
-            if (!CheckerRole.IsAdmin(roles))
+            if (!userInfo.IsAdmin())
                 _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
         }
     }
