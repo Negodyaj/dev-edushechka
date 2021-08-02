@@ -17,7 +17,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var task = _taskRepository.GetTaskById(taskId);
             if (task == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), taskId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(task), taskId));
         }
     }
 }

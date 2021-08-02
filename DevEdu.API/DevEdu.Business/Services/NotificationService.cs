@@ -4,7 +4,7 @@ using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.Services
 {
-    public  class NotificationService : INotificationService
+    public class NotificationService : INotificationService
     {
         private readonly INotificationRepository _notificationRepository;
 
@@ -17,7 +17,7 @@ namespace DevEdu.Business.Services
 
         public List<NotificationDto> GetNotificationsByUserId(int userId) => _notificationRepository.GetNotificationsByUserId(userId);
         public List<NotificationDto> GetNotificationsByGroupId(int groupId) => _notificationRepository.GetNotificationsByGroupId(groupId);
-        public List<NotificationDto> GetNotificationsByRoleId(int RoleId) =>    _notificationRepository.GetNotificationsByRoleId(RoleId);
+        public List<NotificationDto> GetNotificationsByRoleId(int RoleId) => _notificationRepository.GetNotificationsByRoleId(RoleId);
 
         public NotificationDto AddNotification(NotificationDto dto)
         {
@@ -29,7 +29,7 @@ namespace DevEdu.Business.Services
             }
             var output = _notificationRepository.AddNotification(dto);
             return GetNotification(output);
-;        }
+        }
 
         public void DeleteNotification(int id) => _notificationRepository.DeleteNotification(id);
 

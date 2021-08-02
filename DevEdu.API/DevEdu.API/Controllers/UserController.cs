@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using DevEdu.API.Common;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +29,11 @@ namespace DevEdu.API.Controllers
         // api/user/userId
         [HttpPut("{userId}")]
         [Description("Update user")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(UserUpdateInfoOutPutModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public UserUpdateInfoOutPutModel UpdateUserById([FromBody] UserUpdateInputModel model)
         {
             var dtoEntry = _mapper.Map<UserDto>(model);
@@ -37,7 +44,10 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}
         [HttpGet("{userId}")]
         [Description("Return user by id")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public UserFullInfoOutPutModel GetUserById(int userId)
         {
             var dto = _userService.SelectUserById(userId);
@@ -47,7 +57,10 @@ namespace DevEdu.API.Controllers
         // api/user
         [HttpGet]
         [Description("Return list users")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(List<UserInfoOutPutModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<UserInfoOutPutModel> GetAllUsers()
         {
             var listDto = _userService.SelectUsers();
@@ -57,7 +70,10 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}
         [HttpDelete("{userId}")]
         [Description("Delete user by id")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteUser(int userId)
         {
             _userService.DeleteUser(userId);
@@ -66,19 +82,25 @@ namespace DevEdu.API.Controllers
         // api/user/{userId}/role/{roleId}
         [HttpPost("{userId}/role/{roleId}")]
         [Description("Add new role to user")]
+        [AuthorizeRoles()]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void AddRoleToUser(int userId, int roleId)
         {
-            _userService.AddUserRole(userId, roleId);
+            _userService.AddUserRole(userId, (int)roleId);
         }
 
         // api/user/{userId}/role/{roleId}
         [HttpDelete("{userId}/role/{roleId}")]
         [Description("Delete role from user")]
+        [AuthorizeRoles()]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteRoleFromUser(int userId, int roleId)
         {
-            _userService.DeleteUserRole(userId, roleId);
+            _userService.DeleteUserRole(userId, (int)roleId);
         }
     }
 }

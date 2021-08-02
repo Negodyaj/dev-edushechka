@@ -9,7 +9,7 @@ namespace DevEdu.DAL.Repositories
         void DeleteCourse(int id);
         CourseDto GetCourse(int id);
         List<CourseDto> GetCourses();
-        void UpdateCourse(CourseDto courseDto);
+        CourseDto UpdateCourse(int courseId, CourseDto courseDto);
         void AddTaskToCourse(int courseId, int taskId);
         void DeleteTaskFromCourse(int courseId, int taskId);
         List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId);

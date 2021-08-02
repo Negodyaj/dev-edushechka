@@ -89,7 +89,7 @@ namespace DevEdu.API.Controllers
         //  api/notification/5
         [HttpPut("{id}")]
         [Description("Update notification by id")]
-        [ProducesResponseType(typeof(NotificationInfoOutputModel),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
         public NotificationInfoOutputModel UpdateNotification(int id, [FromBody] NotificationUpdateInputModel model)
         {
             var dto = _mapper.Map<NotificationDto>(model);

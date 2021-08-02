@@ -82,7 +82,8 @@ namespace DevEdu.API.Configuration
             CreateMap<CommentDto, CommentInfoOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
-            CreateMap<CourseDto, CourseInfoBaseOutputModel>();
+            CreateMap<CourseDto, CourseInfoFullOutputModel>();
+            CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<MaterialDto, MaterialInfoOutputModel>();
             CreateMap<MaterialDto, MaterialInfoWithCoursesAndGroupsOutputModel>();
             CreateMap<UserDto, UserInfoOutPutModel>();
@@ -93,7 +94,6 @@ namespace DevEdu.API.Configuration
             CreateMap<UserDto, UserUpdateInfoOutPutModel>();
             CreateMap<UserDto, UserInfoOutPutModel>();
             CreateMap<UserDto, UserInfoShortOutputModel>();
-            CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<TaskDto, TaskInfoOutputModel>();
             CreateMap<TaskDto, TaskInfoWithCoursesOutputModel>();
             CreateMap<TaskDto, TaskInfoWithCoursesAndAnswersOutputModel>();
@@ -101,6 +101,10 @@ namespace DevEdu.API.Configuration
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<StudentAnswerOnTaskForTaskDto, StudentAnswerOnTaskInfoOutputModel>();
             CreateMap<StudentAnswerOnTaskDto, StudentAnswerOnTaskInfoOutputModel>();
+            CreateMap<StudentAnswerOnTaskDto, StudentAnswerOnTaskFullOutputModel>()
+                .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
+            CreateMap<StudentAnswerOnTaskDto, StudentAnswerOnTaskOutputModel>()
+                .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
             CreateMap<GroupDto, GroupInfoOutputModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<LessonDto, LessonInfoOutputModel>()
@@ -135,10 +139,9 @@ namespace DevEdu.API.Configuration
                    Email = src.User.Email,
                    Photo = src.User.Photo }));
             CreateMap<StudentLessonDto, FeedbackOutputModel>();
-            CreateMap<StudentLessonDto, StudentLessonShortOutputModel>();
             CreateMap<StudentRatingDto, StudentRatingOutputModel>();
             CreateMap<RatingTypeDto, RatingTypeOutputModel>();
-
+            CreateMap<StudentLessonDto, FeedbackOutputModel>();            
         }
     }
 }
