@@ -37,7 +37,7 @@ namespace DevEdu.Business.Services
             _materilaValidationHelper = materilaValidationHelper;
         }
 
-        public List<MaterialDto> GetAllMaterials() => _materialRepository.GetAllMaterials();
+        public List<MaterialDto> GetAllMaterials() => _materialRepository.GetAllMaterials(); //проверка какие материалы дотупны конкретному пользователю и возвращать их,через хранимку новую
 
         public MaterialDto GetMaterialByIdWithCoursesAndGroups(int id)
         {
@@ -120,7 +120,7 @@ namespace DevEdu.Business.Services
 
             tags.ForEach(tag => _tagValidationHelper.CheckTagExistence(tag));
             var materialId = _materialRepository.AddMaterial(dto);
-            tags.ForEach(tag => AddTagToMaterial(materialId, tag));
+            tags.ForEach(tag => _materialRepository.AddTagToMaterial(materialId, tag));
             return materialId;
         }
     }
