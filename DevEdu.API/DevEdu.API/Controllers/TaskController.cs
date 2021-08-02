@@ -212,17 +212,6 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<StudentAnswerOnTaskFullOutputModel>(output);
         }
 
-        //  api/task/1/group/
-        [HttpGet("{taskId}/groups")]
-        [Description("Get all groups by task")]
-        [ProducesResponseType(typeof(List<GroupTaskInfoWithGroupOutputModel>), StatusCodes.Status200OK)]
-        public List<GroupTaskInfoWithGroupOutputModel> GetGroupsByTaskId(int taskId)
-        {
-            var dto = _taskService.GetGroupsByTaskId(taskId);
-            var output = _mapper.Map<List<GroupTaskInfoWithGroupOutputModel>>(dto);
-            return output;
-        }
-
         // api/task/answer/by-user/42
         [HttpGet("answer/by-user/{userId}")]
         [Description("Get all answers of student")]

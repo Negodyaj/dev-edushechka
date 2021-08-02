@@ -5,7 +5,6 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Linq;
-using DevEdu.Business.ValidationHelpers;
 
 
 namespace DevEdu.Business.Services
@@ -19,6 +18,7 @@ namespace DevEdu.Business.Services
         private readonly ICourseValidationHelper _courseValidationHelper;
         private readonly IMaterialValidationHelper _materialValidationHelper;
         private readonly ITopicValidationHelper _topicValidationHelper;
+
         public CourseService
         (
             ICourseRepository courseRepository,
@@ -26,8 +26,9 @@ namespace DevEdu.Business.Services
             ITaskRepository taskRepository,
             IMaterialRepository materialRepository,
             ICourseValidationHelper courseValidationHelper,
-            IMaterialValidationHelper materialValidationHelper
-                             ITopicValidationHelper topicValidationHelper)
+            IMaterialValidationHelper materialValidationHelper,
+            ITopicValidationHelper topicValidationHelper
+        )
         {
             _courseRepository = courseRepository;
             _topicRepository = topicRepository;

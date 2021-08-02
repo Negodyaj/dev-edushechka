@@ -165,5 +165,26 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure)
                 .ToList();
         }
+
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskById(int id)
+        {
+            var result = _connection
+                .Query<StudentAnswerOnTaskDto, UserDto, TaskDto, TaskStatus, StudentAnswerOnTaskDto>(
+                    _taskStudentSelectById,
+                    (studentAnswer, user, task, taskStatus) =>
+                    {
+                        studentAnswer.User = user;
+                        studentAnswer.Task = task;
+                        studentAnswer.TaskStatus = taskStatus;
+
+                        return studentAnswer;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .FirstOrDefault();
+            return result;
+        }
     }
 }

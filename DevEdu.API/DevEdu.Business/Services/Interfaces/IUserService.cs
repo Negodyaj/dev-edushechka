@@ -5,7 +5,7 @@ namespace DevEdu.Business.Services
 {
     public interface IUserService
     {
-        UserDto AddUser(UserDto dto);
+        int AddUser(UserDto dto);
         void AddUserRole(int userId, int roleId);
         void DeleteUser(int id);
         void DeleteUserRole(int userId, int roleId);

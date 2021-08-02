@@ -7,7 +7,6 @@ using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
-using DevEdu.Business.ValidationHelpers;
 
 namespace DevEdu.Business.Tests
 {
@@ -19,6 +18,7 @@ namespace DevEdu.Business.Tests
         private Mock<IMaterialRepository> _materialRepositoryMock;
         private CourseValidationHelper _courseValidationHelper;
         private MaterialValidationHelper _materialValidationHelper;
+        private ITopicValidationHelper _topicValidationHelper;
         private CourseService _sut;
 
         [SetUp]
@@ -30,9 +30,17 @@ namespace DevEdu.Business.Tests
             _materialRepositoryMock = new Mock<IMaterialRepository>();
             _courseValidationHelper = new CourseValidationHelper(_courseRepositoryMock.Object);
             _materialValidationHelper = new MaterialValidationHelper(_materialRepositoryMock.Object);
-            _sut = new CourseService(_courseRepositoryMock.Object, _topicRepositoryMock.Object,
-                _taskRepositoryMock.Object, _materialRepositoryMock.Object, _courseValidationHelper,
-                _materialValidationHelper);
+            _topicValidationHelper = new TopicValidationHelper(_topicRepositoryMock.Object);
+            _sut = new CourseService
+            (
+                _courseRepositoryMock.Object,
+                _topicRepositoryMock.Object,
+                _taskRepositoryMock.Object,
+                _materialRepositoryMock.Object,
+                _courseValidationHelper,
+                _materialValidationHelper,
+                _topicValidationHelper
+            );
         }
         [Test]
         public void AddTopicToCourse_WithCourseIdAndSimpleDto_TopicWasAdded()

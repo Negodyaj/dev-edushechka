@@ -44,8 +44,6 @@ namespace DevEdu.Business.Services
             return lessonId;
         }
 
-        public void DeleteCommentFromLesson(int lessonId, int commentId) => _lessonRepository.DeleteCommentFromLesson(lessonId, commentId);
-
         public void DeleteLesson(int id) => _lessonRepository.DeleteLesson(id);
 
         public List<LessonDto> SelectAllLessonsByGroupId(int id) => _lessonRepository.SelectAllLessonsByGroupId(id);

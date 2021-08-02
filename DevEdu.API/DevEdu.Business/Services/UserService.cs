@@ -14,19 +14,19 @@ namespace DevEdu.Business.Services
             _userRepository = userRepository;
         }
 
-        public UserDto AddUser(UserDto dto)
+        public int AddUser(UserDto dto)
         {
-            if (dto.Roles.Count == 0)
-                dto.Roles.Add(Role.Student);
+            if (dto.Roles == null || dto.Roles.Count == 0)
+                dto.Roles = new List<Role> { Role.Student };
 
             var addedUserId = _userRepository.AddUser(dto);
 
             foreach (var role in dto.Roles)
-                {
-                    AddUserRole(addedUserId, (int)role);
-                }
+            {
+                _userRepository.AddUserRole(addedUserId, (int)role);
+            }
 
-            return _userRepository.SelectUserById(addedUserId);
+            return addedUserId;
         }
 
         public UserDto SelectUserById(int id) => _userRepository.SelectUserById(id);

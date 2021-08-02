@@ -10,8 +10,6 @@ using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
-using DevEdu.API.Common;
-using DevEdu.DAL.Enums;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
