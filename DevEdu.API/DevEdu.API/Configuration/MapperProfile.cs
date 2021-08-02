@@ -6,6 +6,7 @@ using DevEdu.API.Models.OutputModels.Lesson;
 using DevEdu.DAL.Models;
 using System;
 using System.Globalization;
+using DevEdu.API.Models;
 
 namespace DevEdu.API.Configuration
 {
@@ -66,6 +67,7 @@ namespace DevEdu.API.Configuration
             CreateMap<UserSignInputModel, UserDto>();
             CreateMap<PaymentUpdateInputModel, PaymentDto>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)));
+            CreateMap<UserIdentityInfo, UserDto>();
         }
 
         private void CreateMappingFromDto()

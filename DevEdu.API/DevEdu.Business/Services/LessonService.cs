@@ -11,23 +11,27 @@ namespace DevEdu.Business.Services
     {
         private readonly ILessonRepository _lessonRepository;
         private readonly ICommentRepository _commentRepository;
-        private readonly IUserRepository _userRepository;
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly ILessonValidationHelper _lessonValidationHelper;
+        private readonly ITopicValidationHelper _topicValidationHelper;
+        private readonly IGroupValidationHelper _groupValidationHelper;
 
         public LessonService(
             ILessonRepository lessonRepository,
             ICommentRepository commentRepository,
-            IUserRepository userRepository,
             IUserValidationHelper userValidationHelper,
-            ILessonValidationHelper lessonValidationHelper
+            ILessonValidationHelper lessonValidationHelper,
+            ITopicValidationHelper topicValidationHelper,
+            IGroupValidationHelper groupValidationHelper
         )
         {
             _lessonRepository = lessonRepository;
             _commentRepository = commentRepository;
-            _userRepository = userRepository;
             _userValidationHelper = userValidationHelper;
             _lessonValidationHelper = lessonValidationHelper;
+            _topicValidationHelper = topicValidationHelper;
+            _groupValidationHelper = groupValidationHelper;
+            
         }
 
         public void AddCommentToLesson(int lessonId, CommentDto commentDto)
@@ -37,49 +41,70 @@ namespace DevEdu.Business.Services
             _lessonRepository.AddCommentToLesson(lessonId, commentId);
         }
 
-        public int AddLesson(LessonDto lessonDto, List<int> topicIds)
+        public LessonDto AddLesson(UserDto userIdentity, LessonDto lessonDto, List<int> topicIds)
         {
+            _lessonValidationHelper.CheckUserAndTeacherAreSame(userIdentity, lessonDto.Teacher.Id);
+
             int lessonId = _lessonRepository.AddLesson(lessonDto);
 
             if(topicIds != null)
             {
-                topicIds.ForEach(topicId => _lessonRepository.AddTopicToLesson(lessonId, topicId));
+                foreach (int topicId in topicIds)
+                {
+                    _topicValidationHelper.CheckTopicExistence(topicId);
+                    _lessonRepository.AddTopicToLesson(lessonId, topicId);
+                }
             }
-
-            return lessonId;
+            return _lessonRepository.SelectLessonById(lessonId);
         }
 
         public void DeleteCommentFromLesson(int lessonId, int commentId) => _lessonRepository.DeleteCommentFromLesson(lessonId, commentId);
 
-        public void DeleteLesson(int id) => _lessonRepository.DeleteLesson(id);
-
-        public List<LessonDto> SelectAllLessonsByGroupId(int id) => _lessonRepository.SelectAllLessonsByGroupId(id);
-        
-        public List<LessonDto> SelectAllLessonsByTeacherId(int id) => _lessonRepository.SelectAllLessonsByTeacherId(id);
-        
-        public LessonDto SelectLessonById(int id) => _lessonRepository.SelectLessonById(id);
-        
-        public LessonDto SelectLessonWithCommentsById(int id)
+        public void DeleteLesson(UserDto userIdentity, int id)
         {
+            _lessonValidationHelper.CheckLessonExistence(id);
+            _lessonValidationHelper.CheckUserRelatesToLesson(userIdentity, id);
+
+            _lessonRepository.DeleteLesson(id);
+        }
+
+        public List<LessonDto> SelectAllLessonsByGroupId(UserDto userIdentity, int groupId)
+        {
+            //_groupValidationHelper.CheckGroupExistence(groupId);
+            var result = _lessonRepository.SelectAllLessonsByGroupId(groupId);
+            _lessonValidationHelper.CheckUserRelatesToGroup(userIdentity, result, groupId);
+            return result;
+        }
+
+        public List<LessonDto> SelectAllLessonsByTeacherId(int teacherId)
+        {
+            _lessonValidationHelper.CheckTeacherExistence(teacherId);
+            return _lessonRepository.SelectAllLessonsByTeacherId(teacherId);
+        }
+               
+        public LessonDto SelectLessonWithCommentsById(UserDto userIdentity, int id)
+        {
+            _lessonValidationHelper.CheckLessonExistence(id);
+            _lessonValidationHelper.CheckUserRelatesToLesson(userIdentity, id);
+
             LessonDto result = _lessonRepository.SelectLessonById(id);
-
             result.Comments = _commentRepository.SelectCommentsFromLessonByLessonId(id);
-
             return result;
         }
 
-        public LessonDto SelectLessonWithCommentsAndStudentsById(int id)
+        public LessonDto SelectLessonWithCommentsAndStudentsById(UserDto userIdentity, int id)
         {
-            LessonDto result = SelectLessonWithCommentsById(id);
-
+            LessonDto result = SelectLessonWithCommentsById(userIdentity, id);
             result.Students = _lessonRepository.SelectStudentsLessonByLessonId(id);
-
             return result;
         }
 
-        public LessonDto UpdateLesson(LessonDto lessonDto, int id)
+        public LessonDto UpdateLesson(UserDto userIdentity, LessonDto lessonDto, int lessonId)
         {
-            lessonDto.Id = id;
+            _lessonValidationHelper.CheckLessonExistence(lessonId);
+            _lessonValidationHelper.CheckUserRelatesToLesson(userIdentity, lessonId);
+
+            lessonDto.Id = lessonId;
             _lessonRepository.UpdateLesson(lessonDto);
             return _lessonRepository.SelectLessonById(lessonDto.Id);
         }

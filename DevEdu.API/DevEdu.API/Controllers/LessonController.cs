@@ -2,7 +2,6 @@ using DevEdu.API.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +12,7 @@ using DevEdu.API.Common;
 using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.Business.Services;
 using DevEdu.API.Models.OutputModels.Lesson;
+using DevEdu.API.Extensions;
 
 namespace DevEdu.API.Controllers
 {
@@ -34,11 +34,14 @@ namespace DevEdu.API.Controllers
         [AuthorizeRolesAttribute(Role.Teacher)]
         [HttpPost]
         [Description("Add a lesson.")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
-        public int AddLesson([FromBody] LessonInputModel inputModel)
+        [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status201Created)]
+        public LessonInfoOutputModel AddLesson([FromBody] LessonInputModel inputModel)
         {
-            var dto = _mapper.Map<LessonDto>(inputModel);
-            return _lessonService.AddLesson(dto, inputModel.TopicIds);
+            var lessonDto = _mapper.Map<LessonDto>(inputModel);
+            var userIdentity = this.GetUserIdAndRoles();
+            var userDto = _mapper.Map<UserDto>(userIdentity);
+            var output = _lessonService.AddLesson(userDto, lessonDto, inputModel.TopicIds);
+            return _mapper.Map<LessonInfoOutputModel>(output);
         }
 
         // api/lesson/{id}
@@ -48,7 +51,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteLesson(int id)
         {
-            _lessonService.DeleteLesson(id);
+            var userIdentity = this.GetUserIdAndRoles();
+            var userDto = _mapper.Map<UserDto>(userIdentity);
+            _lessonService.DeleteLesson(userDto, id);
         }
 
         // api/lesson/{id}
@@ -59,7 +64,9 @@ namespace DevEdu.API.Controllers
         public LessonInfoOutputModel UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
         {
             var dto = _mapper.Map<LessonDto>(updateModel);
-            var output = _lessonService.UpdateLesson(dto, id);
+            var userIdentity = this.GetUserIdAndRoles();
+            var userDto = _mapper.Map<UserDto>(userIdentity);
+            var output = _lessonService.UpdateLesson(userDto, dto, id);
             return _mapper.Map<LessonInfoOutputModel>(output);
         }
 
@@ -70,7 +77,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
         public List<LessonInfoOutputModel> GetAllLessonsByGroupId(int id)
         {
-            var dto = _lessonService.SelectAllLessonsByGroupId(id);
+            var userIdentity = this.GetUserIdAndRoles();
+            var userDto = _mapper.Map<UserDto>(userIdentity);
+            var dto = _lessonService.SelectAllLessonsByGroupId(userDto, id);
             return  _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
@@ -92,7 +101,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
         public LessonInfoWithCommentsOutputModel GetAllLessonsWithComments(int id)
         {
-            var dto = _lessonService.SelectLessonWithCommentsById(id);
+            var userIdentity = this.GetUserIdAndRoles();
+            var userDto = _mapper.Map<UserDto>(userIdentity);
+            var dto = _lessonService.SelectLessonWithCommentsById(userDto, id);
             return _mapper.Map<LessonInfoWithCommentsOutputModel>(dto);
         }
 
@@ -103,7 +114,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
         public LessonInfoWithStudentsAndCommentsOutputModel GetAllLessonsWithStudentsAndComments(int id)
         {
-            var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(id);
+            var userIdentity = this.GetUserIdAndRoles();
+            var userDto = _mapper.Map<UserDto>(userIdentity);
+            var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(userDto, id);
             return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel> (dto);
         }
 

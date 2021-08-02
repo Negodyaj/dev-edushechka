@@ -53,6 +53,51 @@ namespace DevEdu.Business.Tests
             };
         }
 
+        public static UserDto GetAdminIdentity()
+        {
+            return new UserDto
+            {
+                Id = 1,
+                Roles = new List<Role> { Role.Admin }
+            };
+        }
+
+        public static UserDto GetManagerIdentity()
+        {
+            return new UserDto
+            {
+                Id = 10,
+                Roles = new List<Role> { Role.Manager }
+            };
+        }
+
+        public static UserDto GetMethodistIdentity()
+        {
+            return new UserDto
+            {
+                Id = 8,
+                Roles = new List<Role> { Role.Methodist }
+            };
+        }
+
+        public static UserDto GetTeacherIdentity()
+        {
+            return new UserDto
+            {
+                Id = 3,
+                Roles = new List<Role> { Role.Teacher }
+            };
+        }
+
+        public static UserDto GetStudentIdentity()
+        {
+            return new UserDto
+            {
+                Id = 50,
+                Roles = new List<Role> { Role.Student }
+            };
+        }
+
         public static List<UserDto> GetListUsersDto()
         {
             return new List<UserDto>

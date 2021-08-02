@@ -5,6 +5,7 @@ using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DevEdu.Business.Tests
 {
@@ -12,18 +13,39 @@ namespace DevEdu.Business.Tests
     {
         private Mock<ILessonRepository> _lessonRepository;
         private Mock<ICommentRepository> _commentRepository;
+        private Mock<ITopicRepository> _topicRepository;
+        private Mock<IGroupRepository> _groupRepository;
         private Mock<IUserRepository> _userRepository;
         private Mock<IUserValidationHelper> _userValidationHelper;
-        private Mock<ILessonValidationHelper> _lessonValidationHelper;
+        private ILessonValidationHelper _lessonValidationHelper;
+        private ITopicValidationHelper _topicValidationHelper;
+        private IGroupValidationHelper _groupValidationHelper;
+
+        private ILessonService _sut;
 
         [SetUp]
         public void SetUp()
         {
             _lessonRepository = new Mock<ILessonRepository>();
             _commentRepository = new Mock<ICommentRepository>();
+            _topicRepository = new Mock<ITopicRepository>();
+            _groupRepository = new Mock<IGroupRepository>();
             _userRepository = new Mock<IUserRepository>();
             _userValidationHelper = new Mock<IUserValidationHelper>();
-            _lessonValidationHelper = new Mock<ILessonValidationHelper>();
+            _lessonValidationHelper = new LessonValidationHelper(
+                _lessonRepository.Object, 
+                _groupRepository.Object, 
+                _userRepository.Object
+            );
+            _topicValidationHelper = new TopicValidationHelper(_topicRepository.Object);
+            _groupValidationHelper = new GroupValidationHelper(_groupRepository.Object);
+
+            _sut = new LessonService(_lessonRepository.Object,
+                    _commentRepository.Object,
+                    _userValidationHelper.Object,
+                    _lessonValidationHelper,
+                    _topicValidationHelper,
+                    _groupValidationHelper);
         }
 
         [Test]
@@ -34,14 +56,8 @@ namespace DevEdu.Business.Tests
             var topicId = 7;
             _lessonRepository.Setup(x => x.AddTopicToLesson(lessonId, topicId));
 
-            var sut = new LessonService(_lessonRepository.Object, 
-                _commentRepository.Object, 
-                _userRepository.Object, 
-                _userValidationHelper.Object, 
-                _lessonValidationHelper.Object);
-
             //When
-            sut.AddTopicToLesson(lessonId, topicId);
+            _sut.AddTopicToLesson(lessonId, topicId);
 
             //Then
             _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Once);
@@ -55,66 +71,70 @@ namespace DevEdu.Business.Tests
             var topicId = 7;
             _lessonRepository.Setup(x => x.DeleteTopicFromLesson(lessonId, topicId));
 
-            var sut = new LessonService(_lessonRepository.Object,
-                            _commentRepository.Object,
-                            _userRepository.Object,
-                            _userValidationHelper.Object,
-                            _lessonValidationHelper.Object);
             //When
-            sut.DeleteTopicFromLesson(lessonId, topicId);
+            _sut.DeleteTopicFromLesson(lessonId, topicId);
 
             //Then
             _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lessonId, topicId), Times.Once);
         }
 
         [Test]
-        public void AddLesson_SimpleDto_LessonAdded()
+        public void AddLesson_UserDtoAndSimpleDtoAndListOfTopicsPassed_LessonAdded()
         {
             //Given
-            var expectedId = LessonData.LessonId;
-            var lessonDto = LessonData.GetAddedLessonDto();
+            var userIdentity = UserData.GetTeacherIdentity();
+            var lessonId = LessonData.LessonId;
+            var addedLesson = LessonData.GetAddedLessonDto();
             var topicIds = new List<int>(){ 6, 7};
+            var topics = TopicData.GetTopics();
 
-            _lessonRepository.Setup(x => x.AddLesson(lessonDto)).Returns(expectedId);
-            foreach (int topicId in topicIds)
+            var expectedLesson = addedLesson;
+            expectedLesson.Id = lessonId;
+
+            _lessonRepository.Setup(x => x.AddLesson(addedLesson)).Returns(lessonId);
+            for(int i = 0; i < topics.Count; i++)
             {
-                _lessonRepository.Setup(x => x.AddTopicToLesson(expectedId, topicId));
+                _topicRepository.Setup(x => x.GetTopic(topicIds[i])).Returns(topics[i]);
+                _lessonRepository.Setup(x => x.AddTopicToLesson(lessonId, topicIds[i]));
             }
-
-            var sut = new LessonService(_lessonRepository.Object, _commentRepository.Object, _userRepository.Object,
-                _userValidationHelper.Object, _lessonValidationHelper.Object);
+            _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(expectedLesson);
 
             //When
-            var actualId = sut.AddLesson(lessonDto, topicIds);
+            var actualLesson = _sut.AddLesson(userIdentity, addedLesson, topicIds);
 
             //Then
-            Assert.AreEqual(expectedId, actualId);
-            _lessonRepository.Verify(x => x.AddLesson(lessonDto), Times.Once);
+            Assert.AreEqual(expectedLesson, actualLesson);
+            _lessonRepository.Verify(x => x.AddLesson(addedLesson), Times.Once);
             foreach (int topicId in topicIds)
             {
-                _lessonRepository.Verify(x => x.AddTopicToLesson(expectedId, topicId), Times.Once);
+                _topicRepository.Verify(x => x.GetTopic(topicId), Times.Once);
+                _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Once);
             }
+            _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(expectedLesson);
         }
 
         [Test]
-        public void SelectAllLessonsByGroupId_ExistingGroupIdPassed_LessonsReturned()
+        public void SelectAllLessonsByGroupId_UserDtoAndExistingGroupIdPassed_LessonsReturned()
         {
             //Given
+            var userIdentity = UserData.GetTeacherIdentity();
             var expected = LessonData.GetLessons();
-
-            var groupId = 9;
-
+            var groupId = 1;
+            var groups = GroupData.GetGroupsDto();
+                 
             _lessonRepository.Setup(x => x.SelectAllLessonsByGroupId(groupId)).Returns(expected);
-
-            var sut = new LessonService(_lessonRepository.Object, _commentRepository.Object, _userRepository.Object,
-                _userValidationHelper.Object, _lessonValidationHelper.Object);
+            if (CheckerRole.IsStudent(userIdentity.Roles))
+            {
+                _groupRepository.Setup(x => x.GetGroupsByStudentId(groupId)).Returns(groups);
+            }
 
             //When
-            var actual = sut.SelectAllLessonsByGroupId(groupId);
+            var actual = _sut.SelectAllLessonsByGroupId(userIdentity, groupId);
 
             //Then
             Assert.AreEqual(expected, actual);
             _lessonRepository.Verify(x => x.SelectAllLessonsByGroupId(groupId), Times.Once);
+            _groupRepository.Verify(x => x.GetGroupsByStudentId(groupId), Times.AtMostOnce);
         }
 
         [Test]
@@ -122,67 +142,42 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expected = LessonData.GetLessons();
-
             var teacherId = 3;
+            var teacherDto = UserData.GetTeacherIdentity();
 
             _lessonRepository.Setup(x => x.SelectAllLessonsByTeacherId(teacherId)).Returns(expected);
-
-            var sut = new LessonService(_lessonRepository.Object, _commentRepository.Object, _userRepository.Object,
-                _userValidationHelper.Object, _lessonValidationHelper.Object);
+            _userRepository.Setup(x => x.SelectUserById(teacherId)).Returns(teacherDto);
 
             //When
-            var actual = sut.SelectAllLessonsByTeacherId(teacherId);
+            var actual = _sut.SelectAllLessonsByTeacherId(teacherId);
 
             //Then
             Assert.AreEqual(expected, actual);
             _lessonRepository.Verify(x => x.SelectAllLessonsByTeacherId(teacherId), Times.Once);
+            _userRepository.Verify(x => x.SelectUserById(teacherId), Times.Once);
         }
 
         [Test]
-        public void SelectLessonById_ExistingLessonIdPassed_LessonReturned()
+        public void SelectLessonWithCommentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsReturned()
         {
             //Given
-            var expected = LessonData.GetSelectedLessonDto();
-
+            var userIdentity = UserData.GetAdminIdentity();
             var lessonId = LessonData.LessonId;
-
-            _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(expected);
-
-            var sut = new LessonService(_lessonRepository.Object, _commentRepository.Object, _userRepository.Object,
-                _userValidationHelper.Object, _lessonValidationHelper.Object); 
-
-            //When
-            var actual = sut.SelectLessonById(lessonId);
-
-            //Then
-            Assert.AreEqual(expected, actual);
-            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
-        }
-
-        [Test]
-        public void SelectLessonWithCommentsById_ExistingLessonIdPassed_LessonWithCommentsReturned()
-        {
-            //Given
             var lesson = LessonData.GetSelectedLessonDto();
             var comments = CommentData.GetListCommentsDto();
 
             var expected = lesson;
             expected.Comments = comments;
 
-            var lessonId = LessonData.LessonId;
-
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(lesson);
             _commentRepository.Setup(x => x.SelectCommentsFromLessonByLessonId(lessonId)).Returns(comments);
-
-            var sut = new LessonService(_lessonRepository.Object, _commentRepository.Object, _userRepository.Object,
-                _userValidationHelper.Object, _lessonValidationHelper.Object);
-
+            
             //When
-            var actual = sut.SelectLessonWithCommentsById(lessonId);
+            var actual = _sut.SelectLessonWithCommentsById(userIdentity, lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
-            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Exactly(2));
             _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Once);
             _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Never);
         }
@@ -191,6 +186,7 @@ namespace DevEdu.Business.Tests
         public void SelectLessonWithCommentsAndStudentsById_ExistingLessonIdPassed_LessonWithCommentsAndAttendancesReturned()
         {
             //Given
+            var userIdentity = UserData.GetAdminIdentity();
             var lesson = LessonData.GetSelectedLessonDto();
             var comments = CommentData.GetListCommentsDto();
             var students = LessonData.GetAttendances();
@@ -205,11 +201,8 @@ namespace DevEdu.Business.Tests
             _commentRepository.Setup(x => x.SelectCommentsFromLessonByLessonId(lessonId)).Returns(comments);
             _lessonRepository.Setup(x => x.SelectStudentsLessonByLessonId(lessonId)).Returns(students);
 
-            var sut = new LessonService(_lessonRepository.Object, _commentRepository.Object, _userRepository.Object,
-                _userValidationHelper.Object, _lessonValidationHelper.Object);
-
             //When
-            var actual = sut.SelectLessonWithCommentsAndStudentsById(lessonId);
+            var actual = _sut.SelectLessonWithCommentsAndStudentsById(userIdentity, lessonId);
 
             //Then
             Assert.AreEqual(expectedLesson, actual);
@@ -222,6 +215,7 @@ namespace DevEdu.Business.Tests
         public void UpdateLesson_SimpleDtoWithoutTeacherPassed_UpdatedLessonReturned()
         {
             //Given
+            var userIdentity = UserData.GetTeacherIdentity();
             var lessonId = LessonData.LessonId;
             var updatedLesson = LessonData.GetUpdatedLessonDto();
 
@@ -230,11 +224,8 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.UpdateLesson(updatedLesson));
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(expected);
 
-            var sut = new LessonService(_lessonRepository.Object, _commentRepository.Object, _userRepository.Object,
-                _userValidationHelper.Object, _lessonValidationHelper.Object);
-
             //When
-            var actual = sut.UpdateLesson(updatedLesson, lessonId);
+            var actual = _sut.UpdateLesson(userIdentity, updatedLesson, lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);

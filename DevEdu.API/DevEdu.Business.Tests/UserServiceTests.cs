@@ -28,12 +28,12 @@ namespace DevEdu.Business.Tests
             var sut = new UserService(_userRepoMock.Object);
 
             //When
-            var actualId = sut.AddUser(user);
+            var actual = sut.AddUser(user);
 
             //Then
-            Assert.AreEqual(UserData.expectedUserId, actualId);
+            Assert.AreEqual(UserData.expectedUserId, actual.Id);
             _userRepoMock.Verify(x => x.AddUser(user), Times.Once);
-            _userRepoMock.Verify(x => x.AddUserRole(actualId, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            _userRepoMock.Verify(x => x.AddUserRole(actual.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
         }
 
         [Test]

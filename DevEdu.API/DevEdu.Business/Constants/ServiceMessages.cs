@@ -7,6 +7,7 @@
         public const string SameTopicsInCourseTopics = "the same topics in the course";
         public const string EntityNotFound = "Entity Not Found";
         public const string PaymentDeleted = "This payment is deleted";
-
+        public const string UserAndTeacherAreNotSame = "User with id = {0} and teacher with id = {1} are not the same";
+        public const string UserDoesntRelateToEntity = "User with id = {0} doesn't relate to {1} with id = {2}";
     }
 }

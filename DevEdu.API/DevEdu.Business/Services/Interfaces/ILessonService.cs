@@ -6,15 +6,14 @@ namespace DevEdu.Business.Services
     public interface ILessonService
     {
         void AddCommentToLesson(int lessonId, CommentDto commentDto);
-        int AddLesson(LessonDto lessonDto, List<int> topicIds);
+        LessonDto AddLesson(UserDto userIdentity, LessonDto lessonDto, List<int> topicIds);
         void DeleteCommentFromLesson(int lessonId, int commentId);
-        void DeleteLesson(int id);
-        List<LessonDto> SelectAllLessonsByGroupId(int id);
+        void DeleteLesson(UserDto userIdentity, int id);
+        List<LessonDto> SelectAllLessonsByGroupId(UserDto userIdentity, int id);
         List<LessonDto> SelectAllLessonsByTeacherId(int id);
-        LessonDto SelectLessonById(int id);
-        LessonDto SelectLessonWithCommentsById(int id);
-        LessonDto SelectLessonWithCommentsAndStudentsById(int id);
-        LessonDto UpdateLesson(LessonDto lessonDto, int id);
+        LessonDto SelectLessonWithCommentsById(UserDto userIdentity, int id);
+        LessonDto SelectLessonWithCommentsAndStudentsById(UserDto userIdentity, int id);
+        LessonDto UpdateLesson(UserDto userIdentity, LessonDto lessonDto, int id);
         void DeleteTopicFromLesson(int lessonId, int topicId);
         void AddTopicToLesson(int lessonId, int topicId);
         void AddStudentToLesson(int lessonId, int userId);

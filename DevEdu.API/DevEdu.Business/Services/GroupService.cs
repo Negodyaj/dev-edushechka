@@ -72,5 +72,7 @@ namespace DevEdu.Business.Services
             _groupRepository.UpdateGroupTask(dto);
             return _groupRepository.GetGroupTask(groupId, taskId);
         }
+
+        public List<GroupDto> GetGroupsByStudentId(int studentId) => _groupRepository.GetGroupsByStudentId(studentId);
     }
 }
