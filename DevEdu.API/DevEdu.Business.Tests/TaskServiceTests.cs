@@ -18,7 +18,6 @@ namespace DevEdu.Business.Tests
         private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
         private Mock<IUserRepository> _userRepoMock;
-        //private Mock<IUserValidationHelper> _userValidationHelperMock;
         private TaskService sut;
 
         [SetUp]
@@ -29,7 +28,6 @@ namespace DevEdu.Business.Tests
             _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
             _groupRepoMock = new Mock<IGroupRepository>();
             _userRepoMock = new Mock<IUserRepository>();
-            //_userValidationHelperMock = new Mock<IUserValidationHelper>();
             sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _groupRepoMock.Object, new TaskValidationHelper(_taskRepoMock.Object, _groupRepoMock.Object), new UserValidationHelper(_userRepoMock.Object));
         }
 
