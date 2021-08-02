@@ -6,11 +6,6 @@ namespace DevEdu.Business.Tests
 {
     public static class NotificationData
     {
-        public const int ExpectedNotificationId = 42;
-        public const int NotificationId = 1;
-        public const int UserId = 1;
-        public const int GroupId = 1;
-
         public static NotificationDto GetNotificationDtoByRole()
         {
             return new NotificationDto

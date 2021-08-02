@@ -9,7 +9,7 @@ namespace DevEdu.Business.Services
         List<NotificationDto> GetNotificationsByUserId(int userId);
         List<NotificationDto> GetNotificationsByGroupId(int groupId);
         List<NotificationDto> GetNotificationsByRoleId(int RoleId);
-        int AddNotification(NotificationDto dto);
+        NotificationDto AddNotification(NotificationDto dto);
         void DeleteNotification(int id);
         NotificationDto UpdateNotification(int id, NotificationDto dto);
     }
