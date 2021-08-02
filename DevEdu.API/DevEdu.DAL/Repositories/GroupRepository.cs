@@ -9,6 +9,14 @@ namespace DevEdu.DAL.Repositories
 {
     public class GroupRepository : BaseRepository, IGroupRepository
     {
+        private const string _groupInsertProcedure = "dbo.Group_Insert";
+        private const string _groupDeleteProcedure = "dbo.Group_Delete";
+        private const string _groupSelectByIdProcedure = "dbo.Group_SelectById";
+        private const string _groupSelectAllProcedure = "dbo.Group_SelectAll";
+        private const string _groupUpdateByIdProcedure = "dbo.Group_UpdateById";
+        private const string _groupUpdateGroupStatusProcedure = "dbo.Group_UpdateGroupStatus";
+
+
         private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
         private const string _userGroupDeleteProcedure = "dbo.Tag_Delete";
         private const string _insertGroupLesson = "dbo.Group_Lesson_Insert";
@@ -22,6 +30,108 @@ namespace DevEdu.DAL.Repositories
         private const string _taskGroupSelectAllByGroupIdProcedure = "dbo.Group_Task_SelectAllByGroupId";
         private const string _taskGroupSelectByIdProcedure = "dbo.Group_Task_SelectById";
         private const string _taskGroupUpdateProcedure = "dbo.Group_Task_Update";
+
+        private const string _groupSelectPresentGroupForStudentByUserId = "dbo.Group_SelectPresentGroupForStudentByUserId";
+
+        public int AddGroup(GroupDto groupDto)
+        {
+            return _connection.QuerySingle<int>
+            (
+                _groupInsertProcedure,
+                new
+                {
+                    groupDto.Id,
+                    groupDto.Name,
+                    groupDto.Course
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public void DeleteGroup(int id)
+        {
+            _connection.Execute
+            (
+                _groupDeleteProcedure,
+                new { Id = id },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public GroupDto GetGroup(int id)
+        {
+            return _connection
+                .Query<GroupDto, CourseDto, GroupDto>
+            (
+                _groupSelectByIdProcedure,
+                (group, course) =>
+                {
+                    GroupDto dto = group;
+                    group.Course = course;
+                    group.Students = new List<UserDto>();
+                    group.Teachers = new List<UserDto>();
+                    group.Tutors = new List<UserDto>();
+                    return dto;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+            )
+            .FirstOrDefault();
+        }
+
+        public List<GroupDto> GetGroups()
+        {
+            return _connection
+                .Query<GroupDto, CourseDto, GroupDto>
+            (
+                _groupSelectAllProcedure,
+                (group, course) =>
+                {
+                    GroupDto groupDto;
+                    groupDto = group;
+                    groupDto.Course = course;
+                    return groupDto;
+                },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+            )
+            .Distinct()
+            .ToList();
+        }
+
+        public GroupDto UpdateGroup(int id, GroupDto groupDto)
+        {
+            return _connection.QuerySingle<GroupDto>
+            (
+                _groupUpdateByIdProcedure,
+                new
+                {
+                    id,
+                    groupDto.Name,
+                    groupDto.Course,
+                    groupDto.GroupStatus,
+                    groupDto.StartDate,
+                    groupDto.Timetable,
+                    groupDto.PaymentPerMonth
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public GroupDto ChangeGroupStatus(int groupId, int statusId)
+        {
+            return _connection.QuerySingle<GroupDto>
+            (
+                _groupUpdateGroupStatusProcedure,
+                new
+                {
+                    groupId,
+                    statusId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
 
         public int AddGroupToLesson(int groupId, int lessonId)
         {
@@ -38,15 +148,15 @@ namespace DevEdu.DAL.Repositories
 
         public int RemoveGroupFromLesson(int groupId, int lessonId)
         {
-           return  _connection.Execute(
-                _deleteGroupLesson,
-                new
-                {
-                    groupId,
-                    lessonId
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            return _connection.Execute(
+                 _deleteGroupLesson,
+                 new
+                 {
+                     groupId,
+                     lessonId
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
         public int AddGroupMaterialReference(int groupId, int materialId)
@@ -197,5 +307,14 @@ namespace DevEdu.DAL.Repositories
                 )
                 .ToList();
         }
-    }    
+
+        public int GetPresentGroupForStudentByUserId(int userId)
+        {
+            return _connection.QuerySingle<int>(
+                   _groupSelectPresentGroupForStudentByUserId,
+                   new { Id = userId },
+                   commandType: CommandType.StoredProcedure
+              );
+        }
+    }
 }

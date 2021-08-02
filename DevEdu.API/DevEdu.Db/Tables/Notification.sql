@@ -2,8 +2,8 @@
 	Id int NOT NULL IDENTITY(1,1),
 	Date datetime NOT NULL,
 	Text nvarchar(max) NOT NULL,
-	UserId int,
 	RoleId int,
+	UserId int,
 	GroupId int,
 	IsDeleted bit NOT NULL DEFAULT '0',
   CONSTRAINT [PK_NOTIFICATION] PRIMARY KEY CLUSTERED

@@ -1,7 +1,6 @@
 ﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
@@ -14,6 +13,7 @@ namespace DevEdu.Business.Tests
         {
             return new UserDto
             {
+                Id = 1,
                 FirstName = "Admin",
                 LastName = "Adminov",
                 Patronymic = "Adminovich",
@@ -38,6 +38,7 @@ namespace DevEdu.Business.Tests
         {
             return new UserDto
             {
+                Id = 2,
                 FirstName = "Student",
                 LastName = "Studentov",
                 Patronymic = "Studentovich",
@@ -60,6 +61,7 @@ namespace DevEdu.Business.Tests
             {
                 new UserDto
                 {
+                    Id = 1,
                     FirstName = "Admin",
                         LastName = "Adminov",
                         Patronymic = "Adminovich",
@@ -80,6 +82,7 @@ namespace DevEdu.Business.Tests
                 },
                 new UserDto
                 {
+                    Id = 2,
                     FirstName = "Student",
                     LastName = "Studentov",
                     Patronymic = "Studentovich",
@@ -96,6 +99,7 @@ namespace DevEdu.Business.Tests
                 },
                 new UserDto
                 {
+                    Id = 3,
                     FirstName = "Manager",
                     LastName = "Managerov",
                     Patronymic = "Managerovich",
@@ -110,6 +114,27 @@ namespace DevEdu.Business.Tests
                     PhoneNumber = "ManagerPhoneNumber",
                     Roles = new List<Role> { Role.Manager }
                 }
+            };
+        }
+
+        public static UserDto GetUserDtoOutOfList()
+        {
+            return new UserDto
+            {
+                Id = 10,
+                FirstName = "Student",
+                LastName = "Studentov",
+                Patronymic = "Studentovich",
+                Email = "student@student.st",
+                Username = "Student01",
+                Password = "qwerty12345",
+                ContractNumber = "Student01",
+                City = (City)1,
+                BirthDate = DateTime.Today,
+                GitHubAccount = "Student/Student.git",
+                Photo = "https://localhost:Student",
+                PhoneNumber = "StudentPhoneNumber",
+                Roles = new List<Role> { Role.Student }
             };
         }
     }

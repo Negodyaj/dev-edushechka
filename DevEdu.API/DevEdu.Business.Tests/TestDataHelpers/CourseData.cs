@@ -159,7 +159,7 @@ namespace DevEdu.Business.Tests
 
             courseTopicsDto.Add(new CourseTopicDto { Position = 5, Id = 1, Topic = new TopicDto { Id = 1 } });
             courseTopicsDto.Add(new CourseTopicDto { Position = 6, Id = 2, Topic = new TopicDto { Id = 2 } });
-            courseTopicsDto.Add(new CourseTopicDto { Position = 8, Id = 3, Topic = new TopicDto { Id = 3 } });
+            courseTopicsDto.Add(new CourseTopicDto { Position = 8, Id = 3, Topic = new TopicDto { Id = 54 } });
 
             return courseTopicsDto;
         }
@@ -173,5 +173,33 @@ namespace DevEdu.Business.Tests
 
             return courseTopicsDto;
         }
+        public static List<TopicDto> GetTopics()
+        {
+            List<TopicDto> topicsDto = new List<TopicDto>();
+
+            topicsDto.Add(new TopicDto { Id = 1 });
+            topicsDto.Add(new TopicDto { Id = 2 });
+            topicsDto.Add(new TopicDto { Id = 3 });
+            topicsDto.Add(new TopicDto { Id = 4 });
+            topicsDto.Add(new TopicDto { Id = 5 });
+            topicsDto.Add(new TopicDto { Id = 6 });
+            topicsDto.Add(new TopicDto { Id = 8 });
+            topicsDto.Add(new TopicDto { Id = 9 });
+            topicsDto.Add(new TopicDto { Id = 10 });
+            topicsDto.Add(new TopicDto { Id = 54 });
+
+            return topicsDto;
+        }
+        public static List<TopicDto> GetTopicsFromBDUseWhenTopicAbsent()
+        {
+            List<TopicDto> topicsDto = new List<TopicDto>();
+
+            topicsDto.Add(new TopicDto { Id = 1 });
+            topicsDto.Add(new TopicDto { Id = 2 });
+            topicsDto.Add(new TopicDto { Id = 33 });
+
+            return topicsDto;
+        }
+
     }
 }

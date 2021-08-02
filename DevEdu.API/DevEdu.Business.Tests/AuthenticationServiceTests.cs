@@ -1,4 +1,5 @@
 ﻿using DevEdu.Business.Services;
+using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -12,11 +13,13 @@ namespace DevEdu.Business.Tests
     class AuthenticationServiceTests
     {
         private AuthenticationService _sut;
+
         [SetUp]
         public void Setup()
         {
-            _sut = new AuthenticationService();
+            _sut = new AuthenticationService(new Mock<IUserRepository>().Object);
         }
+
         [Test]
         public void HashPassword_PasswordAndSalt_ReturnSalt()
         {
@@ -29,6 +32,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(expected, actual);
         }
+
         [Test]
         public void HashPassword_WrongSalt_ReturnError()
         {

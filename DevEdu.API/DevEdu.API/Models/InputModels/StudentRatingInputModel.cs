@@ -16,6 +16,7 @@ namespace DevEdu.API.Models.InputModels
         public int RatingTypeId { get; set; }
 
         [Required(ErrorMessage = RatingRequired)]
+        [Range(minimum: 1, maximum: 100, ErrorMessage = WrongValueOfRating)]
         public int Rating { get; set; }
 
         [Required(ErrorMessage = ReportingPeriodNumberRequired)]

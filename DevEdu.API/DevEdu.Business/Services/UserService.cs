@@ -1,6 +1,7 @@
 ﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Services
 {
@@ -13,20 +14,20 @@ namespace DevEdu.Business.Services
             _userRepository = userRepository;
         }
 
-        public int AddUser(UserDto dto)
+        public UserDto AddUser(UserDto dto)
         {
-            var addedUserId = _userRepository.AddUser(dto);
+            if (dto.Roles.Count == 0)
+                dto.Roles.Add(Role.Student);
 
-            if (dto.Roles == null || dto.Roles.Count == 0)
-            {
-                return addedUserId;
-            }
+            var addedUserId = _userRepository.AddUser(dto);
 
             foreach (var role in dto.Roles)
             {
                 AddUserRole(addedUserId, (int)role);
             }
-            return addedUserId;
+
+            var response = _userRepository.SelectUserById(addedUserId);
+            return response;
         }
 
         public UserDto SelectUserById(int id) => _userRepository.SelectUserById(id);
