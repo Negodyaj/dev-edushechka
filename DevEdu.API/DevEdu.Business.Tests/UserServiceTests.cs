@@ -4,7 +4,8 @@ using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 ﻿using DevEdu.Business.Services;
-using DevEdu.DAL.Models;
+using DevEdu.DAL.Models;
+
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -35,17 +36,17 @@ namespace DevEdu.Business.Tests
             var user = UserData.GetUserDto();
             var expectedUserId = UserData.expectedUserId;
 
-            _userRepoMock.Setup(x => x.AddUser(user)).Returns(UserData.expectedUserId);
-            _userRepoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
-            _userRepoMock.Setup(x => x.SelectUserById(expectedUserId)).Returns(new UserDto { Id = expectedUserId });
+            _repoMock.Setup(x => x.AddUser(user)).Returns(UserData.expectedUserId);
+            _repoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
+            _repoMock.Setup(x => x.SelectUserById(expectedUserId)).Returns(new UserDto { Id = expectedUserId });
 
             //When
             var actualId = _sut.AddUser(user);
 
             //Then
             Assert.AreEqual(UserData.expectedUserId, actualId.Id);
-            _userRepoMock.Verify(x => x.AddUser(user), Times.Once);
-            _userRepoMock.Verify(x => x.AddUserRole(actualId.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            _repoMock.Verify(x => x.AddUser(user), Times.Once);
+            _repoMock.Verify(x => x.AddUserRole(actualId.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
         }
 
         [Test]
@@ -117,18 +118,20 @@ namespace DevEdu.Business.Tests
         public void AddUser_WhenDtoWithoutRoles_UserDtoWithRoleStudentCreated()
         {
             //Given
-            var user = UserData.GetAnotherUserDto();
+            var expectedUser = UserData.GetAnotherUserDto();
 
-            _repoMock.Setup(x => x.AddUser(user)).Returns(UserData.expectedUserId);
+            _repoMock.Setup(x => x.AddUser(expectedUser)).Returns(UserData.expectedUserId);
             _repoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
+            _repoMock.Setup(x => x.SelectUserById(UserData.expectedUserId)).Returns(expectedUser);
 
             //When
-            var actualId = _sut.AddUser(user);
+            var actualUser = _sut.AddUser(expectedUser);
 
             //Then
-            Assert.AreEqual(UserData.expectedUserId, actualId);
-            _repoMock.Verify(x => x.AddUser(user), Times.Once);
-            _repoMock.Verify(x => x.AddUserRole(actualId, It.IsAny<int>()), Times.AtLeastOnce);
+            Assert.AreEqual(expectedUser, actualUser);
+            _repoMock.Verify(x => x.AddUser(expectedUser), Times.Once);
+            _repoMock.Verify(x => x.AddUserRole(actualUser.Id, It.IsAny<int>()), Times.Never); 
+            _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.AtLeastOnce);
         }
 
         [TestCase(1)]

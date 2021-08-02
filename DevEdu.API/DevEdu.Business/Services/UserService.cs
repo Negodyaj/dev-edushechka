@@ -27,9 +27,9 @@ namespace DevEdu.Business.Services
 
             var addedUserId = _userRepository.AddUser(dto);
 
-            foreach (var role in dto.Roles)
-            {
-                AddUserRole(addedUserId, (int)role);
+            foreach (var role in dto.Roles)
+            {
+                AddUserRole(addedUserId, (int)role);
             }
 
             var response = _userRepository.SelectUserById(addedUserId);
