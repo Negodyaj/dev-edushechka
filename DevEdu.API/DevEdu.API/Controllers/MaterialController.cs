@@ -92,7 +92,10 @@ namespace DevEdu.API.Controllers
 
         // api/material/{materialId}/tag/{tagId}
         [HttpPost("{materialId}/tag/{tagId}")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Add tag to material")]
         public string AddTagToMaterial(int materialId, int tagId)
         {
@@ -103,6 +106,9 @@ namespace DevEdu.API.Controllers
         // api/material/{materialId}/tag/{tagId}
         [HttpDelete("{materialId}/tag/{tagId}")]
         [Description("Delete tag from material")]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public string DeleteTagFromMaterial(int materialId, int tagId)
         {
