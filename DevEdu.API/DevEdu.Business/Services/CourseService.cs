@@ -3,7 +3,6 @@ using DevEdu.Business.Exceptions;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -39,7 +38,7 @@ namespace DevEdu.Business.Services
         public void DeleteCourse(int id) => _courseRepository.DeleteCourse(id);
 
         public CourseDto GetCourse(int id) => _courseRepository.GetCourse(id);
-        public CourseDto GetFullCourseInfo(int id) 
+        public CourseDto GetFullCourseInfo(int id)
         {
             var course = GetCourse(id);
             course.Tasks = _taskRepository.GetTaskByCourseId(course.Id);
@@ -57,7 +56,7 @@ namespace DevEdu.Business.Services
 
         public CourseDto UpdateCourse(int id, CourseDto courseDto) => _courseRepository.UpdateCourse(id, courseDto);
 
-        public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
+        public void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto)
         {
             CheckCourseAndTopicExistences(courseId, topicId);
             dto.Course = new CourseDto() { Id = courseId };

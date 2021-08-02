@@ -18,7 +18,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var rating = _ratingRepository.SelectStudentRatingById(ratingId);
             if (rating == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(rating), ratingId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(rating), ratingId));
         }
     }
 }

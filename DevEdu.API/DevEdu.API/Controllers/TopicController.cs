@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using DevEdu.API.Models.InputModels;
-using DevEdu.DAL.Repositories;
 using AutoMapper;
 using DevEdu.DAL.Models;
 using System.ComponentModel;
@@ -30,7 +29,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TopicOutputModel), StatusCodes.Status200OK)]
         public TopicOutputModel GetTopicById(int id)
         {
-            var output= _topicService.GetTopic(id);
+            var output = _topicService.GetTopic(id);
             return _mapper.Map<TopicOutputModel>(output);
         }
 

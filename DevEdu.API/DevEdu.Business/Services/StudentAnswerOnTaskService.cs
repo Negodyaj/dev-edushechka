@@ -5,7 +5,7 @@ using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.Services
 {
-    public class StudentAnswerOnTaskService: IStudentAnswerOnTaskService
+    public class StudentAnswerOnTaskService : IStudentAnswerOnTaskService
     {
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
         private readonly IGroupRepository _groupRepository;
@@ -58,7 +58,7 @@ namespace DevEdu.Business.Services
             return _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(dto);
         }
 
-        public void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId) 
+        public void ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId)
         {
             StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
             dto.Task = new TaskDto { Id = taskId };

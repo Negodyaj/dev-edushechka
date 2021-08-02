@@ -62,7 +62,7 @@ namespace DevEdu.Business.Services
             var user = _userRepository.SelectUserById(userId);
             if (user ==default)
             {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(user), userId));
             }
             if (!user.Roles.Contains((Role)roleId))
             {
@@ -77,7 +77,7 @@ namespace DevEdu.Business.Services
             var user = _userRepository.SelectUserById(userId);
             if (user == default)
             {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(user), userId));
             }
             _userValidationHelper.CheckUserBelongToGroup(groupId, userId, user.Roles);
             _groupRepository.DeleteUserFromGroup(userId, groupId);

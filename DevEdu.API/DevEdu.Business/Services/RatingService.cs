@@ -29,7 +29,7 @@ namespace DevEdu.Business.Services
         {
             _groupValidationHelper.CheckGroupExistence(studentRatingDto.Group.Id);
             _userValidationHelper.CheckAuthorizationUserToGroup(studentRatingDto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
-            _userValidationHelper.CheckUserExistence(studentRatingDto.User.Id);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentRatingDto.User.Id);
             _userValidationHelper.CheckUserBelongToGroup(studentRatingDto.Group.Id, studentRatingDto.User.Id, Role.Student);
             var id = _repository.AddStudentRating(studentRatingDto);
             return _repository.SelectStudentRatingById(id);
@@ -40,7 +40,7 @@ namespace DevEdu.Business.Services
             var dto = _repository.SelectStudentRatingById(id);
             if (dto == default)
             {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(dto), id));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(dto), id));
             }
             _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
             _repository.DeleteStudentRating(id);
@@ -53,7 +53,7 @@ namespace DevEdu.Business.Services
 
         public List<StudentRatingDto> GetStudentRatingByUserId(int userId)
         {
-            _userValidationHelper.CheckUserExistence(userId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
             return _repository.SelectStudentRatingByUserId(userId);
         }
 
@@ -72,7 +72,7 @@ namespace DevEdu.Business.Services
             var dto = _repository.SelectStudentRatingById(id);
             if (dto == default)
             {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(dto), id));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(dto), id));
             }
             _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
             dto = new StudentRatingDto

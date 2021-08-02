@@ -71,7 +71,7 @@ namespace DevEdu.API.Controllers
         public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
         {
             var dto = _mapper.Map<CommentDto>(model);
-            var output= _commentService.UpdateComment(id, dto);
+            var output = _commentService.UpdateComment(id, dto);
             return _mapper.Map<CommentInfoOutputModel>(output);
         }
     }

@@ -4,7 +4,7 @@ using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.Services
 {
-    public  class NotificationService : INotificationService
+    public class NotificationService : INotificationService
     {
         private readonly INotificationRepository _notificationRepository;
 
@@ -17,7 +17,7 @@ namespace DevEdu.Business.Services
 
         public List<NotificationDto> GetNotificationsByUserId(int userId) => _notificationRepository.GetNotificationsByUserId(userId);
         public List<NotificationDto> GetNotificationsByGroupId(int groupId) => _notificationRepository.GetNotificationsByGroupId(groupId);
-        public List<NotificationDto> GetNotificationsByRoleId(int RoleId) =>    _notificationRepository.GetNotificationsByRoleId(RoleId);
+        public List<NotificationDto> GetNotificationsByRoleId(int RoleId) => _notificationRepository.GetNotificationsByRoleId(RoleId);
 
         public int AddNotification(NotificationDto dto)
         {
@@ -27,7 +27,7 @@ namespace DevEdu.Business.Services
             {
                 throw new System.Exception("Only one property (RoleId, UserId or GroupId) should have a value");
             }
-           return  _notificationRepository.AddNotification(dto);
+            return _notificationRepository.AddNotification(dto);
         }
 
         public void DeleteNotification(int id) => _notificationRepository.DeleteNotification(id);

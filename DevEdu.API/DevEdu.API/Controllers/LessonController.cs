@@ -2,7 +2,6 @@ using DevEdu.API.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
@@ -67,7 +66,7 @@ namespace DevEdu.API.Controllers
         public List<LessonInfoOutputModel> GetAllLessonsByGroupId(int id)
         {
             var dto = _lessonService.SelectAllLessonsByGroupId(id);
-            return  _mapper.Map<List<LessonInfoOutputModel>>(dto);
+            return _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
         // api/lesson/teacherId/{id}
@@ -107,7 +106,7 @@ namespace DevEdu.API.Controllers
         public LessonInfoWithStudentsAndCommentsOutputModel GetAllLessonsWithStudentsAndComments(int id)
         {
             var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(id);
-            return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel> (dto);
+            return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel>(dto);
         }
 
         // api/lesson/{lessonId}
@@ -117,7 +116,7 @@ namespace DevEdu.API.Controllers
         public void AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel commentInputModel)
         {
             var commentDto = _mapper.Map<CommentDto>(commentInputModel);
-            
+
             _lessonService.AddCommentToLesson(lessonId, commentDto);
         }
 
@@ -127,7 +126,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteLessonComment(int lessonId, int commentId)
         {
-            _lessonService.DeleteCommentFromLesson(lessonId, commentId);            
+            _lessonService.DeleteCommentFromLesson(lessonId, commentId);
         }
 
         // api/lesson/{lessonId}/topic/{toppicId}
@@ -166,7 +165,6 @@ namespace DevEdu.API.Controllers
         public void DeleteStudentFromLesson(int lessonId, int userId)
         {
            _lessonService.DeleteStudentFromLesson(lessonId, userId);
-            
         }
 
         // api/lesson/{lessonId}/user/{userId}/feedback
@@ -212,7 +210,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<FeedbackOutputModel>), StatusCodes.Status200OK)]
         public List<FeedbackOutputModel> GetAllFeedbackByLessonId(int lessonId)
         {
-            var dto =_lessonService.SelectAllFeedbackByLessonId(lessonId);
+            var dto = _lessonService.SelectAllFeedbackByLessonId(lessonId);
             return _mapper.Map<List<FeedbackOutputModel>>(dto);
         }        
     }

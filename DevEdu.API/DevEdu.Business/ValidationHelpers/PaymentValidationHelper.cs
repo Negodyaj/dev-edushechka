@@ -17,7 +17,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var payment = _paymentRepository.GetPayment(paymentId);
             if (payment == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(payment), paymentId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(payment), paymentId));
         }
     }
 }
