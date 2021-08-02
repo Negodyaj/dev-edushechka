@@ -14,7 +14,7 @@ namespace DevEdu.Business.Services
             _userRepository = userRepository;
         }
 
-        public int AddUser(UserDto dto)
+        public UserDto AddUser(UserDto dto)
         {
             if (dto.Roles.Count == 0)
                 dto.Roles.Add(Role.Student);
@@ -25,8 +25,9 @@ namespace DevEdu.Business.Services
             {
                 AddUserRole(addedUserId, (int)role);
             }
-            
-            return addedUserId;
+
+            var response = _userRepository.SelectUserById(addedUserId);
+            return response;
         }
 
         public UserDto SelectUserById(int id) => _userRepository.SelectUserById(id);
