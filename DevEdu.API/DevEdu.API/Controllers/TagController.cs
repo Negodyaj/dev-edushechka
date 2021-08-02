@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevEdu.API.Configuration;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
@@ -27,6 +28,7 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         [Description("Add tag to database")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public int AddTag([FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
@@ -37,12 +39,16 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}")]
         [Description("Soft delete tag from database")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteTag(int id) => _service.DeleteTag(id);
 
         // api/tag/1
         [HttpPut("{id}")]
         [Description("Update tag in database and return updated tag")]
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public TagOutputModel UpdateTag(int id, [FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
@@ -54,6 +60,7 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         [Description("Get all tags from database")]
         [ProducesResponseType(typeof(List<TagOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public List<TagOutputModel> GetAllTags()
         {
             List<TagDto> queryResult = _service.GetAllTags();
@@ -64,6 +71,8 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         [Description("Get tag from database by ID")]
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public TagOutputModel GetTagById(int id)
         {
             TagDto queryResult = _service.GetTagById(id);
