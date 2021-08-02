@@ -62,15 +62,15 @@ namespace DevEdu.Business.Services
             return task;
         }
 
-        public TaskDto UpdateTask(TaskDto taskDto, int taskId, int userId, List<Role> roles)
+        public TaskDto UpdateTask(TaskDto taskDto, int taskId, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.CheckUserExistence(userId);
+            _userValidationHelper.CheckUserExistence(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if(roles.Contains(Role.Teacher) && !roles.Contains(Role.Admin))
-                _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
-            if(roles.Contains(Role.Methodist) && !roles.Contains(Role.Admin))
+            if(userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
+                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+            if(userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                _taskValidationHelper.CheckMethodistAccessToTask(task, userId);
+                _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
             }
 
             taskDto.Id = taskId;
@@ -78,61 +78,61 @@ namespace DevEdu.Business.Services
             return _taskRepository.GetTaskById(taskId);
         }
 
-        public void DeleteTask(int taskId, int userId, List<Role> roles)
+        public void DeleteTask(int taskId, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.CheckUserExistence(userId);
+            _userValidationHelper.CheckUserExistence(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if (roles.Contains(Role.Teacher) && !roles.Contains(Role.Admin))
-                _taskValidationHelper.CheckUserAccessToTask(taskId, userId);
-            if (roles.Contains(Role.Methodist) && !roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
+                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                _taskValidationHelper.CheckMethodistAccessToTask(task, userId);
+                _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
             }
 
             _taskRepository.DeleteTask(taskId);
         }
 
-        public TaskDto GetTaskById(int taskid, int userId, bool isAdmin)
+        public TaskDto GetTaskById(int taskid, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.CheckUserExistence(userId);
+            _userValidationHelper.CheckUserExistence(userIdentityInfo.UserId);
             var taskDto = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskid);
-            if(!isAdmin)
-            _taskValidationHelper.CheckUserAccessToTask(taskid, userId);
+            if(!userIdentityInfo.Roles.Contains(Role.Admin))
+            _taskValidationHelper.CheckUserAccessToTask(taskid, userIdentityInfo.UserId);
 
             return taskDto;
         }
 
-        public TaskDto GetTaskWithCoursesById(int taskid, int userId, bool isAdmin)
+        public TaskDto GetTaskWithCoursesById(int taskid, UserIdentityInfo userIdentityInfo)
         {
-            var taskDto = GetTaskById(taskid, userId, isAdmin);
+            var taskDto = GetTaskById(taskid, userIdentityInfo);
             taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(taskid);
             return taskDto;
         }
 
-        public TaskDto GetTaskWithAnswersById(int taskid, int userId, bool isAdmin)
+        public TaskDto GetTaskWithAnswersById(int taskid, UserIdentityInfo userIdentityInfo)
         {
-            var taskDto = GetTaskById(taskid, userId, isAdmin);
+            var taskDto = GetTaskById(taskid, userIdentityInfo);
             taskDto.StudentAnswers = _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskid);
             return taskDto;
         }
 
-        public TaskDto GetTaskWithGroupsById(int taskid, int userId, bool isAdmin)
+        public TaskDto GetTaskWithGroupsById(int taskid, UserIdentityInfo userIdentityInfo)
         {
-            var taskDto = GetTaskById(taskid, userId, isAdmin);
+            var taskDto = GetTaskById(taskid, userIdentityInfo);
             taskDto.Groups = _groupRepository.GetGroupsByTaskId(taskid);
             return taskDto;
         }
 
-        public List<TaskDto> GetTasks(int userId, bool isAdmin)
+        public List<TaskDto> GetTasks(UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.CheckUserExistence(userId);
+            _userValidationHelper.CheckUserExistence(userIdentityInfo.UserId);
             var tasks = _taskRepository.GetTasks();
             var allowedTaskDtos = new List<TaskDto>();
-            if (!isAdmin)
+            if (!userIdentityInfo.Roles.Contains(Role.Admin))
                 return tasks;
             foreach (var task in tasks)
             {
-                allowedTaskDtos.Add(_taskValidationHelper.GetTaskAllowedToUser(task.Id, userId));
+                allowedTaskDtos.Add(_taskValidationHelper.GetTaskAllowedToUser(task.Id, userIdentityInfo.UserId));
             }
             return allowedTaskDtos;
         }

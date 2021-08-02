@@ -87,10 +87,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskByTeacherInputModel model)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
+            var userIdentityInfo = this.GetUserIdAndRoles();
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
-            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId, userId, roles));
+            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId, userIdentityInfo));
         }
 
         // api/task/{taskId}
@@ -103,9 +102,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteTask(int taskId)
         {
-            var roles = this.GetUserRoles();
-            var userId = this.GetUserId();
-            _taskService.DeleteTask(taskId, userId, roles);
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            _taskService.DeleteTask(taskId, userIdentityInfo);
         }
 
 
@@ -119,10 +117,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TaskInfoOutputModel GetTaskWithTags(int taskId)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
-            bool isAdmin = roles.Contains(Role.Admin);
-            var taskDto = _taskService.GetTaskById(taskId, userId, isAdmin);
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            var taskDto = _taskService.GetTaskById(taskId, userIdentityInfo);
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
         }
 
@@ -136,10 +132,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
-            bool isAdmin = roles.Contains(Role.Admin);
-            var taskDto = _taskService.GetTaskWithCoursesById(taskId, userId, isAdmin);
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            var taskDto = _taskService.GetTaskWithCoursesById(taskId, userIdentityInfo);
             return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
         }
 
@@ -153,10 +147,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
-            bool isAdmin = roles.Contains(Role.Admin);
-            var taskDto = _taskService.GetTaskWithAnswersById(taskId, userId, isAdmin);
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            var taskDto = _taskService.GetTaskWithAnswersById(taskId, userIdentityInfo);
             return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
         }
 
@@ -170,10 +162,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TaskInfoWithGroupsOutputModel GetTaskWithTagsAndGroups(int taskId)
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
-            bool isAdmin = roles.Contains(Role.Admin);
-            var taskDto = _taskService.GetTaskWithGroupsById(taskId, userId, isAdmin);
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            var taskDto = _taskService.GetTaskWithGroupsById(taskId, userIdentityInfo);
             return _mapper.Map<TaskInfoWithGroupsOutputModel>(taskDto);
         }
 
@@ -187,10 +177,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<TaskInfoOutputModel> GetAllTasksWithTags()
         {
-            var userId = this.GetUserId();
-            var roles = this.GetUserRoles();
-            bool isAdmin = roles.Contains(Role.Admin);
-            var taskDtos = _taskService.GetTasks(userId, isAdmin);
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            var taskDtos = _taskService.GetTasks(userIdentityInfo);
             return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
         }
 

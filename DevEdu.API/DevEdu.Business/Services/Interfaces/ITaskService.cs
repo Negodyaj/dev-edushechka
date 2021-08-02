@@ -8,13 +8,13 @@ namespace DevEdu.Business.Services
     {
         public TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds);
         public TaskDto AddTaskByTeacher(TaskDto taskDto, GroupTaskDto groupTask, int groupId, List<int> tagsIds);
-        public TaskDto UpdateTask(TaskDto taskDto, int taskId, int userId, List<Role> roles);
-        public void DeleteTask(int taskId, int userId, List<Role> roles);
-        public TaskDto GetTaskById(int taskid, int userId, bool isAdmin);
-        TaskDto GetTaskWithCoursesById(int taskid, int userId, bool isAdmin);
-        public TaskDto GetTaskWithAnswersById(int taskid, int userId, bool isAdmin);
-        public TaskDto GetTaskWithGroupsById(int taskid, int userId, bool isAdmin);
-        public List<TaskDto> GetTasks(int userId, bool isAdmin);
+        public TaskDto UpdateTask(TaskDto taskDto, int taskId, UserIdentityInfo userIdentityInfo);
+        public void DeleteTask(int taskId, UserIdentityInfo userIdentityInfo);
+        public TaskDto GetTaskById(int taskid, UserIdentityInfo userIdentityInfo);
+        TaskDto GetTaskWithCoursesById(int taskid, UserIdentityInfo userIdentityInfo);
+        public TaskDto GetTaskWithAnswersById(int taskid, UserIdentityInfo userIdentityInfo);
+        public TaskDto GetTaskWithGroupsById(int taskid, UserIdentityInfo userIdentityInfo);
+        public List<TaskDto> GetTasks(UserIdentityInfo userIdentityInfo);
         public int AddTagToTask(int taskId, int tagId);
         public void DeleteTagFromTask(int taskId, int tagId);
     }
