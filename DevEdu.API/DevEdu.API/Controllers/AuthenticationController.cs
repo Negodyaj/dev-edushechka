@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.API.Configuration;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
