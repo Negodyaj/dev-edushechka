@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using DevEdu.API.Common;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,28 +28,32 @@ namespace DevEdu.API.Controllers
         // api/tag
         [HttpPost]
         [Description("Add tag to database")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
-        public int AddTag([FromBody] TagInputModel model)
+        [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status201Created)]
+        [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Methodist)]
+        public TagOutputModel AddTag([FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
-            return _service.AddTag(dto);
+            dto = _service.AddTag(dto);
+            return _mapper.Map<TagOutputModel>(dto);
         }
 
         // api/tag/1
         [HttpDelete("{id}")]
-        [Description("Soft delete tag from database")]
+        [Description("Delete tag from database")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Methodist)]
         public void DeleteTag(int id) => _service.DeleteTag(id);
 
         // api/tag/1
         [HttpPut("{id}")]
         [Description("Update tag in database and return updated tag")]
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
+        [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Methodist)]
         public TagOutputModel UpdateTag(int id, [FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
-            _service.UpdateTag(dto, id);
-            return GetTagById(id);
+            dto = _service.UpdateTag(dto, id);
+            return _mapper.Map<TagOutputModel>(dto);
         }
 
         // api/tag

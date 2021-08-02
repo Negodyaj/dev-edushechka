@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DevEdu.DAL\DevEdu.DAL.csproj" />
   </ItemGroup>
 

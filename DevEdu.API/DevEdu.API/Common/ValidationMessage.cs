@@ -34,8 +34,8 @@
         public const string TextRequired = "Comment cannot be empty";
         public const string UserIdRequired = "UserId cannot be empty";
         public const string GroupIdRequired = "GroupId must be provided";
-        public const string RaitingTypeIdRequired = "RaitingTypeId must be provided";
-        public const string RaitingRequired = "Raiting must be provided";
+        public const string RatingTypeIdRequired = "RatingTypeId must be provided";
+        public const string RatingRequired = "Rating must be provided";
         public const string ReportingPeriodNumberRequired = "ReportingPeriodNumber must be provided";
         public const string DateRequired = "Date must be provided";
         public const string TeacherCommentRequired = "TeacherComment must be provided";
@@ -50,5 +50,11 @@
         public const string StudentAnswerRequired = "Answer of student must be provided";
         public const string CommentUserIdRequired = "UserId of comment must be provided";
         public const string CommentTextRequired = "Text of comment must be provided";
+        public const string GroupStatusIdRequired = "GroupStatusId must be provided";
+        public const string TimetableRequired = "Timetable must be provided";
+        public const string PaymentPerMonthRequired = "PaymentPerMonth must be provided";
+        public const string WrongFormatGroupStatusId = "GroupStatusId must be integer from 1 to int.MaxValue";
+        public const string WrongFormatStartDate = "StartDate must be format 'dd.MM.yyyy'";
+        public const string WrongValueOfRating = "Value of rating must be from 1 to 100";
     }
 }
