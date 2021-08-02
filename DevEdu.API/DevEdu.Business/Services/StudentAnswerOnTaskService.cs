@@ -8,18 +8,24 @@ namespace DevEdu.Business.Services
     public class StudentAnswerOnTaskService : IStudentAnswerOnTaskService
     {
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
+        private readonly IGroupRepository _groupRepository;
 
-        public StudentAnswerOnTaskService(IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
+        public StudentAnswerOnTaskService(
+            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, 
+            IGroupRepository groupRepository)
         {
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
+            _groupRepository = groupRepository;
         }
 
-        public void AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
+        public int AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
         {
             taskAnswerDto.Task = new TaskDto { Id = taskId };
             taskAnswerDto.User = new UserDto { Id = studentId };
 
-            _studentAnswerOnTaskRepository.AddStudentAnswerOnTask(taskAnswerDto);
+            var studentAnswerId = _studentAnswerOnTaskRepository.AddStudentAnswerOnTask(taskAnswerDto);
+
+            return studentAnswerId;
         }
 
         public void DeleteStudentAnswerOnTask(int taskId, int studentId)
@@ -31,8 +37,6 @@ namespace DevEdu.Business.Services
 
             _studentAnswerOnTaskRepository.DeleteStudentAnswerOnTask(dto);
         }
-
-        public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTasks() => _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTasks();
 
         public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId)
         {
@@ -77,6 +81,10 @@ namespace DevEdu.Business.Services
 
         public void AddCommentOnStudentAnswer(int taskStudentId, int commentId) => _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskStudentId, commentId);
 
-
+        public List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId)
+        {
+            var dto = _studentAnswerOnTaskRepository.GetAllAnswersByStudentId(userId);
+            return dto;
+        }
     }
 }

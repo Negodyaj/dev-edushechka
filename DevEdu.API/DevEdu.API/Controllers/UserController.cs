@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevEdu.API.Common;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
@@ -30,6 +31,9 @@ namespace DevEdu.API.Controllers
         [Description("Update user")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(UserUpdateInfoOutPutModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public UserUpdateInfoOutPutModel UpdateUserById([FromBody] UserUpdateInputModel model)
         {
             var dtoEntry = _mapper.Map<UserDto>(model);
@@ -42,6 +46,8 @@ namespace DevEdu.API.Controllers
         [Description("Return user by id")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public UserFullInfoOutPutModel GetUserById(int userId)
         {
             var dto = _userService.SelectUserById(userId);
@@ -53,6 +59,8 @@ namespace DevEdu.API.Controllers
         [Description("Return list users")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(List<UserInfoOutPutModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<UserInfoOutPutModel> GetAllUsers()
         {
             var listDto = _userService.SelectUsers();
@@ -64,7 +72,9 @@ namespace DevEdu.API.Controllers
         [Description("Delete user by id")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void DeleteUser(int userId)                       
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public void DeleteUser(int userId)
         {
             _userService.DeleteUser(userId);
         }
@@ -74,7 +84,9 @@ namespace DevEdu.API.Controllers
         [Description("Add new role to user")]
         [AuthorizeRoles()]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-        public void AddRoleToUser(int userId, Role roleId)
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public void AddRoleToUser(int userId, int roleId)
         {
             _userService.AddUserRole(userId, (int)roleId);
         }
@@ -84,7 +96,9 @@ namespace DevEdu.API.Controllers
         [Description("Delete role from user")]
         [AuthorizeRoles()]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public void DeleteRoleFromUser(int userId, Role roleId)
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public void DeleteRoleFromUser(int userId, int roleId)
         {
             _userService.DeleteUserRole(userId, (int)roleId);
         }

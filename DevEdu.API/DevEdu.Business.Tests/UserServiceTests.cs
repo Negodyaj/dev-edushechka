@@ -3,6 +3,8 @@ using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
+﻿using DevEdu.Business.Services;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -31,17 +33,19 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var user = UserData.GetUserDto();
+            var expectedUserId = UserData.expectedUserId;
 
-            _repoMock.Setup(x => x.AddUser(user)).Returns(UserData.expectedUserId);
-            _repoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
+            _userRepoMock.Setup(x => x.AddUser(user)).Returns(UserData.expectedUserId);
+            _userRepoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
+            _userRepoMock.Setup(x => x.SelectUserById(expectedUserId)).Returns(new UserDto { Id = expectedUserId });
 
             //When
             var actualId = _sut.AddUser(user);
 
             //Then
-            Assert.AreEqual(UserData.expectedUserId, actualId);
-            _repoMock.Verify(x => x.AddUser(user), Times.Once);
-            _repoMock.Verify(x => x.AddUserRole(actualId, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            Assert.AreEqual(UserData.expectedUserId, actualId.Id);
+            _userRepoMock.Verify(x => x.AddUser(user), Times.Once);
+            _userRepoMock.Verify(x => x.AddUserRole(actualId.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
         }
 
         [Test]

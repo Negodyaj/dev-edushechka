@@ -20,19 +20,20 @@ namespace DevEdu.Business.Services
             _userValidationHelper = helper;
         }
 
-        public int AddUser(UserDto dto)
+        public UserDto AddUser(UserDto dto)
         {
             if (dto.Roles == null || dto.Roles.Count == 0)
                 dto.Roles = new List<Role> { Role.Student };
 
             var addedUserId = _userRepository.AddUser(dto);
 
-            foreach (var role in dto.Roles)
-            {
-                _userRepository.AddUserRole(addedUserId, (int)role);
+            foreach (var role in dto.Roles)
+            {
+                AddUserRole(addedUserId, (int)role);
             }
 
-            return addedUserId;
+            var response = _userRepository.SelectUserById(addedUserId);
+            return response;
         }
 
         public UserDto SelectUserById(int id)
