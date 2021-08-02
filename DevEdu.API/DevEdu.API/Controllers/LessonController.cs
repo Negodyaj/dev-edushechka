@@ -156,6 +156,9 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{lessonId}/topic/{topicId}")]
         [Description("Delete topic from lesson")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteTopicFromLesson(int lessonId, int topicId)
         {
             _lessonService.DeleteTopicFromLesson(lessonId, topicId);
@@ -165,6 +168,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("{lessonId}/topic/{topicId}")]
         [Description("Add topic to lesson")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void AddTopicToLesson(int lessonId, int topicId)
         {
             _lessonService.AddTopicToLesson(lessonId, topicId);

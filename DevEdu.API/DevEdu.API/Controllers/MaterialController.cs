@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevEdu.API.Configuration;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
@@ -27,6 +28,8 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         [Description("Add material")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public MaterialInfoOutputModel AddMaterial([FromBody] MaterialInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
@@ -39,6 +42,9 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         [Description("Get all materials with tags")]
         [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<MaterialInfoOutputModel> GetAllMaterials()
         {
             var dto = _materialService.GetAllMaterials();
@@ -49,6 +55,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         [Description("Get material by id with tags, courses and groups")]
         [ProducesResponseType(typeof(MaterialInfoWithCoursesAndGroupsOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public MaterialInfoWithCoursesAndGroupsOutputModel GetMaterial(int id)
         {
             var dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
@@ -59,6 +68,9 @@ namespace DevEdu.API.Controllers
         [HttpPut("{id}")]
         [Description("Update material by id")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
@@ -70,6 +82,9 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}/isDeleted/{isDeleted}")]
         [Description("Delete material")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteMaterial(int id, bool isDeleted)
         {
             _materialService.DeleteMaterial(id, isDeleted);
@@ -99,6 +114,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("by-tag/{tagId}")]
         [Description("Get materials by tag id")]
         [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<MaterialInfoOutputModel> GetMaterialsByTagId(int tagId)
         {
             var dto = _materialService.GetMaterialsByTagId(tagId);
