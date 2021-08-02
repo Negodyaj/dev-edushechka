@@ -139,10 +139,9 @@ namespace DevEdu.API.Configuration
                    Email = src.User.Email,
                    Photo = src.User.Photo }));
             CreateMap<StudentLessonDto, FeedbackOutputModel>();
-            CreateMap<StudentLessonDto, StudentLessonShortOutputModel>();
             CreateMap<StudentRatingDto, StudentRatingOutputModel>();
             CreateMap<RatingTypeDto, RatingTypeOutputModel>();
-
+            CreateMap<StudentLessonDto, FeedbackOutputModel>();            
         }
     }
 }
