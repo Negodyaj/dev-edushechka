@@ -22,12 +22,12 @@ namespace DevEdu.API.Controllers
     public class LessonController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ILessonService _lessonService;        
+        private readonly ILessonService _lessonService;
 
         public LessonController(IMapper mapper, ILessonService lessonService)
         {
             _mapper = mapper;
-            _lessonService = lessonService;            
+            _lessonService = lessonService;
         }
 
         // api/lesson
@@ -101,7 +101,6 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{id}/full-info"
-        [AuthorizeRoles(Role.Student, Role.Teacher)]
         [HttpGet("{id}/full-info")]
         [Description("Get the lesson with students and comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
