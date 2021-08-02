@@ -176,8 +176,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
-        public StudentLessonShortOutputModel UpdateStudentFeedbackForLesson(int lessonId,int userId, [FromBody] FeedbackInputModel model)
+        [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status200OK)]
+        public StudentLessonOutputModel UpdateStudentFeedbackForLesson(int lessonId,int userId, [FromBody] FeedbackInputModel model)
         {
             var dto = _mapper.Map<StudentLessonDto>(model);
             var output =_lessonService.UpdateStudentFeedbackForLesson(lessonId, userId, dto);
