@@ -207,6 +207,11 @@ namespace DevEdu.Business.Services
 
         public async Task<GroupTaskDto> UpdateGroupTask(int groupId, int taskId, GroupTaskDto dto, UserIdentityInfo userInfo)
         {
+            var userId = userInfo.UserId;
+            var roles = userInfo.Roles;
+
+            if (!CheckerRole.IsAdmin(roles)) { }
+
             await _groupHelper.CheckGroupExistence(groupId);
             _groupHelper.TmpAccess(userInfo, groupId, taskId);
             _taskHelper.CheckTaskExistence(taskId);
@@ -215,6 +220,32 @@ namespace DevEdu.Business.Services
             dto.Task = new TaskDto { Id = taskId };
             await _groupRepository.UpdateGroupTask(dto);
             return await _groupRepository.GetGroupTask(groupId, taskId);
+        }
+
+        private void CheckUserAccessByRoleAndId(int userId, List<Role> roles, GroupDto dto)
+        {
+
+            if (CheckerRole.IsAdmin(roles))
+            {
+                return;
+            }
+
+            CheckUserAccessToGroupData(dto, userId);
+
+            if (CheckerRole.IsStudent(roles))
+            {
+                
+            }
+        }
+
+        private void CheckUserAccessToGroupData(GroupDto dto, int userId)
+        {
+            if (dto.Course != default)
+            {
+            }
+            else
+            {
+            }
         }
     }
 }

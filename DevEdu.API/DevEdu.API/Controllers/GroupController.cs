@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
@@ -53,9 +52,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupFullOutputModel> GetGroup(int id)
         {
-            var userToken = this.GetUserIdAndRoles();
+            var userInfo = this.GetUserIdAndRoles();
 
-            var dto = await _groupService.GetGroup(id, userToken);
+            var dto = await _groupService.GetGroup(id, userInfo);
             return _mapper.Map<GroupFullOutputModel>(dto);
         }
 
@@ -97,10 +96,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupInfoOutputModel> UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
-            var userToken = this.GetUserIdAndRoles();
+            var userInfo = this.GetUserIdAndRoles();
 
             var dto = _mapper.Map<GroupDto>(model);
-            var output = await _groupService.UpdateGroup(id, dto, userToken);
+            var output = await _groupService.UpdateGroup(id, dto, userInfo);
             return _mapper.Map<GroupInfoOutputModel>(output);
         }
 
