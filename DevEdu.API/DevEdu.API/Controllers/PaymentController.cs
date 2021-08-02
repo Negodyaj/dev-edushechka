@@ -56,13 +56,13 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<PaymentDto>(model);
             int id = _paymentService.AddPayment(dto);
             dto = _paymentService.GetPayment(id);
-            
+
             return _mapper.Map<PaymentOutputModel>(dto);
         }
 
         //  api/payment/5
         [HttpDelete("{id}")]
-        [ProducesResponseType (StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [Description("Delete payment by id")]
         public void DeletePayment(int id)
         {
@@ -90,6 +90,6 @@ namespace DevEdu.API.Controllers
             var listId = _paymentService.AddPayments(dto);
             dto = _paymentService.SelectPaymentsBySeveralId(listId);
             return _mapper.Map<List<PaymentOutputModel>>(dto);
-         }
+        }
     }
 }

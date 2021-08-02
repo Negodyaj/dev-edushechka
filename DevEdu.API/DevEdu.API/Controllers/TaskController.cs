@@ -185,8 +185,7 @@ namespace DevEdu.API.Controllers
         public StudentAnswerOnTaskFullOutputModel UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
-            _studentAnswerOnTaskService.UpdateStudentAnswerOnTask(taskId, studentId, taskAnswerDto);
-            var output = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            var output = _studentAnswerOnTaskService.UpdateStudentAnswerOnTask(taskId, studentId, taskAnswerDto);
 
             return _mapper.Map<StudentAnswerOnTaskFullOutputModel>(output);
         }

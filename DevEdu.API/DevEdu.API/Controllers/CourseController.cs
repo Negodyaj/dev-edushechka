@@ -36,11 +36,11 @@ namespace DevEdu.API.Controllers
 
         [HttpGet("{id}/simple")]
         [Description("Get course by id with groups")]
-        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
-        public CourseInfoFullOutputModel GetCourseSimple(int id)
+        [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
+        public CourseInfoShortOutputModel GetCourseSimple(int id)
         {
             var course = _courseService.GetCourse(id);
-            return _mapper.Map<CourseInfoFullOutputModel>(course);
+            return _mapper.Map<CourseInfoShortOutputModel>(course);
         }
 
         [HttpGet("{id}/full")]
@@ -64,8 +64,8 @@ namespace DevEdu.API.Controllers
 
         [HttpPost]
         [Description("Create new course")]
-        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status201Created)]
-        public CourseInfoFullOutputModel AddCourse([FromBody] CourseInputModel model)
+        [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status201Created)]
+        public CourseInfoShortOutputModel AddCourse([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
             int id = _courseService.AddCourse(dto);
@@ -82,12 +82,12 @@ namespace DevEdu.API.Controllers
 
         [HttpPut("{id}")]
         [Description("Update course by Id")]
-        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
-        public CourseInfoFullOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
+        [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
+        public CourseInfoShortOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            _courseService.UpdateCourse(id, dto);
-            return GetCourseSimple(id);
+            var updDto =  _courseService.UpdateCourse(id, dto);
+            return _mapper.Map<CourseInfoShortOutputModel>(updDto);
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}

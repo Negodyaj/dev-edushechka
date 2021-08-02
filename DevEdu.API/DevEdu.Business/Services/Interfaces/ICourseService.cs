@@ -11,7 +11,7 @@ namespace DevEdu.Business.Services
         void DeleteCourse(int id);
         List<CourseDto> GetCourses();
         List<CourseDto> GetCoursesForAdmin();
-        void UpdateCourse(int id, CourseDto courseDto);
+        CourseDto UpdateCourse(int id, CourseDto courseDto);
         int AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
         List<int> AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto);
         List<int> UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics);

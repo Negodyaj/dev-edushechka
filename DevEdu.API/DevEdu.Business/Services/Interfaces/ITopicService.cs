@@ -9,7 +9,7 @@ namespace DevEdu.Business.Services
         void DeleteTopic(int id);
         List<TopicDto> GetAllTopics();
         TopicDto GetTopic(int id);
-        int UpdateTopic(int id, TopicDto topicDto);
+        TopicDto UpdateTopic(int id, TopicDto topicDto);
         int AddTagToTopic(int topicId, int tagId);
         int DeleteTagFromTopic(int topicId, int tagId);
     }

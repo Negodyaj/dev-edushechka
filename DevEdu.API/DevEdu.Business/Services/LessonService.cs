@@ -1,8 +1,6 @@
-﻿using DevEdu.Business.Exceptions;
-using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
-using System.Linq;
 using DevEdu.Business.ValidationHelpers;
 
 namespace DevEdu.Business.Services
@@ -32,7 +30,7 @@ namespace DevEdu.Business.Services
 
         public void AddCommentToLesson(int lessonId, CommentDto commentDto)
         {
-            int commentId =_commentRepository.AddComment(commentDto);
+            int commentId = _commentRepository.AddComment(commentDto);
 
             _lessonRepository.AddCommentToLesson(lessonId, commentId);
         }
@@ -41,7 +39,7 @@ namespace DevEdu.Business.Services
         {
             int lessonId = _lessonRepository.AddLesson(lessonDto);
 
-            if(topicIds != null)
+            if (topicIds != null)
             {
                 topicIds.ForEach(topicId => _lessonRepository.AddTopicToLesson(lessonId, topicId));
             }
@@ -84,37 +82,26 @@ namespace DevEdu.Business.Services
             return _lessonRepository.SelectLessonById(lessonDto.Id);
         }
 
-        public void DeleteTopicFromLesson(int lessonId, int topicId) => 
+        public void DeleteTopicFromLesson(int lessonId, int topicId) =>
             _lessonRepository.DeleteTopicFromLesson(lessonId, topicId);
 
         public void AddTopicToLesson(int lessonId, int topicId) =>
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
 
-        public void AddStudentToLesson(int lessonId, int userId)
-        {
-            var studentLessonDto =
-               new StudentLessonDto
-               {
-                   User = new UserDto { Id = userId },
-                   Lesson = new LessonDto { Id = lessonId }
-               };
-            _lessonRepository.AddStudentToLesson(studentLessonDto);
+        public StudentLessonDto AddStudentToLesson(int lessonId, int userId)
+        {         
+            _lessonRepository.AddStudentToLesson(lessonId, userId);
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);           
         }
 
         public void DeleteStudentFromLesson(int lessonId, int userId)
-        {
-            var studentLessonDto =
-                new StudentLessonDto
-                {
-                    User = new UserDto { Id = userId },
-                    Lesson = new LessonDto { Id = lessonId }
-                };
-            _lessonRepository.DeleteStudentFromLesson(studentLessonDto);
+        {            
+            _lessonRepository.DeleteStudentFromLesson(lessonId, userId);               
         }
 
-        public void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
+        public StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
-            _userValidationHelper.CheckUserExistence(userId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
             _lessonValidationHelper.CheckLessonExistence(lessonId);
 
             // check if user relates to lesson
@@ -134,26 +121,26 @@ namespace DevEdu.Business.Services
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.User = new UserDto { Id = userId };
             _lessonRepository.UpdateStudentFeedbackForLesson(studentLessonDto);
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
         }
 
-        public void UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
+        public StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.User = new UserDto { Id = userId };
             _lessonRepository.UpdateStudentAbsenceReasonOnLesson(studentLessonDto);
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
         }
 
-        public void UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
+        public StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.User = new UserDto { Id = userId };
             _lessonRepository.UpdateStudentAttendanceOnLesson(studentLessonDto);
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
         }
 
         public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId)=>
-            _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
-
-        public StudentLessonDto GetStudenLessonByLessonAndUserId(int lessonId, int userId) =>
-            _lessonRepository.SelectByLessonAndUserId(lessonId, userId);
+            _lessonRepository.SelectAllFeedbackByLessonId(lessonId);       
     }
 }
