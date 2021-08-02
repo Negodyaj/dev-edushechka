@@ -4,7 +4,7 @@ using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class MaterialWithGroupsInputModel : MaterialInputModel
+    public class MaterialWithGroupsInputModel : MaterialWithTagsInputModel
     {
         [MinLength(1, ErrorMessage = GroupsRequired)]
         public List<int> GroupsIds { get; set; }

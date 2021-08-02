@@ -19,11 +19,5 @@ namespace DevEdu.Business.ValidationHelpers
             if (tag == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(tag), tagId));
         }
-
-        //public void CheckProvidedTagsAreUnique(List<int> tags)
-        //{
-        //    if (!(tags.Distinct().Count() == tags.Count()))
-        //        throw new ValidationException(ServiceMessages.DuplicateCoursesValuesProvided);
-        //}
     }
 }

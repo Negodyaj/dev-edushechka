@@ -8,6 +8,5 @@ namespace DevEdu.API.Models.InputModels
     {
         [Required(ErrorMessage = ContentRequired)]
         public string Content { get; set; }
-        public List<int> TagsIds { get; set; }
     }
 }

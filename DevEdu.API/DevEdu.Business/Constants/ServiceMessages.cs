@@ -12,5 +12,6 @@
         public const string DuplicateCoursesValuesProvided = "Courses with same Ids were provided";
         public const string DuplicateGroupsValuesProvided = "Groups with same Ids were provided";
         public const string DuplicateTagsValuesProvided = "Tags with same Ids were provided";
+        public const string AccessToMaterialDenied = "User with id = {0} doesn't have access to material with id = {1}";
     }
 }

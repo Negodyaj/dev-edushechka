@@ -35,6 +35,9 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.EndDate, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<MaterialInputModel, MaterialDto>();
+            CreateMap<MaterialWithCoursesInputModel, MaterialDto>();
+            CreateMap<MaterialWithGroupsInputModel, MaterialDto>();
+            CreateMap<MaterialWithTagsInputModel, MaterialDto>();
             CreateMap<NotificationAddInputModel, NotificationDto>() 
                 .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.GroupId != null ? new GroupDto { Id = (int)src.GroupId } : null))
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserId != null ? new UserDto { Id = (int)src.UserId } : null))

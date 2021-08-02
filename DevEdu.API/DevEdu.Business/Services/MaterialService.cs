@@ -1,10 +1,11 @@
 ﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
-using DevEdu.Business.Extensions;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.DAL.Enums;
+using System.Linq;
 
 namespace DevEdu.Business.Services
 {
@@ -16,6 +17,7 @@ namespace DevEdu.Business.Services
         private readonly IGroupValidationHelper _groupValidationHelper;
         private readonly ITagValidationHelper _tagValidationHelper;
         private readonly ICourseValidationHelper _courseValidationHelper;
+        private readonly IMaterialValidationHelper _materilaValidationHelper;
 
         public MaterialService(
             IMaterialRepository materialRepository, 
@@ -23,7 +25,8 @@ namespace DevEdu.Business.Services
             IGroupRepository groupRepository,
             IGroupValidationHelper groupValidationHelper,
             ITagValidationHelper tagValidationHelper,
-            ICourseValidationHelper courseValidationHelper)
+            ICourseValidationHelper courseValidationHelper,
+            IMaterialValidationHelper materilaValidationHelper)
         {
             _materialRepository = materialRepository;
             _courseRepository = courseRepository;
@@ -31,103 +34,64 @@ namespace DevEdu.Business.Services
             _groupValidationHelper = groupValidationHelper;
             _tagValidationHelper = tagValidationHelper;
             _courseValidationHelper = courseValidationHelper;
+            _materilaValidationHelper = materilaValidationHelper;
         }
 
         public List<MaterialDto> GetAllMaterials() => _materialRepository.GetAllMaterials();
 
-        public MaterialDto GetMaterialById(int id) => _materialRepository.GetMaterialById(id);
-
         public MaterialDto GetMaterialByIdWithCoursesAndGroups(int id)
         {
-            var dto = _materialRepository.GetMaterialById(id);
+            var dto = _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(id);
             dto.Courses = _courseRepository.GetCoursesByMaterialId(id);
             dto.Groups = _groupRepository.GetGroupsByMaterialId(id);
             return dto;
         }
 
-        public MaterialDto GetMaterialByIdWithCourses(int id)
+        public MaterialDto GetMaterialByIdWithTags(int id)
         {
-            var dto = _materialRepository.GetMaterialById(id);
-            dto.Courses = _courseRepository.GetCoursesByMaterialId(id);
-            return dto;
-        }
-
-        public MaterialDto GetMaterialByIdWithGroups(int id)
-        {
-            var dto = _materialRepository.GetMaterialById(id);
-            dto.Groups = _groupRepository.GetGroupsByMaterialId(id);
+            //проверять доступ пользователя к материалу (сделать хранимку достпных материалов по userID)
+            var dto = _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(id);
             return dto;
         }
 
         public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups)
         {
-            var materialId = 0;
-            foreach (int group in groups)
-            {
-                //_groupValidationHelper.CheckProvidedGroupsAreUnique(groups);
-                if (!groups.CheckListValuesAreUnique())
-                    throw new ValidationException(ServiceMessages.DuplicateGroupsValuesProvided);
-                _groupValidationHelper.CheckGroupExistence(group);
-            }
+            if (!(groups.Distinct().Count() == groups.Count()))
+                throw new ValidationException(ServiceMessages.DuplicateGroupsValuesProvided);
+            groups.ForEach(group => _groupValidationHelper.CheckGroupExistence(group));
 
-            if (tags == null || tags.Count == 0)
-            {
-                materialId = _materialRepository.AddMaterial(dto);
-            }
-            else
-            {
-                foreach (int tag in tags)
-                {
-                    if (!tags.CheckListValuesAreUnique())
-                        throw new ValidationException(ServiceMessages.DuplicateTagsValuesProvided);
-                    _tagValidationHelper.CheckTagExistence(tag);
-                }
-                materialId = _materialRepository.AddMaterial(dto);
-                tags.ForEach(tag => AddTagToMaterial(materialId, tag));
-            }
+            var materialId = AddMaterial(dto, tags);
             groups.ForEach(group => _groupRepository.AddGroupMaterialReference(group, materialId));
             return materialId;
         }
 
         public int AddMaterialWithCourses(MaterialDto dto, List<int> tags, List<int> courses)
         {
-            var materialId = 0;
-            foreach (int course in courses)
-            {
-                //_courseValidationHelper.CheckProvidedCoursesAreUnique(courses);
-                if(!courses.CheckListValuesAreUnique())
-                    throw new ValidationException(ServiceMessages.DuplicateCoursesValuesProvided);
-                _courseValidationHelper.CheckCourseExistence(course);
-            }
+            if (!(courses.Distinct().Count() == courses.Count()))
+                throw new ValidationException(ServiceMessages.DuplicateCoursesValuesProvided);
+            courses.ForEach(course => _courseValidationHelper.CheckCourseExistence(course));
 
-            if (tags == null || tags.Count == 0)
-            {
-                materialId = _materialRepository.AddMaterial(dto);
-            }
-            else
-            {
-                foreach (int tag in tags)
-                {
-                    if (!tags.CheckListValuesAreUnique())
-                        throw new ValidationException(ServiceMessages.DuplicateTagsValuesProvided);
-                    _tagValidationHelper.CheckTagExistence(tag);
-                }
-                materialId = _materialRepository.AddMaterial(dto);
-                tags.ForEach(tag => AddTagToMaterial(materialId, tag));
-            }
+            var materialId = AddMaterial(dto, tags);
+
             courses.ForEach(course => _courseRepository.AddCourseMaterialReference(course, materialId));
             return materialId;
         }
 
-        public MaterialDto UpdateMaterial(int id, MaterialDto dto)
+        public MaterialDto UpdateMaterial(int id, MaterialDto dto, int userId, List<Role> roles)
         {
+            var material = GetMaterialByIdWithCoursesAndGroups(id);
+            _materilaValidationHelper.CheckUserAccessToMaterialForDeleteAndUpdate(userId, roles, material);
             dto.Id = id;
             _materialRepository.UpdateMaterial(dto);
             return _materialRepository.GetMaterialById(dto.Id);
         }
 
-        public void DeleteMaterial(int id, bool isDeleted) =>
+        public void DeleteMaterial(int id, bool isDeleted, int userId, List<Role> roles)
+        {
+            var material = _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(id);
+            _materilaValidationHelper.CheckUserAccessToMaterialForDeleteAndUpdate(userId, roles, material);
             _materialRepository.DeleteMaterial(id, isDeleted);
+        }
 
         public void AddTagToMaterial(int materialId, int tagId) =>
             _materialRepository.AddTagToMaterial(materialId, tagId);
@@ -135,7 +99,29 @@ namespace DevEdu.Business.Services
         public void DeleteTagFromMaterial(int materialId, int tagId) =>
             _materialRepository.DeleteTagFromMaterial(materialId, tagId);
 
-        public List<MaterialDto> GetMaterialsByTagId(int tagId) =>
-            _materialRepository.GetMaterialsByTagId(tagId);
+        public List<MaterialDto> GetMaterialsByTagId(int tagId)
+        {
+            _tagValidationHelper.CheckTagExistence(tagId);
+            var allMaterialsByTag = _materialRepository.GetMaterialsByTagId(tagId);
+            var availableMaterials = new List<MaterialDto>();
+            return _materialRepository.GetMaterialsByTagId(tagId);
+            //проверка какие материалы дотупны конкретному пользователю и возвращать их,через хранимку новую
+        }
+
+        private int AddMaterial(MaterialDto dto, List<int> tags)
+        {
+            if (tags == null || tags.Count == 0)
+            {
+                return _materialRepository.AddMaterial(dto);
+            }
+
+            if (!(tags.Distinct().Count() == tags.Count()))
+                throw new ValidationException(ServiceMessages.DuplicateTagsValuesProvided);
+
+            tags.ForEach(tag => _tagValidationHelper.CheckTagExistence(tag));
+            var materialId = _materialRepository.AddMaterial(dto);
+            tags.ForEach(tag => AddTagToMaterial(materialId, tag));
+            return materialId;
+        }
     }
 }
