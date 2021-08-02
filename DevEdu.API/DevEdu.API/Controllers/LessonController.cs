@@ -33,6 +33,8 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         [Description("Add a lesson.")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public int AddLesson([FromBody] LessonInputModel inputModel)
         {
             var dto = _mapper.Map<LessonDto>(inputModel);
@@ -43,6 +45,9 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}")]
         [Description("Delete the lesson by id.")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteLesson(int id)
         {
             _lessonService.DeleteLesson(id);
@@ -52,6 +57,9 @@ namespace DevEdu.API.Controllers
         [HttpPut("{id}")]
         [Description("Update the lesson's teacher comment and link to record.")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public LessonInfoOutputModel UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
         {
             var dto = _mapper.Map<LessonDto>(updateModel);
@@ -63,6 +71,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("/by-groupId/{id}")]
         [Description("Get all lessons by groupId.")]
         [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<LessonInfoOutputModel> GetAllLessonsByGroupId(int id)
         {
             var dto = _lessonService.SelectAllLessonsByGroupId(id);
@@ -73,6 +84,8 @@ namespace DevEdu.API.Controllers
         [HttpGet("/by-teacherId/{id}")]
         [Description("Get all lessons by teacherId.")]
         [ProducesResponseType(typeof(List<LessonInfoWithCourseOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<LessonInfoWithCourseOutputModel> GetAllLessonsByTeacherId(int id)
         {
             var dto = _lessonService.SelectAllLessonsByTeacherId(id);
@@ -83,6 +96,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         [Description("Get the lesson by id.")]
         [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public LessonInfoOutputModel GetLessonById(int id)
         {
             var dto = _lessonService.SelectLessonById(id);
@@ -93,6 +109,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}/with-comments")]
         [Description("Get the lesson with comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public LessonInfoWithCommentsOutputModel GetAllLessonsWithComments(int id)
         {
             var dto = _lessonService.SelectLessonWithCommentsById(id);
@@ -104,6 +123,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}/full-info")]
         [Description("Get the lesson with students and comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public LessonInfoWithStudentsAndCommentsOutputModel GetAllLessonsWithStudentsAndComments(int id)
         {
             var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(id);
