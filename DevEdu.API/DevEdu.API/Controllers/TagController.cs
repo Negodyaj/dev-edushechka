@@ -60,7 +60,6 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         [Description("Get all tags from database")]
         [ProducesResponseType(typeof(List<TagOutputModel>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public List<TagOutputModel> GetAllTags()
         {
             List<TagDto> queryResult = _service.GetAllTags();
@@ -71,7 +70,6 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         [Description("Get tag from database by ID")]
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public TagOutputModel GetTagById(int id)
         {
