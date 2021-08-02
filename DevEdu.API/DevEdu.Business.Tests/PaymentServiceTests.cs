@@ -20,7 +20,7 @@ namespace DevEdu.Business.Tests
         private Mock<IPaymentRepository> _paymentRepoMock;
         private Mock<IUserRepository> _userRepositoryMock;
         private Mock<IPaymentValidationHelper> _paymentValidationHelperMock;
-        private Mock<IUserValidationHelper> _userValidationHelperMock;
+        private PaymentService _sut;
 
         [SetUp]
         public void Setup()
@@ -28,19 +28,19 @@ namespace DevEdu.Business.Tests
             _paymentRepoMock = new Mock<IPaymentRepository>();
             _userRepositoryMock = new Mock<IUserRepository>();
             _paymentValidationHelperMock = new Mock<IPaymentValidationHelper>();
-            _userValidationHelperMock = new Mock<IUserValidationHelper>();
+            _sut = new PaymentService(_paymentRepoMock.Object,
+                                       new PaymentValidationHelper(_paymentRepoMock.Object),
+                                       new UserValidationHelper(_userRepositoryMock.Object));
+            
         }
         [Test]
         public void GetPayment_ById_ValidPaymentRequestId_GotPayment()
         {
             //Given
             var paymentId = 2;
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
             _paymentRepoMock.Setup(x => x.GetPayment(paymentId)).Returns(new PaymentDto() { Id = paymentId });
             //When
-            sut.GetPayment(paymentId);
+            _sut.GetPayment(paymentId);
             //Then
             _paymentRepoMock.Verify(x => x.GetPayment(paymentId), Times.Once);
         }
@@ -50,13 +50,10 @@ namespace DevEdu.Business.Tests
             //Given
             var paymentId = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "payment", paymentId);
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
             _paymentRepoMock.Setup(x => x.GetPayment(paymentId));
             _paymentValidationHelperMock.Setup(x => x.GetPaymentByIdAndThrowIfNotFound(paymentId));
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => sut.GetPayment(paymentId));
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetPayment(paymentId));
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
             _paymentRepoMock.Verify(x => x.GetPayment(paymentId), Times.Once);
@@ -67,13 +64,10 @@ namespace DevEdu.Business.Tests
             //Given
             var userId = 2;
             var paymentsInDB = PaymentData.GetPeyments();
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
             _userRepositoryMock.Setup(x => x.SelectUserById(userId)).Returns(new UserDto() { Id = userId });
             _paymentRepoMock.Setup(x => x.GetPaymentsByUser(userId)).Returns(paymentsInDB);
             //When
-            sut.GetPaymentsByUserId(userId);
+            _sut.GetPaymentsByUserId(userId);
             //Then
             _paymentRepoMock.Verify(x => x.GetPaymentsByUser(userId), Times.Once);
         }
@@ -83,12 +77,9 @@ namespace DevEdu.Business.Tests
             //Given
             var userId = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "user", userId);
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
             _userRepositoryMock.Setup(x => x.SelectUserById(userId));
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => sut.GetPaymentsByUserId(userId));
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetPaymentsByUserId(userId));
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
             _paymentRepoMock.Verify(x => x.GetPaymentsByUser(userId), Times.Never);
@@ -98,11 +89,8 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var payment = PaymentData.GetPayment();
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
             //When
-            sut.AddPayment(payment);
+            _sut.AddPayment(payment);
             //Then
             _paymentRepoMock.Verify(x => x.AddPayment(payment), Times.Once);
         }
@@ -111,12 +99,9 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var id = 2;
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
             _paymentRepoMock.Setup(x => x.GetPayment(id)).Returns(new PaymentDto() { Id = id });
             //When
-            sut.DeletePayment(id);
+            _sut.DeletePayment(id);
             //Then
             _paymentRepoMock.Verify(x => x.DeletePayment(id), Times.Once);
         }
@@ -126,12 +111,9 @@ namespace DevEdu.Business.Tests
             //Given
             var id = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "payment", id);
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
             _paymentRepoMock.Setup(x => x.GetPayment(id));
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => sut.DeletePayment(id));
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.DeletePayment(id));
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
             _paymentRepoMock.Verify(x => x.DeletePayment(id), Times.Never);
@@ -142,12 +124,9 @@ namespace DevEdu.Business.Tests
             //Given
             var id = 2;
             var payment = PaymentData.GetPayment();
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
             _paymentRepoMock.Setup(x => x.GetPayment(id)).Returns(payment);
             //When
-            sut.UpdatePayment(id, payment);
+            _sut.UpdatePayment(id, payment);
             //Then
             _paymentRepoMock.Verify(x => x.UpdatePayment(payment), Times.Once);
         }
@@ -158,12 +137,9 @@ namespace DevEdu.Business.Tests
             var id = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "payment", id);
             var payment = PaymentData.GetPayment();
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
             _paymentRepoMock.Setup(x => x.GetPayment(id));
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => sut.UpdatePayment(id, payment));
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.UpdatePayment(id, payment));
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
             _paymentRepoMock.Verify(x => x.UpdatePayment(payment), Times.Never);
@@ -176,12 +152,9 @@ namespace DevEdu.Business.Tests
             var paymentInDb = PaymentData.GetPayment();
             var exp = ServiceMessages.EntityNotFound;
             PaymentDto payment = default;
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
             _paymentRepoMock.Setup(x => x.GetPayment(id)).Returns(paymentInDb);
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => sut.UpdatePayment(id, payment));
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.UpdatePayment(id, payment));
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
             _paymentRepoMock.Verify(x => x.UpdatePayment(payment), Times.Never);
@@ -191,11 +164,8 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var payments = PaymentData.GetPeyments();
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
             //When
-            sut.AddPayments(payments);
+            _sut.AddPayments(payments);
             //Then
             _paymentRepoMock.Verify(x => x.AddPayments(payments), Times.Once);
         }
@@ -205,12 +175,10 @@ namespace DevEdu.Business.Tests
             //Given
             var payments = PaymentData.GetPeyments();
             var ids = new List<int>() { 1, 2, 3 };
-            var sut = new PaymentService(_paymentRepoMock.Object,
-                                          new PaymentValidationHelper(_paymentRepoMock.Object),
-                                          new UserValidationHelper(_userRepositoryMock.Object));
+            
             _paymentRepoMock.Setup(x => x.SelectPaymentsBySeveralId(ids)).Returns(payments);
             //When
-            sut.SelectPaymentsBySeveralId(ids);
+            _sut.SelectPaymentsBySeveralId(ids);
             //Then
             _paymentRepoMock.Verify(x => x.SelectPaymentsBySeveralId(ids), Times.Once);
         }
