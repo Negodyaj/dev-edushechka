@@ -24,27 +24,17 @@ namespace DevEdu.API.Controllers
         private readonly IMapper _mapper;
         private readonly ITaskService _taskService;
         private readonly IStudentAnswerOnTaskService _studentAnswerOnTaskService;
-        private readonly ICommentRepository _commentRepository;
         private readonly ICommentService _commentService;
-        private readonly IUserService _userService;
-        private readonly IGroupService _groupService;
-        private readonly ICourseService _courseService;
 
         public TaskController(
             IMapper mapper,
             ITaskService taskService,
             IStudentAnswerOnTaskService studentAnswerOnTaskService,
-            ICommentRepository commentRepository,
-            IGroupService groupService,
-            ICourseService courseService,
             ICommentService commentService)
         {
             _taskService = taskService;
             _mapper = mapper;
             _studentAnswerOnTaskService = studentAnswerOnTaskService;
-            _commentRepository = commentRepository;
-            _groupService = groupService;
-            _courseService = courseService;
             _commentService = commentService;
         }
 
@@ -54,6 +44,7 @@ namespace DevEdu.API.Controllers
         [Description("Add new task by teacher")]
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TaskInfoOutputModel AddTaskByTeacher([FromBody] TaskByTeacherInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
@@ -69,23 +60,39 @@ namespace DevEdu.API.Controllers
         [Description("Add new task by methodist")]
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TaskInfoOutputModel AddTaskByMethodist([FromBody] TaskByMethodistInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
-            var task = _taskService.AddTaskByMethodist(taskDto, model.CoursesIds, model.Tags);
+            var task = _taskService.AddTaskByMethodist(taskDto, model.CourseIds, model.Tags);
 
             return _mapper.Map<TaskInfoOutputModel>(task);
         }
 
         // api/task/{taskId}
-        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
+        [AuthorizeRoles(Role.Teacher)]
         [HttpPut("{taskId}")]
         [Description("Update task")]
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskByTeacherInputModel model)
+        public TaskInfoOutputModel UpdateTaskByTeacher(int taskId, [FromBody] TaskByTeacherUpdateInputModel model)
+        {
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            TaskDto taskDto = _mapper.Map<TaskDto>(model);
+            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId, userIdentityInfo));
+        }
+
+        // api/task/{taskId}
+        [AuthorizeRoles(Role.Methodist)]
+        [HttpPut("{taskId}")]
+        [Description("Update task")]
+        [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public TaskInfoOutputModel UpdateTaskByMethodist(int taskId, [FromBody] TaskInputModel model)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
@@ -99,7 +106,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteTask(int taskId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
@@ -129,7 +135,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TaskInfoWithCoursesOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
@@ -144,7 +149,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TaskInfoWithAnswersOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
@@ -159,7 +163,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TaskInfoWithGroupsOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TaskInfoWithGroupsOutputModel GetTaskWithTagsAndGroups(int taskId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
@@ -174,7 +177,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<TaskInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<TaskInfoOutputModel> GetAllTasksWithTags()
         {
             var userIdentityInfo = this.GetUserIdAndRoles();

@@ -39,9 +39,9 @@ namespace DevEdu.Business.Services
         {
             var taskId = _taskRepository.AddTask(taskDto);
             var task = _taskRepository.GetTaskById(taskId);
-            if (tagsIds != null || tagsIds.Count != 0)
+            if (tagsIds != null && tagsIds.Count != 0)
                 tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
-            if (coursesIds != null || coursesIds.Count != 0)
+            if (coursesIds != null && coursesIds.Count != 0)
                 coursesIds.ForEach(courseId => _courseRepository.AddTaskToCourse(courseId, taskId));
 
             return task;
@@ -51,7 +51,7 @@ namespace DevEdu.Business.Services
         {
             var taskId = _taskRepository.AddTask(taskDto);
             var task = _taskRepository.GetTaskById(taskId);
-            if (tagsIds != null || tagsIds.Count != 0)
+            if (tagsIds != null && tagsIds.Count != 0)
                 tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
             if (groupTask != null)
             {

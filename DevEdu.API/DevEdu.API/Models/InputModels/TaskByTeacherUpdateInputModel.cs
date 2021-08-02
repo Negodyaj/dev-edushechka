@@ -4,8 +4,8 @@ using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class TaskByMethodistInputModel : TaskInputModel
+    public class TaskByTeacherUpdateInputModel : TaskInputModel
     {
-        public List<int> CourseIds { get; set; }
+        public GroupTaskInputModel GroupTask { get; set; }
     }
 }

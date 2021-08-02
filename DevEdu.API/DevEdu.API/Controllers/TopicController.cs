@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using DevEdu.API.Models.InputModels;
-using DevEdu.DAL.Repositories;
 using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.DAL.Models;
@@ -10,7 +9,6 @@ using DevEdu.DAL.Enums;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
-using DevEdu.Business.Services;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.API.Configuration.ExceptionResponses;
 

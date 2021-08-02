@@ -16,6 +16,7 @@ namespace DevEdu.Business.Tests
         private Mock<ITagRepository> _tagRepoMock;
         private Mock<ITopicValidationHelper> _topicValidationHelperMock;
         private Mock<ITagValidationHelper> _tagValidationHelperMock;
+        private ITopicService _sut;
 
         [SetUp]
         public void Setup()
@@ -24,6 +25,13 @@ namespace DevEdu.Business.Tests
             _tagRepoMock = new Mock<ITagRepository>();
             _topicValidationHelperMock = new Mock<ITopicValidationHelper>();
             _tagValidationHelperMock = new Mock<ITagValidationHelper>();
+            _sut = new TopicService(
+            _topicRepoMock.Object,
+            _tagRepoMock.Object,
+            new TopicValidationHelper(
+                _topicRepoMock.Object),
+            new TagValidationHelper(_tagRepoMock.Object)
+            );
         }
 
         [Test]
@@ -81,44 +89,31 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTagToTopic_WhenTopicNotFound_EntityNotFoundException()
+        public void AddTagToTopic_WhenTopicNotFound_ThrownEntityNotFoundException()
         {
             var expectedTopicId = 77;
             var expectedTagId = 55;
 
-            _topicValidationHelperMock.Setup(x => x.CheckTopicExistence(expectedTopicId)).Throws(
-                new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", expectedTopicId)));
-
-            var sut = new TopicService(_topicRepoMock.Object, _tagRepoMock.Object, new TopicValidationHelper(_topicRepoMock.Object), new TagValidationHelper(_tagRepoMock.Object));
-
-            EntityNotFoundException ex = Assert.Throws<EntityNotFoundException>(
-                () => sut.AddTagToTopic(expectedTopicId, expectedTagId));
-            Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", expectedTopicId)));
+            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", expectedTopicId)),
+                () => _sut.AddTagToTopic(expectedTopicId, expectedTagId));
 
             _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, expectedTagId), Times.Never);
-            //_topicValidationHelperMock.Verify(x => x.CheckTopicExistence(expectedTopicId), Times.Once);
-            //_tagValidationHelperMock.Verify(x => x.CheckTagExistence(expectedTagId), Times.Never);
         }
 
         [Test]
-        public void AddTagToTopic_WhenTagNotFound_EntityNotFoundException()
+        public void AddTagToTopic_WhenTagNotFound_ThrownEntityNotFoundException()
         {
             var expectedTopicId = 77;
             var expectedTagId = 55;
 
-            _tagValidationHelperMock.Setup(x => x.CheckTagExistence(expectedTagId)).Throws(
-                new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "tag", expectedTagId)));
             _topicRepoMock.Setup(x => x.GetTopic(expectedTopicId)).Returns(TopicData.GetTopicDtoWithTags);
 
-            var sut = new TopicService(_topicRepoMock.Object, _tagRepoMock.Object, new TopicValidationHelper(_topicRepoMock.Object), new TagValidationHelper(_tagRepoMock.Object));
-
-            EntityNotFoundException ex = Assert.Throws<EntityNotFoundException>(
-                () => sut.AddTagToTopic(expectedTopicId, expectedTagId));
-            Assert.That(ex.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "tag", expectedTagId)));
+            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "tag", expectedTagId)),
+            () => _sut.AddTagToTopic(expectedTopicId, expectedTagId));
 
             _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, expectedTagId), Times.Never);
-            //_topicValidationHelperMock.Verify(x => x.CheckTopicExistence(expectedTopicId), Times.Once);
-            //_tagValidationHelperMock.Verify(x => x.CheckTagExistence(expectedTagId), Times.Once);
         }
     }
 }
