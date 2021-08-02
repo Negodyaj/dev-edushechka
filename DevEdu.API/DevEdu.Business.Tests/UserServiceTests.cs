@@ -168,22 +168,6 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void SelectUsers_WhenListIsEmpty_Exception()
-        {
-            //Given
-            var list = _repoMock.Setup(x => x.SelectUsers()).Returns(new List<UserDto>() { });
-            var expectedException = $"{nameof(list)} is empty";
-
-            //When
-            var ex = Assert.Throws<Exception>(
-                () => _sut.SelectUsers());
-
-            //Then
-            Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _repoMock.Verify(x => x.SelectUsers(), Times.Once);
-        }
-
-        [Test]
         public void UpdateUser_WhenDoNotHaveMatchesInDataBase_EntityNotFoundException()
         {
             //Given

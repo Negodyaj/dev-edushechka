@@ -4,7 +4,6 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
@@ -54,9 +53,6 @@ namespace DevEdu.Business.Services
         public List<UserDto> SelectUsers()
         {
             var list = _userRepository.SelectUsers();
-            if (list == default || list.Count == 0)
-                throw new Exception($"{nameof(list)} is empty");
-
             return list;
         }
 
