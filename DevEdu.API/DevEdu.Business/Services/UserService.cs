@@ -19,7 +19,7 @@ namespace DevEdu.Business.Services
             _userValidationHelper = helper;
         }
 
-        public int AddUser(UserDto dto)
+        public UserDto AddUser(UserDto dto)
         {
             if (dto.Roles == null || dto.Roles.Count == 0)
                 dto.Roles = new List<Role> { Role.Student };

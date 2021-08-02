@@ -5,19 +5,6 @@ namespace DevEdu.Business.Tests
 {
     public class CourseData
     {
-        public static CourseDto GetCourseDto()
-        {
-            return new CourseDto
-            {
-                Id = 1,
-                Name = "Rock-hard Back",
-                Description = "Back with rock-n-roll",
-                IsDeleted = false
-            };
-        }
-
-        }
-
         public static CourseDto GetUpdCourseDto()
         {
             return new CourseDto

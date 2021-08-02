@@ -28,10 +28,6 @@ namespace DevEdu.Business.Services
             _lessonValidationHelper = lessonValidationHelper;
         }
 
-        public void AddCommentToLesson(int lessonId, CommentDto commentDto)
-        {
-            int commentId = _commentRepository.AddComment(commentDto);
-
         public int AddLesson(LessonDto lessonDto, List<int> topicIds)
         {
             int lessonId = _lessonRepository.AddLesson(lessonDto);
@@ -84,14 +80,14 @@ namespace DevEdu.Business.Services
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
 
         public StudentLessonDto AddStudentToLesson(int lessonId, int userId)
-        {         
+        {
             _lessonRepository.AddStudentToLesson(lessonId, userId);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);           
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
         }
 
         public void DeleteStudentFromLesson(int lessonId, int userId)
-        {            
-            _lessonRepository.DeleteStudentFromLesson(lessonId, userId);               
+        {
+            _lessonRepository.DeleteStudentFromLesson(lessonId, userId);
         }
 
         public StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
@@ -135,7 +131,7 @@ namespace DevEdu.Business.Services
             return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
         }
 
-        public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId)=>
-            _lessonRepository.SelectAllFeedbackByLessonId(lessonId);       
+        public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId) =>
+            _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
     }
 }

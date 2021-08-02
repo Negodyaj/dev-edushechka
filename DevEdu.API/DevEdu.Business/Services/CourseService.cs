@@ -18,7 +18,6 @@ namespace DevEdu.Business.Services
         private readonly ICourseValidationHelper _courseValidationHelper;
         private readonly IMaterialValidationHelper _materialValidationHelper;
         private readonly ITopicValidationHelper _topicValidationHelper;
-        private readonly IMaterialValidationHelper _materialValidationHelper;
 
         public CourseService
         (

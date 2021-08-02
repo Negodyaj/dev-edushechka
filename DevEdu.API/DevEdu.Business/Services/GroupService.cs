@@ -21,7 +21,8 @@ namespace DevEdu.Business.Services
             IGroupRepository groupRepository,
             IUserRepository userRepository,
             IGroupValidationHelper groupValidationHelper,
-            IMaterialValidationHelper materialValidationHelper
+            IMaterialValidationHelper materialValidationHelper,
+            IUserValidationHelper userValidationHelper
         )
         {
             _groupRepository = groupRepository;
@@ -103,20 +104,5 @@ namespace DevEdu.Business.Services
             if (!userInfo.IsAdmin())
                 _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
         }
-
-        public void DeleteTaskFromGroup(int groupId, int taskId) => _groupRepository.DeleteTaskFromGroup(groupId, taskId);
-
-        public List<GroupTaskDto> GetTasksByGroupId(int groupId) => _groupRepository.GetTaskGroupByGroupId(groupId);
-
-        public GroupTaskDto GetGroupTask(int groupId, int taskId) => _groupRepository.GetGroupTask(groupId, taskId);
-
-        public GroupTaskDto UpdateGroupTask(int groupId, int taskId, GroupTaskDto dto)
-        {
-            dto.Group = new GroupDto { Id = groupId };
-            dto.Task = new TaskDto { Id = taskId };
-            _groupRepository.UpdateGroupTask(dto);
-            return _groupRepository.GetGroupTask(groupId, taskId);
-        }
-
     }
 }

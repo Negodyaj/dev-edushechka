@@ -160,29 +160,6 @@ namespace DevEdu.Business.Tests
             _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Once);
         }
 
-
-        [Test]
-        public void AddCommentOnStudentAnswer_ExistingTaskStudentIdAndcommentIdPassed_CommentWasAdded()
-        {
-            // Given
-            var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
-            var answerAddedForTaskStudent = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDtoWithAddedComment();
-            int taskStudentId = 1;
-            int commentId = 4;
-
-            _studentAnswerOnTaskRepoMock.Setup(x => x.AddCommentOnStudentAnswer(taskStudentId, commentId)).Returns(taskStudentId);
-
-            var sut = new StudentAnswerOnTaskService(_studentAnswerOnTaskRepoMock.Object);
-
-            // When
-            var actualTaskStudentId = sut.AddCommentOnStudentAnswer(taskStudentId, commentId);
-
-            // Then
-            Assert.AreEqual(taskStudentId, actualTaskStudentId);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.AddCommentOnStudentAnswer(taskStudentId, commentId), Times.Once);
-        }
-
-        
         [Test]
         public void GetAllAnswersByStudentId_ExistingUserIdPassed_ReturnListOfStudentAnswerOnTaskDto()
         {

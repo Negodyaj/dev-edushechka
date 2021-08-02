@@ -1,8 +1,8 @@
 using DevEdu.Business.Services;
-using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using DevEdu.Business.Tests.Data;
+using NUnit.Framework;
 
 namespace DevEdu.Business.Tests
 {

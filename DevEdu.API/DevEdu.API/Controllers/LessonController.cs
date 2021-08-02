@@ -204,14 +204,5 @@ namespace DevEdu.API.Controllers
             var dto = _lessonService.SelectAllFeedbackByLessonId(lessonId);
             return _mapper.Map<List<FeedbackOutputModel>>(dto);
         }
-        // api/lesson/{lessonId}/user/{userId}
-        [HttpGet("{lessonId}/user/{userId}")]
-        [Description("Get StudentLesson by lesson and user")]
-        [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
-        public StudentLessonShortOutputModel GetStudentLessonByLessonAndUserId(int lessonId, int userId)
-        {
-            var output = _lessonService.GetStudentLessonByLessonAndUserId(lessonId, userId);
-            return _mapper.Map<StudentLessonShortOutputModel>(output);
-        }
     }
 }
