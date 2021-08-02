@@ -27,7 +27,13 @@ namespace DevEdu.Business.Tests
             _homeworkValidationHelper = new HomeworkValidationHelper(_homeworkRepoMock.Object);
             _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
             _taskValidationHelper = new TaskValidationHelper(_taskRepoMock.Object);
-            _sut = new HomeworkService(_homeworkRepoMock.Object,_homeworkValidationHelper,_groupValidationHelper,_taskValidationHelper);
+            _sut = new HomeworkService
+            (
+                _homeworkRepoMock.Object,
+                _homeworkValidationHelper,
+                _groupValidationHelper,
+                _taskValidationHelper
+            );
         }
 
         [Test]
@@ -232,7 +238,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.AddHomework(group.Id, task.Id,homeworkDto,user.Id));
+                () => _sut.AddHomework(group.Id, task.Id, homeworkDto, user.Id));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));

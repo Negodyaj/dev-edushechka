@@ -1,14 +1,14 @@
-﻿using System.ComponentModel;
-using AutoMapper;
+﻿using AutoMapper;
 using DevEdu.API.Common;
+using DevEdu.API.Extensions;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
-using DevEdu.API.Extensions;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
@@ -86,7 +86,7 @@ namespace DevEdu.API.Controllers
         {
             var userToken = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var output= _commentService.UpdateComment(id, dto, userToken);
+            var output = _commentService.UpdateComment(id, dto, userToken);
             return _mapper.Map<CommentInfoOutputModel>(output);
         }
     }

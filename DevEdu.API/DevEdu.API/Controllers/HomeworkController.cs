@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using AutoMapper;
+﻿using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.API.Extensions;
 using DevEdu.API.Models.InputModels;
@@ -10,6 +8,8 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {

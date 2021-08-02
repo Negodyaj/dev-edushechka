@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Runtime.Serialization.Formatters;
-using Dapper;
+﻿using Dapper;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace DevEdu.DAL.Repositories
 {

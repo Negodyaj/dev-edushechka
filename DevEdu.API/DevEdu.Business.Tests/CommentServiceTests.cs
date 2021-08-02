@@ -1,5 +1,4 @@
-﻿using System;
-using DevEdu.Business.Constants;
+﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
@@ -7,6 +6,7 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System;
 
 namespace DevEdu.Business.Tests
 {
@@ -31,7 +31,13 @@ namespace DevEdu.Business.Tests
             _commentValidationHelper = new CommentValidationHelper(_commentRepoMock.Object);
             _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object);
             _studentAnswerValidationHelper = new StudentAnswerOnTaskValidationHelper(_studentAnswerRepoMock.Object, _groupRepoMock.Object);
-            _sut = new CommentService(_commentRepoMock.Object, _commentValidationHelper, _lessonValidationHelper, _studentAnswerValidationHelper);
+            _sut = new CommentService
+            (
+                _commentRepoMock.Object
+                , _commentValidationHelper,
+                _lessonValidationHelper,
+                _studentAnswerValidationHelper
+            );
         }
 
         [TestCase(Role.Teacher)]

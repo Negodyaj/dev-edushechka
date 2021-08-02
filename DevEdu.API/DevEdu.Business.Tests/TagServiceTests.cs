@@ -52,6 +52,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedTagDtos, actualTagDtos);
             _tagRepoMock.Verify(x => x.SelectAllTags(), Times.Once);
         }
+
         [Test]
         public void GetTagById_Id_TagDto()
         {
@@ -71,6 +72,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedTagDto, actualTagDto);
             _tagRepoMock.Verify(x => x.SelectTagById(tagId), Times.Once);
         }
+
         [Test]
         public void UpdateTag_TagDto_Id_TagDto()
         {

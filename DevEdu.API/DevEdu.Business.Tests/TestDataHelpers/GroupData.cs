@@ -59,6 +59,7 @@ namespace DevEdu.Business.Tests
                 Tutors = null
             };
         }
+
         public static GroupDto GetGroupDtoToUpdNameAndTimetable()
         {
             return new GroupDto
@@ -142,7 +143,7 @@ namespace DevEdu.Business.Tests
                     Teachers = null,
                     Tutors = null,
                     IsDeleted = false
-                }                
+                }
             };
         }
 
@@ -169,7 +170,7 @@ namespace DevEdu.Business.Tests
                     PhoneNumber = null,
                     Roles = null,
                     IsDeleted = false
-                }                
+                }
             };
         }
 

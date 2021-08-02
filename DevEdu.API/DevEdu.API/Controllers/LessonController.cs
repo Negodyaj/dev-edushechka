@@ -1,18 +1,18 @@
-using DevEdu.API.Models.InputModels;
-using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
-using System.Collections.Generic;
-using System.ComponentModel;
-using Microsoft.AspNetCore.Http;
-using DevEdu.API.Models.OutputModels;
-using Microsoft.AspNetCore.Authorization;
-using DevEdu.DAL.Enums;
 using DevEdu.API.Common;
 using DevEdu.API.Configuration.ExceptionResponses;
-using DevEdu.Business.Services;
+using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.API.Models.OutputModels.Lesson;
+using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {

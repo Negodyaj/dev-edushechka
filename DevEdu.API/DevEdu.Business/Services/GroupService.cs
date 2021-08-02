@@ -1,8 +1,8 @@
-﻿using DevEdu.DAL.Enums;
+﻿using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
-using DevEdu.Business.ValidationHelpers;
 
 namespace DevEdu.Business.Services
 {
@@ -39,7 +39,7 @@ namespace DevEdu.Business.Services
             dto.Teachers = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Teacher);
             return dto;
         }
-        
+
         public List<GroupDto> GetGroups() => _groupRepository.GetGroups();
 
         public int AddGroupLesson(int groupId, int lessonId) => _groupRepository.AddGroupToLesson(groupId, lessonId);
@@ -68,7 +68,7 @@ namespace DevEdu.Business.Services
         }
 
         public int AddGroupToLesson(int groupId, int lessonId) => _groupRepository.AddGroupToLesson(groupId, lessonId);
-        public int RemoveGroupFromLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupFromLesson(groupId, lessonId);  
+        public int RemoveGroupFromLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
         public void AddUserToGroup(int groupId, int userId, int roleId) => _groupRepository.AddUserToGroup(groupId, userId, roleId);
         public void DeleteUserFromGroup(int groupId, int userId) => _groupRepository.DeleteUserFromGroup(userId, groupId);
 

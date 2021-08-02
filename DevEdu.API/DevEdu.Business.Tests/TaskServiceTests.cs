@@ -19,7 +19,6 @@ namespace DevEdu.Business.Tests
             _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
         }
 
-
         [Test]
         public void AddTask_SimpleDtoWithoutTags_TaskCreated()
         {

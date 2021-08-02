@@ -1,9 +1,9 @@
-﻿using DevEdu.DAL.Models;
-using Dapper;
+﻿using Dapper;
+using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Collections.Generic;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -105,19 +105,19 @@ namespace DevEdu.DAL.Repositories
                 _userSelectAllProcedure,
                 (user, city, role) =>
                 {
-                    UserDto userEnrty;
+                    UserDto userEntry;
 
-                    if (!UserDictionary.TryGetValue(user.Id, out userEnrty))
+                    if (!UserDictionary.TryGetValue(user.Id, out userEntry))
                     {
-                        userEnrty = user;
-                        userEnrty.City = city;
-                        userEnrty.Roles = new List<Role>();
-                        UserDictionary.Add(user.Id, userEnrty);
+                        userEntry = user;
+                        userEntry.City = city;
+                        userEntry.Roles = new List<Role>();
+                        UserDictionary.Add(user.Id, userEntry);
                     }
 
-                    userEnrty.Roles.Add(role);
+                    userEntry.Roles.Add(role);
 
-                    return userEnrty;
+                    return userEntry;
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure)

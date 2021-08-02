@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Dapper;
+using DevEdu.DAL.Models;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Dapper;
-using DevEdu.DAL.Enums;
-using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -17,7 +16,7 @@ namespace DevEdu.DAL.Repositories
         private const string _taskUpdateProcedure = "dbo.Task_Update";
         private const string _tagTaskAddProcedure = "dbo.Tag_Task_Insert";
         private const string _tagTaskDeleteProcedure = "dbo.Tag_Task_Delete";
-        
+
         public TaskRepository()
         {
 
@@ -84,6 +83,7 @@ namespace DevEdu.DAL.Repositories
                 .ToList<TaskDto>();
             return list;
         }
+
         public int AddTask(TaskDto taskDto)
         {
             int taskId = _connection.QuerySingle<int>(
@@ -99,6 +99,7 @@ namespace DevEdu.DAL.Repositories
                 );
             return taskId;
         }
+
         public void UpdateTask(TaskDto taskDto)
         {
             _connection.Execute(

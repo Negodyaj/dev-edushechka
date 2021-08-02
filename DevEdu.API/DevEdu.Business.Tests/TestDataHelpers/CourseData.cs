@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using DevEdu.DAL.Models;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
@@ -37,6 +37,7 @@ namespace DevEdu.Business.Tests
 
             return courseTopicsDto;
         }
+
         public static List<TopicDto> GetTopics()
         {
             List<TopicDto> topicsDto = new List<TopicDto>();
@@ -54,6 +55,7 @@ namespace DevEdu.Business.Tests
 
             return topicsDto;
         }
+
         public static List<TopicDto> GetTopicsFromBDUseWhenTopicAbsent()
         {
             List<TopicDto> topicsDto = new List<TopicDto>();
@@ -64,6 +66,5 @@ namespace DevEdu.Business.Tests
 
             return topicsDto;
         }
-
     }
 }

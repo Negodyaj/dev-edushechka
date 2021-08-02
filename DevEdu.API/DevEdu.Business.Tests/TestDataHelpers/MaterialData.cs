@@ -1,15 +1,11 @@
 ﻿using DevEdu.DAL.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
     public static class MaterialData
     {
-        public static MaterialDto GetMaterialDtoWithoutTags() => 
+        public static MaterialDto GetMaterialDtoWithoutTags() =>
             new MaterialDto
             {
                 Id = 1,
@@ -17,8 +13,8 @@ namespace DevEdu.Business.Tests
             };
 
         public static MaterialDto GetMaterialDtoWithTags() =>
-            new MaterialDto 
-            { 
+            new MaterialDto
+            {
                 Content = "Материал по ООП",
                 Tags = new List<TagDto>
                 {

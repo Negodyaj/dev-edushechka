@@ -1,12 +1,15 @@
-using System;
-using System.Collections.Generic;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace DevEdu.Business.Tests
 {
     public static class CommentData
     {
+        private const string _dateFormat = "dd.MM.yyyy";
+
         public static CommentDto GetCommentDto()
         {
             return new CommentDto
@@ -25,7 +28,7 @@ namespace DevEdu.Business.Tests
                     Email = "CatJack@meow.cat",
                     Photo = "Cat.jpg"
                 },
-                Date = DateTime.Parse("19.07.2021"),
+                Date = DateTime.ParseExact("19.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                 IsDeleted = false
             };
         }
@@ -51,18 +54,10 @@ namespace DevEdu.Business.Tests
             return new StudentAnswerOnTaskDto
             {
                 Id = 1,
-                User=new UserDto
+                User = new UserDto
                 {
                     Id = 10
                 }
-            };
-        }
-
-        public static List<Role> GetStudentRole()
-        {
-            return new List<Role>
-            {
-                Role.Student
             };
         }
 
@@ -81,6 +76,7 @@ namespace DevEdu.Business.Tests
                 }
             };
         }
+
         public static List<CommentDto> GetListCommentsDto()
         {
             return new List<CommentDto>
@@ -97,7 +93,7 @@ namespace DevEdu.Business.Tests
                         Email = "CatJack@meow.cat",
                         Photo = "Cat.jpg"
                     },
-                    Date = DateTime.Parse("19.07.2021"),
+                    Date = DateTime.ParseExact("19.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                     IsDeleted = false
                 },
                 new CommentDto
@@ -112,7 +108,7 @@ namespace DevEdu.Business.Tests
                         Email = "ZlooEvil@dark.hell",
                         Photo = "Zloo.jpg"
                     },
-                    Date = DateTime.Parse("22.02.2021"),
+                    Date = DateTime.ParseExact("22.02.2021", _dateFormat, CultureInfo.InvariantCulture),
                     IsDeleted = false
                 },
                 new CommentDto
@@ -127,7 +123,7 @@ namespace DevEdu.Business.Tests
                         Email = "AntonTeacher@back.sharp",
                         Photo = "Anton.jpg"
                     },
-                    Date = DateTime.Parse("30.03.2021"),
+                    Date = DateTime.ParseExact("30.03.2021", _dateFormat, CultureInfo.InvariantCulture),
                     IsDeleted = false
                 }
             };

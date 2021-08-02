@@ -1,8 +1,8 @@
+using Dapper;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Dapper;
-using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -228,15 +228,15 @@ namespace DevEdu.DAL.Repositories
 
         public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
-             _connection.Execute(
-                _deleteCourseMaterial,
-                new
-                {
-                    courseId,
-                    materialId
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            _connection.Execute(
+               _deleteCourseMaterial,
+               new
+               {
+                   courseId,
+                   materialId
+               },
+               commandType: CommandType.StoredProcedure
+           );
         }
     }
 }

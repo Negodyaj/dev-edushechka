@@ -1,5 +1,5 @@
-﻿using System;
-using DevEdu.DAL.Enums;
+﻿using DevEdu.DAL.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace DevEdu.DAL.Models

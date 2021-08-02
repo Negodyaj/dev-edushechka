@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DevEdu.DAL.Enums;
+using System;
 using System.Collections.Generic;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Tests
 {

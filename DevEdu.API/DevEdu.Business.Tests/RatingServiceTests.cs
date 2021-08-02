@@ -131,7 +131,7 @@ namespace DevEdu.Business.Tests
 
             //Than
             Assert.AreEqual(expectedStudentRatingDto, actualStudentRatingDto);
-            _ratingRepoMock.Verify(x => x.UpdateStudentRating(It.Is<StudentRatingDto>(dto => 
+            _ratingRepoMock.Verify(x => x.UpdateStudentRating(It.Is<StudentRatingDto>(dto =>
                 dto.Equals(RatingData.GetListOfStudentRatingDto()[2]))));
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(StudentRatingId), Times.Once);
         }

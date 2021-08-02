@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using NUnit.Framework;
 using Moq;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Dapper;
+﻿using Dapper;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -16,7 +16,7 @@ namespace DevEdu.DAL.Repositories
         private const string _homeworkUpdateProcedure = "dbo.Homework_Update";
         private const string _homeworkSelectAllByTaskIdProcedure = "dbo.homework_SelectAllByTaskId";
 
-        public HomeworkRepository(){}
+        public HomeworkRepository() { }
 
         public int AddHomework(HomeworkDto homeworkDto)
         {

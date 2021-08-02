@@ -1,5 +1,4 @@
-﻿using System;
-using DevEdu.Business.Constants;
+﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
@@ -7,6 +6,7 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System;
 
 namespace DevEdu.Business.Tests
 {
@@ -27,7 +27,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock = new Mock<IMaterialRepository>();
             _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
             _materialValidationHelper = new MaterialValidationHelper(_materialRepoMock.Object);
-            _sut = new GroupService(_groupRepoMock.Object, _userRepoMock.Object,_groupValidationHelper,_materialValidationHelper);
+            _sut = new GroupService(_groupRepoMock.Object, _userRepoMock.Object, _groupValidationHelper, _materialValidationHelper);
         }
 
         [Test]
@@ -196,7 +196,7 @@ namespace DevEdu.Business.Tests
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            
+
         }
 
         [TestCase(Role.Teacher)]

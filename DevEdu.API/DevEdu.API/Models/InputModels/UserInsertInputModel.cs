@@ -1,9 +1,9 @@
 ﻿using DevEdu.API.Common;
+using DevEdu.DAL.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using DevEdu.DAL.Enums;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DevEdu.DAL.Enums;
+using System.Collections.Generic;
 using System.Linq;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business
 {
