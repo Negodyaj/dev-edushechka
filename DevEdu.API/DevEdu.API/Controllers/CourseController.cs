@@ -8,9 +8,13 @@ using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
+using DevEdu.API.Common;
+using DevEdu.DAL.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CourseController : Controller
@@ -123,6 +127,7 @@ namespace DevEdu.API.Controllers
 
         // api/course/{courseId}/topic/{topicId}
         [HttpPost("{courseId}/topic/{topicId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [Description("Add topic to course")]
         public string AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
@@ -134,6 +139,7 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpPost("{courseId}/select-topics")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [Description("Add topics to course")]
         public string AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
@@ -146,6 +152,7 @@ namespace DevEdu.API.Controllers
 
         // api/course/{courseId}/topic/{topicId}
         [HttpDelete("{courseId}/topic/{topicId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("Delete topic from course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public string DeleteTopicFromCourse(int courseId, int topicId)
@@ -166,6 +173,7 @@ namespace DevEdu.API.Controllers
 
         // api/course/{courseId}/program
         [HttpPut("{courseId}/program")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("updates topics in the course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public string UpdateCourseTopicsByCourseId(int courseId, [FromBody] List<CourseTopicUpdateInputModel> topics)
