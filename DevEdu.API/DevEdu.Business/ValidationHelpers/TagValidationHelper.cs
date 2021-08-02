@@ -17,7 +17,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var tag = _tagRepository.SelectTagById(tagId);
             if (tag == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(tag), tagId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(tag), tagId));
         }
     }
 }

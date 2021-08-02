@@ -20,7 +20,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var topic = _topicRepository.GetTopic(topicId);
             if (topic == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(topic), topicId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(topic), topicId));
         }
         public void CheckTopicsExistence(List<CourseTopicDto> topics)
         {

@@ -17,7 +17,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var lesson = _lessonRepository.SelectLessonById(lessonId);
             if (lesson == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(lesson), lessonId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(lesson), lessonId));
         }
     }
 }

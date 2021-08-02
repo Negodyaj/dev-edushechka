@@ -45,7 +45,7 @@ namespace DevEdu.Business.Services
             var dto = _repository.SelectTagById(id);
             if (dto == default)
             {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(dto), id));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(dto), id));
             }
             return dto;
         }

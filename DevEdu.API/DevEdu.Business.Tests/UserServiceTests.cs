@@ -3,9 +3,6 @@ using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
-﻿using DevEdu.Business.Services;
-using DevEdu.DAL.Models;
-
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -140,7 +137,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var user = UserData.GetUserDto();
-            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(user), userId);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -172,7 +169,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var user = UserData.GetUserDto();
-            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(user), user.Id);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), user.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -191,7 +188,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var user = UserData.GetUserDto();
-            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(user), id);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -208,7 +205,7 @@ namespace DevEdu.Business.Tests
             //Given
             var roleId = 6;
             var user = UserData.GetUserDto();
-            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(user), userId);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -225,7 +222,7 @@ namespace DevEdu.Business.Tests
             //Given
             var roleId = 6;
             var user = UserData.GetUserDto();
-            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(user), userId);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(

@@ -17,7 +17,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var course = _courseRepository.GetCourse(courseId);
             if (course == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(course), courseId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(course), courseId));
         }
     }
 }

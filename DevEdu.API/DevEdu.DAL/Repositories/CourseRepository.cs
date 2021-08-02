@@ -28,10 +28,6 @@ namespace DevEdu.DAL.Repositories
         private const string _courseSelectByTaskIdProcedure = "dbo.Course_SelectByTaskId";
         private const string _courseSelectAllByMaterialIdProcedure = "dbo.Course_SelectByMaterialId";
 
-        public CourseRepository()
-        {
-        }
-
         public int AddCourse(CourseDto courseDto)
         {
             return _connection.QuerySingle<int>(
@@ -110,13 +106,13 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public CourseDto UpdateCourse(int courseId, CourseDto courseDto)
+        public CourseDto UpdateCourse(CourseDto courseDto)
         {
             return _connection.QuerySingle<CourseDto>(
                 _courseUpdateProcedure,
                 new
                 {
-                    courseId,
+                    CourseId = courseDto.Id,
                     courseDto.Name,
                     courseDto.Description
                 },
