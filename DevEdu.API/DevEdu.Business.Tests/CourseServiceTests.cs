@@ -352,7 +352,7 @@ namespace DevEdu.Business.Tests
             //Given
             var givenCourseId = 0;
             var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "course", givenCourseId);
-            
+
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseId(givenCourseId));
             //When
             var exception = Assert.Throws<EntityNotFoundException>(() =>
@@ -360,7 +360,33 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "course", givenCourseId)));
             _courseRepositoryMock.Verify(x => x.SelectAllTopicsByCourseId(givenCourseId), Times.Never);
+        }
 
+        [Test]
+        public void AddTaskToCourse_WithTaskIdAndCourseId_Added()
+        {
+            //Given
+            var givenCourseId = 3;
+            var givenTaskId = 8;
+            _courseRepositoryMock.Setup(x => x.AddTaskToCourse(givenCourseId, givenTaskId));
+
+            //When
+            _sut.AddTaskToCourse(givenCourseId, givenTaskId);
+            //Then
+            _courseRepositoryMock.Verify(x => x.AddTaskToCourse(givenCourseId, givenTaskId), Times.Once);
+        }
+
+        [Test]
+        public void DeleteTaskFromCourse_WithTaskIdAndCourseId_Deleted()
+        {
+            //Given
+            var givenCourseId = 3;
+            var givenTaskId = 8;
+            _courseRepositoryMock.Setup(x => x.DeleteTaskFromCourse(givenCourseId, givenTaskId));
+            //When
+            _sut.DeleteTaskFromCourse(givenCourseId, givenTaskId);
+            //Then
+            _courseRepositoryMock.Verify(x => x.DeleteTaskFromCourse(givenCourseId, givenTaskId), Times.Once);
         }
 
         [Test]
