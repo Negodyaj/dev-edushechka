@@ -10,6 +10,8 @@ using DevEdu.Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using DevEdu.API.Configuration;
+using DevEdu.API.Common;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Controllers
 {
@@ -40,72 +42,26 @@ namespace DevEdu.API.Controllers
             _commentService = commentService;
         }
 
-        //  api/Task/1
-        [HttpGet("{taskId}")]
-        [Description("Get task by Id with tags")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public TaskInfoOutputModel GetTaskWithTags(int taskId)
-        {
-            var taskDto = _taskService.GetTaskById(taskId);
-            return _mapper.Map<TaskInfoOutputModel>(taskDto);
-        }
-
-        //  api/Task/courses
-        [Authorize(Roles = "Teacher")]
-        [HttpGet("{taskId}/with-courses")]
-        [Description("Get task by Id with tags and courses")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesOutputModel))]
-        public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
-        {
-            var taskDto = _taskService.GetTaskWithCoursesById(taskId);
-            return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
-        }
-
-        //  api/Task/answers
-        [HttpGet("{taskId}/with-answers")]
-        [Description("Get task by Id with tags and answers")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithAnswersOutputModel))]
-        public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
-        {
-            var taskDto = _taskService.GetTaskWithAnswersById(taskId);
-            return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
-        }
-
-        //  api/Task/coursesandanswers
-        [HttpGet("{taskId}/full-info")]
-        [Description("Get task by Id with tags, courses and answers")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoWithCoursesAndAnswersOutputModel))]
-        public TaskInfoWithCoursesAndAnswersOutputModel GetTaskWithTagsCoursesAndAnswers(int taskId)
-        {
-            var taskDto = _taskService.GetTaskWithCoursesAndAnswersById(taskId);
-            return _mapper.Map<TaskInfoWithCoursesAndAnswersOutputModel>(taskDto);
-        }
-
-        //  api/Task
-        [HttpGet]
-        [Description("Get all tasks with tags")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskInfoOutputModel))]
-        public List<TaskInfoOutputModel> GetAllTasksWithTags()
-        {
-            var taskDtos = _taskService.GetTasks();
-            return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
-        }
-
-        // api/task
-        [HttpPost]
-        [Description("Add new task")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        // api/task/methodist
+        [AuthorizeRoles(Role.Methodist)]
+        [HttpPost("methodist")]
+        [Description("Add new task by methodist")]
+        [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public TaskInfoOutputModel AddTask([FromBody] TaskInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
             return _mapper.Map<TaskInfoOutputModel>(_taskService.GetTaskById(_taskService.AddTask(taskDto)));
         }
 
-
         // api/task/{taskId}
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpPut("{taskId}")]
         [Description("Update task")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TaskInfoOutputModel UpdateTask(int taskId, [FromBody] TaskInputModel model)
         {
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
@@ -114,12 +70,72 @@ namespace DevEdu.API.Controllers
         }
 
         // api/task/{taskId}
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpDelete("{taskId}")]
         [Description("Delete task with selected Id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteTask(int taskId)
         {
             _taskService.DeleteTask(taskId);
+        }
+
+        //  api/Task/1
+        [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
+        [HttpGet("{taskId}")]
+        [Description("Get task by Id with tags")]
+        [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public TaskInfoOutputModel GetTaskWithTags(int taskId)
+        {
+            var taskDto = _taskService.GetTaskById(taskId);
+            return _mapper.Map<TaskInfoOutputModel>(taskDto);
+        }
+
+        //  api/Task/1/with-courses
+        [AuthorizeRoles(Role.Methodist)]
+        [HttpGet("{taskId}/with-courses")]
+        [Description("Get task by Id with tags and courses")]
+        [ProducesResponseType(typeof(TaskInfoWithCoursesOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
+        {
+            var taskDto = _taskService.GetTaskWithCoursesById(taskId);
+            return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
+        }
+
+        //  api/Task/1/with-answers
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
+        [HttpGet("{taskId}/with-answers")]
+        [Description("Get task by Id with tags and answers")]
+        [ProducesResponseType(typeof(TaskInfoWithAnswersOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
+        {
+            var taskDto = _taskService.GetTaskWithAnswersById(taskId);
+            return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
+        }
+
+        //  api/Task
+        [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
+        [HttpGet]
+        [Description("Get all tasks with tags")]
+        [ProducesResponseType(typeof(List<TaskInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public List<TaskInfoOutputModel> GetAllTasksWithTags()
+        {
+            var taskDtos = _taskService.GetTasks();
+            return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
         }
 
         // api/task/{taskId}/tag/{tagId}
