@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
@@ -31,6 +32,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         [Description("Return homework by id")]
         [ProducesResponseType(typeof(HomeworkInfoFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public HomeworkInfoFullOutputModel GetHomework(int id)
         {
             var userId = this.GetUserId();
@@ -44,6 +48,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("by-group/{groupId}")]
         [Description("Get all homework by group")]
         [ProducesResponseType(typeof(List<HomeworkInfoWithTaskOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<HomeworkInfoWithTaskOutputModel> GetHomeworkByGroupId(int groupId)
         {
             var userId = this.GetUserId();
@@ -57,6 +64,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("by-task/{taskId}")]
         [Description("Get all homework by task")]
         [ProducesResponseType(typeof(List<HomeworkInfoWithGroupOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<HomeworkInfoWithGroupOutputModel> GetHomeworkByTaskId(int taskId)
         {
             var dto = _homeworkService.GetHomeworkByTaskId(taskId);
@@ -69,6 +79,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("group/{groupId}/task/{taskId}")]
         [Description("Add homework")]
         [ProducesResponseType(typeof(HomeworkInfoOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public HomeworkInfoOutputModel AddHomework(int groupId, int taskId, [FromBody] HomeworkInputModel model)
         {
             var userId = this.GetUserId();
@@ -82,6 +95,9 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}")]
         [Description("Delete homework")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteHomework(int id)
         {
             var userId = this.GetUserId();
@@ -93,6 +109,9 @@ namespace DevEdu.API.Controllers
         [HttpPut("{id}")]
         [Description("Update homework")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public HomeworkInfoOutputModel UpdateHomework(int id, [FromBody] HomeworkInputModel model)
         {
             var userId = this.GetUserId();

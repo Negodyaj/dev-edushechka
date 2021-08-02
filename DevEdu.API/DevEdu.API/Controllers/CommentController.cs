@@ -9,6 +9,7 @@ using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
+using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
@@ -30,6 +31,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         [Description("Return comment by id")]
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel GetComment(int id)
         {
             var userToken = this.GetUserIdAndRoles();
@@ -43,6 +47,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("to-lesson/{lessonId}")]
         [Description("Add new comment to lesson")]
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel model)
         {
             var userToken = this.GetUserIdAndRoles();
@@ -57,6 +64,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("to-student-answer/{taskStudentId}")]
         [Description("Add new comment to student answer")]
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel AddCommentToStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel model)
         {
             var userToken = this.GetUserIdAndRoles();
@@ -71,6 +81,9 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}")]
         [Description("Delete comment by id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteComment(int id)
         {
             var userToken = this.GetUserIdAndRoles();
@@ -82,6 +95,9 @@ namespace DevEdu.API.Controllers
         [HttpPut("{id}")]
         [Description("Update comment by id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
         {
             var userToken = this.GetUserIdAndRoles();
