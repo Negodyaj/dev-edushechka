@@ -145,10 +145,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
            );
 
-<<<<<<< HEAD
-=======
             return taskStudentId;
->>>>>>> RHB-39
         }
 
         public List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskByTaskId(int id)

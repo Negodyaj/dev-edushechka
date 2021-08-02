@@ -14,7 +14,6 @@ namespace DevEdu.DAL.Models
         public DateTime? CompletedDate { get; set; }
         public List<CommentDto> Comments { get; set; }
         public bool IsDeleted { get; set; }
-<<<<<<< HEAD
 
 
         public override bool Equals(object obj)
@@ -43,7 +42,5 @@ namespace DevEdu.DAL.Models
             hash.Add(IsDeleted);
             return hash.ToHashCode();
         }
-=======
->>>>>>> RHB-39
     }
 }
