@@ -9,6 +9,8 @@ using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using DevEdu.DAL.Enums;
+using DevEdu.API.Common;
 
 namespace DevEdu.API.Controllers
 {
@@ -141,6 +143,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpPost("{taskId}/student/{studentId}")]
+        [AuthorizeRoles(Role.Student)]
         [Description("Add student answer on task")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status201Created)]
         public StudentAnswerOnTaskFullOutputModel AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
@@ -155,6 +158,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/all-answers
         [HttpGet("{taskId}/all-answers")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [Description("Get all student answers on tasks by task")]
         [ProducesResponseType(typeof(List<StudentAnswerOnTaskFullOutputModel>), StatusCodes.Status200OK)]
         public List<StudentAnswerOnTaskFullOutputModel> GetAllStudentAnswersOnTask(int taskId)
@@ -167,7 +171,8 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpGet("{taskId}/student/{studentId}")]
-        [Description("Get student answers on tasks by student and task")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
+        [Description("Get student answer on task by task and student")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
         public StudentAnswerOnTaskFullOutputModel GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
@@ -180,6 +185,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpPut("{taskId}/student/{studentId}")]
+        [AuthorizeRoles(Role.Student)]
         [Description("Update student answer on task")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
         public StudentAnswerOnTaskFullOutputModel UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
@@ -192,6 +198,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}
         [HttpDelete("{taskId}/student/{studentId}")]
+        [AuthorizeRoles(Role.Student)]
         [Description("Delete student answer on task")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteStudentAnswerOnTask(int taskId, int studentId)
@@ -201,6 +208,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId}/change-status/{statusId}
         [HttpPut("{taskId}/student/{studentId}/change-status/{statusId}")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [Description("Update task status of student answer")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
         public StudentAnswerOnTaskFullOutputModel UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
@@ -213,6 +221,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/answer/{taskStudentId}/comment}
         [HttpPost("answer/{taskStudentId}/comment")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [Description("Add comment on task student answer")]
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status204NoContent)]
         public CommentInfoOutputModel AddCommentOnStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel inputModel)
@@ -238,6 +247,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/answer/by-user/42
         [HttpGet("answer/by-user/{userId}")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [Description("Get all answers of student")]
         [ProducesResponseType(typeof(List<StudentAnswerOnTaskOutputModel>), StatusCodes.Status200OK)]
         public List<StudentAnswerOnTaskOutputModel> GetAllAnswersByStudentId(int userId)

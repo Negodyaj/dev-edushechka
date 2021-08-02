@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
@@ -9,10 +10,13 @@ namespace DevEdu.Business.Services
     public class StudentAnswerOnTaskService: IStudentAnswerOnTaskService
     {
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
+        private readonly IStudentAnswerOnTaskValidationHelper _studentAnswerOnTaskValidationHelper;
 
-        public StudentAnswerOnTaskService(IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository)
+        public StudentAnswerOnTaskService(IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, 
+            IStudentAnswerOnTaskValidationHelper studentAnswerOnTaskValidationHelper)
         {
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
+            _studentAnswerOnTaskValidationHelper = studentAnswerOnTaskValidationHelper;
         }
 
         public int AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
@@ -27,6 +31,7 @@ namespace DevEdu.Business.Services
 
         public void DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
+
             StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
             dto.Task = new TaskDto { Id = taskId };
             dto.User = new UserDto { Id = studentId };
