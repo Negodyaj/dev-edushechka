@@ -256,5 +256,38 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(groupTaskList, dto);
             _groupRepoMock.Verify(x => x.GetTaskGroupByGroupId(groupId), Times.Once);
         }
+
+        [Test]
+        public void AddUserToGroup_GroupId_UserId_RoleId_UserAddedToGroup()
+        {
+            //Given
+            int groupId = 0;
+            int userId = 0;
+            int roleId = 0;
+
+            var sut = new GroupService(_groupRepoMock.Object);
+
+            //When
+            sut.AddUserToGroup(groupId, userId, roleId);
+
+            //Than
+            _groupRepoMock.Verify(x => x.AddUserToGroup(groupId, userId, roleId), Times.Once);
+        }
+
+        [Test]
+        public void DeleteUserFromGroup_GroupId_UserId_RoleId_UserDeletedFromGroup()
+        {
+            //Given
+            int groupId = 0;
+            int userId = 0;
+
+            var sut = new GroupService(_groupRepoMock.Object);
+
+            //When
+            sut.DeleteUserFromGroup(groupId, userId);
+
+            //Than
+            _groupRepoMock.Verify(x => x.DeleteUserFromGroup(groupId, userId), Times.Once);
+        }
     }
 }
