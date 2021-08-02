@@ -116,5 +116,26 @@ namespace DevEdu.Business.Tests
                 }
             };
         }
+
+        public static UserDto GetUserDtoOutOfList()
+        {
+            return new UserDto
+            {
+                Id = 10,
+                FirstName = "Student",
+                LastName = "Studentov",
+                Patronymic = "Studentovich",
+                Email = "student@student.st",
+                Username = "Student01",
+                Password = "qwerty12345",
+                ContractNumber = "Student01",
+                City = (City)1,
+                BirthDate = DateTime.Today,
+                GitHubAccount = "Student/Student.git",
+                Photo = "https://localhost:Student",
+                PhoneNumber = "StudentPhoneNumber",
+                Roles = new List<Role> { Role.Student }
+            };
+        }
     }
 }
