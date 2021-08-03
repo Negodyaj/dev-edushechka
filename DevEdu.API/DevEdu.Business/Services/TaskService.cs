@@ -64,7 +64,7 @@ namespace DevEdu.Business.Services
 
         public TaskDto UpdateTask(TaskDto taskDto, int taskId, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.CheckUserExistence(userIdentityInfo.UserId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             if(userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
                 _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
@@ -80,7 +80,7 @@ namespace DevEdu.Business.Services
 
         public int DeleteTask(int taskId, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.CheckUserExistence(userIdentityInfo.UserId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
                 _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
@@ -94,7 +94,7 @@ namespace DevEdu.Business.Services
 
         public TaskDto GetTaskById(int taskid, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.CheckUserExistence(userIdentityInfo.UserId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var taskDto = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskid);
             if(!userIdentityInfo.Roles.Contains(Role.Admin))
             _taskValidationHelper.CheckUserAccessToTask(taskid, userIdentityInfo.UserId);
@@ -125,7 +125,7 @@ namespace DevEdu.Business.Services
 
         public List<TaskDto> GetTasks(UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.CheckUserExistence(userIdentityInfo.UserId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var tasks = _taskRepository.GetTasks();
             var allowedTaskDtos = new List<TaskDto>();
             if (!userIdentityInfo.Roles.Contains(Role.Admin))

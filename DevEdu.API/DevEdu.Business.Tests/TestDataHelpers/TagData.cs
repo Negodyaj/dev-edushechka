@@ -26,12 +26,34 @@ namespace DevEdu.Business.Tests
                     Id = 15,
                     Name = "DevEdu",
                     IsDeleted = false
-                },
-                new TagDto
-                {
-                    Id = 13,
-                    Name = "Tag"
                 }
+            };
+        }
+
+        public static TagDto GetInputTagDto()
+        {
+            return new TagDto
+            {
+                Name = "Tag"
+            };
+        }
+
+        public static TagDto GetTagDtoForUpdate()
+        {
+            return new TagDto
+            {
+                Id = 13,
+                Name = "Tag"
+            };
+        }
+
+        public static TagDto GetOutputTagDto()
+        {
+            return new TagDto
+            {
+                Id = 13,
+                Name = "Tag",
+                IsDeleted = false
             };
         }
     }

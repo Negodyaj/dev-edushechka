@@ -603,9 +603,10 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetTaskWithGroupsByIdd_WhenUserNotRelatedToTusk_ThrownAuthorizationException()
+        public void GetTaskWithGroupsById_WhenUserNotRelatedToTask_ThrownAuthorizationException()
         {
             //Given
+            var groupTaskList = GroupTaskData.GetListOfGroupTaskDtoWithGroup();
             var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;

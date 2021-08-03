@@ -74,8 +74,8 @@ namespace DevEdu.API.Controllers
         public TopicOutputModel UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
             var dto = _mapper.Map<TopicDto>(model);
-            _topicService.UpdateTopic(id, dto);
-            return GetTopicById(id);
+            var output = _topicService.UpdateTopic(id, dto);
+            return _mapper.Map<TopicOutputModel>(output);
         }
 
         //  api/topic/{topicId}/tag/{tagId}
@@ -90,7 +90,7 @@ namespace DevEdu.API.Controllers
             return _topicService.AddTagToTopic(topicId, tagId);
         }
 
-        //  api/opic/{topicId}/tag/{tagId}
+        //  api/topic/{topicId}/tag/{tagId}
         [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpDelete("{topicId}/tag/{tagId}")]
         [Description("Delete tag from topic")]
@@ -100,6 +100,6 @@ namespace DevEdu.API.Controllers
         public int DeleteTagFromTopic(int topicId, int tagId)
         {
             return _topicService.DeleteTagFromTopic(topicId, tagId);
-        }
+        }      
     }
 }

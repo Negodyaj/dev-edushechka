@@ -1,4 +1,5 @@
 ﻿using DevEdu.DAL.Models;
+using System;
 using System.Collections.Generic;
 
 namespace DevEdu.DAL.Repositories
@@ -8,10 +9,10 @@ namespace DevEdu.DAL.Repositories
         int AddStudentAnswerOnTask(StudentAnswerOnTaskDto taskAnswerDto);
         void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
         List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId);
-        StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto);
-        void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
+        StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId);
+        int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId, DateTime completedDate);
         void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto);
-        void AddCommentOnStudentAnswer(int taskstudentId, int commentId);
+        int AddCommentOnStudentAnswer(int taskstudentId, int commentId);
         List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId);
     }
 }
