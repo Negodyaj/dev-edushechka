@@ -3,6 +3,7 @@ using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -32,9 +33,19 @@ namespace DevEdu.Business.ValidationHelpers
         public List<PaymentDto> SelectPaymentsBySeveralIdAndThrowIfNotFound(List<int> ids)
         {
             var payments = _paymentRepository.SelectPaymentsBySeveralId(ids);
+            CheckPaymentsExistence(payments, ids);
             if (payments == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFound));
             return payments;
+        }
+        public void CheckPaymentsExistence(List<PaymentDto> payments, List<int> ids)
+        {
+            var arePaymentsInDataBase = (ids.All(d => payments.Any(t => t.Id == d)));
+
+            if (!arePaymentsInDataBase)
+            {
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+            }
         }
     }
 }
