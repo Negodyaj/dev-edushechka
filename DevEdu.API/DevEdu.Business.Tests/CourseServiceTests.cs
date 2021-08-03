@@ -684,5 +684,18 @@ namespace DevEdu.Business.Tests
             //Then
             _topicRepositoryMock.Verify(x => x.GetCourseTopicBySeveralId(ids), Times.Once);
         }
+        [Test]
+        public void GetCourseTopicBySeveralId_NotValidCourseTopicIds_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var ids = new List<int>() { 15, 22, 13 };
+            var courseTopicsInBd = CourseData.GetListCourseTopicDtoFromDataBase();
+            _topicRepositoryMock.Setup(x => x.GetCourseTopicBySeveralId(ids)).Returns(courseTopicsInBd);
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetCourseTopicBySeveralId(ids));
+            //Then
+            Assert.That(result.Message, Is.EqualTo(ServiceMessages.EntityNotFound));
+            _topicRepositoryMock.Verify(x => x.GetCourseTopicBySeveralId(ids), Times.Once);
+        }
     }
 }
