@@ -7,7 +7,7 @@ using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.Services
 {
-    public class StudentAnswerOnTaskService: IStudentAnswerOnTaskService
+    public class StudentAnswerOnTaskService : IStudentAnswerOnTaskService
     {
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
         private readonly IStudentAnswerOnTaskValidationHelper _studentAnswerOnTaskValidationHelper;
@@ -56,12 +56,12 @@ namespace DevEdu.Business.Services
             return answerDto;
         }
 
-        public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId) 
+        public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId)
         {
             DateTime CompletedDate = default;
 
             if (statusId == (int)TaskStatus.Accepted)
-                CompletedDate = System.DateTime.Now;
+                CompletedDate = DateTime.Now;
 
             var stringTime = CompletedDate.ToString("dd.MM.yyyy HH:mm");
             var time = Convert.ToDateTime(stringTime);
