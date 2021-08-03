@@ -6,8 +6,6 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
@@ -181,9 +179,7 @@ namespace DevEdu.Business.Tests
             _repoMock.Verify(x => x.UpdateUser(user), Times.Never);
         }
 
-        [TestCase(1)]
         [TestCase(100)]
-        [TestCase(100500)]
         public void DeleteUser_WhenDoNotHaveMatchesInDataBase_EntityNotFoundException(int id)
         {
             //Given
@@ -231,6 +227,59 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _repoMock.Verify(x => x.DeleteUserRole(userId, roleId), Times.Never);
+        }
+       
+        [Test]
+        public void AddUserRole_UserIdAndRoleId_UserRoleWasCreated()
+        {
+            //Given
+            var roleId = 6;
+            var user = UserData.GetUserDto();
+            var userId = user.Id;
+            _repoMock.Setup(x => x.AddUserRole(userId, roleId)).Verifiable();
+            _repoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
+
+            //When
+            _sut.AddUserRole(userId, roleId);
+
+            //Then
+            _repoMock.Verify(x => x.AddUserRole(userId, roleId), Times.AtLeastOnce);
+            _repoMock.Verify(x => x.SelectUserById(userId), Times.AtLeastOnce);
+        }
+
+        [Test]
+        public void DeleteUserRole_UserIdAndRoleId_UserRoleWasDeleted()
+        {
+            //Given
+            var roleId = 6;
+            var user = UserData.GetUserDto();
+            var userId = user.Id;
+            _repoMock.Setup(x => x.DeleteUserRole(userId, roleId)).Verifiable();
+            _repoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
+
+            //When
+            _sut.DeleteUserRole(userId, roleId);
+
+            //Then
+            _repoMock.Verify(x => x.DeleteUserRole(userId, roleId), Times.AtLeastOnce);
+            _repoMock.Verify(x => x.SelectUserById(userId), Times.AtLeastOnce);
+        }
+
+        [Test]
+        public void DeleteUser_UserId_UserWasDeleted()
+        {
+            //Given
+            var user = UserData.GetUserDto();
+            var userId = user.Id;
+            _repoMock.Setup(x => x.DeleteUser(userId)).Verifiable();
+            _repoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
+
+            //When
+            _sut.DeleteUser(userId);
+
+            //Than
+            _repoMock.Verify(x => x.DeleteUser(userId), Times.AtLeastOnce);
+            _repoMock.Verify(x => x.SelectUserById(userId), Times.AtLeastOnce);
         }
     }
 }

@@ -74,14 +74,12 @@ namespace DevEdu.Business.Services
         public void AddUserRole(int userId, int roleId)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-
             _userRepository.AddUserRole(userId, roleId);
         }
 
         public void DeleteUserRole(int userId, int roleId)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-
             _userRepository.DeleteUserRole(userId, roleId);
         }
     }
