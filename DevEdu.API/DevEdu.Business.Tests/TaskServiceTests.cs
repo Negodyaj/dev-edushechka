@@ -641,9 +641,6 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(userDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskId(It.IsAny<int>())).Returns(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(sameGroupDtos);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskDtos[0].Id)).Returns(taskDtos[0]);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskDtos[1].Id)).Returns(taskDtos[1]);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskDtos[2].Id)).Returns(taskDtos[2]);
             _taskRepoMock.Setup(x => x.GetTasks()).Returns(taskDtos);
 
             //When
