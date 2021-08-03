@@ -167,7 +167,7 @@ namespace DevEdu.DAL.Repositories
                 ).FirstOrDefault();
             return response; 
         }
-        public List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids)
+        public List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids)
         {
             var table = new DataTable();
             table.Columns.Add("Id");

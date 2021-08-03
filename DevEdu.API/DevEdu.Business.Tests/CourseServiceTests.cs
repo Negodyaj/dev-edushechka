@@ -633,7 +633,7 @@ namespace DevEdu.Business.Tests
 
         }
         [Test]
-        public void DeleteAllTopicsByCourseId__CourseIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
+        public void DeleteAllTopicsByCourseId_CourseIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
         {
             //Given
             var givenCourseId = 2;
@@ -647,6 +647,42 @@ namespace DevEdu.Business.Tests
             Assert.That(result.Message, Is.EqualTo(exp));
             _courseRepositoryMock.Verify(x => x.DeleteAllTopicsByCourseId(givenCourseId), Times.Never);
 
+        }
+        [Test]
+        public void GetCourseTopicById_ValidId_CourseTopicWasGotten()
+        {
+            //Given
+            var id = 3;
+            _topicRepositoryMock.Setup(x => x.GetCourseTopicById(id)).Returns(new CourseTopicDto() { Id = id });
+            //When
+            _sut.GetCourseTopicById(id);
+            //Then
+            _topicRepositoryMock.Verify(x => x.GetCourseTopicById(id), Times.Once);
+        }
+        [Test]
+        public void GetCourseTopicById_NotValidId_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var id = 3;
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "courseTopic", id);
+            _topicRepositoryMock.Setup(x => x.GetCourseTopicById(id));
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetCourseTopicById(id));
+            //Then
+            Assert.That(result.Message, Is.EqualTo(exp));
+            _topicRepositoryMock.Verify(x => x.GetCourseTopicById(id), Times.Once);
+        }
+        [Test]
+        public void GetCourseTopicBySeveralId_ValidCourseTopicIds_CourseTopicsWereGotten()
+        {
+            //Given
+            var ids = new List<int>() { 15, 21, 13 };
+            var courseTopicsInBd = CourseData.GetListCourseTopicDtoFromDataBase();
+            _topicRepositoryMock.Setup(x => x.GetCourseTopicBySeveralId(ids)).Returns(courseTopicsInBd);
+            //When
+            _sut.GetCourseTopicBySeveralId(ids);
+            //Then
+            _topicRepositoryMock.Verify(x => x.GetCourseTopicBySeveralId(ids), Times.Once);
         }
     }
 }

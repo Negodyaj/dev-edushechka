@@ -151,11 +151,11 @@ namespace DevEdu.Business.Services
         }
         public CourseTopicDto GetCourseTopicById(int id)
         {
-            return _topicRepository.GetCourseTopicById(id);
+            return _topicValidationHelper.GetCourseTopicByIdAndThrowIfNotFound(id);
         }
-        public List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids)
+        public List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids)
         {
-            return _topicRepository.GetCourseTopicBuSevealId(ids);
+            return _topicValidationHelper.GetCourseTopicBySeveralIdAndThrowIfNotFound(ids);
         }
         public void DeleteAllTopicsByCourseId(int courseId)
         {

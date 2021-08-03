@@ -150,7 +150,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<List<CourseTopicDto>>(inputModel);
 
             var id =_courseService.AddTopicsToCourse(courseId, dto);
-            dto = _courseService.GetCourseTopicBuSevealId(id);
+            dto = _courseService.GetCourseTopicBySeveralId(id);
             return _mapper.Map<List<CourseTopicOutputModel>>(dto);
         }
 
@@ -184,7 +184,7 @@ namespace DevEdu.API.Controllers
         {
             var list = _mapper.Map<List<CourseTopicDto>>(topics);
             var ids = _courseService.UpdateCourseTopicsByCourseId(courseId, list);
-            list = _courseService.GetCourseTopicBuSevealId(ids);
+            list = _courseService.GetCourseTopicBySeveralId(ids);
             return _mapper.Map<List<CourseTopicOutputModel>>(list);
         }
     }
