@@ -16,12 +16,11 @@ namespace DevEdu.Business.Services
         LessonDto UpdateLesson(UserDto userIdentity, LessonDto lessonDto, int id);
         void DeleteTopicFromLesson(int lessonId, int topicId);
         void AddTopicToLesson(int lessonId, int topicId);
-        void AddStudentToLesson(int lessonId, int userId);
+        StudentLessonDto AddStudentToLesson(int lessonId, int userId);
         void DeleteStudentFromLesson(int lessonId, int userId);
-        void UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
-        void UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
-        void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
-        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);
-        StudentLessonDto GetStudenLessonByLessonAndUserId(int lessonId, int userId);
+        StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
+        StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
+        StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
+        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);        
     }
 }

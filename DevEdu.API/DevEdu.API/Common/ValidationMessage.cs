@@ -55,5 +55,6 @@
         public const string PaymentPerMonthRequired = "PaymentPerMonth must be provided";
         public const string WrongFormatGroupStatusId = "GroupStatusId must be integer from 1 to int.MaxValue";
         public const string WrongFormatStartDate = "StartDate must be format 'dd.MM.yyyy'";
+        public const string WrongValueOfRating = "Value of rating must be from 1 to 100";
     }
 }

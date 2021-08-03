@@ -231,27 +231,28 @@ namespace DevEdu.DAL.Repositories
            );
         }
 
-        public void AddStudentToLesson(StudentLessonDto dto)
+        public void AddStudentToLesson(int lessonId, int userId)
         {
             _connection.Execute(
                 _studentLessonInsertProcedure,
                  new
                  {
-                     LessonId = dto.Lesson.Id,
-                     UserId = dto.User.Id
+                     lessonId,
+                     userId
                  },
                  commandType: CommandType.StoredProcedure
              );
+            
         }
 
-        public void DeleteStudentFromLesson(StudentLessonDto dto)
+        public void DeleteStudentFromLesson(int lessonId, int userId)
         {
             _connection.Execute(
                 _studentLessonDeleteProcedure,
                  new
                  {
-                     LessonId = dto.Lesson.Id,
-                     UserId = dto.User.Id
+                     lessonId,
+                     userId
                  },
                  commandType: CommandType.StoredProcedure
              );
@@ -322,17 +323,26 @@ namespace DevEdu.DAL.Repositories
         }
 
 
-        public StudentLessonDto SelectByLessonAndUserId(int lessonId, int userId)
-        {
-            return _connection.QuerySingleOrDefault<StudentLessonDto>(
+        public StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int userId)      
+        {            
+            return _connection.Query<StudentLessonDto, LessonDto, UserDto, StudentLessonDto>(
                 _selectByLessonAndUserIdProcedure,
+                (studentLesson, lesson, user) =>
+                {
+                    var result = studentLesson;
+                    result.Lesson = lesson;
+                    result.User = user;
+                    return result;
+                },
                 new
                 {
                     LessonId = lessonId,
                     UserId = userId
                 },
+                splitOn: "Id",
                 commandType: CommandType.StoredProcedure
-            );
+            ).First();
+            
         }
     }
 }

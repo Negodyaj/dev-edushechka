@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using DevEdu.API.Common;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -10,6 +13,7 @@ using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MaterialController : Controller
@@ -59,7 +63,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{id}")]
         [Description("Update material by id")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
-        public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
+        public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             dto = _materialService.UpdateMaterial(id, dto);
@@ -77,6 +81,7 @@ namespace DevEdu.API.Controllers
 
         // api/material/{materialId}/tag/{tagId}
         [HttpPost("{materialId}/tag/{tagId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher)]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [Description("Add tag to material")]
         public string AddTagToMaterial(int materialId, int tagId)
@@ -87,6 +92,7 @@ namespace DevEdu.API.Controllers
 
         // api/material/{materialId}/tag/{tagId}
         [HttpDelete("{materialId}/tag/{tagId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher)]
         [Description("Delete tag from material")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public string DeleteTagFromMaterial(int materialId, int tagId)
