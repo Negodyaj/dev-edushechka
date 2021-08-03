@@ -104,5 +104,10 @@ namespace DevEdu.Business.Services
             return _groupRepository.GetGroupTask(groupId, taskId);
         }
 
+        public List<GroupDto> GetGroupsByStudentId(int studentId)
+        {
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
+            return _groupRepository.GetGroupsByStudentId(studentId);
+        }
     }
 }
