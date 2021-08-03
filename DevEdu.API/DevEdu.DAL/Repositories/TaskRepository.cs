@@ -54,9 +54,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteTask(int id)
+        public int DeleteTask(int id)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 _taskDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
@@ -125,15 +125,15 @@ namespace DevEdu.DAL.Repositories
         public int AddTagToTask(int taskId, int tagId)
         {
             return _connection
-                .QuerySingle(_tagTaskAddProcedure,
+                .Execute(_tagTaskAddProcedure,
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure
                 );
         }
 
-        public void DeleteTagFromTask(int taskId, int tagId)
+        public int DeleteTagFromTask(int taskId, int tagId)
         {
-            _connection
+            return _connection
                 .Execute(_tagTaskDeleteProcedure,
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure

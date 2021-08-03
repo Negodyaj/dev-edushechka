@@ -115,5 +115,25 @@ namespace DevEdu.Business.Tests
 
             _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, expectedTagId), Times.Never);
         }
+
+        [Test]
+        public void DeleteTagFromTopic_IntTopicIdAndTagId_DeleteTagFromTopic()
+        {
+            //Given
+            var topicId = 1;
+            var tagId = 13;
+            var expecectedAffectedRows = 1;
+
+            _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(TopicData.GetTopicDtoWithTags());
+            _tagRepoMock.Setup(x => x.SelectTagById(tagId)).Returns(TagData.GetTagDto());
+            _topicRepoMock.Setup(x => x.DeleteTagFromTopic(topicId, tagId)).Returns(expecectedAffectedRows);
+
+            //When
+            var actualAffectedRows = _sut.DeleteTagFromTopic(topicId, tagId);
+
+            //Than
+            Assert.AreEqual(expecectedAffectedRows, actualAffectedRows);
+            _topicRepoMock.Verify(x => x.DeleteTagFromTopic(topicId, tagId), Times.Once);
+        }
     }
 }

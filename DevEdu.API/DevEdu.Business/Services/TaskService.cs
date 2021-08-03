@@ -78,7 +78,7 @@ namespace DevEdu.Business.Services
             return _taskRepository.GetTaskById(taskId);
         }
 
-        public void DeleteTask(int taskId, UserIdentityInfo userIdentityInfo)
+        public int DeleteTask(int taskId, UserIdentityInfo userIdentityInfo)
         {
             _userValidationHelper.CheckUserExistence(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
@@ -89,7 +89,7 @@ namespace DevEdu.Business.Services
                 _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
             }
 
-            _taskRepository.DeleteTask(taskId);
+            return _taskRepository.DeleteTask(taskId);
         }
 
         public TaskDto GetTaskById(int taskid, UserIdentityInfo userIdentityInfo)
@@ -142,6 +142,6 @@ namespace DevEdu.Business.Services
             return _taskRepository.AddTagToTask(taskId, tagId);
         }
 
-        public void DeleteTagFromTask(int taskId, int tagId) => _taskRepository.DeleteTagFromTask(taskId, tagId);
+        public int DeleteTagFromTask(int taskId, int tagId) => _taskRepository.DeleteTagFromTask(taskId, tagId);
     }
 }

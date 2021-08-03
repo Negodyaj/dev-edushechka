@@ -256,6 +256,32 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
+        public void DeleteTask_TaskId_DeleteTask()
+        {
+            var taskDto = TaskData.GetTaskDto();
+            var taskId = 1;
+            var userId = 10;
+            var userDto = UserData.GetUserDto();
+            var groupDtos = TaskData.GetListOfGroups();
+            var groupsByUser = TaskData.GetListOfSameGroups();
+            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var expectedAffectedRows = 1;
+
+            _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(userDto);
+            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.DeleteTask(taskId)).Returns(expectedAffectedRows);
+
+            //When
+            var actualAffectedRows = _sut.DeleteTask(taskId, userIdentityInfo);
+
+            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
+            _taskRepoMock.Verify(x => x.DeleteTask(taskId), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
+        }
+
+        [Test]
         public void DeleteTask_WhenTaskDoesNotExist_ThrownEntityNotFoundException()
         {
             var taskId = 1;

@@ -7,11 +7,11 @@ namespace DevEdu.DAL.Repositories
     {
         int AddTask(TaskDto task);
         void UpdateTask(TaskDto task);
-        void DeleteTask(int id);
+        int DeleteTask(int id);
         TaskDto GetTaskById(int id);
         List<TaskDto> GetTasks();
         int AddTagToTask(int taskId, int tagId);
-        void DeleteTagFromTask(int taskId, int tagId);
+        int DeleteTagFromTask(int taskId, int tagId);
         public List<TaskDto> GetTasksByCourseId(int courseId);
     }
 }
