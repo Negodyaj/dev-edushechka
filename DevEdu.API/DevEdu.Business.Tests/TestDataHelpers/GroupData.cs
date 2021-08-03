@@ -7,16 +7,13 @@ namespace DevEdu.Business.Tests
 {
     public class GroupData
     {
-        public const int ExpectedAffectedRows = 1;
-        public const int GroupId = 1;
-        public const int LessonId = 1;
-        public const int TaskId = 1;
-        public const int UserId = 1;
-        public const int UserIdAuthorization = 1;
-        public const int MaterialId = 1;
         public const Role RoleStudent = Role.Student;
-        public static string Answer = $"Group {GroupId} remove  Lesson Id:{LessonId}";
         public const GroupStatus StatusGroup = GroupStatus.Forming;
+
+        public static UserIdentityInfo GetUserInfo()
+        {
+            return new UserIdentityInfo() { UserId = 1, Roles = new() { Role.Admin, Role.Manager } };
+        }
 
         public static GroupDto GetGroupDto()
         {

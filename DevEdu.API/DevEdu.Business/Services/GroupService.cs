@@ -25,14 +25,14 @@ namespace DevEdu.Business.Services
         (
             IGroupRepository groupRepository,
             IGroupValidationHelper groupHelper,
-            IUserRepository userRepository = default,
-            ILessonValidationHelper lessonHelper = default,
-            IMaterialValidationHelper materialHelper = default,
-            IUserValidationHelper userHelper = default,
-            ITaskValidationHelper taskHelper = default,
-            ILessonRepository lessonRepository = default,
-            IMaterialRepository materialRepository = default,
-            ITaskRepository taskRepository = default
+            IUserRepository userRepository,
+            IUserValidationHelper userHelper,
+            ILessonRepository lessonRepository,
+            ILessonValidationHelper lessonHelper,
+            IMaterialRepository materialRepository,
+            IMaterialValidationHelper materialHelper,
+            ITaskRepository taskRepository,
+            ITaskValidationHelper taskHelper
         )
         {
             _groupRepository = groupRepository;

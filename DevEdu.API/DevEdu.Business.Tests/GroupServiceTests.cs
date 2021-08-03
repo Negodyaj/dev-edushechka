@@ -1,6 +1,5 @@
 ﻿using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
-using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -11,45 +10,57 @@ namespace DevEdu.Business.Tests
     public class GroupServiceTests
     {
         private Mock<IGroupRepository> _groupRepoMock;
-        private Mock<IGroupValidationHelper> _groupHelper;
         private Mock<IUserRepository> _userRepoMock;
-        private Mock<IUserValidationHelper> _userHelper;
         private Mock<ILessonRepository> _lessonRepoMock;
-        private Mock<ILessonValidationHelper> _lessonHelper;
         private Mock<IMaterialRepository> _materialRepoMock;
-        private Mock<IMaterialValidationHelper> _materialHelper;
         private Mock<ITaskRepository> _taskRepoMock;
-        private Mock<ITaskValidationHelper> _taskHelper;
+        private GroupValidationHelper _groupHelper;
+        private UserValidationHelper _userHelper;
+        private LessonValidationHelper _lessonHelper;
+        private MaterialValidationHelper _materialHelper;
+        private TaskValidationHelper _taskHelper;
+        private GroupService _sut;
 
 
         [SetUp]
         public void Setup()
         {
             _groupRepoMock = new Mock<IGroupRepository>();
-            _groupHelper = new Mock<IGroupValidationHelper>();
             _userRepoMock = new Mock<IUserRepository>();
-            _userHelper = new Mock<IUserValidationHelper>();
             _lessonRepoMock = new Mock<ILessonRepository>();
-            _lessonHelper = new Mock<ILessonValidationHelper>();
             _materialRepoMock = new Mock<IMaterialRepository>();
-            _materialHelper = new Mock<IMaterialValidationHelper>();
             _taskRepoMock = new Mock<ITaskRepository>();
-            _taskHelper = new Mock<ITaskValidationHelper>();
+            _groupHelper = new GroupValidationHelper(_groupRepoMock.Object);
+            _userHelper = new UserValidationHelper(_userRepoMock.Object);
+            _lessonHelper = new LessonValidationHelper(_lessonRepoMock.Object);
+            _materialHelper = new MaterialValidationHelper(_materialRepoMock.Object);
+            _taskHelper = new TaskValidationHelper(_taskRepoMock.Object);
+            _sut = new
+            (
+                _groupRepoMock.Object,
+                _groupHelper,
+                _userRepoMock.Object,
+                _userHelper,
+                _lessonRepoMock.Object,
+                _lessonHelper,
+                _materialRepoMock.Object,
+                _materialHelper,
+                _taskRepoMock.Object,
+                _taskHelper
+            );
         }
 
         [Test]
         public async Task AddGroup_NotParams_ReturnGroupId()
         {
             //Given            
+            var groupId = 2;
             var groupDto = GroupData.GetGroupDto();
-            var groupId = GroupData.GroupId;
 
             _groupRepoMock.Setup(x => x.AddGroup(groupDto)).ReturnsAsync(groupId);
 
-            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object);
-
             //When
-            var actualGroupId = await sut.AddGroup(groupDto);
+            var actualGroupId = await _sut.AddGroup(groupDto);
 
             //Then
             Assert.AreEqual(groupId, actualGroupId);
@@ -60,27 +71,19 @@ namespace DevEdu.Business.Tests
         public async Task GetGroupWithListStudents_ByIdAndByRoleStudent_ReturnGroupDto()
         {
             //Given            
-            var groupId = GroupData.GroupId;
-            var groupId2 = GroupData.GroupId + 1;
+            var groupId = 2;
+            var groupId2 = 3;
             var roleStudent = GroupData.RoleStudent;
             var groupDto = GroupData.GetGroupDto();
             var studentDtos = UserData.GetListUsersDto();
-            var userId = UserData.expectedUserId;
+            var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _groupRepoMock.Setup(x => x.GetGroup(groupId2));
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)roleStudent)).Returns(studentDtos);
 
-            var sut = new GroupService
-            (
-                _groupRepoMock.Object,
-                _groupHelper.Object,
-                userRepository: _userRepoMock.Object,
-                userHelper: _userHelper.Object
-            );
-
             //When
-            var actualGroupDto = await sut.GetGroup(groupId, userId);
+            var actualGroupDto = await _sut.GetGroup(groupId, userInfo);
 
             //Then
             Assert.AreEqual(groupDto, actualGroupDto);
@@ -97,10 +100,8 @@ namespace DevEdu.Business.Tests
 
             _groupRepoMock.Setup(x => x.GetGroups()).ReturnsAsync(groupDtos);
 
-            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object);
-
             //When
-            var actualGroupDtos = await sut.GetGroups();
+            var actualGroupDtos = await _sut.GetGroups();
 
             //Then
             Assert.AreEqual(groupDtos, actualGroupDtos);
@@ -111,19 +112,17 @@ namespace DevEdu.Business.Tests
         public async Task DeleteGroup_ById_ReturnVoid()
         {
             //Given
-            var groupId = GroupData.GroupId;
+            var groupId = 2;
             var groupDto = GroupData.GetGroupDto();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _groupRepoMock.Setup(x => x.DeleteGroup(groupId));
 
-            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object);
-
             //When
-            await sut.DeleteGroup(groupId);
+            await _sut.DeleteGroup(groupId);
 
             //Then
-            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
             _groupRepoMock.Verify(x => x.DeleteGroup(groupId), Times.Once);
         }
 
@@ -131,19 +130,17 @@ namespace DevEdu.Business.Tests
         public async Task UpdateGroupNameAndTimetable_ByIdAndGroupDto_ReturnGroupDto()
         {
             //Given
-            var groupId = GroupData.GroupId;
+            var groupId = 1;
             var groupDto = GroupData.GetGroupDtoToUpdNameAndTimetable();
             groupDto.Id = groupId;
             var updGroupDto = GroupData.GetUpdGroupDto();
-            var userId = UserData.expectedUserId;
+            var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _groupRepoMock.Setup(x => x.UpdateGroup(groupDto)).ReturnsAsync(updGroupDto);
 
-            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object);
-
             //When
-            var actualGroupDto = await sut.UpdateGroup(groupId, groupDto, userId);
+            var actualGroupDto = await _sut.UpdateGroup(groupId, groupDto, userInfo);
 
             //Then
             Assert.AreEqual(updGroupDto, actualGroupDto);
@@ -155,21 +152,19 @@ namespace DevEdu.Business.Tests
         public async Task ChangeGroupStatus_ByGroupIdAndStatusId_ReturnGroupDto()
         {
             //Given            
-            var groupId = GroupData.GroupId;
+            var groupId = 3;
             var groupStatus = GroupData.StatusGroup;
             var groupDto = GroupData.GetGroupDto();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _groupRepoMock.Setup(x => x.ChangeGroupStatus(groupId, (int)groupStatus)).ReturnsAsync(groupDto);
 
-            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object);
-
             //When
-            var actualGroupDto = await sut.ChangeGroupStatus(groupId, groupStatus);
+            var actualGroupDto = await _sut.ChangeGroupStatus(groupId, groupStatus);
 
             //Then
             Assert.AreEqual(groupDto, actualGroupDto);
-            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
             _groupRepoMock.Verify(x => x.ChangeGroupStatus(groupId, (int)groupStatus), Times.Once);
         }
 
@@ -177,9 +172,9 @@ namespace DevEdu.Business.Tests
         public async Task AddGroupToLesson_ByGroupIdAndLessonId_ReturnString()
         {
             //Given
-            var groupId = GroupData.GroupId;
-            var lessonId = LessonData.LessonId;
-            var userId = UserData.expectedUserId;
+            var groupId = 1;
+            var lessonId = 2;
+            var userInfo = GroupData.GetUserInfo();
             var groupDto = GroupData.GetGroupDto();
             var lessonDto = LessonData.GetSelectedLessonDto();
 
@@ -187,16 +182,8 @@ namespace DevEdu.Business.Tests
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
             _groupRepoMock.Setup(x => x.AddGroupToLesson(groupId, lessonId));
 
-            var sut = new GroupService
-            (
-                _groupRepoMock.Object,
-                _groupHelper.Object,
-                lessonRepository: _lessonRepoMock.Object,
-                lessonHelper: _lessonHelper.Object
-            );
-
             //When
-            await sut.AddGroupToLesson(groupId, lessonId, userId);
+            await _sut.AddGroupToLesson(groupId, lessonId, userInfo);
 
             //Then
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Never);
@@ -208,26 +195,18 @@ namespace DevEdu.Business.Tests
         public async Task RemoveGroupFromLesson_ByGroupIdAndLessonId_ReturnVoid()
         {
             //Given
-            var groupId = GroupData.GroupId;
+            var groupId = 1;
+            var lessonId = 2;
             var groupDto = GroupData.GetGroupDto();
-            var lessonId = LessonData.LessonId;
             var lessonDto = LessonData.GetSelectedLessonDto();
-            var userId = UserData.expectedUserId;
+            var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
             _groupRepoMock.Setup(x => x.RemoveGroupFromLesson(groupId, lessonId));
 
-            var sut = new GroupService
-            (
-                _groupRepoMock.Object,
-                _groupHelper.Object,
-                lessonRepository: _lessonRepoMock.Object,
-                lessonHelper: _lessonHelper.Object
-            );
-
             //When
-            await sut.RemoveGroupFromLesson(groupId, lessonId, userId);
+            await _sut.RemoveGroupFromLesson(groupId, lessonId, userInfo);
 
             //Then
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Never);
@@ -240,23 +219,22 @@ namespace DevEdu.Business.Tests
         public async Task AddMaterialToGroup_IntGroupIdAndMaterialId_AddMaterialToGroup()
         {
             //Given
-            var groupId = GroupData.GroupId;
+            var groupId = 2;
+            var materialId = 2;
+            var expectedAffectedRows = 3;
             var groupDto = GroupData.GetGroupDto();
             var materialDto = MaterialData.GetMaterialDtoWithTags();
-            const int materialId = GroupData.MaterialId;
-            var userId = UserData.expectedUserId;
+            var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _materialRepoMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialDto);
-            _groupRepoMock.Setup(x => x.AddGroupMaterialReference(groupId, materialId)).ReturnsAsync(GroupData.ExpectedAffectedRows);
-
-            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object, materialRepository: _materialRepoMock.Object, materialHelper: _materialHelper.Object);
+            _groupRepoMock.Setup(x => x.AddGroupMaterialReference(groupId, materialId)).ReturnsAsync(expectedAffectedRows);
 
             //When
-            var actualAffectedRows = await sut.AddGroupMaterialReference(groupId, materialId, userId);
+            var actualAffectedRows = await _sut.AddGroupMaterialReference(groupId, materialId, userInfo);
 
             //Than
-            Assert.AreEqual(GroupData.ExpectedAffectedRows, actualAffectedRows);
+            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
 
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Never);
             _materialRepoMock.Verify(x => x.GetMaterialById(materialId), Times.Never);
@@ -267,29 +245,22 @@ namespace DevEdu.Business.Tests
         public async Task DeleteMaterialFromGroup_IntGroupIdAndMaterialId_DeleteMaterialFromGroup()
         {
             //Given
-            var groupId = GroupData.GroupId;
-            var materialId = GroupData.MaterialId;
+            var groupId = 2;
+            var materialId = 2;
+            var expectedAffectedRows = 3;
             var groupDto = GroupData.GetGroupDto();
             var materialDto = MaterialData.GetMaterialDtoWithTags();
-            var userId = UserData.expectedUserId;
+            var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _materialRepoMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialDto);
-            _groupRepoMock.Setup(x => x.RemoveGroupMaterialReference(groupId, materialId)).ReturnsAsync(GroupData.ExpectedAffectedRows);
-
-            var sut = new GroupService
-            (
-                _groupRepoMock.Object,
-                _groupHelper.Object,
-                materialRepository: _materialRepoMock.Object,
-                materialHelper: _materialHelper.Object
-            );
+            _groupRepoMock.Setup(x => x.RemoveGroupMaterialReference(groupId, materialId)).ReturnsAsync(expectedAffectedRows);
 
             //When
-            var actualAffectedRows = await sut.RemoveGroupMaterialReference(groupId, materialId, userId);
+            var actualAffectedRows = await _sut.RemoveGroupMaterialReference(groupId, materialId, userInfo);
 
             //Than
-            Assert.AreEqual(GroupData.ExpectedAffectedRows, actualAffectedRows);
+            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Never);
             _materialRepoMock.Verify(x => x.GetMaterialById(materialId), Times.Never);
             _groupRepoMock.Verify(x => x.RemoveGroupMaterialReference(groupId, materialId), Times.Once);
@@ -299,27 +270,19 @@ namespace DevEdu.Business.Tests
         public async Task AddUserToGroup_ByGroupIdAndLessonIdAndRole_ReturnVoid()
         {
             //Given
-            var groupId = GroupData.GroupId;
+            var groupId = 2;
+            var userId = 3;
             var groupDto = GroupData.GetGroupDto();
             var userDto = UserData.GetUserDto();
-            var userId = UserData.expectedUserId;
             var role = GroupData.RoleStudent;
-            var currentUserId = GroupData.UserIdAuthorization;
+            var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(userDto); ;
             _groupRepoMock.Setup(x => x.AddUserToGroup(groupId, userId, (int)role));
 
-            var sut = new GroupService
-            (
-                _groupRepoMock.Object,
-                _groupHelper.Object,
-                userRepository: _userRepoMock.Object,
-                userHelper: _userHelper.Object
-            );
-
             //When
-            await sut.AddUserToGroup(groupId, userId, role, currentUserId);
+            await _sut.AddUserToGroup(groupId, userId, role, userInfo);
 
             //Then
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Never);
@@ -331,26 +294,18 @@ namespace DevEdu.Business.Tests
         public async Task DeleteUserFromGroup_ByGroupIdAndUserId_ReturnVoid()
         {
             //Given
-            var groupId = GroupData.GroupId;
+            var groupId = 2;
+            var userId = 2;
             var groupDto = GroupData.GetGroupDto();
-            var userId = UserData.expectedUserId;
             var userDto = UserData.GetUserDto();
-            var currentUserId = GroupData.UserIdAuthorization;
+            var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(userDto);
             _groupRepoMock.Setup(x => x.DeleteUserFromGroup(groupId, userId));
 
-            var sut = new GroupService
-            (
-                _groupRepoMock.Object,
-                _groupHelper.Object,
-                userRepository: _userRepoMock.Object,
-                userHelper: _userHelper.Object
-            );
-
             //When
-            await sut.DeleteUserFromGroup(groupId, userId, currentUserId);
+            await _sut.DeleteUserFromGroup(groupId, userId, userInfo);
 
             //Then
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Never);
@@ -363,30 +318,23 @@ namespace DevEdu.Business.Tests
         public async Task AddTaskToGroup_GroupTaskDto_GroupTaskCreated()
         {
             //Given
+            var groupId = 1;
+            var taskId = 2;
+            var expectedGroupTaskId = 3;
             var groupTaskDto = GroupTaskData.GetGroupTaskWithoutGroupAndTask();
-            const int groupId = GroupTaskData.GroupId;
             var groupDto = GroupData.GetGroupDto();
-            const int taskId = GroupTaskData.TaskId;
             var taskDto = TaskData.GetTaskDtoWithTags();
-            var userId = GroupData.UserIdAuthorization;
+            var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
             _groupRepoMock.Setup(x => x.AddTaskToGroup(groupTaskDto)).ReturnsAsync(GroupTaskData.ExpectedGroupTaskId);
 
-            var sut = new GroupService
-            (
-                _groupRepoMock.Object,
-                _groupHelper.Object,
-                taskRepository: _taskRepoMock.Object,
-                taskHelper: _taskHelper.Object
-            );
-
             //When
-            var actualGroupTaskId = await sut.AddTaskToGroup(groupId, taskId, groupTaskDto, userId);
+            var actualGroupTaskId = await _sut.AddTaskToGroup(groupId, taskId, groupTaskDto, userInfo);
 
             //Than
-            Assert.AreEqual(GroupTaskData.ExpectedGroupTaskId, actualGroupTaskId);
+            Assert.AreEqual(expectedGroupTaskId, actualGroupTaskId);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Never);
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Never);
             _groupRepoMock.Verify(x => x.AddTaskToGroup(groupTaskDto), Times.Once);
@@ -396,10 +344,10 @@ namespace DevEdu.Business.Tests
         public async Task GetGroupTaskByBothId_IntGroupIdAndTaskId_ReturnedGroupTasDto()
         {
             //Given
+            var groupId = 2;
+            var taskId = 2;
             var groupTaskDto = GroupTaskData.GetGroupTaskWithGroupAndTask();
-            var groupId = GroupData.GroupId;
-            const int taskId =TaskData.expectedTaskId;
-            var userId = GroupData.UserIdAuthorization;
+            var userInfo = GroupData.GetUserInfo();
             var groupDto = GroupData.GetGroupDto();
             var taskDto = TaskData.GetTaskDtoWithTags();
 
@@ -407,16 +355,8 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
             _groupRepoMock.Setup(x => x.GetGroupTask(groupId, taskId)).ReturnsAsync(groupTaskDto);
 
-            var sut = new GroupService
-            (
-                _groupRepoMock.Object,
-                _groupHelper.Object,
-                taskRepository: _taskRepoMock.Object,
-                taskHelper: _taskHelper.Object
-            );
-
             //When
-            var dto = await sut.GetGroupTask(groupId, taskId, userId);
+            var dto = await _sut.GetGroupTask(groupId, taskId, userInfo);
 
             //Than
             Assert.AreEqual(groupTaskDto, dto);
@@ -429,10 +369,10 @@ namespace DevEdu.Business.Tests
         public async Task UpdateGroupTask_GroupTaskDto_ReturnUpdatedGroupTaskDto()
         {
             //Given
+            var groupId = 2;
+            var taskId = 3;
             var groupTaskDto = GroupTaskData.GetGroupTaskWithoutGroupAndTask();
-            const int groupId = GroupTaskData.GroupId;
-            const int taskId = GroupTaskData.TaskId;
-            var userId = GroupData.UserIdAuthorization;
+            var userInfo = GroupData.GetUserInfo();
             var groupDto = GroupData.GetGroupDto();
             var taskDto = TaskData.GetTaskDtoWithTags();
 
@@ -441,16 +381,8 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.UpdateGroupTask(groupTaskDto));
             _groupRepoMock.Setup(x => x.GetGroupTask(groupId, taskId)).ReturnsAsync(groupTaskDto);
 
-            var sut = new GroupService
-            (
-                _groupRepoMock.Object,
-                _groupHelper.Object,
-                taskRepository: _taskRepoMock.Object,
-                taskHelper: _taskHelper.Object
-            );
-
             //When
-            var actualGroupTaskDto = await sut.UpdateGroupTask(groupId, taskId, groupTaskDto, userId);
+            var actualGroupTaskDto = await _sut.UpdateGroupTask(groupId, taskId, groupTaskDto, userInfo);
 
             //Then
             Assert.AreEqual(groupTaskDto, actualGroupTaskDto);
@@ -464,10 +396,10 @@ namespace DevEdu.Business.Tests
         public async Task DeleteGroupTask_IntGroupIdAndTaskId_DeleteGroupTask()
         {
             //Given
+            var groupId = 1;
+            var taskId = 3;
             var groupTaskDto = GroupTaskData.GetGroupTaskWithoutGroupAndTask();
-            const int groupId = GroupTaskData.GroupId;
-            const int taskId = GroupTaskData.TaskId;
-            var userId = GroupData.UserIdAuthorization;
+            var userInfo = GroupData.GetUserInfo();
             var groupDto = GroupData.GetGroupDto();
             var taskDto = TaskData.GetTaskDtoWithTags();
 
@@ -475,16 +407,8 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
             _groupRepoMock.Setup(x => x.DeleteTaskFromGroup(groupId, taskId));
 
-            var sut = new GroupService
-            (
-                _groupRepoMock.Object,
-                _groupHelper.Object,
-                taskRepository: _taskRepoMock.Object,
-                taskHelper: _taskHelper.Object
-            );
-
             //When
-            await sut.DeleteTaskFromGroup(groupId, taskId, userId);
+            await _sut.DeleteTaskFromGroup(groupId, taskId, userInfo);
 
             //Then
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Never);
@@ -496,18 +420,16 @@ namespace DevEdu.Business.Tests
         public async Task GetTasksByGroupId_IntGroupId_ReturnedListOfGroupTaskDtoWithTask()
         {
             //Given
+            var groupId = 2;
+            var userInfo = GroupData.GetUserInfo();
             var groupTaskList = GroupTaskData.GetListOfGroupTaskDtoWithTask();
-            var groupId = GroupTaskData.GroupId;
-            var userId = GroupData.UserIdAuthorization;
             var groupDto = GroupData.GetGroupDto();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _groupRepoMock.Setup(x => x.GetTaskGroupByGroupId(groupId)).ReturnsAsync(groupTaskList);
 
-            var sut = new GroupService(_groupRepoMock.Object, _groupHelper.Object);
-
             //When
-            var dto = await sut.GetTasksByGroupId(groupId, userId);
+            var dto = await _sut.GetTasksByGroupId(groupId, userInfo);
 
             //Than
             Assert.AreEqual(groupTaskList, dto);

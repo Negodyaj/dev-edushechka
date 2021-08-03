@@ -7,9 +7,15 @@ namespace DevEdu.Business.Tests
 {
     public static class GroupTaskData
     {
+
         public const int ExpectedGroupTaskId = 42;
         public const int TaskId = 1;
         public const int GroupId = 1;
+
+        public static UserIdentityInfo GetUserInfo()
+        {
+            return new UserIdentityInfo() { UserId = 1, Roles = new() {Role.Admin, Role.Manager } };
+        }
 
         public static GroupTaskDto GetGroupTaskWithoutGroupAndTask()
         {
