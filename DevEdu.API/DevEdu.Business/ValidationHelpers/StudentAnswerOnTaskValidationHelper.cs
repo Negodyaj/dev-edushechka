@@ -16,9 +16,9 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckStudentAnswerOnTaskExistence(StudentAnswerOnTaskDto dto)
         {
-            var studentAnswerOnTask = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(dto);
+            var studentAnswerOnTask = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(dto.Task.Id, dto.User.Id);
             if (studentAnswerOnTask == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(studentAnswerOnTask), dto)); // Andrey im so sorry =0
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTask), dto)); // Andrey im so sorry =0
         }
     }
 }

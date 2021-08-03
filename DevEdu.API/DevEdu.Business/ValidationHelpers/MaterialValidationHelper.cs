@@ -17,7 +17,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var material = _materialRepository.GetMaterialById(materialId);
             if (material == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(material), materialId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), materialId));
         }
     }
 }

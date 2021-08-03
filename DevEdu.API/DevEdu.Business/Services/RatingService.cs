@@ -40,7 +40,7 @@ namespace DevEdu.Business.Services
             var dto = _repository.SelectStudentRatingById(id);
             if (dto == default)
             {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(dto), id));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(dto), id));
             }
             _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
             _repository.DeleteStudentRating(id);
@@ -72,7 +72,7 @@ namespace DevEdu.Business.Services
             var dto = _repository.SelectStudentRatingById(id);
             if (dto == default)
             {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(dto), id));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(dto), id));
             }
             _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
             dto = new StudentRatingDto

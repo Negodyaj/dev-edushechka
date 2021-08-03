@@ -201,7 +201,7 @@ namespace DevEdu.Business.Tests
             //Given
             var givenMaterialId = 5;
             var givenTagId = 2;
-            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "tag", givenTagId);
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", givenTagId);
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
             _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId));
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
@@ -218,7 +218,7 @@ namespace DevEdu.Business.Tests
         {
             var givenMaterialId = 5;
             var givenTagId = 2;
-            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "material", givenMaterialId);
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", givenMaterialId);
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
             _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId }); ;
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId));
@@ -236,7 +236,7 @@ namespace DevEdu.Business.Tests
             //Given
             var givenMaterialId = 5;
             var givenTagId = 2;
-            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "tag", givenTagId);
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", givenTagId);
             _materialRepoMock.Setup(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId));
             _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId));
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
@@ -253,7 +253,7 @@ namespace DevEdu.Business.Tests
         {
             var givenMaterialId = 5;
             var givenTagId = 2;
-            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "material", givenMaterialId);
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", givenMaterialId);
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
             _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId }); ;
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId));

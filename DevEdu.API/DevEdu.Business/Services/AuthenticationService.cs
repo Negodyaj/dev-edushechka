@@ -5,17 +5,18 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using DevEdu.Business.Configuration;
 using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DevEdu.Business.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepository;
 
-        public AuthenticationService(IUserService userService)
+        public AuthenticationService(IUserRepository userRepository)
         {
-            _userService = userService;
+            _userRepository = userRepository;
         }
 
         public string SignIn(UserDto dto)
@@ -38,6 +39,14 @@ namespace DevEdu.Business.Services
 
             return encodedJwt;
         }
+
+        public byte[] GetSalt()
+        {
+            byte[] salt;
+            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+            return salt;
+        }
+
         public string HashPassword(string pass, byte[] salt = default)
         {
             if (salt == default)
@@ -49,21 +58,22 @@ namespace DevEdu.Business.Services
             byte[] hashBytes = new byte[36];
             Array.Copy(salt, 0, hashBytes, 0, 16);
             Array.Copy(hash, 0, hashBytes, 16, 20);
-
             string hashedPassword = Convert.ToBase64String(hashBytes);
             return hashedPassword;
         }
-        private byte[] GetSalt()
-        {
-            byte[] salt;
-            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
-            return salt;
-        }
 
+        public bool Verify(string hashedPassword, string userPassword)
+        {
+            byte[] hashBytes = Convert.FromBase64String(hashedPassword);
+            byte[] salt = new byte[16];
+            Array.Copy(hashBytes, 0, salt, 0, 16);
+            string result = HashPassword(userPassword, salt);
+            return result == hashedPassword;
+        }
 
         private ClaimsIdentity GetIdentity(string username, string password)
         {
-            var user = _userService.SelectUserByEmail(username);
+            var user = _userRepository.SelectUserByEmail(username);
 
             var claims = new List<Claim>();
             if (user != null)
@@ -84,14 +94,5 @@ namespace DevEdu.Business.Services
             }
             return null;
         }
-        private bool Verify(string hashedPassword, string userPassword)
-        {
-            byte[] hashBytes = Convert.FromBase64String(hashedPassword);
-            byte[] salt = new byte[16];
-            Array.Copy(hashBytes, 0, salt, 0, 16);
-            string result = HashPassword(userPassword, salt);
-            return result == hashedPassword;
-        }
-
     }
 }
