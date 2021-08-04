@@ -5,13 +5,13 @@ namespace DevEdu.DAL.Repositories
 {
     public interface ITaskRepository
     {
+        int AddTask(TaskDto task);
+        void UpdateTask(TaskDto task);
+        int DeleteTask(int id);
         TaskDto GetTaskById(int id);
         List<TaskDto> GetTasks();
-        int AddTask(TaskDto task);
-        void UpdateTask(TaskDto task);
-        void DeleteTask(int id);
         int AddTagToTask(int taskId, int tagId);
-        void DeleteTagFromTask(int taskId, int tagId);
-        List<TaskDto> GetTaskByCourseId(int courseId);
+        int DeleteTagFromTask(int taskId, int tagId);
+        public List<TaskDto> GetTasksByCourseId(int courseId);
     }
 }

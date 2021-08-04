@@ -5,7 +5,13 @@ namespace DevEdu.Business.Tests
 {
     public class TagData
     {
-        public static List<TagDto> GetListTagDto()
+        public static TagDto GetTagDto() =>  new TagDto
+                {
+                    Id = 13,
+                    Name = "Tag",
+                    IsDeleted = false
+                };
+    public static List<TagDto> GetListTagData()
         {
             return new List<TagDto>
             {

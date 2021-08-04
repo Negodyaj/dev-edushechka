@@ -20,6 +20,8 @@ namespace DevEdu.DAL.Repositories
         void RemoveGroupMaterialReference(int groupId, int materialId);
         public List<GroupDto> GetGroupsByMaterialId(int id);
         int GetPresentGroupForStudentByUserId(int userId);
+        public List<GroupDto> GetGroupsByTaskId(int taskId);
+        public List<GroupDto> GetGroupsByUserId(int userId);
         List<GroupDto> GetGroupsByUserId(int userId);
         List<GroupDto> GetGroupsByLessonId(int lessonId);
     }

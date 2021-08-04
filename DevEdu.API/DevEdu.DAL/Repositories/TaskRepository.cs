@@ -21,7 +21,46 @@ namespace DevEdu.DAL.Repositories
         {
 
         }
+        public int AddTask(TaskDto taskDto)
+        {
+            int taskId = _connection.QuerySingle<int>(
+                _taskAddProcedure,
+                new
+                {
+                    taskDto.Name,
+                    taskDto.Description,
+                    taskDto.Links,
+                    taskDto.IsRequired
+                },
+                commandType: CommandType.StoredProcedure
+                );
+            return taskId;
+        }
 
+        public void UpdateTask(TaskDto taskDto)
+        {
+            _connection.Execute(
+                _taskUpdateProcedure,
+                new
+                {
+                    taskDto.Id,
+                    taskDto.Name,
+                    taskDto.Description,
+                    taskDto.Links,
+                    taskDto.IsRequired
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public int DeleteTask(int id)
+        {
+            return _connection.Execute(
+                _taskDeleteProcedure,
+                new { id },
+                commandType: CommandType.StoredProcedure
+                );
+        }
         public TaskDto GetTaskById(int id)
         {
             TaskDto task = default;
@@ -48,7 +87,7 @@ namespace DevEdu.DAL.Repositories
             return task;
         }
 
-        public List<TaskDto> GetTaskByCourseId(int courseId)
+        public List<TaskDto> GetTasksByCourseId(int courseId)
         {
             var taskList = new List<TaskDto>();
             return _connection.Query<TaskDto>(
@@ -84,59 +123,18 @@ namespace DevEdu.DAL.Repositories
             return list;
         }
 
-        public int AddTask(TaskDto taskDto)
-        {
-            int taskId = _connection.QuerySingle<int>(
-                _taskAddProcedure,
-                new
-                {
-                    taskDto.Name,
-                    taskDto.Description,
-                    taskDto.Links,
-                    taskDto.IsRequired
-                },
-                commandType: CommandType.StoredProcedure
-                );
-            return taskId;
-        }
-
-        public void UpdateTask(TaskDto taskDto)
-        {
-            _connection.Execute(
-                _taskUpdateProcedure,
-                new
-                {
-                    taskDto.Id,
-                    taskDto.Name,
-                    taskDto.Description,
-                    taskDto.Links,
-                    taskDto.IsRequired
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
-
-        public void DeleteTask(int id)
-        {
-            _connection.Execute(
-                _taskDeleteProcedure,
-                new { id },
-                commandType: CommandType.StoredProcedure
-                );
-        }
-
         public int AddTagToTask(int taskId, int tagId)
         {
             return _connection
-                .QuerySingle(_tagTaskAddProcedure,
+                .Execute(_tagTaskAddProcedure,
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure
                 );
         }
 
-        public void DeleteTagFromTask(int taskId, int tagId)
+        public int DeleteTagFromTask(int taskId, int tagId)
         {
-            _connection
+            return _connection
                 .Execute(_tagTaskDeleteProcedure,
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure

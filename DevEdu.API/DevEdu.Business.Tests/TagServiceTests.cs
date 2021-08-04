@@ -119,7 +119,7 @@ namespace DevEdu.Business.Tests
         public void GetAllTags_NoEntries_ListTagDto()
         {
             //Given
-            var expectedTagDtos = TagData.GetListTagDto();
+            var expectedTagDtos = TagData.GetListTagData();
 
             _tagRepoMock.Setup(x => x.SelectAllTags()).Returns(expectedTagDtos);
 
