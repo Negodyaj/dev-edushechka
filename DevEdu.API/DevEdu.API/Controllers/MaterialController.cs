@@ -55,13 +55,14 @@ namespace DevEdu.API.Controllers
         }
 
         // api/material
-        [AuthorizeRoles(Role.Methodist)]
+        [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet]
         [Description("Get all materials with tags")]
         [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
         public List<MaterialInfoOutputModel> GetAllMaterials()
         {
-            var dto = _materialService.GetAllMaterials();
+            var user = this.GetUserIdAndRoles();
+            var dto = _materialService.GetAllMaterials(user);
             return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
         }
 
@@ -70,21 +71,21 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}/full-output-model")]
         [Description("Get material by id with tags, courses and groups")]
         [ProducesResponseType(typeof(MaterialInfoFullOutputModel), StatusCodes.Status200OK)]
-        public MaterialInfoFullOutputModel GetMaterialByIdWithCoursesAndGroups
-            (int id)
+        public MaterialInfoFullOutputModel GetMaterialByIdWithCoursesAndGroups(int id)
         {
             var dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
             return _mapper.Map<MaterialInfoFullOutputModel>(dto);
         }
 
         // api/material/5/short-output-model
-        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
+        [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet("{id}/short-output-model")]
         [Description("Get material by id with tags")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
         public MaterialInfoOutputModel GetMaterialByIdWithTags(int id)
         {
-            var dto = _materialService.GetMaterialByIdWithTags(id);
+            var user = this.GetUserIdAndRoles();
+            var dto = _materialService.GetMaterialByIdWithTags(id, user);
             return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
@@ -95,8 +96,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
         public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
         {
+            var user = this.GetUserIdAndRoles();
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            dto = _materialService.UpdateMaterial(id, dto, this.GetUserId(), this.GetUserRoles());
+            dto = _materialService.UpdateMaterial(id, dto, user);
             return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
@@ -107,7 +109,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public void DeleteMaterial(int id, bool isDeleted)
         {
-            _materialService.DeleteMaterial(id, isDeleted, this.GetUserId(), this.GetUserRoles());
+            var user = this.GetUserIdAndRoles();
+            _materialService.DeleteMaterial(id, isDeleted, user);
         }
 
         // api/material/{materialId}/tag/{tagId}
@@ -137,7 +140,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
         public List<MaterialInfoOutputModel> GetMaterialsByTagId(int tagId)
         {
-            var dto = _materialService.GetMaterialsByTagId(tagId);
+            var user = this.GetUserIdAndRoles();
+            var dto = _materialService.GetMaterialsByTagId(tagId, user);
             return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
         }
     }

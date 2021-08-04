@@ -1,6 +1,5 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
-using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
@@ -11,66 +10,72 @@ namespace DevEdu.Business.ValidationHelpers
     public class MaterialValidationHelper : IMaterialValidationHelper
     {
         private readonly IMaterialRepository _materialRepository;
-        private readonly IUserRepository _userRepository;
         private readonly IGroupRepository _groupRepository;
+        private readonly ICourseRepository _courseRepository;
 
         public MaterialValidationHelper(
             IMaterialRepository materialRepository,
-            IUserRepository userRepository,
-            IGroupRepository groupRepository)
+            IGroupRepository groupRepository,
+            ICourseRepository courseRepository)
         {
             _materialRepository = materialRepository;
-            _userRepository = userRepository;
             _groupRepository = groupRepository;
+            _courseRepository = courseRepository;
         }
 
         public MaterialDto GetMaterialByIdAndThrowIfNotFound(int materialId)
         {
             var material = _materialRepository.GetMaterialById(materialId);
             if (material == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), materialId));
+                throw new EntityNotFoundException(string.
+                    Format(ServiceMessages.EntityNotFoundMessage, nameof(material), materialId));
             return material;
         }
 
-        public void CheckUserAccessToMaterialForDeleteAndUpdate(int userId, List<Role> roles, MaterialDto material)
+        public void CheckMethodistAccessToMaterialForDeleteAndUpdate(int userId, MaterialDto material)
         {
-            foreach(int role in roles)
+            if (material.Courses == null || material.Courses.Count == 0)
             {
-                if (role == (int)Role.Methodist)
-                {
-                    if (material.Courses == null || material.Courses.Count == 0)
-                    {
-                        throw new AuthorizationException(string.Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
-                    }
-                }
-                else if (role == (int)Role.Teacher)
-                {
-                    if (material.Groups == null || material.Groups.Count == 0)
-                    {
-                        throw new AuthorizationException(string.Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
-                    }
-                    //check that teacher has access to groups (Отдельный метод)
-                }
+                throw new AuthorizationException(string.
+                    Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
             }
         }
 
-        public void CheckUserAccessToMaterialForGetById(int userId, List<Role> roles, MaterialDto material)
+        public void CheckTeacherAccessToMaterialForDeleteAndUpdate(int userId, MaterialDto material)
         {
-            foreach (int role in roles)
+            if (material.Groups == null || 
+                material.Groups.Count == 0 || 
+                GetMaterialAllowedToUserByGroup(material.Id, userId) == null) 
             {
-                if (role == (int)Role.Methodist)
-                {
-                    return;
-                }
-                else if (role == (int)Role.Teacher)
-                {
-                    //check that teacher has access to materials by groups
-                }
+                throw new AuthorizationException(string.
+                    Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
             }
         }
 
-        //метод возвращающий материалы доступные юзеру по группам
-        public MaterialDto GetMaterialAllowedToUser(int materialId, int userId)
+        public void CheckUserAccessToMaterialForGetById(int userId, MaterialDto material)
+        {
+            if (GetMaterialAllowedToUserByGroup(material.Id, userId) == null &&
+                 GetMaterialAllowedToUserByCourse(material.Id, userId) == null)
+            {
+                throw new AuthorizationException(string.
+                    Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
+            }
+        }
+        public List<MaterialDto> GetMaterialsAllowedToUser(List<MaterialDto> materials, int userId)
+        {
+            var materialDtos = new List<MaterialDto>();
+            materials.ForEach(m => materialDtos.Add(GetMaterialAllowedToUserByGroup(m.Id, userId)));
+            materials.ForEach(m => materialDtos.Add(GetMaterialAllowedToUserByCourse(m.Id, userId)));
+            var result = materialDtos.Where(x => x != null).GroupBy(m => m.Id).Select(m => m.First()).ToList();
+            return result;
+        }
+
+        public void CheckPassedValuesAreUnique(List<int> values, string entity)
+        {
+            if (!(values.Distinct().Count() == values.Count()))
+                throw new ValidationException(string.Format(ServiceMessages.DuplicateValuesProvided, entity));
+        }
+        private MaterialDto GetMaterialAllowedToUserByGroup(int materialId, int userId)
         {
             var groupsByMaterial = _groupRepository.GetGroupsByMaterialId(materialId);
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
@@ -79,17 +84,20 @@ namespace DevEdu.Business.ValidationHelpers
             if (result == default)
                 return null;
             return _materialRepository.GetMaterialById(materialId);
-            //добавить курсыяы
         }
 
-        public List<TaskDto> GetTasksAllowedToUser(List<TaskDto> tasks, int userId)
+
+        private MaterialDto GetMaterialAllowedToUserByCourse(int materialId, int userId)
         {
-            var taskDtos = new List<TaskDto>();
-            foreach (var task in tasks)
-            {
-                taskDtos.Add(GetMaterialAllowedToUser(task.Id, userId));
-            }
-            return taskDtos;
+            var coursesByMaterial = _courseRepository.GetCoursesByMaterialId(materialId);
+            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            List<int> coursesByUser = new List<int>();
+            groupsByUser.ForEach(group => coursesByUser.Add(group.Course.Id));
+
+            var result = coursesByMaterial.FirstOrDefault(сm => coursesByUser.Any(сu => сu == сm.Id));
+            if (result == default)
+                return null;
+            return _materialRepository.GetMaterialById(materialId);
         }
     }
 }

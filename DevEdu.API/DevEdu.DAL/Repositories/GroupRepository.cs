@@ -309,16 +309,17 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public List<GroupDto> GetGroupsByUserId(int userId)
+        public List<GroupDto> GetGroupsByUserId(int userId) //подтягивать курс id
         {
             GroupDto result;
             return _connection
-                .Query<GroupDto, GroupStatus, GroupDto>(
+                .Query<GroupDto, GroupStatus, CourseDto, GroupDto>(
                     _groupSelectGroupsByUserIdProcedure,
-                    (group, groupStatus) =>
+                    (group, groupStatus, course) =>
                     {
                         result = group;
                         result.GroupStatus = groupStatus;
+                        result.Course = course;
                         return result;
                     },
                     new { userId },
@@ -327,7 +328,6 @@ namespace DevEdu.DAL.Repositories
                 )
                 .ToList();
         }
-
         public int GetPresentGroupForStudentByUserId(int userId)
         {
             return _connection.QuerySingle<int>(

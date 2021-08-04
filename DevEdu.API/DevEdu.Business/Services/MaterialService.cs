@@ -2,10 +2,6 @@
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using DevEdu.Business.ValidationHelpers;
-using DevEdu.Business.Constants;
-using DevEdu.Business.Exceptions;
-using DevEdu.DAL.Enums;
-using System.Linq;
 
 namespace DevEdu.Business.Services
 {
@@ -20,8 +16,8 @@ namespace DevEdu.Business.Services
         private readonly IMaterialValidationHelper _materilaValidationHelper;
 
         public MaterialService(
-            IMaterialRepository materialRepository, 
-            ICourseRepository courseRepository, 
+            IMaterialRepository materialRepository,
+            ICourseRepository courseRepository,
             IGroupRepository groupRepository,
             IGroupValidationHelper groupValidationHelper,
             ITagValidationHelper tagValidationHelper,
@@ -37,7 +33,15 @@ namespace DevEdu.Business.Services
             _materilaValidationHelper = materilaValidationHelper;
         }
 
-        public List<MaterialDto> GetAllMaterials() => _materialRepository.GetAllMaterials(); //проверка какие материалы дотупны конкретному пользователю и возвращать их,через хранимку новую
+        public List<MaterialDto> GetAllMaterials(UserIdentityInfo user)
+        {
+            var allMaterials = _materialRepository.GetAllMaterials();
+            if (!(CheckerRole.IsAdmin(user.Roles) || CheckerRole.IsMethodist(user.Roles)))
+            {
+                return _materilaValidationHelper.GetMaterialsAllowedToUser(allMaterials, user.UserId);
+            }
+            return allMaterials;
+        }
 
         public MaterialDto GetMaterialByIdWithCoursesAndGroups(int id)
         {
@@ -47,17 +51,19 @@ namespace DevEdu.Business.Services
             return dto;
         }
 
-        public MaterialDto GetMaterialByIdWithTags(int id)
+        public MaterialDto GetMaterialByIdWithTags(int id, UserIdentityInfo user)
         {
-            //проверять доступ пользователя к материалу (сделать хранимку достпных материалов по userID)
             var dto = _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(id);
+            if (!(CheckerRole.IsAdmin(user.Roles) || CheckerRole.IsMethodist(user.Roles)))
+            {
+                _materilaValidationHelper.CheckUserAccessToMaterialForGetById(user.UserId, dto);
+            }
             return dto;
         }
 
         public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups)
         {
-            if (!(groups.Distinct().Count() == groups.Count()))
-                throw new ValidationException(ServiceMessages.DuplicateGroupsValuesProvided);
+            _materilaValidationHelper.CheckPassedValuesAreUnique(groups, nameof(groups));
             groups.ForEach(group => _groupValidationHelper.CheckGroupExistence(group));
 
             var materialId = AddMaterial(dto, tags);
@@ -67,29 +73,48 @@ namespace DevEdu.Business.Services
 
         public int AddMaterialWithCourses(MaterialDto dto, List<int> tags, List<int> courses)
         {
-            if (!(courses.Distinct().Count() == courses.Count()))
-                throw new ValidationException(ServiceMessages.DuplicateCoursesValuesProvided);
+            _materilaValidationHelper.CheckPassedValuesAreUnique(courses, nameof(courses));
             courses.ForEach(course => _courseValidationHelper.CheckCourseExistence(course));
 
             var materialId = AddMaterial(dto, tags);
-
             courses.ForEach(course => _courseRepository.AddCourseMaterialReference(course, materialId));
             return materialId;
         }
 
-        public MaterialDto UpdateMaterial(int id, MaterialDto dto, int userId, List<Role> roles)
+        public MaterialDto UpdateMaterial(int id, MaterialDto dto, UserIdentityInfo user)
         {
             var material = GetMaterialByIdWithCoursesAndGroups(id);
-            _materilaValidationHelper.CheckUserAccessToMaterialForDeleteAndUpdate(userId, roles, material);
+            if (!CheckerRole.IsAdmin(user.Roles))
+            {
+                if(CheckerRole.IsMethodist(user.Roles))
+                {
+                    _materilaValidationHelper.CheckMethodistAccessToMaterialForDeleteAndUpdate(user.UserId, material);
+                }
+                else
+                {
+                    _materilaValidationHelper.CheckTeacherAccessToMaterialForDeleteAndUpdate(user.UserId, material);
+                }
+            }
+
             dto.Id = id;
             _materialRepository.UpdateMaterial(dto);
             return _materialRepository.GetMaterialById(dto.Id);
         }
 
-        public void DeleteMaterial(int id, bool isDeleted, int userId, List<Role> roles)
+        public void DeleteMaterial(int id, bool isDeleted, UserIdentityInfo user)
         {
             var material = _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(id);
-            _materilaValidationHelper.CheckUserAccessToMaterialForDeleteAndUpdate(userId, roles, material);
+            if (!CheckerRole.IsAdmin(user.Roles))
+            {
+                if (CheckerRole.IsMethodist(user.Roles))
+                {
+                    _materilaValidationHelper.CheckMethodistAccessToMaterialForDeleteAndUpdate(user.UserId, material);
+                }
+                else
+                {
+                    _materilaValidationHelper.CheckTeacherAccessToMaterialForDeleteAndUpdate(user.UserId, material);
+                }
+            }
             _materialRepository.DeleteMaterial(id, isDeleted);
         }
 
@@ -99,26 +124,26 @@ namespace DevEdu.Business.Services
         public void DeleteTagFromMaterial(int materialId, int tagId) =>
             _materialRepository.DeleteTagFromMaterial(materialId, tagId);
 
-        public List<MaterialDto> GetMaterialsByTagId(int tagId)
+        public List<MaterialDto> GetMaterialsByTagId(int tagId, UserIdentityInfo user)
         {
             _tagValidationHelper.CheckTagExistence(tagId);
+
             var allMaterialsByTag = _materialRepository.GetMaterialsByTagId(tagId);
-            var availableMaterials = new List<MaterialDto>();
-            return _materialRepository.GetMaterialsByTagId(tagId);
-            //проверка какие материалы дотупны конкретному пользователю и возвращать их,через хранимку новую
+            if (!(CheckerRole.IsAdmin(user.Roles) || CheckerRole.IsMethodist(user.Roles)))
+            {
+                return _materilaValidationHelper.GetMaterialsAllowedToUser(allMaterialsByTag, user.UserId);
+            }
+            return allMaterialsByTag;
         }
 
         private int AddMaterial(MaterialDto dto, List<int> tags)
         {
             if (tags == null || tags.Count == 0)
-            {
                 return _materialRepository.AddMaterial(dto);
-            }
 
-            if (!(tags.Distinct().Count() == tags.Count()))
-                throw new ValidationException(ServiceMessages.DuplicateTagsValuesProvided);
-
+            _materilaValidationHelper.CheckPassedValuesAreUnique(tags, nameof(tags));
             tags.ForEach(tag => _tagValidationHelper.CheckTagExistence(tag));
+
             var materialId = _materialRepository.AddMaterial(dto);
             tags.ForEach(tag => _materialRepository.AddTagToMaterial(materialId, tag));
             return materialId;

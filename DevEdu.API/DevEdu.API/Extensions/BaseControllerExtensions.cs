@@ -21,11 +21,11 @@ namespace DevEdu.API.Extensions
             return controller.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => (Role)Enum.Parse(typeof(Role), c.Value)).ToList();
         }
 
-        public static UserIdentifyInfo GetUserIdAndRoles(this Controller controller)
+        public static UserIdentityInfo GetUserIdAndRoles(this Controller controller)
         {
             var userId = Convert.ToInt32(controller.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
             var roles = controller.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => (Role)Enum.Parse(typeof(Role), c.Value)).ToList();
-            return new UserIdentifyInfo
+            return new UserIdentityInfo
             {
                 UserId = userId,
                 Roles = roles
