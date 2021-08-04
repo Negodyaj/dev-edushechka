@@ -73,7 +73,7 @@ namespace DevEdu.Business.Tests
         public void AddTaskByTeacher_WithTags_TaskWithTagsCreated()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDtoWithTags();
             var taskId = 1;
             var expectedGroupId = 10;
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -119,7 +119,7 @@ namespace DevEdu.Business.Tests
         public void AddTaskByMethodist_WithTags_TaskWithTagsCreated()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDtoWithTags();
             var taskId = 1;
             var coursesIds = new List<int> { 1 };
             var tagsIds = new List<int> { 13, 15, 14 };
@@ -241,7 +241,7 @@ namespace DevEdu.Business.Tests
         [Test]
         public void UpdateTask_WhenMethodistNotRelatedToTask_ThrownAuthorizationException()
         {
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDtoWithTags();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
@@ -331,7 +331,7 @@ namespace DevEdu.Business.Tests
         [Test]
         public void DeleteTask_WhenMethodistNotRelatedToTask_ThrownAuthorizationException()
         {
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDtoWithTags();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
