@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using DevEdu.DAL.Models;
 
@@ -9,7 +10,7 @@ namespace DevEdu.Business.Tests
 
         public static TaskDto GetTaskDtoWithoutTags()
         {
-            return new TaskDto {Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true};
+            return new TaskDto { Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true };
         }
 
         public static TaskDto GetTaskDtoWithTags()
@@ -110,6 +111,26 @@ namespace DevEdu.Business.Tests
                         new TagDto {Id = 6}
                     }
                 }
+            };
+        }
+
+        public static List<GroupDto> GetListOfGroups()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto {Id = 1},
+                new GroupDto {Id = 2},
+                new GroupDto {Id = 3}
+            };
+        }
+
+        public static List<GroupDto> GetListOfSameGroups()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto {Id = 1},
+                new GroupDto {Id = 2},
+                new GroupDto {Id = 3}
             };
         }
     }

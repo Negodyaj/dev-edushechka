@@ -17,14 +17,6 @@ namespace DevEdu.Business.ValidationHelpers
             _groupRepository = groupRepository;
         }
 
-
-        public void CheckTaskExistence(int taskId)
-        {
-            var task = _taskRepository.GetTaskById(taskId);
-            if (task == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), taskId));
-        }
-
         public TaskDto GetTaskByIdAndThrowIfNotFound(int taskId)
         {
             var task = _taskRepository.GetTaskById(taskId);

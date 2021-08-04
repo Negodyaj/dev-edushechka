@@ -29,7 +29,7 @@ namespace DevEdu.Business.Services
         public int AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
-            _taskValidationHelper.CheckTaskExistence(taskId);
+            _taskValidationHelper.CheckUserAccessToTask(taskId, studentId);
 
             taskAnswerDto.Task = new TaskDto { Id = taskId };
             taskAnswerDto.User = new UserDto { Id = studentId };
@@ -48,7 +48,7 @@ namespace DevEdu.Business.Services
 
         public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId)
         {
-            _taskValidationHelper.CheckTaskExistence(taskId);
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
 
             return _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
         }
