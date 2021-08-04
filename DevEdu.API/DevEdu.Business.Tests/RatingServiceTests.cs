@@ -43,10 +43,7 @@ namespace DevEdu.Business.Tests
             var groupId = group.Id;
             var student = inputStudentRatingDto.User;
             var studentId = student.Id;
-            var authorUserInfo = new UserIdentityInfo { 
-                UserId = 1,
-                Roles = new List<Role> { Role.Teacher } 
-            };
+            var authorUserInfo = RatingData.GetTeacherIdentityInfo();
             var usersInGroup = UserData.GetListUsersDto();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
@@ -80,11 +77,7 @@ namespace DevEdu.Business.Tests
             var groupId = group.Id;
             var student = inputStudentRatingDto.User;
             var studentId = student.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 4,
-                Roles = new List<Role> { Role.Admin }
-            };
+            var authorUserInfo = RatingData.GetAdminIdentityInfo();
             var usersInGroup = UserData.GetListUsersDto();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
@@ -108,17 +101,13 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddStudentRating_GroupDoesntExist_EntityNotFoundException()
+        public void AddStudentRating_GroupDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
             var studentRatingId = expectedStudentRatingDto.Id;
             var studentId = expectedStudentRatingDto.User.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 1,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var authorUserInfo = RatingData.GetTeacherIdentityInfo();
             var groupId = expectedStudentRatingDto.Group.Id;
             GroupDto group = default;
 
@@ -137,17 +126,13 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddStudentRating_TeacherDoesntAuthorizeToGroup_AuthorizationException()
+        public void AddStudentRating_TeacherDoesntAuthorizeToGroup_AuthorizationExceptionThrown()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
             var studentRatingId = expectedStudentRatingDto.Id;
             var studentId = expectedStudentRatingDto.User.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 4,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var authorUserInfo = RatingData.GetTeacherOutOfGroupIdentityInfo();
             var group = expectedStudentRatingDto.Group;
             var groupId = group.Id;
             var usersInGroup = UserData.GetListUsersDto();
@@ -168,17 +153,13 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddStudentRating_UserDoesntExist_EntityNotFoundException()
+        public void AddStudentRating_UserDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
             var studentRatingId = expectedStudentRatingDto.Id;
             var studentId = expectedStudentRatingDto.User.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 1,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var authorUserInfo = RatingData.GetTeacherIdentityInfo();
             var group = expectedStudentRatingDto.Group;
             var groupId = group.Id;
             UserDto student = default;
@@ -201,18 +182,14 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddStudentRating_StudentDoesntBelongToGroup_ValidationException()
+        public void AddStudentRating_StudentDoesntBelongToGroup_ValidationExceptionThrown()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetStudentRatingDto();
             var studentRatingId = expectedStudentRatingDto.Id;
             var student = expectedStudentRatingDto.User;
             var studentId = student.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 1,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var authorUserInfo = RatingData.GetTeacherIdentityInfo();
             var group = expectedStudentRatingDto.Group;
             var groupId = group.Id;
             var usersInGroup = UserData.GetListUsersDto();
@@ -240,11 +217,7 @@ namespace DevEdu.Business.Tests
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
             var studentRatingId = expectedStudentRatingDto.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 1,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var authorUserInfo = RatingData.GetTeacherIdentityInfo();
             var groupId = expectedStudentRatingDto.Group.Id;
             var usersInGroup = UserData.GetListUsersDto();
 
@@ -266,11 +239,7 @@ namespace DevEdu.Business.Tests
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
             var studentRatingId = expectedStudentRatingDto.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 4,
-                Roles = new List<Role> { Role.Admin }
-            };
+            var authorUserInfo = RatingData.GetAdminIdentityInfo();
             var groupId = expectedStudentRatingDto.Group.Id;
             var usersInGroup = UserData.GetListUsersDto();
 
@@ -287,16 +256,12 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteStudentRating_TeacherDoesntAuthorizeToGroup_AuthorizationException()
+        public void DeleteStudentRating_TeacherDoesntAuthorizeToGroup_AuthorizationExceptionThrown()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
             var studentRatingId = expectedStudentRatingDto.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 4,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var authorUserInfo = RatingData.GetTeacherOutOfGroupIdentityInfo();
             var groupId = expectedStudentRatingDto.Group.Id;
             var usersInGroup = UserData.GetListUsersDto();
 
@@ -313,16 +278,12 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteStudentRating_EntityDoesntExist_EntityNotFoundException()
+        public void DeleteStudentRating_EntityDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             StudentRatingDto expectedStudentRatingDto = default;
-            var studentRatingId = 1;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 4,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var studentRatingId = UserData.GetUserDto().Id;
+            var authorUserInfo = RatingData.GetTeacherOutOfGroupIdentityInfo();
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(studentRatingId)).Returns(expectedStudentRatingDto);
 
@@ -332,10 +293,11 @@ namespace DevEdu.Business.Tests
             //Than
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Once);
             _ratingRepoMock.Verify(x => x.DeleteStudentRating(It.IsAny<int>()), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
-        public void GetAllStudentRatings_NoEntries_ReturnListOfStudentRatingDto()
+        public void GetAllStudentRatings_NoEntries_ListOfStudentRatingDtoReturned()
         {
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
@@ -351,7 +313,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetStudentRatingByUserId_UserId_ReturnListOfStudentRatingDto()
+        public void GetStudentRatingByUserId_UserId_ListOfStudentRatingDtoReturned()
         {
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
@@ -371,7 +333,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetStudentRatingByUserId_UserDoesntExist_EntityNotFoundException()
+        public void GetStudentRatingByUserId_UserDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
@@ -389,16 +351,12 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetStudentRatingByGroupId_GroupId_AuthorUserIsManager_ReturnListOfStudentRatingDto()
+        public void GetStudentRatingByGroupId_AuthorUserIsManager_ListOfStudentRatingDtoReturned()
         {
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
             var groupId = expectedStudentRatingDtos[0].Group.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 1,
-                Roles = new List<Role> { Role.Manager }
-            };
+            var authorUserInfo = RatingData.GetManagerIdentityInfo();
             var group = expectedStudentRatingDtos[0].Group;
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingByGroupId(groupId)).Returns(expectedStudentRatingDtos);
@@ -415,16 +373,12 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetStudentRatingByGroupId_GroupId_AuthorUserIsTeacher_ReturnListOfStudentRatingDto()
+        public void GetStudentRatingByGroupId_AuthorUserIsTeacher_ListOfStudentRatingDtoReturned()
         {
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
             var groupId = expectedStudentRatingDtos[0].Group.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 1,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var authorUserInfo = RatingData.GetTeacherIdentityInfo();
             var group = expectedStudentRatingDtos[0].Group;
             var usersInGroup = UserData.GetListUsersDto();
 
@@ -443,16 +397,12 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetStudentRatingByGroupId_GroupDoesntExist_EntityNotFoundException()
+        public void GetStudentRatingByGroupId_GroupDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
             var groupId = expectedStudentRatingDtos[0].Group.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 1,
-                Roles = new List<Role> { Role.Manager }
-            };
+            var authorUserInfo = RatingData.GetManagerIdentityInfo();
             GroupDto group = default;
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
@@ -466,17 +416,13 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetStudentRatingByGroupId_TeacherDoesntAuthorizeToGroup_ReturnListOfStudentRatingDto()
+        public void GetStudentRatingByGroupId_TeacherDoesntAuthorizeToGroup_ListOfStudentRatingDtoReturned()
         {
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
             var group = expectedStudentRatingDtos[0].Group;
             var groupId = group.Id;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 4,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var authorUserInfo = RatingData.GetTeacherOutOfGroupIdentityInfo();
             var usersInGroup = UserData.GetListUsersDto();
 
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
@@ -491,7 +437,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateStudentRating_AuthorUserIsTeacher_ReturnStudentRatingDto()
+        public void UpdateStudentRating_AuthorUserIsTeacher_StudentRatingDtoReturned()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
@@ -500,11 +446,7 @@ namespace DevEdu.Business.Tests
             var groupId = expectedStudentRatingDto.Group.Id;
             var value = expectedStudentRatingDto.Rating;
             var periodNumber = expectedStudentRatingDto.ReportingPeriodNumber;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 1,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var authorUserInfo = RatingData.GetTeacherIdentityInfo();
             var usersInGroup = UserData.GetListUsersDto();
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(studentRatingId)).Returns(expectedStudentRatingDto);
@@ -522,7 +464,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateStudentRating_AuthorUserIsAdmin_ReturnStudentRatingDto()
+        public void UpdateStudentRating_AuthorUserIsAdmin_StudentRatingDtoReturned()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
@@ -531,11 +473,7 @@ namespace DevEdu.Business.Tests
             var groupId = expectedStudentRatingDto.Group.Id;
             var value = expectedStudentRatingDto.Rating;
             var periodNumber = expectedStudentRatingDto.ReportingPeriodNumber;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 4,
-                Roles = new List<Role> { Role.Admin }
-            };
+            var authorUserInfo = RatingData.GetAdminIdentityInfo();
             var usersInGroup = UserData.GetListUsersDto();
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(studentRatingId)).Returns(expectedStudentRatingDto);
@@ -553,18 +491,15 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateStudentRating_StudentRatingDoesntExist_EntityNotFoundException()
+        public void UpdateStudentRating_StudentRatingDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             StudentRatingDto expectedStudentRatingDto = default;
-            var studentRatingId = 0;
-            var value = 0;
-            var periodNumber = 0;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 1,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var inputStudentRatingDto = RatingData.GetStudentRatingDto();
+            var studentRatingId = inputStudentRatingDto.Id;
+            var value = inputStudentRatingDto.Rating;
+            var periodNumber = inputStudentRatingDto.ReportingPeriodNumber;
+            var authorUserInfo = RatingData.GetTeacherIdentityInfo();
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(It.IsAny<int>())).Returns(expectedStudentRatingDto);
 
@@ -578,7 +513,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateStudentRating_TeacherDoesntAuthorizeToGroup_AuthorizationException()
+        public void UpdateStudentRating_TeacherDoesntAuthorizeToGroup_AuthorizationExceptionThrown()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
@@ -586,11 +521,7 @@ namespace DevEdu.Business.Tests
             var groupId = expectedStudentRatingDto.Group.Id;
             var value = expectedStudentRatingDto.Rating;
             var periodNumber = expectedStudentRatingDto.ReportingPeriodNumber;
-            var authorUserInfo = new UserIdentityInfo
-            {
-                UserId = 4,
-                Roles = new List<Role> { Role.Teacher }
-            };
+            var authorUserInfo = RatingData.GetTeacherOutOfGroupIdentityInfo();
             var usersInGroup = UserData.GetListUsersDto();
 
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
