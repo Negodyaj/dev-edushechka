@@ -6,7 +6,7 @@ using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 
-namespace DevEdu.Business.Tests.Tag
+namespace DevEdu.Business.Tests
 {
     public class TagServiceTests
     {
@@ -119,7 +119,7 @@ namespace DevEdu.Business.Tests.Tag
         public void GetAllTags_NoEntries_ListTagDto()
         {
             //Given
-            var expectedTagDtos = TagData.GetListTagDto();
+            var expectedTagDtos = TagData.GetListTagData();
 
             _tagRepoMock.Setup(x => x.SelectAllTags()).Returns(expectedTagDtos);
 
