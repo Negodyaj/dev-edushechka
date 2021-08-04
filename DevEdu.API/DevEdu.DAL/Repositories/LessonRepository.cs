@@ -224,8 +224,7 @@ namespace DevEdu.DAL.Repositories
                {
                    lessonDto.Id,
                    lessonDto.TeacherComment,
-                   lessonDto.LinkToRecord,
-                   lessonDto.Date
+                   lessonDto.LinkToRecord
                },
                commandType: CommandType.StoredProcedure
            );
