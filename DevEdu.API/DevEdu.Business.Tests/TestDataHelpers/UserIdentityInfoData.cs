@@ -1,7 +1,7 @@
-﻿using DevEdu.DAL.Enums;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Enums;
 using System;
 using System.Collections.Generic;
-using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Tests
 {

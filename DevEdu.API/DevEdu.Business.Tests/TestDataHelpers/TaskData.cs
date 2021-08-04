@@ -7,7 +7,7 @@ namespace DevEdu.Business.Tests
     {
         public const int expectedTaskId = 55;
 
-        public static TaskDto GetTaskDto()
+        public static TaskDto GetTaskDtoWithoutTags()
         {
             return new TaskDto { Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true };
         }

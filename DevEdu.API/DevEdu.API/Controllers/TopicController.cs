@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
-using DevEdu.API.Models.InputModels;
-using AutoMapper;
 using DevEdu.API.Common;
-using DevEdu.DAL.Models;
+using DevEdu.API.Configuration;
+using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
-using DevEdu.API.Models.OutputModels;
-using DevEdu.API.Configuration.ExceptionResponses;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
@@ -71,7 +72,8 @@ namespace DevEdu.API.Controllers
         [Description("Update topic")]
         [ProducesResponseType(typeof(TopicOutputModel), StatusCodes.Status200OK)]
         public TopicOutputModel UpdateTopic(int id, [FromBody] TopicInputModel model)
-        {
+        {
+
             var dto = _mapper.Map<TopicDto>(model);
             var output = _topicService.UpdateTopic(id, dto);
             return _mapper.Map<TopicOutputModel>(output);
@@ -99,6 +101,6 @@ namespace DevEdu.API.Controllers
         public int DeleteTagFromTopic(int topicId, int tagId)
         {
             return _topicService.DeleteTagFromTopic(topicId, tagId);
-        }      
+        }
     }
 }

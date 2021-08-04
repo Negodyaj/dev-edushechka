@@ -26,7 +26,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock = new Mock<ITaskRepository>();
             _homeworkValidationHelper = new HomeworkValidationHelper(_homeworkRepoMock.Object);
             _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
-            _taskValidationHelper = new TaskValidationHelper(_taskRepoMock.Object);
+            _taskValidationHelper = new TaskValidationHelper(_taskRepoMock.Object, _groupRepoMock.Object);
             _sut = new HomeworkService
             (
                 _homeworkRepoMock.Object,

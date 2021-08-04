@@ -1,7 +1,7 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
-using DevEdu.Business.ValidationHelpers;
 
 namespace DevEdu.Business.Services
 {

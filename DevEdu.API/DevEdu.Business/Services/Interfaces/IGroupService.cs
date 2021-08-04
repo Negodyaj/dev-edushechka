@@ -1,6 +1,6 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
-using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Services
 {

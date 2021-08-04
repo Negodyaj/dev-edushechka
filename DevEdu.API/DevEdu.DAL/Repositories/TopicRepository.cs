@@ -167,7 +167,7 @@ namespace DevEdu.DAL.Repositories
                 splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 ).FirstOrDefault();
-            return response; 
+            return response;
         }
         public List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids)
         {

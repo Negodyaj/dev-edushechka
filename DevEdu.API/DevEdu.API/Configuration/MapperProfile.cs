@@ -143,7 +143,7 @@ namespace DevEdu.API.Configuration
             CreateMap<StudentLessonDto, FeedbackOutputModel>();
             CreateMap<StudentRatingDto, StudentRatingOutputModel>();
             CreateMap<RatingTypeDto, RatingTypeOutputModel>();
-            CreateMap<StudentLessonDto, FeedbackOutputModel>();            
+            CreateMap<StudentLessonDto, FeedbackOutputModel>();
         }
     }
 }

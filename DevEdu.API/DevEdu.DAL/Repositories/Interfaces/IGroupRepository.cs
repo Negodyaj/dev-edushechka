@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using DevEdu.DAL.Enums;
-using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Models;
+using System.Collections.Generic;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -20,8 +19,7 @@ namespace DevEdu.DAL.Repositories
         void RemoveGroupMaterialReference(int groupId, int materialId);
         public List<GroupDto> GetGroupsByMaterialId(int id);
         int GetPresentGroupForStudentByUserId(int userId);
-        public List<GroupDto> GetGroupsByTaskId(int taskId);
-        public List<GroupDto> GetGroupsByUserId(int userId);
+        List<GroupDto> GetGroupsByTaskId(int taskId);
         List<GroupDto> GetGroupsByUserId(int userId);
         List<GroupDto> GetGroupsByLessonId(int lessonId);
     }

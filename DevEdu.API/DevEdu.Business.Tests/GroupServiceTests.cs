@@ -466,7 +466,7 @@ namespace DevEdu.Business.Tests
         public void DeleteUserFromGroup_GroupDoesntExist_EntityNotFoundException()
         {
             //Given
-            GroupDto group = default; 
+            GroupDto group = default;
             var groupId = 0;
             var user = UserData.GetUserDto();
             var userId = user.Id;
@@ -475,7 +475,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
 
             //When
-            Assert.Throws< EntityNotFoundException>(()=> _sut.DeleteUserFromGroup(groupId, userId));
+            Assert.Throws<EntityNotFoundException>(() => _sut.DeleteUserFromGroup(groupId, userId));
 
             //Than
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);

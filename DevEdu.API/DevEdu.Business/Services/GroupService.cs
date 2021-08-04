@@ -1,11 +1,11 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
-using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Services
 {
@@ -73,7 +73,7 @@ namespace DevEdu.Business.Services
         {
             _groupValidationHelper.CheckGroupExistence(groupId);
             var user = _userRepository.SelectUserById(userId);
-            if (user ==default)
+            if (user == default)
             {
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
             }

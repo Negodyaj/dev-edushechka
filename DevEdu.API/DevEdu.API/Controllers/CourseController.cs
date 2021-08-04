@@ -1,17 +1,16 @@
 ﻿using AutoMapper;
 using DevEdu.API.Common;
+using DevEdu.API.Configuration;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
@@ -83,7 +82,7 @@ namespace DevEdu.API.Controllers
         public CourseInfoShortOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            var updDto =  _courseService.UpdateCourse(id, dto);
+            var updDto = _courseService.UpdateCourse(id, dto);
             return _mapper.Map<CourseInfoShortOutputModel>(updDto);
         }
 
@@ -146,13 +145,13 @@ namespace DevEdu.API.Controllers
 
         [HttpPost("{courseId}/add-topics")]
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
-	[ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]	
+        [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]
         [Description("Add topics to course")]
         public List<CourseTopicOutputModel> AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
         {
             var dto = _mapper.Map<List<CourseTopicDto>>(inputModel);
 
-            var id =_courseService.AddTopicsToCourse(courseId, dto);
+            var id = _courseService.AddTopicsToCourse(courseId, dto);
             dto = _courseService.GetCourseTopicBuSevealId(id);
             return _mapper.Map<List<CourseTopicOutputModel>>(dto);
         }

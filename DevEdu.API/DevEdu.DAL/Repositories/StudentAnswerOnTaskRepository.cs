@@ -1,7 +1,7 @@
-﻿using System;
-using Dapper;
+﻿using Dapper;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -104,16 +104,16 @@ namespace DevEdu.DAL.Repositories
 
         public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {
-             _connection.Execute(
-                _taskStudentUpdateAnswer,
-                new
-                {
-                    TaskId = dto.Task.Id,
-                    StudentId = dto.User.Id,
-                    dto.Answer
-                },
-                commandType: CommandType.StoredProcedure
-                );
+            _connection.Execute(
+               _taskStudentUpdateAnswer,
+               new
+               {
+                   TaskId = dto.Task.Id,
+                   StudentId = dto.User.Id,
+                   dto.Answer
+               },
+               commandType: CommandType.StoredProcedure
+               );
         }
 
         public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId, DateTime completedDate)
@@ -131,21 +131,6 @@ namespace DevEdu.DAL.Repositories
                 );
 
             return statusId;
-        }
-
-        public List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskByTaskId(int id)
-        {
-            return _connection.Query<StudentAnswerOnTaskForTaskDto, UserDto, StudentAnswerOnTaskForTaskDto>(
-                    _task_Student_SelectByTaskIdProcedure,
-                    (answerDto, userDto) =>
-                    {
-                        answerDto.Student = userDto;
-                        return answerDto;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure)
-                .ToList();
         }
 
         public List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId)

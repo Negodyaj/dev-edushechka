@@ -25,7 +25,7 @@ namespace DevEdu.Business.ValidationHelpers
         public List<PaymentDto> GetPaymentsByUserIdAndThrowIfNotFound(int userId)
         {
             var payments = _paymentRepository.GetPaymentsByUser(userId);
-            if(payments == default)
+            if (payments == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundByUserId, nameof(payments), userId));
             return payments;
         }

@@ -186,13 +186,13 @@ namespace DevEdu.Business.Services
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
             _topicValidationHelper.CheckTopicExistence(topicId);
-            
+
         }
         private void CheckCourseAndMaterialExistences(int courseId, int materialId)
         {
-        _courseValidationHelper.CheckCourseExistence(courseId);
-        _materialValidationHelper.CheckMaterialExistence(materialId);
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _materialValidationHelper.CheckMaterialExistence(materialId);
         }
-        
+
     }
 }

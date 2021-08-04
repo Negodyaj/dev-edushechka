@@ -20,6 +20,6 @@ namespace DevEdu.Business.Services
         StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
         StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
         StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
-        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);        
+        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);
     }
 }

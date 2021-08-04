@@ -42,14 +42,14 @@ namespace DevEdu.Business.Services
 
         public List<HomeworkDto> GetHomeworkByTaskId(int taskId)
         {
-            _taskValidationHelper.CheckTaskExistence(taskId);
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             return _homeworkRepository.GetHomeworkByTaskId(taskId);
         }
 
         public HomeworkDto AddHomework(int groupId, int taskId, HomeworkDto dto, int userId)
         {
             _groupValidationHelper.CheckGroupExistence(groupId);
-            _taskValidationHelper.CheckTaskExistence(taskId);
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
             dto.Group = new GroupDto { Id = groupId };
             dto.Task = new TaskDto { Id = taskId };

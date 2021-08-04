@@ -17,7 +17,6 @@ namespace DevEdu.DAL.Repositories
         private const string _groupUpdateGroupStatusProcedure = "dbo.Group_UpdateGroupStatus";
         private const string _groupSelectAllByTaskIdProcedure = "dbo.Group_SelectAllByTaskId";
         private const string _groupSelectGroupsByUserIdProcedure = "dbo.Group_SelectAllByUserId";
-        private const string _groupSelectGroupsByUserIdProcedure = "dbo.Group_SelectAllByUserId";
         private const string _groupSelectGroupsByLessonIdProcedure = "dbo.Group_SelectAllByLessonId";
 
         private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
@@ -27,12 +26,6 @@ namespace DevEdu.DAL.Repositories
         private const string _insertGroupMaterial = "dbo.Group_Material_Insert";
         private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
         private const string _groupSelectAllByMaterialIdProcedure = "dbo.Group_SelectByMaterialId";
-
-        private const string _taskToGroupAddProcedure = "dbo.Group_Task_Insert";
-        private const string _taskFromGroupDeleteProcedure = "dbo.Group_Task_Delete";
-        private const string _taskGroupSelectAllByGroupIdProcedure = "dbo.Group_Task_SelectAllByGroupId";
-        private const string _taskGroupSelectByIdProcedure = "dbo.Group_Task_SelectById";
-        private const string _taskGroupUpdateProcedure = "dbo.Group_Task_Update";
 
         private const string _groupSelectPresentGroupForStudentByUserId = "dbo.Group_SelectPresentGroupForStudentByUserId";
         public GroupRepository() { }
@@ -281,25 +274,6 @@ namespace DevEdu.DAL.Repositories
                 )
                 .ToList();
         }
-
-        public List<GroupDto> GetGroupsByUserId(int userId)
-        {
-            GroupDto result;
-            return _connection
-                .Query<GroupDto, GroupStatus, GroupDto>(
-                    _groupSelectGroupsByUserIdProcedure,
-                    (group, groupStatus) =>
-                    {
-                        result = group;
-                        result.GroupStatus = groupStatus;
-                        return result;
-                    },
-                    new { userId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
-                .ToList();
-        }  
 
         public int GetPresentGroupForStudentByUserId(int userId)
         {

@@ -215,7 +215,7 @@ namespace DevEdu.DAL.Repositories
                  },
                  commandType: CommandType.StoredProcedure
              );
-            
+
         }
 
         public void DeleteStudentFromLesson(int lessonId, int userId)
@@ -295,8 +295,8 @@ namespace DevEdu.DAL.Repositories
         }
 
 
-        public StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int userId)      
-        {            
+        public StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int userId)
+        {
             return _connection.Query<StudentLessonDto, LessonDto, UserDto, StudentLessonDto>(
                 _selectByLessonAndUserIdProcedure,
                 (studentLesson, lesson, user) =>
@@ -314,7 +314,7 @@ namespace DevEdu.DAL.Repositories
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
             ).First();
-            
+
         }
     }
 }
