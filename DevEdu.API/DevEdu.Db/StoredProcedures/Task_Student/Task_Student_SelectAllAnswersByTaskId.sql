@@ -13,7 +13,6 @@ BEGIN
 		us.FirstName,
 		us.LastName,
 		us.Email,
-		us.GitHubAccount,
 		us.Photo
 	FROM dbo.Task_Student tstud
 		inner JOIN dbo.[User] us on us.Id = tstud.StudentId

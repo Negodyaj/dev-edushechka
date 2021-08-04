@@ -26,14 +26,14 @@ namespace DevEdu.DAL.Repositories
 
         }
 
-        public void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
+        public void DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
             _connection.Execute(
                 _taskStudentDelete,
                 new
                 {
-                    TaskId = dto.Task.Id,
-                    StudentId = dto.User.Id
+                    TaskId = taskId,
+                    StudentId = studentId
                 },
                 commandType: CommandType.StoredProcedure
             );

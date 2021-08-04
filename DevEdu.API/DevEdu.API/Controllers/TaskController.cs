@@ -158,7 +158,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/all-answers
         [HttpGet("{taskId}/all-answers")]
-        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist)]
         [Description("Get all student answers on tasks by task")]
         [ProducesResponseType(typeof(List<StudentAnswerOnTaskFullOutputModel>), StatusCodes.Status200OK)]
         public List<StudentAnswerOnTaskFullOutputModel> GetAllStudentAnswersOnTask(int taskId)
@@ -247,7 +247,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/answer/by-user/42
         [HttpGet("answer/by-user/{userId}")]
-        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student, Role.Methodist)]
         [Description("Get all answers of student")]
         [ProducesResponseType(typeof(List<StudentAnswerOnTaskOutputModel>), StatusCodes.Status200OK)]
         public List<StudentAnswerOnTaskOutputModel> GetAllAnswersByStudentId(int userId)

@@ -11,16 +11,26 @@ namespace DevEdu.Business.Services
     {
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
         private readonly IStudentAnswerOnTaskValidationHelper _studentAnswerOnTaskValidationHelper;
+        private const string _dateFormat = "dd.MM.yyyy HH:mm";
+        private readonly IUserValidationHelper _userValidationHelper;
+        private readonly ITaskValidationHelper _taskValidationHelper;
 
         public StudentAnswerOnTaskService(IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository, 
-            IStudentAnswerOnTaskValidationHelper studentAnswerOnTaskValidationHelper)
+            IStudentAnswerOnTaskValidationHelper studentAnswerOnTaskValidationHelper,
+            IUserValidationHelper userValidationHelper,
+            ITaskValidationHelper taskValidationHelper)
         {
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
             _studentAnswerOnTaskValidationHelper = studentAnswerOnTaskValidationHelper;
+            _userValidationHelper = userValidationHelper;
+            _taskValidationHelper = taskValidationHelper;
         }
 
         public int AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
         {
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
+            _taskValidationHelper.CheckTaskExistence(taskId);
+
             taskAnswerDto.Task = new TaskDto { Id = taskId };
             taskAnswerDto.User = new UserDto { Id = studentId };
 
@@ -31,40 +41,37 @@ namespace DevEdu.Business.Services
 
         public void DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
+            _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
 
-            StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
-            dto.Task = new TaskDto { Id = taskId };
-            dto.User = new UserDto { Id = studentId };
-            dto.Comments = new List<CommentDto>();
-
-            _studentAnswerOnTaskRepository.DeleteStudentAnswerOnTask(dto);
+            _studentAnswerOnTaskRepository.DeleteStudentAnswerOnTask(taskId, studentId);
         }
 
         public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId)
         {
-            StudentAnswerOnTaskDto dto = new StudentAnswerOnTaskDto();
-            dto.Task = new TaskDto { Id = taskId };
-            dto.User = new UserDto();
-            dto.Comments = new List<CommentDto>();
+            _taskValidationHelper.CheckTaskExistence(taskId);
 
             return _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
         }
 
         public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
+            _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
+
             var answerDto = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
             return answerDto;
         }
 
         public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId)
         {
-            DateTime CompletedDate = default;
+            _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
+
+            DateTime completedDate = default;
 
             if (statusId == (int)TaskStatus.Accepted)
-                CompletedDate = DateTime.Now;
+                completedDate = DateTime.Now;
 
-            var stringTime = CompletedDate.ToString("dd.MM.yyyy HH:mm");
-            var time = Convert.ToDateTime(stringTime);
+            string stringTime = completedDate.ToString(_dateFormat);
+            DateTime time = Convert.ToDateTime(stringTime);
 
             var status = _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId, time);
 
@@ -73,6 +80,8 @@ namespace DevEdu.Business.Services
 
         public StudentAnswerOnTaskDto UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
         {
+            _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
+
             taskAnswerDto.Task = new TaskDto { Id = taskId };
             taskAnswerDto.User = new UserDto { Id = studentId };
 
@@ -85,6 +94,8 @@ namespace DevEdu.Business.Services
 
         public List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId)
         {
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
+
             var dto = _studentAnswerOnTaskRepository.GetAllAnswersByStudentId(userId);
             return dto;
         }
