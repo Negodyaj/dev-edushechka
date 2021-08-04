@@ -127,13 +127,13 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void AddMaterialToGroup_ExistingGroupIdAndMaterialIdPassed_AddMaterialToGroup(Enum role)
+        public void AddMaterialToGroup_ExistingGroupIdAndMaterialIdPassed_MaterialAddedToGroup(Enum role)
         {
             //Given
             const int groupId = 1;
             const int materialId = 1;
-            var userToken = UserTokenData.GetUserIdentityWithRole(role);
-            var userId = userToken.UserId;
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var userId = userInfo.UserId;
 
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
@@ -143,7 +143,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.AddGroupMaterialReference(groupId, materialId));
 
             //When
-            _sut.AddGroupMaterialReference(groupId, materialId, userToken);
+            _sut.AddGroupMaterialReference(groupId, materialId, userInfo);
 
             //Than
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
@@ -156,13 +156,13 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void DeleteMaterialFromGroup_ExistingGroupIdAndMaterialIdPassed_DeleteMaterialFromGroup(Enum role)
+        public void DeleteMaterialFromGroup_ExistingGroupIdAndMaterialIdPassed_MaterialRemoveFromGroup(Enum role)
         {
             //Given
             const int groupId = 1;
             const int materialId = 1;
-            var userToken = UserTokenData.GetUserIdentityWithRole(role);
-            var userId = userToken.UserId;
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var userId = userInfo.UserId;
 
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
@@ -172,7 +172,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.RemoveGroupMaterialReference(groupId, materialId));
 
             //When
-            _sut.RemoveGroupMaterialReference(groupId, materialId, userToken);
+            _sut.RemoveGroupMaterialReference(groupId, materialId, userInfo);
 
             //Than
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
@@ -185,17 +185,17 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void AddMaterialToGroup_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundException(Enum role)
+        public void AddMaterialToGroup_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             //Given
             var group = GroupData.GetGroupDto();
             var material = MaterialData.GetMaterialDtoWithoutTags();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), group.Id);
-            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userToken));
+                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -205,19 +205,19 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void AddMaterialToGroup_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundException(Enum role)
+        public void AddMaterialToGroup_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             //Given
             var group = GroupData.GetGroupDto();
             var material = MaterialData.GetMaterialDtoWithoutTags();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
-            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetGroupDto());
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userToken));
+                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -227,12 +227,12 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void AddMaterialToGroup_WhenUserDoNotHaveAccess_AuthorizationException(Enum role)
+        public void AddMaterialToGroup_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             //Given
             var group = GroupData.GetGroupDto();
             var material = MaterialData.GetMaterialDtoWithoutTags();
-            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var user = UserData.GetUserDto();
             var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, user.Id, group.Id);
 
@@ -242,7 +242,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userToken));
+                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -253,17 +253,17 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void DeleteMaterialFromGroup_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundException(Enum role)
+        public void DeleteMaterialFromGroup_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             //Given
             var group = GroupData.GetGroupDto();
             var material = MaterialData.GetMaterialDtoWithoutTags();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), group.Id);
-            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userToken));
+                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -272,19 +272,19 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void DeleteMaterialFromGroup_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundException(Enum role)
+        public void DeleteMaterialFromGroup_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             //Given
             var group = GroupData.GetGroupDto();
             var material = MaterialData.GetMaterialDtoWithoutTags();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
-            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetGroupDto());
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userToken));
+                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -294,12 +294,12 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void DeleteMaterialFromGroup_WhenUserDoNotHaveAccess_AuthorizationException(Enum role)
+        public void DeleteMaterialFromGroup_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             //Given
             var group = GroupData.GetGroupDto();
             var material = MaterialData.GetMaterialDtoWithoutTags();
-            var userToken = UserTokenData.GetUserIdentityWithRole(role);
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var user = UserData.GetUserDto();
             var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, user.Id, group.Id);
 
@@ -309,7 +309,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userToken));
+                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));

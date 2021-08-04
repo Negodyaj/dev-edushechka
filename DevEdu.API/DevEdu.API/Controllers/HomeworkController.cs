@@ -34,7 +34,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(HomeworkInfoFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public HomeworkInfoFullOutputModel GetHomework(int id)
         {
             var userId = this.GetUserId();
@@ -50,7 +49,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<HomeworkInfoWithTaskOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<HomeworkInfoWithTaskOutputModel> GetHomeworkByGroupId(int groupId)
         {
             var userId = this.GetUserId();
@@ -66,7 +64,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<HomeworkInfoWithGroupOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<HomeworkInfoWithGroupOutputModel> GetHomeworkByTaskId(int taskId)
         {
             var dto = _homeworkService.GetHomeworkByTaskId(taskId);
@@ -97,7 +94,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteHomework(int id)
         {
             var userId = this.GetUserId();

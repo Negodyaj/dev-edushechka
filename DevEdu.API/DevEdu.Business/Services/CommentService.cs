@@ -3,6 +3,7 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Services
 {
@@ -29,12 +30,11 @@ namespace DevEdu.Business.Services
 
         public CommentDto AddCommentToLesson(int lessonId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var userId = userInfo.UserId;
             _lessonValidationHelper.CheckLessonExistence(lessonId);
             if (!userInfo.IsAdmin())
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
+                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userInfo.UserId);
 
-            dto.User = new UserDto { Id = userId };
+            dto.User = new UserDto { Id = userInfo.UserId };
             dto.Lesson = new LessonDto { Id = lessonId };
             var id = _commentRepository.AddComment(dto);
             return _commentRepository.GetComment(id);
@@ -42,11 +42,10 @@ namespace DevEdu.Business.Services
 
         public CommentDto AddCommentToStudentAnswer(int taskStudentId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var userId = userInfo.UserId;
             var studentAnswer = _studentAnswerValidationHelper.CheckStudentAnswerOnTaskExistence(taskStudentId);
             var studentId = studentAnswer.User.Id;
             if (!userInfo.IsAdmin())
-                _studentAnswerValidationHelper.CheckUserInStudentAnswerAccess(studentId, userId);
+                _studentAnswerValidationHelper.CheckUserInStudentAnswerAccess(studentId, userInfo.UserId);
 
             dto.StudentAnswer = new StudentAnswerOnTaskDto { Id = taskStudentId };
             var id = _commentRepository.AddComment(dto);

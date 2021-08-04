@@ -29,7 +29,7 @@ namespace DevEdu.Business.Services
         public HomeworkDto GetHomework(int homeworkId, int userId)
         {
             var dto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            CheckAccessAndExistence(homeworkId, userId, dto);
+            CheckAccessAndExistenceAndThrowIfNotFound(userId, dto);
             return dto;
         }
 
@@ -60,7 +60,7 @@ namespace DevEdu.Business.Services
         public void DeleteHomework(int homeworkId, int userId)
         {
             var dto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            CheckAccessAndExistence(homeworkId, userId, dto);
+            CheckAccessAndExistenceAndThrowIfNotFound(userId, dto);
 
             _homeworkRepository.DeleteHomework(homeworkId);
         }
@@ -68,14 +68,14 @@ namespace DevEdu.Business.Services
         public HomeworkDto UpdateHomework(int homeworkId, HomeworkDto dto, int userId)
         {
             _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            CheckAccessAndExistence(homeworkId, userId, dto);
+            CheckAccessAndExistenceAndThrowIfNotFound(userId, dto);
 
             dto.Id = homeworkId;
             _homeworkRepository.UpdateHomework(dto);
             return _homeworkRepository.GetHomework(homeworkId);
         }
 
-        private void CheckAccessAndExistence(int homeworkId, int userId, HomeworkDto dto)
+        private void CheckAccessAndExistenceAndThrowIfNotFound(int userId, HomeworkDto dto)
         {
             var groupId = dto.Group.Id;
             _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);

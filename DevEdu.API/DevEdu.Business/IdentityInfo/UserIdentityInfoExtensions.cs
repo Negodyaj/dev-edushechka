@@ -1,6 +1,6 @@
 ﻿using DevEdu.DAL.Enums;
 
-namespace DevEdu.Business
+namespace DevEdu.Business.IdentityInfo
 {
     public static class UserIdentityInfoExtensions
     {

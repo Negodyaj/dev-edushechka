@@ -5,6 +5,7 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Services
 {
@@ -56,13 +57,13 @@ namespace DevEdu.Business.Services
 
         public void AddGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
         {
-            CheckAccessAndExistence(groupId, materialId, userInfo);
+            CheckAccessAndExistenceAndThrowIfNotFound(groupId, materialId, userInfo);
             _groupRepository.AddGroupMaterialReference(groupId, materialId);
         }
 
         public void RemoveGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
         {
-            CheckAccessAndExistence(groupId, materialId, userInfo);
+            CheckAccessAndExistenceAndThrowIfNotFound(groupId, materialId, userInfo);
             _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
         }
 
@@ -95,10 +96,9 @@ namespace DevEdu.Business.Services
             _groupRepository.DeleteUserFromGroup(userId, groupId);
         }
 
-        private void CheckAccessAndExistence(int groupId, int materialId, UserIdentityInfo userInfo)
+        private void CheckAccessAndExistenceAndThrowIfNotFound(int groupId, int materialId, UserIdentityInfo userInfo)
         {
             var userId = userInfo.UserId;
-            var roles = userInfo.Roles;
             _groupValidationHelper.CheckGroupExistence(groupId);
             _materialValidationHelper.CheckMaterialExistence(materialId);
             if (!userInfo.IsAdmin())

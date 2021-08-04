@@ -117,7 +117,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteHomework_ExistingHomeworkIdPassed_DeleteHomework()
+        public void DeleteHomework_ExistingHomeworkIdPassed_HomeworkRemoved()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -184,7 +184,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddHomework_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        public void AddHomework_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithoutGroupAndTask();
@@ -202,7 +202,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddHomework__WhenTaskIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        public void AddHomework__WhenTaskIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithoutGroupAndTask();
@@ -223,7 +223,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddHomework_WhenUserDoNotHaveAccess_AuthorizationException()
+        public void AddHomework_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithoutGroupAndTask();
@@ -248,7 +248,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkById_WhenHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        public void GetHomeworkById_WhenHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -264,7 +264,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkById_WhenUserDoNotHaveAccess_AuthorizationException()
+        public void GetHomeworkById_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown()
         {
             //Given
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -288,7 +288,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateHomework_WhenHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        public void UpdateHomework_WhenHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -304,7 +304,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateHomework_WhenUserDoNotHaveAccess_AuthorizationException()
+        public void UpdateHomework_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown()
         {
             //Given
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -328,7 +328,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteHomework_WhenHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        public void DeleteHomework_WhenHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -344,7 +344,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteHomework_WhenUserDoNotHaveAccess_AuthorizationException()
+        public void DeleteHomework_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown()
         {
             //Given
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -368,7 +368,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkByGroupId_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        public void GetHomeworkByGroupId_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
             var homeworkList = HomeworkData.GetListOfHomeworkDtoWithTask();
@@ -390,7 +390,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkByGroupId_WhenUserDoNotHaveAccess_AuthorizationException()
+        public void GetHomeworkByGroupId_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown()
         {
             //Given
             var group = GroupData.GetGroupDto();
@@ -411,7 +411,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkByTaskId_WhenTaskIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        public void GetHomeworkByTaskId_WhenTaskIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
             var task = TaskData.GetTaskDtoWithoutTags();

@@ -671,7 +671,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddMaterialToCourse_ExistingCourseIdAndMaterialIdIdPassed_AddMaterialToCourse()
+        public void AddMaterialToCourse_ExistingCourseIdAndMaterialIdIdPassed_MaterialAddedToCourse()
         {
             //Given
             const int courseId = 1;
@@ -691,7 +691,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteMaterialFromCourse_ExistingCourseIdAndMaterialIdIdPassed_DeleteMaterialFromCourse()
+        public void DeleteMaterialFromCourse_ExistingCourseIdAndMaterialIdIdPassed_MaterialRemovedFromCourse()
         {
             //Given
             const int courseId = 1;
@@ -711,7 +711,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddMaterialToCourse_WhenCourseIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        public void AddMaterialToCourse_WhenCourseIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
             var course = CourseData.GetCourseDto();
@@ -727,7 +727,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddMaterialToCourse_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        public void AddMaterialToCourse_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
             var course = CourseData.GetCourseDto();
@@ -745,7 +745,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteMaterialToCourse_WhenCourseIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        public void DeleteMaterialToCourse_WhenCourseIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
             var course = CourseData.GetCourseDto();
@@ -761,7 +761,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteMaterialToCourse_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundException()
+        public void DeleteMaterialToCourse_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
             var course = CourseData.GetCourseDto();

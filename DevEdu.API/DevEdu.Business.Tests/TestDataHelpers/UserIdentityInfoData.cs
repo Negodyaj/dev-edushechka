@@ -1,10 +1,11 @@
 ﻿using DevEdu.DAL.Enums;
 using System;
 using System.Collections.Generic;
+using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Tests
 {
-    public class UserTokenData
+    public class UserIdentityInfoData
     {
         public static UserIdentityInfo GetUserIdentityWithRole(Enum role)
         {
@@ -18,7 +19,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserIdentityInfo GetUserTokenWithAdminRole()
+        public static UserIdentityInfo GetUserIdentityWithAdminRole()
         {
             return new UserIdentityInfo
             {
@@ -30,7 +31,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserIdentityInfo GetUserTokenWithManagerRole()
+        public static UserIdentityInfo GetUserIdentityWithManagerRole()
         {
             return new UserIdentityInfo
             {
@@ -42,7 +43,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserIdentityInfo GetUserTokenWithMethodistRole()
+        public static UserIdentityInfo GetUserIdentityWithMethodistRole()
         {
             return new UserIdentityInfo
             {
@@ -54,7 +55,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserIdentityInfo GetUserTokenWithTeacherRole()
+        public static UserIdentityInfo GetUserIdentityWithTeacherRole()
         {
             return new UserIdentityInfo
             {
@@ -66,7 +67,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserIdentityInfo GetUserTokenWithTutorRole()
+        public static UserIdentityInfo GetUserIdentityWithTutorRole()
         {
             return new UserIdentityInfo
             {
@@ -78,7 +79,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserIdentityInfo GetUserTokenWithStudentRole()
+        public static UserIdentityInfo GetUserIdentityWithStudentRole()
         {
             return new UserIdentityInfo
             {
