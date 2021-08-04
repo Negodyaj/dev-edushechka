@@ -11,6 +11,20 @@ namespace DevEdu.Business.Tests
 
         public static int LessonId = 30;
 
+        public static LessonDto GetLessonDto()
+        {
+            return new LessonDto
+            {
+                Id = 6,
+                Date = DateTime.ParseExact("01.01.2021", _dateFormat, CultureInfo.InvariantCulture),
+                TeacherComment = "Comment",
+                Teacher = new UserDto
+                {
+                    Id = 10
+                }
+            };
+        }
+
         public static LessonDto GetAddedLessonDto()
         {
             return new LessonDto
@@ -29,7 +43,6 @@ namespace DevEdu.Business.Tests
         {
             return new LessonDto
             {
-                Id = LessonId,
                 Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                 TeacherComment = "Good",
                 LinkToRecord = "http://link.com"
@@ -183,13 +196,6 @@ namespace DevEdu.Business.Tests
 
         }
 
-        public static LessonDto GetLessonDto()
-        {
-            return new LessonDto
-            {
-                Id = 30
-            };
-        }
         public static UserDto GetUserDto()
         {
             return new UserDto

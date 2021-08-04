@@ -34,9 +34,9 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckTeacherExistence(int teacherId)
         {
-            var user = _userRepository.SelectUserById(teacherId);
-            if (user == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "teacher", teacherId));
+            var teacher = _userRepository.SelectUserById(teacherId);
+            if (teacher == default)
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(teacher), teacherId));
         }
 
         public void CheckUserAndTeacherAreSame(UserDto userIdentity, int teacherId)
@@ -45,53 +45,30 @@ namespace DevEdu.Business.ValidationHelpers
                 return;
 
             if (userIdentity.Id != teacherId)
-                throw new AuthorizationException(string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.Id, teacherId));
+                throw new ValidationException(string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.Id, teacherId));
         }
 
-        public void CheckUserRelatesToGroup(UserDto userIdentity, List<LessonDto> lessons, int groupId)
-        {
-            if (CheckerRole.IsAdmin(userIdentity.Roles))
-                return;
-
-            if (CheckerRole.IsStudent(userIdentity.Roles))
-            {
-                var studentGroups = _groupRepository.GetGroupsByStudentId(userIdentity.Id);
-                var result = studentGroups.FirstOrDefault(g => g.Id == groupId);
-                if (result == default)
-                {
-                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntRelateToEntity, userIdentity.Id, "group", groupId));
-                }
-            }
-            else if (CheckerRole.IsTeacher(userIdentity.Roles))
-            {
-                var result = lessons.FirstOrDefault(l => l.Teacher.Id == userIdentity.Id);
-                if (result == default )
-                {
-                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntRelateToEntity, userIdentity.Id, "group", groupId));
-                }
-            }
-        }
-
-        public void CheckUserRelatesToLesson(UserDto userIdentity, int lessonId)
+        public void CheckUserBelongsToLesson(UserDto userIdentity, int lessonId)
         {
             if (CheckerRole.IsAdmin(userIdentity.Roles))
                 return;
 
             var lesson = _lessonRepository.SelectLessonById(lessonId);
+
             if (CheckerRole.IsStudent(userIdentity.Roles))
             {
                 var studentGroups = _groupRepository.GetGroupsByStudentId(userIdentity.Id);
-                var result = studentGroups.Intersect(lesson.Groups);
-                if (result == default)
+                var result = studentGroups.Where(sg => (lesson.Groups).Any(lg => lg.Id == sg.Id));
+                if (result.Count() == 0)
                 {
-                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntRelateToEntity, userIdentity.Id, nameof(lesson), lesson.Id));
+                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.Id, lesson.Id));
                 }
             }
             else if(CheckerRole.IsTeacher(userIdentity.Roles))
             {
-                if(userIdentity.Id != lesson.Id)
+                if(userIdentity.Id != lesson.Teacher.Id)
                 {
-                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntRelateToEntity, userIdentity.Id, nameof(lesson), lesson.Id));
+                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.Id, lesson.Id));
 
                 }
             }

@@ -16,6 +16,6 @@
         public const string MinimumAllowedValueWithTwoParamsMessage = "{0} or {1} less than allowed value = {2}";
         public const string EntityWithEmailNotFoundMessage = "{0} with email = {1} was not found";
         public const string UserAndTeacherAreNotSame = "User with id = {0} and teacher with id = {1} are not the same";
-        public const string UserDoesntRelateToEntity = "User with id = {0} doesn't relate to {1} with id = {2}";
+        public const string UserDoesntBelongToLesson = "User with id {0} doesn`t belong to lesson with id {1}";
     }
 }

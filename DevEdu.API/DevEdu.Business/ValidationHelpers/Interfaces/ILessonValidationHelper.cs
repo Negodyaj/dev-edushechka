@@ -8,7 +8,6 @@ namespace DevEdu.Business.ValidationHelpers
         void CheckLessonExistence(int lessonId);
         void CheckTeacherExistence(int teacherId);
         void CheckUserAndTeacherAreSame(UserDto userIdentity, int teacherId);
-        void CheckUserRelatesToGroup(UserDto userDto, List<LessonDto> lessons, int groupId);
-        void CheckUserRelatesToLesson(UserDto userIdentity, int lessonId);
+        void CheckUserBelongsToLesson(UserDto userIdentity, int lessonId);
     }
 }
