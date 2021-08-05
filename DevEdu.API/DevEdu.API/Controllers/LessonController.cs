@@ -39,8 +39,7 @@ namespace DevEdu.API.Controllers
         {
             var lessonDto = _mapper.Map<LessonDto>(inputModel);
             var userIdentity = this.GetUserIdAndRoles();
-            var userDto = _mapper.Map<UserDto>(userIdentity);
-            var output = _lessonService.AddLesson(userDto, lessonDto, inputModel.TopicIds);
+            var output = _lessonService.AddLesson(userIdentity, lessonDto, inputModel.TopicIds);
             return _mapper.Map<LessonInfoOutputModel>(output);
         }
 
@@ -52,8 +51,7 @@ namespace DevEdu.API.Controllers
         public void DeleteLesson(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            var userDto = _mapper.Map<UserDto>(userIdentity);
-            _lessonService.DeleteLesson(userDto, id);
+            _lessonService.DeleteLesson(userIdentity, id);
         }
 
         // api/lesson/{id}
@@ -65,8 +63,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<LessonDto>(updateModel);
             var userIdentity = this.GetUserIdAndRoles();
-            var userDto = _mapper.Map<UserDto>(userIdentity);
-            var output = _lessonService.UpdateLesson(userDto, dto, id);
+            var output = _lessonService.UpdateLesson(userIdentity, dto, id);
             return _mapper.Map<LessonInfoOutputModel>(output);
         }
 
@@ -78,8 +75,7 @@ namespace DevEdu.API.Controllers
         public List<LessonInfoOutputModel> GetAllLessonsByGroupId(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            var userDto = _mapper.Map<UserDto>(userIdentity);
-            var dto = _lessonService.SelectAllLessonsByGroupId(userDto, id);
+            var dto = _lessonService.SelectAllLessonsByGroupId(userIdentity, id);
             return  _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
@@ -102,8 +98,7 @@ namespace DevEdu.API.Controllers
         public LessonInfoWithCommentsOutputModel GetAllLessonsWithComments(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            var userDto = _mapper.Map<UserDto>(userIdentity);
-            var dto = _lessonService.SelectLessonWithCommentsById(userDto, id);
+            var dto = _lessonService.SelectLessonWithCommentsById(userIdentity, id);
             return _mapper.Map<LessonInfoWithCommentsOutputModel>(dto);
         }
 
@@ -115,8 +110,7 @@ namespace DevEdu.API.Controllers
         public LessonInfoWithStudentsAndCommentsOutputModel GetAllLessonsWithStudentsAndComments(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            var userDto = _mapper.Map<UserDto>(userIdentity);
-            var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(userDto, id);
+            var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(userIdentity, id);
             return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel> (dto);
         }
 

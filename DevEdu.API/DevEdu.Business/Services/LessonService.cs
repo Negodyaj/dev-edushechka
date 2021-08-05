@@ -60,8 +60,8 @@ namespace DevEdu.Business.Services
 
         public void DeleteLesson(UserDto userIdentity, int id)
         {
-            _lessonValidationHelper.CheckLessonExistence(id);
-            _lessonValidationHelper.CheckUserBelongsToLesson(userIdentity, id);
+            var lesson = _lessonValidationHelper.CheckLessonExistence(id);
+            _lessonValidationHelper.CheckUserBelongsToLesson(userIdentity, lesson);
 
             _lessonRepository.DeleteLesson(id);
         }
@@ -76,14 +76,14 @@ namespace DevEdu.Business.Services
 
         public List<LessonDto> SelectAllLessonsByTeacherId(int teacherId)
         {
-            _lessonValidationHelper.CheckTeacherExistence(teacherId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(teacherId);
             return _lessonRepository.SelectAllLessonsByTeacherId(teacherId);
         }
                
         public LessonDto SelectLessonWithCommentsById(UserDto userIdentity, int id)
         {
-            _lessonValidationHelper.CheckLessonExistence(id);
-            _lessonValidationHelper.CheckUserBelongsToLesson(userIdentity, id);
+            var lesson = _lessonValidationHelper.CheckLessonExistence(id);
+            _lessonValidationHelper.CheckUserBelongsToLesson(userIdentity, lesson);
 
             LessonDto result = _lessonRepository.SelectLessonById(id);
             result.Comments = _commentRepository.SelectCommentsFromLessonByLessonId(id);
@@ -99,8 +99,8 @@ namespace DevEdu.Business.Services
 
         public LessonDto UpdateLesson(UserDto userIdentity, LessonDto lessonDto, int lessonId)
         {
-            _lessonValidationHelper.CheckLessonExistence(lessonId);
-            _lessonValidationHelper.CheckUserBelongsToLesson(userIdentity, lessonId);
+            var lesson = _lessonValidationHelper.CheckLessonExistence(lessonId);
+            _lessonValidationHelper.CheckUserBelongsToLesson(userIdentity, lesson);
 
             lessonDto.Id = lessonId;
             _lessonRepository.UpdateLesson(lessonDto);

@@ -25,20 +25,6 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static LessonDto GetAddedLessonDto()
-        {
-            return new LessonDto
-            {
-                Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
-                TeacherComment = "Good",
-                Teacher = new UserDto
-                {
-                    Id = 3
-                },
-                LinkToRecord = "http://link.com"
-            };
-        }
-
         public static LessonDto GetUpdatedLessonDto()
         {
             return new LessonDto

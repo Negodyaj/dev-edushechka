@@ -20,10 +20,6 @@ namespace DevEdu.Business.Tests
         private Mock<ITopicRepository> _topicRepository;
         private Mock<IGroupRepository> _groupRepository;
         private Mock<IUserRepository> _userRepository;
-        private UserValidationHelper _userValidationHelper;
-        private ILessonValidationHelper _lessonValidationHelper;
-        private ITopicValidationHelper _topicValidationHelper;
-        private IGroupValidationHelper _groupValidationHelper;
 
         private ILessonService _sut;
 
@@ -35,21 +31,22 @@ namespace DevEdu.Business.Tests
             _topicRepository = new Mock<ITopicRepository>();
             _groupRepository = new Mock<IGroupRepository>();
             _userRepository = new Mock<IUserRepository>();
-            _userValidationHelper = new UserValidationHelper(_userRepository.Object);
-            _lessonValidationHelper = new LessonValidationHelper(
-                _lessonRepository.Object, 
-                _groupRepository.Object, 
+
+            UserValidationHelper userValidationHelper = new UserValidationHelper(_userRepository.Object);
+            ILessonValidationHelper lessonValidationHelper = new LessonValidationHelper(
+                _lessonRepository.Object,
+                _groupRepository.Object,
                 _userRepository.Object
             );
-            _topicValidationHelper = new TopicValidationHelper(_topicRepository.Object);
-            _groupValidationHelper = new GroupValidationHelper(_groupRepository.Object);
+            ITopicValidationHelper topicValidationHelper = new TopicValidationHelper(_topicRepository.Object);
+            IGroupValidationHelper groupValidationHelper = new GroupValidationHelper(_groupRepository.Object);
 
             _sut = new LessonService(_lessonRepository.Object,
                     _commentRepository.Object,
-                    _userValidationHelper,
-                    _lessonValidationHelper,
-                    _topicValidationHelper,
-                    _groupValidationHelper);
+                    userValidationHelper,
+                    lessonValidationHelper,
+                    topicValidationHelper,
+                    groupValidationHelper);
         }
 
         [Test]
@@ -206,14 +203,11 @@ namespace DevEdu.Business.Tests
             //Given
             var userIdentity = UserData.GetTeacherIdentity();
             var lessonId = LessonData.LessonId;
-            var addedLesson = LessonData.GetAddedLessonDto();
+            var expectedLesson = LessonData.GetSelectedLessonDto();
             var topicIds = TopicData.GetListTopicId();
             var topics = TopicData.GetListTopicDto();
 
-            var expectedLesson = addedLesson;
-            expectedLesson.Id = lessonId;
-
-            _lessonRepository.Setup(x => x.AddLesson(addedLesson)).Returns(lessonId);
+            _lessonRepository.Setup(x => x.AddLesson(expectedLesson)).Returns(lessonId);
             for(int i = 0; i < topics.Count; i++)
             {
                 _topicRepository.Setup(x => x.GetTopic(topicIds[i])).Returns(topics[i]);
@@ -222,11 +216,11 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(expectedLesson);
 
             //When
-            var actualLesson = _sut.AddLesson(userIdentity, addedLesson, topicIds);
+            var actualLesson = _sut.AddLesson(userIdentity, expectedLesson, topicIds);
 
             //Then
             Assert.AreEqual(expectedLesson, actualLesson);
-            _lessonRepository.Verify(x => x.AddLesson(addedLesson), Times.Once);
+            _lessonRepository.Verify(x => x.AddLesson(expectedLesson), Times.Once);
             foreach (int topicId in topicIds)
             {
                 _topicRepository.Verify(x => x.GetTopic(topicId), Times.Once);
@@ -259,7 +253,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var userIdentity = UserData.GetTeacherIdentity();
-            var addedLesson = LessonData.GetAddedLessonDto();
+            var addedLesson = LessonData.GetSelectedLessonDto();
             var topicIds = new List<int>{1};
 
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicIds.First());
@@ -366,7 +360,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var teacherId = 3;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "teacher", teacherId);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "user", teacherId);
 
             _userRepository.Setup(x => x.SelectUserById(teacherId)).Returns(It.IsAny<UserDto>());
 
@@ -443,7 +437,7 @@ namespace DevEdu.Business.Tests
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Exactly(2));
+            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByStudentId(userIdentity.Id), Times.Once);
             _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lesson.Id), Times.Never);
             _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lesson.Id), Times.Never);
@@ -517,7 +511,7 @@ namespace DevEdu.Business.Tests
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Exactly(2));
+            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByStudentId(userIdentity.Id), Times.Never);
             _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lesson.Id), Times.Never);
             _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lesson.Id), Times.Never);
@@ -541,7 +535,7 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(expected, actual);
 
-            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Exactly(3));
+            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Exactly(2));
             _groupRepository.Verify(x => x.GetGroupsByStudentId(userIdentity.Id), Times.Never);
             _lessonRepository.Verify(x => x.UpdateLesson(updatedLesson), Times.Once);
         }
@@ -584,7 +578,7 @@ namespace DevEdu.Business.Tests
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Exactly(2));
+            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByStudentId(userIdentity.Id), Times.Never);
             _lessonRepository.Verify(x => x.UpdateLesson(lesson), Times.Never);
         }
@@ -604,7 +598,7 @@ namespace DevEdu.Business.Tests
             _sut.DeleteLesson(userIdentity, lessonId);
 
             //Then
-            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Exactly(2));
+            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByStudentId(userIdentity.Id), Times.Never);
             _lessonRepository.Verify(x => x.DeleteLesson(lessonId), Times.Once);
         }
@@ -646,7 +640,7 @@ namespace DevEdu.Business.Tests
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Exactly(2));
+            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByStudentId(userIdentity.Id), Times.Never);
             _lessonRepository.Verify(x => x.UpdateLesson(lesson), Times.Never);
         }

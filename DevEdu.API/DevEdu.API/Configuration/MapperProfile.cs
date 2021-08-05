@@ -45,7 +45,8 @@ namespace DevEdu.API.Configuration
             CreateMap<LessonInputModel, LessonDto>()
                 .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => new UserDto { Id = src.TeacherId }))
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)));
-            CreateMap<LessonUpdateInputModel, LessonDto>();
+            CreateMap<LessonUpdateInputModel, LessonDto>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<TagInputModel, TagDto>();
             CreateMap<TaskInputModel, TaskDto>();
             CreateMap<TopicInputModel, TopicDto>();
@@ -66,7 +67,6 @@ namespace DevEdu.API.Configuration
             CreateMap<UserSignInputModel, UserDto>();
             CreateMap<PaymentUpdateInputModel, PaymentDto>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)));
-            CreateMap<UserIdentityInfo, UserDto>();
         }
 
         private void CreateMappingFromDto()

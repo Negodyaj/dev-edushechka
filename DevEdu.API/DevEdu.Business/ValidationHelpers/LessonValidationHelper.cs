@@ -25,18 +25,12 @@ namespace DevEdu.Business.ValidationHelpers
             
         }
 
-        public void CheckLessonExistence(int lessonId)
+        public LessonDto CheckLessonExistence(int lessonId)
         {
             var lesson = _lessonRepository.SelectLessonById(lessonId);
             if (lesson == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(lesson), lessonId));
-        }
-
-        public void CheckTeacherExistence(int teacherId)
-        {
-            var teacher = _userRepository.SelectUserById(teacherId);
-            if (teacher == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(teacher), teacherId));
+            return lesson;
         }
 
         public void CheckUserAndTeacherAreSame(UserDto userIdentity, int teacherId)
@@ -48,12 +42,10 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new ValidationException(string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.Id, teacherId));
         }
 
-        public void CheckUserBelongsToLesson(UserDto userIdentity, int lessonId)
+        public void CheckUserBelongsToLesson(UserDto userIdentity, LessonDto lesson)
         {
             if (CheckerRole.IsAdmin(userIdentity.Roles))
                 return;
-
-            var lesson = _lessonRepository.SelectLessonById(lessonId);
 
             if (CheckerRole.IsStudent(userIdentity.Roles))
             {
@@ -69,7 +61,6 @@ namespace DevEdu.Business.ValidationHelpers
                 if(userIdentity.Id != lesson.Teacher.Id)
                 {
                     throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.Id, lesson.Id));
-
                 }
             }
         }

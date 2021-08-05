@@ -5,9 +5,8 @@ namespace DevEdu.Business.ValidationHelpers
 {
     public interface ILessonValidationHelper
     {
-        void CheckLessonExistence(int lessonId);
-        void CheckTeacherExistence(int teacherId);
+        LessonDto CheckLessonExistence(int lessonId);
         void CheckUserAndTeacherAreSame(UserDto userIdentity, int teacherId);
-        void CheckUserBelongsToLesson(UserDto userIdentity, int lessonId);
+        void CheckUserBelongsToLesson(UserDto userIdentity, LessonDto lesson);
     }
 }

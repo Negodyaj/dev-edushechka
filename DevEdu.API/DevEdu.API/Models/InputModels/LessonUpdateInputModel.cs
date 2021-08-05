@@ -11,5 +11,8 @@ namespace DevEdu.API.Models.InputModels
         [Required(ErrorMessage = LinkToRecordIdRequired)]
         [Url]
         public string LinkToRecord { get; set; }
+
+        [Required(ErrorMessage = DateRequired)]
+        public string Date { get; set; }
     }
 }
