@@ -44,7 +44,7 @@ namespace DevEdu.Business.Services
         public CourseDto GetFullCourseInfo(int id)
         {
             var course = GetCourse(id);
-            course.Tasks = _taskRepository.GetTaskByCourseId(course.Id);
+            course.Tasks = _taskRepository.GetTasksByCourseId(course.Id);
             course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
             course.Topics = _topicRepository.GetTopicsByCourseId(course.Id);
             return course;

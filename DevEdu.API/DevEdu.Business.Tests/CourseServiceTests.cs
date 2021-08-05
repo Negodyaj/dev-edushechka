@@ -83,7 +83,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(courseDto, dto);
             _courseRepositoryMock.Verify(x => x.GetCourse(courseId), Times.Once);
-            _taskRepositoryMock.Verify(x => x.GetTaskByCourseId(courseId), Times.Never);
+            _taskRepositoryMock.Verify(x => x.GetTasksByCourseId(courseId), Times.Never);
             _materialRepositoryMock.Verify(x => x.GetMaterialsByCourseId(courseId), Times.Never);
             _topicRepositoryMock.Verify(x => x.GetTopicsByCourseId(courseId), Times.Never);
         }
@@ -101,7 +101,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(courseDto, dto);
             _courseRepositoryMock.Verify(x => x.GetCourse(courseId), Times.Once);
-            _taskRepositoryMock.Verify(x => x.GetTaskByCourseId(courseId), Times.Once);
+            _taskRepositoryMock.Verify(x => x.GetTasksByCourseId(courseId), Times.Once);
             _materialRepositoryMock.Verify(x => x.GetMaterialsByCourseId(courseId), Times.Once);
             _topicRepositoryMock.Verify(x => x.GetTopicsByCourseId(courseId), Times.Once);
         }
@@ -122,7 +122,7 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Verify(x => x.GetCourses(), Times.Once);
             foreach(var course in actualCourseList)
             {
-                _taskRepositoryMock.Verify(x => x.GetTaskByCourseId(course.Id), Times.Never);
+                _taskRepositoryMock.Verify(x => x.GetTasksByCourseId(course.Id), Times.Never);
                 _materialRepositoryMock.Verify(x => x.GetMaterialsByCourseId(course.Id), Times.Never);
                 _topicRepositoryMock.Verify(x => x.GetTopicsByCourseId(course.Id), Times.Never);
             }
@@ -145,7 +145,7 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(updCourseDto, actualCourseDto);
             _courseRepositoryMock.Verify(x => x.UpdateCourse(courseDto), Times.Once);
-            _taskRepositoryMock.Verify(x => x.GetTaskByCourseId(courseId), Times.Never);
+            _taskRepositoryMock.Verify(x => x.GetTasksByCourseId(courseId), Times.Never);
             _materialRepositoryMock.Verify(x => x.GetMaterialsByCourseId(courseId), Times.Never);
             _topicRepositoryMock.Verify(x => x.GetTopicsByCourseId(courseId), Times.Never);
         }
