@@ -1,7 +1,7 @@
 ﻿using DevEdu.DAL.Enums;
 using System.Collections.Generic;
 
-namespace DevEdu.Business
+namespace DevEdu.Business.IdentityInfo
 {
     public class UserIdentityInfo
     {
