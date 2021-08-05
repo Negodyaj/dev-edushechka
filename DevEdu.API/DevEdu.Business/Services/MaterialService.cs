@@ -2,6 +2,7 @@
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Services
 {
@@ -36,7 +37,7 @@ namespace DevEdu.Business.Services
         public List<MaterialDto> GetAllMaterials(UserIdentityInfo user)
         {
             var allMaterials = _materialRepository.GetAllMaterials();
-            if (!(CheckerRole.IsAdmin(user.Roles) || CheckerRole.IsMethodist(user.Roles)))
+            if (!(user.IsAdmin() || user.IsMethodist()))
             {
                 return _materilaValidationHelper.GetMaterialsAllowedToUser(allMaterials, user.UserId);
             }
@@ -54,7 +55,7 @@ namespace DevEdu.Business.Services
         public MaterialDto GetMaterialByIdWithTags(int id, UserIdentityInfo user)
         {
             var dto = _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(id);
-            if (!(CheckerRole.IsAdmin(user.Roles) || CheckerRole.IsMethodist(user.Roles)))
+            if (!(user.IsAdmin() || user.IsMethodist()))
             {
                 _materilaValidationHelper.CheckUserAccessToMaterialForGetById(user.UserId, dto);
             }
@@ -84,9 +85,9 @@ namespace DevEdu.Business.Services
         public MaterialDto UpdateMaterial(int id, MaterialDto dto, UserIdentityInfo user)
         {
             var material = GetMaterialByIdWithCoursesAndGroups(id);
-            if (!CheckerRole.IsAdmin(user.Roles))
+            if (!user.IsAdmin())
             {
-                if(CheckerRole.IsMethodist(user.Roles))
+                if(user.IsMethodist())
                 {
                     _materilaValidationHelper.CheckMethodistAccessToMaterialForDeleteAndUpdate(user.UserId, material);
                 }
@@ -103,10 +104,10 @@ namespace DevEdu.Business.Services
 
         public void DeleteMaterial(int id, bool isDeleted, UserIdentityInfo user)
         {
-            var material = _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(id);
-            if (!CheckerRole.IsAdmin(user.Roles))
+            var material = GetMaterialByIdWithCoursesAndGroups(id);
+            if (!user.IsAdmin())
             {
-                if (CheckerRole.IsMethodist(user.Roles))
+                if (user.IsMethodist())
                 {
                     _materilaValidationHelper.CheckMethodistAccessToMaterialForDeleteAndUpdate(user.UserId, material);
                 }
@@ -129,7 +130,7 @@ namespace DevEdu.Business.Services
             _tagValidationHelper.CheckTagExistence(tagId);
 
             var allMaterialsByTag = _materialRepository.GetMaterialsByTagId(tagId);
-            if (!(CheckerRole.IsAdmin(user.Roles) || CheckerRole.IsMethodist(user.Roles)))
+            if (!(user.IsAdmin() || user.IsMethodist()))
             {
                 return _materilaValidationHelper.GetMaterialsAllowedToUser(allMaterialsByTag, user.UserId);
             }
