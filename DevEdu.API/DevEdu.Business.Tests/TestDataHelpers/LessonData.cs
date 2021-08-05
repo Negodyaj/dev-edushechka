@@ -58,13 +58,7 @@ namespace DevEdu.Business.Tests
                     Id = 2,
                     Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                     TeacherComment = "Good",
-                    Teacher = new UserDto {
-                        Id = 3,
-                        FirstName = "Olga",
-                        LastName = "Ivanovna",
-                        Email = "olga@mail.ru",
-                        Photo = " http://photo.jpg"
-                    },
+                    Teacher = UserData.GetTeacherDto(),
                     Topics = new List<TopicDto>()
                     {
                         new TopicDto{
@@ -78,13 +72,7 @@ namespace DevEdu.Business.Tests
                     Id = 5,
                     Date = DateTime.ParseExact("12.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                     TeacherComment = "Good",
-                    Teacher = new UserDto {
-                        Id = 3,
-                        FirstName = "Olga",
-                        LastName = "Ivanovna",
-                        Email = "olga@mail.ru",
-                        Photo = " http://photo.jpg"
-                    },
+                    Teacher = UserData.GetTeacherDto(),
                     Topics = new List<TopicDto>()
                     {
                         new TopicDto{

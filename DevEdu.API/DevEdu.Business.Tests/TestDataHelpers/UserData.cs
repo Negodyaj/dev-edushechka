@@ -55,47 +55,59 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserDto GetAdminIdentity()
-        {
-            return new UserDto
-            {
-                Id = 1,
-                Roles = new List<Role> { Role.Admin }
-            };
-        }
-
-        public static UserDto GetManagerIdentity()
-        {
-            return new UserDto
-            {
-                Id = 10,
-                Roles = new List<Role> { Role.Manager }
-            };
-        }
-
-        public static UserDto GetMethodistIdentity()
-        {
-            return new UserDto
-            {
-                Id = 8,
-                Roles = new List<Role> { Role.Methodist }
-            };
-        }
-
-        public static UserDto GetTeacherIdentity()
+        public static UserDto GetTeacherDto()
         {
             return new UserDto
             {
                 Id = 3,
+                FirstName = "Olga",
+                LastName = "Ivanovna",
+                Email = "olga@mail.ru",
+                Photo = " http://photo.jpg"
+            };
+        }
+
+        public static UserIdentityInfo GetAdminIdentity()
+        {
+            return new UserIdentityInfo
+            {
+                UserId = 1,
+                Roles = new List<Role> { Role.Admin }
+            };
+        }
+
+        public static UserIdentityInfo GetManagerIdentity()
+        {
+            return new UserIdentityInfo
+            {
+                UserId = 10,
+                Roles = new List<Role> { Role.Manager }
+            };
+        }
+
+        public static UserIdentityInfo GetMethodistIdentity()
+        {
+            return new UserIdentityInfo
+            {
+                UserId = 8,
+                Roles = new List<Role> { Role.Methodist }
+            };
+        }
+
+        public static UserIdentityInfo GetTeacherIdentity()
+        {
+            return new UserIdentityInfo
+            {
+                UserId = 3,
                 Roles = new List<Role> { Role.Teacher }
             };
         }
 
-        public static UserDto GetStudentIdentity()
+        public static UserIdentityInfo GetStudentIdentity()
         {
-            return new UserDto
+            return new UserIdentityInfo
             {
-                Id = 50,
+                UserId = 50,
                 Roles = new List<Role> { Role.Student }
             };
         }

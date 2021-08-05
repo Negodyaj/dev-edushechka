@@ -2,7 +2,6 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace DevEdu.Business.ValidationHelpers
@@ -33,34 +32,34 @@ namespace DevEdu.Business.ValidationHelpers
             return lesson;
         }
 
-        public void CheckUserAndTeacherAreSame(UserDto userIdentity, int teacherId)
+        public void CheckUserAndTeacherAreSame(UserIdentityInfo userIdentity, int teacherId)
         {
             if (CheckerRole.IsAdmin(userIdentity.Roles))
                 return;
 
-            if (userIdentity.Id != teacherId)
-                throw new ValidationException(string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.Id, teacherId));
+            if (userIdentity.UserId != teacherId)
+                throw new ValidationException(string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.UserId, teacherId));
         }
 
-        public void CheckUserBelongsToLesson(UserDto userIdentity, LessonDto lesson)
+        public void CheckUserBelongsToLesson(UserIdentityInfo userIdentity, LessonDto lesson)
         {
             if (CheckerRole.IsAdmin(userIdentity.Roles))
                 return;
 
             if (CheckerRole.IsStudent(userIdentity.Roles))
             {
-                var studentGroups = _groupRepository.GetGroupsByStudentId(userIdentity.Id);
+                var studentGroups = _groupRepository.GetGroupsByUserId(userIdentity.UserId);
                 var result = studentGroups.Where(sg => (lesson.Groups).Any(lg => lg.Id == sg.Id));
                 if (result.Count() == 0)
                 {
-                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.Id, lesson.Id));
+                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id));
                 }
             }
             else if(CheckerRole.IsTeacher(userIdentity.Roles))
             {
-                if(userIdentity.Id != lesson.Teacher.Id)
+                if(userIdentity.UserId != lesson.Teacher.Id)
                 {
-                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.Id, lesson.Id));
+                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id));
                 }
             }
         }

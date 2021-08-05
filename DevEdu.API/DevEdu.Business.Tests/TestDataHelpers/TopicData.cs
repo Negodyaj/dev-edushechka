@@ -51,5 +51,10 @@ namespace DevEdu.Business.Tests
 
             };
         }
+
+        public static List<int> GetListTopicId()
+        {
+            return new List<int> { 6, 7, 8 };
+        }
     }
 }

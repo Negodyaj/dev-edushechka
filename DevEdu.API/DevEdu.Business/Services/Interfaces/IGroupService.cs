@@ -22,6 +22,5 @@ namespace DevEdu.Business.Services
         List<GroupTaskDto> GetTasksByGroupId(int groupId);
         GroupTaskDto GetGroupTask(int id, int taskId);
         GroupTaskDto UpdateGroupTask(int groupId, int taskId, GroupTaskDto groupTaskDto);
-        List<GroupDto> GetGroupsByStudentId(int studentId);
     }
 }
