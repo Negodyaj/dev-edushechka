@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Enums;
+﻿using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
@@ -9,16 +10,22 @@ namespace DevEdu.Business.Services
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IGroupValidationHelper _groupValidationHelper;
+        private readonly ILessonValidationHelper _lessonValidationHelper;
+        private readonly IUserValidationHelper _userValidationHelper;
 
-        public GroupService(IGroupRepository groupRepository)
-        {
-            _groupRepository = groupRepository;
-        }
+        public GroupService(IGroupRepository groupRepository,
+            IUserRepository userRepository,
+            IGroupValidationHelper groupValidationHelper,
+            ILessonValidationHelper lessonValidationHelper,
+            IUserValidationHelper userValidationHelper)
 
-        public GroupService(IGroupRepository groupRepository, IUserRepository userRepository)
         {
             _groupRepository = groupRepository;
             _userRepository = userRepository;
+            _groupValidationHelper = groupValidationHelper;
+            _lessonValidationHelper = lessonValidationHelper;
+            _userValidationHelper = userValidationHelper;
         }
 
         public int AddGroup(GroupDto groupDto) => _groupRepository.AddGroup(groupDto);
@@ -36,8 +43,6 @@ namespace DevEdu.Business.Services
         
         public List<GroupDto> GetGroups() => _groupRepository.GetGroups();
 
-        public int AddGroupLesson(int groupId, int lessonId) => _groupRepository.AddGroupToLesson(groupId, lessonId);
-
         public int RemoveGroupLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
 
         public GroupDto UpdateGroup(int id, GroupDto groupDto) => _groupRepository.UpdateGroup(id, groupDto);
@@ -46,8 +51,16 @@ namespace DevEdu.Business.Services
         public int AddGroupMaterialReference(int groupId, int materialId) => _groupRepository.AddGroupMaterialReference(groupId, materialId);
 
         public int RemoveGroupMaterialReference(int groupId, int materialId) => _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
-        public int AddGroupToLesson(int groupId, int lessonId) => _groupRepository.AddGroupToLesson(groupId, lessonId);
-        public int RemoveGroupFromLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupFromLesson(groupId, lessonId);  
+        public int AddGroupToLesson(int groupId, int lessonId)
+        {
+            CheckGroupAndLessonExistence(groupId, lessonId);
+            return  _groupRepository.AddGroupToLesson(groupId, lessonId);
+        }
+        public int RemoveGroupFromLesson(int groupId, int lessonId)
+        {
+            CheckGroupAndLessonExistence(groupId, lessonId);
+            return _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
+        }
         public void AddUserToGroup(int groupId, int userId, int roleId) => _groupRepository.AddUserToGroup(groupId, userId, roleId);
 
         public void DeleteUserFromGroup(int groupId, int userId) => _groupRepository.DeleteUserFromGroup(userId, groupId);
@@ -71,6 +84,12 @@ namespace DevEdu.Business.Services
             dto.Task = new TaskDto { Id = taskId };
             _groupRepository.UpdateGroupTask(dto);
             return _groupRepository.GetGroupTask(groupId, taskId);
+        }
+
+        private void CheckGroupAndLessonExistence(int groupId, int lessonId)
+        {
+            _groupValidationHelper.CheckGroupExistence(groupId);
+            _lessonValidationHelper.CheckLessonExistence(lessonId);
         }
     }
 }

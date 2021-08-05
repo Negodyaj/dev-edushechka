@@ -9,13 +9,10 @@ using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
-using DevEdu.API.Configuration.ExceptionResponses;
-using System;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using DevEdu.API.Extensions;
 using DevEdu.DAL.Enums;
 using DevEdu.API.Common;
+using System.Security.Claims;
+using DevEdu.API.Extensions;
 
 namespace DevEdu.API.Controllers
 {
@@ -26,7 +23,7 @@ namespace DevEdu.API.Controllers
         private readonly IMapper _mapper;
         private readonly ICourseRepository _courseRepository;
         private readonly ICourseService _courseService;
-        //private readonly ClaimsIdentity _claimsIdentity;
+        private readonly ClaimsIdentity _claimsIdentity;
 
         public CourseController(
             IMapper mapper,
@@ -47,7 +44,6 @@ namespace DevEdu.API.Controllers
 
         public CourseInfoShortOutputModel GetCourseSimple(int id)
         {
-            //var userToken = this.GetUserIdAndRoles();
             var course = _courseService.GetCourse(id);
             return _mapper.Map<CourseInfoShortOutputModel>(course);
         }
@@ -59,8 +55,8 @@ namespace DevEdu.API.Controllers
 
         public CourseInfoFullOutputModel GetCourseFull(int id)
         {
-            //var userId = Convert.ToInt32(_claimsIdentity.FindFirst(JwtRegisteredClaimNames.NameId)?.Value);
-            var course = _courseService.GetFullCourseInfo(id);
+            var userToken = this.GetUserIdAndRoles();
+            var course = _courseService.GetFullCourseInfo(id, userToken);
             return _mapper.Map<CourseInfoFullOutputModel>(course);
         }
 

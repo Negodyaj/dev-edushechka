@@ -4,7 +4,7 @@ namespace DevEdu.Business.ValidationHelpers
 {
     public interface ICourseValidationHelper
     {
-        void CheckCourseExistence(CourseDto course);
+        CourseDto CheckCourseExistence(int courseId);
         void CourseAccessValidate(CourseDto dto, int userId);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
@@ -35,33 +36,41 @@ namespace DevEdu.Business.Services
 
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
 
-        public void DeleteCourse(int id) => _courseRepository.GetCourse(id);
+        public void DeleteCourse(int id)
+        {
+            _courseValidation.CheckCourseExistence(id);
+            _courseRepository.DeleteCourse(id);
+        }
 
         public CourseDto GetCourse(int id)
         {
-            CourseDto course = _courseRepository.GetCourse(id);
-            _courseValidation.CheckCourseExistence(course);
+            var course = _courseRepository.GetCourse(id);
+            _courseValidation.CheckCourseExistence(course.Id);
             return course;
         }
-        public CourseDto GetFullCourseInfo(int id) 
+        public CourseDto GetFullCourseInfo(int id, UserDto userToken) 
         {
             var course = GetCourse(id);
+            if (userToken.Roles.Contains(Role.Admin) ||
+                userToken.Roles.Contains(Role.Teacher) ||
+                userToken.Roles.Contains(Role.Tutor))
+
             course.Tasks = _taskRepository.GetTaskByCourseId(course.Id);
             course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
-            course.Groups = _groupRepository.GetGroupByCourseId(course.Id);
+
+            if (userToken.Roles.Contains(Role.Admin) ||
+                userToken.Roles.Contains(Role.Teacher) ||
+                userToken.Roles.Contains(Role.Tutor) ||
+                userToken.Roles.Contains(Role.Methodist))
+                    course.Groups = _groupRepository.GetGroupByCourseId(course.Id);
             return course;
 
-        }
-        public List<CourseDto> GetCoursesForAdmin()
-        {
-            var courses = _courseRepository.GetCourses();
-            return courses;
         }
         public List<CourseDto> GetCourses() => _courseRepository.GetCourses();
 
         public void UpdateCourse(int id, CourseDto courseDto)
         {
-            courseDto.Id = id;
+            var checkedCourse = _courseValidation.CheckCourseExistence(id);
             _courseRepository.UpdateCourse(courseDto);
         }
 

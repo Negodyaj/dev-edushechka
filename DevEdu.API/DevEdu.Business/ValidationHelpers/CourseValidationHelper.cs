@@ -14,10 +14,13 @@ namespace DevEdu.Business.ValidationHelpers
             _courseRepository = courseRepository;
         }
 
-        public void CheckCourseExistence(CourseDto course)
+        public CourseDto CheckCourseExistence(int courseId)
         {
+            var course = _courseRepository.GetCourse(courseId);
             if (course == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(course), course.Id));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(course), courseId));
+
+            return course;
         }
 
         public void CourseAccessValidate(CourseDto dto, int userId)
