@@ -1,6 +1,7 @@
 using DevEdu.API.Common;
 using DevEdu.API.Configuration;
 using DevEdu.Business.Configuration;
+using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
@@ -80,13 +81,14 @@ namespace DevEdu.API
 
             services.AddMvc()
 
-          .ConfigureApiBehaviorOptions(options =>
-          {
-              options.InvalidModelStateResponseFactory = actionContext =>
-              {
-                  return CustomErrorResponse(actionContext);
-              };
-          });
+                  .ConfigureApiBehaviorOptions(options =>
+                  {
+                   //   options.SuppressModelStateInvalidFilter = true;
+                      options.InvalidModelStateResponseFactory = actionContext =>
+                      {
+                          return CustomErrorResponse(actionContext);
+                      };
+                  });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -132,10 +134,10 @@ namespace DevEdu.API
             return new UnprocessableEntityObjectResult(actionContext.ModelState
                 
              .Where(modelError => modelError.Value.Errors.Count > 0)
-             .Select(modelError => new Error
+             .Select(modelError => new ValidationException
              {
-                 ErrorField = modelError.Key,
-                 ErrorDescription = modelError.Value.Errors.FirstOrDefault().ErrorMessage
+                 Message = modelError.Key,
+                 Description = modelError.Value.Errors.FirstOrDefault().ErrorMessage
              }).ToList());
         }
 
