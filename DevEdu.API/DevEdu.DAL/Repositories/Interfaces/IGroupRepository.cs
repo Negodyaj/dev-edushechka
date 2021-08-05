@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DevEdu.DAL.Enums;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
@@ -25,6 +25,7 @@ namespace DevEdu.DAL.Repositories
         void UpdateGroupTask(GroupTaskDto groupTaskDto);
         public List<GroupDto> GetGroupsByMaterialId(int id);
         int GetPresentGroupForStudentByUserId(int userId);
-        List<GroupDto> GetGroupsByStudentId(int studentId);
+        public List<GroupDto> GetGroupsByTaskId(int taskId);
+        public List<GroupDto> GetGroupsByUserId(int userId);
     }
 }

@@ -16,7 +16,8 @@ namespace DevEdu.DAL.Repositories
         private const string _groupSelectAllProcedure = "dbo.Group_SelectAll";
         private const string _groupUpdateByIdProcedure = "dbo.Group_UpdateById";
         private const string _groupUpdateGroupStatusProcedure = "dbo.Group_UpdateGroupStatus";
-
+        private const string _groupSelectAllByTaskIdProcedure = "dbo.Group_SelectAllByTaskId";
+        private const string _groupSelectGroupsByUserIdProcedure = "dbo.Group_SelectAllByUserId";
 
         private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
         private const string _userGroupDeleteProcedure = "dbo.Tag_Delete";
@@ -308,6 +309,44 @@ namespace DevEdu.DAL.Repositories
                 )
                 .ToList();
         }
+
+        public List<GroupDto> GetGroupsByTaskId(int taskId)
+        {
+            GroupDto result;
+            return _connection
+                .Query<GroupDto, GroupStatus, GroupDto>(
+                    _groupSelectAllByTaskIdProcedure,
+                    (group, groupStatus) =>
+                    {
+                        result = group;
+                        result.GroupStatus = groupStatus;
+                        return result;
+                    },
+                    new { taskId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+
+        public List<GroupDto> GetGroupsByUserId(int userId)
+        {
+            GroupDto result;
+            return _connection
+                .Query<GroupDto, GroupStatus, GroupDto>(
+                    _groupSelectGroupsByUserIdProcedure,
+                    (group, groupStatus) =>
+                    {
+                        result = group;
+                        result.GroupStatus = groupStatus;
+                        return result;
+                    },
+                    new { userId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }  
 
         public int GetPresentGroupForStudentByUserId(int userId)
         {
