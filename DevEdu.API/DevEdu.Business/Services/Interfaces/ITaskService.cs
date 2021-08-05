@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DevEdu.DAL.Enums;
+using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.Services
