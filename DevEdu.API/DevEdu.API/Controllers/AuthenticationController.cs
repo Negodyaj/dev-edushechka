@@ -30,7 +30,6 @@ namespace DevEdu.API.Controllers
         [HttpPost("/register")]
         [ProducesResponseType(typeof(UserExistingFullInfoOutPutModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public UserExistingFullInfoOutPutModel Register([FromBody] UserInsertInputModel model)
         {
@@ -43,7 +42,6 @@ namespace DevEdu.API.Controllers
 
         [HttpPost("/sign-in")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public string SignIn(UserSignInputModel model)
