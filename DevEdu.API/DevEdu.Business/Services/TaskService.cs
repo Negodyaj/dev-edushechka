@@ -129,7 +129,7 @@ namespace DevEdu.Business.Services
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var tasks = _taskRepository.GetTasks();
             var allowedTaskDtos = new List<TaskDto>();
-            if (!userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Admin))
                 return tasks;
             foreach (var task in tasks)
             {
