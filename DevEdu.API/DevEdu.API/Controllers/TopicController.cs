@@ -30,6 +30,10 @@ namespace DevEdu.API.Controllers
         //  api/topic/{id}
         [HttpGet("{id}")]
         [Description("Get topic by id")]
+
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(TopicOutputModel), StatusCodes.Status200OK)]
         public TopicOutputModel GetTopicById(int id)
         {
@@ -39,6 +43,9 @@ namespace DevEdu.API.Controllers
 
         [HttpGet]
         [Description("Get all topics")]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(List<TopicOutputModel>), StatusCodes.Status200OK)]
         public List<TopicOutputModel> GetAllTopics()
         {
@@ -47,8 +54,10 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/topic
+        [AuthorizeRoles(Role.Methodist, Role.Manager)]
         [HttpPost]
         [Description("Add topic")]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(TopicOutputModel), (StatusCodes.Status201Created))]
         public TopicOutputModel AddTopic([FromBody] TopicInputModel model)
         {
@@ -58,17 +67,25 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/topic/{id}
+        [AuthorizeRoles(Role.Methodist, Role.Manager)]
         [HttpDelete("{id}")]
         [Description("Delete topic")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteTopic(int id)
         {
             _topicService.DeleteTopic(id);
         }
 
         //  api/topic/{id}
+        [AuthorizeRoles(Role.Methodist, Role.Manager)]
         [HttpPut("{id}")]
         [Description("Update topic")]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(TopicOutputModel), StatusCodes.Status200OK)]
         public TopicOutputModel UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
