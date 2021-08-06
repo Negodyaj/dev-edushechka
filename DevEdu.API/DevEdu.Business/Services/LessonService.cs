@@ -89,7 +89,7 @@ namespace DevEdu.Business.Services
 
         public void DeleteTopicFromLesson(int lessonId, int topicId)
         {
-            _lessonValidationHelper.CheckLessonExistence(lessonId);
+            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             _topicValidationHelper.CheckTopicExistence(topicId);
             if(_lessonRepository.DeleteTopicFromLesson(lessonId, topicId) == 0)
             {
@@ -99,9 +99,9 @@ namespace DevEdu.Business.Services
 
         public void AddTopicToLesson(int lessonId, int topicId)
         {
-            _lessonValidationHelper.CheckLessonExistence(lessonId);
+            var lesson = _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             _topicValidationHelper.CheckTopicExistence(topicId);
-            _lessonValidationHelper.CheckTopicLessonReferenceIsUnique(lessonId, topicId);
+            _lessonValidationHelper.CheckTopicLessonReferenceIsUnique(lesson, topicId);
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
         }
 
@@ -129,8 +129,8 @@ namespace DevEdu.Business.Services
 
         public void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
-            _userValidationHelper.CheckUserExistence(userId);
-            _lessonValidationHelper.CheckLessonExistence(lessonId);
+            //_userValidationHelper.CheckUserExistence(userId);
+            //_lessonValidationHelper.CheckLessonExistence(lessonId);
 
             // check if user relates to lesson
             /*

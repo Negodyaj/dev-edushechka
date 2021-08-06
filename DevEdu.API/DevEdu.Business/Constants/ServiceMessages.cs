@@ -12,5 +12,6 @@
         public const string DuplicateValuesProvided = "Duplicate Ids for {0} were provided";
         public const string DuplicateTagsValuesProvided = "Tags with same Ids were provided";
         public const string AccessToMaterialDenied = "User with id = {0} doesn't have access to material with id = {1}";
+        public const string UserWithRoleDoesntBelongToGroup = "{0} with id {1} doesn`t belong to group with id {2}";
     }
 }

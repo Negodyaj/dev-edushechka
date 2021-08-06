@@ -77,7 +77,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<GroupDto> GetGroupsDto()
+        public static List<GroupDto> GetGroupsDtos()
         {
             return new List<GroupDto>
             {
@@ -144,6 +144,76 @@ namespace DevEdu.Business.Tests
                     Tutors = null,
                     IsDeleted = false
                 }                
+            };
+        }
+
+        public static List<GroupDto> GetAnotherGroupsDtos()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto
+                {
+                    Id = 1,
+                    Name = "Котейка",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Ололошки",
+                        Description = "Курс для котиков",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Понедельник 10-20",
+                    PaymentPerMonth = 5479.0M,
+                    Students = null,
+                    Teachers = null,
+                    Tutors = null,
+                    IsDeleted = false
+                },
+                new GroupDto
+                {
+                    Id = 1,
+                    Name = "Котейка",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Ололошки",
+                        Description = "Курс для котиков",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Понедельник 10-20",
+                    PaymentPerMonth = 5479.0M,
+                    Students = null,
+                    Teachers = null,
+                    Tutors = null,
+                    IsDeleted = false
+                },
+                new GroupDto
+                {
+                    Id = 1,
+                    Name = "Котейка",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Ололошки",
+                        Description = "Курс для котиков",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Понедельник 10-20",
+                    PaymentPerMonth = 5479.0M,
+                    Students = null,
+                    Teachers = null,
+                    Tutors = null,
+                    IsDeleted = false
+                }
             };
         }
 

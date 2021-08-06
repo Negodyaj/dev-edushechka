@@ -65,7 +65,7 @@ namespace DevEdu.Business.Tests
         public void GetGroups_NotParams_ReturnListGroupDto()
         {
             //Given
-            var groupDtos = GroupData.GetGroupsDto();
+            var groupDtos = GroupData.GetGroupsDtos();
 
             _groupRepoMock.Setup(x => x.GetGroups()).Returns(groupDtos);
 

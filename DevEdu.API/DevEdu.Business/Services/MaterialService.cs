@@ -3,6 +3,8 @@ using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.Business.IdentityInfo;
+using System.Linq;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Services
 {
@@ -15,6 +17,7 @@ namespace DevEdu.Business.Services
         private readonly ITagValidationHelper _tagValidationHelper;
         private readonly ICourseValidationHelper _courseValidationHelper;
         private readonly IMaterialValidationHelper _materilaValidationHelper;
+        private readonly IUserValidationHelper _useraValidationHelper;
 
         public MaterialService(
             IMaterialRepository materialRepository,
@@ -23,7 +26,8 @@ namespace DevEdu.Business.Services
             IGroupValidationHelper groupValidationHelper,
             ITagValidationHelper tagValidationHelper,
             ICourseValidationHelper courseValidationHelper,
-            IMaterialValidationHelper materilaValidationHelper)
+            IMaterialValidationHelper materilaValidationHelper,
+            IUserValidationHelper useraValidationHelper)
         {
             _materialRepository = materialRepository;
             _courseRepository = courseRepository;
@@ -32,6 +36,7 @@ namespace DevEdu.Business.Services
             _tagValidationHelper = tagValidationHelper;
             _courseValidationHelper = courseValidationHelper;
             _materilaValidationHelper = materilaValidationHelper;
+            _useraValidationHelper = useraValidationHelper;
         }
 
         public List<MaterialDto> GetAllMaterials(UserIdentityInfo user)
@@ -62,10 +67,11 @@ namespace DevEdu.Business.Services
             return dto;
         }
 
-        public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups)
+        public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups, int userId)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(groups, nameof(groups));
             groups.ForEach(group => _groupValidationHelper.CheckGroupExistence(group));
+            groups.ForEach(group => _useraValidationHelper.CheckUserBelongToGroup(group, userId, Role.Teacher));
 
             var materialId = AddMaterial(dto, tags);
             groups.ForEach(group => _groupRepository.AddGroupMaterialReference(group, materialId));
@@ -85,17 +91,7 @@ namespace DevEdu.Business.Services
         public MaterialDto UpdateMaterial(int id, MaterialDto dto, UserIdentityInfo user)
         {
             var material = GetMaterialByIdWithCoursesAndGroups(id);
-            if (!user.IsAdmin())
-            {
-                if(user.IsMethodist())
-                {
-                    _materilaValidationHelper.CheckMethodistAccessToMaterialForDeleteAndUpdate(user.UserId, material);
-                }
-                else
-                {
-                    _materilaValidationHelper.CheckTeacherAccessToMaterialForDeleteAndUpdate(user.UserId, material);
-                }
-            }
+            CheckAccessToMaterialByRole(material, user);
 
             dto.Id = id;
             _materialRepository.UpdateMaterial(dto);
@@ -105,17 +101,7 @@ namespace DevEdu.Business.Services
         public void DeleteMaterial(int id, bool isDeleted, UserIdentityInfo user)
         {
             var material = GetMaterialByIdWithCoursesAndGroups(id);
-            if (!user.IsAdmin())
-            {
-                if (user.IsMethodist())
-                {
-                    _materilaValidationHelper.CheckMethodistAccessToMaterialForDeleteAndUpdate(user.UserId, material);
-                }
-                else
-                {
-                    _materilaValidationHelper.CheckTeacherAccessToMaterialForDeleteAndUpdate(user.UserId, material);
-                }
-            }
+            CheckAccessToMaterialByRole(material, user);
             _materialRepository.DeleteMaterial(id, isDeleted);
         }
 
@@ -148,6 +134,21 @@ namespace DevEdu.Business.Services
             var materialId = _materialRepository.AddMaterial(dto);
             tags.ForEach(tag => _materialRepository.AddTagToMaterial(materialId, tag));
             return materialId;
+        }
+
+        private void CheckAccessToMaterialByRole(MaterialDto material, UserIdentityInfo user)
+        {
+            if (!user.IsAdmin())
+            {
+                if (user.IsMethodist())
+                {
+                    _materilaValidationHelper.CheckMethodistAccessToMaterialForDeleteAndUpdate(user.UserId, material);
+                }
+                else
+                {
+                    _materilaValidationHelper.CheckTeacherAccessToMaterialForDeleteAndUpdate(user.UserId, material);
+                }
+            }
         }
     }
 }

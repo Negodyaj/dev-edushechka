@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Extensions;
+using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {
@@ -33,10 +34,13 @@ namespace DevEdu.API.Controllers
         [HttpPost("with-groups")]
         [Description("Add material with groups")]
         [ProducesResponseType(typeof(MaterialInfoWithGroupsOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public MaterialInfoWithGroupsOutputModel AddMaterialWithGroups([FromBody] MaterialWithGroupsInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            int id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds);
+            int id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserId());
             dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
             return _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
         }
@@ -46,6 +50,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("with-courses")]
         [Description("Add material with courses")]
         [ProducesResponseType(typeof(MaterialInfoWithCoursesOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public MaterialInfoWithCoursesOutputModel AddMaterialWithCourses([FromBody] MaterialWithCoursesInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
@@ -59,6 +66,7 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         [Description("Get all materials with tags")]
         [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public List<MaterialInfoOutputModel> GetAllMaterials()
         {
             var user = this.GetUserIdAndRoles();
@@ -71,6 +79,8 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}/full-output-model")]
         [Description("Get material by id with tags, courses and groups")]
         [ProducesResponseType(typeof(MaterialInfoFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public MaterialInfoFullOutputModel GetMaterialByIdWithCoursesAndGroups(int id)
         {
             var dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
@@ -82,6 +92,8 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}/short-output-model")]
         [Description("Get material by id with tags")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public MaterialInfoOutputModel GetMaterialByIdWithTags(int id)
         {
             var user = this.GetUserIdAndRoles();
@@ -94,6 +106,8 @@ namespace DevEdu.API.Controllers
         [HttpPut("{id}")]
         [Description("Update material by id")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
         {
             var user = this.GetUserIdAndRoles();
@@ -107,6 +121,8 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}/isDeleted/{isDeleted}")]
         [Description("Delete material")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteMaterial(int id, bool isDeleted)
         {
             var user = this.GetUserIdAndRoles();
@@ -138,6 +154,8 @@ namespace DevEdu.API.Controllers
         [HttpGet("by-tag/{tagId}")]
         [Description("Get materials by tag id")]
         [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<MaterialInfoOutputModel> GetMaterialsByTagId(int tagId)
         {
             var user = this.GetUserIdAndRoles();

@@ -45,7 +45,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             if (material.Groups == null || 
                 material.Groups.Count == 0 || 
-                GetMaterialAllowedToUserByGroup(material.Id, userId) == null) 
+                GetMaterialIfAllowedToUserByGroup(material, userId) == null) 
             {
                 throw new AuthorizationException(string.
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
@@ -54,8 +54,8 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckUserAccessToMaterialForGetById(int userId, MaterialDto material)
         {
-            if (GetMaterialAllowedToUserByGroup(material.Id, userId) == null &&
-                 GetMaterialAllowedToUserByCourse(material.Id, userId) == null)
+            if (GetMaterialIfAllowedToUserByGroup(material, userId) == null &&
+                 GetMaterialIfAllowedToUserByCourse(material, userId) == null)
             {
                 throw new AuthorizationException(string.
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
@@ -64,9 +64,9 @@ namespace DevEdu.Business.ValidationHelpers
         public List<MaterialDto> GetMaterialsAllowedToUser(List<MaterialDto> materials, int userId)
         {
             var materialDtos = new List<MaterialDto>();
-            materials.ForEach(m => materialDtos.Add(GetMaterialAllowedToUserByGroup(m.Id, userId)));
-            materials.ForEach(m => materialDtos.Add(GetMaterialAllowedToUserByCourse(m.Id, userId)));
-            var result = materialDtos.Where(x => x != null).GroupBy(m => m.Id).Select(m => m.First()).ToList();
+            materials.ForEach(m => materialDtos.Add(GetMaterialIfAllowedToUserByGroup(m, userId)));
+            materials.ForEach(m => materialDtos.Add(GetMaterialIfAllowedToUserByCourse(m, userId)));
+            var result = materialDtos.Where(m => m != null).GroupBy(m => m.Id).Select(m => m.First()).ToList();
             return result;
         }
 
@@ -75,21 +75,21 @@ namespace DevEdu.Business.ValidationHelpers
             if (!(values.Distinct().Count() == values.Count()))
                 throw new ValidationException(string.Format(ServiceMessages.DuplicateValuesProvided, entity));
         }
-        private MaterialDto GetMaterialAllowedToUserByGroup(int materialId, int userId)
+        private MaterialDto GetMaterialIfAllowedToUserByGroup(MaterialDto material, int userId)
         {
-            var groupsByMaterial = _groupRepository.GetGroupsByMaterialId(materialId);
+            var groupsByMaterial = _groupRepository.GetGroupsByMaterialId(material.Id);
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
 
             var result = groupsByMaterial.FirstOrDefault(gm => groupsByUser.Any(gu => gu.Id == gm.Id));
             if (result == default)
                 return null;
-            return _materialRepository.GetMaterialById(materialId);
+            return material;
         }
 
 
-        private MaterialDto GetMaterialAllowedToUserByCourse(int materialId, int userId)
+        private MaterialDto GetMaterialIfAllowedToUserByCourse(MaterialDto material, int userId)
         {
-            var coursesByMaterial = _courseRepository.GetCoursesByMaterialId(materialId);
+            var coursesByMaterial = _courseRepository.GetCoursesByMaterialId(material.Id);
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
             List<int> coursesByUser = new List<int>();
             groupsByUser.ForEach(group => coursesByUser.Add(group.Course.Id));
@@ -97,7 +97,7 @@ namespace DevEdu.Business.ValidationHelpers
             var result = coursesByMaterial.FirstOrDefault(сm => coursesByUser.Any(сu => сu == сm.Id));
             if (result == default)
                 return null;
-            return _materialRepository.GetMaterialById(materialId);
+            return material;
         }
     }
 }

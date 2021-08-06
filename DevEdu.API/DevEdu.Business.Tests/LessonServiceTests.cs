@@ -14,9 +14,7 @@ namespace DevEdu.Business.Tests
         private Mock<ILessonRepository> _lessonRepository;
         private Mock<ICommentRepository> _commentRepository;
         private Mock<IUserRepository> _userRepository;
-        private Mock<IUserValidationHelper> _userValidationHelper;
-        private Mock<ILessonValidationHelper> _lessonValidationHelper;
-        private Mock<ITopicValidationHelper> _topicValidationHelper;
+        private Mock<ITopicRepository> _topicRepository;
         private LessonService _sut;
 
         [SetUp]
@@ -25,33 +23,35 @@ namespace DevEdu.Business.Tests
             _lessonRepository = new Mock<ILessonRepository>();
             _commentRepository = new Mock<ICommentRepository>();
             _userRepository = new Mock<IUserRepository>();
-            _userValidationHelper = new Mock<IUserValidationHelper>();
-            _lessonValidationHelper = new Mock<ILessonValidationHelper>();
-            _topicValidationHelper = new Mock<ITopicValidationHelper>();
-            _sut = new LessonService(_lessonRepository.Object,
+            _topicRepository = new Mock<ITopicRepository>();
+
+            _sut = new LessonService(
+                _lessonRepository.Object,
                 _commentRepository.Object,
                 _userRepository.Object,
-                _userValidationHelper.Object,
-                _lessonValidationHelper.Object,
-                _topicValidationHelper.Object);
+                new UserValidationHelper(_userRepository.Object),
+                new LessonValidationHelper(_lessonRepository.Object),
+                new TopicValidationHelper(_topicRepository.Object));
         }
 
         [Test]
-        public void AddTopicToLesson_WhenLessonIdAndTopicIdAreValid_TopicLessonReferenceCreated()
+        public void AddTopicToLesson_WhenLessonIdAndTopicIdExist_TopicLessonReferenceCreated()
         {
             //Given
-            var lessonId = 5;
-            var topicId = 7;
-            _lessonRepository.Setup(x => x.AddTopicToLesson(lessonId, topicId));
+            var lesson = LessonData.GetSelectedLessonDto();
+            var topic = TopicData.GetTopicDtoWithoutTags();
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
+            _topicRepository.Setup(x => x.GetTopic(topic.Id)).Returns(topic);
+            _lessonRepository.Setup(x => x.AddTopicToLesson(lesson.Id, topic.Id));
 
             //When
-            _sut.AddTopicToLesson(lessonId, topicId);
+            _sut.AddTopicToLesson(lesson.Id, topic.Id);
 
             //Then
-            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
-            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
-            _lessonValidationHelper.Verify(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId), Times.Once);
-            _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Once);
+            _lessonRepository.Verify(x => x.SelectLessonById((lesson.Id)), Times.Once);
+            _topicRepository.Verify(x => x.GetTopic((topic.Id)), Times.Once);
+            _lessonRepository.Verify(x => x.AddTopicToLesson(lesson.Id, topic.Id), Times.Once);
         }
 
         [Test]
@@ -60,18 +60,16 @@ namespace DevEdu.Business.Tests
             //Given
             var lessonId = 5;
             var topicId = 7;
-            _lessonValidationHelper.Setup(x => x.CheckLessonExistence(lessonId))
-                .Throws(new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId)));
-            
+            var expectedMessage = string.Format(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId));
+
             //When
-            var exception = Assert.Throws<EntityNotFoundException>(() =>
+            var actual = Assert.Throws<EntityNotFoundException>(() =>
                 _sut.AddTopicToLesson(lessonId, topicId));
 
             //Then
-            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId)));
-            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
-            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Never);
-            _lessonValidationHelper.Verify(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId), Times.Never);
+            Assert.AreEqual(expectedMessage, actual.Message);
+            _lessonRepository.Verify(x => x.SelectLessonById((lessonId)), Times.Once);
+            _topicRepository.Verify(x => x.GetTopic((topicId)), Times.Never);
             _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Never);
         }
 
@@ -79,80 +77,80 @@ namespace DevEdu.Business.Tests
         public void AddTopicToLesson_WhenTopicWithGivenIdDoesNotExist_EntityNotFoundExceptionThrown()
         {
             //Given
-            var lessonId = 5;
+            var lesson = LessonData.GetSelectedLessonDto();
             var topicId = 7;
-            _topicValidationHelper.Setup(x => x.CheckTopicExistence(topicId))
-                .Throws(new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId)));
+            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId);
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
 
             //When
-            var exception = Assert.Throws<EntityNotFoundException>(() =>
-                _sut.AddTopicToLesson(lessonId, topicId));
+            var actual = Assert.Throws<EntityNotFoundException>(() =>
+                            _sut.AddTopicToLesson(lesson.Id, topicId));
 
             //Then
-            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId)));
-            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
-            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
-            _lessonValidationHelper.Verify(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId), Times.Never);
-            _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Never);
+            Assert.AreEqual(expectedMessage, actual.Message);
+            _lessonRepository.Verify(x => x.SelectLessonById((lesson.Id)), Times.Once);
+            _topicRepository.Verify(x => x.GetTopic((topicId)), Times.Once);
+            _lessonRepository.Verify(x => x.AddTopicToLesson(lesson.Id, topicId), Times.Never);
         }
 
         [Test]
         public void AddTopicToLesson_WhenTopicLessonReferenceAlreadyExists_ValidationExceptionThrown()
         {
-            //Given
-            var lessonId = 5;
-            var topicId = 7;
-            _lessonValidationHelper.Setup(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId))
-                .Throws(new ValidationException(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lessonId, topicId)));
+            var lesson = LessonData.GetSelectedLessonDto();
+            var topic = TopicData.GetAnotherTopicDtoWithoutTags();
+            var expectedMessage = string.Format(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lesson.Id, topic.Id));
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
+            _topicRepository.Setup(x => x.GetTopic(topic.Id)).Returns(topic);
 
             //When
-            var exception = Assert.Throws<ValidationException>(() =>
-                _sut.AddTopicToLesson(lessonId, topicId));
+            var actual = Assert.Throws<ValidationException>(() =>
+                            _sut.AddTopicToLesson(lesson.Id, topic.Id));
 
             //Then
-            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lessonId, topicId)));
-            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
-            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
-            _lessonValidationHelper.Verify(x => x.CheckTopicLessonReferenceIsUnique(lessonId, topicId), Times.Once);
-            _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Never);
+            Assert.AreEqual(expectedMessage, actual.Message);
+            _lessonRepository.Verify(x => x.SelectLessonById((lesson.Id)), Times.Once);
+            _topicRepository.Verify(x => x.GetTopic((topic.Id)), Times.Once);
+            _lessonRepository.Verify(x => x.AddTopicToLesson(lesson.Id, topic.Id), Times.Never);
         }
 
         [Test]
         public void DeleteTopicFromLesson_WhenLessonIdAndTopicIdAreValid_TopicLessonReferenceDeleted()
         {
             //Given
-            var lessonId = 4;
-            var topicId = 7;
-            var rowsAffected = 1;
-            _lessonRepository.Setup(x => x.DeleteTopicFromLesson(lessonId, topicId)).Returns(rowsAffected);
+            var lesson = LessonData.GetSelectedLessonDto();
+            var topic = TopicData.GetAnotherTopicDtoWithoutTags();
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
+            _topicRepository.Setup(x => x.GetTopic(topic.Id)).Returns(topic);
+            _lessonRepository.Setup(x => x.DeleteTopicFromLesson(lesson.Id, topic.Id)).Returns(1);
 
             //When
-            _sut.DeleteTopicFromLesson(lessonId, topicId);
+            _sut.DeleteTopicFromLesson(lesson.Id, topic.Id);
 
             //Then
-            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
-            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
-            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lessonId, topicId), Times.Once);
+            _lessonRepository.Verify(x => x.SelectLessonById((lesson.Id)), Times.Once);
+            _topicRepository.Verify(x => x.GetTopic((topic.Id)), Times.Once);
+            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lesson.Id, topic.Id), Times.Once);
         }
 
         [Test]
         public void DeleteTopicFromLesson_WhenLessonWithGivenIdDoesNotExist_EntityNotFoundExceptionThrown()
         {
             //Given
-            var lessonId = 4;
+            var lessonId = 5;
             var topicId = 7;
-
-            _lessonValidationHelper.Setup(x => x.CheckLessonExistence(lessonId))
-                .Throws(new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId)));
+            var expectedMessage = string.Format(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId));
 
             //When
-            var exception = Assert.Throws<EntityNotFoundException>(() =>
+            var actual = Assert.Throws<EntityNotFoundException>(() =>
                 _sut.DeleteTopicFromLesson(lessonId, topicId));
 
             //Then
-            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId)));
-            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
-            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Never);
+            Assert.AreEqual(expectedMessage, actual.Message);
+            _lessonRepository.Verify(x => x.SelectLessonById((lessonId)), Times.Once);
+            _topicRepository.Verify(x => x.GetTopic((topicId)), Times.Never);
             _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lessonId, topicId), Times.Never);
         }
 
@@ -160,41 +158,43 @@ namespace DevEdu.Business.Tests
         public void DeleteTopicFromLesson_WhenTopicWithGivenIdDoesNotExist_EntityNotFoundExceptionThrown()
         {
             //Given
-            var lessonId = 4;
+            var lesson = LessonData.GetSelectedLessonDto();
             var topicId = 7;
+            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId);
 
-            _topicValidationHelper.Setup(x => x.CheckTopicExistence(topicId))
-                .Throws(new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId)));
+            _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
 
             //When
-            var exception = Assert.Throws<EntityNotFoundException>(() =>
-                _sut.DeleteTopicFromLesson(lessonId, topicId));
+            var actual = Assert.Throws<EntityNotFoundException>(() =>
+                            _sut.DeleteTopicFromLesson(lesson.Id, topicId));
 
             //Then
-            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId)));
-            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
-            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
-            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lessonId, topicId), Times.Never);
+            Assert.AreEqual(expectedMessage, actual.Message);
+            _lessonRepository.Verify(x => x.SelectLessonById((lesson.Id)), Times.Once);
+            _topicRepository.Verify(x => x.GetTopic((topicId)), Times.Once);
+            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lesson.Id, topicId), Times.Never);
         }
 
         [Test]
         public void DeleteTopicFromLesson_WhenTopicLessonReferenceDoesNotExist_ValidationExceptionThrown()
         {
-            //Given
-            var lessonId = 4;
-            var topicId = 7;
-            _lessonRepository.Setup(x => x.DeleteTopicFromLesson(lessonId, topicId)).
-                Throws(new ValidationException(string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId)));
+            var lesson = LessonData.GetSelectedLessonDto();
+            var topic = TopicData.GetAnotherTopicDtoWithoutTags();
+            var expectedMessage = string.Format(string.Format(ServiceMessages.LessonTopicReferenceNotFound, lesson.Id, topic.Id));
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
+            _topicRepository.Setup(x => x.GetTopic(topic.Id)).Returns(topic);
+            _lessonRepository.Setup(x => x.DeleteTopicFromLesson(lesson.Id, topic.Id)).Returns(0);
 
             //When
-            var exception = Assert.Throws<ValidationException>(() =>
-                _sut.DeleteTopicFromLesson(lessonId, topicId));
+            var actual = Assert.Throws<ValidationException>(() =>
+                            _sut.DeleteTopicFromLesson(lesson.Id, topic.Id));
 
             //Then
-            Assert.That(exception.Message, Is.EqualTo(string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId)));
-            _lessonValidationHelper.Verify(x => x.CheckLessonExistence((lessonId)), Times.Once);
-            _topicValidationHelper.Verify(x => x.CheckTopicExistence((topicId)), Times.Once);
-            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lessonId, topicId), Times.Once);
+            Assert.AreEqual(expectedMessage, actual.Message);
+            _lessonRepository.Verify(x => x.SelectLessonById((lesson.Id)), Times.Once);
+            _topicRepository.Verify(x => x.GetTopic((topic.Id)), Times.Once);
+            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lesson.Id, topic.Id), Times.Once);
         }
 
         [Test]
@@ -203,7 +203,7 @@ namespace DevEdu.Business.Tests
             //Given
             var expectedId = LessonData.LessonId;
             var lessonDto = LessonData.GetAddedLessonDto();
-            var topicIds = new List<int>(){ 6, 7};
+            var topicIds = new List<int>() { 6, 7 };
 
             _lessonRepository.Setup(x => x.AddLesson(lessonDto)).Returns(expectedId);
             foreach (int topicId in topicIds)
@@ -211,16 +211,8 @@ namespace DevEdu.Business.Tests
                 _lessonRepository.Setup(x => x.AddTopicToLesson(expectedId, topicId));
             }
 
-            var sut = new LessonService(
-                _lessonRepository.Object, 
-                _commentRepository.Object, 
-                _userRepository.Object,
-                _userValidationHelper.Object, 
-                _lessonValidationHelper.Object,
-                _topicValidationHelper.Object);
-
             //When
-            var actualId = sut.AddLesson(lessonDto, topicIds);
+            var actualId = _sut.AddLesson(lessonDto, topicIds);
 
             //Then
             Assert.AreEqual(expectedId, actualId);
@@ -241,16 +233,8 @@ namespace DevEdu.Business.Tests
 
             _lessonRepository.Setup(x => x.SelectAllLessonsByGroupId(groupId)).Returns(expected);
 
-            var sut = new LessonService(
-                _lessonRepository.Object,
-                _commentRepository.Object,
-                _userRepository.Object,
-                _userValidationHelper.Object,
-                _lessonValidationHelper.Object,
-                _topicValidationHelper.Object);
-
             //When
-            var actual = sut.SelectAllLessonsByGroupId(groupId);
+            var actual = _sut.SelectAllLessonsByGroupId(groupId);
 
             //Then
             Assert.AreEqual(expected, actual);
@@ -267,16 +251,8 @@ namespace DevEdu.Business.Tests
 
             _lessonRepository.Setup(x => x.SelectAllLessonsByTeacherId(teacherId)).Returns(expected);
 
-            var sut = new LessonService(
-                _lessonRepository.Object,
-                _commentRepository.Object,
-                _userRepository.Object,
-                _userValidationHelper.Object,
-                _lessonValidationHelper.Object,
-                _topicValidationHelper.Object);
-
             //When
-            var actual = sut.SelectAllLessonsByTeacherId(teacherId);
+            var actual = _sut.SelectAllLessonsByTeacherId(teacherId);
 
             //Then
             Assert.AreEqual(expected, actual);
@@ -293,16 +269,8 @@ namespace DevEdu.Business.Tests
 
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(expected);
 
-            var sut = new LessonService(
-                _lessonRepository.Object,
-                _commentRepository.Object,
-                _userRepository.Object,
-                _userValidationHelper.Object,
-                _lessonValidationHelper.Object,
-                _topicValidationHelper.Object);
-
             //When
-            var actual = sut.SelectLessonById(lessonId);
+            var actual = _sut.SelectLessonById(lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
@@ -324,16 +292,8 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(lesson);
             _commentRepository.Setup(x => x.SelectCommentsFromLessonByLessonId(lessonId)).Returns(comments);
 
-            var sut = new LessonService(
-                _lessonRepository.Object,
-                _commentRepository.Object,
-                _userRepository.Object,
-                _userValidationHelper.Object,
-                _lessonValidationHelper.Object,
-                _topicValidationHelper.Object);
-
             //When
-            var actual = sut.SelectLessonWithCommentsById(lessonId);
+            var actual = _sut.SelectLessonWithCommentsById(lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
@@ -360,16 +320,8 @@ namespace DevEdu.Business.Tests
             _commentRepository.Setup(x => x.SelectCommentsFromLessonByLessonId(lessonId)).Returns(comments);
             _lessonRepository.Setup(x => x.SelectStudentsLessonByLessonId(lessonId)).Returns(students);
 
-            var sut = new LessonService(
-                _lessonRepository.Object,
-                _commentRepository.Object,
-                _userRepository.Object,
-                _userValidationHelper.Object,
-                _lessonValidationHelper.Object,
-                _topicValidationHelper.Object);
-
             //When
-            var actual = sut.SelectLessonWithCommentsAndStudentsById(lessonId);
+            var actual = _sut.SelectLessonWithCommentsAndStudentsById(lessonId);
 
             //Then
             Assert.AreEqual(expectedLesson, actual);
@@ -390,22 +342,13 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.UpdateLesson(updatedLesson));
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(expected);
 
-            var sut = new LessonService(
-                _lessonRepository.Object,
-                _commentRepository.Object,
-                _userRepository.Object,
-                _userValidationHelper.Object,
-                _lessonValidationHelper.Object,
-                _topicValidationHelper.Object);
-
             //When
-            var actual = sut.UpdateLesson(updatedLesson, lessonId);
+            var actual = _sut.UpdateLesson(updatedLesson, lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
             _lessonRepository.Verify(x => x.UpdateLesson(updatedLesson), Times.Once);
             _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
         }
-
     }
 }
