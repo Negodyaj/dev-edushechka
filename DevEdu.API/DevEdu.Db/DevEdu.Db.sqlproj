@@ -218,7 +218,6 @@
     <Build Include="StoredProcedures\Group_Task\Group_Task_SelectAllByGroupId.sql" />
     <Build Include="StoredProcedures\Group_Task\Group_Task_SelectById.sql" />
     <Build Include="StoredProcedures\Group_Task\Group_Task_SelectAllByTaskId.sql" />
-    <Build Include="StoredProcedures\Task_Student\Task_Student_SelectByTaskId.sql" />
     <Build Include="StoredProcedures\Course\Course_SelectByTaskId.sql" />
     <Build Include="StoredProcedures\Course\Course_SelectByMaterialId.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectByMaterialId.sql" />
@@ -241,6 +240,8 @@
     <Build Include="StoredProcedures\Payment\Payment_BulkInsert.sql" />
     <Build Include="Types\User-Defined Table Types\IdType.sql" />
     <Build Include="StoredProcedures\Payment\Payment_SelectBySeveralId.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectAllByUserId.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectAllByTaskId.sql" />
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectAllFeedbackByLessonId.sql" />
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonAndUserId.sql" />
     <Build Include="StoredProcedures\Topic\Topic_SelectByCourseId.sql" />
