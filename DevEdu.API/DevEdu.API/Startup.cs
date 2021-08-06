@@ -20,6 +20,7 @@ using System;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Net;
+using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API
 {
@@ -87,14 +88,14 @@ namespace DevEdu.API
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 })
 
-                  .ConfigureApiBehaviorOptions(options =>
-                  {
+                .ConfigureApiBehaviorOptions(options =>
+                {
                    //   options.SuppressModelStateInvalidFilter = true;
-                      options.InvalidModelStateResponseFactory = actionContext =>
-                      {
-                          return CustomErrorResponse(actionContext);
-                      };
-                  });
+                    options.InvalidModelStateResponseFactory = context =>
+                    {
+                          return CustomErrorResponse(context);
+                    };
+                });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -136,15 +137,9 @@ namespace DevEdu.API
         }
 
         private UnprocessableEntityObjectResult CustomErrorResponse(ActionContext actionContext)
-        {  
-            return new UnprocessableEntityObjectResult(actionContext.ModelState
-                
-             .Where(modelError => modelError.Value.Errors.Count > 0)
-             .Select(modelError => new ValidationException
-             {
-                 Message = modelError.Key,
-                 Description = modelError.Value.Errors.FirstOrDefault().ErrorMessage
-             }).ToList());
+        {
+            var exc = new ValidationException(actionContext.ModelState);
+            return new UnprocessableEntityObjectResult(exc.ValidationErrors);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

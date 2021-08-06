@@ -69,7 +69,7 @@ namespace DevEdu.API.Configuration
             var result = JsonConvert.SerializeObject(
                 new ValidationExceptionResponse
                 {
-                    Message = exception.Message,
+                    Field = exception.Message,
                     Description = exception.Message
                 }
             );
