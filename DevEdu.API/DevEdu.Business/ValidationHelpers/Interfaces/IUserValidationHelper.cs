@@ -1,5 +1,5 @@
-﻿﻿using DevEdu.DAL.Models;
-using DevEdu.DAL.Enums;
+﻿using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.ValidationHelpers

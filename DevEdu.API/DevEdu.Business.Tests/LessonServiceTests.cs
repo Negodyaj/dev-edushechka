@@ -1,7 +1,7 @@
 ﻿using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
-using Moq;
 using DevEdu.DAL.Repositories;
+using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 
@@ -12,6 +12,7 @@ namespace DevEdu.Business.Tests
         private Mock<ILessonRepository> _lessonRepository;
         private Mock<ICommentRepository> _commentRepository;
         private Mock<IUserRepository> _userRepository;
+        private Mock<IGroupRepository> _groupRepository;
         private UserValidationHelper _userValidationHelper;
         private LessonValidationHelper _lessonValidationHelper;
         private LessonService _sut;
@@ -22,7 +23,8 @@ namespace DevEdu.Business.Tests
             _lessonRepository = new Mock<ILessonRepository>();
             _commentRepository = new Mock<ICommentRepository>();
             _userRepository = new Mock<IUserRepository>();
-            _lessonValidationHelper = new LessonValidationHelper(_lessonRepository.Object);
+            _groupRepository = new Mock<IGroupRepository>();
+            _lessonValidationHelper = new LessonValidationHelper(_lessonRepository.Object, _groupRepository.Object);
             _userValidationHelper = new UserValidationHelper(_userRepository.Object);
 
             _sut = new LessonService(

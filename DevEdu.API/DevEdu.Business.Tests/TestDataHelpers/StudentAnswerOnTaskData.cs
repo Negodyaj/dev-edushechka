@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DevEdu.DAL.Models;
+using System;
 using System.Collections.Generic;
-using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.Tests
 {
@@ -54,7 +54,7 @@ namespace DevEdu.Business.Tests
 
         public static StudentAnswerOnTaskDto GetAnswerOfStudent()
         {
-            return new StudentAnswerOnTaskDto 
+            return new StudentAnswerOnTaskDto
             {
                 User = new UserDto
                 {

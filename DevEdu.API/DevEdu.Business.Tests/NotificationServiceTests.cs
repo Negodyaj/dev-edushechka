@@ -27,7 +27,7 @@ namespace DevEdu.Business.Tests
             _notificationRepoMock.Setup(x => x.GetNotification(ExpectedNotificationId)).Returns(notificationDto);
 
             var sut = new NotificationService(_notificationRepoMock.Object);
-                
+
             //When
             var actualNotificationtDto = sut.AddNotification(notificationDto);
 

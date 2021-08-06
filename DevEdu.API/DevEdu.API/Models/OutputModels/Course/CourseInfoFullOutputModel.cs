@@ -2,7 +2,7 @@
 
 namespace DevEdu.API.Models.OutputModels
 {
-    public class CourseInfoFullOutputModel: CourseInfoShortOutputModel
+    public class CourseInfoFullOutputModel : CourseInfoShortOutputModel
     {
         public List<TopicOutputModel> Topics { get; set; }
         public List<MaterialInfoOutputModel> Materials { get; set; }
