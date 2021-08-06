@@ -53,27 +53,27 @@ namespace DevEdu.Business.Services
         public CommentDto GetComment(int commentId, UserIdentityInfo userInfo)
         {
             var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
-            CheckUserAccessByRoleAndId(userInfo, checkedDto);
+            CheckUserAccessToCommentByUserId(userInfo, checkedDto);
             return checkedDto;
         }
 
         public void DeleteComment(int commentId, UserIdentityInfo userInfo)
         {
             var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
-            CheckUserAccessByRoleAndId(userInfo, checkedDto);
+            CheckUserAccessToCommentByUserId(userInfo, checkedDto);
             _commentRepository.DeleteComment(commentId);
         }
 
         public CommentDto UpdateComment(int commentId, CommentDto dto, UserIdentityInfo userInfo)
         {
             var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
-            CheckUserAccessByRoleAndId(userInfo, checkedDto);
+            CheckUserAccessToCommentByUserId(userInfo, checkedDto);
             dto.Id = commentId;
             _commentRepository.UpdateComment(dto);
             return _commentRepository.GetComment(commentId);
         }
 
-        private void CheckUserAccessByRoleAndId(UserIdentityInfo userInfo, CommentDto dto)
+        private void CheckUserAccessToCommentByUserId(UserIdentityInfo userInfo, CommentDto dto)
         {
             var userId = userInfo.UserId;
 
@@ -81,27 +81,7 @@ namespace DevEdu.Business.Services
             {
                 return;
             }
-
-            CheckUserAccessToGroupData(dto, userId);
-
-            if (userInfo.IsStudent())
-            {
-                _commentValidationHelper.UserComplianceCheck(dto, userId);
-            }
-        }
-
-        private void CheckUserAccessToGroupData(CommentDto dto, int userId)
-        {
-            if (dto.Lesson != default)
-            {
-                var lessonId = dto.Lesson.Id;
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
-            }
-            else
-            {
-                var studentId = dto.StudentAnswer.Id;
-                _studentAnswerValidationHelper.CheckUserInStudentAnswerAccess(studentId, userId);
-            }
+            _commentValidationHelper.UserComplianceCheck(dto, userId);
         }
     }
 }

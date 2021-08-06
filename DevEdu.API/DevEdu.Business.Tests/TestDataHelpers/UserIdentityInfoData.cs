@@ -7,11 +7,11 @@ namespace DevEdu.Business.Tests
 {
     public class UserIdentityInfoData
     {
-        public static UserIdentityInfo GetUserIdentityWithRole(Enum role)
+        public static UserIdentityInfo GetUserIdentityWithRole(Enum role, int userId = 1)
         {
             return new UserIdentityInfo
             {
-                UserId = 1,
+                UserId = userId,
                 Roles = new List<Role>
                 {
                     (Role)role
