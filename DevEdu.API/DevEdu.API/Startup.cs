@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
 using System;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Net;
 
 namespace DevEdu.API
@@ -79,7 +80,12 @@ namespace DevEdu.API
 
             services.AddControllers();
 
-            services.AddMvc()
+            services
+                .AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
                   .ConfigureApiBehaviorOptions(options =>
                   {

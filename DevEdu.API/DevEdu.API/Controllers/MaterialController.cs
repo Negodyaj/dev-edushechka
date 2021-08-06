@@ -63,7 +63,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{id}")]
         [Description("Update material by id")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
-        public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
+        public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             dto = _materialService.UpdateMaterial(id, dto);

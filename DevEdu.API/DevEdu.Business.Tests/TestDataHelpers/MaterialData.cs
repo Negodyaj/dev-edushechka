@@ -10,7 +10,7 @@ namespace DevEdu.Business.Tests
     public static class MaterialData
     {
         public static MaterialDto GetMaterialDtoWithoutTags() => 
-            new MaterialDto { Content = "Материал по ООП" };
+            new MaterialDto { Id = 4, Content = "Материал по ООП" };
 
         public static MaterialDto GetMaterialDtoWithTags() =>
             new MaterialDto 

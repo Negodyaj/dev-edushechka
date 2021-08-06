@@ -36,11 +36,11 @@ namespace DevEdu.API.Controllers
 
         [HttpGet("{id}/simple")]
         [Description("Get course by id with groups")]
-        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
-        public CourseInfoFullOutputModel GetCourseSimple(int id)
+        [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
+        public CourseInfoShortOutputModel GetCourseSimple(int id)
         {
             var course = _courseService.GetCourse(id);
-            return _mapper.Map<CourseInfoFullOutputModel>(course);
+            return _mapper.Map<CourseInfoShortOutputModel>(course);
         }
 
         [HttpGet("{id}/full")]
@@ -64,8 +64,8 @@ namespace DevEdu.API.Controllers
 
         [HttpPost]
         [Description("Create new course")]
-        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status201Created)]
-        public CourseInfoFullOutputModel AddCourse([FromBody] CourseInputModel model)
+        [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status201Created)]
+        public CourseInfoShortOutputModel AddCourse([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
             int id = _courseService.AddCourse(dto);
@@ -82,16 +82,17 @@ namespace DevEdu.API.Controllers
 
         [HttpPut("{id}")]
         [Description("Update course by Id")]
-        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
-        public CourseInfoFullOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
+        [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
+        public CourseInfoShortOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            _courseService.UpdateCourse(id, dto);
-            return GetCourseSimple(id);
+            var updDto =  _courseService.UpdateCourse(id, dto);
+            return _mapper.Map<CourseInfoShortOutputModel>(updDto);
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
         [HttpPost("{courseId}/material/{materialId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("Add material to course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public void AddMaterialToCourse(int courseId, int materialId)
@@ -100,6 +101,7 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpDelete("{courseId}/material/{materialId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("Delete material from course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public void RemoveMaterialFromCourse(int courseId, int materialId)
@@ -130,24 +132,26 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [Description("Add topic to course")]
-        public string AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
+        public CourseTopicOutputModel AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
         {
             var dto = _mapper.Map<CourseTopicDto>(inputModel);
 
-            _courseService.AddTopicToCourse(courseId, topicId, dto);
-            return $"Topic Id:{topicId} added in course Id:{courseId} on {inputModel.Position} position";
+            var id = _courseService.AddTopicToCourse(courseId, topicId, dto);
+            dto = _courseService.GetCourseTopicById(id);
+            return _mapper.Map<CourseTopicOutputModel>(dto);
         }
 
-        [HttpPost("{courseId}/select-topics")]
+        [HttpPost("{courseId}/add-topics")]
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]	
         [Description("Add topics to course")]
-        public string AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
+        public List<CourseTopicOutputModel> AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
         {
             var dto = _mapper.Map<List<CourseTopicDto>>(inputModel);
 
-            _courseService.AddTopicsToCourse(courseId, dto);
-            return "done";
+            var id =_courseService.AddTopicsToCourse(courseId, dto);
+            dto = _courseService.GetCourseTopicBuSevealId(id);
+            return _mapper.Map<List<CourseTopicOutputModel>>(dto);
         }
 
         // api/course/{courseId}/topic/{topicId}
@@ -175,12 +179,13 @@ namespace DevEdu.API.Controllers
         [HttpPut("{courseId}/program")]
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("updates topics in the course")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public string UpdateCourseTopicsByCourseId(int courseId, [FromBody] List<CourseTopicUpdateInputModel> topics)
+        [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]
+        public List<CourseTopicOutputModel> UpdateCourseTopicsByCourseId(int courseId, [FromBody] List<CourseTopicUpdateInputModel> topics)
         {
             var list = _mapper.Map<List<CourseTopicDto>>(topics);
-            _courseService.UpdateCourseTopicsByCourseId(courseId, list);
-            return "updated";
+            var ids = _courseService.UpdateCourseTopicsByCourseId(courseId, list);
+            list = _courseService.GetCourseTopicBuSevealId(ids);
+            return _mapper.Map<List<CourseTopicOutputModel>>(list);
         }
     }
 }
