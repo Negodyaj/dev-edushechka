@@ -17,11 +17,11 @@ namespace DevEdu.Business.Services
         LessonDto UpdateLesson(LessonDto lessonDto, int id);
         void DeleteTopicFromLesson(int lessonId, int topicId);
         void AddTopicToLesson(int lessonId, int topicId);
-        StudentLessonDto AddStudentToLesson(int lessonId, int userId);
-        void DeleteStudentFromLesson(int lessonId, int userId);
-        StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
-        StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
-        StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
-        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);        
+        StudentLessonDto AddStudentToLesson(int lessonId, int userId, UserIdentityInfo userIdentityInfo);
+        void DeleteStudentFromLesson(int lessonId, int userId, UserIdentityInfo userIdentityInfo);
+        StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo);
+        StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo);
+        StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo);
+        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId, UserIdentityInfo userIdentityInfo);        
     }
 }

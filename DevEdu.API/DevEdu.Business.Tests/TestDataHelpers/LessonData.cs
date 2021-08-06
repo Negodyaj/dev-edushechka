@@ -197,5 +197,20 @@ namespace DevEdu.Business.Tests
                 Id = 42
             };
         }
+        public static List<GroupDto> GetGroupsDto()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto
+                {
+                    Id = 10
+                },
+
+                new GroupDto
+                {
+                    Id = 20
+                }
+            };
+        }
     }
 }

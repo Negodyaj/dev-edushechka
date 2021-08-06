@@ -15,6 +15,8 @@ namespace DevEdu.DAL.Repositories
         private const string _groupSelectAllProcedure = "dbo.Group_SelectAll";
         private const string _groupUpdateByIdProcedure = "dbo.Group_UpdateById";
         private const string _groupUpdateGroupStatusProcedure = "dbo.Group_UpdateGroupStatus";
+        private const string _groupSelectGroupsByUserIdProcedure = "dbo.Group_SelectAllByUserId";
+        private const string _groupSelectGroupsByLessonIdProcedure = "dbo.Group_SelectAllByLessonId";
 
 
         private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
@@ -308,6 +310,44 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
+        public List<GroupDto> GetGroupsByUserId(int userId)
+        {
+            GroupDto result;
+            return _connection
+                .Query<GroupDto, GroupStatus, GroupDto>(
+                    _groupSelectGroupsByUserIdProcedure,
+                    (group, groupStatus) =>
+                    {
+                        result = group;
+                        result.GroupStatus = groupStatus;
+                        return result;
+                    },
+                    new { userId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+
+        public List<GroupDto> GetGroupsByLessonId(int lessonId)
+        {
+            GroupDto result;
+            return _connection
+                .Query<GroupDto, GroupStatus, GroupDto>(
+                    _groupSelectGroupsByLessonIdProcedure,
+                    (group, groupStatus) =>
+                    {
+                        result = group;
+                        result.GroupStatus = groupStatus;
+                        return result;
+                    },
+                    new { lessonId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+
         public int GetPresentGroupForStudentByUserId(int userId)
         {
             return _connection.QuerySingle<int>(
@@ -316,5 +356,7 @@ namespace DevEdu.DAL.Repositories
                    commandType: CommandType.StoredProcedure
               );
         }
+
+
     }
 }

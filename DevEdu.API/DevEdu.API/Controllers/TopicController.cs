@@ -7,9 +7,13 @@ using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
 using DevEdu.Business.Services;
 using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Common;
+using DevEdu.DAL.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TopicController : Controller
@@ -42,6 +46,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<TopicOutputModel>>(output);
         }
 
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         //  api/topic
         [HttpPost]
         [Description("Add topic")]
@@ -53,6 +58,7 @@ namespace DevEdu.API.Controllers
             return GetTopicById(output);
         }
 
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         //  api/topic/{id}
         [HttpDelete("{id}")]
         [Description("Delete topic")]
@@ -62,6 +68,7 @@ namespace DevEdu.API.Controllers
             _topicService.DeleteTopic(id);
         }
 
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         //  api/topic/{id}
         [HttpPut("{id}")]
         [Description("Update topic")]
