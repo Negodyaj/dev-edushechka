@@ -189,25 +189,5 @@ namespace DevEdu.Business.Tests
                 }
             };
         }
-
-        public static List<GroupDto> GetListOfGroups()
-        {
-            return new List<GroupDto>
-            {
-                new GroupDto {Id = 1},
-                new GroupDto {Id = 2},
-                new GroupDto {Id = 3}
-            };
-        }
-
-        public static List<GroupDto> GetListOfSameGroups()
-        {
-            return new List<GroupDto>
-            {
-                new GroupDto {Id = 1},
-                new GroupDto {Id = 2},
-                new GroupDto {Id = 3}
-            };
-        }
     }
 }

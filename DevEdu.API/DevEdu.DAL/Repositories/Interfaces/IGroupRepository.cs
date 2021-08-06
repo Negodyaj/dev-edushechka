@@ -24,7 +24,7 @@ namespace DevEdu.DAL.Repositories
         GroupTaskDto GetGroupTask(int groupId, int taskId);
         void UpdateGroupTask(GroupTaskDto groupTaskDto);
         public List<GroupDto> GetGroupsByMaterialId(int id);
-        List<GroupDto> GetGroupsByTaskId(int taskId);
+       // List<GroupDto> GetGroupsByTaskId(int taskId);
         int GetPresentGroupForStudentByUserId(int userId);
         public List<GroupDto> GetGroupsByTaskId(int taskId);
         public List<GroupDto> GetGroupsByUserId(int userId);
