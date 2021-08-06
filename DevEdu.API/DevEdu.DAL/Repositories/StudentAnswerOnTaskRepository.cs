@@ -77,9 +77,9 @@ namespace DevEdu.DAL.Repositories
 
         public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
-
             StudentAnswerOnTaskDto result = default;
-            return _connection
+
+            var query = _connection
                 .Query<StudentAnswerOnTaskDto, UserDto, TaskDto, TaskStatus, StudentAnswerOnTaskDto>(
                 _taskStudentSelectByTaskAndStudent,
                 (studentAnswer, user, task, taskStatus) =>
@@ -100,6 +100,8 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
              )
              .FirstOrDefault();
+
+            return result;
         }
 
         public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto)

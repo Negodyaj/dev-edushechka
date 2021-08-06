@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using DevEdu.DAL.Enums;
 using DevEdu.API.Common;
+using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {
@@ -146,6 +147,8 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Student)]
         [Description("Add student answer on task")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public StudentAnswerOnTaskFullOutputModel AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
@@ -161,6 +164,8 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist)]
         [Description("Get all student answers on tasks by task")]
         [ProducesResponseType(typeof(List<StudentAnswerOnTaskFullOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<StudentAnswerOnTaskFullOutputModel> GetAllStudentAnswersOnTask(int taskId)
         {
             var studentAnswersDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTask(taskId);
@@ -174,6 +179,8 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [Description("Get student answer on task by task and student")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public StudentAnswerOnTaskFullOutputModel GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
             var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
@@ -188,6 +195,8 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Student)]
         [Description("Update student answer on task")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public StudentAnswerOnTaskFullOutputModel UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
@@ -201,6 +210,8 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Student)]
         [Description("Delete student answer on task")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
             _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(taskId, studentId);
@@ -211,6 +222,8 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [Description("Update task status of student answer")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public StudentAnswerOnTaskFullOutputModel UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
             _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId);
@@ -224,6 +237,8 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [Description("Add comment on task student answer")]
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public CommentInfoOutputModel AddCommentOnStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel inputModel)
         {
             var commentDto = _mapper.Map<CommentDto>(inputModel);
@@ -250,6 +265,8 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student, Role.Methodist)]
         [Description("Get all answers of student")]
         [ProducesResponseType(typeof(List<StudentAnswerOnTaskOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<StudentAnswerOnTaskOutputModel> GetAllAnswersByStudentId(int userId)
         {
             var answersDto = _studentAnswerOnTaskService.GetAllAnswersByStudentId(userId);
