@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using DevEdu.API.Common;
 using System.ComponentModel.DataAnnotations;
-using DevEdu.API.Common;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class GroupTaskInputModel
+    public class HomeworkInputModel
     {
         [Required(ErrorMessage = StartDateRequired)]
         [CustomDateFormatAttribute(ErrorMessage = WrongFormatDate)]

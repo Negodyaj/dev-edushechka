@@ -1,4 +1,4 @@
-﻿namespace DevEdu.API.Configuration.ExceptionResponses
+﻿namespace DevEdu.API.Configuration
 {
     public class ValidationExceptionResponse
     {

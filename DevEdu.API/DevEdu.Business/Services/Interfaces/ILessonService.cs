@@ -5,9 +5,7 @@ namespace DevEdu.Business.Services
 {
     public interface ILessonService
     {
-        void AddCommentToLesson(int lessonId, CommentDto commentDto);
         int AddLesson(LessonDto lessonDto, List<int> topicIds);
-        void DeleteCommentFromLesson(int lessonId, int commentId);
         void DeleteLesson(int id);
         List<LessonDto> SelectAllLessonsByGroupId(int id);
         List<LessonDto> SelectAllLessonsByTeacherId(int id);
@@ -22,6 +20,6 @@ namespace DevEdu.Business.Services
         StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
         StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
         StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto);
-        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);        
+        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);
     }
 }

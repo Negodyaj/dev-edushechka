@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
 ﻿using DevEdu.API.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace DevEdu.API.Models.InputModels
 {

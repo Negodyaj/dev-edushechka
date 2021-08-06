@@ -162,6 +162,6 @@ namespace DevEdu.Business.Tests
 
             //Than
             _tagRepoMock.Verify(x => x.SelectTagById(tagId), Times.Once);
-        }        
+        }
     }
 }

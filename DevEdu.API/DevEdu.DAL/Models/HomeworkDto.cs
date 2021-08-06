@@ -2,7 +2,7 @@
 
 namespace DevEdu.DAL.Models
 {
-    public class GroupTaskDto
+    public class HomeworkDto
     {
         public int Id { get; set; }
         public TaskDto Task { get; set; }

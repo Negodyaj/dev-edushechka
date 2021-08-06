@@ -1,6 +1,6 @@
 ﻿namespace DevEdu.API.Models.OutputModels
 {
-    public class GroupTaskInfoWithGroupOutputModel : GroupTaskInfoOutputModel
+    public class HomeworkInfoWithGroupOutputModel : HomeworkInfoOutputModel
     {
         public GroupOutputMiniModel Group { get; set; }
     }
