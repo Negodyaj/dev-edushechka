@@ -85,7 +85,7 @@ namespace DevEdu.API
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                });
+                })
 
                   .ConfigureApiBehaviorOptions(options =>
                   {
