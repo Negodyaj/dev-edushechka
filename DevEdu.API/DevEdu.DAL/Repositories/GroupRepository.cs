@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Dapper;
+﻿using Dapper;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -17,6 +17,7 @@ namespace DevEdu.DAL.Repositories
         private const string _groupUpdateGroupStatusProcedure = "dbo.Group_UpdateGroupStatus";
         private const string _groupSelectAllByTaskIdProcedure = "dbo.Group_SelectAllByTaskId";
         private const string _groupSelectGroupsByUserIdProcedure = "dbo.Group_SelectAllByUserId";
+        private const string _groupSelectGroupsByLessonIdProcedure = "dbo.Group_SelectAllByLessonId";
 
         private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
         private const string _userGroupDeleteProcedure = "dbo.Tag_Delete";
@@ -26,13 +27,8 @@ namespace DevEdu.DAL.Repositories
         private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
         private const string _groupSelectAllByMaterialIdProcedure = "dbo.Group_SelectByMaterialId";
 
-        private const string _taskToGroupAddProcedure = "dbo.Group_Task_Insert";
-        private const string _taskFromGroupDeleteProcedure = "dbo.Group_Task_Delete";
-        private const string _taskGroupSelectAllByGroupIdProcedure = "dbo.Group_Task_SelectAllByGroupId";
-        private const string _taskGroupSelectByIdProcedure = "dbo.Group_Task_SelectById";
-        private const string _taskGroupUpdateProcedure = "dbo.Group_Task_Update";
-
         private const string _groupSelectPresentGroupForStudentByUserId = "dbo.Group_SelectPresentGroupForStudentByUserId";
+        public GroupRepository() { }
 
         public int AddGroup(GroupDto groupDto)
         {
@@ -41,7 +37,6 @@ namespace DevEdu.DAL.Repositories
                 _groupInsertProcedure,
                 new
                 {
-                    groupDto.Id,
                     groupDto.Name,
                     groupDto.Course
                 },
@@ -160,9 +155,9 @@ namespace DevEdu.DAL.Repositories
              );
         }
 
-        public int AddGroupMaterialReference(int groupId, int materialId)
+        public void AddGroupMaterialReference(int groupId, int materialId)
         {
-            return _connection.Execute(
+            _connection.Execute(
                 _insertGroupMaterial,
                 new
                 {
@@ -173,9 +168,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int RemoveGroupMaterialReference(int groupId, int materialId)
+        public void RemoveGroupMaterialReference(int groupId, int materialId)
         {
-            return _connection.Execute(
+            _connection.Execute(
                 _deleteGroupMaterial,
                 new
                 {
@@ -213,97 +208,49 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int AddTaskToGroup(GroupTaskDto groupTaskDto)
+        public List<GroupDto> GetGroupsByMaterialId(int id)
         {
-            return _connection.QuerySingle<int>(
-                _taskToGroupAddProcedure,
-                new
-                {
-                    GroupId = groupTaskDto.Group.Id,
-                    TaskId = groupTaskDto.Task.Id,
-                    groupTaskDto.StartDate,
-                    groupTaskDto.EndDate
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            return _connection.Query<GroupDto>(
+                    _groupSelectAllByMaterialIdProcedure,
+                    new { id },
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
         }
 
-        public void DeleteTaskFromGroup(int groupId, int taskId)
+        public List<GroupDto> GetGroupsByUserId(int userId)
         {
-            _connection.Execute(
-                _taskFromGroupDeleteProcedure,
-                new
-                {
-                    groupId,
-                    taskId
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
-
-        public List<GroupTaskDto> GetTaskGroupByGroupId(int groupId)
-        {
-            GroupTaskDto result;
+            GroupDto result;
             return _connection
-                .Query<GroupTaskDto, TaskDto, GroupTaskDto>(
-                    _taskGroupSelectAllByGroupIdProcedure,
-                    (groupTask, task) =>
+                .Query<GroupDto, GroupStatus, GroupDto>(
+                    _groupSelectGroupsByUserIdProcedure,
+                    (group, groupStatus) =>
                     {
-                        result = groupTask;
-                        result.Task = task;
+                        result = group;
+                        result.GroupStatus = groupStatus;
                         return result;
                     },
-                    new { groupId },
+                    new { userId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
         }
 
-        public GroupTaskDto GetGroupTask(int groupId, int taskId)
+        public List<GroupDto> GetGroupsByLessonId(int lessonId)
         {
-            GroupTaskDto result = default;
+            GroupDto result;
             return _connection
-                .Query<GroupTaskDto, TaskDto, GroupDto, GroupStatus, GroupTaskDto>(
-                    _taskGroupSelectByIdProcedure,
-                    (groupTask, task, group, groupStatus) =>
+                .Query<GroupDto, GroupStatus, GroupDto>(
+                    _groupSelectGroupsByLessonIdProcedure,
+                    (group, groupStatus) =>
                     {
-                        result = groupTask;
-                        result.Task = task;
-                        result.Group = group;
-                        result.Group.GroupStatus = groupStatus;
+                        result = group;
+                        result.GroupStatus = groupStatus;
                         return result;
                     },
-                    new
-                    {
-                        groupId,
-                        taskId
-                    },
+                    new { lessonId },
                     splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
-                .FirstOrDefault();
-        }
-
-        public void UpdateGroupTask(GroupTaskDto groupTaskDto)
-        {
-            _connection.Execute(
-                _taskGroupUpdateProcedure,
-                new
-                {
-                    GroupId = groupTaskDto.Group.Id,
-                    TaskId = groupTaskDto.Task.Id,
-                    groupTaskDto.StartDate,
-                    groupTaskDto.EndDate
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
-        public List<GroupDto> GetGroupsByMaterialId(int id)
-        {
-            return _connection.Query<GroupDto>(
-                    _groupSelectAllByMaterialIdProcedure,
-                    new { id },
                     commandType: CommandType.StoredProcedure
                 )
                 .ToList();
@@ -327,25 +274,6 @@ namespace DevEdu.DAL.Repositories
                 )
                 .ToList();
         }
-
-        public List<GroupDto> GetGroupsByUserId(int userId)
-        {
-            GroupDto result;
-            return _connection
-                .Query<GroupDto, GroupStatus, GroupDto>(
-                    _groupSelectGroupsByUserIdProcedure,
-                    (group, groupStatus) =>
-                    {
-                        result = group;
-                        result.GroupStatus = groupStatus;
-                        return result;
-                    },
-                    new { userId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
-                .ToList();
-        }  
 
         public int GetPresentGroupForStudentByUserId(int userId)
         {

@@ -1,20 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
-using DevEdu.API.Models.InputModels;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using AutoMapper;
 using DevEdu.API.Common;
+using DevEdu.API.Configuration;
 using DevEdu.API.Extensions;
+using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
-using DevEdu.DAL.Repositories;
-using DevEdu.DAL.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using DevEdu.DAL.Enums;
-using DevEdu.API.Common;
 using DevEdu.API.Configuration.ExceptionResponses;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
@@ -50,8 +48,8 @@ namespace DevEdu.API.Controllers
         public TaskInfoOutputModel AddTaskByTeacher([FromBody] TaskByTeacherInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
-            var groupTaskDto = _mapper.Map<GroupTaskDto>(model.GroupTask);
-            var task = _taskService.AddTaskByTeacher(taskDto, groupTaskDto, model.GroupId, model.Tags);
+            var homeworkDto = _mapper.Map<HomeworkDto>(model.Homework);
+            var task = _taskService.AddTaskByTeacher(taskDto, homeworkDto, model.GroupId, model.Tags);
 
             return _mapper.Map<TaskInfoOutputModel>(task);
         }
@@ -294,22 +292,6 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<StudentAnswerOnTaskFullOutputModel>(output);
         }
 
-        // api/task/answer/{taskStudentId}/comment}
-        [HttpPost("answer/{taskStudentId}/comment")]
-        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
-        [Description("Add comment on task student answer")]
-        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public CommentInfoOutputModel AddCommentOnStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel inputModel)
-        {
-            var commentDto = _mapper.Map<CommentDto>(inputModel);
-            int commentId = _commentService.AddComment(commentDto);
-            _studentAnswerOnTaskService.AddCommentOnStudentAnswer(taskStudentId, commentId);
-
-            var output = _commentService.GetComment(commentId);
-            return _mapper.Map<CommentInfoOutputModel>(output);
-        }
         // api/task/answer/by-user/42
         [HttpGet("answer/by-user/{userId}")]
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student, Role.Methodist)]

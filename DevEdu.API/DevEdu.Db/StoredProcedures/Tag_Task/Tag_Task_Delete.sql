@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[Tag_Task_Delete]
-	@TagId int ,
+	@TagId  int,
 	@TaskId int
 AS
 	Delete from [dbo].[Tag_Task] 

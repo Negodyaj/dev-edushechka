@@ -1,26 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using DevEdu.DAL.Enums;
+﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace DevEdu.Business.Tests
 {
-    public static class GroupTaskData
+    public static class HomeworkData
     {
+        private const string _dateFormat = "dd.MM.yyyy";
 
-        public static GroupTaskDto GetGroupTaskWithoutGroupAndTask()
+        public static HomeworkDto GetHomeworkDtoWithoutGroupAndTask()
         {
-            return new GroupTaskDto
+            return new HomeworkDto
             {
                 Id = 1,
-                StartDate = DateTime.Parse("28.10.2020"),
-                EndDate = DateTime.Parse("28.10.2021")
+                StartDate = DateTime.ParseExact("28.10.2020", _dateFormat, CultureInfo.InvariantCulture),
             };
         }
 
-        public static GroupTaskDto GetGroupTaskWithGroupAndTask()
+        public static HomeworkDto GetHomeworkDtoWithGroupAndTask()
         {
-            return new GroupTaskDto
+            return new HomeworkDto
             {
                 Id = 1,
                 Task = new TaskDto
@@ -37,19 +38,19 @@ namespace DevEdu.Business.Tests
                     Id = 1,
                     Name = "group",
                     GroupStatus = new GroupStatus(),
-                    StartDate = DateTime.Parse("01.01.2021"),
+                    StartDate = DateTime.ParseExact("01.01.2021", _dateFormat, CultureInfo.InvariantCulture),
                     IsDeleted = false
                 },
-                StartDate = DateTime.Parse("28.10.2020"),
-                EndDate = DateTime.Parse("28.10.2021")
+                StartDate = DateTime.ParseExact("28.10.2020", _dateFormat, CultureInfo.InvariantCulture),
+                EndDate = DateTime.ParseExact("28.10.2021", _dateFormat, CultureInfo.InvariantCulture)
             };
         }
 
-        public static List<GroupTaskDto> GetListOfGroupTaskDtoWithTask()
+        public static List<HomeworkDto> GetListOfHomeworkDtoWithTask()
         {
-            return new List<GroupTaskDto>
+            return new List<HomeworkDto>
             {
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 1,
                     Task = new TaskDto
@@ -61,10 +62,10 @@ namespace DevEdu.Business.Tests
                         IsRequired = true,
                         IsDeleted = false
                     },
-                    StartDate = DateTime.Parse("28.10.2020"),
-                    EndDate = DateTime.Parse("28.10.2021")
+                    StartDate = DateTime.ParseExact("28.10.2020", _dateFormat, CultureInfo.InvariantCulture),
+                    EndDate = DateTime.ParseExact("28.10.2021", _dateFormat, CultureInfo.InvariantCulture)
                 },
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 2,
                     Task = new TaskDto
@@ -76,10 +77,10 @@ namespace DevEdu.Business.Tests
                         IsRequired = true,
                         IsDeleted = false
                     },
-                    StartDate = DateTime.Parse("22.10.2020"),
-                    EndDate = DateTime.Parse("22.10.2021")
+                    StartDate = DateTime.ParseExact("22.10.2020", _dateFormat, CultureInfo.InvariantCulture),
+                    EndDate = DateTime.ParseExact("22.10.2021", _dateFormat, CultureInfo.InvariantCulture)
                 },
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 3,
                     Task = new TaskDto
@@ -91,17 +92,17 @@ namespace DevEdu.Business.Tests
                         IsRequired = true,
                         IsDeleted = false
                     },
-                    StartDate = DateTime.Parse("23.10.2020"),
-                    EndDate = DateTime.Parse("23.10.2021")
+                    StartDate = DateTime.ParseExact("23.10.2020", _dateFormat, CultureInfo.InvariantCulture),
+                    EndDate = DateTime.ParseExact("23.10.2021", _dateFormat, CultureInfo.InvariantCulture)
                 }
             };
         }
 
-        public static List<GroupTaskDto> GetListOfGroupTaskDtoWithGroup()
+        public static List<HomeworkDto> GetListOfHomeworkDtoWithGroup()
         {
-            return new List<GroupTaskDto>
+            return new List<HomeworkDto>
             {
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 1,
                     Group = new GroupDto
@@ -109,13 +110,13 @@ namespace DevEdu.Business.Tests
                         Id = 1,
                         Name = "group1",
                         GroupStatus = new GroupStatus(),
-                        StartDate=DateTime.Parse("01.01.2021"),
+                        StartDate = DateTime.ParseExact("01.01.2021", _dateFormat, CultureInfo.InvariantCulture),
                         IsDeleted=false
                     },
-                    StartDate = DateTime.Parse("28.10.2020"),
-                    EndDate = DateTime.Parse("28.10.2021")
+                    StartDate = DateTime.ParseExact("28.10.2020", _dateFormat, CultureInfo.InvariantCulture),
+                    EndDate = DateTime.ParseExact("28.10.2021", _dateFormat, CultureInfo.InvariantCulture)
                 },
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 2,
                     Group = new GroupDto
@@ -123,13 +124,13 @@ namespace DevEdu.Business.Tests
                         Id = 2,
                         Name = "group2",
                         GroupStatus = new GroupStatus(),
-                        StartDate=DateTime.Parse("02.01.2021"),
+                        StartDate = DateTime.ParseExact("02.01.2021", _dateFormat, CultureInfo.InvariantCulture),
                         IsDeleted=false
                     },
-                    StartDate = DateTime.Parse("22.10.2020"),
-                    EndDate = DateTime.Parse("22.10.2021")
+                    StartDate = DateTime.ParseExact("22.10.2020", _dateFormat, CultureInfo.InvariantCulture),
+                    EndDate = DateTime.ParseExact("22.10.2021", _dateFormat, CultureInfo.InvariantCulture)
                 },
-                new GroupTaskDto
+                new HomeworkDto
                 {
                     Id = 3,
                     Group = new GroupDto
@@ -137,11 +138,11 @@ namespace DevEdu.Business.Tests
                         Id = 3,
                         Name = "group3",
                         GroupStatus = new GroupStatus(),
-                        StartDate=DateTime.Parse("03.01.2021"),
+                        StartDate = DateTime.ParseExact("03.01.2021", _dateFormat, CultureInfo.InvariantCulture),
                         IsDeleted=false
                     },
-                    StartDate = DateTime.Parse("23.10.2020"),
-                    EndDate = DateTime.Parse("23.10.2021")
+                    StartDate = DateTime.ParseExact("23.10.2020", _dateFormat, CultureInfo.InvariantCulture),
+                    EndDate = DateTime.ParseExact("23.10.2021", _dateFormat, CultureInfo.InvariantCulture)
                 }
             };
         }

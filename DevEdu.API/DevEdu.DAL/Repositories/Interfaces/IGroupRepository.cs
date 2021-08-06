@@ -16,17 +16,13 @@ namespace DevEdu.DAL.Repositories
         int AddGroupToLesson(int groupId, int lessonId);
         int RemoveGroupFromLesson(int groupId, int lessonId);
         GroupDto ChangeGroupStatus(int groupId, int statusId);
-        int AddGroupMaterialReference(int groupId, int materialId);
-        int RemoveGroupMaterialReference(int groupId, int materialId);
-        int AddTaskToGroup(GroupTaskDto groupTaskDto);
-        void DeleteTaskFromGroup(int groupId, int taskId);
-        List<GroupTaskDto> GetTaskGroupByGroupId(int groupId);
-        GroupTaskDto GetGroupTask(int groupId, int taskId);
-        void UpdateGroupTask(GroupTaskDto groupTaskDto);
+        void AddGroupMaterialReference(int groupId, int materialId);
+        void RemoveGroupMaterialReference(int groupId, int materialId);
         public List<GroupDto> GetGroupsByMaterialId(int id);
        // List<GroupDto> GetGroupsByTaskId(int taskId);
         int GetPresentGroupForStudentByUserId(int userId);
-        public List<GroupDto> GetGroupsByTaskId(int taskId);
-        public List<GroupDto> GetGroupsByUserId(int userId);
+        List<GroupDto> GetGroupsByTaskId(int taskId);
+        List<GroupDto> GetGroupsByUserId(int userId);
+        List<GroupDto> GetGroupsByLessonId(int lessonId);
     }
 }

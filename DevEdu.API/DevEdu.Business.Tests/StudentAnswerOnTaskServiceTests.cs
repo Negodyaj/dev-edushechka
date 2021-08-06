@@ -80,7 +80,7 @@ namespace DevEdu.Business.Tests
             _taskRepository.Verify(x => x.GetTaskById(taskId), Times.Once);
         }
 
-        
+
         [Test]
         public void GetStudentAnswerOnTaskByTaskIdAndStudentId_ExistingTaskIdAndStudentIdPassed_StudentAnswerGot()
         {
@@ -177,27 +177,6 @@ namespace DevEdu.Business.Tests
             _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Exactly(countEntry));
         }
 
-
-        [Test]
-        public void AddCommentOnStudentAnswer_ExistingTaskStudentIdAndcommentIdPassed_CommentWasAdded()
-        {
-            // Given
-            var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
-            var answerAddedForTaskStudent = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDtoWithAddedComment();
-            int taskStudentId = 1;
-            int commentId = 4;
-
-            _studentAnswerOnTaskRepoMock.Setup(x => x.AddCommentOnStudentAnswer(taskStudentId, commentId)).Returns(taskStudentId);
-
-            // When
-            var actualTaskStudentId = _sut.AddCommentOnStudentAnswer(taskStudentId, commentId);
-
-            // Then
-            Assert.AreEqual(taskStudentId, actualTaskStudentId);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.AddCommentOnStudentAnswer(taskStudentId, commentId), Times.Once);
-        }
-
-        
         [Test]
         public void GetAllAnswersByStudentId_ExistingUserIdPassed_ReturnListOfStudentAnswerOnTaskDto()
         {
