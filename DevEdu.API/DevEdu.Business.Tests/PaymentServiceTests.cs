@@ -209,5 +209,26 @@ namespace DevEdu.Business.Tests
             Assert.That(result.Message, Is.EqualTo(ServiceMessages.EntityNotFound));
             _paymentRepoMock.Verify(x => x.SelectPaymentsBySeveralId(ids), Times.Once);
         }
+        [Test]
+        public void UpdatePayment_PaymentIsDeleted_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var id = 4;
+            var paymentInDb = new PaymentDto()
+            {
+                Id = 4,
+                Date = DateTime.Now,
+                IsDeleted = true,
+                User = new UserDto() { Id = 1 }
+            };
+            var exp = ServiceMessages.PaymentDeleted;
+            PaymentDto payment = PaymentData.GetPayment();
+            _paymentRepoMock.Setup(x => x.GetPayment(id)).Returns(paymentInDb);
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.UpdatePayment(id, payment));
+            //Then
+            Assert.That(result.Message, Is.EqualTo(exp));
+            _paymentRepoMock.Verify(x => x.UpdatePayment(payment), Times.Never);
+        }
      }
 }

@@ -42,7 +42,7 @@ namespace DevEdu.Business.ValidationHelpers
         public List<CourseTopicDto> GetCourseTopicBySeveralIdAndThrowIfNotFound(List<int> ids)
         {
             var courseTopic = _topicRepository.GetCourseTopicBySeveralId(ids);
-            var areCourseTopicsInDataBase = (ids.All(d => courseTopic.Any(t => t.Id == d)));
+            var areCourseTopicsInDataBase = ids.All(d => courseTopic.Any(t => t.Id == d));
             if (!areCourseTopicsInDataBase)
             {
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);

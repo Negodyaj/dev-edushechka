@@ -40,7 +40,7 @@ namespace DevEdu.Business.ValidationHelpers
         }
         public void CheckPaymentsExistence(List<PaymentDto> payments, List<int> ids)
         {
-            var arePaymentsInDataBase = (ids.All(d => payments.Any(t => t.Id == d)));
+            var arePaymentsInDataBase = ids.All(d => payments.Any(t => t.Id == d));
 
             if (!arePaymentsInDataBase)
             {
