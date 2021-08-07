@@ -10,6 +10,7 @@ using DevEdu.API.Models.OutputModels;
 using DevEdu.API.Common;
 using DevEdu.DAL.Enums;
 using Microsoft.AspNetCore.Authorization;
+using DevEdu.API.Extensions;
 
 namespace DevEdu.API.Controllers
 {
@@ -28,6 +29,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/topic/{id}
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [HttpGet("{id}")]
         [Description("Get topic by id")]
         [ProducesResponseType(typeof(TopicOutputModel), StatusCodes.Status200OK)]
@@ -37,6 +39,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TopicOutputModel>(output);
         }
 
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [HttpGet]
         [Description("Get all topics")]
         [ProducesResponseType(typeof(List<TopicOutputModel>), StatusCodes.Status200OK)]
@@ -46,8 +49,8 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<TopicOutputModel>>(output);
         }
 
-        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         //  api/topic
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [HttpPost]
         [Description("Add topic")]
         [ProducesResponseType(typeof(TopicOutputModel), (StatusCodes.Status201Created))]

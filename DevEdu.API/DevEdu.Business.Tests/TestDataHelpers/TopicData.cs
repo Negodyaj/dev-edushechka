@@ -6,11 +6,7 @@ using System.Collections.Generic;
 namespace DevEdu.Business.Tests.Data
 {
     public static class TopicData
-    {
-        public const int ExpectedTopicId = 42;
-        public const int TopicId = 1;
-
-
+    {        
         public static TopicDto GetTopicDto()
         {
             return new TopicDto
