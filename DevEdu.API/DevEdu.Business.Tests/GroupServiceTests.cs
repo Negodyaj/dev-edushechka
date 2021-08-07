@@ -458,7 +458,7 @@ namespace DevEdu.Business.Tests
             //Than
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
             _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.DeleteUserFromGroup(userId, groupId), Times.Once);
         }
 
