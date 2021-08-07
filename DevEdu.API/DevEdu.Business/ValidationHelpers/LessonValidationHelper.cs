@@ -35,19 +35,13 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckUserAndTeacherAreSame(UserIdentityInfo userIdentity, int teacherId)
         {
-            if (CheckerRole.IsAdmin(userIdentity.Roles))
-                return;
-
             if (userIdentity.UserId != teacherId)
                 throw new ValidationException(string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.UserId, teacherId));
         }
 
         public void CheckUserBelongsToLesson(UserIdentityInfo userIdentity, LessonDto lesson)
         {
-            if (CheckerRole.IsAdmin(userIdentity.Roles))
-                return;
-
-            if (CheckerRole.IsStudent(userIdentity.Roles))
+            if (userIdentity.IsStudent())
             {
                 var studentGroups = _groupRepository.GetGroupsByUserId(userIdentity.UserId);
                 var result = studentGroups.Where(sg => (lesson.Groups).Any(lg => lg.Id == sg.Id));
@@ -56,7 +50,7 @@ namespace DevEdu.Business.ValidationHelpers
                     throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id));
                 }
             }
-            else if(CheckerRole.IsTeacher(userIdentity.Roles))
+            else if(userIdentity.IsTeacher())
             {
                 if(userIdentity.UserId != lesson.Teacher.Id)
                 {

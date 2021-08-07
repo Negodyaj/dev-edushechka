@@ -37,11 +37,6 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckUserBelongToGroup(int groupId, int userId, List<Role> roles)
         {
-            if (CheckerRole.IsAdmin(roles))
-            {
-                return;
-            }
-
             var checkResult = false;
             foreach (var role in roles)
             {
