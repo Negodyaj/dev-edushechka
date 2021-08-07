@@ -49,13 +49,13 @@ namespace DevEdu.Business.Tests
         {
 
             return new StudentRatingDto
-                    {
-                        Group = new GroupDto { Id = 1 },
-                        User = UserData.GetAnotherUserDto(),
-                        RatingType = GetRatingTypeDtos()[0],
-                        Rating = 80,
-                        ReportingPeriodNumber = 2
-                    };
+            {
+                Group = new GroupDto { Id = 1 },
+                User = UserData.GetAnotherUserDto(),
+                RatingType = GetRatingTypeDtos()[0],
+                Rating = 80,
+                ReportingPeriodNumber = 2
+            };
         }
 
         public static StudentRatingDto GetOutputStudentRatingDto()

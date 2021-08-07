@@ -6,8 +6,6 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DevEdu.Business.Tests
 {
@@ -64,7 +62,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.AddMaterial(materialData)).Returns(expectedId);
             _materialRepoMock.Setup(x => x.AddTagToMaterial(expectedId, It.IsAny<int>()));
             _materialRepoMock.Setup(x => x.GetMaterialById(expectedId)).Returns(new MaterialDto() { Id = expectedId });
-            _tagRepositoryMock.Setup(x => x.SelectTagById(It.IsAny<int>())).Returns(new TagDto { Id = 1});
+            _tagRepositoryMock.Setup(x => x.SelectTagById(It.IsAny<int>())).Returns(new TagDto { Id = 1 });
 
             //When
             var actualId = _sut.AddMaterial(materialData);
@@ -166,6 +164,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(materialsData, actualList);
             _materialRepoMock.Verify(x => x.GetMaterialsByTagId(tagId), Times.Once);
         }
+
         [Test]
         public void AddTagToMaterial_WithMaterialIdAndTagId_Added()
         {
@@ -180,6 +179,7 @@ namespace DevEdu.Business.Tests
             //Then
             _materialRepoMock.Verify(x => x.AddTagToMaterial(givenMaterialId, givenTagId), Times.Once);
         }
+
         [Test]
         public void DeleteTagFromMaterial_WithMaterialIdAndTagId_Deleted()
         {
@@ -195,6 +195,7 @@ namespace DevEdu.Business.Tests
             //Then
             _materialRepoMock.Verify(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId), Times.Once);
         }
+
         [Test]
         public void AddTagToMaterial_TagIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
         {
@@ -205,24 +206,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
             _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId));
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
-            
-            //When
-            var result = Assert.Throws<EntityNotFoundException>(() => 
-            _sut.AddTagToMaterial(givenMaterialId, givenTagId));
-            //Then
-            _materialRepoMock.Verify(x => x.AddTagToMaterial(givenMaterialId, givenTagId), Times.Never);
-            Assert.That(result.Message, Is.EqualTo(exp));
-        }
-        [Test]
-        public void AddTagToMaterial_MeterialIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
-        {
-            var givenMaterialId = 5;
-            var givenTagId = 2;
-            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", givenMaterialId);
-            _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
-            _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId }); ;
-            _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId));
-           
+
             //When
             var result = Assert.Throws<EntityNotFoundException>(() =>
             _sut.AddTagToMaterial(givenMaterialId, givenTagId));
@@ -230,6 +214,25 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.AddTagToMaterial(givenMaterialId, givenTagId), Times.Never);
             Assert.That(result.Message, Is.EqualTo(exp));
         }
+
+        [Test]
+        public void AddTagToMaterial_MaterialIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
+        {
+            var givenMaterialId = 5;
+            var givenTagId = 2;
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", givenMaterialId);
+            _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
+            _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId }); ;
+            _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId));
+
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() =>
+            _sut.AddTagToMaterial(givenMaterialId, givenTagId));
+            //Then
+            _materialRepoMock.Verify(x => x.AddTagToMaterial(givenMaterialId, givenTagId), Times.Never);
+            Assert.That(result.Message, Is.EqualTo(exp));
+        }
+
         [Test]
         public void DeleteTagFromMaterial_TagIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
         {
@@ -240,16 +243,17 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId));
             _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId));
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
-            
+
             //When
             var result = Assert.Throws<EntityNotFoundException>(() =>
             _sut.DeleteTagFromMaterial(givenMaterialId, givenTagId));
             //Then
-            _materialRepoMock.Verify(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId), Times.Never);;
+            _materialRepoMock.Verify(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId), Times.Never); ;
             Assert.That(result.Message, Is.EqualTo(exp));
         }
+
         [Test]
-        public void DeleteTagToMaterial_MeterialIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
+        public void DeleteTagToMaterial_MaterialIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
         {
             var givenMaterialId = 5;
             var givenTagId = 2;
@@ -257,7 +261,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
             _tagRepositoryMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId }); ;
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId));
-            
+
             //When
             var result = Assert.Throws<EntityNotFoundException>(() =>
             _sut.DeleteTagFromMaterial(givenMaterialId, givenTagId));
@@ -265,6 +269,5 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId), Times.Never);
             Assert.That(result.Message, Is.EqualTo(exp));
         }
-
     }
 }

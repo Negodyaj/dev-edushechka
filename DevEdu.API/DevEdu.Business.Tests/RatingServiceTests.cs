@@ -111,7 +111,7 @@ namespace DevEdu.Business.Tests
             var groupId = expectedStudentRatingDto.Group.Id;
             GroupDto group = default;
 
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);            
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
 
             //When
             Assert.Throws<EntityNotFoundException>(() => _sut.AddStudentRating(expectedStudentRatingDto, authorUserInfo));

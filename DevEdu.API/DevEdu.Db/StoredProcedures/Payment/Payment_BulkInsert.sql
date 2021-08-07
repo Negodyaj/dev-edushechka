@@ -1,4 +1,4 @@
-﻿Create Procedure [dbo].[Payment_BulkInsert]
+﻿CREATE Procedure [dbo].[Payment_BulkInsert]
 	@tblPayment PaymentType readonly
 as
 Begin

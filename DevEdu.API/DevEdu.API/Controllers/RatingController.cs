@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
+using DevEdu.API.Common;
+using DevEdu.API.Extensions;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Extensions;
-using DevEdu.API.Common;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Controllers
 {
