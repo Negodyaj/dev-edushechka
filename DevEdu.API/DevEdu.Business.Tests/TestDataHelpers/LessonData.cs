@@ -111,7 +111,7 @@ namespace DevEdu.Business.Tests
                     Feedback = "ok",
                     IsPresent = true,
                     AbsenceReason = null,
-                    User = new UserDto
+                    Student = new UserDto
                     {
                         Id = 12,
                         FirstName = "Petr",
@@ -127,7 +127,7 @@ namespace DevEdu.Business.Tests
                     Feedback = "ok",
                     IsPresent = false,
                     AbsenceReason = "ill",
-                    User = new UserDto
+                    Student = new UserDto
                     {
                         Id = 18,
                         FirstName = "Ivan",
@@ -146,7 +146,7 @@ namespace DevEdu.Business.Tests
             return new StudentLessonDto
             {
                 Id = 42,
-                User = new UserDto { Id = 42 },
+                Student = new UserDto { Id = 42 },
                 Lesson = new LessonDto { Id = 30 },
                 Feedback = "feedback",
                 IsPresent = true,

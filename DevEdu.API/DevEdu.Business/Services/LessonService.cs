@@ -88,93 +88,85 @@ namespace DevEdu.Business.Services
         public void AddTopicToLesson(int lessonId, int topicId) =>
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
 
-        public StudentLessonDto AddStudentToLesson(int lessonId, int userId, UserIdentityInfo userIdentityInfo)
+        public StudentLessonDto AddStudentToLesson(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
         {
-            //проверка на преподавателя и на принадлежность к уроку
-            var userrId = userIdentityInfo.UserId;
+            var userId = userIdentityInfo.UserId;
             var roles = userIdentityInfo.Roles;
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
             _lessonValidationHelper.CheckLessonExistence(lessonId);
             if (!CheckerRole.IsAdmin(roles))
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userrId);
+                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
 
-            _lessonRepository.AddStudentToLesson(lessonId, userId);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
+            _lessonRepository.AddStudentToLesson(lessonId, studentId);
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
         }
 
-        public void DeleteStudentFromLesson(int lessonId, int userId, UserIdentityInfo userIdentityInfo)
+        public void DeleteStudentFromLesson(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
         {
-            //проверка на преподавателя и на принадлежность к уроку
-            var userrId = userIdentityInfo.UserId;
+            var userId = userIdentityInfo.UserId;
             var roles = userIdentityInfo.Roles;
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
             _lessonValidationHelper.CheckLessonExistence(lessonId);
-            _lessonValidationHelper.CheckAttendanceExistence(lessonId, userId);
+            _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             if (!CheckerRole.IsAdmin(roles))
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userrId);
-            _lessonRepository.DeleteStudentFromLesson(lessonId, userId);
+                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
+            _lessonRepository.DeleteStudentFromLesson(lessonId, studentId);
         }
 
-        public StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
+        public StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
         {
-            var userrId = userIdentityInfo.UserId;
+            var userId = userIdentityInfo.UserId;
             var roles = userIdentityInfo.Roles;
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
             _lessonValidationHelper.CheckLessonExistence(lessonId);
-            _lessonValidationHelper.CheckAttendanceExistence(lessonId, userId);
-            //проверка на студента и на принадлежность к уроку
+            _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             if (!CheckerRole.IsAdmin(roles))
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userrId);
+                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
-            studentLessonDto.User = new UserDto { Id = userId };
+            studentLessonDto.Student = new UserDto { Id = studentId };
             _lessonRepository.UpdateStudentFeedbackForLesson(studentLessonDto);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
         }
 
-        public StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
+        public StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
         {
-            var userrId = userIdentityInfo.UserId;
+            var userId = userIdentityInfo.UserId;
             var roles = userIdentityInfo.Roles;
             _lessonValidationHelper.CheckLessonExistence(lessonId);
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-            _lessonValidationHelper.CheckAttendanceExistence(lessonId, userId);
-            //проверка на студента и на принадлежность к уроку
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
+            _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             if (!CheckerRole.IsAdmin(roles))
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userrId);
+                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
-            studentLessonDto.User = new UserDto { Id = userId };
+            studentLessonDto.Student = new UserDto { Id = studentId };
             _lessonRepository.UpdateStudentAbsenceReasonOnLesson(studentLessonDto);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
         }
 
-        public StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
+        public StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
         {
-            //проверка на преподавателя и на принадлежность к уроку
-            var userrId = userIdentityInfo.UserId;
+            var userId = userIdentityInfo.UserId;
             var roles = userIdentityInfo.Roles;
             if (!CheckerRole.IsAdmin(roles))
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userrId);
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId); 
+                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId); 
             _lessonValidationHelper.CheckLessonExistence(lessonId);
-            _lessonValidationHelper.CheckAttendanceExistence(lessonId, userId);
-
-
+            _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
-            studentLessonDto.User = new UserDto { Id = userId };
+            studentLessonDto.Student = new UserDto { Id = studentId };
             _lessonRepository.UpdateStudentAttendanceOnLesson(studentLessonDto);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
         }
 
         public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId, UserIdentityInfo userIdentityInfo)
         {
-            var userrId = userIdentityInfo.UserId;
+            var userId = userIdentityInfo.UserId;
             var roles = userIdentityInfo.Roles;
             _lessonValidationHelper.CheckLessonExistence(lessonId);
             if (CheckerRole.IsStudent(roles) || CheckerRole.IsTeacher(roles))
             {
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userrId);
+                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
             }
-            //кто имеет допуск к уроку проверка пользователя на принадлежность к уроку?
             return _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
         }                
 

@@ -15,5 +15,7 @@
         public const string MinimumAllowedValueMessage = "{0} less than allowed value = {1}";
         public const string MinimumAllowedValueWithTwoParamsMessage = "{0} or {1} less than allowed value = {2}";
         public const string EntityWithEmailNotFoundMessage = "{0} with email = {1} was not found";
+        public const string UserOnLessonNotFoundMessage = "User with id {0} doesn`t belong to lesson with id {1}";
+
     }
 }
