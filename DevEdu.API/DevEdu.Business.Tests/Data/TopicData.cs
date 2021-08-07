@@ -15,14 +15,14 @@ namespace DevEdu.Business.Tests.Data
             return new TopicDto
             {
                 Name = "Topic1",
-                Duration = 5,               
+                Duration = 5,
             };
         }
 
         public static TopicDto GetTopicWithTagsDto()
         {
             return new TopicDto
-            {               
+            {
                 Name = "Topic1",
                 Duration = 5,
                 Tags = new List<TagDto>

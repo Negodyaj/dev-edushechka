@@ -1,7 +1,7 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
-using DevEdu.Business.ValidationHelpers;
 
 namespace DevEdu.Business.Services
 {
@@ -32,13 +32,6 @@ namespace DevEdu.Business.Services
             
         }
 
-        public void AddCommentToLesson(int lessonId, CommentDto commentDto)
-        {
-            int commentId = _commentRepository.AddComment(commentDto);
-
-            _lessonRepository.AddCommentToLesson(lessonId, commentId);
-        }
-
         public LessonDto AddLesson(UserIdentityInfo userIdentity, LessonDto lessonDto, List<int> topicIds)
         {
             _lessonValidationHelper.CheckUserAndTeacherAreSame(userIdentity, lessonDto.Teacher.Id);
@@ -55,8 +48,6 @@ namespace DevEdu.Business.Services
             }
             return _lessonRepository.SelectLessonById(lessonId);
         }
-
-        public void DeleteCommentFromLesson(int lessonId, int commentId) => _lessonRepository.DeleteCommentFromLesson(lessonId, commentId);
 
         public void DeleteLesson(UserIdentityInfo userIdentity, int id)
         {
@@ -114,14 +105,14 @@ namespace DevEdu.Business.Services
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
 
         public StudentLessonDto AddStudentToLesson(int lessonId, int userId)
-        {         
+        {
             _lessonRepository.AddStudentToLesson(lessonId, userId);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);           
+            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
         }
 
         public void DeleteStudentFromLesson(int lessonId, int userId)
-        {            
-            _lessonRepository.DeleteStudentFromLesson(lessonId, userId);               
+        {
+            _lessonRepository.DeleteStudentFromLesson(lessonId, userId);
         }
 
         public StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
@@ -165,7 +156,7 @@ namespace DevEdu.Business.Services
             return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
         }
 
-        public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId)=>
-            _lessonRepository.SelectAllFeedbackByLessonId(lessonId);       
+        public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId) =>
+            _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
     }
 }

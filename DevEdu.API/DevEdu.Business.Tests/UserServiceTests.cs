@@ -6,8 +6,6 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
@@ -127,7 +125,7 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(expectedUser, actualUser);
             _repoMock.Verify(x => x.AddUser(expectedUser), Times.Once);
-            _repoMock.Verify(x => x.AddUserRole(actualUser.Id, It.IsAny<int>()), Times.Never); 
+            _repoMock.Verify(x => x.AddUserRole(actualUser.Id, It.IsAny<int>()), Times.Never);
             _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.AtLeastOnce);
         }
 

@@ -64,5 +64,14 @@ namespace DevEdu.Business.ValidationHelpers
             }
         }
 
+
+        public void CheckUserInLessonAccess(int lessonId, int userId)
+        {
+            var groupsByLesson = _groupRepository.GetGroupsByLessonId(lessonId);
+            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var result = groupsByUser.FirstOrDefault(gu => groupsByLesson.Any(gl => gl.Id == gu.Id));
+            if (result == default)
+                throw new AuthorizationException(string.Format(ServiceMessages.UserOnLessonNotFoundMessage, userId, lessonId));
+        }
     }
 }

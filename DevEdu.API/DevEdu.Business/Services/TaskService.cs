@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DevEdu.Business.Constants;
-using DevEdu.Business.Exceptions;
+﻿using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
 {
@@ -15,6 +13,7 @@ namespace DevEdu.Business.Services
         private readonly ICourseRepository _courseRepository;
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
         private readonly IGroupRepository _groupRepository;
+        private readonly IHomeworkRepository _homeworkRepository;
         private readonly ITaskValidationHelper _taskValidationHelper;
         private readonly IUserValidationHelper _userValidationHelper;
 
@@ -23,6 +22,7 @@ namespace DevEdu.Business.Services
             ICourseRepository courseRepository,
             IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository,
             IGroupRepository groupRepository,
+            IHomeworkRepository homeworkRepository,
             ITaskValidationHelper taskValidationHelper,
             IUserValidationHelper userValidationHelper
         )
@@ -31,6 +31,7 @@ namespace DevEdu.Business.Services
             _courseRepository = courseRepository;
             _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
             _groupRepository = groupRepository;
+            _homeworkRepository = homeworkRepository;
             _taskValidationHelper = taskValidationHelper;
             _userValidationHelper = userValidationHelper;
         }
@@ -47,17 +48,17 @@ namespace DevEdu.Business.Services
             return task;
         }
 
-        public TaskDto AddTaskByTeacher(TaskDto taskDto, GroupTaskDto groupTask, int groupId, List<int> tagsIds)
+        public TaskDto AddTaskByTeacher(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds)
         {
             var taskId = _taskRepository.AddTask(taskDto);
             var task = _taskRepository.GetTaskById(taskId);
             if (tagsIds != null && tagsIds.Count != 0)
                 tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
-            if (groupTask != null)
+            if (homework != null)
             {
-                groupTask.Group = _groupRepository.GetGroup(groupId);
-                groupTask.Task = task;
-                _groupRepository.AddTaskToGroup(groupTask);
+                homework.Group = _groupRepository.GetGroup(groupId);
+                homework.Task = task;
+                _homeworkRepository.AddHomework(homework);
             }
             return task;
         }
@@ -66,9 +67,9 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if(userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
                 _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
-            if(userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
                 _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
             }
@@ -92,34 +93,34 @@ namespace DevEdu.Business.Services
             return _taskRepository.DeleteTask(taskId);
         }
 
-        public TaskDto GetTaskById(int taskid, UserIdentityInfo userIdentityInfo)
+        public TaskDto GetTaskById(int taskId, UserIdentityInfo userIdentityInfo)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
-            var taskDto = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskid);
-            if(!userIdentityInfo.Roles.Contains(Role.Admin))
-            _taskValidationHelper.CheckUserAccessToTask(taskid, userIdentityInfo.UserId);
+            var taskDto = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            if (!userIdentityInfo.Roles.Contains(Role.Admin))
+                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
 
             return taskDto;
         }
 
-        public TaskDto GetTaskWithCoursesById(int taskid, UserIdentityInfo userIdentityInfo)
+        public TaskDto GetTaskWithCoursesById(int taskId, UserIdentityInfo userIdentityInfo)
         {
-            var taskDto = GetTaskById(taskid, userIdentityInfo);
-            taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(taskid);
+            var taskDto = GetTaskById(taskId, userIdentityInfo);
+            taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(taskId);
             return taskDto;
         }
 
-        public TaskDto GetTaskWithAnswersById(int taskid, UserIdentityInfo userIdentityInfo)
+        public TaskDto GetTaskWithAnswersById(int taskId, UserIdentityInfo userIdentityInfo)
         {
-            var taskDto = GetTaskById(taskid, userIdentityInfo);
-            taskDto.StudentAnswers = _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskid);
+            var taskDto = GetTaskById(taskId, userIdentityInfo);
+            taskDto.StudentAnswers = _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
             return taskDto;
         }
 
-        public TaskDto GetTaskWithGroupsById(int taskid, UserIdentityInfo userIdentityInfo)
+        public TaskDto GetTaskWithGroupsById(int taskId, UserIdentityInfo userIdentityInfo)
         {
-            var taskDto = GetTaskById(taskid, userIdentityInfo);
-            taskDto.Groups = _groupRepository.GetGroupsByTaskId(taskid);
+            var taskDto = GetTaskById(taskId, userIdentityInfo);
+            taskDto.Groups = _groupRepository.GetGroupsByTaskId(taskId);
             return taskDto;
         }
 
@@ -128,7 +129,7 @@ namespace DevEdu.Business.Services
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var tasks = _taskRepository.GetTasks();
             var allowedTaskDtos = new List<TaskDto>();
-            if (!userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Admin))
                 return tasks;
             foreach (var task in tasks)
             {

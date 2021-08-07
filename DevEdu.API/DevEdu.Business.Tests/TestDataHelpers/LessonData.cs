@@ -7,7 +7,7 @@ namespace DevEdu.Business.Tests
 {
     public static class LessonData
     {
-        private const string _dateFormat = "dd.MM.yyyy"; 
+        private const string _dateFormat = "dd.MM.yyyy";
 
         public static int LessonId = 30;
 
@@ -35,7 +35,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static LessonDto GetSelectedLessonDto()  
+        public static LessonDto GetSelectedLessonDto()
         {
             return new LessonDto
             {
@@ -50,7 +50,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<LessonDto> GetLessons() 
+        public static List<LessonDto> GetLessons()
         {
             return new List<LessonDto>{
                 new LessonDto
@@ -78,7 +78,7 @@ namespace DevEdu.Business.Tests
                         new TopicDto{
                             Id = 6,
                             Name = "service"
-                        }, 
+                        },
                         new TopicDto{
                             Id = 7,
                             Name = "tests"
@@ -88,7 +88,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<StudentLessonDto> GetAttendances() 
+        public static List<StudentLessonDto> GetAttendances()
         {
             return new List<StudentLessonDto> {
                 new StudentLessonDto

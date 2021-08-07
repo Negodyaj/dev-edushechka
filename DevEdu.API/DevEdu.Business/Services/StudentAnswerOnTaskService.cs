@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using DevEdu.DAL.Enums;
+﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
 {
@@ -75,8 +75,6 @@ namespace DevEdu.Business.Services
 
             return _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
         }
-
-        public int AddCommentOnStudentAnswer(int taskStudentId, int commentId) => _studentAnswerOnTaskRepository.AddCommentOnStudentAnswer(taskStudentId, commentId);
 
         public List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId)
         {

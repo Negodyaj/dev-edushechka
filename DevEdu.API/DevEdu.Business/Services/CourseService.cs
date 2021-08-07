@@ -15,20 +15,23 @@ namespace DevEdu.Business.Services
         private readonly ITopicRepository _topicRepository;
         private readonly ITaskRepository _taskRepository;
         private readonly IMaterialRepository _materialRepository;
-        private readonly ICourseValidationHelper  _courseValidationHelper;
-        private readonly ITopicValidationHelper _topicValidationHelper;
+        private readonly ICourseValidationHelper _courseValidationHelper;
         private readonly IMaterialValidationHelper _materialValidationHelper;
+        private readonly ITopicValidationHelper _topicValidationHelper;
 
-        public CourseService(ITopicRepository topicRepository,
-                             ICourseRepository courseRepository,
-                             ITaskRepository taskRepository,
-                             IMaterialRepository materialRepository,
-                             ICourseValidationHelper courseValidationHelper,
-                             ITopicValidationHelper topicValidationHelper,
-                             IMaterialValidationHelper materialValidationHelper)
+        public CourseService
+        (
+            ICourseRepository courseRepository,
+            ITopicRepository topicRepository,
+            ITaskRepository taskRepository,
+            IMaterialRepository materialRepository,
+            ICourseValidationHelper courseValidationHelper,
+            IMaterialValidationHelper materialValidationHelper,
+            ITopicValidationHelper topicValidationHelper
+        )
         {
-            _topicRepository = topicRepository;
             _courseRepository = courseRepository;
+            _topicRepository = topicRepository;
             _taskRepository = taskRepository;
             _materialRepository = materialRepository;
             _courseValidationHelper = courseValidationHelper;
@@ -104,13 +107,16 @@ namespace DevEdu.Business.Services
 
         public int AddCourseMaterialReference(int courseId, int materialId)
         {
-            CheckCourseAndMaterialExistences(courseId, materialId);
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _materialValidationHelper.CheckMaterialExistence(materialId);
             return _courseRepository.AddCourseMaterialReference(courseId, materialId);
         }
-        public int RemoveCourseMaterialReference(int courseId, int materialId)
+
+        public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
-            CheckCourseAndMaterialExistences(courseId, materialId);
-            return _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
         }
 
         public List<int> UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
@@ -180,13 +186,13 @@ namespace DevEdu.Business.Services
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
             _topicValidationHelper.CheckTopicExistence(topicId);
-            
+
         }
         private void CheckCourseAndMaterialExistences(int courseId, int materialId)
         {
-        _courseValidationHelper.CheckCourseExistence(courseId);
-        _materialValidationHelper.CheckMaterialExistence(materialId);
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _materialValidationHelper.CheckMaterialExistence(materialId);
         }
-        
+
     }
 }

@@ -1,9 +1,7 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
-using DevEdu.Business.Constants;
-using DevEdu.Business.Exceptions;
-using DevEdu.Business.ValidationHelpers;
 
 namespace DevEdu.Business.Services
 {
@@ -46,7 +44,7 @@ namespace DevEdu.Business.Services
         public TopicDto UpdateTopic(int id, TopicDto topicDto)
         {
             topicDto.Id = id;
-           _topicRepository.UpdateTopic(topicDto);
+            _topicRepository.UpdateTopic(topicDto);
             return _topicRepository.GetTopic(id);
         }
 

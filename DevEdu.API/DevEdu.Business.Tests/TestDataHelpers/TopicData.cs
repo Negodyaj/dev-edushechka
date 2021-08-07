@@ -1,6 +1,5 @@
-using System.Collections.Generic;
 using DevEdu.DAL.Models;
-using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
