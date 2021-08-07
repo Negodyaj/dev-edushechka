@@ -3,6 +3,7 @@ using Dapper;
 using System.Collections.Generic;
 using DevEdu.DAL.Models;
 using System.Linq;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -29,9 +30,7 @@ namespace DevEdu.DAL.Repositories
         private const string _selectByLessonAndUserIdProcedure = "dbo.Student_Lesson_SelectByLessonAndUserId";
 
 
-        public LessonRepository()
-        {
-        }
+        public LessonRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddLesson(LessonDto lessonDto)
         {

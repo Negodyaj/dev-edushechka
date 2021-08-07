@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Collections.Generic;
 using DevEdu.DAL.Enums;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -20,7 +21,7 @@ namespace DevEdu.DAL.Repositories
         private const string _userRoleAddProcedure = "dbo.User_Role_Insert";
         private const string _userRoleDeleteProcedure = "dbo.User_Role_Delete";
 
-        public UserRepository() { }
+        public UserRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddUser(UserDto user)
         {

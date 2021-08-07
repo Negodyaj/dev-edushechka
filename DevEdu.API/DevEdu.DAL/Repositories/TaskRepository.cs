@@ -4,6 +4,7 @@ using System.Linq;
 using Dapper;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -19,7 +20,7 @@ namespace DevEdu.DAL.Repositories
         private const string _tagTaskDeleteProcedure = "dbo.Tag_Task_Delete";
         private const string _taskGroupSelectAllByTaskIdProcedure = "dbo.Group_Task_SelectAllByTaskId";
 
-        public TaskRepository()
+        public TaskRepository(IOptions<DatabaseSettings> options) : base(options)
         {
 
         }

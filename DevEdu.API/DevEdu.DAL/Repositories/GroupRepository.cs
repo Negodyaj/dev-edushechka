@@ -4,6 +4,7 @@ using System.Linq;
 using Dapper;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -32,6 +33,7 @@ namespace DevEdu.DAL.Repositories
         private const string _taskGroupUpdateProcedure = "dbo.Group_Task_Update";
 
         private const string _groupSelectPresentGroupForStudentByUserId = "dbo.Group_SelectPresentGroupForStudentByUserId";
+        public GroupRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddGroup(GroupDto groupDto)
         {

@@ -5,6 +5,7 @@ using DevEdu.DAL.Models;
 using System.Linq;
 using DevEdu.DAL.Enums;
 using System;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -21,10 +22,7 @@ namespace DevEdu.DAL.Repositories
         private const string _taskStudentCommentInsert = "dbo.Task_Student_Comment_Insert";
         private const string _task_Student_SelectByTaskIdProcedure = "dbo.Task_Student_SelectByTaskId";
 
-        public StudentAnswerOnTaskRepository()
-        {
-
-        }
+        public StudentAnswerOnTaskRepository(IOptions<DatabaseSettings> options) : base(options) {}
 
         public void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {

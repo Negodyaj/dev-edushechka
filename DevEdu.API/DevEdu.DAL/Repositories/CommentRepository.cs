@@ -4,6 +4,7 @@ using System.Linq;
 using Dapper;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -16,7 +17,7 @@ namespace DevEdu.DAL.Repositories
         private const string _commentUpdateProcedure = "dbo.Comment_Update";
         private const string _commentsFromLessonSelectByLessonIdProcedure = "dbo.Comment_SelectByLessonId";
 
-        public CommentRepository() { }
+        public CommentRepository(IOptions<DatabaseSettings> options) : base(options){ }
 
         public int AddComment(CommentDto commentDto)
         {

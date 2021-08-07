@@ -4,6 +4,7 @@ using System.Linq;
 using Dapper;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -16,6 +17,7 @@ namespace DevEdu.DAL.Repositories
         private const string _notificationSelectAllByGroupIdProcedure = "dbo.Notification_SelectAllByGroupId";
         private const string _notificationSelectAllByRoleIdProcedure = "dbo.Notification_SelectAllByRoleId";
         private const string _notificationUpdateProcedure = "dbo.Notification_Update";
+        public NotificationRepository(IOptions<DatabaseSettings> options) : base(options) { }
         public int AddNotification(NotificationDto notificationDto)
         {
             return _connection.QuerySingle<int>(

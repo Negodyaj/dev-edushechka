@@ -3,6 +3,7 @@ using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -14,6 +15,9 @@ namespace DevEdu.DAL.Repositories
         private const string _tagSelectByIDProcedure = "dbo.Tag_SelectByID";
         private const string _tagUpdateProcedure = "dbo.Tag_Update";
 
+        public TagRepository(IOptions<DatabaseSettings> options) : base(options)
+        {
+        }
 
         public int AddTag(TagDto tagDto)
         {

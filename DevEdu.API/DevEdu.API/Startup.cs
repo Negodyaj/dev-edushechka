@@ -15,6 +15,11 @@ using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
 using System.Text.Json.Serialization;
 using System.Net;
+using DevEdu.DAL.Models;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace DevEdu.API
 {
@@ -23,6 +28,10 @@ namespace DevEdu.API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            //var builder = new ConfigurationBuilder().AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "Properties", "launchSettings.json"));
+            //Configuration = builder.Build();
+
         }
 
         public IConfiguration Configuration { get; }
@@ -30,6 +39,10 @@ namespace DevEdu.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions<IConfiguration>();
+            services.AddOptions<DatabaseSettings>().Bind(Configuration.GetSection(nameof(DatabaseSettings))).ValidateDataAnnotations();
+            
+
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IMaterialRepository, MaterialRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
