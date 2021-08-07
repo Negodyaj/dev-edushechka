@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.ValidationHelpers
 {

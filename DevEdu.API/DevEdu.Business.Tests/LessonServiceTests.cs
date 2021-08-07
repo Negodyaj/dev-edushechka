@@ -8,6 +8,7 @@ using DevEdu.Business.Constants;
 using System.Collections.Generic;
 using System.Linq;
 using DevEdu.DAL.Models;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Tests
 {
@@ -30,14 +31,14 @@ namespace DevEdu.Business.Tests
             _groupRepository = new Mock<IGroupRepository>();
             _userRepository = new Mock<IUserRepository>();
 
-            UserValidationHelper userValidationHelper = new UserValidationHelper(_userRepository.Object);
-            ILessonValidationHelper lessonValidationHelper = new LessonValidationHelper(
+            var userValidationHelper = new UserValidationHelper(_userRepository.Object);
+            var lessonValidationHelper = new LessonValidationHelper(
                 _lessonRepository.Object,
                 _groupRepository.Object,
                 _userRepository.Object
             );
-            ITopicValidationHelper topicValidationHelper = new TopicValidationHelper(_topicRepository.Object);
-            IGroupValidationHelper groupValidationHelper = new GroupValidationHelper(_groupRepository.Object);
+            var topicValidationHelper = new TopicValidationHelper(_topicRepository.Object);
+            var groupValidationHelper = new GroupValidationHelper(_groupRepository.Object);
 
             _sut = new LessonService(_lessonRepository.Object,
                     _commentRepository.Object,
@@ -199,7 +200,7 @@ namespace DevEdu.Business.Tests
         public void AddLesson_UserDtoAndSimpleDtoAndListOfTopicsPassed_LessonAdded()
         {
             //Given
-            var userIdentity = UserData.GetTeacherIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var lessonId = LessonData.LessonId;
             var expectedLesson = LessonData.GetSelectedLessonDto();
             var topicIds = TopicData.GetListTopicId();
@@ -231,7 +232,7 @@ namespace DevEdu.Business.Tests
         public void AddLesson_UserAndTeacherAreNotSame_ValidationExceptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetTeacherIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var addedLesson = LessonData.GetLessonDto();
             var expectedException = string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.UserId, addedLesson.Teacher.Id);
 
@@ -250,7 +251,7 @@ namespace DevEdu.Business.Tests
         public void AddLesson_TopicDoesntExist_EntityNotFoundExceptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetTeacherIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var addedLesson = LessonData.GetSelectedLessonDto();
             var topicIds = new List<int>{1};
 
@@ -273,7 +274,7 @@ namespace DevEdu.Business.Tests
         public void SelectAllLessonsByGroupId_UserDtoAndExistingGroupIdPassed_LessonsReturned()
         { 
             //Given
-            var userIdentity = UserData.GetTeacherIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var userDto = UserData.GetTeacherDto();
             var expected = LessonData.GetLessons();
             var group = GroupData.GetGroupDto();
@@ -298,7 +299,7 @@ namespace DevEdu.Business.Tests
         public void SelectAllLessonsByGroupId_GroupDoesntExist_EntityNotFoundExciptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetTeacherIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var groupId = 3;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "group", groupId);
 
@@ -318,7 +319,7 @@ namespace DevEdu.Business.Tests
         public void SelectAllLessonsByGroupId_UserDoesntBelongTOGroup_AuthorizationExceptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetTeacherIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var group = GroupData.GetGroupDto();
             var lessons = new List<UserDto> { };
             var expectedException = string.Format(ServiceMessages.UserDoesntBelongToGroup, userIdentity.UserId, group.Id);
@@ -376,7 +377,7 @@ namespace DevEdu.Business.Tests
         public void SelectLessonWithCommentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsReturned()
         {
             //Given
-            var userIdentity = UserData.GetAdminIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lessonId = LessonData.LessonId;
             var lesson = LessonData.GetSelectedLessonDto();
             var comments = CommentData.GetListCommentsDto();
@@ -402,7 +403,7 @@ namespace DevEdu.Business.Tests
         public void SelectLessonWithCommentsById_LessonDoesntExist_EntityNotFoundExciptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetAdminIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lessonId = LessonData.LessonId;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
 
@@ -423,7 +424,7 @@ namespace DevEdu.Business.Tests
         public void SelectLessonWithCommentsById_UserDoesntBelongToLesson_AuthorizationExceptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetStudentIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithStudentRole();
             var lesson = LessonData.GetLessonDto();
             var groups = new List<GroupDto> { };
             var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
@@ -446,7 +447,7 @@ namespace DevEdu.Business.Tests
         public void SelectLessonWithCommentsAndStudentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsAndAttendancesReturned()
         {
             //Given
-            var userIdentity = UserData.GetAdminIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lesson = LessonData.GetSelectedLessonDto();
             var comments = CommentData.GetListCommentsDto();
             var students = LessonData.GetAttendances();
@@ -476,7 +477,7 @@ namespace DevEdu.Business.Tests
         public void SelectLessonWithCommentsAndStudentsById_LessonDoesntExist_EntityNotFoundExciptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetAdminIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lessonId = LessonData.LessonId;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
 
@@ -497,7 +498,7 @@ namespace DevEdu.Business.Tests
         public void SelectLessonWithCommentsAndStudentsById_UserDoesntBelongToLesson_AuthorizationExceptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetTeacherIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var lesson = LessonData.GetLessonDto();
             var groups = new List<GroupDto> { };
             var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
@@ -520,7 +521,7 @@ namespace DevEdu.Business.Tests
         public void UpdateLesson_UserDtoAndSimpleDtoWithoutTeacherPassed_UpdatedLessonReturned()
         {
             //Given
-            var userIdentity = UserData.GetTeacherIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var lessonId = LessonData.LessonId;
             var updatedLesson = LessonData.GetUpdatedLessonDto();
             var expected = LessonData.GetSelectedLessonDto();
@@ -543,7 +544,7 @@ namespace DevEdu.Business.Tests
         public void UpdateLesson_LessonDoesntExist_EntityNotFoundExciptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetAdminIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lessonId = LessonData.LessonId;
             var updatedLesson = LessonData.GetLessonDto();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
@@ -564,7 +565,7 @@ namespace DevEdu.Business.Tests
         public void UpdateLesson_UserDoesntBelongToLesson_AuthorizationExceptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetTeacherIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var lesson = LessonData.GetLessonDto();
             var groups = new List<GroupDto> { };
             var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
@@ -586,7 +587,7 @@ namespace DevEdu.Business.Tests
         public void DeleteLesson_UserDtoAndExistingLessonIdPassed_DeletedLesson()
         {
             //Given
-            var userIdentity = UserData.GetTeacherIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var lessonId = LessonData.LessonId;
             var lesson = LessonData.GetSelectedLessonDto();
 
@@ -606,7 +607,7 @@ namespace DevEdu.Business.Tests
         public void DeleteLesson_LessonDoesntExist_EntityNotFoundExciptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetAdminIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lessonId = LessonData.LessonId;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
 
@@ -626,7 +627,7 @@ namespace DevEdu.Business.Tests
         public void DeleteLesson_UserDoesntBelongToLesson_AuthorizationExceptionReturned()
         {
             //Given
-            var userIdentity = UserData.GetTeacherIdentity();
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var lesson = LessonData.GetLessonDto();
             var groups = new List<GroupDto> { };
             var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);

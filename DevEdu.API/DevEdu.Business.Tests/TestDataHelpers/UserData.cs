@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Enums;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -54,7 +55,6 @@ namespace DevEdu.Business.Tests
                 Roles = new List<Role> { Role.Student }
             };
         }
-
         public static UserDto GetTeacherDto()
         {
             return new UserDto
@@ -64,51 +64,6 @@ namespace DevEdu.Business.Tests
                 LastName = "Ivanovna",
                 Email = "olga@mail.ru",
                 Photo = " http://photo.jpg"
-            };
-        }
-
-        public static UserIdentityInfo GetAdminIdentity()
-        {
-            return new UserIdentityInfo
-            {
-                UserId = 1,
-                Roles = new List<Role> { Role.Admin }
-            };
-        }
-
-        public static UserIdentityInfo GetManagerIdentity()
-        {
-            return new UserIdentityInfo
-            {
-                UserId = 10,
-                Roles = new List<Role> { Role.Manager }
-            };
-        }
-
-        public static UserIdentityInfo GetMethodistIdentity()
-        {
-            return new UserIdentityInfo
-            {
-                UserId = 8,
-                Roles = new List<Role> { Role.Methodist }
-            };
-        }
-
-        public static UserIdentityInfo GetTeacherIdentity()
-        {
-            return new UserIdentityInfo
-            {
-                UserId = 3,
-                Roles = new List<Role> { Role.Teacher }
-            };
-        }
-
-        public static UserIdentityInfo GetStudentIdentity()
-        {
-            return new UserIdentityInfo
-            {
-                UserId = 50,
-                Roles = new List<Role> { Role.Student }
             };
         }
 
