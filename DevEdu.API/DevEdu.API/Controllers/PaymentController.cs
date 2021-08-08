@@ -6,11 +6,13 @@ using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels.Payment;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentController : Controller
@@ -28,7 +30,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Get payment by id")]
         public PaymentOutputModel GetPayment(int id)
         {
@@ -41,7 +42,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Get all payments by user id")]
         public List<PaymentOutputModel> SelectAllPaymentsByUserId(int userId)
         {
@@ -70,7 +70,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType (StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Delete payment by id")]
         public void DeletePayment(int id)
         {

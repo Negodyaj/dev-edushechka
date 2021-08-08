@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class RatingController: Controller
@@ -76,7 +78,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<StudentRatingOutputModel> GetStudentRatingByGroupID(int groupId)
+        public List<StudentRatingOutputModel> GetStudentRatingByGroupId(int groupId)
         {
             var dto = _service.GetStudentRatingByGroupId(groupId);
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);

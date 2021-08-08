@@ -30,7 +30,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel GetComment(int id)
         {
             var dto = _commentService.GetComment(id);
@@ -44,7 +43,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<CommentInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<CommentInfoOutputModel> GetCommentsByUserId(int userId)
         {
             var dto = _commentService.GetCommentsByUserId(userId);
@@ -57,7 +55,6 @@ namespace DevEdu.API.Controllers
         [Description("Add new comment")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public int AddComment([FromBody] CommentAddInputModel model)
         {
@@ -71,7 +68,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteComment(int id)
         {
             _commentService.DeleteComment(id);

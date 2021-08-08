@@ -33,11 +33,9 @@ namespace DevEdu.API.Controllers
 
         [HttpGet("{id}/simple")]
         [Description("Get course by id with groups")]
-
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CourseInfoFullOutputModel GetCourseSimple(int id)
         {
             var course = _courseService.GetCourse(id);
@@ -49,7 +47,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CourseInfoFullOutputModel GetCourseFull(int id)
         {
             var course = _courseService.GetFullCourseInfo(id);
@@ -60,9 +57,7 @@ namespace DevEdu.API.Controllers
         [Description("Get all courses")]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public List<CourseInfoFullOutputModel> GetAllCoursesWithGrops()
+        public List<CourseInfoFullOutputModel> GetAllCoursesWithGroups()
         {
             var courses = _courseService.GetCourses();
             return _mapper.Map<List<CourseInfoFullOutputModel>>(courses);
@@ -73,7 +68,6 @@ namespace DevEdu.API.Controllers
         [Description("Create new course")]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CourseInfoFullOutputModel AddCourse([FromBody] CourseInputModel model)
         {
@@ -87,7 +81,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteCourse(int id)
         {
             _courseService.DeleteCourse(id);
@@ -112,7 +105,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void AddMaterialToCourse(int courseId, int materialId)
         {
             _courseService.AddCourseMaterialReference(courseId, materialId);
@@ -123,7 +115,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void RemoveMaterialFromCourse(int courseId, int materialId)
         {
             _courseService.RemoveCourseMaterialReference(courseId, materialId);
@@ -134,7 +125,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public string AddTaskToCourse(int courseId, int taskId)
         {
             _courseService.AddTaskToCourse(courseId, taskId);
@@ -146,7 +136,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public string RemoveTaskFromCourse(int courseId, int taskId)
         {
             _courseService.DeleteTaskFromCourse(courseId, taskId);
@@ -188,7 +177,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public string DeleteTopicFromCourse(int courseId, int topicId)
         {
             _courseService.DeleteTopicFromCourse(courseId, topicId);
@@ -196,14 +184,10 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpGet("{courseId}/topics")]
-        [Description("Get all topics by course id ")]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        [Description("Get all topics by course id")]
         [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<CourseTopicOutputModel> SelectAllTopicsByCourseId(int courseId)
         {
             var list = _courseService.SelectAllTopicsByCourseId(courseId);

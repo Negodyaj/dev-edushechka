@@ -47,7 +47,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteLesson(int id)
         {
             _lessonService.DeleteLesson(id);
@@ -73,7 +72,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<LessonInfoOutputModel> GetAllLessonsByGroupId(int id)
         {
             var dto = _lessonService.SelectAllLessonsByGroupId(id);
@@ -84,8 +82,8 @@ namespace DevEdu.API.Controllers
         [HttpGet("/by-teacherId/{id}")]
         [Description("Get all lessons by teacherId.")]
         [ProducesResponseType(typeof(List<LessonInfoWithCourseOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<LessonInfoWithCourseOutputModel> GetAllLessonsByTeacherId(int id)
         {
             var dto = _lessonService.SelectAllLessonsByTeacherId(id);
@@ -98,7 +96,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public LessonInfoOutputModel GetLessonById(int id)
         {
             var dto = _lessonService.SelectLessonById(id);
@@ -111,7 +108,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public LessonInfoWithCommentsOutputModel GetAllLessonsWithComments(int id)
         {
             var dto = _lessonService.SelectLessonWithCommentsById(id);
@@ -125,7 +121,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public LessonInfoWithStudentsAndCommentsOutputModel GetAllLessonsWithStudentsAndComments(int id)
         {
             var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(id);
@@ -158,7 +153,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void DeleteTopicFromLesson(int lessonId, int topicId)
         {
             _lessonService.DeleteTopicFromLesson(lessonId, topicId);
@@ -170,7 +164,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public void AddTopicToLesson(int lessonId, int topicId)
         {
             _lessonService.AddTopicToLesson(lessonId, topicId);
@@ -180,6 +173,8 @@ namespace DevEdu.API.Controllers
         [HttpPost("{lessonId}/user/{userId}")]
         [Description("Adds student to lesson")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void AddStudentToLesson(int lessonId, int userId )
         {
             _lessonService.AddStudentToLesson(lessonId, userId);
@@ -190,6 +185,8 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{lessonId}/user/{userId}")]
         [Description("Deletes student from lesson")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteStudentFromLesson(int lessonId, int userId)
         {
             _lessonService.DeleteStudentFromLesson(lessonId, userId); 
@@ -199,43 +196,51 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Student)]
         [HttpPut("{lessonId}/user/{userId}/feedback")]
         [Description("Update Feedback for lesson")]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public StudentLessonShortOutputModel UpdateStudentFeedbackForLesson(int lessonId,int userId, [FromBody] FeedbackInputModel model)
         {
             var dto = _mapper.Map<StudentLessonDto>(model);
             _lessonService.UpdateStudentFeedbackForLesson(lessonId, userId, dto);
-            return GetStudenLessonByLessonAndUserId(lessonId, userId);
+            return GetStudentLessonByLessonAndUserId(lessonId, userId);
         }
 
         // api/lesson/{lessonId}/user/{userId}/absenceReason
         [HttpPut("{lessonId}/user/{userId}/absenceReason")]
         [Description("Update AbsenceReason for lesson")]
         [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public StudentLessonShortOutputModel UpdateStudentAbsenceReasonOnLesson(int lessonId,int userId, [FromBody] AbsenceReasonInputModel model)
         {
             var dto = _mapper.Map<StudentLessonDto>(model);
             _lessonService.UpdateStudentAbsenceReasonOnLesson(lessonId, userId, dto);
-            return GetStudenLessonByLessonAndUserId(lessonId, userId);
+            return GetStudentLessonByLessonAndUserId(lessonId, userId);
         }
 
         // api/lesson/{lessonId}/user/{userId}/attendance
         [HttpPut("{lessonId}/user/{userId}/attendance")]
         [Description("Update Attendance for lesson")]
         [ProducesResponseType(typeof(StudentLessonShortOutputModel),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public StudentLessonShortOutputModel UpdateStudentAttendanceOnLesson(int lessonId, int userId, [FromBody] AttendanceInputModel model)
         {
             var dto = _mapper.Map<StudentLessonDto>(model);
             _lessonService.UpdateStudentAttendanceOnLesson(lessonId, userId, dto);            
-            return GetStudenLessonByLessonAndUserId(lessonId, userId);
+            return GetStudentLessonByLessonAndUserId(lessonId, userId);
         }
 
         // api/lesson/{lessonId}/feedback
         [HttpGet("{lessonId}/feedback")]
         [Description("Get all feedback by lesson")]
         [ProducesResponseType(typeof(List<FeedbackOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<FeedbackOutputModel> GetAllFeedbackByLessonId(int lessonId)
         {
             var dto =_lessonService.SelectAllFeedbackByLessonId(lessonId);
@@ -245,7 +250,9 @@ namespace DevEdu.API.Controllers
         [HttpGet("{lessonId}/user/{userId}")]
         [Description("Get StudenLesson by lesson and user")]
         [ProducesResponseType(typeof(StudentLessonShortOutputModel), StatusCodes.Status200OK)]
-        public StudentLessonShortOutputModel GetStudenLessonByLessonAndUserId(int lessonId, int userId)
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public StudentLessonShortOutputModel GetStudentLessonByLessonAndUserId(int lessonId, int userId)
         {
             var output =_lessonService.GetStudenLessonByLessonAndUserId(lessonId, userId);
             return _mapper.Map<StudentLessonShortOutputModel>(output);
