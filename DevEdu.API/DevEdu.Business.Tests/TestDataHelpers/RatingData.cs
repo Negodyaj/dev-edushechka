@@ -1,4 +1,5 @@
-﻿
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
@@ -29,12 +30,6 @@ namespace DevEdu.Business.Tests
                         Rating = 50,
                         ReportingPeriodNumber = 2
                     },
-                    //new StudentRatingDto
-                    //{
-                    //    Id = 1,
-                    //    Rating = 80,
-                    //    ReportingPeriodNumber = 2
-                    //},
                     new StudentRatingDto
                     {
                         Id = 3,
@@ -54,13 +49,13 @@ namespace DevEdu.Business.Tests
         {
 
             return new StudentRatingDto
-                    {
-                        Group = new GroupDto { Id = 1 },
-                        User = UserData.GetAnotherUserDto(),
-                        RatingType = GetRatingTypeDtos()[0],
-                        Rating = 80,
-                        ReportingPeriodNumber = 2
-                    };
+            {
+                Group = new GroupDto { Id = 1 },
+                User = UserData.GetAnotherUserDto(),
+                RatingType = GetRatingTypeDtos()[0],
+                Rating = 80,
+                ReportingPeriodNumber = 2
+            };
         }
 
         public static StudentRatingDto GetOutputStudentRatingDto()
@@ -121,6 +116,42 @@ namespace DevEdu.Business.Tests
                     Name = "оценка посещаемости",
                     Weight = 30
                 }
+            };
+        }
+
+        public static UserIdentityInfo GetTeacherIdentityInfo()
+        {
+            return new UserIdentityInfo
+            {
+                UserId = 1,
+                Roles = new List<Role> { Role.Teacher }
+            };
+        }
+
+        public static UserIdentityInfo GetTeacherOutOfGroupIdentityInfo()
+        {
+            return new UserIdentityInfo
+            {
+                UserId = 4,
+                Roles = new List<Role> { Role.Teacher }
+            };
+        }
+
+        public static UserIdentityInfo GetAdminIdentityInfo()
+        {
+            return new UserIdentityInfo
+            {
+                UserId = 1,
+                Roles = new List<Role> { Role.Admin }
+            };
+        }
+
+        public static UserIdentityInfo GetManagerIdentityInfo()
+        {
+            return new UserIdentityInfo
+            {
+                UserId = 1,
+                Roles = new List<Role> { Role.Manager }
             };
         }
     }

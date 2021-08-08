@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
+using DevEdu.API.Common;
+using DevEdu.API.Extensions;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Extensions;
-using DevEdu.API.Common;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Controllers
 {
@@ -36,8 +36,8 @@ namespace DevEdu.API.Controllers
         public StudentRatingOutputModel AddStudentRating([FromBody] StudentRatingInputModel model)
         {
             var dto = _mapper.Map<StudentRatingDto>(model);
-            var authorUserId = this.GetUserId();
-            dto = _service.AddStudentRating(dto, authorUserId);
+            var authorUserInfo = this.GetUserIdAndRoles();
+            dto = _service.AddStudentRating(dto, authorUserInfo);
             return _mapper.Map<StudentRatingOutputModel>(dto);
         }
 
@@ -48,8 +48,8 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher)]
         public void DeleteStudentRating(int id)
         {
-            var authorUserId = this.GetUserId();
-            _service.DeleteStudentRating(id, authorUserId);
+            var authorUserInfo = this.GetUserIdAndRoles();
+            _service.DeleteStudentRating(id, authorUserInfo);
         }
 
         // api/rating/1/{periodNumber}/value/50
@@ -59,8 +59,8 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher)]
         public StudentRatingOutputModel UpdateStudentRating(int id, int value, int periodNumber)
         {
-            var authorUserId = this.GetUserId();
-            var dto = _service.UpdateStudentRating(id, value, periodNumber, authorUserId);
+            var authorUserInfo = this.GetUserIdAndRoles();
+            var dto = _service.UpdateStudentRating(id, value, periodNumber, authorUserInfo);
             return _mapper.Map<StudentRatingOutputModel>(dto);
         }
 
@@ -82,9 +82,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status200OK)]
         public List<StudentRatingOutputModel> GetStudentRatingByGroupID(int groupId)
         {
-            var authorUserId = this.GetUserId();
-            var authRoles = this.GetUserRoles();
-            var dto = _service.GetStudentRatingByGroupId(groupId, authorUserId, authRoles);
+            var authorUserInfo = this.GetUserIdAndRoles();
+            var dto = _service.GetStudentRatingByGroupId(groupId, authorUserInfo);
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
 

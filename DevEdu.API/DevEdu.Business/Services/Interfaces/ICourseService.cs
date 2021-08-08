@@ -20,7 +20,7 @@ namespace DevEdu.Business.Services
         void DeleteTaskFromCourse(int courseId, int taskId);
         public void AddTaskToCourse(int courseId, int taskId);
         int AddCourseMaterialReference(int courseId, int materialId);
-        int RemoveCourseMaterialReference(int courseId, int materialId);
+        void RemoveCourseMaterialReference(int courseId, int materialId);
         CourseTopicDto GetCourseTopicById(int id);
         List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids);
     }

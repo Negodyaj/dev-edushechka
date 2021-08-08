@@ -9,9 +9,6 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -31,7 +28,7 @@ namespace DevEdu.Business.Tests
             _sut = new PaymentService(_paymentRepoMock.Object,
                                        new PaymentValidationHelper(_paymentRepoMock.Object),
                                        new UserValidationHelper(_userRepositoryMock.Object));
-            
+
         }
         [Test]
         public void GetPayment_ById_ValidPaymentRequestId_GotPayment()
@@ -189,7 +186,7 @@ namespace DevEdu.Business.Tests
             //Given
             var payments = PaymentData.GetPeyments();
             var ids = new List<int>() { 1, 2, 3 };
-            
+
             _paymentRepoMock.Setup(x => x.SelectPaymentsBySeveralId(ids)).Returns(payments);
             //When
             _sut.SelectPaymentsBySeveralId(ids);

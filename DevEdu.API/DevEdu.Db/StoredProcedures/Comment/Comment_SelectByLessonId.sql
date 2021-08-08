@@ -8,5 +8,5 @@ BEGIN
 		c.Text,
 		c.Date
 	FROM dbo.Comment as c
-		inner join dbo.Lesson_Comment lc on lc.LessonId = @LessonId 
+		inner join Lesson l on l.Id = @LessonId 
 END
