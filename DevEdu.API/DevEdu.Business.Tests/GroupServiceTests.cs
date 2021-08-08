@@ -1,21 +1,36 @@
-﻿using DevEdu.Business.Services;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
+using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System;
 
 namespace DevEdu.Business.Tests
 {
     public class GroupServiceTests
     {
         private Mock<IGroupRepository> _groupRepoMock;
+        private Mock<IMaterialRepository> _materialRepoMock;
         private Mock<IUserRepository> _userRepoMock;
+        private GroupService _sut;
+        private MaterialValidationHelper _materialValidationHelper;
+        private GroupValidationHelper _groupValidationHelper;
+        private UserValidationHelper _userValidationHelper;
 
         [SetUp]
         public void Setup()
         {
             _groupRepoMock = new Mock<IGroupRepository>();
             _userRepoMock = new Mock<IUserRepository>();
+            _materialRepoMock = new Mock<IMaterialRepository>();
+            _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
+            _materialValidationHelper = new MaterialValidationHelper(_materialRepoMock.Object);
+            _userValidationHelper = new UserValidationHelper(_userRepoMock.Object);
+            _sut = new GroupService(_groupRepoMock.Object, _userRepoMock.Object, _groupValidationHelper, _materialValidationHelper, _userValidationHelper);
         }
 
         [Test]
@@ -27,10 +42,8 @@ namespace DevEdu.Business.Tests
 
             _groupRepoMock.Setup(x => x.AddGroup(groupDto)).Returns(groupId);
 
-            var sut = new GroupService(_groupRepoMock.Object);
-
             //When
-            var actualGroupId = sut.AddGroup(groupDto);
+            var actualGroupId = _sut.AddGroup(groupDto);
 
             //Then
             Assert.AreEqual(groupId, actualGroupId);
@@ -50,10 +63,8 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, roleStudent)).Returns(studentDtos);
             groupDto.Students = studentDtos;
 
-            var sut = new GroupService(_groupRepoMock.Object, _userRepoMock.Object);
-
             //When
-            var actualGroupDto = sut.GetGroup(groupId);
+            var actualGroupDto = _sut.GetGroup(groupId);
 
             //Then
             Assert.AreEqual(groupDto, actualGroupDto);
@@ -69,10 +80,8 @@ namespace DevEdu.Business.Tests
 
             _groupRepoMock.Setup(x => x.GetGroups()).Returns(groupDtos);
 
-            var sut = new GroupService(_groupRepoMock.Object);
-
             //When
-            var actualGroupDtos = sut.GetGroups();
+            var actualGroupDtos = _sut.GetGroups();
 
             //Then
             Assert.AreEqual(groupDtos, actualGroupDtos);
@@ -89,10 +98,8 @@ namespace DevEdu.Business.Tests
 
             _groupRepoMock.Setup(x => x.UpdateGroup(groupId, groupDto)).Returns(updGroupDto);
 
-            var sut = new GroupService(_groupRepoMock.Object);
-
             //When
-            var actualGroupDto = sut.UpdateGroup(groupId, groupDto);
+            var actualGroupDto = _sut.UpdateGroup(groupId, groupDto);
 
             //Then
             Assert.AreEqual(updGroupDto, actualGroupDto);
@@ -108,153 +115,419 @@ namespace DevEdu.Business.Tests
             var groupDto = GroupData.GetGroupDto();
 
             _groupRepoMock.Setup(x => x.ChangeGroupStatus(groupId, groupStatus)).Returns(groupDto);
-            
-            var sut = new GroupService(_groupRepoMock.Object);
 
             //When
-            var actualGroupDto = sut.ChangeGroupStatus(groupId, groupStatus);
+            var actualGroupDto = _sut.ChangeGroupStatus(groupId, groupStatus);
 
             //Then
             Assert.AreEqual(groupDto, actualGroupDto);
             _groupRepoMock.Verify(x => x.ChangeGroupStatus(groupId, groupStatus), Times.Once);
         }
 
-        [Test]
-        public void AddMaterialToGroup_IntGroupIdAndMaterialId_AddMaterialToGroup()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddMaterialToGroup_ExistingGroupIdAndMaterialIdPassed_MaterialAddedToGroup(Enum role)
         {
             //Given
-            const int groupId = GroupData.GroupId;
-            const int materialId = GroupData.MaterialId;
+            const int groupId = 1;
+            const int materialId = 1;
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var userId = userInfo.UserId;
 
-            _groupRepoMock.Setup(x => x.AddGroupMaterialReference(groupId, materialId)).Returns(GroupData.ExpectedAffectedRows);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+            _materialRepoMock.Setup(x => x.GetMaterialById(materialId)).Returns(MaterialData.GetMaterialDtoWithoutTags);
 
-            var sut = new GroupService(_groupRepoMock.Object);
+            _groupRepoMock.Setup(x => x.AddGroupMaterialReference(groupId, materialId));
 
             //When
-            var actualAffectedRows = sut.AddGroupMaterialReference(groupId, materialId);
+            _sut.AddGroupMaterialReference(groupId, materialId, userInfo);
 
             //Than
-            Assert.AreEqual(GroupData.ExpectedAffectedRows, actualAffectedRows);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Exactly(2));
+            _materialRepoMock.Verify(x => x.GetMaterialById(materialId), Times.Once);
+
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(groupId, materialId), Times.Once);
         }
 
-        [Test]
-        public void DeleteMaterialFromGroup_IntGroupIdAndMaterialId_DeleteMaterialFromGroup()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void DeleteMaterialFromGroup_ExistingGroupIdAndMaterialIdPassed_MaterialRemoveFromGroup(Enum role)
         {
             //Given
-            const int groupId = GroupData.GroupId;
-            const int materialId = GroupData.MaterialId;
+            const int groupId = 1;
+            const int materialId = 1;
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var userId = userInfo.UserId;
 
-            _groupRepoMock.Setup(x => x.RemoveGroupMaterialReference(groupId, materialId)).Returns(GroupData.ExpectedAffectedRows);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+            _materialRepoMock.Setup(x => x.GetMaterialById(materialId)).Returns(MaterialData.GetMaterialDtoWithoutTags);
 
-            var sut = new GroupService(_groupRepoMock.Object);
+            _groupRepoMock.Setup(x => x.RemoveGroupMaterialReference(groupId, materialId));
 
             //When
-            var actualAffectedRows = sut.RemoveGroupMaterialReference(groupId, materialId);
+            _sut.RemoveGroupMaterialReference(groupId, materialId, userInfo);
 
             //Than
-            Assert.AreEqual(GroupData.ExpectedAffectedRows, actualAffectedRows);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Exactly(2));
+            _materialRepoMock.Verify(x => x.GetMaterialById(materialId), Times.Once);
+
             _groupRepoMock.Verify(x => x.RemoveGroupMaterialReference(groupId, materialId), Times.Once);
         }
 
-        [Test]
-        public void AddTaskToGroup_GroupTaskDto_GroupTaskCreated()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddMaterialToGroup_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             //Given
-            var groupTaskDto = GroupTaskData.GetGroupTaskWithoutGroupAndTask();
-            const int groupId = GroupTaskData.GroupId;
-            const int taskId = GroupTaskData.TaskId;
-
-            _groupRepoMock.Setup(x => x.AddTaskToGroup(groupTaskDto)).Returns(GroupTaskData.ExpectedGroupTaskId);
-
-            var sut = new GroupService(_groupRepoMock.Object);
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), group.Id);
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             //When
-            var actualGroupTaskId = sut.AddTaskToGroup(groupId, taskId, groupTaskDto);
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userInfo));
 
             //Than
-            Assert.AreEqual(GroupTaskData.ExpectedGroupTaskId, actualGroupTaskId);
-            _groupRepoMock.Verify(x => x.AddTaskToGroup(groupTaskDto), Times.Once);
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+
         }
 
-        [Test]
-        public void GetGroupTaskByBothId_IntGroupIdAndTaskId_ReturnedGroupTasDto()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddMaterialToGroup_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             //Given
-            var groupTaskDto = GroupTaskData.GetGroupTaskWithGroupAndTask();
-            const int groupId = GroupTaskData.GroupId;
-            const int taskId = GroupTaskData.TaskId;
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
-            _groupRepoMock.Setup(x => x.GetGroupTask(groupId, taskId)).Returns(groupTaskDto);
-
-            var sut = new GroupService(_groupRepoMock.Object);
+            _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetGroupDto());
 
             //When
-            var dto = sut.GetGroupTask(groupId, taskId);
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userInfo));
 
             //Than
-            Assert.AreEqual(groupTaskDto, dto);
-            _groupRepoMock.Verify(x => x.GetGroupTask(groupId, taskId), Times.Once);
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Once);
         }
 
-        [Test]
-        public void UpdateGroupTask_GroupTaskDto_ReturnUpdatedGroupTaskDto()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddMaterialToGroup_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             //Given
-            var groupTaskDto = GroupTaskData.GetGroupTaskWithoutGroupAndTask();
-            const int groupId = GroupTaskData.GroupId;
-            const int taskId = GroupTaskData.TaskId;
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var user = UserData.GetUserDto();
+            var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, user.Id, group.Id);
 
-            _groupRepoMock.Setup(x => x.UpdateGroupTask(groupTaskDto));
-            _groupRepoMock.Setup(x => x.GetGroupTask(groupId, taskId)).Returns(groupTaskDto);
-
-            var sut = new GroupService(_groupRepoMock.Object);
-
-            //When
-            var actualGroupTaskDto = sut.UpdateGroupTask(groupId, taskId, groupTaskDto);
-
-            //Then
-            Assert.AreEqual(groupTaskDto, actualGroupTaskDto);
-            _groupRepoMock.Verify(x => x.UpdateGroupTask(groupTaskDto), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupTask(groupId, taskId), Times.Once);
-        }
-
-        [Test]
-        public void DeleteGroupTask_IntGroupIdAndTaskId_DeleteGroupTask()
-        {
-            //Given
-            var groupTaskDto = GroupTaskData.GetGroupTaskWithoutGroupAndTask();
-            const int groupId = GroupTaskData.GroupId;
-            const int taskId = GroupTaskData.TaskId;
-
-            _groupRepoMock.Setup(x => x.DeleteTaskFromGroup(groupId, taskId));
-
-            var sut = new GroupService(_groupRepoMock.Object);
+            _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetAnotherGroupDto());
+            _materialRepoMock.Setup(x => x.GetMaterialById(material.Id)).Returns(MaterialData.GetMaterialDtoWithoutTags);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.Id)).Returns(GroupData.GetGroupsDto);
 
             //When
-            sut.DeleteTaskFromGroup(groupId, taskId);
-
-            //Then
-            _groupRepoMock.Verify(x => x.DeleteTaskFromGroup(groupId, taskId), Times.Once);
-        }
-
-        [Test]
-        public void GetTasksByGroupId_IntGroupId_ReturnedListOfGroupTaskDtoWithTask()
-        {
-            //Given
-            var groupTaskList = GroupTaskData.GetListOfGroupTaskDtoWithTask();
-            const int groupId = GroupTaskData.GroupId;
-
-            _groupRepoMock.Setup(x => x.GetTaskGroupByGroupId(groupId)).Returns(groupTaskList);
-
-            var sut = new GroupService(_groupRepoMock.Object);
-
-            //When
-            var dto = sut.GetTasksByGroupId(groupId);
+            var ex = Assert.Throws<AuthorizationException>(
+                () => _sut.AddGroupMaterialReference(group.Id, material.Id, userInfo));
 
             //Than
-            Assert.AreEqual(groupTaskList, dto);
-            _groupRepoMock.Verify(x => x.GetTaskGroupByGroupId(groupId), Times.Once);
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Exactly(2));
+            _materialRepoMock.Verify(x => x.GetMaterialById(material.Id), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void DeleteMaterialFromGroup_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), group.Id);
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void DeleteMaterialFromGroup_WhenMaterialIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+
+            _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetGroupDto());
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void DeleteMaterialFromGroup_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var user = UserData.GetUserDto();
+            var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, user.Id, group.Id);
+
+            _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetAnotherGroupDto());
+            _materialRepoMock.Setup(x => x.GetMaterialById(material.Id)).Returns(MaterialData.GetMaterialDtoWithoutTags);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.Id)).Returns(GroupData.GetGroupsDto);
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(
+                () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Exactly(2));
+            _materialRepoMock.Verify(x => x.GetMaterialById(material.Id), Times.Once);
+        }
+        [Test]
+        public void AddGroupToLesson_IntGroupIdAndLessonId_AddLessonToGroup()
+        {
+            //Given
+            const int groupId = 1;
+            const int lessonId = 1;
+            const int expectedAffectedRows = 1;
+
+            _groupRepoMock.Setup(x => x.AddGroupToLesson(groupId, lessonId)).Returns(expectedAffectedRows);
+
+            //When
+            var actualAffectedRows = _sut.AddGroupToLesson(groupId, lessonId);
+
+            //Than
+            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
+            _groupRepoMock.Verify(x => x.AddGroupToLesson(groupId, lessonId), Times.Once);
+        }
+
+        [Test]
+        public void RemoveGroupFromLesson_IntGroupIdAndLessonId_DeleteMaterialFromGroup()
+        {
+            //Given
+            const int groupId = 1;
+            const int lessonId = 1;
+            const int expectedAffectedRows = 1;
+
+            _groupRepoMock.Setup(x => x.RemoveGroupFromLesson(groupId, lessonId)).Returns(expectedAffectedRows);
+
+            //When
+            var actualAffectedRows = _sut.RemoveGroupFromLesson(groupId, lessonId);
+
+            //Than
+            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
+            _groupRepoMock.Verify(x => x.RemoveGroupFromLesson(groupId, lessonId), Times.Once);
+        }
+
+        [Test]
+        public void AddUserToGroup_GroupId_UserId_RoleId_UserAddedToGroup()
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var groupId = group.Id;
+            var user = UserData.GetUserDto();
+            var userId = user.Id;
+            var roleId = (int)user.Roles[0];
+
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
+
+            //When
+            _sut.AddUserToGroup(groupId, userId, roleId);
+
+            //Than
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.AddUserToGroup(groupId, userId, roleId), Times.Once);
+        }
+
+        [Test]
+        public void AddUserToGroup_UserDoesntExist_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var groupId = group.Id;
+            UserDto user = default;
+            var userId = 0;
+            var roleId = 0;
+
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
+
+            //When
+            Assert.Throws<EntityNotFoundException>(() => _sut.AddUserToGroup(groupId, userId, roleId));
+
+            //Than
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(It.IsAny<int>()), Times.Once);
+            _groupRepoMock.Verify(x => x.AddUserToGroup(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        }
+
+        [Test]
+        public void AddUserToGroup_UserDoesntHaveRole_ValidationExceptionThrown()
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var groupId = group.Id;
+            var user = UserData.GetUserDto();
+            var userId = user.Id;
+            var roleId = 0;
+
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
+
+            //When
+            Assert.Throws<ValidationException>(() => _sut.AddUserToGroup(groupId, userId, roleId));
+
+            //Than
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(It.IsAny<int>()), Times.Once);
+            _groupRepoMock.Verify(x => x.AddUserToGroup(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        }
+
+        [Test]
+        public void AddUserToGroup_GroupDoesntExist_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            GroupDto group = default;
+            var groupId = 0;
+            var userId = 0;
+            var roleId = 0;
+
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+
+            //When
+            Assert.Throws<EntityNotFoundException>(() => _sut.AddUserToGroup(groupId, userId, roleId));
+
+            //Than
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.AddUserToGroup(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        }
+
+        [Test]
+        public void DeleteUserFromGroup_GroupId_UserId_UserDeletedFromGroup()
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var groupId = group.Id;
+            var user = UserData.GetUserDto();
+            var userId = user.Id;
+            var roleId = (int)user.Roles[0];
+
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, roleId)).Returns(UserData.GetListUsersDto());
+
+            //When
+            _sut.DeleteUserFromGroup(groupId, userId);
+
+            //Than
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            _groupRepoMock.Verify(x => x.DeleteUserFromGroup(userId, groupId), Times.Once);
+        }
+
+        [Test]
+        public void DeleteUserFromGroup_GroupDoesntExist_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            GroupDto group = default;
+            var groupId = 0;
+            var user = UserData.GetUserDto();
+            var userId = user.Id;
+            var roleId = (int)user.Roles[0];
+
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+
+            //When
+            Assert.Throws<EntityNotFoundException>(() => _sut.DeleteUserFromGroup(groupId, userId));
+
+            //Than
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(It.IsAny<int>()), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.DeleteUserFromGroup(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        }
+
+        [Test]
+        public void DeleteUserFromGroup_UserDoesntExist_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var groupId = group.Id;
+            UserDto user = default;
+            var userId = 0;
+
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
+
+            //When
+            Assert.Throws<EntityNotFoundException>(() => _sut.DeleteUserFromGroup(groupId, userId));
+
+            //Than
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.DeleteUserFromGroup(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        }
+
+        [Test]
+        public void DeleteUserFromGroup_UserDoesntHaveRole_ValidationExceptionThrown()
+        {
+            //Given
+            var group = GroupData.GetGroupDto();
+            var groupId = group.Id;
+            var user = UserData.GetUserDtoOutOfList();
+            var userId = user.Id;
+            var roleId = (int)user.Roles[0];
+
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, roleId)).Returns(UserData.GetListUsersDto());
+
+            //When
+            Assert.Throws<ValidationException>(() => _sut.DeleteUserFromGroup(groupId, userId));
+
+            //Than
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            _groupRepoMock.Verify(x => x.DeleteUserFromGroup(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
     }
 }

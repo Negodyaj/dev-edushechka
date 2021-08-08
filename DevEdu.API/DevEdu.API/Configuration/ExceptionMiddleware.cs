@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DevEdu.Business.Exceptions;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using DevEdu.Business.Exceptions;
-using Newtonsoft.Json;
 
 namespace DevEdu.API.Configuration
 {

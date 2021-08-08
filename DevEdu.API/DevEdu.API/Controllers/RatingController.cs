@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
-using DevEdu.API.Configuration;
+using DevEdu.API.Common;
+using DevEdu.API.Extensions;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DevEdu.API.Configuration;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
@@ -15,7 +18,8 @@ namespace DevEdu.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class RatingController: Controller
+    [AuthorizeRoles(Role.Teacher, Role.Manager)]
+    public class RatingController : Controller
     {
         private IRatingService _service;
 
@@ -28,27 +32,36 @@ namespace DevEdu.API.Controllers
         }
 
         // api/rating
+        [AuthorizeRoles(Role.Teacher)]
         [HttpPost]
         [Description("Add StudentRating to database")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public int AddStudentRating([FromBody] StudentRatingInputModel model)
+        public StudentRatingOutputModel AddStudentRating([FromBody] StudentRatingInputModel model)
         {
             var dto = _mapper.Map<StudentRatingDto>(model);
-            return _service.AddStudentRating(dto);
+            var authorUserInfo = this.GetUserIdAndRoles();
+            dto = _service.AddStudentRating(dto, authorUserInfo);
+            return _mapper.Map<StudentRatingOutputModel>(dto);
         }
 
         // api/rating/1
+        [AuthorizeRoles(Role.Teacher)]
         [HttpDelete("{id}")]
         [Description("Delete StudentRating from database")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteStudentRating(int id) => _service.DeleteStudentRating(id);
+        public void DeleteStudentRating(int id)
+        {
+            var authorUserInfo = this.GetUserIdAndRoles();
+            _service.DeleteStudentRating(id, authorUserInfo);
+        }
 
         // api/rating/1/{periodNumber}/value/50
+        [AuthorizeRoles(Role.Teacher)]
         [HttpPut("{id}/period/{periodNumber}/value/{value}")]
         [Description("Update StudentRating in database and return updated StudentRating")]
         [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status200OK)]
@@ -56,11 +69,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public StudentRatingOutputModel UpdateStudentRating(int id, int value, int periodNumber)
         {
-            var dto = _service.UpdateStudentRating(id, value, periodNumber);
+            var authorUserInfo = this.GetUserIdAndRoles();
+            var dto = _service.UpdateStudentRating(id, value, periodNumber, authorUserInfo);
             return _mapper.Map<StudentRatingOutputModel>(dto);
         }
 
         // api/rating
+        [AuthorizeRoles(Role.Manager)]
         [HttpGet]
         [Description("Get all StudentRatings from database")]
         [ProducesResponseType(typeof(List<StudentRatingOutputModel>), StatusCodes.Status200OK)]
@@ -71,7 +86,6 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
 
-
         // api/rating/by-group/1
         [HttpGet("by-group/{groupId}")]
         [Description("Get StudentRating from database by GroupID")]
@@ -80,11 +94,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<StudentRatingOutputModel> GetStudentRatingByGroupId(int groupId)
         {
-            var dto = _service.GetStudentRatingByGroupId(groupId);
+            var authorUserInfo = this.GetUserIdAndRoles();
+            var dto = _service.GetStudentRatingByGroupId(groupId, authorUserInfo);
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
 
         // api/rating/by-user/1
+        [AuthorizeRoles(Role.Manager)]
         [HttpGet("by-user/{userid}")]
         [Description("Get StudentRatings from database by UserID")]
         [ProducesResponseType(typeof(List<StudentRatingOutputModel>), StatusCodes.Status200OK)]

@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 
@@ -7,10 +8,21 @@ namespace DevEdu.Business.Services
     public class TopicService : ITopicService
     {
         private readonly ITopicRepository _topicRepository;
+        private readonly ITagRepository _tagRepository;
+        private readonly ITopicValidationHelper _topicValidationHelper;
+        private readonly ITagValidationHelper _tagValidationHelper;
 
-        public TopicService(ITopicRepository topicRepository)
+        public TopicService(
+            ITopicRepository topicRepository,
+            ITagRepository tagRepository,
+            ITopicValidationHelper topicValidationHelper,
+            ITagValidationHelper tagValidationHelper
+            )
         {
             _topicRepository = topicRepository;
+            _tagRepository = tagRepository;
+            _topicValidationHelper = topicValidationHelper;
+            _tagValidationHelper = tagValidationHelper;
         }
 
         public int AddTopic(TopicDto topicDto)
@@ -29,14 +41,25 @@ namespace DevEdu.Business.Services
 
         public List<TopicDto> GetAllTopics() => _topicRepository.GetAllTopics();
 
-        public int UpdateTopic(int id, TopicDto topicDto)
+        public TopicDto UpdateTopic(int id, TopicDto topicDto)
         {
             topicDto.Id = id;
-           return _topicRepository.UpdateTopic(topicDto);
+            _topicRepository.UpdateTopic(topicDto);
+            return _topicRepository.GetTopic(id);
         }
 
-        public int AddTagToTopic(int topicId, int tagId) => _topicRepository.AddTagToTopic(topicId, tagId);
+        public int AddTagToTopic(int topicId, int tagId)
+        {
+            _topicValidationHelper.CheckTopicExistence(topicId);
+            _tagValidationHelper.CheckTagExistence(tagId);
+            return _topicRepository.AddTagToTopic(topicId, tagId);
+        }
 
-        public int DeleteTagFromTopic(int topicId, int tagId) => _topicRepository.DeleteTagFromTopic(topicId, tagId);
+        public int DeleteTagFromTopic(int topicId, int tagId)
+        {
+            _topicValidationHelper.CheckTopicExistence(topicId);
+            _tagValidationHelper.CheckTagExistence(tagId);
+            return _topicRepository.DeleteTagFromTopic(topicId, tagId);
+        }
     }
 }

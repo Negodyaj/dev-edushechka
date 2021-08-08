@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
-using System.ComponentModel;
+﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using DevEdu.API.Models.OutputModels;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel;
 using DevEdu.API.Configuration;
 using Microsoft.AspNetCore.Authorization;
 
@@ -88,7 +88,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<NotificationDto>(model);
             var output = _notificationService.AddNotification(dto);
-            return GetNotification(output);
+            return _mapper.Map<NotificationInfoOutputModel>(output);
         }
 
         //  api/notification/5
@@ -105,7 +105,7 @@ namespace DevEdu.API.Controllers
         //  api/notification/5
         [HttpPut("{id}")]
         [Description("Update notification by id")]
-        [ProducesResponseType(typeof(NotificationInfoOutputModel),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public NotificationInfoOutputModel UpdateNotification(int id, [FromBody] NotificationUpdateInputModel model)

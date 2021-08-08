@@ -1,8 +1,8 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,27 +15,39 @@ namespace DevEdu.Business.Services
         private readonly ITopicRepository _topicRepository;
         private readonly ITaskRepository _taskRepository;
         private readonly IMaterialRepository _materialRepository;
-        
-        public CourseService(ITopicRepository topicRepository,
-                             ICourseRepository courseRepository,
-                             ITaskRepository taskRepository,
-                             IMaterialRepository materialRepository)
+        private readonly ICourseValidationHelper _courseValidationHelper;
+        private readonly IMaterialValidationHelper _materialValidationHelper;
+        private readonly ITopicValidationHelper _topicValidationHelper;
+
+        public CourseService
+        (
+            ICourseRepository courseRepository,
+            ITopicRepository topicRepository,
+            ITaskRepository taskRepository,
+            IMaterialRepository materialRepository,
+            ICourseValidationHelper courseValidationHelper,
+            IMaterialValidationHelper materialValidationHelper,
+            ITopicValidationHelper topicValidationHelper
+        )
         {
-            _topicRepository = topicRepository;
             _courseRepository = courseRepository;
+            _topicRepository = topicRepository;
             _taskRepository = taskRepository;
             _materialRepository = materialRepository;
+            _courseValidationHelper = courseValidationHelper;
+            _materialValidationHelper = materialValidationHelper;
+            _topicValidationHelper = topicValidationHelper;
         }
 
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
 
-        public void DeleteCourse(int id) => _courseRepository.GetCourse(id);
+        public void DeleteCourse(int id) => _courseRepository.DeleteCourse(id);
 
         public CourseDto GetCourse(int id) => _courseRepository.GetCourse(id);
-        public CourseDto GetFullCourseInfo(int id) 
+        public CourseDto GetFullCourseInfo(int id)
         {
             var course = GetCourse(id);
-            course.Tasks = _taskRepository.GetTaskByCourseId(course.Id);
+            course.Tasks = _taskRepository.GetTasksByCourseId(course.Id);
             course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
             course.Topics = _topicRepository.GetTopicsByCourseId(course.Id);
             return course;
@@ -48,33 +60,41 @@ namespace DevEdu.Business.Services
         }
         public List<CourseDto> GetCourses() => _courseRepository.GetCourses();
 
-        public void UpdateCourse(int id, CourseDto courseDto)
+        public CourseDto UpdateCourse(int id, CourseDto courseDto)
         {
             courseDto.Id = id;
             _courseRepository.UpdateCourse(courseDto);
+            return _courseRepository.GetCourse(id);
         }
 
-        public void AddTopicToCourse(int courseId, int topicId,CourseTopicDto dto)
+        public int AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto)
         {
+            CheckCourseAndTopicExistences(courseId, topicId);
             dto.Course = new CourseDto() { Id = courseId };
             dto.Topic = new TopicDto { Id = topicId };
-            _topicRepository.AddTopicToCourse(dto);
+            return _topicRepository.AddTopicToCourse(dto);
         }
 
-        public void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
+        public List<int> AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
         {
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _topicValidationHelper.CheckTopicsExistence(listDto);
             foreach (var topic in listDto)
+            {
                 topic.Course = new CourseDto() { Id = courseId };
-            _topicRepository.AddTopicsToCourse(listDto);
+            }
+            return _topicRepository.AddTopicsToCourse(listDto);
         }
 
         public void DeleteTopicFromCourse(int courseId, int topicId)
         {
+            CheckCourseAndTopicExistences(courseId, topicId);
             _topicRepository.DeleteTopicFromCourse(courseId, topicId);
         }
 
         public List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId)
         {
+            _courseValidationHelper.CheckCourseExistence(courseId);
             var list = _courseRepository.SelectAllTopicsByCourseId(courseId);
             return list;
         }
@@ -85,15 +105,27 @@ namespace DevEdu.Business.Services
         public void AddTaskToCourse(int courseId, int taskId) =>
             _courseRepository.AddTaskToCourse(courseId, taskId);
 
-        public int AddCourseMaterialReference(int courseId, int materialId) => _courseRepository.AddCourseMaterialReference(courseId, materialId);
-
-        public int RemoveCourseMaterialReference(int courseId, int materialId) => _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
-
-        public void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
+        public int AddCourseMaterialReference(int courseId, int materialId)
         {
-            if (topics == null || topics.Count == 0)
-                return;
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _materialValidationHelper.CheckMaterialExistence(materialId);
+            return _courseRepository.AddCourseMaterialReference(courseId, materialId);
+        }
 
+        public void RemoveCourseMaterialReference(int courseId, int materialId)
+        {
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
+        }
+
+        public List<int> UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
+        {
+            List<int> response;
+            if (topics == null || topics.Count == 0)
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _topicValidationHelper.CheckTopicsExistence(topics);
             CheckUniquenessPositions(topics);
             CheckUniquenessTopics(topics);
             var topicsInDatabase = _courseRepository.SelectAllTopicsByCourseId(courseId);
@@ -104,24 +136,38 @@ namespace DevEdu.Business.Services
             )
             {
                 DeleteAllTopicsByCourseId(courseId);
-                AddTopicsToCourse(courseId, topics);
+                response = AddTopicsToCourse(courseId, topics);
             }
             else if (topicsInDatabase == null || topicsInDatabase.Count == 0)
             {
-                AddTopicsToCourse(courseId, topics);
+                response = AddTopicsToCourse(courseId, topics);
             }
             else
             {
+                response = new List<int>();
                 foreach (var topic in topics)
                 {
                     topic.Course = new CourseDto() { Id = courseId };
+                    response.Add(topic.Id);
                 }
                 _courseRepository.UpdateCourseTopicsByCourseId(topics);
+
             }
+            return response;
         }
-
-        public void DeleteAllTopicsByCourseId(int courseId) => _courseRepository.DeleteAllTopicsByCourseId(courseId);
-
+        public CourseTopicDto GetCourseTopicById(int id)
+        {
+            return _topicRepository.GetCourseTopicById(id);
+        }
+        public List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids)
+        {
+            return _topicRepository.GetCourseTopicBuSevealId(ids);
+        }
+        public void DeleteAllTopicsByCourseId(int courseId)
+        {
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _courseRepository.DeleteAllTopicsByCourseId(courseId);
+        }
         private void CheckUniquenessPositions(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
@@ -136,5 +182,17 @@ namespace DevEdu.Business.Services
                 throw new ValidationException(ServiceMessages.SameTopicsInCourseTopics);
             }
         }
+        private void CheckCourseAndTopicExistences(int courseId, int topicId)
+        {
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _topicValidationHelper.CheckTopicExistence(topicId);
+
+        }
+        private void CheckCourseAndMaterialExistences(int courseId, int materialId)
+        {
+            _courseValidationHelper.CheckCourseExistence(courseId);
+            _materialValidationHelper.CheckMaterialExistence(materialId);
+        }
+
     }
 }

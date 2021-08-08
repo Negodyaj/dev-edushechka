@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
+using DevEdu.API.Common;
+using DevEdu.API.Configuration;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Configuration;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
@@ -27,6 +29,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user/userId
+        [AuthorizeRoles(Role.Manager)]
         [HttpPut("{userId}")]
         [Description("Update user")]
         [ProducesResponseType(typeof(UserUpdateInfoOutPutModel), StatusCodes.Status200OK)]
@@ -41,6 +44,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user/{userId}
+        [AuthorizeRoles(Role.Manager)]
         [HttpGet("{userId}")]
         [Description("Return user by id")]
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
@@ -53,6 +57,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user
+        [AuthorizeRoles(Role.Manager)]
         [HttpGet]
         [Description("Return list users")]
         [ProducesResponseType(typeof(List<UserInfoOutPutModel>), StatusCodes.Status200OK)]
@@ -64,6 +69,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user/{userId}
+        [AuthorizeRoles(Role.Manager)]
         [HttpDelete("{userId}")]
         [Description("Delete user by id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -75,6 +81,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user/{userId}/role/{roleId}
+        [AuthorizeRoles()]
         [HttpPost("{userId}/role/{roleId}")]
         [Description("Add new role to user")]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
@@ -82,10 +89,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void AddRoleToUser(int userId, int roleId)
         {
-            _userService.AddUserRole(userId, roleId);
+            _userService.AddUserRole(userId, (int)roleId);
         }
 
         // api/user/{userId}/role/{roleId}
+        [AuthorizeRoles()]
         [HttpDelete("{userId}/role/{roleId}")]
         [Description("Delete role from user")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -93,7 +101,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteRoleFromUser(int userId, int roleId)
         {
-            _userService.DeleteUserRole(userId, roleId);
+            _userService.DeleteUserRole(userId, (int)roleId);
         }
     }
 }

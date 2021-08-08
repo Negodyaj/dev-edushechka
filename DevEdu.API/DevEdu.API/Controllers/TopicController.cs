@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using DevEdu.API.Models.InputModels;
-using AutoMapper;
-using DevEdu.DAL.Models;
-using System.ComponentModel;
-using Microsoft.AspNetCore.Http;
-using DevEdu.Business.Services;
-using DevEdu.API.Models.OutputModels;
+﻿using AutoMapper;
 using DevEdu.API.Common;
-using DevEdu.DAL.Enums;
 using DevEdu.API.Configuration;
+using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
+using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
@@ -36,7 +36,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public TopicOutputModel GetTopicById(int id)
         {
-            var output= _topicService.GetTopic(id);
+            var output = _topicService.GetTopic(id);
             return _mapper.Map<TopicOutputModel>(output);
         }
 
@@ -86,9 +86,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TopicOutputModel UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
-            var dto = _mapper.Map<TopicDto>(model);           
-            _topicService.UpdateTopic(id, dto);
-            return GetTopicById(id);
+
+            var dto = _mapper.Map<TopicDto>(model);
+            var output = _topicService.UpdateTopic(id, dto);
+            return _mapper.Map<TopicOutputModel>(output);
         }
 
         //  api/topic/{topicId}/tag/{tagId}
@@ -103,7 +104,7 @@ namespace DevEdu.API.Controllers
             return _topicService.AddTagToTopic(topicId, tagId);
         }
 
-        //  api/opic/{topicId}/tag/{tagId}
+        //  api/topic/{topicId}/tag/{tagId}
         [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpDelete("{topicId}/tag/{tagId}")]
         [Description("Delete tag from topic")]

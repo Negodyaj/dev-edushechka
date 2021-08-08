@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
-using DevEdu.API.Configuration;
+using DevEdu.API.Common;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Microsoft.AspNetCore.Authorization;
+using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
@@ -70,7 +72,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
+        public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             dto = _materialService.UpdateMaterial(id, dto);
@@ -90,8 +92,9 @@ namespace DevEdu.API.Controllers
         }
 
         // api/material/{materialId}/tag/{tagId}
+        [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher)]
         [HttpPost("{materialId}/tag/{tagId}")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Add tag to material")]
@@ -102,6 +105,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/material/{materialId}/tag/{tagId}
+        [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher)]
         [HttpDelete("{materialId}/tag/{tagId}")]
         [Description("Delete tag from material")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]

@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using AutoMapper;
+﻿using AutoMapper;
+using DevEdu.API.Common;
 using DevEdu.API.Configuration;
+using DevEdu.API.Extensions;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
@@ -25,6 +27,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/comment/5
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet("{id}")]
         [Description("Return comment by id")]
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
@@ -32,37 +35,48 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public CommentInfoOutputModel GetComment(int id)
         {
-            var dto = _commentService.GetComment(id);
+            var userInfo = this.GetUserIdAndRoles();
+            var dto = _commentService.GetComment(id, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(dto);
             return output;
         }
 
-        //  api/comment/by-user/1
-        [HttpGet("by-user/{userId}")]
-        [Description("Return comments by user")]
-        [ProducesResponseType(typeof(List<CommentInfoOutputModel>), StatusCodes.Status200OK)]
+        //  api/comment/to-lesson/1
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
+        [HttpPost("to-lesson/{lessonId}")]
+        [Description("Add new comment to lesson")]
+        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<CommentInfoOutputModel> GetCommentsByUserId(int userId)
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public CommentInfoOutputModel AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel model)
         {
-            var dto = _commentService.GetCommentsByUserId(userId);
-            var output = _mapper.Map<List<CommentInfoOutputModel>>(dto);
+            var userInfo = this.GetUserIdAndRoles();
+            var dto = _mapper.Map<CommentDto>(model);
+            var comment = _commentService.AddCommentToLesson(lessonId, dto, userInfo);
+            var output = _mapper.Map<CommentInfoOutputModel>(comment);
             return output;
         }
 
-        //  api/comment
-        [HttpPost]
-        [Description("Add new comment")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        //  api/comment/to-student-answer/1
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
+        [HttpPost("to-student-answer/{taskStudentId}")]
+        [Description("Add new comment to student answer")]
+        [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public int AddComment([FromBody] CommentAddInputModel model)
+        public CommentInfoOutputModel AddCommentToStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel model)
         {
+            var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            return _commentService.AddComment(dto);
+            var comment = _commentService.AddCommentToStudentAnswer(taskStudentId, dto, userInfo);
+            var output = _mapper.Map<CommentInfoOutputModel>(comment);
+            return output;
         }
 
         //  api/comment/5
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [HttpDelete("{id}")]
         [Description("Delete comment by id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -70,10 +84,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteComment(int id)
         {
-            _commentService.DeleteComment(id);
+            var userInfo = this.GetUserIdAndRoles();
+            _commentService.DeleteComment(id, userInfo);
         }
 
         //  api/comment/5
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [HttpPut("{id}")]
         [Description("Update comment by id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -82,8 +98,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
         {
+            var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var output= _commentService.UpdateComment(id, dto);
+            var output = _commentService.UpdateComment(id, dto, userInfo);
             return _mapper.Map<CommentInfoOutputModel>(output);
         }
     }

@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using AutoMapper;
-using DevEdu.API.Configuration;
+﻿using AutoMapper;
+using DevEdu.API.Common;
 using DevEdu.API.Models.InputModels;
 using DevEdu.API.Models.OutputModels.Payment;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel;
+using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
-    [Authorize]
+    [AuthorizeRoles(Role.Manager)]
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentController : Controller
@@ -25,6 +26,7 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
             _paymentService = paymentService;
         }
+
         //  api/payment/5
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
@@ -38,6 +40,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/payment/user/1
+        [AuthorizeRoles(Role.Student)]
         [HttpGet("user/{userId}")]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -61,7 +64,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<PaymentDto>(model);
             int id = _paymentService.AddPayment(dto);
             dto = _paymentService.GetPayment(id);
-            
+
             return _mapper.Map<PaymentOutputModel>(dto);
         }
 
@@ -90,6 +93,7 @@ namespace DevEdu.API.Controllers
             dto = _paymentService.GetPayment(id);
             return _mapper.Map<PaymentOutputModel>(dto);
         }
+
         //  api/payment/bulk
         [HttpPost("bulk")]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
@@ -103,6 +107,6 @@ namespace DevEdu.API.Controllers
             var listId = _paymentService.AddPayments(dto);
             dto = _paymentService.SelectPaymentsBySeveralId(listId);
             return _mapper.Map<List<PaymentOutputModel>>(dto);
-         }
+        }
     }
 }
