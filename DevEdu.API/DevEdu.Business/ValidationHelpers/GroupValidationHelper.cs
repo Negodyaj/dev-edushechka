@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Repositories;
 using System.Threading.Tasks;
 
@@ -26,9 +27,29 @@ namespace DevEdu.Business.ValidationHelpers
             throw new AuthorizationException(string.Format(ServiceMessages.AccessDeniedForGetGroupMembers, groupId));
         }
 
-        public void TmpAccess(UserIdentityInfo userInfo, int id2, int id3 = 0)
+        public void CheckAccessGroup(UserIdentityInfo userInfo, int groupId)
         {
-            throw new AuthorizationException("");
+            throw new System.NotImplementedException();
+        }
+
+        public void CheckAccessGroupAndMaterial(UserIdentityInfo userInfo, int groupId, int materialId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void CheckAccessGroupAndLesson(UserIdentityInfo userInfo, int groupId, int lessonId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void CheckAccessGroupAndUser(UserIdentityInfo userInfo, int groupId, int userId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void CheckAccessGroupAndTask(UserIdentityInfo userInfo, int groupId, int taskId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

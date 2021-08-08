@@ -51,7 +51,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task AddGroup_NotParams_ReturnGroupId()
+        public async Task AddGroup_NotParams_GroupAdded()
         {
             //Given            
             var groupId = 2;
@@ -328,7 +328,7 @@ namespace DevEdu.Business.Tests
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.AddTaskToGroup(groupTaskDto)).ReturnsAsync(GroupTaskData.ExpectedGroupTaskId);
+            _groupRepoMock.Setup(x => x.AddTaskToGroup(groupTaskDto)).ReturnsAsync(expectedGroupTaskId);
 
             //When
             var actualGroupTaskId = await _sut.AddTaskToGroup(groupId, taskId, groupTaskDto, userInfo);

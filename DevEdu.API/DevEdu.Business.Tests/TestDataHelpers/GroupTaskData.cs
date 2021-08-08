@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Enums;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -7,11 +8,6 @@ namespace DevEdu.Business.Tests
 {
     public static class GroupTaskData
     {
-
-        public const int ExpectedGroupTaskId = 42;
-        public const int TaskId = 1;
-        public const int GroupId = 1;
-
         public static UserIdentityInfo GetUserInfo()
         {
             return new UserIdentityInfo() { UserId = 1, Roles = new() {Role.Admin, Role.Manager } };

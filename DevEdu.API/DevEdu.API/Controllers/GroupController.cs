@@ -63,7 +63,6 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<List<GroupOutputModel>> GetAllGroups()
         {
             var dto = await _groupService.GetGroups();
@@ -153,7 +152,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<int> AddGroupMaterialReference(int groupId, int materialId)
         {
             var userInfo = this.GetUserIdAndRoles();
@@ -183,7 +181,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task AddUserToGroup(int groupId, int userId, Role roleId)
         {
             var userInfo = this.GetUserIdAndRoles();
@@ -198,7 +195,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task DeleteUserFromGroup(int userId, int groupId)
         {
             var userInfo = this.GetUserIdAndRoles();
@@ -213,7 +209,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(GroupTaskInfoFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupTaskInfoFullOutputModel> GetGroupTask(int groupId, int taskId)
         {
             var userInfo = this.GetUserIdAndRoles();
@@ -229,8 +224,6 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [ProducesResponseType(typeof(List<GroupTaskInfoWithTaskOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<List<GroupTaskInfoWithTaskOutputModel>> GetTasksByGroupId(int groupId)
         {
             var userInfo = this.GetUserIdAndRoles();
@@ -246,7 +239,6 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<int> AddTaskToGroup(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
@@ -263,7 +255,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task DeleteTaskFromGroup(int groupId, int taskId)
         {
             var userInfo = this.GetUserIdAndRoles();
@@ -278,7 +269,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(GroupTaskInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<GroupTaskInfoOutputModel> UpdateGroupTask(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();

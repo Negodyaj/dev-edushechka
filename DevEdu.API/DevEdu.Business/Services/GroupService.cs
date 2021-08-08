@@ -1,10 +1,10 @@
-﻿using DevEdu.Business.ValidationHelpers;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static Dapper.SqlMapper;
 
 namespace DevEdu.Business.Services
 {
@@ -99,7 +99,7 @@ namespace DevEdu.Business.Services
         public async Task<GroupDto> UpdateGroup(int id, GroupDto groupDto, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistence(id);
-            _groupHelper.TmpAccess(userInfo, id);
+            _groupHelper.CheckAccessGroup(userInfo, id);
 
             groupDto.Id = id;
             return await _groupRepository.UpdateGroup(groupDto);
@@ -116,7 +116,7 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistence(groupId);
             _materialHelper.CheckMaterialExistence(materialId);
-            _groupHelper.TmpAccess(userInfo, groupId, materialId);
+            _groupHelper.CheckAccessGroupAndMaterial(userInfo, groupId, materialId);
 
             return await _groupRepository.AddGroupMaterialReference(groupId, materialId);
         }
@@ -125,7 +125,7 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistence(groupId);
             _materialHelper.CheckMaterialExistence(materialId);
-            _groupHelper.TmpAccess(userInfo, groupId, materialId);
+            _groupHelper.CheckAccessGroupAndMaterial(userInfo, groupId, materialId);
 
             return await _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
         }
@@ -134,7 +134,7 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistence(groupId);
             _lessonHelper.CheckLessonExistence(lessonId);
-            _groupHelper.TmpAccess(userInfo, groupId, lessonId);
+            _groupHelper.CheckAccessGroupAndLesson(userInfo, groupId, lessonId);
 
             return await _groupRepository.AddGroupToLesson(groupId, lessonId);
         }
@@ -143,7 +143,7 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistence(groupId);
             _lessonHelper.CheckLessonExistence(lessonId);
-            _groupHelper.TmpAccess(userInfo, groupId, lessonId);
+            _groupHelper.CheckAccessGroupAndLesson(userInfo, groupId, lessonId);
 
             await _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
         }
@@ -152,7 +152,7 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistence(groupId);
             _userHelper.CheckUserExistence(userId);
-            _groupHelper.TmpAccess(userInfo, groupId, userId);
+            _groupHelper.CheckAccessGroupAndUser(userInfo, groupId, userId);
 
 
             await _groupRepository.AddUserToGroup(groupId, userId, (int)roleId);
@@ -162,7 +162,7 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistence(groupId);
             _userHelper.CheckUserExistence(userId);
-            _groupHelper.TmpAccess(userInfo, userId, groupId);
+            _groupHelper.CheckAccessGroupAndUser(userInfo, groupId, userId);
 
             await _groupRepository.DeleteUserFromGroup(userId, groupId);
         }
@@ -171,7 +171,7 @@ namespace DevEdu.Business.Services
         public async Task<int> AddTaskToGroup(int groupId, int taskId, GroupTaskDto dto, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistence(groupId);
-            _groupHelper.TmpAccess(userInfo, groupId, taskId);
+            _groupHelper.CheckAccessGroupAndTask(userInfo, groupId, taskId);
             _taskHelper.CheckTaskExistence(taskId);
 
             dto.Group = new GroupDto { Id = groupId };
@@ -182,7 +182,7 @@ namespace DevEdu.Business.Services
         public async Task DeleteTaskFromGroup(int groupId, int taskId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistence(groupId);
-            _groupHelper.TmpAccess(userInfo, groupId, taskId);
+            _groupHelper.CheckAccessGroupAndTask(userInfo, groupId, taskId);
             _taskHelper.CheckTaskExistence(taskId);
 
             await _groupRepository.DeleteTaskFromGroup(groupId, taskId);
@@ -191,7 +191,7 @@ namespace DevEdu.Business.Services
         public async Task<List<GroupTaskDto>> GetTasksByGroupId(int groupId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistence(groupId);
-            _groupHelper.TmpAccess(userInfo, groupId);
+            _groupHelper.CheckAccessGroup(userInfo, groupId);
 
             return await _groupRepository.GetTaskGroupByGroupId(groupId);
         }
@@ -199,7 +199,7 @@ namespace DevEdu.Business.Services
         public async Task<GroupTaskDto> GetGroupTask(int groupId, int taskId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistence(groupId);
-            _groupHelper.TmpAccess(userInfo, groupId, taskId);
+            _groupHelper.CheckAccessGroupAndTask(userInfo, groupId, taskId);
             _taskHelper.CheckTaskExistence(taskId);
 
             return await _groupRepository.GetGroupTask(groupId, taskId);
@@ -210,10 +210,10 @@ namespace DevEdu.Business.Services
             var userId = userInfo.UserId;
             var roles = userInfo.Roles;
 
-            if (!CheckerRole.IsAdmin(roles)) { }
+            if (!userInfo.IsAdmin()) { }
 
             await _groupHelper.CheckGroupExistence(groupId);
-            _groupHelper.TmpAccess(userInfo, groupId, taskId);
+            _groupHelper.CheckAccessGroupAndTask(userInfo, groupId, taskId);
             _taskHelper.CheckTaskExistence(taskId);
 
             dto.Group = new GroupDto { Id = groupId };
@@ -222,19 +222,19 @@ namespace DevEdu.Business.Services
             return await _groupRepository.GetGroupTask(groupId, taskId);
         }
 
-        private void CheckUserAccessByRoleAndId(int userId, List<Role> roles, GroupDto dto)
+        private void CheckUserAccessByRoleAndId(UserIdentityInfo userInfo, GroupDto dto)
         {
-
-            if (CheckerRole.IsAdmin(roles))
+            var userId = userInfo.UserId;
+            if (userInfo.IsAdmin())
             {
                 return;
             }
 
             CheckUserAccessToGroupData(dto, userId);
 
-            if (CheckerRole.IsStudent(roles))
+            if (userInfo.IsStudent())
             {
-                
+
             }
         }
 

@@ -9,6 +9,7 @@ namespace DevEdu.Business.Tests
     public class TaskServiceTests
     {
         private Mock<ITaskRepository> _taskRepoMock;
+        private Mock<ITagRepository> _tagRepoMock;
         private Mock<ICourseRepository> _courseRepoMock;
         private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
         private TaskValidationHelper _taskHelper;
@@ -19,11 +20,12 @@ namespace DevEdu.Business.Tests
         public void Setup()
         {
             _taskRepoMock = new Mock<ITaskRepository>();
+            _tagRepoMock = new Mock<ITagRepository>();
             _courseRepoMock = new Mock<ICourseRepository>();
             _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
-            _taskHelper = new TaskValidationHelper();
-            _tagHelper = new TagValidationHelper();
-            _sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper.Object, _tagHelper.Object);
+            _taskHelper = new TaskValidationHelper(_taskRepoMock.Object);
+            _tagHelper = new TagValidationHelper(_tagRepoMock.Object);
+            _sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper, _tagHelper);
         }
 
         [Test]
@@ -186,7 +188,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var groupTaskList = GroupTaskData.GetListOfGroupTaskDtoWithGroup();
-            const int taskId = GroupTaskData.TaskId;
+            var taskId = 1;
 
             _taskRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupTaskList);
 
