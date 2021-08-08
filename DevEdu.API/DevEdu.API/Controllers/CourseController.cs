@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CourseController : Controller
@@ -143,7 +143,7 @@ namespace DevEdu.API.Controllers
 
         [HttpPost("{courseId}/add-topics")]
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
-	[ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]	
+	    [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]	
         [Description("Add topics to course")]
         public List<CourseTopicOutputModel> AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
         {

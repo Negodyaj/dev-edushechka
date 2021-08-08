@@ -5,10 +5,7 @@ namespace DevEdu.DAL.Models
 {
     public class DatabaseSettings 
     {
-        public DatabaseSettings()
-        {
-            
-        }
+        public DatabaseSettings(){ }
         public  string ConnectionString { get; set; }
         
     }

@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using DevEdu.Business.Configuration;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DevEdu.Business.Services
@@ -13,10 +14,12 @@ namespace DevEdu.Business.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IAuthOptions _options;
 
-        public AuthenticationService(IUserRepository userRepository)
+        public AuthenticationService(IUserRepository userRepository, IAuthOptions options)
         {
             _userRepository = userRepository;
+            _options = options;
         }
 
         public string SignIn(UserDto dto)
@@ -33,7 +36,7 @@ namespace DevEdu.Business.Services
                 notBefore: DateTime.UtcNow,
                 claims: identity.Claims,//Here we are adding claims to JWT
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(AuthOptions.Lifetime)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
+                signingCredentials: new SigningCredentials(_options.GetSymmetricSecurityKey(),
                     SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
@@ -94,5 +97,6 @@ namespace DevEdu.Business.Services
             }
             return null;
         }
+        
     }
 }

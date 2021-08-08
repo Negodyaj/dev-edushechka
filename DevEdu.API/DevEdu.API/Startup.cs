@@ -28,10 +28,6 @@ namespace DevEdu.API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
-            //var builder = new ConfigurationBuilder().AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "Properties", "launchSettings.json"));
-            //Configuration = builder.Build();
-
         }
 
         public IConfiguration Configuration { get; }
@@ -41,8 +37,8 @@ namespace DevEdu.API
         {
             services.AddOptions<IConfiguration>();
             services.AddOptions<DatabaseSettings>().Bind(Configuration.GetSection(nameof(DatabaseSettings))).ValidateDataAnnotations();
+            services.AddOptions<AuthSettings>().Bind(Configuration.GetSection(nameof(AuthSettings))).ValidateDataAnnotations();
             
-
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IMaterialRepository, MaterialRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
@@ -72,6 +68,7 @@ namespace DevEdu.API
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAuthOptions, AuthOptions>();
 
             services.AddScoped<ICommentValidationHelper, CommentValidationHelper>();
             services.AddScoped<ICourseValidationHelper, CourseValidationHelper>();
@@ -107,7 +104,7 @@ namespace DevEdu.API
                         ValidateAudience = true,
                         ValidAudience = AuthOptions.Audience,
                         ValidateLifetime = true,
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        //IssuerSigningKey = //AuthOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true
                     };
                 });
