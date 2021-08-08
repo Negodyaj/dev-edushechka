@@ -7,6 +7,7 @@ using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
@@ -26,6 +27,8 @@ namespace DevEdu.API.Controllers
         [HttpGet("{id}")]
         [Description("Return notification by id")]
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public NotificationInfoOutputModel GetNotification(int id)
         {
             var dto = _notificationService.GetNotification(id);
@@ -37,6 +40,8 @@ namespace DevEdu.API.Controllers
         [HttpGet("by-user/{userId}")]
         [Description("Return notifications by user")]
         [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<NotificationInfoOutputModel> GetAllNotificationsByUserId(int userId)
         {
             var dto = _notificationService.GetNotificationsByUserId(userId);
@@ -48,6 +53,8 @@ namespace DevEdu.API.Controllers
         [HttpGet("by-group/{groupId}")]
         [Description("Return notifications by group")]
         [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<NotificationInfoOutputModel> GetAllNotificationsByGroupId(int groupId)
         {
             var dto = _notificationService.GetNotificationsByGroupId(groupId);
@@ -59,6 +66,8 @@ namespace DevEdu.API.Controllers
         [HttpGet("by-role/{roleId}")]
         [Description("Return notifications by role")]
         [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<NotificationInfoOutputModel> GetAllNotificationsByRoleId(int roleId)
         {
             var dto = _notificationService.GetNotificationsByRoleId(roleId);
@@ -70,6 +79,9 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         [Description("Add new notification")]
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public NotificationInfoOutputModel AddNotification([FromBody] NotificationAddInputModel model)
         {
             var dto = _mapper.Map<NotificationDto>(model);
@@ -81,6 +93,8 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}")]
         [Description("Delete notification by id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteNotification(int id)
         {
             _notificationService.DeleteNotification(id);
@@ -90,6 +104,8 @@ namespace DevEdu.API.Controllers
         [HttpPut("{id}")]
         [Description("Update notification by id")]
         [ProducesResponseType(typeof(NotificationInfoOutputModel),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public NotificationInfoOutputModel UpdateNotification(int id, [FromBody] NotificationUpdateInputModel model)
         {
             var dto = _mapper.Map<NotificationDto>(model);
