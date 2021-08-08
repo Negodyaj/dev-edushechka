@@ -3,5 +3,6 @@
     public interface IGroupValidationHelper
     {
         void CheckGroupExistence(int groupId);
+        void CheckUserInGroupExistence(int groupId, int userId);
     }
 }

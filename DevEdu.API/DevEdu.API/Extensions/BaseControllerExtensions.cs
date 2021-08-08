@@ -1,10 +1,11 @@
-﻿using DevEdu.DAL.Enums;
-using DevEdu.DAL.Models;
+using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Extensions
 {
@@ -21,13 +22,13 @@ namespace DevEdu.API.Extensions
             return controller.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => (Role)Enum.Parse(typeof(Role), c.Value)).ToList();
         }
 
-        public static UserDto GetUserIdAndRoles(this Controller controller)
+        public static UserIdentityInfo GetUserIdAndRoles(this Controller controller)
         {
             var userId = Convert.ToInt32(controller.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
             var roles = controller.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => (Role)Enum.Parse(typeof(Role), c.Value)).ToList();
-            return new UserDto
+            return new UserIdentityInfo
             {
-                Id = userId,
+                UserId = userId,
                 Roles = roles
             };
         }

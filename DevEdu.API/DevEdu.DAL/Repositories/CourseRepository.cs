@@ -1,8 +1,8 @@
+using Dapper;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Dapper;
-using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -27,10 +27,6 @@ namespace DevEdu.DAL.Repositories
 
         private const string _courseSelectByTaskIdProcedure = "dbo.Course_SelectByTaskId";
         private const string _courseSelectAllByMaterialIdProcedure = "dbo.Course_SelectByMaterialId";
-
-        public CourseRepository()
-        {
-        }
 
         public int AddCourse(CourseDto courseDto)
         {
@@ -110,13 +106,13 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public void UpdateCourse(CourseDto courseDto)
+        public CourseDto UpdateCourse(CourseDto courseDto)
         {
-            _connection.Execute(
+            return _connection.QuerySingle<CourseDto>(
                 _courseUpdateProcedure,
                 new
                 {
-                    courseDto.Id,
+                    CourseId = courseDto.Id,
                     courseDto.Name,
                     courseDto.Description
                 },
@@ -226,17 +222,17 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int RemoveCourseMaterialReference(int courseId, int materialId)
+        public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
-            return _connection.Execute(
-                _deleteCourseMaterial,
-                new
-                {
-                    courseId,
-                    materialId
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            _connection.Execute(
+               _deleteCourseMaterial,
+               new
+               {
+                   courseId,
+                   materialId
+               },
+               commandType: CommandType.StoredProcedure
+           );
         }
     }
 }

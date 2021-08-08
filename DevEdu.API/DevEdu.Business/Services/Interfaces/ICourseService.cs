@@ -10,15 +10,18 @@ namespace DevEdu.Business.Services
         int AddCourse(CourseDto courseDto);
         void DeleteCourse(int id);
         List<CourseDto> GetCourses();
-        void UpdateCourse(int id, CourseDto courseDto);
-        void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
-        void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto);
-        void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics);
+        List<CourseDto> GetCoursesForAdmin();
+        CourseDto UpdateCourse(int id, CourseDto courseDto);
+        int AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
+        List<int> AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto);
+        List<int> UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics);
         void DeleteTopicFromCourse(int courseId, int topicId);
         List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId);
         void DeleteTaskFromCourse(int courseId, int taskId);
         public void AddTaskToCourse(int courseId, int taskId);
         int AddCourseMaterialReference(int courseId, int materialId);
-        int RemoveCourseMaterialReference(int courseId, int materialId);
+        void RemoveCourseMaterialReference(int courseId, int materialId);
+        CourseTopicDto GetCourseTopicById(int id);
+        List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids);
     }
 }
