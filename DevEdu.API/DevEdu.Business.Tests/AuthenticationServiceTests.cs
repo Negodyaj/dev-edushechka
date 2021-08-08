@@ -1,4 +1,5 @@
-﻿using DevEdu.Business.Services;
+﻿using DevEdu.Business.Configuration;
+using DevEdu.Business.Services;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -17,7 +18,7 @@ namespace DevEdu.Business.Tests
         [SetUp]
         public void Setup()
         {
-            _sut = new AuthenticationService(new Mock<IUserRepository>().Object);
+            _sut = new AuthenticationService(new Mock<IUserRepository>().Object, new Mock<IAuthOptions>().Object);
         }
 
         [Test]
