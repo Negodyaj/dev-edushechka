@@ -24,7 +24,7 @@ namespace DevEdu.Business.Tests
                 City = (City)1,
                 BirthDate = DateTime.Today,
                 GitHubAccount = "admin/admin.git",
-                Photo = "https://localhost:Admin/admin",
+                Photo = "https://localhost:IsAdmin/admin",
                 PhoneNumber = "adminPhoneNumber",
                 Roles = new List<Role>
                 {
@@ -48,8 +48,8 @@ namespace DevEdu.Business.Tests
                 ContractNumber = "Student01",
                 City = (City)1,
                 BirthDate = DateTime.Today,
-                GitHubAccount = "Student/Student.git",
-                Photo = "https://localhost:Student",
+                GitHubAccount = "IsStudent/IsStudent.git",
+                Photo = "https://localhost:IsStudent",
                 PhoneNumber = "StudentPhoneNumber",
                 Roles = new List<Role> { Role.Student }
             };
@@ -72,7 +72,7 @@ namespace DevEdu.Business.Tests
                         City = (City)1,
                         BirthDate = DateTime.Today,
                         GitHubAccount = "admin/admin.git",
-                        Photo = "https://localhost:Admin/admin",
+                        Photo = "https://localhost:IsAdmin/admin",
                         PhoneNumber = "adminPhoneNumber",
                         Roles = new List<Role>
                         {
@@ -92,8 +92,8 @@ namespace DevEdu.Business.Tests
                     ContractNumber = "Student01",
                     City = (City)1,
                     BirthDate = DateTime.Today,
-                    GitHubAccount = "Student/Student.git",
-                    Photo = "https://localhost:Student",
+                    GitHubAccount = "IsStudent/IsStudent.git",
+                    Photo = "https://localhost:IsStudent",
                     PhoneNumber = "StudentPhoneNumber",
                     Roles = new List<Role> { Role.Student }
                 },

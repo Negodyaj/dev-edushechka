@@ -1,15 +1,10 @@
-﻿using DevEdu.DAL.Models;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
     public class CourseData
     {
-        public CourseData()
-        {
-
-        }
-
         public static CourseDto GetUpdCourseDto()
         {
             return new CourseDto
@@ -163,6 +158,7 @@ namespace DevEdu.Business.Tests
 
             return courseTopicsDto;
         }
+
         public static List<CourseTopicDto> GetListCourseTopicDtoFromDataBase()
         {
             List<CourseTopicDto> courseTopicsDto = new List<CourseTopicDto>();
@@ -173,6 +169,7 @@ namespace DevEdu.Business.Tests
 
             return courseTopicsDto;
         }
+
         public static List<TopicDto> GetTopics()
         {
             List<TopicDto> topicsDto = new List<TopicDto>();
@@ -190,6 +187,7 @@ namespace DevEdu.Business.Tests
 
             return topicsDto;
         }
+
         public static List<TopicDto> GetTopicsFromBDUseWhenTopicAbsent()
         {
             List<TopicDto> topicsDto = new List<TopicDto>();
@@ -200,6 +198,5 @@ namespace DevEdu.Business.Tests
 
             return topicsDto;
         }
-
     }
 }

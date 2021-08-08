@@ -24,10 +24,11 @@ namespace DevEdu.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // This method gets called by the runtime. Use this method to add services to the container. 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+
             services.AddScoped<IMaterialRepository, MaterialRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IStudentAnswerOnTaskRepository, StudentAnswerOnTaskRepository>();
@@ -42,6 +43,8 @@ namespace DevEdu.API
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
             services.AddScoped<IRatingRepository, RatingRepository>();
+            services.AddScoped<IHomeworkRepository, HomeworkRepository>();
+
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IGroupService, GroupService>();
@@ -56,6 +59,7 @@ namespace DevEdu.API
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IHomeworkService, HomeworkService>();
 
             services.AddScoped<ICommentValidationHelper, CommentValidationHelper>();
             services.AddScoped<ICourseValidationHelper, CourseValidationHelper>();
@@ -65,10 +69,12 @@ namespace DevEdu.API
             services.AddScoped<INotificationValidationHelper, NotificationValidationHelper>();
             services.AddScoped<IPaymentValidationHelper, PaymentValidationHelper>();
             services.AddScoped<IRatingValidationHelper, RatingValidationHelper>();
+            services.AddScoped<IStudentAnswerOnTaskValidationHelper, StudentAnswerOnTaskValidationHelper>();
             services.AddScoped<ITagValidationHelper, TagValidationHelper>();
             services.AddScoped<ITaskValidationHelper, TaskValidationHelper>();
             services.AddScoped<ITopicValidationHelper, TopicValidationHelper>();
             services.AddScoped<IUserValidationHelper, UserValidationHelper>();
+            services.AddScoped<IHomeworkValidationHelper, HomeworkValidationHelper>();
 
             services.AddControllers();
 
@@ -114,11 +120,11 @@ namespace DevEdu.API
                 document.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT token"));
             });
 
-            // Add framework services.
+            // Add framework services. 
             services.AddOptions();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -130,20 +136,20 @@ namespace DevEdu.API
 
             app.UseMiddleware<ExceptionMiddleware>();
 
-            //This middleware is used to redirects HTTP requests to HTTPS.  
+            //This middleware is used to redirects HTTP requests to HTTPS.   
             app.UseHttpsRedirection();
 
-            //This middleware is used to returns static files and short-circuits further request processing.   
+            //This middleware is used to returns static files and short-circuits further request processing.    
             app.UseStaticFiles();
 
-            //This middleware is used to route requests.   
+            //This middleware is used to route requests.    
             app.UseRouting();
 
-            //This middleware is used to authorizes a user to access secure resources.  
+            //This middleware is used to authorizes a user to access secure resources.   
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //This middleware is used to add Razor Pages endpoints to the request pipeline.   
+            //This middleware is used to add Razor Pages endpoints to the request pipeline.    
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

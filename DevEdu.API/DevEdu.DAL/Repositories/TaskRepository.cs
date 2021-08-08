@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Dapper;
+using DevEdu.DAL.Models;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Dapper;
-using DevEdu.DAL.Enums;
-using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -87,6 +86,7 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
             return task;
         }
+
         public List<TaskDto> GetTasksByCourseId(int courseId)
         {
             var taskList = new List<TaskDto>();
@@ -96,6 +96,7 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure)
                 .ToList();
         }
+
         public List<TaskDto> GetTasks()
         {
             var taskDictionary = new Dictionary<int, TaskDto>();

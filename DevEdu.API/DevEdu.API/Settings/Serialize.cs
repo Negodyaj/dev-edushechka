@@ -11,7 +11,7 @@ namespace DevEdu.API.Settings
             (
                 model,
                 Formatting.Indented,
-                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All}
+                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }
             );
         }
     }
