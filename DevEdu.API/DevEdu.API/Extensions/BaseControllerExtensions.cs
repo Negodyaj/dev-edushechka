@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using DevEdu.Business;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Extensions
 {

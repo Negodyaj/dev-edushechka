@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DevEdu.API.Extensions;
 
 namespace DevEdu.API.Controllers
 {
@@ -41,18 +42,22 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson
+        [AuthorizeRolesAttribute(Role.Teacher)]
         [HttpPost]
         [Description("Add a lesson.")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public int AddLesson([FromBody] LessonInputModel inputModel)
+        public LessonInfoOutputModel AddLesson([FromBody] LessonInputModel inputModel)
         {
-            var dto = _mapper.Map<LessonDto>(inputModel);
-            return _lessonService.AddLesson(dto, inputModel.TopicIds);
+            var lessonDto = _mapper.Map<LessonDto>(inputModel);
+            var userIdentity = this.GetUserIdAndRoles();
+            var output = _lessonService.AddLesson(userIdentity, lessonDto, inputModel.TopicIds);
+            return _mapper.Map<LessonInfoOutputModel>(output);
         }
 
         // api/lesson/{id}
+        [AuthorizeRolesAttribute(Role.Teacher)]
         [HttpDelete("{id}")]
         [Description("Delete the lesson by id.")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -60,24 +65,28 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteLesson(int id)
         {
-            _lessonService.DeleteLesson(id);
+            var userIdentity = this.GetUserIdAndRoles();
+            _lessonService.DeleteLesson(userIdentity, id);
         }
 
         // api/lesson/{id}
+        [AuthorizeRolesAttribute(Role.Teacher)]
         [HttpPut("{id}")]
         [Description("Update the lesson's teacher comment and link to record.")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public LessonInfoOutputModel UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
         {
             var dto = _mapper.Map<LessonDto>(updateModel);
-            var output = _lessonService.UpdateLesson(dto, id);
+            var userIdentity = this.GetUserIdAndRoles();
+            var output = _lessonService.UpdateLesson(userIdentity, dto, id);
             return _mapper.Map<LessonInfoOutputModel>(output);
         }
 
         // api/lesson/groupId/{id}
+        [AuthorizeRolesAttribute(Role.Teacher, Role.Student)]
         [HttpGet("/by-groupId/{id}")]
         [Description("Get all lessons by groupId.")]
         [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
@@ -85,11 +94,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<LessonInfoOutputModel> GetAllLessonsByGroupId(int id)
         {
-            var dto = _lessonService.SelectAllLessonsByGroupId(id);
-            return _mapper.Map<List<LessonInfoOutputModel>>(dto);
+            var userIdentity = this.GetUserIdAndRoles();
+            var dto = _lessonService.SelectAllLessonsByGroupId(userIdentity, id);
+            return  _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
         // api/lesson/teacherId/{id}
+        [AuthorizeRolesAttribute(Role.Manager, Role.Methodist)]
         [HttpGet("/by-teacherId/{id}")]
         [Description("Get all lessons by teacherId.")]
         [ProducesResponseType(typeof(List<LessonInfoWithCourseOutputModel>), StatusCodes.Status200OK)]
@@ -100,7 +111,7 @@ namespace DevEdu.API.Controllers
             var dto = _lessonService.SelectAllLessonsByTeacherId(id);
             return _mapper.Map<List<LessonInfoWithCourseOutputModel>>(dto);
         }
-
+        
         // api/lesson/{id}
         [HttpGet("{id}")]
         [Description("Get the lesson by id.")]
@@ -112,8 +123,9 @@ namespace DevEdu.API.Controllers
             var dto = _lessonService.SelectLessonById(id);
             return _mapper.Map<LessonInfoOutputModel>(dto);
         }
-
+        
         // api/lesson/{id}/with-comments
+        [AuthorizeRolesAttribute(Role.Student)]
         [HttpGet("{id}/with-comments")]
         [Description("Get the lesson with comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
@@ -121,11 +133,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public LessonInfoWithCommentsOutputModel GetAllLessonsWithComments(int id)
         {
-            var dto = _lessonService.SelectLessonWithCommentsById(id);
+            var userIdentity = this.GetUserIdAndRoles();
+            var dto = _lessonService.SelectLessonWithCommentsById(userIdentity, id);
             return _mapper.Map<LessonInfoWithCommentsOutputModel>(dto);
         }
 
         // api/lesson/{id}/full-info"
+        [AuthorizeRolesAttribute(Role.Teacher)]
         [HttpGet("{id}/full-info")]
         [Description("Get the lesson with students and comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
@@ -133,8 +147,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public LessonInfoWithStudentsAndCommentsOutputModel GetAllLessonsWithStudentsAndComments(int id)
         {
-            var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(id);
-            return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel>(dto);
+            var userIdentity = this.GetUserIdAndRoles();
+            var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(userIdentity, id);
+            return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel> (dto);
         }
 
         // api/lesson/{lessonId}/topic/{toppicId}

@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Enums;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,17 @@ namespace DevEdu.Business.Tests
                 Photo = "https://localhost:IsStudent",
                 PhoneNumber = "StudentPhoneNumber",
                 Roles = new List<Role> { Role.Student }
+            };
+        }
+        public static UserDto GetTeacherDto()
+        {
+            return new UserDto
+            {
+                Id = 3,
+                FirstName = "Olga",
+                LastName = "Ivanovna",
+                Email = "olga@mail.ru",
+                Photo = " http://photo.jpg"
             };
         }
 
