@@ -19,7 +19,6 @@ using System;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Net;
-using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API
 {
@@ -96,10 +95,7 @@ namespace DevEdu.API
                 .ConfigureApiBehaviorOptions(options =>
                 {
                    //   options.SuppressModelStateInvalidFilter = true;
-                    options.InvalidModelStateResponseFactory = context =>
-                    {
-                          return CustomErrorResponse(context);
-                    };
+                    options.InvalidModelStateResponseFactory = CustomErrorResponse;
                 });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -144,7 +140,7 @@ namespace DevEdu.API
         private UnprocessableEntityObjectResult CustomErrorResponse(ActionContext actionContext)
         {
             var exc = new ValidationException(actionContext.ModelState);
-            return new UnprocessableEntityObjectResult(exc.ValidationErrors);
+            return new UnprocessableEntityObjectResult(exc);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,7 +8,7 @@ namespace DevEdu.Business.Exceptions
 {
     public class ValidationError
     {
-        //public int StatusCode { get; set; }
+        public int Code { get; set; }
         public string Field { get; set; }
         public string ErrorMessage { get; set; }
     }

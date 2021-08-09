@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -68,7 +69,8 @@ namespace DevEdu.API.Configuration
             var result = JsonConvert.SerializeObject(
                 new ValidationExceptionResponse
                 {
-                    Field = exception.Message,
+                    Code = ValidationCode,
+                    Message = MessageValidation,
                     Description = exception.Message
                 }
             );
