@@ -10,9 +10,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : Controller
@@ -27,9 +29,9 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user/userId
+        [AuthorizeRoles(Role.Manager)]
         [HttpPut("{userId}")]
         [Description("Update user")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(UserUpdateInfoOutPutModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -42,9 +44,9 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user/{userId}
+        [AuthorizeRoles(Role.Manager)]
         [HttpGet("{userId}")]
         [Description("Return user by id")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -55,12 +57,11 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user
+        [AuthorizeRoles(Role.Manager)]
         [HttpGet]
         [Description("Return list users")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(List<UserInfoOutPutModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<UserInfoOutPutModel> GetAllUsers()
         {
             var listDto = _userService.SelectUsers();
@@ -68,9 +69,9 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user/{userId}
+        [AuthorizeRoles(Role.Manager)]
         [HttpDelete("{userId}")]
         [Description("Delete user by id")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -80,9 +81,9 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user/{userId}/role/{roleId}
+        [AuthorizeRoles()]
         [HttpPost("{userId}/role/{roleId}")]
         [Description("Add new role to user")]
-        [AuthorizeRoles()]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -92,9 +93,9 @@ namespace DevEdu.API.Controllers
         }
 
         // api/user/{userId}/role/{roleId}
+        [AuthorizeRoles()]
         [HttpDelete("{userId}/role/{roleId}")]
         [Description("Delete role from user")]
-        [AuthorizeRoles()]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
