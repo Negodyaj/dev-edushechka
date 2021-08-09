@@ -47,7 +47,7 @@ namespace DevEdu.Business.Services
         public void DeleteStudentAnswerOnTask(int taskId, int studentId, UserIdentityInfo userInfo)
         {
             var checkedStudentAnswerDto = _studentAnswerOnTaskValidationHelper.GetStudentAnswerByTaskIdAndStudentIdOrThrowIfNotFound(taskId, studentId);
-            CheckUserAccessToAddAnswerUserId(userInfo, checkedStudentAnswerDto);
+            CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
             _studentAnswerOnTaskRepository.DeleteStudentAnswerOnTask(taskId, studentId);
         }
 
@@ -60,10 +60,9 @@ namespace DevEdu.Business.Services
 
         public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId, UserIdentityInfo userInfo)
         {
-            _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
-
-            var answerDto = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
-            return answerDto;
+            var checkedStudentAnswerDto = _studentAnswerOnTaskValidationHelper.GetStudentAnswerByTaskIdAndStudentIdOrThrowIfNotFound(taskId, studentId);
+            CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
+            return checkedStudentAnswerDto;
         }
 
         public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId, UserIdentityInfo userInfo)
@@ -85,7 +84,8 @@ namespace DevEdu.Business.Services
 
         public StudentAnswerOnTaskDto UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto, UserIdentityInfo userInfo)
         {
-            _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
+            var checkedStudentAnswerDto = _studentAnswerOnTaskValidationHelper.GetStudentAnswerByTaskIdAndStudentIdOrThrowIfNotFound(taskId, studentId);
+            CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
 
             taskAnswerDto.Task = new TaskDto { Id = taskId };
             taskAnswerDto.User = new UserDto { Id = studentId };
@@ -103,7 +103,7 @@ namespace DevEdu.Business.Services
             return dto;
         }
 
-        private void CheckUserAccessToAddAnswerUserId(UserIdentityInfo userInfo, StudentAnswerOnTaskDto studentAnswerDto)
+        private void CheckUserAccessToStudentAnswerByUserId(UserIdentityInfo userInfo, StudentAnswerOnTaskDto studentAnswerDto)
         {
             var userId = userInfo.UserId;
 

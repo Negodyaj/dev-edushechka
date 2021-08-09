@@ -98,13 +98,11 @@ namespace DevEdu.Business.Tests
             int taskId = 1;
             int userId = 1;
             var dtoForTaskIdAndUserId = StudentAnswerOnTaskData.DtoForTaskIdAndUserId();
-            int countEntry = 2;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             dtoForTaskIdAndUserId.Task.Id = taskId;
             dtoForTaskIdAndUserId.User.Id = userId;
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId)).Returns(studentAnswerDto);
             _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId)).Returns(studentAnswerDto);
 
             // When
@@ -112,7 +110,7 @@ namespace DevEdu.Business.Tests
 
             // Then
             Assert.AreEqual(studentAnswerDto, dto);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Exactly(countEntry));
+            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Once);
         }
 
 
@@ -153,7 +151,7 @@ namespace DevEdu.Business.Tests
             DateTime dateNow = DateTime.Now;
             var dateString = dateNow.ToString("dd.MM.yyyy HH:mm");
             DateTime dateTime = Convert.ToDateTime(dateString);
-            int countEntry = 3;
+            int countEntry = 2;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _studentAnswerOnTaskRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(taskId, userId, acceptedSatusId, dateTime)).Returns(acceptedSatusId);
@@ -233,10 +231,10 @@ namespace DevEdu.Business.Tests
             _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId)).Returns(studentAnswerDto);
             _studentAnswerOnTaskRepoMock.Setup(x => x.DeleteStudentAnswerOnTask(taskId, userId));
 
-            //When
+            // When
             _sut.DeleteStudentAnswerOnTask(taskId, userId, userInfo);
 
-            //Than
+            // Than
             _studentAnswerOnTaskRepoMock.Verify(x => x.DeleteStudentAnswerOnTask(taskId, userId), Times.Once);
             _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Once);
         }
@@ -262,7 +260,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
             _studentAnswerOnTaskRepoMock.Setup(x => x.AddStudentAnswerOnTask(studentAnswerOnTaskDto)).Returns(expectedStudentAnswerId);
 
-            //When
+            // When
             var actualException = Assert.Throws<AuthorizationException>(
                 () => _sut.AddStudentAnswerOnTask(taskId, studentAnswerOnTaskDto.User.Id, studentAnswerOnTaskDto, userInfo));
 
@@ -278,33 +276,33 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Student)]
         public void AddStudentAnswerOnTask_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
-            //Given
+            // Given
             int taskId = 1;
             var studentAnswerOnTaskDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var user = UserData.GetUserDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), studentAnswerOnTaskDto.User.Id);
 
-            //When
+            // When
             var actualException = Assert.Throws<EntityNotFoundException>(
                 () => _sut.AddStudentAnswerOnTask(taskId, studentAnswerOnTaskDto.User.Id, studentAnswerOnTaskDto, userInfo));
 
-            //Than
+            // Than
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
         }
 
 
         [TestCase(Role.Student)]
-        public void DeleteStudentAnswerOnTask_WhenCommentIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void DeleteStudentAnswerOnTask_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
-            //Given
+            // Given
             var studentAnswerOnTaskDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             int taskId = 1;
             int userId = 4;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTaskDto), studentAnswerOnTaskDto.Id);
 
-            //When
+            // When
             var actualException = Assert.Throws<EntityNotFoundException>(
                 () => _sut.DeleteStudentAnswerOnTask(taskId, userId, userInfo));
 
@@ -325,9 +323,93 @@ namespace DevEdu.Business.Tests
 
             _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, expectedUserId)).Returns(studentAnswerDto);
 
-            //When
+            // When
             var actualException = Assert.Throws<AuthorizationException>(
                     () => _sut.DeleteStudentAnswerOnTask(taskId, expectedUserId, userInfo));
+
+            // Than
+            Assert.That(actualException.Message, Is.EqualTo(expectedException));
+            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, expectedUserId), Times.Once);
+        }
+
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void GetStudentAnswerOnTaskByTaskIdAndStudentId_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        {
+            // Given
+            int taskId = 1;
+            var studentAnswerOnTaskDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            var user = UserData.GetUserDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTaskDto), studentAnswerOnTaskDto.User.Id);
+
+            // When
+            var actualException = Assert.Throws<EntityNotFoundException>(
+                () => _sut.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentAnswerOnTaskDto.User.Id, userInfo));
+
+            // Than
+            Assert.That(actualException.Message, Is.EqualTo(expectedException));
+        }
+
+        [TestCase(Role.Teacher, 2)]
+        [TestCase(Role.Tutor, 2)]
+        public void GetStudentAnswerOnTaskByTaskIdAndStudentId_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        {
+            //Given
+            var studentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role, userId);
+            int taskId = 1;
+            var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
+
+            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentAnswerOnTaskDto.User.Id)).Returns(studentAnswerOnTaskDto);
+
+            //When
+            var actualException = Assert.Throws<AuthorizationException>(
+                    () => _sut.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentAnswerOnTaskDto.User.Id, userInfo));
+
+            //Than
+            Assert.That(actualException.Message, Is.EqualTo(expectedException));
+            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentAnswerOnTaskDto.User.Id), Times.Once);
+        }
+
+
+        [TestCase(Role.Student)]
+        public void UpdateStudentAnswerOnTask_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        {
+            // Given
+            var studentAnswerOnTaskDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            int taskId = 1;
+            int userId = 1;
+            var onlyAnswer = StudentAnswerOnTaskData.GetAnswerOfStudent();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTaskDto), studentAnswerOnTaskDto.Id);
+
+            // When
+            var actualException = Assert.Throws<EntityNotFoundException>(
+                    () => _sut.UpdateStudentAnswerOnTask(taskId, userId, onlyAnswer, userInfo));
+
+            // Then
+            Assert.That(actualException.Message, Is.EqualTo(expectedException));
+        }
+
+
+        [TestCase(Role.Student, 2)]
+        public void UpdateStudentAnswerOnTask_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        {
+            //Given
+            var studentAnswerOnTaskDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role, userId);
+            int taskId = 1;
+            int expectedUserId = 1;
+
+            var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
+
+            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, expectedUserId)).Returns(studentAnswerOnTaskDto);
+
+            //When
+            var actualException = Assert.Throws<AuthorizationException>(
+                    () => _sut.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, expectedUserId, userInfo));
 
             //Than
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
@@ -335,8 +417,26 @@ namespace DevEdu.Business.Tests
         }
 
 
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Methodist)]
+        public void GetAllStudentAnswersOnTask_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        {
+            // Given
+            var studentAnswersList = StudentAnswerOnTaskData.GetListStudentAnswersOnTaskDto();
+            int taskId = 1;
+            var taskDto = TaskData.GetAnotherTaskDtoWithTags();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
+            _studentAnswerOnTaskRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(taskId)).Returns(studentAnswersList);
+            _taskRepository.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            // When
+            var dtoList = _sut.GetAllStudentAnswersOnTask(taskId, userInfo);
 
-
+            // Then
+            Assert.AreEqual(studentAnswersList, dtoList);
+            _studentAnswerOnTaskRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(taskId), Times.Once);
+            _taskRepository.Verify(x => x.GetTaskById(taskId), Times.Once);
+        }
     }
 }
