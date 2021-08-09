@@ -3,7 +3,7 @@
 	FirstName			nvarchar(50)	NOT NULL,
 	LastName			nvarchar(50)	NOT NULL,
 	Patronymic 			nvarchar(50)	NOT NULL,
-	Email				nvarchar(50)	NOT NULL, 
+	Email				nvarchar(50)	NOT NULL UNIQUE, 
 	Username			nvarchar(50)	NOT NULL,
 	Password			nvarchar(200)	NOT NULL,
 	RegistrationDate	datetime		NOT NULL,
@@ -12,7 +12,7 @@
 	BirthDate			date			NOT NULL,
 	GitHubAccount		nvarchar(50),
 	Photo				nvarchar(150),
-	PhoneNumber			nvarchar(12)	NOT NULL,
+	PhoneNumber			nvarchar(12)	NOT NULL UNIQUE,
 	IsDeleted			bit				NOT NULL DEFAULT '0',
 	ExileDate			date,
   CONSTRAINT [PK_USER] PRIMARY KEY CLUSTERED

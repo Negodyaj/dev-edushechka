@@ -36,7 +36,6 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<UserDto>(model);
             dto.Password = _authService.HashPassword(dto.Password);
             var addedUser = _mapper.Map<UserExistingFullInfoOutPutModel>(_userService.AddUser(dto));
-
             return addedUser;
         }
 
