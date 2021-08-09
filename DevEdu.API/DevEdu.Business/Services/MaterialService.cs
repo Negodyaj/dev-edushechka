@@ -3,9 +3,7 @@ using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.Business.IdentityInfo;
-using System.Linq;
 using DevEdu.DAL.Enums;
-using System;
 
 namespace DevEdu.Business.Services
 {
