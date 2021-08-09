@@ -32,5 +32,22 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             }
         }
+        public CourseTopicDto GetCourseTopicByIdAndThrowIfNotFound(int id)
+        {
+            var courseTopic = _topicRepository.GetCourseTopicById(id);
+            if (courseTopic == default)
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(courseTopic), id));
+            return courseTopic;
+        }
+        public List<CourseTopicDto> GetCourseTopicBySeveralIdAndThrowIfNotFound(List<int> ids)
+        {
+            var courseTopic = _topicRepository.GetCourseTopicBySeveralId(ids);
+            var areCourseTopicsInDataBase = ids.All(d => courseTopic.Any(t => t.Id == d));
+            if (!areCourseTopicsInDataBase)
+            {
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+            }
+            return courseTopic;
+         }
     }
 }
