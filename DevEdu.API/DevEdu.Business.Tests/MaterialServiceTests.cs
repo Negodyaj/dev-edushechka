@@ -442,15 +442,12 @@ namespace DevEdu.Business.Tests
             var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
             var groups = new List<int>() { 1, 2, 3 };
             var groupDtos = new List<GroupDto> { new GroupDto { Id = 1}, new GroupDto { Id = 2 }, null };
-            var usersInGroup = UserData.GetListsOfUsersInGroup();
             var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "group", groups[2]);
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
-                    Returns(usersInGroup[i]);
             }
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
@@ -462,7 +459,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroup(It.IsAny<int>()), Times.Exactly(groups.Count));
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(2));
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
         }
 

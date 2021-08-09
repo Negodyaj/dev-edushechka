@@ -5,6 +5,7 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.Business.IdentityInfo;
 using System.Linq;
 using DevEdu.DAL.Enums;
+using System;
 
 namespace DevEdu.Business.Services
 {
@@ -70,19 +71,15 @@ namespace DevEdu.Business.Services
         public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups, UserIdentityInfo user)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(groups, nameof(groups));
-            foreach (int group in groups)
+            groups.ForEach(group => _groupValidationHelper.CheckGroupExistence(group));
+            if (user.IsTeacher())
             {
-                _groupValidationHelper.CheckGroupExistence(group);
-                if (user.IsTeacher())
-                {
-                    _useraValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, Role.Teacher);
-                }
-                else 
-                {
-                    _useraValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, Role.Tutor);
-                }
+                groups.ForEach(group => _useraValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, Role.Teacher));
             }
-
+            else
+            {
+                groups.ForEach(group => _useraValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, Role.Tutor));
+            }
             var materialId = AddMaterial(dto, tags);
             groups.ForEach(group => _groupRepository.AddGroupMaterialReference(group, materialId));
             return materialId;
