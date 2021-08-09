@@ -131,9 +131,11 @@ namespace DevEdu.API.Controllers
         }
 
         // api/material/{materialId}/tag/{tagId}
-        [HttpPost("{materialId}/tag/{tagId}")]
         [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher)]
+        [HttpPost("{materialId}/tag/{tagId}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Add tag to material")]
         public string AddTagToMaterial(int materialId, int tagId)
         {
@@ -142,10 +144,12 @@ namespace DevEdu.API.Controllers
         }
 
         // api/material/{materialId}/tag/{tagId}
-        [HttpDelete("{materialId}/tag/{tagId}")]
         [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher)]
+        [HttpDelete("{materialId}/tag/{tagId}")]
         [Description("Delete tag from material")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public string DeleteTagFromMaterial(int materialId, int tagId)
         {
             _materialService.DeleteTagFromMaterial(materialId, tagId);

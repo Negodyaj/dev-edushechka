@@ -5,7 +5,12 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using DevEdu.Business.Exceptions;
+using DevEdu.Business.Constants;
 using System.Collections.Generic;
+using System.Linq;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Tests
 {
@@ -30,12 +35,14 @@ namespace DevEdu.Business.Tests
             _sut = new LessonService(
                 _lessonRepository.Object,
                 _commentRepository.Object,
-                _userRepository.Object,
                 new UserValidationHelper(_userRepository.Object),
                 new LessonValidationHelper(
                     _lessonRepository.Object,
-                    _groupRepository.Object),
-                new TopicValidationHelper(_topicRepository.Object));
+                    _groupRepository.Object,
+                    _userRepository.Object),
+                new TopicValidationHelper(_topicRepository.Object),
+                new GroupValidationHelper(_groupRepository.Object)
+                );
         }
 
         [Test]
@@ -221,47 +228,143 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddLesson_SimpleDto_LessonAdded()
+        public void AddLesson_UserDtoAndSimpleDtoAndListOfTopicsPassed_LessonAdded()
         {
             //Given
-            var expectedId = LessonData.LessonId;
-            var lessonDto = LessonData.GetAddedLessonDto();
-            var topicIds = new List<int>() { 6, 7 };
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
+            var lessonId = LessonData.LessonId;
+            var expectedLesson = LessonData.GetSelectedLessonDto();
+            var topicIds = TopicData.GetListTopicId();
+            var topics = TopicData.GetListTopicDto();
 
-            _lessonRepository.Setup(x => x.AddLesson(lessonDto)).Returns(expectedId);
-            foreach (int topicId in topicIds)
+            _lessonRepository.Setup(x => x.AddLesson(expectedLesson)).Returns(lessonId);
+            for(int i = 0; i < topics.Count; i++)
             {
-                _lessonRepository.Setup(x => x.AddTopicToLesson(expectedId, topicId));
+                _topicRepository.Setup(x => x.GetTopic(topicIds[i])).Returns(topics[i]);
+                _lessonRepository.Setup(x => x.AddTopicToLesson(lessonId, topicIds[i]));
             }
+            _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(expectedLesson);
 
             //When
-            var actualId = _sut.AddLesson(lessonDto, topicIds);
+            var actualLesson = _sut.AddLesson(userIdentity, expectedLesson, topicIds);
 
             //Then
-            Assert.AreEqual(expectedId, actualId);
-            _lessonRepository.Verify(x => x.AddLesson(lessonDto), Times.Once);
+            Assert.AreEqual(expectedLesson, actualLesson);
+            _lessonRepository.Verify(x => x.AddLesson(expectedLesson), Times.Once);
             foreach (int topicId in topicIds)
             {
-                _lessonRepository.Verify(x => x.AddTopicToLesson(expectedId, topicId), Times.Once);
+                _topicRepository.Verify(x => x.GetTopic(topicId), Times.Once);
+                _lessonRepository.Verify(x => x.AddTopicToLesson(lessonId, topicId), Times.Once);
             }
+            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
         }
 
         [Test]
-        public void SelectAllLessonsByGroupId_ExistingGroupIdPassed_LessonsReturned()
+        public void AddLesson_UserAndTeacherAreNotSame_ValidationExceptionReturned()
         {
             //Given
-            var expected = LessonData.GetLessons();
-
-            var groupId = 9;
-
-            _lessonRepository.Setup(x => x.SelectAllLessonsByGroupId(groupId)).Returns(expected);
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
+            var addedLesson = LessonData.GetLessonDto();
+            var expectedException = string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.UserId, addedLesson.Teacher.Id);
 
             //When
-            var actual = _sut.SelectAllLessonsByGroupId(groupId);
+            var ex = Assert.Throws<ValidationException>(() => _sut.AddLesson(userIdentity, addedLesson, null));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _lessonRepository.Verify(x => x.AddLesson(addedLesson), Times.Never);
+            _topicRepository.Verify(x => x.GetTopic(It.IsAny<int>()), Times.Never);
+            _lessonRepository.Verify(x => x.AddTopicToLesson(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _lessonRepository.Verify(x => x.SelectLessonById(It.IsAny<int>()), Times.Never);
+        }
+
+        [Test]
+        public void AddLesson_TopicDoesntExist_EntityNotFoundExceptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
+            var addedLesson = LessonData.GetSelectedLessonDto();
+            var topicIds = new List<int>{1};
+
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicIds.First());
+
+            _lessonRepository.Setup(x => x.AddLesson(addedLesson)).Returns(It.IsAny<int>());
+            _topicRepository.Setup(x => x.GetTopic(topicIds.First())).Returns(It.IsAny<TopicDto>());
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.AddLesson(userIdentity, addedLesson, topicIds));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _lessonRepository.Verify(x => x.AddLesson(addedLesson), Times.Once);
+            _topicRepository.Verify(x => x.GetTopic(topicIds.First()), Times.Once);
+            _lessonRepository.Verify(x => x.AddTopicToLesson(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _lessonRepository.Verify(x => x.SelectLessonById(It.IsAny<int>()), Times.Never);
+        }
+
+        [Test]
+        public void SelectAllLessonsByGroupId_UserDtoAndExistingGroupIdPassed_LessonsReturned()
+        { 
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
+            var userDto = UserData.GetTeacherDto();
+            var expected = LessonData.GetLessons();
+            var group = GroupData.GetGroupDto();
+
+            _groupRepository.Setup(x => x.GetGroup(group.Id)).Returns(group);
+            _userRepository
+                .Setup(x => x.GetUsersByGroupIdAndRole(group.Id, It.IsAny<int>()))
+                .Returns(new List<UserDto> { userDto });
+            _lessonRepository.Setup(x => x.SelectAllLessonsByGroupId(group.Id)).Returns(expected);
+
+            //When
+            var actual = _sut.SelectAllLessonsByGroupId(userIdentity, group.Id);
 
             //Then
             Assert.AreEqual(expected, actual);
-            _lessonRepository.Verify(x => x.SelectAllLessonsByGroupId(groupId), Times.Once);
+            _groupRepository.Verify(x => x.GetGroup(group.Id), Times.Once);
+            _userRepository.Verify(x => x.GetUsersByGroupIdAndRole(group.Id, It.IsAny<int>()), Times.Once);
+            _lessonRepository.Verify(x => x.SelectAllLessonsByGroupId(group.Id), Times.Once);
+        }
+
+        [Test]
+        public void SelectAllLessonsByGroupId_GroupDoesntExist_EntityNotFoundExciptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
+            var groupId = 3;
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "group", groupId);
+
+            _groupRepository.Setup(x => x.GetGroup(groupId)).Returns(It.IsAny<GroupDto>());
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectAllLessonsByGroupId(userIdentity, groupId));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _groupRepository.Verify(x => x.GetGroup(groupId), Times.Once);
+            _userRepository.Verify(x => x.GetUsersByGroupIdAndRole(groupId, It.IsAny<int>()), Times.Never);
+            _lessonRepository.Verify(x => x.SelectAllLessonsByGroupId(groupId), Times.Never);
+        }
+
+        [Test]
+        public void SelectAllLessonsByGroupId_UserDoesntBelongTOGroup_AuthorizationExceptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
+            var group = GroupData.GetGroupDto();
+            var lessons = new List<UserDto> { };
+            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToGroup, userIdentity.UserId, group.Id);
+
+            _groupRepository.Setup(x => x.GetGroup(group.Id)).Returns(group);
+            _userRepository.Setup(x => x.GetUsersByGroupIdAndRole(group.Id, It.IsAny<int>())).Returns(lessons);
+            //When
+            var ex = Assert.Throws<ValidationException>(() => _sut.SelectAllLessonsByGroupId(userIdentity, group.Id));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _groupRepository.Verify(x => x.GetGroup(group.Id), Times.Once);
+            _userRepository.Verify(x => x.GetUsersByGroupIdAndRole(group.Id, It.IsAny<int>()), Times.Once);
+            _lessonRepository.Verify(x => x.SelectAllLessonsByGroupId(group.Id), Times.Never);
         }
 
         [Test]
@@ -269,66 +372,113 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expected = LessonData.GetLessons();
+            var teacher = UserData.GetTeacherDto();
 
+            _lessonRepository.Setup(x => x.SelectAllLessonsByTeacherId(teacher.Id)).Returns(expected);
+            _userRepository.Setup(x => x.SelectUserById(teacher.Id)).Returns(teacher);
+
+            //When
+            var actual = _sut.SelectAllLessonsByTeacherId(teacher.Id);
+
+            //Then
+            Assert.AreEqual(expected, actual);
+            _lessonRepository.Verify(x => x.SelectAllLessonsByTeacherId(teacher.Id), Times.Once);
+            _userRepository.Verify(x => x.SelectUserById(teacher.Id), Times.Once);
+        }
+
+        [Test]
+        public void SelectAllLessonsByTeacherId_TeacherDoesntExist_EntityNotFoundExciptionReturned()
+        {
+            //Given
             var teacherId = 3;
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "user", teacherId);
 
-            _lessonRepository.Setup(x => x.SelectAllLessonsByTeacherId(teacherId)).Returns(expected);
+            _userRepository.Setup(x => x.SelectUserById(teacherId)).Returns(It.IsAny<UserDto>());
 
             //When
-            var actual = _sut.SelectAllLessonsByTeacherId(teacherId);
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectAllLessonsByTeacherId(teacherId));
 
             //Then
-            Assert.AreEqual(expected, actual);
-            _lessonRepository.Verify(x => x.SelectAllLessonsByTeacherId(teacherId), Times.Once);
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _userRepository.Verify(x => x.SelectUserById(teacherId), Times.Once);
+            _lessonRepository.Verify(x => x.SelectAllLessonsByTeacherId(teacherId), Times.Never);
         }
 
         [Test]
-        public void SelectLessonById_ExistingLessonIdPassed_LessonReturned()
+        public void SelectLessonWithCommentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsReturned()
         {
             //Given
-            var expected = LessonData.GetSelectedLessonDto();
-
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lessonId = LessonData.LessonId;
-
-            _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(expected);
-
-            //When
-            var actual = _sut.SelectLessonById(lessonId);
-
-            //Then
-            Assert.AreEqual(expected, actual);
-            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
-        }
-
-        [Test]
-        public void SelectLessonWithCommentsById_ExistingLessonIdPassed_LessonWithCommentsReturned()
-        {
-            //Given
             var lesson = LessonData.GetSelectedLessonDto();
             var comments = CommentData.GetListCommentsDto();
 
             var expected = lesson;
             expected.Comments = comments;
 
-            var lessonId = LessonData.LessonId;
-
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(lesson);
             _commentRepository.Setup(x => x.SelectCommentsFromLessonByLessonId(lessonId)).Returns(comments);
 
             //When
-            var actual = _sut.SelectLessonWithCommentsById(lessonId);
+            var actual = _sut.SelectLessonWithCommentsById(userIdentity, lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
-            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Exactly(2));
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
             _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Once);
             _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Never);
         }
 
         [Test]
-        public void SelectLessonWithCommentsAndStudentsById_ExistingLessonIdPassed_LessonWithCommentsAndAttendancesReturned()
+        public void SelectLessonWithCommentsById_LessonDoesntExist_EntityNotFoundExciptionReturned()
         {
             //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
+            var lessonId = LessonData.LessonId;
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(It.IsAny<LessonDto>());
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectLessonWithCommentsById(userIdentity, lessonId));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
+            _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Never);
+            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Never);
+        }
+
+        [Test]
+        public void SelectLessonWithCommentsById_UserDoesntBelongToLesson_AuthorizationExceptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithStudentRole();
+            var lesson = LessonData.GetLessonDto();
+            var groups = new List<GroupDto> { };
+            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
+            _groupRepository.Setup(x => x.GetGroupsByUserId(userIdentity.UserId)).Returns(groups);
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectLessonWithCommentsById(userIdentity, lesson.Id));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Once);
+            _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lesson.Id), Times.Never);
+            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lesson.Id), Times.Never);
+        }
+
+        [Test]
+        public void SelectLessonWithCommentsAndStudentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsAndAttendancesReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lesson = LessonData.GetSelectedLessonDto();
             var comments = CommentData.GetListCommentsDto();
             var students = LessonData.GetAttendances();
@@ -344,34 +494,186 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectStudentsLessonByLessonId(lessonId)).Returns(students);
 
             //When
-            var actual = _sut.SelectLessonWithCommentsAndStudentsById(lessonId);
+            var actual = _sut.SelectLessonWithCommentsAndStudentsById(userIdentity, lessonId);
 
             //Then
             Assert.AreEqual(expectedLesson, actual);
-            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Exactly(2));
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
             _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Once);
             _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Once);
         }
 
         [Test]
-        public void UpdateLesson_SimpleDtoWithoutTeacherPassed_UpdatedLessonReturned()
+        public void SelectLessonWithCommentsAndStudentsById_LessonDoesntExist_EntityNotFoundExciptionReturned()
         {
             //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
+            var lessonId = LessonData.LessonId;
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(It.IsAny<LessonDto>());
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectLessonWithCommentsAndStudentsById(userIdentity, lessonId));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
+            _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Never);
+            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Never);
+        }
+
+        [Test]
+        public void SelectLessonWithCommentsAndStudentsById_UserDoesntBelongToLesson_AuthorizationExceptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
+            var lesson = LessonData.GetLessonDto();
+            var groups = new List<GroupDto> { };
+            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
+            _groupRepository.Setup(x => x.GetGroupsByUserId(userIdentity.UserId)).Returns(groups);
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectLessonWithCommentsAndStudentsById(userIdentity, lesson.Id));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
+            _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lesson.Id), Times.Never);
+            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lesson.Id), Times.Never);
+        }
+
+        [Test]
+        public void UpdateLesson_UserDtoAndSimpleDtoWithoutTeacherPassed_UpdatedLessonReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var lessonId = LessonData.LessonId;
             var updatedLesson = LessonData.GetUpdatedLessonDto();
-
-            var expected = LessonData.GetUpdatedLessonDto();
+            var expected = LessonData.GetSelectedLessonDto();
 
             _lessonRepository.Setup(x => x.UpdateLesson(updatedLesson));
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(expected);
 
             //When
-            var actual = _sut.UpdateLesson(updatedLesson, lessonId);
+            var actual = _sut.UpdateLesson(userIdentity, updatedLesson, lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
+
+            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Exactly(2));
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
             _lessonRepository.Verify(x => x.UpdateLesson(updatedLesson), Times.Once);
+        }
+
+        [Test]
+        public void UpdateLesson_LessonDoesntExist_EntityNotFoundExciptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
+            var lessonId = LessonData.LessonId;
+            var updatedLesson = LessonData.GetLessonDto();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(It.IsAny<LessonDto>());
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.UpdateLesson(userIdentity, updatedLesson, lessonId));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
             _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
+            _lessonRepository.Verify(x => x.UpdateLesson(updatedLesson), Times.Never);
+        }
+
+        [Test]
+        public void UpdateLesson_UserDoesntBelongToLesson_AuthorizationExceptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
+            var lesson = LessonData.GetLessonDto();
+            var groups = new List<GroupDto> { };
+            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
+            _groupRepository.Setup(x => x.GetGroupsByUserId(userIdentity.UserId)).Returns(groups);
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectLessonWithCommentsAndStudentsById(userIdentity, lesson.Id));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
+            _lessonRepository.Verify(x => x.UpdateLesson(lesson), Times.Never);
+        }
+
+        [Test]
+        public void DeleteLesson_UserDtoAndExistingLessonIdPassed_DeletedLesson()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
+            var lessonId = LessonData.LessonId;
+            var lesson = LessonData.GetSelectedLessonDto();
+
+            _lessonRepository.Setup(x => x.DeleteLesson(lessonId));
+            _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(lesson);
+
+            //When
+            _sut.DeleteLesson(userIdentity, lessonId);
+
+            //Then
+            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
+            _lessonRepository.Verify(x => x.DeleteLesson(lessonId), Times.Once);
+        }
+
+        [Test]
+        public void DeleteLesson_LessonDoesntExist_EntityNotFoundExciptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
+            var lessonId = LessonData.LessonId;
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(It.IsAny<LessonDto>());
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.DeleteLesson(userIdentity, lessonId));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
+            _lessonRepository.Verify(x => x.DeleteLesson(lessonId), Times.Never);
+        }
+
+        [Test]
+        public void DeleteLesson_UserDoesntBelongToLesson_AuthorizationExceptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
+            var lesson = LessonData.GetLessonDto();
+            var groups = new List<GroupDto> { };
+            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
+            _groupRepository.Setup(x => x.GetGroupsByUserId(userIdentity.UserId)).Returns(groups);
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(() => _sut.DeleteLesson(userIdentity, lesson.Id));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
+            _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
+            _lessonRepository.Verify(x => x.UpdateLesson(lesson), Times.Never);
         }
     }
 }

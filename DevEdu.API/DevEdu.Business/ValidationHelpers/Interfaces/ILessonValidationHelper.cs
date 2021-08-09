@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -6,6 +7,8 @@ namespace DevEdu.Business.ValidationHelpers
     {
         LessonDto GetLessonByIdAndThrowIfNotFound(int lessonId);
         public void CheckTopicLessonReferenceIsUnique(LessonDto lesson, int topicId);    
+        void CheckUserAndTeacherAreSame(UserIdentityInfo userIdentity, int teacherId);
+        void CheckUserBelongsToLesson(UserIdentityInfo userIdentity, LessonDto lesson);
         void CheckUserInLessonAccess(int lessonId, int userId);
     }
 }

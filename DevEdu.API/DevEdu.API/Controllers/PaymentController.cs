@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
@@ -25,9 +26,12 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
             _paymentService = paymentService;
         }
+
         //  api/payment/5
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Get payment by id")]
         public PaymentOutputModel GetPayment(int id)
         {
@@ -36,9 +40,11 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/payment/user/1
-        [HttpGet("user/{userId}")]
         [AuthorizeRoles(Role.Student)]
+        [HttpGet("user/{userId}")]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Get all payments by user id")]
         public List<PaymentOutputModel> SelectAllPaymentsByUserId(int userId)
         {
@@ -49,6 +55,9 @@ namespace DevEdu.API.Controllers
         //  api/payment
         [HttpPost]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Add one payment")]
         public PaymentOutputModel AddPayment([FromBody] PaymentInputModel model)
         {
@@ -61,7 +70,9 @@ namespace DevEdu.API.Controllers
 
         //  api/payment/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType (StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Delete payment by id")]
         public void DeletePayment(int id)
         {
@@ -71,6 +82,9 @@ namespace DevEdu.API.Controllers
         //  api/payment/5
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Update payment by id")]
         public PaymentOutputModel UpdatePayment(int id, [FromBody] PaymentUpdateInputModel model)
         {
@@ -79,9 +93,13 @@ namespace DevEdu.API.Controllers
             dto = _paymentService.GetPayment(id);
             return _mapper.Map<PaymentOutputModel>(dto);
         }
+
         //  api/payment/bulk
         [HttpPost("bulk")]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Add payments")]
         public List<PaymentOutputModel> AddPayments([FromBody] List<PaymentInputModel> models)
         {
