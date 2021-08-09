@@ -1,10 +1,8 @@
-﻿using DevEdu.Business.Constants;
-using DevEdu.Business.Exceptions;
+﻿using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
@@ -25,24 +23,26 @@ namespace DevEdu.Business.Services
             _userValidationHelper = userValidationHelper;
         }
 
-        public StudentRatingDto AddStudentRating(StudentRatingDto studentRatingDto, int authorUserId)
+        public StudentRatingDto AddStudentRating(StudentRatingDto studentRatingDto, UserIdentityInfo authorUserInfo)
         {
             _groupValidationHelper.CheckGroupExistence(studentRatingDto.Group.Id);
-            _userValidationHelper.CheckAuthorizationUserToGroup(studentRatingDto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
+            if (!authorUserInfo.IsAdmin())
+            {
+                _userValidationHelper.CheckAuthorizationUserToGroup(studentRatingDto.Group.Id, authorUserInfo.UserId, Role.Teacher);
+            }
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentRatingDto.User.Id);
             _userValidationHelper.CheckUserBelongToGroup(studentRatingDto.Group.Id, studentRatingDto.User.Id, Role.Student);
             var id = _repository.AddStudentRating(studentRatingDto);
             return _repository.SelectStudentRatingById(id);
         }
 
-        public void DeleteStudentRating(int id, int authorUserId)
+        public void DeleteStudentRating(int id, UserIdentityInfo authorUserInfo)
         {
-            var dto = _repository.SelectStudentRatingById(id);
-            if (dto == default)
+            var dto = _ratingValidationHelper.CheckRaitingExistenceAndReturnDto(id);
+            if (!authorUserInfo.IsAdmin())
             {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(dto), id));
+                _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, authorUserInfo.UserId, Role.Teacher);
             }
-            _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
             _repository.DeleteStudentRating(id);
         }
 
@@ -57,24 +57,23 @@ namespace DevEdu.Business.Services
             return _repository.SelectStudentRatingByUserId(userId);
         }
 
-        public List<StudentRatingDto> GetStudentRatingByGroupId(int groupId, int authorUserId, List<Role> authRoles)
+        public List<StudentRatingDto> GetStudentRatingByGroupId(int groupId, UserIdentityInfo authorUserInfo)
         {
-            if (authRoles.Contains(Role.Teacher))
+            if (!authorUserInfo.IsAdmin() && !authorUserInfo.IsManager())
             {
-                _userValidationHelper.CheckAuthorizationUserToGroup(groupId, Convert.ToInt32(authorUserId), Role.Teacher);
+                _userValidationHelper.CheckAuthorizationUserToGroup(groupId, authorUserInfo.UserId, Role.Teacher);
             }
             _groupValidationHelper.CheckGroupExistence(groupId);
             return _repository.SelectStudentRatingByGroupId(groupId);
         }
 
-        public StudentRatingDto UpdateStudentRating(int id, int value, int periodNumber, int authorUserId)
+        public StudentRatingDto UpdateStudentRating(int id, int value, int periodNumber, UserIdentityInfo authorUserInfo)
         {
-            var dto = _repository.SelectStudentRatingById(id);
-            if (dto == default)
+            var dto = _ratingValidationHelper.CheckRaitingExistenceAndReturnDto(id);
+            if (!authorUserInfo.IsAdmin())
             {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(dto), id));
+                _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, authorUserInfo.UserId, Role.Teacher);
             }
-            _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, Convert.ToInt32(authorUserId), Role.Teacher);
             dto = new StudentRatingDto
             {
                 Id = id,

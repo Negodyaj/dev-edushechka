@@ -22,6 +22,6 @@ namespace DevEdu.Business.Services
         int AddCourseMaterialReference(int courseId, int materialId);
         void RemoveCourseMaterialReference(int courseId, int materialId);
         CourseTopicDto GetCourseTopicById(int id);
-        List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids);
+        List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids);
     }
 }
