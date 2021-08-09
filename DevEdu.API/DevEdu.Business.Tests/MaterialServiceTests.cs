@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
-    class MaterialServiceTests
+    public class MaterialServiceTests
     {
         private Mock<IMaterialRepository> _materialRepoMock;
         private Mock<ICourseRepository> _courseRepoMock;
@@ -52,8 +52,8 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedMaterials = MaterialData.GetListOfMaterialsWithTagsCoursesAndGroups();
-            var groupsByMaterial = GroupData.GetGroupsDtos();
-            var groupsByUser = GroupData.GetAnotherGroupsDtos();
+            var groupsByMaterial = GroupData.GetGroupDtos();
+            var groupsByUser = GroupData.GetAnotherGroupDtos();
             var coursesByMaterial = CourseData.GetCoursesDtos();
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { role } };
 
@@ -79,8 +79,8 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedMaterials = MaterialData.GetListOfMaterialsWithTagsCoursesAndGroups();
-            var groupsByMaterial = GroupData.GetGroupsDtos();
-            var groupsByUser = GroupData.GetAnotherGroupsDtos();
+            var groupsByMaterial = GroupData.GetGroupDtos();
+            var groupsByUser = GroupData.GetAnotherGroupDtos();
             var coursesByMaterial = CourseData.GetCoursesDtos();
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { role } };
 
@@ -105,7 +105,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedMaterial = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
-            var groupsByMaterialId = GroupData.GetGroupsDtos();
+            var groupsByMaterialId = GroupData.GetGroupDtos();
             var coursesByMaterial = CourseData.GetCoursesDtos();
 
             _materialRepoMock.Setup(x => x.GetMaterialById(expectedMaterial.Id)).Returns(expectedMaterial);
@@ -147,8 +147,8 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedMaterial = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
-            var groupsByMaterial = GroupData.GetGroupsDtos();
-            var groupsByUser = GroupData.GetAnotherGroupsDtos();
+            var groupsByMaterial = GroupData.GetGroupDtos();
+            var groupsByUser = GroupData.GetAnotherGroupDtos();
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { role } };
 
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(expectedMaterial.Id)).Returns(groupsByMaterial);
@@ -173,7 +173,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedMaterial = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
-            var groupsByUser = GroupData.GetAnotherGroupsDtos();
+            var groupsByUser = GroupData.GetAnotherGroupDtos();
             var coursesByMaterial = CourseData.GetCoursesDtos();
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { role } };
 
@@ -269,8 +269,8 @@ namespace DevEdu.Business.Tests
             //Given
             var expectedMaterials = MaterialData.GetListOfMaterialsWithTagsCoursesAndGroups();
             var tag = TagData.GetListTagData()[0];
-            var groupsByMaterial = GroupData.GetGroupsDtos();
-            var groupsByUser = GroupData.GetAnotherGroupsDtos();
+            var groupsByMaterial = GroupData.GetGroupDtos();
+            var groupsByUser = GroupData.GetAnotherGroupDtos();
             var coursesByMaterial = CourseData.GetCoursesDtos();
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { role } };
 
@@ -338,31 +338,32 @@ namespace DevEdu.Business.Tests
             _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Never);
         }
 
-        [Test]
-        public void AddMaterialWithGroups_MaterialDtoListOfGroupsAndListOfTags_MaterialWithTagsAndGroupsCreated()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void AddMaterialWithGroups_MaterialDtoListOfGroupsAndListOfTags_MaterialWithTagsAndGroupsCreated(Role role)
         {
             //Given
             var expectedId = 5;
             var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
             var groups = new List<int>() { 1, 2, 3 };
             var tags = new List<int>() { 1, 2, 3 };
-            var groupDtos = GroupData.GetGroupsDtos();
+            var groupDtos = GroupData.GetGroupDtos();
             var usersInGroup = UserData.GetListsOfUsersInGroup();
             var tagDtos = TagData.GetListOfTags();
 
-            var user = new UserIdentityInfo() { UserId = 2 };
+            var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
             for(int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)Role.Teacher)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
                 _tagRepoMock.Setup(x => x.SelectTagById(tags[i])).Returns(tagDtos[i]);
             }
             _materialRepoMock.Setup(x => x.AddMaterial(materialToAdd)).Returns(expectedId);
 
             //When
-            int actualId = _sut.AddMaterialWithGroups(materialToAdd, tags, groups, user.UserId);
+            int actualId = _sut.AddMaterialWithGroups(materialToAdd, tags, groups, user);
 
             //Then
             Assert.AreEqual(expectedId, actualId);
@@ -375,28 +376,29 @@ namespace DevEdu.Business.Tests
 
         }
 
-        [Test]
-        public void AddMaterialWithGroups_MaterialDtoListOfGroups_MaterialWithoutTagsCreated()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void AddMaterialWithGroups_MaterialDtoListOfGroups_MaterialWithoutTagsCreated(Role role)
         {
             //Given
             var expectedId = 5;
             var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
             var groups = new List<int>() { 1, 2, 3 };
-            var groupDtos = GroupData.GetGroupsDtos();
+            var groupDtos = GroupData.GetGroupDtos();
             var usersInGroup = UserData.GetListsOfUsersInGroup();
 
-            var user = new UserIdentityInfo() { UserId = 2 };
+            var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)Role.Teacher)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
             _materialRepoMock.Setup(x => x.AddMaterial(materialToAdd)).Returns(expectedId);
 
             //When
-            int actualId = _sut.AddMaterialWithGroups(materialToAdd, null, groups, user.UserId);
+            int actualId = _sut.AddMaterialWithGroups(materialToAdd, null, groups, user);
 
             //Then
             Assert.AreEqual(expectedId, actualId);
@@ -420,7 +422,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<ValidationException>(
-                () => _sut.AddMaterialWithGroups(materialToAdd, null, groups, user.UserId));
+                () => _sut.AddMaterialWithGroups(materialToAdd, null, groups, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -432,8 +434,9 @@ namespace DevEdu.Business.Tests
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
         }
 
-        [Test]
-        public void AddMaterialWithGroups_ListOfGroupsWithNotExistingGroup_EntityNotFoundExceptionThrown()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void AddMaterialWithGroups_ListOfGroupsWithNotExistingGroup_EntityNotFoundExceptionThrown(Role role)
         {
             //Given
             var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
@@ -441,17 +444,17 @@ namespace DevEdu.Business.Tests
             var groupDtos = new List<GroupDto> { new GroupDto { Id = 1}, new GroupDto { Id = 2 }, null };
             var usersInGroup = UserData.GetListsOfUsersInGroup();
             var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "group", groups[2]);
-            var user = new UserIdentityInfo() { UserId = 2 };
+            var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)Role.Teacher)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddMaterialWithGroups(materialToAdd, null, groups, user.UserId));
+                () => _sut.AddMaterialWithGroups(materialToAdd, null, groups, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -463,26 +466,27 @@ namespace DevEdu.Business.Tests
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
         }
 
-        [Test]
-        public void AddMaterialWithGroups_TeacherDoesNotBelongToGroup_AuthorizationExceptionThrown()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void AddMaterialWithGroups_UserDoesNotBelongToGroup_AuthorizationExceptionThrown(Role role)
         {
             //Given
             var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
             var groups = new List<int>() { 1, 2, 3 };
-            var groupDtos = GroupData.GetGroupsDtos();
+            var groupDtos = GroupData.GetGroupDtos();
             var usersInGroup = UserData.GetAnotherListsOfUsersInGroup();
-            var user = new UserIdentityInfo() { UserId = 2 };
-            var expectedMessage = string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, user.UserId, groups[2], Role.Teacher.ToString());
+            var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
+            var expectedMessage = string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, user.UserId, groups[2], role.ToString());
 
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)Role.Teacher)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
             //When
             var actual = Assert.Throws<AuthorizationException>(
-                () => _sut.AddMaterialWithGroups(materialToAdd, null, groups, user.UserId));
+                () => _sut.AddMaterialWithGroups(materialToAdd, null, groups, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -494,31 +498,32 @@ namespace DevEdu.Business.Tests
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
         }
 
-        [Test]
-        public void AddMaterialWithGroups_ListOfTagsWithNotExistingTag_EntityNotFoundExceptionThrown()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void AddMaterialWithGroups_ListOfTagsWithNotExistingTag_EntityNotFoundExceptionThrown(Role role)
         {
             //Given
             var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
             var groups = new List<int>() { 1, 2, 3 };
             var tags = new List<int>() { 1, 2, 3 };
             var tagDtos = new List<TagDto> { new TagDto { Id = 1 }, new TagDto { Id = 2 }, null };
-            var groupDtos = GroupData.GetGroupsDtos();
+            var groupDtos = GroupData.GetGroupDtos();
             var usersInGroup = UserData.GetListsOfUsersInGroup();
             var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", tags[2]);
 
-            var user = new UserIdentityInfo() { UserId = 2 };
+            var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)Role.Teacher)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
                 _tagRepoMock.Setup(x => x.SelectTagById(tags[i])).Returns(tagDtos[i]);
             }
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddMaterialWithGroups(materialToAdd, tags, groups, user.UserId));
+                () => _sut.AddMaterialWithGroups(materialToAdd, tags, groups, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -531,29 +536,30 @@ namespace DevEdu.Business.Tests
 
         }
 
-        [Test]
-        public void AddMaterialWithGroups_ListOfTagsWithDuplicateValues_ValidationExceptionThrown()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void AddMaterialWithGroups_ListOfTagsWithDuplicateValues_ValidationExceptionThrown(Role role)
         {
             //Given
             var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
             var groups = new List<int>() { 1, 2, 3 };
             var tags = new List<int>() { 1, 2, 2 };
-            var groupDtos = GroupData.GetGroupsDtos();
+            var groupDtos = GroupData.GetGroupDtos();
             var usersInGroup = UserData.GetListsOfUsersInGroup();
             var expectedMessage = string.Format(ServiceMessages.DuplicateValuesProvided, nameof(tags));
 
-            var user = new UserIdentityInfo() { UserId = 2 };
+            var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)Role.Teacher)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
 
             //When
             var actual = Assert.Throws<ValidationException>(
-                () => _sut.AddMaterialWithGroups(materialToAdd, tags, groups, user.UserId));
+                () => _sut.AddMaterialWithGroups(materialToAdd, tags, groups, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -741,7 +747,7 @@ namespace DevEdu.Business.Tests
             //Given
             var materialToUpdate = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
             var expectedMaterial = MaterialData.GetUpdatedMaterialDtoWithTagsCoursesAndGroups();
-            var groupsByUser = GroupData.GetAnotherGroupsDtos();
+            var groupsByUser = GroupData.GetAnotherGroupDtos();
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { Role.Teacher } };
 
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToUpdate.Id)).Returns(materialToUpdate);
@@ -858,7 +864,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var materialToDelete = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
-            var groupsByUser = GroupData.GetAnotherGroupsDtos();
+            var groupsByUser = GroupData.GetAnotherGroupDtos();
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { Role.Teacher } };
 
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToDelete.Id)).Returns(materialToDelete);
@@ -972,13 +978,14 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTagToMaterial_WithMaterialIdAndTopicId_Added()
+        public void AddTagToMaterial_WithMaterialIdAndTagId_Added()
         {
             //Given
             var givenMaterialId = 5;
-            var givenTagId = 11;
+            var givenTagId = 2;
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
-
+            _tagRepoMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId });
+            _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
             //When
             _sut.AddTagToMaterial(givenMaterialId, givenTagId);
             //Then
@@ -986,17 +993,93 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteTagFromMaterial_WithMaterialIdAndTopicId_Deleted()
+        public void DeleteTagFromMaterial_WithMaterialIdAndTagId_Deleted()
         {
             //Given
             var givenMaterialId = 5;
-            var givenTagId = 11;
+            var givenTagId = 2;
+            _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
+            _tagRepoMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId });
+            _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
             _materialRepoMock.Setup(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId));
-
             //When
             _sut.DeleteTagFromMaterial(givenMaterialId, givenTagId);
             //Then
             _materialRepoMock.Verify(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId), Times.Once);
+        }
+
+        [Test]
+        public void AddTagToMaterial_TagIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var givenMaterialId = 5;
+            var givenTagId = 2;
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", givenTagId);
+            _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
+            _tagRepoMock.Setup(x => x.SelectTagById(givenTagId));
+            _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
+
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() =>
+            _sut.AddTagToMaterial(givenMaterialId, givenTagId));
+            //Then
+            _materialRepoMock.Verify(x => x.AddTagToMaterial(givenMaterialId, givenTagId), Times.Never);
+            Assert.That(result.Message, Is.EqualTo(exp));
+        }
+
+        [Test]
+        public void AddTagToMaterial_MaterialIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
+        {
+            var givenMaterialId = 5;
+            var givenTagId = 2;
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", givenMaterialId);
+            _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
+            _tagRepoMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId }); ;
+            _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId));
+
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() =>
+            _sut.AddTagToMaterial(givenMaterialId, givenTagId));
+            //Then
+            _materialRepoMock.Verify(x => x.AddTagToMaterial(givenMaterialId, givenTagId), Times.Never);
+            Assert.That(result.Message, Is.EqualTo(exp));
+        }
+
+        [Test]
+        public void DeleteTagFromMaterial_TagIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var givenMaterialId = 5;
+            var givenTagId = 2;
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", givenTagId);
+            _materialRepoMock.Setup(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId));
+            _tagRepoMock.Setup(x => x.SelectTagById(givenTagId));
+            _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
+
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() =>
+            _sut.DeleteTagFromMaterial(givenMaterialId, givenTagId));
+            //Then
+            _materialRepoMock.Verify(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId), Times.Never); ;
+            Assert.That(result.Message, Is.EqualTo(exp));
+        }
+
+        [Test]
+        public void DeleteTagToMaterial_MaterialIdIsAbsentInDatabase_EntityNotFoundExceptionThrown()
+        {
+            var givenMaterialId = 5;
+            var givenTagId = 2;
+            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", givenMaterialId);
+            _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
+            _tagRepoMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId }); ;
+            _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId));
+
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() =>
+            _sut.DeleteTagFromMaterial(givenMaterialId, givenTagId));
+            //Then
+            _materialRepoMock.Verify(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId), Times.Never);
+            Assert.That(result.Message, Is.EqualTo(exp));
         }
     }
 }

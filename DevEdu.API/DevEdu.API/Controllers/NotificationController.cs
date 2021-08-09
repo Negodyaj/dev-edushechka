@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
-using System.ComponentModel;
+﻿using AutoMapper;
 using DevEdu.API.Models.InputModels;
+using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using DevEdu.API.Models.OutputModels;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevEdu.API.Controllers
 {
@@ -74,7 +74,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<NotificationDto>(model);
             var output = _notificationService.AddNotification(dto);
-            return GetNotification(output);
+            return _mapper.Map<NotificationInfoOutputModel>(output);
         }
 
         //  api/notification/5
@@ -89,7 +89,7 @@ namespace DevEdu.API.Controllers
         //  api/notification/5
         [HttpPut("{id}")]
         [Description("Update notification by id")]
-        [ProducesResponseType(typeof(NotificationInfoOutputModel),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
         public NotificationInfoOutputModel UpdateNotification(int id, [FromBody] NotificationUpdateInputModel model)
         {
             var dto = _mapper.Map<NotificationDto>(model);

@@ -1,9 +1,9 @@
-﻿using DevEdu.DAL.Models;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
-    public class TopicData
+    public static class TopicData
     {
         public static TopicDto GetTopicDtoWithoutTags()
         {

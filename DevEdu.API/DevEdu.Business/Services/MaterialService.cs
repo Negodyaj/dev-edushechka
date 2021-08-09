@@ -67,13 +67,20 @@ namespace DevEdu.Business.Services
             return dto;
         }
 
-        public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups, int userId)
+        public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups, UserIdentityInfo user)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(groups, nameof(groups));
-            foreach(int group in groups)
+            foreach (int group in groups)
             {
                 _groupValidationHelper.CheckGroupExistence(group);
-                _useraValidationHelper.CheckAuthorizationUserToGroup(group, userId, Role.Teacher);
+                if (user.IsTeacher())
+                {
+                    _useraValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, Role.Teacher);
+                }
+                else 
+                {
+                    _useraValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, Role.Tutor);
+                }
             }
 
             var materialId = AddMaterial(dto, tags);
@@ -108,11 +115,16 @@ namespace DevEdu.Business.Services
             _materialRepository.DeleteMaterial(id, isDeleted);
         }
 
-        public void AddTagToMaterial(int materialId, int tagId) =>
+        public void AddTagToMaterial(int materialId, int tagId)
+        {
+            CheckMaterialAndTagExistence(materialId, tagId);
             _materialRepository.AddTagToMaterial(materialId, tagId);
-
-        public void DeleteTagFromMaterial(int materialId, int tagId) =>
+        }
+        public void DeleteTagFromMaterial(int materialId, int tagId)
+        {
+            CheckMaterialAndTagExistence(materialId, tagId);
             _materialRepository.DeleteTagFromMaterial(materialId, tagId);
+        }
 
         public List<MaterialDto> GetMaterialsByTagId(int tagId, UserIdentityInfo user)
         {
@@ -152,6 +164,12 @@ namespace DevEdu.Business.Services
                     _materilaValidationHelper.CheckTeacherAccessToMaterialForDeleteAndUpdate(user.UserId, material);
                 }
             }
+        }
+
+        private void CheckMaterialAndTagExistence(int materialId, int tagId)
+        {
+            _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
+            _tagValidationHelper.CheckTagExistence(tagId);
         }
     }
 }

@@ -1,16 +1,16 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
 {
     public interface IRatingService
     {
-        int AddStudentRating(StudentRatingDto studentRatingDto);
-        void DeleteStudentRating(int id);
+        StudentRatingDto AddStudentRating(StudentRatingDto studentRatingDto, UserIdentityInfo authorUserInfo);
+        void DeleteStudentRating(int id, UserIdentityInfo authorUserInfo);
         List<StudentRatingDto> GetAllStudentRatings();
-        StudentRatingDto GetStudentRatingById(int id);
         List<StudentRatingDto> GetStudentRatingByUserId(int userId);
-        public List<StudentRatingDto> GetStudentRatingByGroupId(int groupId);
-        StudentRatingDto UpdateStudentRating(int id, int value, int periodNumber);
+        public List<StudentRatingDto> GetStudentRatingByGroupId(int groupId, UserIdentityInfo authorUserInfo);
+        StudentRatingDto UpdateStudentRating(int id, int value, int periodNumber, UserIdentityInfo authorUserInfo);
     }
 }

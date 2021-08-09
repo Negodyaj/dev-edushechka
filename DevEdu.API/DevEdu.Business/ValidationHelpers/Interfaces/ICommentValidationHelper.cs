@@ -1,7 +1,10 @@
-﻿namespace DevEdu.Business.ValidationHelpers
+﻿using DevEdu.DAL.Models;
+
+namespace DevEdu.Business.ValidationHelpers
 {
     public interface ICommentValidationHelper
     {
-        void CheckCommentExistence(int courseId);
+        CommentDto GetCommentByIdAndThrowIfNotFound(int commentId);
+        void UserComplianceCheck(CommentDto dto, int userId);
     }
 }

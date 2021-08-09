@@ -9,10 +9,16 @@ namespace DevEdu.Business.ValidationHelpers
     public class LessonValidationHelper : ILessonValidationHelper
     {
         private readonly ILessonRepository _lessonRepository;
+        private readonly IGroupRepository _groupRepository;
 
-        public LessonValidationHelper(ILessonRepository lessonRepository)
+        public LessonValidationHelper
+        (
+            ILessonRepository lessonRepository,
+            IGroupRepository groupRepository
+        )
         {
             _lessonRepository = lessonRepository;
+            _groupRepository = groupRepository;
         }
 
         public LessonDto GetLessonByIdAndThrowIfNotFound(int lessonId)
@@ -27,6 +33,15 @@ namespace DevEdu.Business.ValidationHelpers
         {
             if (lesson.Topics.Any(topic => topic.Id == topicId))
                 throw new ValidationException(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lesson.Id, topicId));
+        }
+
+        public void CheckUserInLessonAccess(int lessonId, int userId)
+        {
+            var groupsByLesson = _groupRepository.GetGroupsByLessonId(lessonId);
+            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var result = groupsByUser.FirstOrDefault(gu => groupsByLesson.Any(gl => gl.Id == gu.Id));
+            if (result == default)
+                throw new AuthorizationException(string.Format(ServiceMessages.UserOnLessonNotFoundMessage, userId, lessonId));
         }
     }
 }

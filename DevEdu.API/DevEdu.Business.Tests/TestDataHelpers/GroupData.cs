@@ -7,7 +7,6 @@ namespace DevEdu.Business.Tests
 {
     public class GroupData
     {
-        public const int ExpectedAffectedRows = 1;
         public const int GroupId = 1;
         public const int MaterialId = 1;
         public const int RoleStudent = (int)Role.Student;
@@ -60,6 +59,7 @@ namespace DevEdu.Business.Tests
                 Tutors = null
             };
         }
+
         public static GroupDto GetGroupDtoToUpdNameAndTimetable()
         {
             return new GroupDto
@@ -77,7 +77,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<GroupDto> GetGroupsDtos()
+        public static List<GroupDto> GetGroupDtos()
         {
             return new List<GroupDto>
             {
@@ -174,7 +174,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<GroupDto> GetAnotherGroupsDtos()
+        public static List<GroupDto> GetAnotherGroupDtos()
         {
             return new List<GroupDto>
             {
@@ -267,7 +267,39 @@ namespace DevEdu.Business.Tests
                     PhoneNumber = null,
                     Roles = null,
                     IsDeleted = false
-                }                
+                }
+            };
+        }
+
+        public static List<Role> GetStudentRole()
+        {
+            return new List<Role>
+            {
+                Role.Student
+            };
+        }
+
+        public static GroupDto GetAnotherGroupDto()
+        {
+            return new GroupDto
+            {
+                Id = 100,
+                Name = "Котейка",
+                Course = new CourseDto
+                {
+                    Id = 1,
+                    Name = "Ололошки",
+                    Description = "Курс для котиков",
+                    Groups = null,
+                    IsDeleted = false
+                },
+                GroupStatus = GroupStatus.Forming,
+                StartDate = DateTime.MaxValue,
+                Timetable = "Понедельник",
+                PaymentPerMonth = 1.0M,
+                Students = null,
+                Teachers = null,
+                Tutors = null
             };
         }
     }

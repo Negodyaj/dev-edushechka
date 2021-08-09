@@ -10,7 +10,7 @@ namespace DevEdu.Business.Services
         MaterialDto GetMaterialByIdWithCoursesAndGroups(int id);
         MaterialDto GetMaterialByIdWithTags(int id, UserIdentityInfo user);
         int AddMaterialWithCourses(MaterialDto dto, List<int> tags, List<int> courses);
-        int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups, int userId);
+        int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups, UserIdentityInfo user);
         MaterialDto UpdateMaterial(int id, MaterialDto dto, UserIdentityInfo user);
         void DeleteMaterial(int id, bool isDeleted, UserIdentityInfo user);
         void AddTagToMaterial(int materialId, int tagId);

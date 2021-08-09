@@ -5,7 +5,7 @@ namespace DevEdu.Business.Services
 {
     public interface ITagService
     {
-        int AddTag(TagDto dto);
+        TagDto AddTag(TagDto dto);
         void DeleteTag(int id);
         List<TagDto> GetAllTags();
         TagDto GetTagById(int id);

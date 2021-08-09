@@ -14,15 +14,17 @@ namespace DevEdu.Business.Tests
         private Mock<ILessonRepository> _lessonRepository;
         private Mock<ICommentRepository> _commentRepository;
         private Mock<IUserRepository> _userRepository;
+        private Mock<IGroupRepository> _groupRepository;
         private Mock<ITopicRepository> _topicRepository;
         private LessonService _sut;
 
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
             _lessonRepository = new Mock<ILessonRepository>();
             _commentRepository = new Mock<ICommentRepository>();
             _userRepository = new Mock<IUserRepository>();
+            _groupRepository = new Mock<IGroupRepository>();
             _topicRepository = new Mock<ITopicRepository>();
 
             _sut = new LessonService(
@@ -30,12 +32,33 @@ namespace DevEdu.Business.Tests
                 _commentRepository.Object,
                 _userRepository.Object,
                 new UserValidationHelper(_userRepository.Object),
-                new LessonValidationHelper(_lessonRepository.Object),
+                new LessonValidationHelper(
+                    _lessonRepository.Object,
+                    _groupRepository.Object),
                 new TopicValidationHelper(_topicRepository.Object));
         }
 
         [Test]
         public void AddTopicToLesson_WhenLessonIdAndTopicIdExist_TopicLessonReferenceCreated()
+        {
+            //Given
+            var lesson = LessonData.GetSelectedLessonDto();
+            var topic = TopicData.GetTopicDtoWithoutTags();
+
+            _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
+            _topicRepository.Setup(x => x.GetTopic(topic.Id)).Returns(topic);
+            _lessonRepository.Setup(x => x.AddTopicToLesson(lesson.Id, topic.Id));
+
+            //When
+            _sut.AddTopicToLesson(lesson.Id, topic.Id);
+
+            //Then
+            _lessonRepository.Verify(x => x.SelectLessonById((lesson.Id)), Times.Once);
+            _topicRepository.Verify(x => x.GetTopic((topic.Id)), Times.Once);
+            _lessonRepository.Verify(x => x.AddTopicToLesson(lesson.Id, topic.Id), Times.Once);
+        }
+
+        public void AddStudentToLesson_IntLessonIdAndUserId_AddingStudentToLesson()
         {
             //Given
             var lesson = LessonData.GetSelectedLessonDto();

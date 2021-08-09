@@ -6,6 +6,7 @@ Begin
   Set 
     TopicId = src.TopicId,
 	Position = src.Position
+
   From 
     @tblCourseTopic src
   Where 

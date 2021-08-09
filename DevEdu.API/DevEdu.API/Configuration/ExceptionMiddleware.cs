@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DevEdu.Business.Exceptions;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using DevEdu.API.Configuration.ExceptionResponses;
-using DevEdu.Business.Exceptions;
-using Newtonsoft.Json;
 
 namespace DevEdu.API.Configuration
 {
@@ -34,11 +33,11 @@ namespace DevEdu.API.Configuration
             {
                 await HandlerExceptionMessageAsync(context, ex, AuthorizationCode, MessageAuthorization);
             }
-            catch (ValidationException ex)
+            catch (ValidationException ex) //422
             {
                 await HandleValidationExceptionMessageAsync(context, ex);
             }
-            catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException ex) //404
             {
                 await HandlerExceptionMessageAsync(context, ex, EntityCode, MessageEntity);
             }

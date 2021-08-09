@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using Dapper;
-using DevEdu.DAL.Models;
-using System.Linq;
+﻿using Dapper;
 using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -17,8 +17,8 @@ namespace DevEdu.DAL.Repositories
         private const string _taskStudentUpdateStatusId = "dbo.Task_Student_UpdateStatusId";
         private const string _taskStudentSelectAllAnswersByTaskId = "dbo.Task_Student_SelectAllAnswersByTaskId";
         private const string _taskStudentSelectAnswersByUserId = "dbo.Task_Student_SelectAllAnswersByUserId";
+        private const string _taskStudentSelectById = "dbo.Task_Student_SelectById";
 
-        private const string _taskStudentCommentInsert = "dbo.Task_Student_Comment_Insert";
         private const string _task_Student_SelectByTaskIdProcedure = "dbo.Task_Student_SelectByTaskId";
 
         public StudentAnswerOnTaskRepository()
@@ -47,7 +47,7 @@ namespace DevEdu.DAL.Repositories
                 {
                     TaskId = dto.Task.Id,
                     StudentId = dto.User.Id,
-                    Answer = dto.Answer
+                    dto.Answer
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -75,102 +75,72 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(StudentAnswerOnTaskDto dto)
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
-            var result = _connection
+
+            StudentAnswerOnTaskDto result = default;
+            return _connection
                 .Query<StudentAnswerOnTaskDto, UserDto, TaskDto, TaskStatus, StudentAnswerOnTaskDto>(
                 _taskStudentSelectByTaskAndStudent,
                 (studentAnswer, user, task, taskStatus) =>
                 {
-                    studentAnswer.User = user;
-                    studentAnswer.Task = task;
-                    studentAnswer.TaskStatus = taskStatus;
+                    result = studentAnswer;
+                    result.User = user;
+                    result.Task = task;
+                    result.TaskStatus = taskStatus;
 
-                    return studentAnswer;
+                    return result;
                 },
                 new
                 {
-                    TaskId = dto.Task.Id,
-                    StudentId = dto.User.Id
+                    TaskId = taskId,
+                    StudentId = studentId
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
              )
              .FirstOrDefault();
-
-            return result;
         }
 
         public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
         {
             _connection.Execute(
-                _taskStudentUpdateAnswer,
-                new
-                {
-                    TaskId = dto.Task.Id,
-                    StudentId = dto.User.Id,
-                    dto.Answer
-                },
-                commandType: CommandType.StoredProcedure
-                );
+               _taskStudentUpdateAnswer,
+               new
+               {
+                   TaskId = dto.Task.Id,
+                   StudentId = dto.User.Id,
+                   dto.Answer
+               },
+               commandType: CommandType.StoredProcedure
+               );
         }
 
-        public void ChangeStatusOfStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
+        public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId, DateTime completedDate)
         {
             _connection.Execute(
                 _taskStudentUpdateStatusId,
                 new
                 {
-                    TaskId = dto.Task.Id,
-                    StudentId = dto.User.Id,
-                    StatusId = (int)(dto.TaskStatus),
-                    dto.CompletedDate
+                    TaskId = taskId,
+                    StudentId = studentId,
+                    StatusId = statusId,
+                    CompletedDate = completedDate
                 },
                 commandType: CommandType.StoredProcedure
                 );
-        }
 
-        public void AddCommentOnStudentAnswer(int taskStudentId, int commentId)
-        {
-            _connection.Query(
-                _taskStudentCommentInsert,
-                new
-                {
-                    taskStudentId,
-                    commentId
-                },
-                commandType: CommandType.StoredProcedure
-           );
-             
-        }
-
-        public List<StudentAnswerOnTaskForTaskDto> GetStudentAnswersToTaskByTaskId(int id)
-        {
-            return _connection.Query<StudentAnswerOnTaskForTaskDto, UserDto, StudentAnswerOnTaskForTaskDto>(
-                    _task_Student_SelectByTaskIdProcedure,
-                    (answerDto, userDto) =>
-                    {
-                        answerDto.Student = userDto;
-                        return answerDto;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure)
-                .ToList();
+            return statusId;
         }
 
         public List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId)
         {
-            StudentAnswerOnTaskDto answer = new StudentAnswerOnTaskDto();
-
             return _connection.Query<StudentAnswerOnTaskDto, TaskStatus, StudentAnswerOnTaskDto>(
                     _taskStudentSelectAnswersByUserId,
                     (answerDto, taskStatus) =>
                     {
-                        answer = answerDto;
-                        answer.TaskStatus = taskStatus;
-
-                        return answer;
+                        answerDto.TaskStatus = taskStatus;
+                        return answerDto;
                     },
                     new
                     {
@@ -179,6 +149,27 @@ namespace DevEdu.DAL.Repositories
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure)
                 .ToList();
+        }
+
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskById(int id)
+        {
+            var result = _connection
+                .Query<StudentAnswerOnTaskDto, UserDto, TaskDto, TaskStatus, StudentAnswerOnTaskDto>(
+                    _taskStudentSelectById,
+                    (studentAnswer, user, task, taskStatus) =>
+                    {
+                        studentAnswer.User = user;
+                        studentAnswer.Task = task;
+                        studentAnswer.TaskStatus = taskStatus;
+
+                        return studentAnswer;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .FirstOrDefault();
+            return result;
         }
     }
 }

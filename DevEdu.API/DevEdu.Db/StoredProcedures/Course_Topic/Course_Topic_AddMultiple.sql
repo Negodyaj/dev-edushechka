@@ -5,5 +5,6 @@ Begin
 	set nocount on;
 	
 	insert into Course_Topic(CourseId,TopicId,Position)
+	output inserted.id
 	Select CourseId,TopicId,Position From @tblCourseTopic
 End

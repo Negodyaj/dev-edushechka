@@ -6,5 +6,6 @@ namespace DevEdu.Business.ValidationHelpers
     {
         LessonDto GetLessonByIdAndThrowIfNotFound(int lessonId);
         public void CheckTopicLessonReferenceIsUnique(LessonDto lesson, int topicId);    
+        void CheckUserInLessonAccess(int lessonId, int userId);
     }
 }

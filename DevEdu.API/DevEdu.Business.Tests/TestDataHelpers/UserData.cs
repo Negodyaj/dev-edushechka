@@ -13,6 +13,7 @@ namespace DevEdu.Business.Tests
         {
             return new UserDto
             {
+                Id = 1,
                 FirstName = "Admin",
                 LastName = "Adminov",
                 Patronymic = "Adminovich",
@@ -23,7 +24,7 @@ namespace DevEdu.Business.Tests
                 City = (City)1,
                 BirthDate = DateTime.Today,
                 GitHubAccount = "admin/admin.git",
-                Photo = "https://localhost:Admin/admin",
+                Photo = "https://localhost:IsAdmin/admin",
                 PhoneNumber = "adminPhoneNumber",
                 Roles = new List<Role>
                 {
@@ -37,6 +38,7 @@ namespace DevEdu.Business.Tests
         {
             return new UserDto
             {
+                Id = 2,
                 FirstName = "Student",
                 LastName = "Studentov",
                 Patronymic = "Studentovich",
@@ -46,8 +48,8 @@ namespace DevEdu.Business.Tests
                 ContractNumber = "Student01",
                 City = (City)1,
                 BirthDate = DateTime.Today,
-                GitHubAccount = "Student/Student.git",
-                Photo = "https://localhost:Student",
+                GitHubAccount = "IsStudent/IsStudent.git",
+                Photo = "https://localhost:IsStudent",
                 PhoneNumber = "StudentPhoneNumber",
                 Roles = new List<Role> { Role.Student }
             };
@@ -59,6 +61,7 @@ namespace DevEdu.Business.Tests
             {
                 new UserDto
                 {
+                    Id = 1,
                     FirstName = "Admin",
                         LastName = "Adminov",
                         Patronymic = "Adminovich",
@@ -69,7 +72,7 @@ namespace DevEdu.Business.Tests
                         City = (City)1,
                         BirthDate = DateTime.Today,
                         GitHubAccount = "admin/admin.git",
-                        Photo = "https://localhost:Admin/admin",
+                        Photo = "https://localhost:IsAdmin/admin",
                         PhoneNumber = "adminPhoneNumber",
                         Roles = new List<Role>
                         {
@@ -79,6 +82,7 @@ namespace DevEdu.Business.Tests
                 },
                 new UserDto
                 {
+                    Id = 2,
                     FirstName = "Student",
                     LastName = "Studentov",
                     Patronymic = "Studentovich",
@@ -88,13 +92,14 @@ namespace DevEdu.Business.Tests
                     ContractNumber = "Student01",
                     City = (City)1,
                     BirthDate = DateTime.Today,
-                    GitHubAccount = "Student/Student.git",
-                    Photo = "https://localhost:Student",
+                    GitHubAccount = "IsStudent/IsStudent.git",
+                    Photo = "https://localhost:IsStudent",
                     PhoneNumber = "StudentPhoneNumber",
                     Roles = new List<Role> { Role.Student }
                 },
                 new UserDto
                 {
+                    Id = 3,
                     FirstName = "Manager",
                     LastName = "Managerov",
                     Patronymic = "Managerovich",
@@ -109,6 +114,39 @@ namespace DevEdu.Business.Tests
                     PhoneNumber = "ManagerPhoneNumber",
                     Roles = new List<Role> { Role.Manager }
                 }
+            };
+        }
+
+        public static UserDto GetUserDtoOutOfList()
+        {
+            return new UserDto
+            {
+                Id = 10,
+                FirstName = "Student",
+
+                LastName = "Studentov",
+
+                Patronymic = "Studentovich",
+
+                Email = "student@student.st",
+
+                Username = "Student01",
+
+                Password = "qwerty12345",
+
+                ContractNumber = "Student01",
+
+                City = (City)1,
+
+                BirthDate = DateTime.Today,
+
+                GitHubAccount = "Student/Student.git",
+
+                Photo = "https://localhost:Student",
+
+                PhoneNumber = "StudentPhoneNumber",
+
+                Roles = new List<Role> { Role.Student }
             };
         }
 

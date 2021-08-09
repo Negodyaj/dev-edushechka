@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Extensions;
-using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.API.Configuration;
 
 namespace DevEdu.API.Controllers
 {
@@ -40,7 +40,7 @@ namespace DevEdu.API.Controllers
         public MaterialInfoWithGroupsOutputModel AddMaterialWithGroups([FromBody] MaterialWithGroupsInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            int id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserId());
+            int id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
             dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
             return _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
         }
@@ -132,6 +132,7 @@ namespace DevEdu.API.Controllers
 
         // api/material/{materialId}/tag/{tagId}
         [HttpPost("{materialId}/tag/{tagId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher)]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [Description("Add tag to material")]
         public string AddTagToMaterial(int materialId, int tagId)
@@ -142,6 +143,7 @@ namespace DevEdu.API.Controllers
 
         // api/material/{materialId}/tag/{tagId}
         [HttpDelete("{materialId}/tag/{tagId}")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher)]
         [Description("Delete tag from material")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public string DeleteTagFromMaterial(int materialId, int tagId)
