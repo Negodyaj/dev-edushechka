@@ -19,6 +19,7 @@ using System;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Net;
+using ValidationExceptionResponse = DevEdu.Business.Exceptions.ValidationExceptionResponse;
 
 namespace DevEdu.API
 {
@@ -139,7 +140,7 @@ namespace DevEdu.API
 
         private UnprocessableEntityObjectResult CustomErrorResponse(ActionContext actionContext)
         {
-            var exc = new ValidationException(actionContext.ModelState);
+            var exc = new ValidationExceptionResponse(actionContext.ModelState);
             return new UnprocessableEntityObjectResult(exc);
         }
 
