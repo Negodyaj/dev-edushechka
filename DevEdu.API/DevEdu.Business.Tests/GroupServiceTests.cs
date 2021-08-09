@@ -375,7 +375,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddUserToGroup_UserDoesntExist_EntityNotFoundException()
+        public void AddUserToGroup_UserDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             var group = GroupData.GetGroupDto();
@@ -397,7 +397,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddUserToGroup_UserDoesntHaveRole_ValidationException()
+        public void AddUserToGroup_UserDoesntHaveRole_ValidationExceptionThrown()
         {
             //Given
             var group = GroupData.GetGroupDto();
@@ -419,7 +419,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddUserToGroup_GroupDoesntExist_EntityNotFoundException()
+        public void AddUserToGroup_GroupDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             GroupDto group = default;
@@ -463,7 +463,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteUserFromGroup_GroupDoesntExist_EntityNotFoundException()
+        public void DeleteUserFromGroup_GroupDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             GroupDto group = default;
@@ -485,14 +485,13 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteUserFromGroup_UserDoesntExist_EntityNotFoundException()
+        public void DeleteUserFromGroup_UserDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             var group = GroupData.GetGroupDto();
             var groupId = group.Id;
             UserDto user = default;
             var userId = 0;
-            var roleId = 0;
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
             _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
@@ -508,7 +507,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteUserFromGroup_UserDoesntHaveRole_ValidationException()
+        public void DeleteUserFromGroup_UserDoesntHaveRole_ValidationExceptionThrown()
         {
             //Given
             var group = GroupData.GetGroupDto();
