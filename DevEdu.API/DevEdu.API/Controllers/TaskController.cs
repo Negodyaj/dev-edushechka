@@ -9,7 +9,6 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using DevEdu.API.Configuration.ExceptionResponses;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -211,9 +210,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public StudentAnswerOnTaskFullOutputModel AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
+            var userInfo = this.GetUserIdAndRoles();
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
-            _studentAnswerOnTaskService.AddStudentAnswerOnTask(taskId, studentId, taskAnswerDto);
-            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            _studentAnswerOnTaskService.AddStudentAnswerOnTask(taskId, studentId, taskAnswerDto, userInfo);
+            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId, userInfo);
             var output = _mapper.Map<StudentAnswerOnTaskFullOutputModel>(studentAnswerDto);
 
             return output;
@@ -228,7 +228,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<StudentAnswerOnTaskFullOutputModel> GetAllStudentAnswersOnTask(int taskId)
         {
-            var studentAnswersDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTask(taskId);
+            var userInfo = this.GetUserIdAndRoles();
+            var studentAnswersDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTask(taskId, userInfo);
             var output = _mapper.Map<List<StudentAnswerOnTaskFullOutputModel>>(studentAnswersDto);
 
             return output;
@@ -243,7 +244,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public StudentAnswerOnTaskFullOutputModel GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
-            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            var userInfo = this.GetUserIdAndRoles();
+            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId, userInfo);
             var output = _mapper.Map<StudentAnswerOnTaskFullOutputModel>(studentAnswerDto);
 
             return output;
@@ -259,8 +261,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public StudentAnswerOnTaskFullOutputModel UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
+            var userInfo = this.GetUserIdAndRoles();
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
-            var output = _studentAnswerOnTaskService.UpdateStudentAnswerOnTask(taskId, studentId, taskAnswerDto);
+            var output = _studentAnswerOnTaskService.UpdateStudentAnswerOnTask(taskId, studentId, taskAnswerDto, userInfo);
 
             return _mapper.Map<StudentAnswerOnTaskFullOutputModel>(output);
         }
@@ -274,7 +277,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
-            _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(taskId, studentId);
+            var userInfo = this.GetUserIdAndRoles();
+            _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(taskId, studentId, userInfo);
         }
 
         // api/task/{taskId}/student/{studentId}/change-status/{statusId}
@@ -286,8 +290,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public StudentAnswerOnTaskFullOutputModel UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
-            _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId);
-            var output = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            var userInfo = this.GetUserIdAndRoles();
+            _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId, userInfo);
+            var output = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId, userInfo);
 
             return _mapper.Map<StudentAnswerOnTaskFullOutputModel>(output);
         }
@@ -301,7 +306,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<StudentAnswerOnTaskOutputModel> GetAllAnswersByStudentId(int userId)
         {
-            var answersDto = _studentAnswerOnTaskService.GetAllAnswersByStudentId(userId);
+            var userInfo = this.GetUserIdAndRoles();
+            var answersDto = _studentAnswerOnTaskService.GetAllAnswersByStudentId(userId, userInfo);
             var output = _mapper.Map<List<StudentAnswerOnTaskOutputModel>>(answersDto);
 
             return output;

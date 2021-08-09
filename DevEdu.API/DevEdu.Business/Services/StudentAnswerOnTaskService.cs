@@ -6,14 +6,16 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System;
 using System.Collections.Generic;
+using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Services
 {
     public class StudentAnswerOnTaskService : IStudentAnswerOnTaskService
     {
+        private const string _dateFormat = "dd.MM.yyyy HH:mm";
+
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
         private readonly IStudentAnswerOnTaskValidationHelper _studentAnswerOnTaskValidationHelper;
-        private const string _dateFormat = "dd.MM.yyyy HH:mm";
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly ITaskValidationHelper _taskValidationHelper;
 
@@ -28,10 +30,11 @@ namespace DevEdu.Business.Services
             _taskValidationHelper = taskValidationHelper;
         }
 
-        public int AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
+        public int AddStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto, UserIdentityInfo userInfo)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
-            _taskValidationHelper.CheckUserAccessToTask(taskId, studentId);
+            if (!userInfo.IsAdmin())
+                _studentAnswerOnTaskValidationHelper.CheckUserInStudentAnswerAccess(studentId, userInfo.UserId);
 
             taskAnswerDto.Task = new TaskDto { Id = taskId };
             taskAnswerDto.User = new UserDto { Id = studentId };
@@ -41,21 +44,21 @@ namespace DevEdu.Business.Services
             return studentAnswerId;
         }
 
-        public void DeleteStudentAnswerOnTask(int taskId, int studentId)
+        public void DeleteStudentAnswerOnTask(int taskId, int studentId, UserIdentityInfo userInfo)
         {
-            _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
-
+            var checkedStudentAnswerDto = _studentAnswerOnTaskValidationHelper.GetStudentAnswerByTaskIdAndStudentIdOrThrowIfNotFound(taskId, studentId);
+            CheckUserAccessToAddAnswerUserId(userInfo, checkedStudentAnswerDto);
             _studentAnswerOnTaskRepository.DeleteStudentAnswerOnTask(taskId, studentId);
         }
 
-        public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId)
+        public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId, UserIdentityInfo userInfo)
         {
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
 
             return _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
         }
 
-        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
+        public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId, UserIdentityInfo userInfo)
         {
             _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
 
@@ -63,7 +66,7 @@ namespace DevEdu.Business.Services
             return answerDto;
         }
 
-        public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId)
+        public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId, UserIdentityInfo userInfo)
         {
             _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
 
@@ -80,7 +83,7 @@ namespace DevEdu.Business.Services
             return status;
         }
 
-        public StudentAnswerOnTaskDto UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto)
+        public StudentAnswerOnTaskDto UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto, UserIdentityInfo userInfo)
         {
             _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
 
@@ -92,12 +95,23 @@ namespace DevEdu.Business.Services
             return _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
         }
 
-        public List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId)
+        public List<StudentAnswerOnTaskDto> GetAllAnswersByStudentId(int userId, UserIdentityInfo userInfo)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
 
             var dto = _studentAnswerOnTaskRepository.GetAllAnswersByStudentId(userId);
             return dto;
+        }
+
+        private void CheckUserAccessToAddAnswerUserId(UserIdentityInfo userInfo, StudentAnswerOnTaskDto studentAnswerDto)
+        {
+            var userId = userInfo.UserId;
+
+            if (userInfo.IsAdmin())
+            {
+                return;
+            }
+            _studentAnswerOnTaskValidationHelper.CheckUserComplianceToStudentAnswer(studentAnswerDto, userId);
         }
     }
 }

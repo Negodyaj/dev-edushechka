@@ -44,5 +44,19 @@ namespace DevEdu.Business.ValidationHelpers
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
         }
+
+        public void CheckUserComplianceToStudentAnswer(StudentAnswerOnTaskDto dto, int userId)
+        {
+            if (dto.User.Id != userId)
+                throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
+        }
+
+        public StudentAnswerOnTaskDto GetStudentAnswerByTaskIdAndStudentIdOrThrowIfNotFound(int taskId, int studentId)
+        {
+            var studentAnswerOnTaskDto = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            if (studentAnswerOnTaskDto == default)
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTaskDto), taskId, studentId));
+            return studentAnswerOnTaskDto;
+        }
     }
 }
