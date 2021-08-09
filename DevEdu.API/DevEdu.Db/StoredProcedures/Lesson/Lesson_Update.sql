@@ -7,6 +7,6 @@ AS
 BEGIN
     UPDATE dbo.Lesson
     SET
-    TeacherComment = @TeacherComment, LinkToRecord = @LinkToRecord
-    WHERE (Id = @Id and Date = @Date)
+    TeacherComment = @TeacherComment, LinkToRecord = @LinkToRecord, Date = @Date
+    WHERE Id = @Id
 END

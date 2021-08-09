@@ -11,9 +11,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DevEdu.API.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class GroupController : Controller
@@ -30,7 +33,10 @@ namespace DevEdu.API.Controllers
         //  api/Group/5
         [HttpGet("{id}")]
         [Description("Return Group by id")]
-        [ProducesResponseType(typeof(GroupFullOutputModel), StatusCodes.Status200OK)]  // todo
+        [ProducesResponseType(typeof(GroupFullOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public GroupFullOutputModel GetGroup(int id)
         {
             var dto = _groupService.GetGroup(id);
@@ -41,6 +47,7 @@ namespace DevEdu.API.Controllers
         [HttpGet]
         [Description("Get all Groups")]
         [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public List<GroupOutputModel> GetAllGroups()
         {
             var dto = _groupService.GetGroups();
@@ -51,6 +58,8 @@ namespace DevEdu.API.Controllers
         [HttpPost]
         [Description("Add new Group")]
         [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public GroupOutputModel AddGroup([FromBody] GroupInputModel model)
         {
             var dto = _mapper.Map<GroupDto>(model);
@@ -62,6 +71,8 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{id}")]
         [Description("Delete Group by Id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteGroup(int id)
         {
             _groupService.DeleteGroup(id);
@@ -70,7 +81,10 @@ namespace DevEdu.API.Controllers
         //  api/Group
         [HttpPut]
         [Description("Update Group by id")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GroupInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public GroupInfoOutputModel UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
             var dto = _mapper.Map<GroupDto>(model);
@@ -81,7 +95,9 @@ namespace DevEdu.API.Controllers
         //  api/Group/{groupId}/change-status/{statusId}
         [HttpPut("{groupId}/change-status/{statusId}")]
         [Description("Change group status by id")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(GroupOutputBaseModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public GroupOutputBaseModel ChangeGroupStatus(int groupId, int statusId)
         {
             var output = _groupService.ChangeGroupStatus(groupId, statusId);
@@ -92,7 +108,9 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpPost("{groupId}/lesson/{lessonId}")]
         [Description("Add group lesson reference")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public string AddGroupToLesson(int groupId, int lessonId)
         {
             _groupService.AddGroupToLesson(groupId, lessonId);
@@ -102,7 +120,9 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
         [Description("Delete lesson from groupId")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public string RemoveGroupFromLesson(int groupId, int lessonId)
         {
             _groupService.RemoveGroupFromLesson(groupId, lessonId);
@@ -136,17 +156,21 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/group/1/user/2/role/1
+        [AuthorizeRoles(Role.Manager)]
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
         [Description("Add user to group")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [AuthorizeRoles(Role.Manager)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void AddUserToGroup(int groupId, int userId, int roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
 
         //  api/group/1/user/2
+        [AuthorizeRoles(Role.Manager)]
         [HttpDelete("{groupId}/user/{userId}")]
         [Description("Delete user from group")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [AuthorizeRoles(Role.Manager)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
     }
 }

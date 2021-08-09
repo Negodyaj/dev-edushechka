@@ -33,28 +33,35 @@ namespace DevEdu.Business.Tests.Data
                 }
             };
         }
-
         public static List<TopicDto> GetListTopicDto()
         {
             return new List<TopicDto>
             {
                 new TopicDto
                 {
+                    Id = 6,
                     Name = "Topic1",
                     Duration = 5,
                 },
                 new TopicDto
                 {
+                    Id = 7,
                     Name = "Topic2",
                     Duration = 2,
                 },
                 new TopicDto
                 {
+                    Id = 8,
                     Name = "Topic3",
                     Duration = 9,
                 },
 
             };
+        }
+
+        public static List<int> GetListTopicId()
+        {
+            return new List<int> { 6, 7, 8 };
         }
     }
 }

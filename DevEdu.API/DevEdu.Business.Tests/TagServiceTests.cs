@@ -60,7 +60,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteTag_TagDoesntExist_EntityNotFoundException()
+        public void DeleteTag_TagDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             TagDto tagDto = default;
@@ -77,7 +77,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateTag_TagDto_Id_TagDto()
+        public void UpdateTag_TagDto_Id_TagDtoUpdatedAndReturned()
         {
             //Given
             var expectedTagDto = TagData.GetOutputTagDto();
@@ -97,7 +97,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateTag_TagDoesntExist_EntityNotFoundException()
+        public void UpdateTag_TagDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             TagDto expectedTagDto = default;
@@ -116,7 +116,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetAllTags_NoEntries_ListTagDto()
+        public void GetAllTags_NoEntries_ListTagDtoReturned()
         {
             //Given
             var expectedTagDtos = TagData.GetListTagData();
@@ -132,7 +132,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetTagById_Id_TagDto()
+        public void GetTagById_Id_TagDtoReturned()
         {
             //Given
             var expectedTagDto = TagData.GetOutputTagDto();
@@ -149,7 +149,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetTagById_TagDoesntExist_EntityNotFoundException()
+        public void GetTagById_TagDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             TagDto expectedTagDto = default;
