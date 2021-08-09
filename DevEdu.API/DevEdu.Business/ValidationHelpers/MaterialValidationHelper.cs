@@ -82,10 +82,9 @@ namespace DevEdu.Business.ValidationHelpers
 
             var result = groupsByMaterial.FirstOrDefault(gm => groupsByUser.Any(gu => gu.Id == gm.Id));
             if (result == default)
-                return null;
+                material = default;
             return material;
         }
-
 
         private MaterialDto GetMaterialIfAllowedToUserByCourse(MaterialDto material, int userId)
         {
@@ -96,7 +95,7 @@ namespace DevEdu.Business.ValidationHelpers
 
             var result = coursesByMaterial.FirstOrDefault(сm => coursesByUser.Any(сu => сu == сm.Id));
             if (result == default)
-                return null;
+                material = default;
             return material;
         }
     }

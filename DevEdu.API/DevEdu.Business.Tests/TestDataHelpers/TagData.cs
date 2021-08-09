@@ -30,5 +30,30 @@ namespace DevEdu.Business.Tests
                 }
             };
         }
+
+        public static List<TagDto> GetListOfTags()
+        {
+            return new List<TagDto>
+            {
+                new TagDto
+                {
+                    Id = 1,
+                    Name = "Tag",
+                    IsDeleted = false
+                },
+                new TagDto
+                {
+                    Id = 2,
+                    Name = "DevEdu",
+                    IsDeleted = false
+                },
+                new TagDto
+                {
+                    Id = 3,
+                    Name = "Tag",
+                    IsDeleted = false
+                }
+            };
+        }
     }
 }

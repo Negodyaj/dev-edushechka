@@ -111,5 +111,55 @@ namespace DevEdu.Business.Tests
                 }
             };
         }
+
+        public static List<List<UserDto>> GetListsOfUsersInGroup()
+        {
+            return new List<List<UserDto>>
+            {
+                new List<UserDto>
+                {
+                    new UserDto {Id = 2},
+                    new UserDto {Id = 3},
+                    new UserDto {Id = 4},
+                },
+                new List<UserDto>
+                {
+                    new UserDto {Id = 2},
+                    new UserDto {Id = 5},
+                    new UserDto {Id = 6},
+                },
+                new List<UserDto>
+                {
+                    new UserDto {Id = 2},
+                    new UserDto {Id = 7},
+                    new UserDto {Id = 8},
+                }
+            };
+        }
+
+        public static List<List<UserDto>> GetAnotherListsOfUsersInGroup()
+        {
+            return new List<List<UserDto>>
+            {
+                new List<UserDto>
+                {
+                    new UserDto {Id = 2},
+                    new UserDto {Id = 3},
+                    new UserDto {Id = 4},
+                },
+                new List<UserDto>
+                {
+                    new UserDto {Id = 2},
+                    new UserDto {Id = 5},
+                    new UserDto {Id = 6},
+                },
+                new List<UserDto>
+                {
+                    new UserDto {Id = 9},
+                    new UserDto {Id = 7},
+                    new UserDto {Id = 8},
+                }
+            };
+        }
     }
 }

@@ -70,8 +70,11 @@ namespace DevEdu.Business.Services
         public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups, int userId)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(groups, nameof(groups));
-            groups.ForEach(group => _groupValidationHelper.CheckGroupExistence(group));
-            groups.ForEach(group => _useraValidationHelper.CheckUserBelongToGroup(group, userId, Role.Teacher));
+            foreach(int group in groups)
+            {
+                _groupValidationHelper.CheckGroupExistence(group);
+                _useraValidationHelper.CheckAuthorizationUserToGroup(group, userId, Role.Teacher);
+            }
 
             var materialId = AddMaterial(dto, tags);
             groups.ForEach(group => _groupRepository.AddGroupMaterialReference(group, materialId));

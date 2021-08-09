@@ -22,12 +22,12 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
         }
 
-        public void CheckUserBelongToGroup(int groupId, int userId, Role role)
+        public void CheckAuthorizationUserToGroup(int groupId, int userId, Role role)
         {
             var usersInGroup = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
             if (usersInGroup == default || usersInGroup.FirstOrDefault(u => u.Id == userId) == default)
             {
-                throw new ValidationException(string.Format(ServiceMessages.UserWithRoleDoesntBelongToGroup, role.ToString(), userId, groupId));
+                throw new AuthorizationException(string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, userId, groupId, role.ToString()));
             }
         }
     }

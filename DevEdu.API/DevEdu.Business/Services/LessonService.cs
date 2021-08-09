@@ -129,8 +129,8 @@ namespace DevEdu.Business.Services
 
         public void UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto)
         {
-            //_userValidationHelper.CheckUserExistence(userId);
-            //_lessonValidationHelper.CheckLessonExistence(lessonId);
+            _userValidationHelper.CheckUserExistence(userId);
+            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
 
             // check if user relates to lesson
             /*

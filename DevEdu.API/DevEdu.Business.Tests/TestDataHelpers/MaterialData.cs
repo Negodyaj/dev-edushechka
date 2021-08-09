@@ -12,10 +12,23 @@ namespace DevEdu.Business.Tests
         public static MaterialDto GetMaterialDtoWithoutTags() => 
             new MaterialDto { Content = "Материал по ООП" };
 
-        public static MaterialDto GetMaterialDtoWithTagsCoursesAndGroups() =>
+        public static MaterialDto GetMaterialDtoWithTags() =>
             new MaterialDto 
             { 
                 Content = "Материал по ООП",
+                Tags = new List<TagDto>
+                {
+                    new TagDto {Id = 1},
+                    new TagDto {Id = 2},
+                    new TagDto {Id = 3}
+                },
+                IsDeleted = false
+            };
+
+        public static MaterialDto GetMaterialDtoWithTagsCoursesAndGroups() =>
+            new MaterialDto
+            {
+                Content = "Материал по Наследованию",
                 Tags = new List<TagDto>
                 {
                     new TagDto {Id = 1},
@@ -31,22 +44,34 @@ namespace DevEdu.Business.Tests
                 Groups = new List<GroupDto>
                     {
                         new GroupDto {Id = 1},
-                        new GroupDto {Id = 1},
-                        new GroupDto {Id = 1}
+                        new GroupDto {Id = 2},
+                        new GroupDto {Id = 3}
                     },
                 IsDeleted = false
             };
-
-        public static MaterialDto GetMaterialDtoWithTags() =>
+        public static MaterialDto GetUpdatedMaterialDtoWithTagsCoursesAndGroups() =>
             new MaterialDto
             {
-                Content = "Материал по Наследованию",
+                Content = "Материал по Наследованию обновленный",
                 Tags = new List<TagDto>
                 {
                     new TagDto {Id = 1},
                     new TagDto {Id = 2},
                     new TagDto {Id = 3}
-                }
+                },
+                Courses = new List<CourseDto>
+                    {
+                        new CourseDto {Id = 1},
+                        new CourseDto {Id = 2},
+                        new CourseDto {Id = 3}
+                    },
+                Groups = new List<GroupDto>
+                    {
+                        new GroupDto {Id = 1},
+                        new GroupDto {Id = 2},
+                        new GroupDto {Id = 3}
+                    },
+                IsDeleted = false
             };
 
         public static List<MaterialDto> GetListOfMaterialsWithTagsCoursesAndGroups() =>
@@ -71,8 +96,8 @@ namespace DevEdu.Business.Tests
                     Groups = new List<GroupDto>
                     {
                         new GroupDto {Id = 1},
-                        new GroupDto {Id = 1},
-                        new GroupDto {Id = 1}
+                        new GroupDto {Id = 2},
+                        new GroupDto {Id = 3}
                     },
                     IsDeleted = false
                 },
@@ -90,13 +115,12 @@ namespace DevEdu.Business.Tests
                     {
                         new CourseDto {Id = 1},
                         new CourseDto {Id = 2},
-                        new CourseDto {Id = 3}
                     },
                     Groups = new List<GroupDto>
                     {
-                        new GroupDto {Id = 1},
-                        new GroupDto {Id = 1},
-                        new GroupDto {Id = 1}
+                        new GroupDto {Id = 3},
+                        new GroupDto {Id = 5},
+                        new GroupDto {Id = 6}
                     },
                     IsDeleted = false
                 },
@@ -112,15 +136,14 @@ namespace DevEdu.Business.Tests
                     },
                     Courses = new List<CourseDto>
                     {
-                        new CourseDto {Id = 1},
                         new CourseDto {Id = 2},
                         new CourseDto {Id = 3}
                     },
                     Groups = new List<GroupDto>
                     {
                         new GroupDto {Id = 1},
-                        new GroupDto {Id = 1},
-                        new GroupDto {Id = 1}
+                        new GroupDto {Id = 3},
+                        new GroupDto {Id = 6}
                     },
                     IsDeleted = false
                 }

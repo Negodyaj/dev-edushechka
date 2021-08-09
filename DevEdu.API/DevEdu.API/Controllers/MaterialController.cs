@@ -74,9 +74,9 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
         }
 
-        // api/material/5/full-output-model
+        // api/material/5/full
         [AuthorizeRoles(Role.Methodist)]
-        [HttpGet("{id}/full-output-model")]
+        [HttpGet("{id}/full")]
         [Description("Get material by id with tags, courses and groups")]
         [ProducesResponseType(typeof(MaterialInfoFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -87,9 +87,9 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<MaterialInfoFullOutputModel>(dto);
         }
 
-        // api/material/5/short-output-model
+        // api/material/5/
         [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
-        [HttpGet("{id}/short-output-model")]
+        [HttpGet("{id}/")]
         [Description("Get material by id with tags")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -108,6 +108,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)  
         {
             var user = this.GetUserIdAndRoles();
