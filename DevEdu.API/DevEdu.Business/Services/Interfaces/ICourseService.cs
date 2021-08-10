@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
@@ -6,11 +7,10 @@ namespace DevEdu.Business.Services
     public interface ICourseService
     {
         CourseDto GetCourse(int id);
-        CourseDto GetFullCourseInfo(int id, UserDto userToken);
+        CourseDto GetFullCourseInfo(int id, UserIdentityInfo userToken);
         int AddCourse(CourseDto courseDto);
         void DeleteCourse(int id);
         List<CourseDto> GetCourses();
-        List<CourseDto> GetCoursesForAdmin();
         CourseDto UpdateCourse(int id, CourseDto courseDto);
         int AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
         List<int> AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto);

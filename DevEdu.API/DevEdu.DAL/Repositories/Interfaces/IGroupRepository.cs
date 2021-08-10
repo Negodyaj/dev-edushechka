@@ -22,6 +22,6 @@ namespace DevEdu.DAL.Repositories
         List<GroupDto> GetGroupsByTaskId(int taskId);
         List<GroupDto> GetGroupsByUserId(int userId);
         List<GroupDto> GetGroupsByLessonId(int lessonId);
-        List<GroupDto> GetGroupByCourseId(int courseId);
+        List<GroupDto> GetGroupsByCourseId(int courseId);
     }
 }

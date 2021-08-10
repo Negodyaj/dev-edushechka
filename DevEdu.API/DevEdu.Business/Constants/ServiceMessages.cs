@@ -10,7 +10,6 @@
         public const string EntityDoesntHaveAcessMessage = "{0} with id = {1} does not have access to the {2} with id = {3}";
         public const string SamePositionsInCourseTopics = "the same positions of topics in the course";
         public const string SameTopicsInCourseTopics = "the same topics in the course";
-        public const string UserHasNoAccessMessage = "The user with id = {0} does not have access to the data of this group";
         public const string EntityNotFound = "Entity Not Found";
         public const string PaymentDeleted = "This payment is deleted";
         public const string UserWithRoleDoesntBelongToGroup = "{0} with id {1} doesn`t belong to group with id {2}";

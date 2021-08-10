@@ -19,6 +19,7 @@ namespace DevEdu.Business.Tests
         private CourseValidationHelper _courseValidationHelper;
         private MaterialValidationHelper _materialValidationHelper;
         private ITopicValidationHelper _topicValidationHelper;
+        private Mock<IGroupRepository> _groupRepositoryMock;
         private CourseService _sut;
 
 
@@ -32,6 +33,7 @@ namespace DevEdu.Business.Tests
             _courseValidationHelper = new CourseValidationHelper(_courseRepositoryMock.Object);
             _materialValidationHelper = new MaterialValidationHelper(_materialRepositoryMock.Object);
             _topicValidationHelper = new TopicValidationHelper(_topicRepositoryMock.Object);
+            _groupRepositoryMock = new Mock<IGroupRepository>();
             _sut = new CourseService
             (
                 _courseRepositoryMock.Object,
@@ -40,7 +42,8 @@ namespace DevEdu.Business.Tests
                 _materialRepositoryMock.Object,
                 _courseValidationHelper,
                 _materialValidationHelper,
-                _topicValidationHelper
+                _topicValidationHelper,
+                _groupRepositoryMock.Object
             );
         }
 
@@ -101,10 +104,11 @@ namespace DevEdu.Business.Tests
             //Given
             var courseDto = CourseData.GetCourseDto();
             var courseId = 1;
+            var userToken = UserData.GetUserDto();
             _courseRepositoryMock.Setup(x => x.GetCourse(courseId)).Returns(courseDto);
 
             //When
-            var dto = _sut.GetFullCourseInfo(courseId);
+            var dto = _sut.GetFullCourseInfo(courseId, userToken);
 
             //Than
             Assert.AreEqual(courseDto, dto);

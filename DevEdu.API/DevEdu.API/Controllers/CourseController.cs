@@ -8,9 +8,6 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
-using DevEdu.DAL.Enums;
-using DevEdu.API.Common;
 using System.Security.Claims;
 using DevEdu.API.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -50,7 +47,7 @@ namespace DevEdu.API.Controllers
 
         [HttpGet("{id}/full")]
         [Description("Get course by id full")]
-        [AuthorizeRoles(Role.Admin, Role.Manager, Role.Teacher, Role.Methodist)]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
 
         public CourseInfoFullOutputModel GetCourseFull(int id)
@@ -72,7 +69,7 @@ namespace DevEdu.API.Controllers
 
         [HttpPost]
         [Description("Create new course")]
-        [AuthorizeRoles(Role.Admin, Role.Manager, Role.Teacher, Role.Methodist)]
+        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Methodist)]
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status201Created)]
         public CourseInfoShortOutputModel AddCourse([FromBody] CourseInputModel model)
         {
@@ -83,7 +80,7 @@ namespace DevEdu.API.Controllers
 
         [HttpDelete("{id}")]
         [Description("Delete course by id")]
-        [Authorize]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
 
         public void DeleteCourse(int id)
@@ -93,7 +90,7 @@ namespace DevEdu.API.Controllers
 
         [HttpPut("{id}")]
         [Description("Update course by Id")]
-        [Authorize(Roles = "Admin, Manager")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
         public CourseInfoShortOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
         {

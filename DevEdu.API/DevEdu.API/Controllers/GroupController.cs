@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Common;
 using DevEdu.API.Configuration;
 using DevEdu.API.Extensions;
@@ -94,7 +93,7 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpPost("{groupId}/lesson/{lessonId}")]
         [Description("Add group lesson reference")]
-        [Authorize(Roles = "Admin, Manager, Teacher")]
+        [AuthorizeRoles(Role.Manager, Role.Teacher)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -107,7 +106,7 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
         [Description("Delete lesson from groupId")]
-        [Authorize(Roles = "Admin, Manager, Teacher")]
+        [AuthorizeRoles(Role.Manager, Role.Teacher)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]

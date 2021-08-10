@@ -285,9 +285,8 @@ namespace DevEdu.DAL.Repositories
               );
         }
 
-        public List<GroupDto> GetGroupByCourseId(int courseId)
+        public List<GroupDto> GetGroupsByCourseId(int courseId)
         {
-            var groupList = new List<GroupDto>();
             return _connection.Query<GroupDto>(
                     _groupSelectByCourse,
                     new { courseId },

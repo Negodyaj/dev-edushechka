@@ -14,7 +14,7 @@ namespace DevEdu.Business.ValidationHelpers
             _courseRepository = courseRepository;
         }
 
-        public CourseDto CheckCourseExistence(int courseId)
+        public CourseDto GetCourseByIdAndThrowIfNotFound(int courseId)
         {
             var course = _courseRepository.GetCourse(courseId);
             if (course == default)

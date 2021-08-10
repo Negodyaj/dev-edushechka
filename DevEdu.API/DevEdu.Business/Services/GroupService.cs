@@ -16,15 +16,16 @@ namespace DevEdu.Business.Services
         private readonly IGroupValidationHelper _groupValidationHelper;
         private readonly IMaterialValidationHelper _materialValidationHelper;
         private readonly IUserValidationHelper _userValidationHelper;
+        private readonly ILessonValidationHelper _lessonValidationHelper;
 
-            ILessonValidationHelper lessonValidationHelper,
         public GroupService
         (
             IGroupRepository groupRepository,
             IUserRepository userRepository,
             IGroupValidationHelper groupValidationHelper,
             IMaterialValidationHelper materialValidationHelper,
-            IUserValidationHelper userValidationHelper
+            IUserValidationHelper userValidationHelper,
+            ILessonValidationHelper lessonValidationHelper
         )
         {
             _groupRepository = groupRepository;
@@ -33,6 +34,7 @@ namespace DevEdu.Business.Services
             _groupValidationHelper = groupValidationHelper;
             _materialValidationHelper = materialValidationHelper;
             _userValidationHelper = userValidationHelper;
+            _lessonValidationHelper = lessonValidationHelper;
         }
 
         public int AddGroup(GroupDto groupDto) => _groupRepository.AddGroup(groupDto);
