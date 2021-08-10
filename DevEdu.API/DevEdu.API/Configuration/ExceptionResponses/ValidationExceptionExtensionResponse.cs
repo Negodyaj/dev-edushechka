@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace DevEdu.Business.Exceptions
 {
-    public class ValidationExceptionResponse
+    public class ValidationExceptionExtensionResponse
     {
         public int Code { get; set; }
         public string Message { get; set; }
         public List<ValidationError> ValidationErrors { get; set; }
 
-        public ValidationExceptionResponse(ModelStateDictionary modelState)
+        public ValidationExceptionExtensionResponse(ModelStateDictionary modelState)
         {
             Code = 1001;
             Message = "Validation Failed";
@@ -19,7 +19,7 @@ namespace DevEdu.Business.Exceptions
             {
                 ValidationErrors.Add(new ValidationError
                 {
-                    Code = DateTime.Now.Millisecond + DateTime.Now.Minute,
+                    Code = 422,
                     Field = $"{state.Key}",
                     ErrorMessage = $"Invalid format {state.Value.Errors[0].ErrorMessage} "
                 });
