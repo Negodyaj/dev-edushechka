@@ -18,7 +18,7 @@ namespace DevEdu.Business.Configuration
             _key = Environment.GetEnvironmentVariable(_key);
         }
         public SymmetricSecurityKey GetSymmetricSecurityKey()
-        {
+         {
             return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_key));
         }
         private string CheckString(string str)

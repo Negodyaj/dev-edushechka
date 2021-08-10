@@ -25,9 +25,12 @@ namespace DevEdu.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.Development.json");
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -92,6 +95,10 @@ namespace DevEdu.API
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
+           
+            var provider = services.BuildServiceProvider();
+            var authOptions = provider.GetRequiredService<IAuthOptions>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -104,7 +111,7 @@ namespace DevEdu.API
                         ValidateAudience = true,
                         ValidAudience = AuthOptions.Audience,
                         ValidateLifetime = true,
-                        //IssuerSigningKey = //AuthOptions.GetSymmetricSecurityKey(),
+                        IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true
                     };
                 });
@@ -137,9 +144,15 @@ namespace DevEdu.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseOpenApi();
-                app.UseSwaggerUi3();
             }
+            else if (env.IsProduction())
+            {
+                app.UseExceptionHandler("Error");
+                
+            }
+            app.UseOpenApi();
+
+            app.UseSwaggerUi3();
 
             app.UseMiddleware<ExceptionMiddleware>();
 
