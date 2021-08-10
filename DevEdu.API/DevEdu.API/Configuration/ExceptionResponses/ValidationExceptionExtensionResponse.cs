@@ -11,6 +11,16 @@ namespace DevEdu.Business.Exceptions
         public string Message { get; set; }
         public List<ValidationExceptionResponse> ValidationErrors { get; set; }
 
+        public ValidationExceptionExtensionResponse(Exception exception)
+        {
+            ValidationErrors = new List<ValidationExceptionResponse>();
+                ValidationErrors.Add(new ValidationExceptionResponse
+                {
+                    Code = 422,
+                    Message = exception.Message,
+                    Description = exception.Message
+                });
+        }
         public ValidationExceptionExtensionResponse(ModelStateDictionary modelState)
         {
             Code = 1001;
@@ -21,8 +31,8 @@ namespace DevEdu.Business.Exceptions
                 ValidationErrors.Add(new ValidationExceptionResponse
                 {
                     Code = 422,
-                    Message = $"{state.Key}",
-                    Description = $"Invalid format {state.Value.Errors[0].ErrorMessage} "
+                    Message = state.Key,
+                    Description = state.Value.Errors[0].ErrorMessage
                 });
             }
         }

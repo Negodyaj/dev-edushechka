@@ -67,13 +67,9 @@ namespace DevEdu.API.Configuration
         {
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(
-                new ValidationExceptionResponse
-                {
-                    Code = ValidationCode,
-                    Message = MessageValidation,
-                    Description = exception.Message
-                }
-            );
+                new ValidationExceptionExtensionResponse(exception)
+
+            ); ;
             context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
             return context.Response.WriteAsync(result);
         }
