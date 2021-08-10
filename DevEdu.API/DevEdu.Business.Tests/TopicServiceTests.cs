@@ -60,17 +60,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedTopicId = 77;
-            var topicDto = new TopicDto
-            {
-                Name = "Topic1",
-                Duration = 5,
-                Tags = new List<TagDto>
-                {
-                    new TagDto{ Id = 1 },
-                    new TagDto{ Id = 2 },
-                    new TagDto{ Id = 3 }
-                }
-            };
+            var topicDto = TopicData.GetTopicDtoWithTags();
 
             _topicRepoMock.Setup(x => x.AddTopic(topicDto)).Returns(expectedTopicId);
             _topicRepoMock.Setup(x => x.AddTagToTopic(expectedTopicId, It.IsAny<int>()));
@@ -92,17 +82,17 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var topicDto = TopicData.GetTopicDtoWithoutTags();
-            var topicId = 1;
+            var expectedTopicId = 1;
 
-            _topicRepoMock.Setup(x => x.DeleteTopic(topicId));
-            _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(topicDto);
+            _topicRepoMock.Setup(x => x.DeleteTopic(expectedTopicId));
+            _topicRepoMock.Setup(x => x.GetTopic(expectedTopicId)).Returns(topicDto);
 
             //When
-            _sut.DeleteTopic(topicId);
+            _sut.DeleteTopic(expectedTopicId);
 
             //Than
-            _topicRepoMock.Verify(x => x.DeleteTopic(topicId), Times.Once);
-            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Once);
+            _topicRepoMock.Verify(x => x.DeleteTopic(expectedTopicId), Times.Once);
+            _topicRepoMock.Verify(x => x.GetTopic(expectedTopicId), Times.Once);
         }
         [Test]
         public void GetTopic_IntTopicId_GetTopic()
@@ -118,7 +108,7 @@ namespace DevEdu.Business.Tests
 
             //Than
             Assert.AreEqual(topicDto, dto);
-            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Exactly(2));           
+            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Once);           
         }
 
         [Test]
