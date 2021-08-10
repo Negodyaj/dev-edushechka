@@ -111,19 +111,7 @@ namespace DevEdu.API.Controllers
             var dto = _lessonService.SelectAllLessonsByTeacherId(id);
             return _mapper.Map<List<LessonInfoWithCourseOutputModel>>(dto);
         }
-        
-        // api/lesson/{id}
-        [HttpGet("{id}")]
-        [Description("Get the lesson by id.")]
-        [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public LessonInfoOutputModel GetLessonById(int id)
-        {
-            var dto = _lessonService.SelectLessonById(id);
-            return _mapper.Map<LessonInfoOutputModel>(dto);
-        }
-        
+              
         // api/lesson/{id}/with-comments
         [AuthorizeRolesAttribute(Role.Student)]
         [HttpGet("{id}/with-comments")]
