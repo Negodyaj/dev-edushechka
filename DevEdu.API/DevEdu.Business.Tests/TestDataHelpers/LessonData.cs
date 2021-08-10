@@ -46,7 +46,13 @@ namespace DevEdu.Business.Tests
                 {
                     Id = 3
                 },
-                LinkToRecord = "http://link.com"
+                LinkToRecord = "http://link.com",
+                Topics = new List<TopicDto>
+                {
+                    new TopicDto {Id = 4},
+                    new TopicDto {Id = 2},
+                    new TopicDto {Id = 3},
+                }
             };
         }
 

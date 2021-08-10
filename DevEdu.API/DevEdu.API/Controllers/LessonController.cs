@@ -111,7 +111,7 @@ namespace DevEdu.API.Controllers
             var dto = _lessonService.SelectAllLessonsByTeacherId(id);
             return _mapper.Map<List<LessonInfoWithCourseOutputModel>>(dto);
         }
-              
+        
         // api/lesson/{id}/with-comments
         [AuthorizeRolesAttribute(Role.Student)]
         [HttpGet("{id}/with-comments")]
@@ -141,6 +141,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{lessonId}/topic/{toppicId}
+        [AuthorizeRoles(Role.Teacher)]
         [HttpDelete("{lessonId}/topic/{topicId}")]
         [Description("Delete topic from lesson")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -152,6 +153,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{lessonId}/topic/{topicId}
+        [AuthorizeRoles(Role.Teacher)]
         [HttpPost("{lessonId}/topic/{topicId}")]
         [Description("Add topic to lesson")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

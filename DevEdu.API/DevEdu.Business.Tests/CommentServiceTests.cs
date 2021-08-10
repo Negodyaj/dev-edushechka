@@ -204,7 +204,7 @@ namespace DevEdu.Business.Tests
 
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
             _groupRepoMock.Setup(x => x.GetGroupsByLessonId(lessonId)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
@@ -251,7 +251,7 @@ namespace DevEdu.Business.Tests
 
             _studentAnswerRepoMock.Setup(x => x.GetStudentAnswerOnTaskById(studentAnswerOnTaskDto.Id)).Returns(studentAnswerOnTaskDto);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
 
             //When
             var ex = Assert.Throws<AuthorizationException>(

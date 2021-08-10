@@ -100,7 +100,7 @@ namespace DevEdu.Business.Services
         {
             var userId = userInfo.UserId;
             _groupValidationHelper.CheckGroupExistence(groupId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
             if (!userInfo.IsAdmin())
                 _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
         }
