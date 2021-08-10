@@ -7,6 +7,7 @@ using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 using DevEdu.Business.Tests.Data;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
@@ -23,7 +24,7 @@ namespace DevEdu.Business.Tests
         {
             _topicRepoMock = new Mock<ITopicRepository>();
             _tagRepoMock = new Mock<ITagRepository>();
-            _topicValidationHelper = new TopicValidationHelper(_topicRepository.Object);
+            _topicValidationHelper = new TopicValidationHelper(_topicRepoMock.Object);
             _tagValidationHelperMock = new Mock<ITagValidationHelper>();
             _sut = new TopicService(
             _topicRepoMock.Object,
@@ -44,8 +45,7 @@ namespace DevEdu.Business.Tests
             _topicRepoMock.Setup(x => x.AddTopic(topicDto)).Returns(expectedTopicId);
             _topicRepoMock.Setup(x => x.AddTagToTopic(It.IsAny<int>(), It.IsAny<int>()));
 
-            var sut = new TopicService(_topicRepoMock.Object);
-
+            
             //When
             var actualTopicId = _sut.AddTopic(topicDto);
 
@@ -77,8 +77,7 @@ namespace DevEdu.Business.Tests
             _topicRepoMock.Setup(x => x.GetTopic(expectedTopicId)).Returns(topicDto);
             _tagRepoMock.Setup(x => x.SelectTagById(It.IsAny<int>())).Returns(topicDto.Tags[0]);
 
-            var sut = new TopicService(_topicRepoMock.Object, _tagRepoMock.Object, _topicValidationHelperMock.Object, _tagValidationHelperMock.Object);
-
+           
             //When
             var actualTopicId = _sut.AddTopic(topicDto);
 
@@ -92,34 +91,34 @@ namespace DevEdu.Business.Tests
         public void DeleteTopic_IntTopicId_DeleteTopic()
         {
             //Given
-            var topicDto = TopicData.GetTopicDto();
-            var topicId = 1;            
+            var topicDto = TopicData.GetTopicDtoWithoutTags();
+            var topicId = 1;
 
-            _topicRepository.Setup(x => x.DeleteTopic(topicId));
-            _topicRepository.Setup(x => x.GetTopic(topicId)).Returns(topicDto);
+            _topicRepoMock.Setup(x => x.DeleteTopic(topicId));
+            _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(topicDto);
 
             //When
             _sut.DeleteTopic(topicId);
 
             //Than
-            _topicRepository.Verify(x => x.DeleteTopic(topicId), Times.Once);
-            _topicRepository.Verify(x => x.GetTopic(topicId), Times.Once);
+            _topicRepoMock.Verify(x => x.DeleteTopic(topicId), Times.Once);
+            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Once);
         }
         [Test]
         public void GetTopic_IntTopicId_GetTopic()
         {
             //Given
-            var topicDto = TopicData.GetTopicDto();
+            var topicDto = TopicData.GetTopicDtoWithoutTags();
             var topicId = 1;
 
-            _topicRepository.Setup(x => x.GetTopic(topicId)).Returns(topicDto);            
+            _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(topicDto);            
 
             //When
             var dto = _sut.GetTopic(topicId);
 
             //Than
             Assert.AreEqual(topicDto, dto);
-            _topicRepository.Verify(x => x.GetTopic(topicId), Times.Exactly(2));           
+            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Exactly(2));           
         }
 
         [Test]
@@ -127,33 +126,33 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedList = TopicData.GetListTopicDto();
-            _topicRepository.Setup(x => x.GetAllTopics()).Returns(expectedList);
+            _topicRepoMock.Setup(x => x.GetAllTopics()).Returns(expectedList);
             
             //When
             var actualList = _sut.GetAllTopics();
 
             //Then
             Assert.AreEqual(expectedList, actualList);
-            _topicRepository.Verify(x => x.GetAllTopics(), Times.Once);           
+            _topicRepoMock.Verify(x => x.GetAllTopics(), Times.Once);           
         }
 
         [Test]
         public void UpdateTopic_TopicDto_ReturnUpdatedTopicDto()
         {
             //Given
-            var topicDto = TopicData.GetTopicDto();
+            var topicDto = TopicData.GetTopicDtoWithoutTags();
             var topicId = 1;
 
-            _topicRepository.Setup(x => x.UpdateTopic(topicDto));
-            _topicRepository.Setup(x => x.GetTopic(topicId)).Returns(topicDto);
+            _topicRepoMock.Setup(x => x.UpdateTopic(topicDto));
+            _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(topicDto);
             
             //When
             var dto = _sut.UpdateTopic(topicId, topicDto);
 
             //Than
             Assert.AreEqual(topicDto, dto);
-            _topicRepository.Verify(x => x.UpdateTopic(topicDto), Times.Once);
-            _topicRepository.Verify(x => x.GetTopic(topicId), Times.Exactly(2));           
+            _topicRepoMock.Verify(x => x.UpdateTopic(topicDto), Times.Once);
+            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Exactly(2));           
         }
 
         [Test]

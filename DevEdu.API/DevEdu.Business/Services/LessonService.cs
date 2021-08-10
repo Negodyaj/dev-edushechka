@@ -119,13 +119,11 @@ namespace DevEdu.Business.Services
             _lessonRepository.AddTopicToLesson(lessonId, topicId);
 
         public StudentLessonDto AddStudentToLesson(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
-        {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
+        {           
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
             _lessonValidationHelper.CheckLessonExistence(lessonId);
-            if (!CheckerRole.IsAdmin(roles))
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
+            if (!userIdentityInfo.IsAdmin())
+                _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userIdentityInfo.UserId);
 
             _lessonRepository.AddStudentToLesson(lessonId, studentId);
             return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
@@ -133,25 +131,22 @@ namespace DevEdu.Business.Services
 
         public void DeleteStudentFromLesson(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
         {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
+           
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
             _lessonValidationHelper.CheckLessonExistence(lessonId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
-            if (!CheckerRole.IsAdmin(roles))
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
+            if (!userIdentityInfo.IsAdmin())
+                _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userIdentityInfo.UserId);
             _lessonRepository.DeleteStudentFromLesson(lessonId, studentId);
         }
 
         public StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
-        {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
+        {            
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
             _lessonValidationHelper.CheckLessonExistence(lessonId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
-            if (!CheckerRole.IsAdmin(roles))
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
+            if (!userIdentityInfo.IsAdmin())
+                _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userIdentityInfo.UserId);
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.Student = new UserDto { Id = studentId };
             _lessonRepository.UpdateStudentFeedbackForLesson(studentLessonDto);
@@ -160,13 +155,11 @@ namespace DevEdu.Business.Services
 
         public StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
         {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
             _lessonValidationHelper.CheckLessonExistence(lessonId);
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
-            if (!CheckerRole.IsAdmin(roles))
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
+            if (!userIdentityInfo.IsAdmin())
+                _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userIdentityInfo.UserId);
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.Student = new UserDto { Id = studentId };
             _lessonRepository.UpdateStudentAbsenceReasonOnLesson(studentLessonDto);
@@ -174,11 +167,9 @@ namespace DevEdu.Business.Services
         }
 
         public StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
-        {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
-            if (!CheckerRole.IsAdmin(roles))
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
+        {            
+            if (!userIdentityInfo.IsAdmin())
+                _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userIdentityInfo.UserId);
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId); 
             _lessonValidationHelper.CheckLessonExistence(lessonId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
@@ -189,14 +180,10 @@ namespace DevEdu.Business.Services
         }
 
         public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId, UserIdentityInfo userIdentityInfo)
-        {
-            var userId = userIdentityInfo.UserId;
-            var roles = userIdentityInfo.Roles;
+        {            
             _lessonValidationHelper.CheckLessonExistence(lessonId);
-            if (CheckerRole.IsStudent(roles) || CheckerRole.IsTeacher(roles))
-            {
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userId);
-            }
+            if (userIdentityInfo.IsStudent() || userIdentityInfo.IsTeacher())          
+                _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userIdentityInfo.UserId);            
             return _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
         }                
 

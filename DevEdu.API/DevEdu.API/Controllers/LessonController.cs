@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
@@ -112,18 +113,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<LessonInfoWithCourseOutputModel>>(dto);
         }
         
-        // api/lesson/{id}
-        [HttpGet("{id}")]
-        [Description("Get the lesson by id.")]
-        [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public LessonInfoOutputModel GetLessonById(int id)
-        {
-            var dto = _lessonService.SelectLessonById(id);
-            return _mapper.Map<LessonInfoOutputModel>(dto);
-        }
-        
+               
         // api/lesson/{id}/with-comments
         [AuthorizeRolesAttribute(Role.Student)]
         [HttpGet("{id}/with-comments")]
@@ -179,37 +169,38 @@ namespace DevEdu.API.Controllers
         [HttpPost("{lessonId}/student/{studentId}")]
         [Description("Adds student to lesson")]
         [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status204NoContent)]
-        public StudentLessonOutputModel AddStudentToLesson(int lessonId, int userId )
+        public StudentLessonOutputModel AddStudentToLesson(int lessonId, int studentId)
         {
-           var output= _lessonService.AddStudentToLesson(lessonId, userId);
-           return _mapper.Map<StudentLessonOutputModel>(output);
+            var userInfo = this.GetUserIdAndRoles();
+            var output = _lessonService.AddStudentToLesson(lessonId, studentId, userInfo);
+            return _mapper.Map<StudentLessonOutputModel>(output);
         }
 
 
-        // api/lesson/{lessonId}/user/{userId}
-        [HttpDelete("{lessonId}/user/{userId}")]
+        // api/lesson/{lessonId}/student/{studentId}
+        [AuthorizeRoles(Role.Teacher)]
+        [HttpDelete("{lessonId}/student/{studentId}")]
         [Description("Deletes student from lesson")]
-        [ProducesResponseType( StatusCodes.Status204NoContent)]
-        public void DeleteStudentFromLesson(int lessonId, int userId)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public void DeleteStudentFromLesson(int lessonId, int studentId)
         {
-           _lessonService.DeleteStudentFromLesson(lessonId, userId);
+            var userInfo = this.GetUserIdAndRoles();
+            _lessonService.DeleteStudentFromLesson(lessonId, studentId, userInfo);
         }
 
         // api/lesson/{lessonId}/student/{studentId}/feedback
         [AuthorizeRoles(Role.Student)]
         [HttpPut("{lessonId}/student/{studentId}/feedback")]
         [Description("Update Feedback for lesson")]
-        [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status200OK)]
-        public StudentLessonOutputModel UpdateStudentFeedbackForLesson(int lessonId,int userId, [FromBody] FeedbackInputModel model)
+        public StudentLessonOutputModel UpdateStudentFeedbackForLesson(int lessonId, int studentId, [FromBody] FeedbackInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<StudentLessonDto>(model);
-            var output =_lessonService.UpdateStudentFeedbackForLesson(lessonId, userId, dto);
+            var output = _lessonService.UpdateStudentFeedbackForLesson(lessonId, studentId, dto, userInfo);
             return _mapper.Map<StudentLessonOutputModel>(output);
         }
 
@@ -221,11 +212,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status200OK)]
-        public StudentLessonOutputModel UpdateStudentAbsenceReasonOnLesson(int lessonId,int userId, [FromBody] AbsenceReasonInputModel model)
+        public StudentLessonOutputModel UpdateStudentAbsenceReasonOnLesson(int lessonId, int studentId, [FromBody] AbsenceReasonInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<StudentLessonDto>(model);
-            var output =_lessonService.UpdateStudentAbsenceReasonOnLesson(lessonId, userId, dto);
+            var output = _lessonService.UpdateStudentAbsenceReasonOnLesson(lessonId, studentId, dto, userInfo);
             return _mapper.Map<StudentLessonOutputModel>(output);
         }
 
@@ -234,7 +225,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{lessonId}/student/{studentId}/attendance")]
         [Description("Update Attendance for lesson")]
         [ProducesResponseType(typeof(StudentLessonOutputModel),StatusCodes.Status200OK)]
-        public StudentLessonOutputModel UpdateStudentAttendanceOnLesson(int lessonId, int userId, [FromBody] AttendanceInputModel model)
+        public StudentLessonOutputModel UpdateStudentAttendanceOnLesson(int lessonId, int studentId, [FromBody] AttendanceInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<StudentLessonDto>(model);
@@ -243,7 +234,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/{lessonId}/feedback
-        [AuthorizeRoles(Role.Student, Role.Teacher, Role.Manager, Role.Methodist)]
+        [AuthorizeRoles(Role.Teacher, Role.Manager)]
         [HttpGet("{lessonId}/feedback")]
         [Description("Get all feedback by lesson")]
         [ProducesResponseType(typeof(List<FeedbackOutputModel>), StatusCodes.Status200OK)]

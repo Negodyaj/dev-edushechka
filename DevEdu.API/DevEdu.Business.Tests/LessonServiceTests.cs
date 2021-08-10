@@ -33,7 +33,7 @@ namespace DevEdu.Business.Tests
             _groupRepository = new Mock<IGroupRepository>();
             _userRepository = new Mock<IUserRepository>();
             _groupRepository = new Mock<IGroupRepository>();
-            _lessonValidationHelper = new LessonValidationHelper(_lessonRepository.Object, _groupRepository.Object);
+            _lessonValidationHelper = new LessonValidationHelper(_lessonRepository.Object, _groupRepository.Object, _userRepository.Object);
             _userValidationHelper = new UserValidationHelper(_userRepository.Object);
 
             var userValidationHelper = new UserValidationHelper(_userRepository.Object);
@@ -58,7 +58,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
-            var userIdentityInfo = UserTokenData.GetUserTokenWithTeacherRole();
+            var userIdentityInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
             var lessonId = 30;
             var userId = 42;
 
@@ -86,7 +86,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
-            var userIdentityInfo = UserTokenData.GetUserTokenWithTeacherRole();
+            var userIdentityInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
             var lessonId = 30;
             var userId = 42;
 
@@ -115,7 +115,7 @@ namespace DevEdu.Business.Tests
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
             // var userIdentityInfo = UserTokenData.GetUserIdentityWithRole(role);
-            var userIdentityInfo = UserTokenData.GetUserTokenWithStudentRole();
+            var userIdentityInfo = UserIdentityInfoData.GetUserIdentityWithStudentRole();
             var lessonId = 30;
             var userId = 42;
 
@@ -144,7 +144,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
-            var userIdentityInfo = UserTokenData.GetUserTokenWithStudentRole();
+            var userIdentityInfo = UserIdentityInfoData.GetUserIdentityWithStudentRole();
             var lessonId = 30;
             var userId = 42;
 
@@ -173,7 +173,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
-            var userIdentityInfo = UserTokenData.GetUserTokenWithTeacherRole();
+            var userIdentityInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
             var lessonId = 30;
             var userId = 42;
 
@@ -202,7 +202,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
-            var userIdentityInfo = UserTokenData.GetUserTokenWithTeacherRole();//переписать под несколько ролей
+            var userIdentityInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();//переписать под несколько ролей
             var lessonId = 30;
             
             var listStudentLessonDto = LessonData.GetListStudentDto();

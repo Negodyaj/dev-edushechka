@@ -30,7 +30,7 @@ namespace DevEdu.Business.Services
         {
             _lessonValidationHelper.CheckLessonExistence(lessonId);
             if (!userInfo.IsAdmin())
-                _lessonValidationHelper.CheckUserInLessonAccess(lessonId, userInfo.UserId);
+                _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userInfo.UserId);
 
             dto.User = new UserDto { Id = userInfo.UserId };
             dto.Lesson = new LessonDto { Id = lessonId };

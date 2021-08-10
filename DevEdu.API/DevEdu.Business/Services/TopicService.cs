@@ -43,8 +43,8 @@ namespace DevEdu.Business.Services
 
         public TopicDto GetTopic(int id)
         {
-            _topicValidationHelper.CheckTopicExistence(id);
-            return _topicRepository.GetTopic(id);
+           var topicDto= _topicValidationHelper.CheckTopicExistence(id);
+            return topicDto;
         }
 
         public List<TopicDto> GetAllTopics()

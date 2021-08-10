@@ -200,7 +200,7 @@ namespace DevEdu.Business.Tests
             var lessonDto = CommentData.GetLessonDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var userId = userInfo.UserId;
-            var expectedException = string.Format(ServiceMessages.UserOnLessonNotFoundMessage, userId, lessonId);
+            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userId, lessonId);
 
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
             _groupRepoMock.Setup(x => x.GetGroupsByLessonId(lessonId)).Returns(CommentData.GetGroupsDto());

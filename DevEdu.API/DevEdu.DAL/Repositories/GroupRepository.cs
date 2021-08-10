@@ -275,43 +275,7 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public List<GroupDto> GetGroupsByUserId(int userId)
-        {
-            GroupDto result;
-            return _connection
-                .Query<GroupDto, GroupStatus, GroupDto>(
-                    _groupSelectGroupsByUserIdProcedure,
-                    (group, groupStatus) =>
-                    {
-                        result = group;
-                        result.GroupStatus = groupStatus;
-                        return result;
-                    },
-                    new { userId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
-                .ToList();
-        }
-
-        public List<GroupDto> GetGroupsByLessonId(int lessonId)
-        {
-            GroupDto result;
-            return _connection
-                .Query<GroupDto, GroupStatus, GroupDto>(
-                    _groupSelectGroupsByLessonIdProcedure,
-                    (group, groupStatus) =>
-                    {
-                        result = group;
-                        result.GroupStatus = groupStatus;
-                        return result;
-                    },
-                    new { lessonId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
-                .ToList();
-        }
+       
 
         public int GetPresentGroupForStudentByUserId(int userId)
         {
