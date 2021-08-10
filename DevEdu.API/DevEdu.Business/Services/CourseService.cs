@@ -78,7 +78,7 @@ namespace DevEdu.Business.Services
         public List<int> AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _topicValidationHelper.CheckTopicsExistence(listDto);
+            _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFound(listDto);
             foreach (var topic in listDto)
             {
                 topic.Course = new CourseDto() { Id = courseId };
@@ -108,14 +108,14 @@ namespace DevEdu.Business.Services
         public int AddCourseMaterialReference(int courseId, int materialId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
             return _courseRepository.AddCourseMaterialReference(courseId, materialId);
         }
 
         public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
             _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
         }
 
@@ -125,7 +125,7 @@ namespace DevEdu.Business.Services
             if (topics == null || topics.Count == 0)
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _topicValidationHelper.CheckTopicsExistence(topics);
+            _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFound(topics);
             CheckUniquenessPositions(topics);
             CheckUniquenessTopics(topics);
             var topicsInDatabase = _courseRepository.SelectAllTopicsByCourseId(courseId);
@@ -185,13 +185,13 @@ namespace DevEdu.Business.Services
         private void CheckCourseAndTopicExistences(int courseId, int topicId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _topicValidationHelper.CheckTopicExistence(topicId);
+            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
 
         }
         private void CheckCourseAndMaterialExistences(int courseId, int materialId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
         }
 
     }

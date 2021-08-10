@@ -10,6 +10,11 @@ namespace DevEdu.Business.Tests
             return new TopicDto { Id = 1, Name = "Topic1", Duration = 5 };
         }
 
+        public static TopicDto GetAnotherTopicDtoWithoutTags()
+        {
+            return new TopicDto { Id = 4, Name = "Topic4", Duration = 5 };
+        }
+
         public static TopicDto GetTopicDtoWithTags()
         {
             return new TopicDto

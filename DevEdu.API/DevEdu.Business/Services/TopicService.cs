@@ -37,13 +37,13 @@ namespace DevEdu.Business.Services
 
         public void DeleteTopic(int id)
         {              
-            _topicValidationHelper.CheckTopicExistence(id);            
+            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(id);            
                 _topicRepository.DeleteTopic(id);            
         }
 
         public TopicDto GetTopic(int id)
         {
-           var topicDto= _topicValidationHelper.CheckTopicExistence(id);
+           var topicDto= _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(id);
             return topicDto;
         }
 
@@ -54,7 +54,7 @@ namespace DevEdu.Business.Services
 
         public TopicDto UpdateTopic(int id, TopicDto topicDto)
         {
-            _topicValidationHelper.CheckTopicExistence(id);            
+            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(id);            
             topicDto.Id = id;
             _topicRepository.UpdateTopic(topicDto);
             return _topicRepository.GetTopic(id);
@@ -62,14 +62,14 @@ namespace DevEdu.Business.Services
 
         public int AddTagToTopic(int topicId, int tagId)
         {
-            _topicValidationHelper.CheckTopicExistence(topicId);
+            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
             _tagValidationHelper.CheckTagExistence(tagId);
             return _topicRepository.AddTagToTopic(topicId, tagId);
         }
 
         public int DeleteTagFromTopic(int topicId, int tagId)
         {
-            _topicValidationHelper.CheckTopicExistence(topicId);
+            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
             _tagValidationHelper.CheckTagExistence(tagId);
             return _topicRepository.DeleteTagFromTopic(topicId, tagId);
         }

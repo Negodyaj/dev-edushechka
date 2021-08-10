@@ -28,7 +28,7 @@ namespace DevEdu.Business.Services
 
         public CommentDto AddCommentToLesson(int lessonId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            _lessonValidationHelper.CheckLessonExistence(lessonId);
+            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             if (!userInfo.IsAdmin())
                 _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userInfo.UserId);
 

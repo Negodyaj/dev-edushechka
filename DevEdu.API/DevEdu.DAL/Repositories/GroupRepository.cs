@@ -222,12 +222,13 @@ namespace DevEdu.DAL.Repositories
         {
             GroupDto result;
             return _connection
-                .Query<GroupDto, GroupStatus, GroupDto>(
+                .Query<GroupDto, GroupStatus, CourseDto, GroupDto>(
                     _groupSelectGroupsByUserIdProcedure,
-                    (group, groupStatus) =>
+                    (group, groupStatus, course) =>
                     {
                         result = group;
                         result.GroupStatus = groupStatus;
+                        result.Course = course;
                         return result;
                     },
                     new { userId },
