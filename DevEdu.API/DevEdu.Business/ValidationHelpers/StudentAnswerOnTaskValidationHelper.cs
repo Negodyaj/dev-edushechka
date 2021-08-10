@@ -2,6 +2,7 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DevEdu.Business.ValidationHelpers
@@ -56,7 +57,21 @@ namespace DevEdu.Business.ValidationHelpers
             var studentAnswerOnTaskDto = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
             if (studentAnswerOnTaskDto == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTaskDto), taskId, studentId));
+
             return studentAnswerOnTaskDto;
+        }
+
+        public List<StudentAnswerOnTaskDto> GetStudentAnswerOnTaskAllowedToUser(int taskId, int userId)
+        {
+            var groupsByTask = _groupRepository.GetGroupsByTaskId(taskId);
+            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+
+            var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
+
+            if (result == default)
+                return null;
+
+            return _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
         }
     }
 }

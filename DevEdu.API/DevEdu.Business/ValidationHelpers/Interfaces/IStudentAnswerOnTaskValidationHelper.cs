@@ -1,4 +1,5 @@
 ﻿using DevEdu.DAL.Models;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -9,5 +10,6 @@ namespace DevEdu.Business.ValidationHelpers
         void CheckUserInStudentAnswerAccess(int studentId, int userId);
         void CheckUserComplianceToStudentAnswer(StudentAnswerOnTaskDto dto, int userId);
         StudentAnswerOnTaskDto GetStudentAnswerByTaskIdAndStudentIdOrThrowIfNotFound(int taskId, int studentId);
+        List<StudentAnswerOnTaskDto> GetStudentAnswerOnTaskAllowedToUser(int taskId, int userId);
     }
 }

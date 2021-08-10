@@ -4,9 +4,9 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
-using System.Collections.Generic;
 using DevEdu.Business.IdentityInfo;
+using DevEdu.Business.Exceptions;
+using DevEdu.Business.Constants;
 
 namespace DevEdu.Business.Services
 {
@@ -53,7 +53,17 @@ namespace DevEdu.Business.Services
 
         public List<StudentAnswerOnTaskDto> GetAllStudentAnswersOnTask(int taskId, UserIdentityInfo userInfo)
         {
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userInfo.UserId);
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+
+            if (!userInfo.Roles.Contains(Role.Admin) && !userInfo.Roles.Contains(Role.Student))
+            {
+                return _studentAnswerOnTaskValidationHelper.GetStudentAnswerOnTaskAllowedToUser(taskId, userInfo.UserId);
+            }
+            else if (userInfo.Roles.Contains(Role.Student))
+            {
+                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userInfo.UserId));
+            }
 
             return _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
         }
@@ -67,19 +77,27 @@ namespace DevEdu.Business.Services
 
         public int ChangeStatusOfStudentAnswerOnTask(int taskId, int studentId, int statusId, UserIdentityInfo userInfo)
         {
-            _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
+            if (!userInfo.Roles.Contains(Role.Student) && !userInfo.Roles.Contains(Role.Manager))
+            {
+                _studentAnswerOnTaskValidationHelper.CheckStudentAnswerOnTaskExistence(taskId, studentId);
 
-            DateTime completedDate = default;
+                DateTime completedDate = default;
 
-            if (statusId == (int)TaskStatus.Accepted)
-                completedDate = DateTime.Now;
+                if (statusId == (int)TaskStatus.Accepted)
+                    completedDate = DateTime.Now;
 
-            string stringTime = completedDate.ToString(_dateFormat);
-            DateTime time = Convert.ToDateTime(stringTime);
+                string stringTime = completedDate.ToString(_dateFormat);
+                DateTime time = Convert.ToDateTime(stringTime);
 
-            var status = _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId, time);
+                var status = _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId, time);
 
-            return status;
+                return status;
+            }
+            else
+            {
+                throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userInfo.UserId));
+            }
+
         }
 
         public StudentAnswerOnTaskDto UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto, UserIdentityInfo userInfo)
