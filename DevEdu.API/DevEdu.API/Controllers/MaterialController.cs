@@ -89,7 +89,7 @@ namespace DevEdu.API.Controllers
 
         // api/material/5/
         [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
-        [HttpGet("{id}/")]
+        [HttpGet("{id}")]
         [Description("Get material by id with tags")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]

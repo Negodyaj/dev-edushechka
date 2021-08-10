@@ -16,7 +16,7 @@ namespace DevEdu.Business.Services
         private readonly ITagValidationHelper _tagValidationHelper;
         private readonly ICourseValidationHelper _courseValidationHelper;
         private readonly IMaterialValidationHelper _materilaValidationHelper;
-        private readonly IUserValidationHelper _useraValidationHelper;
+        private readonly IUserValidationHelper _userValidationHelper;
 
         public MaterialService(
             IMaterialRepository materialRepository,
@@ -35,7 +35,7 @@ namespace DevEdu.Business.Services
             _tagValidationHelper = tagValidationHelper;
             _courseValidationHelper = courseValidationHelper;
             _materilaValidationHelper = materilaValidationHelper;
-            _useraValidationHelper = useraValidationHelper;
+            _userValidationHelper = useraValidationHelper;
         }
 
         public List<MaterialDto> GetAllMaterials(UserIdentityInfo user)
@@ -69,15 +69,12 @@ namespace DevEdu.Business.Services
         public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups, UserIdentityInfo user)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(groups, nameof(groups));
-            groups.ForEach(group => _groupValidationHelper.CheckGroupExistence(group));
-            if (user.IsTeacher())
+            groups.ForEach(group =>
             {
-                groups.ForEach(group => _useraValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, Role.Teacher));
-            }
-            else
-            {
-                groups.ForEach(group => _useraValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, Role.Tutor));
-            }
+                _groupValidationHelper.CheckGroupExistence(group);
+                var currentRole = user.IsTeacher() ? Role.Teacher : Role.Tutor;
+                _userValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, currentRole);
+            });
             var materialId = AddMaterial(dto, tags);
             groups.ForEach(group => _groupRepository.AddGroupMaterialReference(group, materialId));
             return materialId;
