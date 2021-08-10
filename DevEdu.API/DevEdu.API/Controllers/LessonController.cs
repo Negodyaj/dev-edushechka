@@ -112,8 +112,7 @@ namespace DevEdu.API.Controllers
             var dto = _lessonService.SelectAllLessonsByTeacherId(id);
             return _mapper.Map<List<LessonInfoWithCourseOutputModel>>(dto);
         }
-        
-               
+              
         // api/lesson/{id}/with-comments
         [AuthorizeRolesAttribute(Role.Student)]
         [HttpGet("{id}/with-comments")]
