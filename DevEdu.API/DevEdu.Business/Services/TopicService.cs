@@ -8,12 +8,21 @@ namespace DevEdu.Business.Services
     public class TopicService : ITopicService
     {
         private readonly ITopicRepository _topicRepository;
+        private readonly ITagRepository _tagRepository;
         private readonly ITopicValidationHelper _topicValidationHelper;
+        private readonly ITagValidationHelper _tagValidationHelper;
 
-        public TopicService(ITopicRepository topicRepository, ITopicValidationHelper topicValidationHelper)
+        public TopicService(
+            ITopicRepository topicRepository,
+            ITagRepository tagRepository,
+            ITopicValidationHelper topicValidationHelper,
+            ITagValidationHelper tagValidationHelper
+            )
         {
             _topicRepository = topicRepository;
+            _tagRepository = tagRepository;
             _topicValidationHelper = topicValidationHelper;
+            _tagValidationHelper = tagValidationHelper;
         }
 
         public int AddTopic(TopicDto topicDto)
@@ -47,12 +56,22 @@ namespace DevEdu.Business.Services
         {
             _topicValidationHelper.CheckTopicExistence(id);            
             topicDto.Id = id;
-           _topicRepository.UpdateTopic(topicDto);            
+            _topicRepository.UpdateTopic(topicDto);
             return _topicRepository.GetTopic(id);
         }
 
-        public int AddTagToTopic(int topicId, int tagId) => _topicRepository.AddTagToTopic(topicId, tagId);
+        public int AddTagToTopic(int topicId, int tagId)
+        {
+            _topicValidationHelper.CheckTopicExistence(topicId);
+            _tagValidationHelper.CheckTagExistence(tagId);
+            return _topicRepository.AddTagToTopic(topicId, tagId);
+        }
 
-        public int DeleteTagFromTopic(int topicId, int tagId) => _topicRepository.DeleteTagFromTopic(topicId, tagId);
+        public int DeleteTagFromTopic(int topicId, int tagId)
+        {
+            _topicValidationHelper.CheckTopicExistence(topicId);
+            _tagValidationHelper.CheckTagExistence(tagId);
+            return _topicRepository.DeleteTagFromTopic(topicId, tagId);
+        }
     }
 }

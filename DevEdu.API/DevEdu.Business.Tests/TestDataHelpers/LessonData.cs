@@ -7,21 +7,21 @@ namespace DevEdu.Business.Tests
 {
     public static class LessonData
     {
-        private const string _dateFormat = "dd.MM.yyyy"; 
+        private const string _dateFormat = "dd.MM.yyyy";
 
         public static int LessonId = 30;
 
-        public static LessonDto GetAddedLessonDto()
+        public static LessonDto GetLessonDto()
         {
             return new LessonDto
             {
-                Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
-                TeacherComment = "Good",
+                Id = 6,
+                Date = DateTime.ParseExact("01.01.2021", _dateFormat, CultureInfo.InvariantCulture),
+                TeacherComment = "Comment",
                 Teacher = new UserDto
                 {
-                    Id = 3
-                },
-                LinkToRecord = "http://link.com"
+                    Id = 10
+                }
             };
         }
 
@@ -29,14 +29,13 @@ namespace DevEdu.Business.Tests
         {
             return new LessonDto
             {
-                Id = LessonId,
                 Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                 TeacherComment = "Good",
                 LinkToRecord = "http://link.com"
             };
         }
 
-        public static LessonDto GetSelectedLessonDto()  
+        public static LessonDto GetSelectedLessonDto()
         {
             return new LessonDto
             {
@@ -51,7 +50,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<LessonDto> GetLessons() 
+        public static List<LessonDto> GetLessons()
         {
             return new List<LessonDto>{
                 new LessonDto
@@ -59,13 +58,7 @@ namespace DevEdu.Business.Tests
                     Id = 2,
                     Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                     TeacherComment = "Good",
-                    Teacher = new UserDto {
-                        Id = 3,
-                        FirstName = "Olga",
-                        LastName = "Ivanovna",
-                        Email = "olga@mail.ru",
-                        Photo = " http://photo.jpg"
-                    },
+                    Teacher = UserData.GetTeacherDto(),
                     Topics = new List<TopicDto>()
                     {
                         new TopicDto{
@@ -79,19 +72,13 @@ namespace DevEdu.Business.Tests
                     Id = 5,
                     Date = DateTime.ParseExact("12.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                     TeacherComment = "Good",
-                    Teacher = new UserDto {
-                        Id = 3,
-                        FirstName = "Olga",
-                        LastName = "Ivanovna",
-                        Email = "olga@mail.ru",
-                        Photo = " http://photo.jpg"
-                    },
+                    Teacher = UserData.GetTeacherDto(),
                     Topics = new List<TopicDto>()
                     {
                         new TopicDto{
                             Id = 6,
                             Name = "service"
-                        }, 
+                        },
                         new TopicDto{
                             Id = 7,
                             Name = "tests"
@@ -101,7 +88,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<StudentLessonDto> GetAttendances() 
+        public static List<StudentLessonDto> GetAttendances()
         {
             return new List<StudentLessonDto> {
                 new StudentLessonDto
@@ -183,13 +170,6 @@ namespace DevEdu.Business.Tests
 
         }
 
-        public static LessonDto GetLessonDto()
-        {
-            return new LessonDto
-            {
-                Id = 30
-            };
-        }
         public static UserDto GetUserDto()
         {
             return new UserDto

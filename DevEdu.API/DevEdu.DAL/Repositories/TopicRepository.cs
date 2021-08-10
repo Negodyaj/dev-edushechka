@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Dapper;
+using DevEdu.DAL.Models;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Dapper;
-using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -81,6 +81,7 @@ namespace DevEdu.DAL.Repositories
                  commandType: CommandType.StoredProcedure
              );
         }
+
         public int AddTopicToCourse(CourseTopicDto dto)
         {
             return _connection.QuerySingle<int>(
@@ -89,6 +90,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 );
         }
+
         public void DeleteTopicFromCourse(int courseId, int topicId)
         {
             _connection.Execute(
@@ -165,9 +167,9 @@ namespace DevEdu.DAL.Repositories
                 splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 ).FirstOrDefault();
-            return response; 
+            return response;
         }
-        public List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids)
+        public List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids)
         {
             var table = new DataTable();
             table.Columns.Add("Id");

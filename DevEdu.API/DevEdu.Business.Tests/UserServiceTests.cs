@@ -6,8 +6,6 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
@@ -38,12 +36,12 @@ namespace DevEdu.Business.Tests
             _repoMock.Setup(x => x.SelectUserById(expectedUserId)).Returns(new UserDto { Id = expectedUserId });
 
             //When
-            var actualId = _sut.AddUser(user);
+            var actual = _sut.AddUser(user);
 
             //Then
-            Assert.AreEqual(UserData.expectedUserId, actualId.Id);
+            Assert.AreEqual(UserData.expectedUserId, actual.Id);
             _repoMock.Verify(x => x.AddUser(user), Times.Once);
-            _repoMock.Verify(x => x.AddUserRole(actualId.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            _repoMock.Verify(x => x.AddUserRole(actual.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
         }
 
         [Test]
@@ -127,7 +125,7 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(expectedUser, actualUser);
             _repoMock.Verify(x => x.AddUser(expectedUser), Times.Once);
-            _repoMock.Verify(x => x.AddUserRole(actualUser.Id, It.IsAny<int>()), Times.Never); 
+            _repoMock.Verify(x => x.AddUserRole(actualUser.Id, It.IsAny<int>()), Times.Never);
             _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.AtLeastOnce);
         }
 

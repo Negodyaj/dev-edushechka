@@ -1,66 +1,93 @@
-using System.Collections.Generic;
+using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using NUnit.Framework;
 using Moq;
+using NUnit.Framework;
 using DevEdu.Business.Tests.Data;
-using DevEdu.Business.ValidationHelpers;
 
 namespace DevEdu.Business.Tests
 {
     public class TopicServiceTests
     {
-        private Mock<ITopicRepository> _topicRepository;
-        private Mock<IGroupRepository> _groupRepository;
+        private Mock<ITopicRepository> _topicRepoMock;
+        private Mock<ITagRepository> _tagRepoMock;
         private TopicValidationHelper _topicValidationHelper;
-        private TopicService _sut;
+        private Mock<ITagValidationHelper> _tagValidationHelperMock;
+        private ITopicService _sut;
 
         [SetUp]
         public void Setup()
         {
-            _topicRepository = new Mock<ITopicRepository>();
-            _groupRepository = new Mock<IGroupRepository>();
+            _topicRepoMock = new Mock<ITopicRepository>();
+            _tagRepoMock = new Mock<ITagRepository>();
             _topicValidationHelper = new TopicValidationHelper(_topicRepository.Object);
-            _sut = new TopicService(_topicRepository.Object, _topicValidationHelper);
+            _tagValidationHelperMock = new Mock<ITagValidationHelper>();
+            _sut = new TopicService(
+            _topicRepoMock.Object,
+            _tagRepoMock.Object,
+            new TopicValidationHelper(
+                _topicRepoMock.Object),
+            new TagValidationHelper(_tagRepoMock.Object)
+            );
         }
 
         [Test]
         public void AddTopic_SimpleDtoWithoutTags_TopicCreated()
         {
-            //Given            
-            var topicDto = TopicData.GetTopicDto();
-            var ExpectedTopicId = 42;
-            _topicRepository.Setup(x => x.AddTopic(topicDto)).Returns(ExpectedTopicId);
-            _topicRepository.Setup(x => x.AddTagToTopic(It.IsAny<int>(), It.IsAny<int>()));           
+            //Given
+            var expectedTopicId = 77;
+            var topicDto = new TopicDto { Name = "Topic1", Duration = 5 };
+
+            _topicRepoMock.Setup(x => x.AddTopic(topicDto)).Returns(expectedTopicId);
+            _topicRepoMock.Setup(x => x.AddTagToTopic(It.IsAny<int>(), It.IsAny<int>()));
+
+            var sut = new TopicService(_topicRepoMock.Object);
 
             //When
             var actualTopicId = _sut.AddTopic(topicDto);
 
             //Than
-            Assert.AreEqual(ExpectedTopicId, actualTopicId);
-            _topicRepository.Verify(x => x.AddTopic(topicDto), Times.Once);
-            _topicRepository.Verify(x => x.AddTagToTopic(It.IsAny<int>(), It.IsAny<int>()), Times.Never);            
+            Assert.AreEqual(expectedTopicId, actualTopicId);
+            _topicRepoMock.Verify(x => x.AddTopic(topicDto), Times.Once);
+            _topicRepoMock.Verify(x => x.AddTagToTopic(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
         public void AddTopic_DtoWithTags_TopicWithTagsCreated()
         {
-            //Given                      
-            var topicDto = TopicData.GetTopicWithTagsDto();
-            var ExpectedTopicId = 42;
+            //Given
+            var expectedTopicId = 77;
+            var topicDto = new TopicDto
+            {
+                Name = "Topic1",
+                Duration = 5,
+                Tags = new List<TagDto>
+                {
+                    new TagDto{ Id = 1 },
+                    new TagDto{ Id = 2 },
+                    new TagDto{ Id = 3 }
+                }
+            };
 
-            _topicRepository.Setup(x => x.AddTopic(topicDto)).Returns(ExpectedTopicId);
-            _topicRepository.Setup(x => x.AddTagToTopic(ExpectedTopicId, It.IsAny<int>()));            
+            _topicRepoMock.Setup(x => x.AddTopic(topicDto)).Returns(expectedTopicId);
+            _topicRepoMock.Setup(x => x.AddTagToTopic(expectedTopicId, It.IsAny<int>()));
+            _topicRepoMock.Setup(x => x.GetTopic(expectedTopicId)).Returns(topicDto);
+            _tagRepoMock.Setup(x => x.SelectTagById(It.IsAny<int>())).Returns(topicDto.Tags[0]);
+
+            var sut = new TopicService(_topicRepoMock.Object, _tagRepoMock.Object, _topicValidationHelperMock.Object, _tagValidationHelperMock.Object);
 
             //When
             var actualTopicId = _sut.AddTopic(topicDto);
 
             //Than
-            Assert.AreEqual(ExpectedTopicId, actualTopicId);
-            _topicRepository.Verify(x => x.AddTopic(topicDto), Times.Once);
-            _topicRepository.Verify(x => x.AddTagToTopic(ExpectedTopicId, It.IsAny<int>()), Times.Exactly(topicDto.Tags.Count));            
+            Assert.AreEqual(expectedTopicId, actualTopicId);
+            _topicRepoMock.Verify(x => x.AddTopic(topicDto), Times.Once);
+            _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, It.IsAny<int>()), Times.Exactly(topicDto.Tags.Count));
         }
+
         [Test]
         public void DeleteTopic_IntTopicId_DeleteTopic()
         {
@@ -129,8 +156,52 @@ namespace DevEdu.Business.Tests
             _topicRepository.Verify(x => x.GetTopic(topicId), Times.Exactly(2));           
         }
 
-        
+        [Test]
+        public void AddTagToTopic_WhenTopicNotFound_ThrownEntityNotFoundException()
+        {
+            var expectedTopicId = 77;
+            var expectedTagId = 55;
 
+            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", expectedTopicId)),
+                () => _sut.AddTagToTopic(expectedTopicId, expectedTagId));
 
+            _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, expectedTagId), Times.Never);
+        }
+
+        [Test]
+        public void AddTagToTopic_WhenTagNotFound_ThrownEntityNotFoundException()
+        {
+            var expectedTopicId = 77;
+            var expectedTagId = 55;
+
+            _topicRepoMock.Setup(x => x.GetTopic(expectedTopicId)).Returns(TopicData.GetTopicDtoWithTags);
+
+            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "tag", expectedTagId)),
+            () => _sut.AddTagToTopic(expectedTopicId, expectedTagId));
+
+            _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, expectedTagId), Times.Never);
+        }
+
+        [Test]
+        public void DeleteTagFromTopic_IntTopicIdAndTagId_DeleteTagFromTopic()
+        {
+            //Given
+            var topicId = 1;
+            var tagId = 13;
+            var expecectedAffectedRows = 1;
+
+            _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(TopicData.GetTopicDtoWithTags());
+            _tagRepoMock.Setup(x => x.SelectTagById(tagId)).Returns(TagData.GetTagDto());
+            _topicRepoMock.Setup(x => x.DeleteTagFromTopic(topicId, tagId)).Returns(expecectedAffectedRows);
+
+            //When
+            var actualAffectedRows = _sut.DeleteTagFromTopic(topicId, tagId);
+
+            //Than
+            Assert.AreEqual(expecectedAffectedRows, actualAffectedRows);
+            _topicRepoMock.Verify(x => x.DeleteTagFromTopic(topicId, tagId), Times.Once);
+        }
     }
 }

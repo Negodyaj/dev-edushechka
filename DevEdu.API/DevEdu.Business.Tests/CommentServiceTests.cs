@@ -1,112 +1,386 @@
-﻿using DevEdu.Business.Services;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
+using DevEdu.Business.Services;
+using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System;
 
 namespace DevEdu.Business.Tests
 {
     public class CommentServiceTests
     {
         private Mock<ICommentRepository> _commentRepoMock;
+        private Mock<ILessonRepository> _lessonRepoMock;
+        private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
+        private Mock<IGroupRepository> _groupRepoMock;
+        private Mock<IUserRepository> _userRepoMock;
+        private CommentValidationHelper _commentValidationHelper;
+        private LessonValidationHelper _lessonValidationHelper;
+        private StudentAnswerOnTaskValidationHelper _studentAnswerValidationHelper;
+        private CommentService _sut;
 
         [SetUp]
         public void Setup()
         {
             _commentRepoMock = new Mock<ICommentRepository>();
+            _lessonRepoMock = new Mock<ILessonRepository>();
+            _groupRepoMock = new Mock<IGroupRepository>();
+            _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
+            _userRepoMock = new Mock<IUserRepository>();
+            _commentValidationHelper = new CommentValidationHelper(_commentRepoMock.Object);
+            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object, _userRepoMock.Object);
+            _studentAnswerValidationHelper = new StudentAnswerOnTaskValidationHelper(_studentAnswerRepoMock.Object, _groupRepoMock.Object);
+            _sut = new CommentService
+            (
+                _commentRepoMock.Object,
+                _commentValidationHelper,
+                _lessonValidationHelper,
+                _studentAnswerValidationHelper
+            );
         }
 
-        [Test]
-        public void AddComment_CommentDto_CommentCreated()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddCommentToLesson_CommentDtoAndExistingLessonInPassed_AddCommentAndReturned(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
+            const int lessonId = 1;
+            const int expectedCommentId = 1;
+            var lessonDto = CommentData.GetLessonDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var userId = userInfo.UserId;
 
-            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(CommentData.ExpectedCommentId);
-
-            var sut = new CommentService(_commentRepoMock.Object);
+            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
+            _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
+            _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByLessonId(lessonId)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
 
             //When
-            var actualCommentId = sut.AddComment(commentDto);
+            var actualComment = _sut.AddCommentToLesson(lessonId, commentDto, userInfo);
 
             //Than
-            Assert.AreEqual(CommentData.ExpectedCommentId, actualCommentId);
+            Assert.AreEqual(commentDto, actualComment);
             _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
+            _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
+            _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByLessonId(lessonId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
         }
 
-        [Test]
-        public void GetComment_IntCommentId_GetComment()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddCommentToStudentAnswer_CommentDtoAndExistingStudentAnswerIdPassed_CommentReturned(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
-            const int commentId = CommentData.CommentId;
+            const int taskStudentId = 1;
+            const int expectedCommentId = 1;
+            const int expectedStudentAnswerOnTaskId = 1;
+            var studentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var userId = userInfo.UserId;
+
+            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
+            _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
+            _studentAnswerRepoMock.Setup(x => x.GetStudentAnswerOnTaskById(expectedStudentAnswerOnTaskId)).Returns(studentAnswerOnTaskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
+
+            //When
+            var actualComment = _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userInfo);
+
+            //Than
+            Assert.AreEqual(commentDto, actualComment);
+            _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
+            _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
+            _studentAnswerRepoMock.Verify(x => x.GetStudentAnswerOnTaskById(expectedStudentAnswerOnTaskId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void GetComment_ExistingCommentIdPassed_CommentReturned(Enum role)
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var userId = userInfo.UserId;
+            const int commentId = 1;
 
             _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
 
-            var sut = new CommentService(_commentRepoMock.Object);
-
             //When
-            var dto = sut.GetComment(commentId);
+            var dto = _sut.GetComment(commentId, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, dto);
             _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
         }
 
-        [Test]
-        public void UpdateComment_CommentDto_ReturnUpdatedCommentDto()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void UpdateComment_CommentDtoAndExistingCommentIdPassed_ReturnUpdatedCommentDto(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
-            const int commentId = CommentData.CommentId;
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var userId = userInfo.UserId;
+            const int commentId = 1;
 
             _commentRepoMock.Setup(x => x.UpdateComment(commentDto));
             _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
 
-            var sut = new CommentService(_commentRepoMock.Object);
-
             //When
-            var dto = sut.UpdateComment(commentId, commentDto);
+            var dto = _sut.UpdateComment(commentId, commentDto, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, dto);
             _commentRepoMock.Verify(x => x.UpdateComment(commentDto), Times.Once);
-            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
+            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Exactly(2));
         }
 
-        [Test]
-        public void DeleteComment_IntCommentId_DeleteComment()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void DeleteComment_ExistingCommentIdPassed_CommentRemoved(Enum role)
         {
             //Given
-            const int commentId = CommentData.CommentId;
+            var commentDto = CommentData.GetCommentDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var userId = userInfo.UserId;
+            const int commentId = 1;
 
+            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
             _commentRepoMock.Setup(x => x.DeleteComment(commentId));
 
-            var sut = new CommentService(_commentRepoMock.Object);
-
             //When
-            sut.DeleteComment(commentId);
+            _sut.DeleteComment(commentId, userInfo);
 
             //Than
+            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
             _commentRepoMock.Verify(x => x.DeleteComment(commentId), Times.Once);
         }
 
-        [Test]
-        public void GetCommentByUserId_IntUserId_ReturnedListOfUserComments()
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddCommentToLesson_WhenLessonIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             //Given
-            var commentsList = CommentData.GetListCommentsDto();
-            const int userId = CommentData.UserId;
-
-            _commentRepoMock.Setup(x => x.GetCommentsByUser(userId)).Returns(commentsList);
-
-            var sut = new CommentService(_commentRepoMock.Object);
+            var commentDto = CommentData.GetCommentDto();
+            var lesson = CommentData.GetLessonDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(lesson), lesson.Id);
 
             //When
-            var listOfDto = sut.GetCommentsByUserId(userId);
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.AddCommentToLesson(lesson.Id, commentDto, userInfo));
 
             //Than
-            Assert.AreEqual(commentsList, listOfDto);
-            _commentRepoMock.Verify(x => x.GetCommentsByUser(userId), Times.Once);
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddCommentToLesson_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            const int lessonId = 1;
+            var lessonDto = CommentData.GetLessonDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var userId = userInfo.UserId;
+            var expectedException = string.Format(ServiceMessages.UserOnLessonNotFoundMessage, userId, lessonId);
+
+            _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByLessonId(lessonId)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(
+                () => _sut.AddCommentToLesson(lessonId, commentDto, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByLessonId(lessonId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddCommentToStudentAnswer_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            const int taskStudentId = 1;
+            var studentAnswerOnTask = CommentData.GetStudentAnswerOnTaskDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTask), studentAnswerOnTask.Id);
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void AddCommentToStudentAnswer_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
+        {
+            //Given
+            var studentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
+            var commentDto = CommentData.GetCommentDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var userId = userInfo.UserId;
+            var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
+
+            _studentAnswerRepoMock.Setup(x => x.GetStudentAnswerOnTaskById(studentAnswerOnTaskDto.Id)).Returns(studentAnswerOnTaskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(
+                () => _sut.AddCommentToStudentAnswer(studentAnswerOnTaskDto.Id, commentDto, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _studentAnswerRepoMock.Verify(x => x.GetStudentAnswerOnTaskById(studentAnswerOnTaskDto.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void GetComment_WhenCommentIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        {
+            //Given
+            var comment = CommentData.GetCommentDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), comment.Id);
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.GetComment(comment.Id, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [TestCase(Role.Teacher,2)]
+        [TestCase(Role.Tutor,2)]
+        [TestCase(Role.Student,2)]
+        public void GetComment_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role, userId);
+            const int commentId = 1;
+            var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
+
+            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(
+                    () => _sut.GetComment(commentId, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void UpdateComment_WhenCommentIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        {
+            //Given
+            var comment = CommentData.GetCommentDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), comment.Id);
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.UpdateComment(comment.Id, comment, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [TestCase(Role.Teacher, 2)]
+        [TestCase(Role.Tutor, 2)]
+        [TestCase(Role.Student, 2)]
+        public void UpdateComment_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role, userId);
+            const int commentId = 1;
+            var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
+
+            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(
+                    () => _sut.UpdateComment(commentId, commentDto, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        [TestCase(Role.Student)]
+        public void DeleteComment_WhenCommentIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        {
+            //Given
+            var comment = CommentData.GetCommentDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), comment.Id);
+
+            //When
+            var ex = Assert.Throws<EntityNotFoundException>(
+                () => _sut.DeleteComment(comment.Id, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [TestCase(Role.Teacher, 2)]
+        [TestCase(Role.Tutor, 2)]
+        [TestCase(Role.Student, 2)]
+        public void DeleteComment_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        {
+            //Given
+            var commentDto = CommentData.GetCommentDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role, userId);
+            const int commentId = 1;
+            var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
+
+            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+
+            //When
+            var ex = Assert.Throws<AuthorizationException>(
+                    () => _sut.DeleteComment(commentId, userInfo));
+
+            //Than
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
         }
     }
 }

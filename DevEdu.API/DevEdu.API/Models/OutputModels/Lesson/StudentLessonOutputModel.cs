@@ -8,5 +8,5 @@
 		public bool IsPresent { get; set; }
 		public string AbsenceReason { get; set; }
 
-	}
+    }
 }
