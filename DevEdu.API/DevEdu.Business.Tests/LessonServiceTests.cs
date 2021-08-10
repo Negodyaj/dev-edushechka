@@ -65,7 +65,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Verify(x => x.SelectLessonById((lesson.Id)), Times.Once);
             _topicRepository.Verify(x => x.GetTopic((topic.Id)), Times.Once);
             _lessonRepository.Verify(x => x.AddTopicToLesson(lesson.Id, topic.Id), Times.Once);
-        }      
+        }
 
         [Test]
         public void AddTopicToLesson_WhenLessonWithGivenIdDoesNotExist_EntityNotFoundExceptionThrown()
@@ -221,7 +221,7 @@ namespace DevEdu.Business.Tests
             var topics = TopicData.GetListTopicDto();
 
             _lessonRepository.Setup(x => x.AddLesson(expectedLesson)).Returns(lessonId);
-            for(int i = 0; i < topics.Count; i++)
+            for (int i = 0; i < topics.Count; i++)
             {
                 _topicRepository.Setup(x => x.GetTopic(topicIds[i])).Returns(topics[i]);
                 _lessonRepository.Setup(x => x.AddTopicToLesson(lessonId, topicIds[i]));
@@ -267,7 +267,7 @@ namespace DevEdu.Business.Tests
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var addedLesson = LessonData.GetSelectedLessonDto();
-            var topicIds = new List<int>{1};
+            var topicIds = new List<int> { 1 };
 
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicIds.First());
 
@@ -286,7 +286,7 @@ namespace DevEdu.Business.Tests
 
         [Test]
         public void SelectAllLessonsByGroupId_UserDtoAndExistingGroupIdPassed_LessonsReturned()
-        { 
+        {
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var userDto = UserData.GetTeacherDto();
@@ -718,7 +718,7 @@ namespace DevEdu.Business.Tests
         public void UpdateFeedback_IntLessonIdUserIdAndStuentLessonDto_ReturnUpdatedStudentLessontDto()
         {
             //Given
-            var studentLessonDto = LessonData.GetStudentLessonDto();            
+            var studentLessonDto = LessonData.GetStudentLessonDto();
             var userIdentityInfo = UserIdentityInfoData.GetUserIdentityWithStudentRole();
             var lessonId = 30;
             var userId = 42;
