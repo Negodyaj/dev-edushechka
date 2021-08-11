@@ -150,10 +150,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public string DeleteTagFromMaterial(int materialId, int tagId)
+        public ActionResult DeleteTagFromMaterial(int materialId, int tagId)
         {
             _materialService.DeleteTagFromMaterial(materialId, tagId);
-            return $"Tag id: {tagId} deleted from material id: {materialId}";
+            return NoContent();
         }
 
         // api/material/by-tag/1

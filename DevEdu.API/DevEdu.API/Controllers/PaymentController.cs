@@ -59,13 +59,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Add one payment")]
-        public PaymentOutputModel AddPayment([FromBody] PaymentInputModel model)
+        public ActionResult<PaymentOutputModel> AddPayment([FromBody] PaymentInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
             int id = _paymentService.AddPayment(dto);
-            dto = _paymentService.GetPayment(id);
-
-            return _mapper.Map<PaymentOutputModel>(dto);
+            dto.Id = id;
+            var output = _mapper.Map<PaymentOutputModel>(dto);
+            return StatusCode(201,output);
         }
 
         //  api/payment/5
@@ -74,9 +74,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Delete payment by id")]
-        public void DeletePayment(int id)
+        public ActionResult DeletePayment(int id)
         {
             _paymentService.DeletePayment(id);
+            return NoContent();
         }
 
         //  api/payment/5
