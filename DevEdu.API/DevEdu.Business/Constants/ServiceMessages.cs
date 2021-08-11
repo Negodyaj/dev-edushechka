@@ -19,5 +19,8 @@
         public const string MinimumAllowedValueMessage = "{0} less than allowed value = {1}";
         public const string MinimumAllowedValueWithTwoParamsMessage = "{0} or {1} less than allowed value = {2}";
         public const string EntityWithEmailNotFoundMessage = "{0} with email = {1} was not found";
+        public const string AccessToNotificationDenied = "User with id = {0} doesn't have access to notification with id = {1}";
+        public const string MoreOnePropertyHaveAValueMessage = "Only one property ({0}, {1} or {2}) should have a value";
+
     }
 }
