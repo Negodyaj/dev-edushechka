@@ -34,11 +34,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public TagOutputModel AddTag([FromBody] TagInputModel model)
+        public ActionResult<TagOutputModel> AddTag([FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
             dto = _service.AddTag(dto);
-            return _mapper.Map<TagOutputModel>(dto);
+            var output = _mapper.Map<UserUpdateInfoOutPutModel>(dto);
+            return StatusCode(201, output);
         }
 
         // api/tag/1
@@ -48,7 +49,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteTag(int id) => _service.DeleteTag(id);
+        public ActionResult DeleteTag(int id)
+        {
+            _service.DeleteTag(id);
+            return NoContent();
+        }
 
         // api/tag/1
         [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Methodist)]
