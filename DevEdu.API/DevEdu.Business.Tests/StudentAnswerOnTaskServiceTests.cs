@@ -148,9 +148,9 @@ namespace DevEdu.Business.Tests
             int taskId = 1;
             int userId = 1;
             int acceptedSatusId = (int)TaskStatus.Accepted;
-            DateTime dateNow = DateTime.Now;
-            var dateString = dateNow.ToString("dd.MM.yyyy HH:mm");
-            DateTime dateTime = Convert.ToDateTime(dateString);
+            DateTime dateTime = DateTime.Now;
+            dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
+
             int countEntry = 2;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
@@ -162,7 +162,7 @@ namespace DevEdu.Business.Tests
             var dto = _sut.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId, userInfo);
 
             // Then
-            Assert.AreEqual(DateTime.Now.ToString("dd.MM.yyyy HH:mm"), (dto.CompletedDate != null ? ((DateTime)dto.CompletedDate).ToString("dd.MM.yyyy HH:mm") : null));
+            Assert.AreEqual(dateTime, dto.CompletedDate);
             _studentAnswerOnTaskRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTask(taskId, userId, acceptedSatusId, dateTime), Times.Once);
             _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId), Times.Exactly(countEntry));
         }
@@ -417,26 +417,26 @@ namespace DevEdu.Business.Tests
         }
 
 
-        [TestCase(Role.Teacher)]
-        [TestCase(Role.Tutor)]
-        [TestCase(Role.Methodist)]
-        public void GetAllStudentAnswersOnTask_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
-        {
-            // Given
-            var studentAnswersList = StudentAnswerOnTaskData.GetListStudentAnswersOnTaskDto();
-            int taskId = 1;
-            var taskDto = TaskData.GetAnotherTaskDtoWithTags();
-            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+        //[TestCase(Role.Teacher)]
+        //[TestCase(Role.Tutor)]
+        //[TestCase(Role.Methodist)]
+        //public void GetAllStudentAnswersOnTask_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        //{
+        //    // Given
+        //    var studentAnswersList = StudentAnswerOnTaskData.GetListStudentAnswersOnTaskDto();
+        //    int taskId = 1;
+        //    var taskDto = TaskData.GetAnotherTaskDtoWithTags();
+        //    var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(taskId)).Returns(studentAnswersList);
-            _taskRepository.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            // When
-            var dtoList = _sut.GetAllStudentAnswersOnTask(taskId, userInfo);
+        //    _studentAnswerOnTaskRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(taskId)).Returns(studentAnswersList);
+        //    _taskRepository.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+        //    // When
+        //    var dtoList = _sut.GetAllStudentAnswersOnTask(taskId, userInfo);
 
-            // Then
-            Assert.AreEqual(studentAnswersList, dtoList);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(taskId), Times.Once);
-            _taskRepository.Verify(x => x.GetTaskById(taskId), Times.Once);
-        }
+        //    // Then
+        //    Assert.AreEqual(studentAnswersList, dtoList);
+        //    _studentAnswerOnTaskRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(taskId), Times.Once);
+        //    _taskRepository.Verify(x => x.GetTaskById(taskId), Times.Once);
+        //}
     }
 }

@@ -12,7 +12,7 @@ namespace DevEdu.Business.Services
 {
     public class StudentAnswerOnTaskService : IStudentAnswerOnTaskService
     {
-        private const string _dateFormat = "dd.MM.yyyy HH:mm";
+        private const string _dateFormat = "dd.MM.yyyy HH:mm:ss";
 
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
         private readonly IStudentAnswerOnTaskValidationHelper _studentAnswerOnTaskValidationHelper;
@@ -56,13 +56,9 @@ namespace DevEdu.Business.Services
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userInfo.UserId);
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
 
-            if (!userInfo.Roles.Contains(Role.Admin) && !userInfo.Roles.Contains(Role.Student))
+            if (!userInfo.Roles.Contains(Role.Admin))
             {
                 return _studentAnswerOnTaskValidationHelper.GetStudentAnswerOnTaskAllowedToUser(taskId, userInfo.UserId);
-            }
-            else if (userInfo.Roles.Contains(Role.Student))
-            {
-                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userInfo.UserId));
             }
 
             return _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
@@ -86,10 +82,8 @@ namespace DevEdu.Business.Services
                 if (statusId == (int)TaskStatus.Accepted)
                     completedDate = DateTime.Now;
 
-                string stringTime = completedDate.ToString(_dateFormat);
-                DateTime time = Convert.ToDateTime(stringTime);
-
-                var status = _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId, time);
+                completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day, completedDate.Hour, completedDate.Minute, completedDate.Second);
+                var status = _studentAnswerOnTaskRepository.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId, completedDate);
 
                 return status;
             }
