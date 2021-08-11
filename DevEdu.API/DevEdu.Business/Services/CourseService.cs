@@ -17,10 +17,12 @@ namespace DevEdu.Business.Services
         private readonly ITopicRepository _topicRepository;
         private readonly ITaskRepository _taskRepository;
         private readonly IMaterialRepository _materialRepository;
-        private readonly ICourseValidationHelper _courseValidationHelper;
-        private readonly IMaterialValidationHelper _materialValidationHelper;
-        private readonly ITopicValidationHelper _topicValidationHelper;
         private readonly IGroupRepository _groupRepository;
+        private readonly ICourseValidationHelper _courseValidationHelper;
+        private readonly ITopicValidationHelper _topicValidationHelper;
+        private readonly ITaskValidationHelper _taskValidationHelper;
+        private readonly IMaterialValidationHelper _materialValidationHelper;
+        private readonly IGroupValidationHelper _groupValidationHelper;
 
         public CourseService
         (
@@ -28,20 +30,24 @@ namespace DevEdu.Business.Services
             ITopicRepository topicRepository,
             ITaskRepository taskRepository,
             IMaterialRepository materialRepository,
+            IGroupRepository groupRepository,
             ICourseValidationHelper courseValidationHelper,
-            IMaterialValidationHelper materialValidationHelper,
             ITopicValidationHelper topicValidationHelper,
-            IGroupRepository groupRepository
+            ITaskValidationHelper taskValidationHelper,
+            IMaterialValidationHelper materialValidationHelper,
+            IGroupValidationHelper groupValidationHelper
         )
         {
             _courseRepository = courseRepository;
             _topicRepository = topicRepository;
             _taskRepository = taskRepository;
             _materialRepository = materialRepository;
-            _courseValidationHelper = courseValidationHelper;
-            _materialValidationHelper = materialValidationHelper;
-            _topicValidationHelper = topicValidationHelper;
             _groupRepository = groupRepository;
+            _courseValidationHelper = courseValidationHelper;
+            _topicValidationHelper = topicValidationHelper;
+            _taskValidationHelper = taskValidationHelper;
+            _materialValidationHelper = materialValidationHelper;
+            _groupValidationHelper = groupValidationHelper;
         }
 
         public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);

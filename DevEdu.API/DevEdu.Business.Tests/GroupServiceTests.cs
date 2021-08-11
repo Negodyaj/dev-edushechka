@@ -16,10 +16,12 @@ namespace DevEdu.Business.Tests
         private Mock<IGroupRepository> _groupRepoMock;
         private Mock<IMaterialRepository> _materialRepoMock;
         private Mock<IUserRepository> _userRepoMock;
+        private Mock<ILessonRepository> _lessonRepoMock;
         private GroupService _sut;
         private MaterialValidationHelper _materialValidationHelper;
         private GroupValidationHelper _groupValidationHelper;
         private UserValidationHelper _userValidationHelper;
+        private LessonValidationHelper _lessonValidationHelper;
 
         [SetUp]
         public void Setup()
@@ -27,10 +29,17 @@ namespace DevEdu.Business.Tests
             _groupRepoMock = new Mock<IGroupRepository>();
             _userRepoMock = new Mock<IUserRepository>();
             _materialRepoMock = new Mock<IMaterialRepository>();
+            _lessonRepoMock = new Mock<ILessonRepository>();
             _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
             _materialValidationHelper = new MaterialValidationHelper(_materialRepoMock.Object);
             _userValidationHelper = new UserValidationHelper(_userRepoMock.Object);
-            _sut = new GroupService(_groupRepoMock.Object, _userRepoMock.Object, _groupValidationHelper, _materialValidationHelper, _userValidationHelper);
+            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object);
+            _sut = new GroupService(_groupRepoMock.Object,
+                                    _userRepoMock.Object,
+                                    _groupValidationHelper,
+                                    _materialValidationHelper,
+                                    _userValidationHelper,
+                                    _lessonValidationHelper);
         }
 
         [Test]

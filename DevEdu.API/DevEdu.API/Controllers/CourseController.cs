@@ -23,7 +23,6 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ICourseService _courseService;
-        private readonly ClaimsIdentity _claimsIdentity;
 
         public CourseController(
             IMapper mapper,
@@ -32,7 +31,6 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
             _courseService = courseService;
             _mapper = mapper;
-            //_claimsIdentity = this.User.Identity as ClaimsIdentity;
         }
 
         [HttpGet("{id}/simple")]

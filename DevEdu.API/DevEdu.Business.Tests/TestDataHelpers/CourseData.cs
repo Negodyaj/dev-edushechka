@@ -12,21 +12,17 @@ namespace DevEdu.Business.Tests
                 Id = 1,
                 Name = "C#",
                 Description = "api",
-                Groups = new List<GroupDto>
+                Topics = new List<TopicDto>
                 {
-                    new GroupDto
+                    new TopicDto
                     {
                         Id = 1,
-                        Name = "Volosatiye Zmei",
-                        PaymentPerMonth = 10000,
-                        Timetable = "Morning"
+                        Name = "Scooter"
                     },
-                    new GroupDto
+                    new TopicDto
                     {
                         Id = 2,
-                        Name = "Zhidkie Osnovi",
-                        PaymentPerMonth = 20000,
-                        Timetable = "Evening"
+                        Name = "E-e-e-e-a"
                     }
                 }
             };
