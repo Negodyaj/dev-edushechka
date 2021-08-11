@@ -4,9 +4,9 @@ using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class MaterialInputModel
+    public class MaterialWithCoursesInputModel : MaterialWithTagsInputModel
     {
-        [Required(ErrorMessage = ContentRequired)]
-        public string Content { get; set; }
+        [MinLength(1, ErrorMessage = CoursesRequired)]
+        public List<int> CoursesIds { get; set; }
     }
 }

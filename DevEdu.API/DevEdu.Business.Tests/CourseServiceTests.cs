@@ -15,6 +15,7 @@ namespace DevEdu.Business.Tests
         private Mock<ICourseRepository> _courseRepositoryMock;
         private Mock<ITopicRepository> _topicRepositoryMock;
         private Mock<ITaskRepository> _taskRepositoryMock;
+        private Mock<IGroupRepository> _groupRepositoryMock;
         private Mock<IMaterialRepository> _materialRepositoryMock;
         private CourseValidationHelper _courseValidationHelper;
         private MaterialValidationHelper _materialValidationHelper;
@@ -28,9 +29,13 @@ namespace DevEdu.Business.Tests
             _topicRepositoryMock = new Mock<ITopicRepository>();
             _courseRepositoryMock = new Mock<ICourseRepository>();
             _taskRepositoryMock = new Mock<ITaskRepository>();
+            _groupRepositoryMock = new Mock<IGroupRepository>();
             _materialRepositoryMock = new Mock<IMaterialRepository>();
             _courseValidationHelper = new CourseValidationHelper(_courseRepositoryMock.Object);
-            _materialValidationHelper = new MaterialValidationHelper(_materialRepositoryMock.Object);
+            _materialValidationHelper = new MaterialValidationHelper(
+                _materialRepositoryMock.Object,
+                _groupRepositoryMock.Object,
+                _courseRepositoryMock.Object);
             _topicValidationHelper = new TopicValidationHelper(_topicRepositoryMock.Object);
             _sut = new CourseService
             (
