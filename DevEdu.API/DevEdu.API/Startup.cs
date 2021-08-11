@@ -28,9 +28,10 @@ namespace DevEdu.API
          public Startup(IConfiguration configuration)
         {
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.Development.json");
+                .AddJsonFile(string.Format("appsettings.{0}.json", configuration.GetSection("ASPNETCORE_ENVIRONMENT").Value));
 
             Configuration = builder.Build();
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -38,9 +39,12 @@ namespace DevEdu.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOptions<IConfiguration>();
-            services.AddOptions<DatabaseSettings>().Bind(Configuration.GetSection(nameof(DatabaseSettings))).ValidateDataAnnotations();
-            services.AddOptions<AuthSettings>().Bind(Configuration.GetSection(nameof(AuthSettings))).ValidateDataAnnotations();
+            services.AddOptions<DatabaseSettings>()
+                .Bind(Configuration.GetSection(nameof(DatabaseSettings)))
+                .ValidateDataAnnotations();
+            services.AddOptions<AuthSettings>()
+                .Bind(Configuration.GetSection(nameof(AuthSettings)))
+                .ValidateDataAnnotations();
             
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IMaterialRepository, MaterialRepository>();
@@ -147,7 +151,7 @@ namespace DevEdu.API
             }
             else if (env.IsProduction())
             {
-                app.UseExceptionHandler("Error");
+                app.UseExceptionHandler("/Error");
                 
             }
             app.UseOpenApi();
