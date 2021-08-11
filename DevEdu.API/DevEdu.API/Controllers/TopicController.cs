@@ -98,24 +98,26 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpPost("{topicId}/tag/{tagId}")]
         [Description("Add tag to topic")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public int AddTagToTopic(int topicId, int tagId)
+        public ActionResult AddTagToTopic(int topicId, int tagId)
         {
-            return _topicService.AddTagToTopic(topicId, tagId);
+            _topicService.AddTagToTopic(topicId, tagId);
+            return StatusCode(201);
         }
 
         //  api/topic/{topicId}/tag/{tagId}
         [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpDelete("{topicId}/tag/{tagId}")]
         [Description("Delete tag from topic")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public int DeleteTagFromTopic(int topicId, int tagId)
+        public ActionResult DeleteTagFromTopic(int topicId, int tagId)
         {
-            return _topicService.DeleteTagFromTopic(topicId, tagId);
+            _topicService.DeleteTagFromTopic(topicId, tagId);
+            return NoContent();
         }
     }
 }
