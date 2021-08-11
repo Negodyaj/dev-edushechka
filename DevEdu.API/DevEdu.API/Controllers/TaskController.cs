@@ -209,14 +209,14 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public StudentAnswerOnTaskFullOutputModel AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
+        public ActionResult<StudentAnswerOnTaskFullOutputModel> AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
             _studentAnswerOnTaskService.AddStudentAnswerOnTask(taskId, studentId, taskAnswerDto);
             var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
             var output = _mapper.Map<StudentAnswerOnTaskFullOutputModel>(studentAnswerDto);
 
-            return output;
+            return StatusCode(201, output);
         }
 
         // api/task/{taskId}/all-answers
@@ -269,9 +269,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public void DeleteStudentAnswerOnTask(int taskId, int studentId)
+        public ActionResult DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
             _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(taskId, studentId);
+
+            return NoContent();
         }
 
         // api/task/{taskId}/student/{studentId}/change-status/{statusId}
