@@ -57,11 +57,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TopicOutputModel), (StatusCodes.Status201Created))]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public TopicOutputModel AddTopic([FromBody] TopicInputModel model)
+        public ActionResult<TopicOutputModel> AddTopic([FromBody] TopicInputModel model)
         {
             var dto = _mapper.Map<TopicDto>(model);
-            var output = _topicService.AddTopic(dto);
-            return GetTopicById(output);
+            var topicId = _topicService.AddTopic(dto);
+            var output = GetTopicById(topicId);
+            return StatusCode(201, output);
         }
 
         //  api/topic/{id}
@@ -71,9 +72,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteTopic(int id)
+        public ActionResult DeleteTopic(int id)
         {
             _topicService.DeleteTopic(id);
+            return NoContent();
         }
 
         //  api/topic/{id}
