@@ -1,18 +1,18 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
 {
     public interface ILessonService
     {
-        int AddLesson(LessonDto lessonDto, List<int> topicIds);
-        void DeleteLesson(int id);
-        List<LessonDto> SelectAllLessonsByGroupId(int id);
+        LessonDto AddLesson(UserIdentityInfo userIdentity, LessonDto lessonDto, List<int> topicIds);
+        void DeleteLesson(UserIdentityInfo userIdentity, int id);
+        List<LessonDto> SelectAllLessonsByGroupId(UserIdentityInfo userIdentity, int id);
         List<LessonDto> SelectAllLessonsByTeacherId(int id);
-        LessonDto SelectLessonById(int id);
-        LessonDto SelectLessonWithCommentsById(int id);
-        LessonDto SelectLessonWithCommentsAndStudentsById(int id);
-        LessonDto UpdateLesson(LessonDto lessonDto, int id);
+        LessonDto SelectLessonWithCommentsById(UserIdentityInfo userIdentity, int id);
+        LessonDto SelectLessonWithCommentsAndStudentsById(UserIdentityInfo userIdentity, int id);
+        LessonDto UpdateLesson(UserIdentityInfo userIdentity, LessonDto lessonDto, int id);
         void DeleteTopicFromLesson(int lessonId, int topicId);
         void AddTopicToLesson(int lessonId, int topicId);
         StudentLessonDto AddStudentToLesson(int lessonId, int userId);

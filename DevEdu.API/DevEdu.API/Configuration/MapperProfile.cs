@@ -6,6 +6,7 @@ using DevEdu.API.Models.OutputModels.Payment;
 using DevEdu.DAL.Models;
 using System;
 using System.Globalization;
+using DevEdu.API.Models;
 
 namespace DevEdu.API.Configuration
 {
@@ -35,7 +36,10 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.EndDate, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<MaterialInputModel, MaterialDto>();
-            CreateMap<NotificationAddInputModel, NotificationDto>()
+            CreateMap<MaterialWithCoursesInputModel, MaterialDto>();
+            CreateMap<MaterialWithGroupsInputModel, MaterialDto>();
+            CreateMap<MaterialWithTagsInputModel, MaterialDto>();
+            CreateMap<NotificationAddInputModel, NotificationDto>() 
                 .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.GroupId != null ? new GroupDto { Id = (int)src.GroupId } : null))
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserId != null ? new UserDto { Id = (int)src.UserId } : null))
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.RoleId != null ? src.RoleId : null));
@@ -86,7 +90,9 @@ namespace DevEdu.API.Configuration
             CreateMap<CourseDto, CourseInfoFullOutputModel>();
             CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<MaterialDto, MaterialInfoOutputModel>();
-            CreateMap<MaterialDto, MaterialInfoWithCoursesAndGroupsOutputModel>();
+            CreateMap<MaterialDto, MaterialInfoFullOutputModel>();
+            CreateMap<MaterialDto, MaterialInfoWithGroupsOutputModel>();
+            CreateMap<MaterialDto, MaterialInfoWithCoursesOutputModel>();
             CreateMap<UserDto, UserInfoOutPutModel>();
             CreateMap<UserDto, UserFullInfoOutPutModel>()
                 .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src => src.RegistrationDate.ToString(_dateFormat)))

@@ -36,12 +36,12 @@ namespace DevEdu.Business.Tests
             _repoMock.Setup(x => x.SelectUserById(expectedUserId)).Returns(new UserDto { Id = expectedUserId });
 
             //When
-            var actualId = _sut.AddUser(user);
+            var actual = _sut.AddUser(user);
 
             //Then
-            Assert.AreEqual(UserData.expectedUserId, actualId.Id);
+            Assert.AreEqual(UserData.expectedUserId, actual.Id);
             _repoMock.Verify(x => x.AddUser(user), Times.Once);
-            _repoMock.Verify(x => x.AddUserRole(actualId.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            _repoMock.Verify(x => x.AddUserRole(actual.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
         }
 
         [Test]

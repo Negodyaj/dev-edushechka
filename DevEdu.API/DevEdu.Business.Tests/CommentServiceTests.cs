@@ -16,6 +16,7 @@ namespace DevEdu.Business.Tests
         private Mock<ILessonRepository> _lessonRepoMock;
         private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
+        private Mock<IUserRepository> _userRepoMock;
         private CommentValidationHelper _commentValidationHelper;
         private LessonValidationHelper _lessonValidationHelper;
         private StudentAnswerOnTaskValidationHelper _studentAnswerValidationHelper;
@@ -28,8 +29,9 @@ namespace DevEdu.Business.Tests
             _lessonRepoMock = new Mock<ILessonRepository>();
             _groupRepoMock = new Mock<IGroupRepository>();
             _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
+            _userRepoMock = new Mock<IUserRepository>();
             _commentValidationHelper = new CommentValidationHelper(_commentRepoMock.Object);
-            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object);
+            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object, _userRepoMock.Object);
             _studentAnswerValidationHelper = new StudentAnswerOnTaskValidationHelper(_studentAnswerRepoMock.Object, _groupRepoMock.Object);
             _sut = new CommentService
             (
@@ -202,7 +204,7 @@ namespace DevEdu.Business.Tests
 
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
             _groupRepoMock.Setup(x => x.GetGroupsByLessonId(lessonId)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
@@ -249,7 +251,7 @@ namespace DevEdu.Business.Tests
 
             _studentAnswerRepoMock.Setup(x => x.GetStudentAnswerOnTaskById(studentAnswerOnTaskDto.Id)).Returns(studentAnswerOnTaskDto);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
 
             //When
             var ex = Assert.Throws<AuthorizationException>(

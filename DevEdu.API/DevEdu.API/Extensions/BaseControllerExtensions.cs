@@ -1,12 +1,10 @@
-using DevEdu.Business.IdentityInfo;
+﻿using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using DevEdu.Business;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Extensions
 {
@@ -35,3 +33,4 @@ namespace DevEdu.API.Extensions
         }
     }
 }
+

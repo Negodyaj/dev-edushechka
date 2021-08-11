@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Enums;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,17 @@ namespace DevEdu.Business.Tests
                 Photo = "https://localhost:IsStudent",
                 PhoneNumber = "StudentPhoneNumber",
                 Roles = new List<Role> { Role.Student }
+            };
+        }
+        public static UserDto GetTeacherDto()
+        {
+            return new UserDto
+            {
+                Id = 3,
+                FirstName = "Olga",
+                LastName = "Ivanovna",
+                Email = "olga@mail.ru",
+                Photo = " http://photo.jpg"
             };
         }
 
@@ -135,6 +147,56 @@ namespace DevEdu.Business.Tests
                 Photo = "https://localhost:Student",
                 PhoneNumber = "StudentPhoneNumber",
                 Roles = new List<Role> { Role.Student }
+            };
+        }
+
+        public static List<List<UserDto>> GetListsOfUsersInGroup()
+        {
+            return new List<List<UserDto>>
+            {
+                new List<UserDto>
+                {
+                    new UserDto {Id = 2},
+                    new UserDto {Id = 3},
+                    new UserDto {Id = 4},
+                },
+                new List<UserDto>
+                {
+                    new UserDto {Id = 2},
+                    new UserDto {Id = 5},
+                    new UserDto {Id = 6},
+                },
+                new List<UserDto>
+                {
+                    new UserDto {Id = 2},
+                    new UserDto {Id = 7},
+                    new UserDto {Id = 8},
+                }
+            };
+        }
+
+        public static List<List<UserDto>> GetAnotherListsOfUsersInGroup()
+        {
+            return new List<List<UserDto>>
+            {
+                new List<UserDto>
+                {
+                    new UserDto {Id = 2},
+                    new UserDto {Id = 3},
+                    new UserDto {Id = 4},
+                },
+                new List<UserDto>
+                {
+                    new UserDto {Id = 2},
+                    new UserDto {Id = 5},
+                    new UserDto {Id = 6},
+                },
+                new List<UserDto>
+                {
+                    new UserDto {Id = 9},
+                    new UserDto {Id = 7},
+                    new UserDto {Id = 8},
+                }
             };
         }
     }

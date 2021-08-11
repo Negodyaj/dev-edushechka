@@ -108,14 +108,14 @@ namespace DevEdu.Business.Services
         public int AddCourseMaterialReference(int courseId, int materialId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
             return _courseRepository.AddCourseMaterialReference(courseId, materialId);
         }
 
         public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
             _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
         }
 
@@ -191,7 +191,7 @@ namespace DevEdu.Business.Services
         private void CheckCourseAndMaterialExistences(int courseId, int materialId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
         }
 
     }
