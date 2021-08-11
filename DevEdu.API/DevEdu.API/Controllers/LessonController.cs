@@ -169,13 +169,14 @@ namespace DevEdu.API.Controllers
         // api/lesson/{lessonId}/user/{userId}
         [HttpPost("{lessonId}/user/{userId}")]
         [Description("Adds student to lesson")]
-        [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public StudentLessonOutputModel AddStudentToLesson(int lessonId, int userId)
+        public ActionResult<StudentLessonOutputModel> AddStudentToLesson(int lessonId, int userId)
         {
-            var output = _lessonService.AddStudentToLesson(lessonId, userId);
-            return _mapper.Map<StudentLessonOutputModel>(output);
+            var dto = _lessonService.AddStudentToLesson(lessonId, userId);
+            var output =_mapper.Map<StudentLessonOutputModel>(dto);
+            return StatusCode(201, output);
         }
 
         // api/lesson/{lessonId}/user/{userId}
@@ -184,9 +185,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteStudentFromLesson(int lessonId, int userId)
+        public ActionResult DeleteStudentFromLesson(int lessonId, int userId)
         {
             _lessonService.DeleteStudentFromLesson(lessonId, userId);
+            return NoContent();
         }
 
         // api/lesson/{lessonId}/user/{userId}/feedback
