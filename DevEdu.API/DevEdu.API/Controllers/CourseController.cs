@@ -117,9 +117,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void RemoveCourseMaterialReference(int courseId, int materialId)
+        public ActionResult RemoveCourseMaterialReference(int courseId, int materialId)
         {
             _courseService.RemoveCourseMaterialReference(courseId, materialId);
+            return NoContent();
         }
 
         [HttpPost("{courseId}/task/{taskId}")]
@@ -184,10 +185,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public string DeleteTopicFromCourse(int courseId, int topicId)
+        public ActionResult DeleteTopicFromCourse(int courseId, int topicId)
         {
             _courseService.DeleteTopicFromCourse(courseId, topicId);
-            return $"Topic Id:{topicId} deleted from course Id:{courseId}";
+            return NoContent();
         }
 
         [HttpGet("{courseId}/topics")]

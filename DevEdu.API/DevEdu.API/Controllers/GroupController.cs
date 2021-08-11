@@ -162,7 +162,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void AddUserToGroup(int groupId, int userId, int roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
+        public ActionResult AddUserToGroup(int groupId, int userId, int roleId)
+        {
+            _groupService.AddUserToGroup(groupId, userId, roleId);
+            return NoContent();
+        }
 
         //  api/group/1/user/2
         [AuthorizeRoles(Role.Manager)]
@@ -171,6 +175,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
+        public ActionResult DeleteUserFromGroup(int groupId, int userId)
+        {
+            _groupService.DeleteUserFromGroup(userId, groupId);
+            return NoContent();
+        }
     }
 }

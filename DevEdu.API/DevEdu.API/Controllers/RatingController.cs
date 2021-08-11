@@ -39,12 +39,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public StudentRatingOutputModel AddStudentRating([FromBody] StudentRatingInputModel model)
+        public ActionResult<StudentRatingOutputModel> AddStudentRating([FromBody] StudentRatingInputModel model)
         {
             var dto = _mapper.Map<StudentRatingDto>(model);
             var authorUserInfo = this.GetUserIdAndRoles();
             dto = _service.AddStudentRating(dto, authorUserInfo);
-            return _mapper.Map<StudentRatingOutputModel>(dto);
+            var output = _mapper.Map<UserUpdateInfoOutPutModel>(dto);
+            return StatusCode(201, output);
         }
 
         // api/rating/1
@@ -54,10 +55,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteStudentRating(int id)
+        public ActionResult DeleteStudentRating(int id)
         {
             var authorUserInfo = this.GetUserIdAndRoles();
             _service.DeleteStudentRating(id, authorUserInfo);
+            return NoContent();
         }
 
         // api/rating/1/{periodNumber}/value/50
