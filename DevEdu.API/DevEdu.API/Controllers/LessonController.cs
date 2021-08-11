@@ -48,12 +48,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public LessonInfoOutputModel AddLesson([FromBody] LessonInputModel inputModel)
+        public ActionResult<LessonInfoOutputModel> AddLesson([FromBody] LessonInputModel inputModel)
         {
             var lessonDto = _mapper.Map<LessonDto>(inputModel);
             var userIdentity = this.GetUserIdAndRoles();
-            var output = _lessonService.AddLesson(userIdentity, lessonDto, inputModel.TopicIds);
-            return _mapper.Map<LessonInfoOutputModel>(output);
+            var addedLesson = _lessonService.AddLesson(userIdentity, lessonDto, inputModel.TopicIds);
+            var output =  _mapper.Map<LessonInfoOutputModel>(addedLesson);
+            return StatusCode(201, output);
         }
 
         // api/lesson/{id}
@@ -63,10 +64,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteLesson(int id)
+        public ActionResult DeleteLesson(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
             _lessonService.DeleteLesson(userIdentity, id);
+            return NoContent();
         }
 
         // api/lesson/{id}
