@@ -12,7 +12,7 @@
 	BirthDate			date			NOT NULL,
 	GitHubAccount		nvarchar(50),
 	Photo				nvarchar(150),
-	PhoneNumber			nvarchar(12)	NOT NULL UNIQUE,
+	PhoneNumber			nvarchar(12)	NOT NULL,
 	IsDeleted			bit				NOT NULL DEFAULT '0',
 	ExileDate			date,
   CONSTRAINT [PK_USER] PRIMARY KEY CLUSTERED
