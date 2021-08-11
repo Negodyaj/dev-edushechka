@@ -179,7 +179,7 @@ namespace DevEdu.DAL.Repositories
                     "[dbo].[Student_Lesson_SelectByLessonId]",
                     (studentLesson, user) =>
                     {
-                        studentLesson.User = user;
+                        studentLesson.Student = user;
                         return studentLesson;
                     },
                     new { lessonId },
@@ -204,28 +204,28 @@ namespace DevEdu.DAL.Repositories
            );
         }
 
-        public void AddStudentToLesson(int lessonId, int userId)
+        public void AddStudentToLesson(int lessonId, int studentId)
         {
             _connection.Execute(
                 _studentLessonInsertProcedure,
                  new
                  {
                      lessonId,
-                     userId
+                     studentId
                  },
                  commandType: CommandType.StoredProcedure
              );
 
         }
 
-        public void DeleteStudentFromLesson(int lessonId, int userId)
+        public void DeleteStudentFromLesson(int lessonId, int studentId)
         {
             _connection.Execute(
                 _studentLessonDeleteProcedure,
                  new
                  {
                      lessonId,
-                     userId
+                     studentId
                  },
                  commandType: CommandType.StoredProcedure
              );
@@ -239,7 +239,7 @@ namespace DevEdu.DAL.Repositories
                  {
                      studentLessonDto.Feedback,
                      LessonId = studentLessonDto.Lesson.Id,
-                     UserId = studentLessonDto.User.Id
+                     StudentId = studentLessonDto.Student.Id
                  },
                  commandType: CommandType.StoredProcedure
              );
@@ -253,7 +253,7 @@ namespace DevEdu.DAL.Repositories
                  {
                      studentLessonDto.AbsenceReason,
                      LessonId = studentLessonDto.Lesson.Id,
-                     UserId = studentLessonDto.User.Id
+                     StudentId = studentLessonDto.Student.Id
                  },
                  commandType: CommandType.StoredProcedure
              );
@@ -267,7 +267,7 @@ namespace DevEdu.DAL.Repositories
                  {
                      studentLessonDto.IsPresent,
                      LessonId = studentLessonDto.Lesson.Id,
-                     UserId = studentLessonDto.User.Id
+                     StudentId = studentLessonDto.Student.Id
                  },
                  commandType: CommandType.StoredProcedure
              );
@@ -281,7 +281,7 @@ namespace DevEdu.DAL.Repositories
                 (studentLesson, user) =>
                 {
                     result = studentLesson;
-                    result.User = user;
+                    result.Student = user;
                     result.Feedback = studentLesson.Feedback;
 
                     return result;
@@ -295,21 +295,21 @@ namespace DevEdu.DAL.Repositories
         }
 
 
-        public StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int userId)
-        {
+        public StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int studentId)      
+        {            
             return _connection.Query<StudentLessonDto, LessonDto, UserDto, StudentLessonDto>(
                 _selectByLessonAndUserIdProcedure,
                 (studentLesson, lesson, user) =>
                 {
                     var result = studentLesson;
                     result.Lesson = lesson;
-                    result.User = user;
+                    result.Student = user;
                     return result;
                 },
                 new
                 {
                     LessonId = lessonId,
-                    UserId = userId
+                    StudentId = studentId
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure

@@ -29,6 +29,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/topic/{id}
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [HttpGet("{id}")]
         [Description("Get topic by id")]
         [ProducesResponseType(typeof(TopicOutputModel), StatusCodes.Status200OK)]
@@ -40,6 +41,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TopicOutputModel>(output);
         }
 
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [HttpGet]
         [Description("Get all topics")]
         [ProducesResponseType(typeof(List<TopicOutputModel>), StatusCodes.Status200OK)]
@@ -51,7 +53,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/topic
-        [AuthorizeRoles(Role.Methodist, Role.Manager)]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [HttpPost]
         [Description("Add topic")]
         [ProducesResponseType(typeof(TopicOutputModel), (StatusCodes.Status201Created))]
@@ -65,6 +67,7 @@ namespace DevEdu.API.Controllers
             return StatusCode(201, output);
         }
 
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         //  api/topic/{id}
         [AuthorizeRoles(Role.Methodist, Role.Manager)]
         [HttpDelete("{id}")]
@@ -78,6 +81,7 @@ namespace DevEdu.API.Controllers
             return NoContent();
         }
 
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         //  api/topic/{id}
         [AuthorizeRoles(Role.Methodist, Role.Manager)]
         [HttpPut("{id}")]
