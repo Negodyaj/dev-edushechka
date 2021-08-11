@@ -19,7 +19,6 @@ using System;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Net;
-using ValidationExceptionExtensionResponse = DevEdu.Business.Exceptions.ValidationExceptionExtensionResponse;
 
 namespace DevEdu.API
 {
@@ -97,7 +96,7 @@ namespace DevEdu.API
                 {
                     options.InvalidModelStateResponseFactory = context =>
                     {
-                        var exc = new ValidationExceptionExtensionResponse(context.ModelState);
+                        var exc = new ValidationExceptionResponse(context.ModelState);
                         return new UnprocessableEntityObjectResult(exc);
                     };
                 });

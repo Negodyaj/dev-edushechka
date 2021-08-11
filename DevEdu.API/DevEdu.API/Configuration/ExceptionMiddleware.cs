@@ -66,10 +66,7 @@ namespace DevEdu.API.Configuration
         private static Task HandleValidationExceptionMessageAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            var result = JsonConvert.SerializeObject(
-                new ValidationExceptionExtensionResponse(exception)
-
-            ); ;
+            var result = JsonConvert.SerializeObject(new ValidationExceptionResponse(exception));
             context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
             return context.Response.WriteAsync(result);
         }
