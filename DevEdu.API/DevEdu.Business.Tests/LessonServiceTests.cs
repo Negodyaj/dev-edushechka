@@ -373,7 +373,7 @@ namespace DevEdu.Business.Tests
             var teacher = UserData.GetTeacherDto();
 
             _lessonRepository.Setup(x => x.SelectAllLessonsByTeacherId(teacher.Id)).Returns(expected);
-            _userRepository.Setup(x => x.SelectUserById(teacher.Id)).Returns(teacher);
+            _userRepository.Setup(x => x.GetUserById(teacher.Id)).Returns(teacher);
 
             //When
             var actual = _sut.SelectAllLessonsByTeacherId(teacher.Id);
@@ -381,7 +381,7 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(expected, actual);
             _lessonRepository.Verify(x => x.SelectAllLessonsByTeacherId(teacher.Id), Times.Once);
-            _userRepository.Verify(x => x.SelectUserById(teacher.Id), Times.Once);
+            _userRepository.Verify(x => x.GetUserById(teacher.Id), Times.Once);
         }
 
         [Test]
@@ -391,14 +391,14 @@ namespace DevEdu.Business.Tests
             var teacherId = 3;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "user", teacherId);
 
-            _userRepository.Setup(x => x.SelectUserById(teacherId)).Returns(It.IsAny<UserDto>());
+            _userRepository.Setup(x => x.GetUserById(teacherId)).Returns(It.IsAny<UserDto>());
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectAllLessonsByTeacherId(teacherId));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _userRepository.Verify(x => x.SelectUserById(teacherId), Times.Once);
+            _userRepository.Verify(x => x.GetUserById(teacherId), Times.Once);
             _lessonRepository.Verify(x => x.SelectAllLessonsByTeacherId(teacherId), Times.Never);
         }
 

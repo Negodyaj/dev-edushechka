@@ -43,7 +43,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public UserDto SelectUserById(int id)
+        public UserDto GetUserById(int id)
         {
             UserDto result = default;
             return _connection
@@ -69,7 +69,7 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
         }
 
-        public UserDto SelectUserByEmail(string email)
+        public UserDto GetUserByEmail(string email)
         {
             UserDto result = default;
             return _connection
@@ -95,7 +95,7 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
         }
 
-        public List<UserDto> SelectUsers()
+        public List<UserDto> GetAllUsers()
         {
             var UserDictionary = new Dictionary<int, UserDto>();
 

@@ -52,7 +52,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public UserFullInfoOutPutModel GetUserById(int userId)
         {
-            var dto = _userService.SelectUserById(userId);
+            var dto = _userService.GetUserById(userId);
             return _mapper.Map<UserFullInfoOutPutModel>(dto);
         }
 
@@ -64,7 +64,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public List<UserInfoOutPutModel> GetAllUsers()
         {
-            var listDto = _userService.SelectUsers();
+            var listDto = _userService.GetAllUsers();
             return _mapper.Map<List<UserInfoOutPutModel>>(listDto);
         }
 
