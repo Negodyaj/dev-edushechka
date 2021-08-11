@@ -108,14 +108,14 @@ namespace DevEdu.Business.Services
         public int AddCourseMaterialReference(int courseId, int materialId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
             return _courseRepository.AddCourseMaterialReference(courseId, materialId);
         }
 
         public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
             _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
         }
 
@@ -157,11 +157,11 @@ namespace DevEdu.Business.Services
         }
         public CourseTopicDto GetCourseTopicById(int id)
         {
-            return _topicRepository.GetCourseTopicById(id);
+            return _topicValidationHelper.GetCourseTopicByIdAndThrowIfNotFound(id);
         }
-        public List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids)
+        public List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids)
         {
-            return _topicRepository.GetCourseTopicBuSevealId(ids);
+            return _topicValidationHelper.GetCourseTopicBySeveralIdAndThrowIfNotFound(ids);
         }
         public void DeleteAllTopicsByCourseId(int courseId)
         {
@@ -191,7 +191,7 @@ namespace DevEdu.Business.Services
         private void CheckCourseAndMaterialExistences(int courseId, int materialId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
         }
 
     }

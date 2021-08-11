@@ -12,9 +12,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DevEdu.API.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
-{   [Authorize]
+{
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class NotificationController : Controller
@@ -86,6 +89,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public NotificationInfoOutputModel AddNotification([FromBody] NotificationAddInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();

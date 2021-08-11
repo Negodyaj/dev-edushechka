@@ -1,4 +1,6 @@
-﻿namespace DevEdu.Business.ValidationHelpers
+﻿using System.Collections.Generic;
+
+namespace DevEdu.Business.ValidationHelpers
 {
     public interface IGroupValidationHelper
     {

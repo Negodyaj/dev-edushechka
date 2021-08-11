@@ -16,6 +16,7 @@ namespace DevEdu.Business.Tests
         private Mock<IGroupRepository> _groupRepoMock;
         private Mock<IMaterialRepository> _materialRepoMock;
         private Mock<IUserRepository> _userRepoMock;
+        private Mock<ICourseRepository> _courseRepoMock;
         private GroupService _sut;
         private MaterialValidationHelper _materialValidationHelper;
         private GroupValidationHelper _groupValidationHelper;
@@ -27,8 +28,12 @@ namespace DevEdu.Business.Tests
             _groupRepoMock = new Mock<IGroupRepository>();
             _userRepoMock = new Mock<IUserRepository>();
             _materialRepoMock = new Mock<IMaterialRepository>();
+            _courseRepoMock = new Mock<ICourseRepository>();
             _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
-            _materialValidationHelper = new MaterialValidationHelper(_materialRepoMock.Object);
+            _materialValidationHelper = new MaterialValidationHelper(
+                _materialRepoMock.Object,
+                _groupRepoMock.Object,
+                _courseRepoMock.Object);
             _userValidationHelper = new UserValidationHelper(_userRepoMock.Object);
             _sut = new GroupService(_groupRepoMock.Object, _userRepoMock.Object, _groupValidationHelper, _materialValidationHelper, _userValidationHelper);
         }
@@ -76,7 +81,7 @@ namespace DevEdu.Business.Tests
         public void GetGroups_NotParams_ReturnListGroupDto()
         {
             //Given
-            var groupDtos = GroupData.GetGroupsDto();
+            var groupDtos = GroupData.GetGroupDtos();
 
             _groupRepoMock.Setup(x => x.GetGroups()).Returns(groupDtos);
 
@@ -135,7 +140,7 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var userId = userInfo.UserId;
 
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos);
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
             _materialRepoMock.Setup(x => x.GetMaterialById(materialId)).Returns(MaterialData.GetMaterialDtoWithoutTags);
@@ -164,7 +169,7 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var userId = userInfo.UserId;
 
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos);
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
             _materialRepoMock.Setup(x => x.GetMaterialById(materialId)).Returns(MaterialData.GetMaterialDtoWithoutTags);
@@ -238,7 +243,7 @@ namespace DevEdu.Business.Tests
 
             _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetAnotherGroupDto());
             _materialRepoMock.Setup(x => x.GetMaterialById(material.Id)).Returns(MaterialData.GetMaterialDtoWithoutTags);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.Id)).Returns(GroupData.GetGroupsDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.Id)).Returns(GroupData.GetGroupDtos);
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
@@ -305,8 +310,9 @@ namespace DevEdu.Business.Tests
 
             _groupRepoMock.Setup(x => x.GetGroup(group.Id)).Returns(GroupData.GetAnotherGroupDto());
             _materialRepoMock.Setup(x => x.GetMaterialById(material.Id)).Returns(MaterialData.GetMaterialDtoWithoutTags);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.Id)).Returns(GroupData.GetGroupsDto);
-
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.Id)).Returns(GroupData.GetGroupDtos
+);
+            
             //When
             var ex = Assert.Throws<AuthorizationException>(
                 () => _sut.RemoveGroupMaterialReference(group.Id, material.Id, userInfo));
@@ -375,7 +381,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddUserToGroup_UserDoesntExist_EntityNotFoundException()
+        public void AddUserToGroup_UserDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             var group = GroupData.GetGroupDto();
@@ -397,7 +403,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddUserToGroup_UserDoesntHaveRole_ValidationException()
+        public void AddUserToGroup_UserDoesntHaveRole_ValidationExceptionThrown()
         {
             //Given
             var group = GroupData.GetGroupDto();
@@ -419,7 +425,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddUserToGroup_GroupDoesntExist_EntityNotFoundException()
+        public void AddUserToGroup_GroupDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             GroupDto group = default;
@@ -463,7 +469,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteUserFromGroup_GroupDoesntExist_EntityNotFoundException()
+        public void DeleteUserFromGroup_GroupDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             GroupDto group = default;
@@ -485,14 +491,13 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteUserFromGroup_UserDoesntExist_EntityNotFoundException()
+        public void DeleteUserFromGroup_UserDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             var group = GroupData.GetGroupDto();
             var groupId = group.Id;
             UserDto user = default;
             var userId = 0;
-            var roleId = 0;
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
             _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
@@ -508,7 +513,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteUserFromGroup_UserDoesntHaveRole_ValidationException()
+        public void DeleteUserFromGroup_UserDoesntHaveRole_ValidationExceptionThrown()
         {
             //Given
             var group = GroupData.GetGroupDto();
