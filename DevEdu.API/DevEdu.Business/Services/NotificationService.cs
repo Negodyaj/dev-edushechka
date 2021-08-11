@@ -3,6 +3,7 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Services
 {
@@ -66,10 +67,11 @@ namespace DevEdu.Business.Services
             if (userInfo.IsTeacher())
             {
                 _notificationValidationHelper.CheckNotificationIsForGroup(checkedDto, userInfo.UserId);
-                _notificationValidationHelper.CheckTeacherAccessToNotificationForUpdateAndDelete(checkedDto, userInfo.UserId);
+                _userValidationHelper.CheckAuthorizationUserToGroup(checkedDto.Group.Id, userInfo.UserId, Role.Teacher);
             }
             _notificationRepository.DeleteNotification(id);
         }
+
         public NotificationDto UpdateNotification(int id, NotificationDto dto, UserIdentityInfo userInfo)
         {
             var checkedDto = _notificationValidationHelper.GetNotificationByIdAndThrowIfNotFound(id);
@@ -77,7 +79,7 @@ namespace DevEdu.Business.Services
             if (userInfo.IsTeacher())
             {
                 _notificationValidationHelper.CheckNotificationIsForGroup(checkedDto, userInfo.UserId);
-                _notificationValidationHelper.CheckTeacherAccessToNotificationForUpdateAndDelete(checkedDto, userInfo.UserId);
+                _userValidationHelper.CheckAuthorizationUserToGroup(checkedDto.Group.Id, userInfo.UserId, Role.Teacher);
             }
             _notificationRepository.UpdateNotification(dto);
             return _notificationRepository.GetNotification(id);

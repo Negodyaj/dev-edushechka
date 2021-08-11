@@ -10,12 +10,10 @@ namespace DevEdu.Business.ValidationHelpers
     public class NotificationValidationHelper : INotificationValidationHelper
     {
         private readonly INotificationRepository _notificationRepository;
-        private readonly IUserValidationHelper _userValidationHelper;
 
-        public NotificationValidationHelper(INotificationRepository notificationRepository, IUserValidationHelper userValidationHelper)
+        public NotificationValidationHelper(INotificationRepository notificationRepository)
         {
             _notificationRepository = notificationRepository;
-            _userValidationHelper = userValidationHelper;
         }
 
         public NotificationDto GetNotificationByIdAndThrowIfNotFound(int notificationId)
@@ -26,16 +24,12 @@ namespace DevEdu.Business.ValidationHelpers
             return notification;
         }
 
-        public void CheckTeacherAccessToNotificationForUpdateAndDelete(NotificationDto dto, int userId)
-        {
-            _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, userId, Role.Teacher);
-        }
         public void CheckNotificationIsForGroup(NotificationDto dto, int userId)
         {
-            if(dto.Group == null)
+            if (dto.Group == null)
                 throw new AuthorizationException(string.Format(ServiceMessages.AccessToNotificationDenied, userId, dto.Id));
         }
-        
+
         public void CheckRoleIdUserIdGroupIdIsNotNull(NotificationDto dto)
         {
             if (dto.Role != null && dto.User != null

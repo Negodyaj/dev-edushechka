@@ -90,12 +90,14 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public NotificationInfoOutputModel AddNotification([FromBody] NotificationAddInputModel model)
+        public NotificationInfoOutputModel AddNotification([FromBody] NotificationAddInputModel inputModel)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _mapper.Map<NotificationDto>(model);
+            var dto = _mapper.Map<NotificationDto>(inputModel);
             var output = _notificationService.AddNotification(dto, userInfo);
-            return _mapper.Map<NotificationInfoOutputModel>(output);
+            var model = _mapper.Map<NotificationInfoOutputModel>(output);
+            return model;
+
         }
 
         //  api/notification/5
@@ -117,12 +119,14 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public NotificationInfoOutputModel UpdateNotification(int id, [FromBody] NotificationUpdateInputModel model)
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public NotificationInfoOutputModel UpdateNotification(int id, [FromBody] NotificationUpdateInputModel inputModel)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _mapper.Map<NotificationDto>(model);
+            var dto = _mapper.Map<NotificationDto>(inputModel);
             var output = _notificationService.UpdateNotification(id, dto, userInfo);
-            return _mapper.Map<NotificationInfoOutputModel>(output);
+            var model = _mapper.Map<NotificationInfoOutputModel>(output);
+            return model;
         }
     }
 }
