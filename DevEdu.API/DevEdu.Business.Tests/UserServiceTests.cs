@@ -56,7 +56,7 @@ namespace DevEdu.Business.Tests
 
             //Then
             Assert.AreEqual(expectedDto, actualDto);
-            _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.AtLeastOnce);
+            _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.Once);
         }
 
         [Test]
@@ -126,7 +126,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedUser, actualUser);
             _repoMock.Verify(x => x.AddUser(expectedUser), Times.Once);
             _repoMock.Verify(x => x.AddUserRole(actualUser.Id, It.IsAny<int>()), Times.Never);
-            _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.AtLeastOnce);
+            _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.Once);
         }
 
         [TestCase(1)]
@@ -143,6 +143,7 @@ namespace DevEdu.Business.Tests
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _repoMock.Verify(x => x.SelectUserById(userId), Times.Once);
         }
 
         [Test]
@@ -236,15 +237,15 @@ namespace DevEdu.Business.Tests
             var roleId = 6;
             var user = UserData.GetUserDto();
             var userId = user.Id;
-            _repoMock.Setup(x => x.AddUserRole(userId, roleId)).Verifiable();
+            _repoMock.Setup(x => x.AddUserRole(userId, roleId));
             _repoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
 
             //When
             _sut.AddUserRole(userId, roleId);
 
             //Then
-            _repoMock.Verify(x => x.AddUserRole(userId, roleId), Times.AtLeastOnce);
-            _repoMock.Verify(x => x.SelectUserById(userId), Times.AtLeastOnce);
+            _repoMock.Verify(x => x.AddUserRole(userId, roleId), Times.Once);
+            _repoMock.Verify(x => x.SelectUserById(userId), Times.Once);
         }
 
         [Test]
@@ -254,15 +255,15 @@ namespace DevEdu.Business.Tests
             var roleId = 6;
             var user = UserData.GetUserDto();
             var userId = user.Id;
-            _repoMock.Setup(x => x.DeleteUserRole(userId, roleId)).Verifiable();
+            _repoMock.Setup(x => x.DeleteUserRole(userId, roleId));
             _repoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
 
             //When
             _sut.DeleteUserRole(userId, roleId);
 
             //Then
-            _repoMock.Verify(x => x.DeleteUserRole(userId, roleId), Times.AtLeastOnce);
-            _repoMock.Verify(x => x.SelectUserById(userId), Times.AtLeastOnce);
+            _repoMock.Verify(x => x.DeleteUserRole(userId, roleId), Times.Once);
+            _repoMock.Verify(x => x.SelectUserById(userId), Times.Once);
         }
 
         [Test]
@@ -271,15 +272,15 @@ namespace DevEdu.Business.Tests
             //Given
             var user = UserData.GetUserDto();
             var userId = user.Id;
-            _repoMock.Setup(x => x.DeleteUser(userId)).Verifiable();
+            _repoMock.Setup(x => x.DeleteUser(userId));
             _repoMock.Setup(x => x.SelectUserById(userId)).Returns(user);
 
             //When
             _sut.DeleteUser(userId);
 
             //Than
-            _repoMock.Verify(x => x.DeleteUser(userId), Times.AtLeastOnce);
-            _repoMock.Verify(x => x.SelectUserById(userId), Times.AtLeastOnce);
+            _repoMock.Verify(x => x.DeleteUser(userId), Times.Once);
+            _repoMock.Verify(x => x.SelectUserById(userId), Times.Once);
         }
     }
 }
