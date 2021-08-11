@@ -19,7 +19,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public UserDto GetUserByIdAndThrowIfNotFound(int userId)
         {
-            var user = _userRepository.SelectUserById(userId);
+            var user = _userRepository.GetUserById(userId);
             if (user == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
 

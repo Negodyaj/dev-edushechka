@@ -28,7 +28,7 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpPost("/register")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public UserFullInfoOutPutModel Register([FromBody] UserInsertInputModel model)
@@ -36,11 +36,11 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<UserDto>(model);
             dto.Password = _authService.HashPassword(dto.Password);
             var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUser(dto));
-
             return addedUser;
         }
 
         [HttpPost("/sign-in")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public string SignIn(UserSignInputModel model)

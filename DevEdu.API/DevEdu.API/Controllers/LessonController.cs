@@ -174,11 +174,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public StudentLessonOutputModel AddStudentToLesson(int lessonId, int studentId)
+        public ActionResult< StudentLessonOutputModel> AddStudentToLesson(int lessonId, int studentId)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var output = _lessonService.AddStudentToLesson(lessonId, studentId, userInfo);
-            return StatusCode(201, _mapper.Map<StudentLessonOutputModel>(output));
+            var dto = _lessonService.AddStudentToLesson(lessonId, studentId, userInfo);
+            var outPut = _mapper.Map<StudentLessonOutputModel>(dto);
+            return StatusCode(201, outPut);
         }
 
 
@@ -189,7 +190,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteStudentFromLesson(int lessonId, int studentId)
+        public ActionResult DeleteStudentFromLesson(int lessonId, int studentId)
         {
             var userInfo = this.GetUserIdAndRoles();
             _lessonService.DeleteStudentFromLesson(lessonId, studentId, userInfo);
