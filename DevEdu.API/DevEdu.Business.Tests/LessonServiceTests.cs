@@ -19,8 +19,6 @@ namespace DevEdu.Business.Tests
         private Mock<IUserRepository> _userRepository;
         private Mock<IGroupRepository> _groupRepository;
         private Mock<ITopicRepository> _topicRepository;
-        private LessonValidationHelper _lessonValidationHelper;
-        private UserValidationHelper _userValidationHelper;
         private LessonService _sut;
 
         [SetUp]
@@ -31,8 +29,6 @@ namespace DevEdu.Business.Tests
             _userRepository = new Mock<IUserRepository>();
             _groupRepository = new Mock<IGroupRepository>();
             _topicRepository = new Mock<ITopicRepository>();
-            _userValidationHelper = new UserValidationHelper(_userRepository.Object);
-            _lessonValidationHelper = new LessonValidationHelper(_lessonRepository.Object, _groupRepository.Object, _userRepository.Object);
 
             _sut = new LessonService(
                 _lessonRepository.Object,

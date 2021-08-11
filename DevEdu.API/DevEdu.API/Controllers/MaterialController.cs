@@ -37,12 +37,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public MaterialInfoWithGroupsOutputModel AddMaterialWithGroups([FromBody] MaterialWithGroupsInputModel materialModel)
+        public ActionResult<MaterialInfoWithGroupsOutputModel> AddMaterialWithGroups([FromBody] MaterialWithGroupsInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             int id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
             dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
-            return _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
+            var output = _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
+            return StatusCode(201, output);
         }
 
         // api/material
@@ -53,12 +54,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public MaterialInfoWithCoursesOutputModel AddMaterialWithCourses([FromBody] MaterialWithCoursesInputModel materialModel)
+        public ActionResult<MaterialInfoWithCoursesOutputModel> AddMaterialWithCourses([FromBody] MaterialWithCoursesInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             int id = _materialService.AddMaterialWithCourses(dto, materialModel.TagsIds, materialModel.CoursesIds);
             dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
-            return _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
+            var output = _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
+            return StatusCode(201, output);
         }
 
         // api/material
@@ -124,10 +126,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteMaterial(int id, bool isDeleted)
+        public ActionResult DeleteMaterial(int id, bool isDeleted)
         {
             var user = this.GetUserIdAndRoles();
             _materialService.DeleteMaterial(id, isDeleted, user);
+            return NoContent();
         }
 
         // api/material/{materialId}/tag/{tagId}
