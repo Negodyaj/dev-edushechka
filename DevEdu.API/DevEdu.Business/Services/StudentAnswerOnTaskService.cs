@@ -47,7 +47,7 @@ namespace DevEdu.Business.Services
         public void DeleteStudentAnswerOnTask(int taskId, int studentId, UserIdentityInfo userInfo)
         {
             var checkedStudentAnswerDto = _studentAnswerOnTaskValidationHelper.GetStudentAnswerByTaskIdAndStudentIdOrThrowIfNotFound(taskId, studentId);
-            CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
+            _studentAnswerOnTaskValidationHelper.CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
             _studentAnswerOnTaskRepository.DeleteStudentAnswerOnTask(taskId, studentId);
         }
 
@@ -67,7 +67,7 @@ namespace DevEdu.Business.Services
         public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId, UserIdentityInfo userInfo)
         {
             var checkedStudentAnswerDto = _studentAnswerOnTaskValidationHelper.GetStudentAnswerByTaskIdAndStudentIdOrThrowIfNotFound(taskId, studentId);
-            CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
+            _studentAnswerOnTaskValidationHelper.CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
             return checkedStudentAnswerDto;
         }
 
@@ -97,7 +97,7 @@ namespace DevEdu.Business.Services
         public StudentAnswerOnTaskDto UpdateStudentAnswerOnTask(int taskId, int studentId, StudentAnswerOnTaskDto taskAnswerDto, UserIdentityInfo userInfo)
         {
             var checkedStudentAnswerDto = _studentAnswerOnTaskValidationHelper.GetStudentAnswerByTaskIdAndStudentIdOrThrowIfNotFound(taskId, studentId);
-            CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
+            _studentAnswerOnTaskValidationHelper.CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
 
             taskAnswerDto.Task = new TaskDto { Id = taskId };
             taskAnswerDto.User = new UserDto { Id = studentId };
@@ -113,17 +113,6 @@ namespace DevEdu.Business.Services
 
             var dto = _studentAnswerOnTaskRepository.GetAllAnswersByStudentId(userId);
             return dto;
-        }
-
-        private void CheckUserAccessToStudentAnswerByUserId(UserIdentityInfo userInfo, StudentAnswerOnTaskDto studentAnswerDto)
-        {
-            var userId = userInfo.UserId;
-
-            if (userInfo.IsAdmin())
-            {
-                return;
-            }
-            _studentAnswerOnTaskValidationHelper.CheckUserComplianceToStudentAnswer(studentAnswerDto, userId);
         }
     }
 }

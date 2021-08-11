@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
@@ -72,6 +73,17 @@ namespace DevEdu.Business.ValidationHelpers
                 return null;
 
             return _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
+        }
+
+        public void CheckUserAccessToStudentAnswerByUserId(UserIdentityInfo userInfo, StudentAnswerOnTaskDto studentAnswerDto)
+        {
+            var userId = userInfo.UserId;
+
+            if (userInfo.IsAdmin())
+            {
+                return;
+            }
+            CheckUserComplianceToStudentAnswer(studentAnswerDto, userId);
         }
     }
 }
