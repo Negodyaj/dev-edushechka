@@ -90,14 +90,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public NotificationInfoOutputModel AddNotification([FromBody] NotificationAddInputModel inputModel)
+        public ActionResult<NotificationInfoOutputModel> AddNotification([FromBody] NotificationAddInputModel inputModel)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<NotificationDto>(inputModel);
             var output = _notificationService.AddNotification(dto, userInfo);
             var model = _mapper.Map<NotificationInfoOutputModel>(output);
-            return model;
-
+            return StatusCode(201,model);
         }
 
         //  api/notification/5
@@ -106,17 +105,18 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteNotification(int id)
+        public ActionResult DeleteNotification(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
             _notificationService.DeleteNotification(id, userInfo);
+            return NoContent();
         }
 
         //  api/notification/5
         [AuthorizeRoles(Role.Teacher, Role.Manager)]
         [HttpPut("{id}")]
         [Description("Update notification by id")]
-        [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
