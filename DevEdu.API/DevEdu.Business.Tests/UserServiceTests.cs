@@ -36,12 +36,12 @@ namespace DevEdu.Business.Tests
             _repoMock.Setup(x => x.GetUserById(expectedUserId)).Returns(new UserDto { Id = expectedUserId });
 
             //When
-            var actual = _sut.AddUser(user);
+            var actualDto = _sut.AddUser(user);
 
             //Then
-            Assert.AreEqual(UserData.expectedUserId, actual.Id);
+            Assert.AreEqual(UserData.expectedUserId, actualDto.Id);
             _repoMock.Verify(x => x.AddUser(user), Times.Once);
-            _repoMock.Verify(x => x.AddUserRole(actual.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            _repoMock.Verify(x => x.AddUserRole(actualDto.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
         }
 
         [Test]
@@ -63,15 +63,15 @@ namespace DevEdu.Business.Tests
         public void SelectUserByEmail_UserEmail_ReturnUserDto()
         {
             //Given
-            var user = UserData.GetUserDto();
-            _repoMock.Setup(x => x.GetUserByEmail(user.Email)).Returns(user);
+            var expectedDto = UserData.GetUserDto();
+            _repoMock.Setup(x => x.GetUserByEmail(expectedDto.Email)).Returns(expectedDto);
 
             //When
-            var actualUser = _sut.GetUserByEmail(user.Email);
+            var actualDto = _sut.GetUserByEmail(expectedDto.Email);
 
             //Then
-            Assert.AreEqual(user, actualUser);
-            _repoMock.Verify(x => x.GetUserByEmail(user.Email), Times.Once);
+            Assert.AreEqual(expectedDto, actualDto);
+            _repoMock.Verify(x => x.GetUserByEmail(expectedDto.Email), Times.Once);
         }
 
         [Test]
@@ -93,20 +93,20 @@ namespace DevEdu.Business.Tests
         public void UpdateUser_UserDto_ReturnUpdateUserDto()
         {
             //Given
-            var expectedDto = UserData.GetUserDto();
+            var expectedDto =  UserData.GetUserDto();
             var expectedAnotherDto = UserData.GetAnotherUserDto();
             var expectedMinimumCallCount = 2;
 
-            _repoMock.Setup(x => x.UpdateUser(expectedDto));
-            _repoMock.Setup(x => x.GetUserById(expectedDto.Id)).Returns(expectedAnotherDto);
+            _repoMock.Setup(x => x.UpdateUser(expectedAnotherDto));
+            _repoMock.Setup(x => x.GetUserById(expectedAnotherDto.Id)).Returns(expectedDto);
 
             //When
-            var actualDto = _sut.UpdateUser(expectedDto);
+            var actualDto = _sut.UpdateUser(expectedAnotherDto);
 
             //Then
-            Assert.AreEqual(expectedAnotherDto, actualDto);
-            _repoMock.Verify(x => x.UpdateUser(expectedDto), Times.Once);
-            _repoMock.Verify(x => x.GetUserById(expectedDto.Id), Times.AtLeast(expectedMinimumCallCount));
+            Assert.AreEqual(expectedDto, actualDto);
+            _repoMock.Verify(x => x.UpdateUser(expectedAnotherDto), Times.Once);
+            _repoMock.Verify(x => x.GetUserById(expectedAnotherDto.Id), Times.AtLeast(expectedMinimumCallCount));
         }
 
         [Test]
