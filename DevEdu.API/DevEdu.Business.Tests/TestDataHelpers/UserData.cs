@@ -54,15 +54,21 @@ namespace DevEdu.Business.Tests
                 PhoneNumber = "StudentPhoneNumber",
                 Roles = new List<Role> { Role.Student }
             };
-        }
+        }
+
         public static UserDto GetTeacherDto()
         {
             return new UserDto
-            {
-                Id = 3,
-                FirstName = "Olga",
-                LastName = "Ivanovna",
-                Email = "olga@mail.ru",
+            {
+
+                Id = 3,
+
+                FirstName = "Olga",
+
+                LastName = "Ivanovna",
+
+                Email = "olga@mail.ru",
+
                 Photo = " http://photo.jpg"
             };
         }
