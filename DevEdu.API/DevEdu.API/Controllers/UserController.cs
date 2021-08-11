@@ -45,13 +45,13 @@ namespace DevEdu.API.Controllers
         [HttpGet("{userId}")]
         [Description("Return user by id")]
         [AuthorizeRoles(Role.Manager)]
-        [ProducesResponseType(typeof(UserExistingFullInfoOutPutModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public UserExistingFullInfoOutPutModel GetUserById(int userId)
+        public UserFullInfoOutPutModel GetUserById(int userId)
         {
             var dto = _userService.SelectUserById(userId);
-            return _mapper.Map<UserExistingFullInfoOutPutModel>(dto);
+            return _mapper.Map<UserFullInfoOutPutModel>(dto);
         }
 
         // api/user

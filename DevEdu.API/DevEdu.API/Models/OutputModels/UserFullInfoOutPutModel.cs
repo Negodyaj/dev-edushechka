@@ -2,7 +2,7 @@
 
 namespace DevEdu.API.Models.OutputModels
 {
-    public class UserExistingFullInfoOutPutModel : UserInfoOutPutModel
+    public class UserFullInfoOutPutModel : UserInfoOutPutModel
     {
         public string Patronymic { get; set; }
         public string Username { get; set; }
