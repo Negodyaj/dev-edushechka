@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Configuration;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
@@ -136,10 +135,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void AddGroupMaterialReference(int groupId, int materialId)
+        public ActionResult AddGroupMaterialReference(int groupId, int materialId)
         {
             var userInfo = this.GetUserIdAndRoles();
             _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
+            return NoContent();
         }
 
         // api/Group/{groupId}/material/{materialId}
@@ -149,10 +149,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void RemoveGroupMaterialReference(int groupId, int materialId)
+        public ActionResult RemoveGroupMaterialReference(int groupId, int materialId)
         {
             var userInfo = this.GetUserIdAndRoles();
             _groupService.RemoveGroupMaterialReference(groupId, materialId, userInfo);
+            return NoContent();
         }
 
         //  api/group/1/user/2/role/1

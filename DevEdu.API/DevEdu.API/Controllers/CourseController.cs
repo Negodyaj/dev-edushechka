@@ -105,9 +105,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void AddCourseMaterialReference(int courseId, int materialId)
+        public ActionResult AddCourseMaterialReference(int courseId, int materialId)
         {
             _courseService.AddCourseMaterialReference(courseId, materialId);
+            return NoContent();
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
