@@ -7,7 +7,7 @@ namespace DevEdu.Business.Services
     {
         CourseDto GetCourse(int id);
         CourseDto GetFullCourseInfo(int id);
-        int AddCourse(CourseDto courseDto);
+        CourseDto AddCourse(CourseDto courseDto);
         void DeleteCourse(int id);
         List<CourseDto> GetCourses();
         List<CourseDto> GetCoursesForAdmin();

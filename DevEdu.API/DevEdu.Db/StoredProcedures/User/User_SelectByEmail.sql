@@ -8,6 +8,7 @@ BEGIN
 		U.LastName,
 		U.Patronymic,
 		U.Email,
+		U.Password,
 		U.Username,
 		U.IsDeleted,
 		U.RegistrationDate,
