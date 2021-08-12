@@ -110,10 +110,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public string AddGroupToLesson(int groupId, int lessonId)
+        public ActionResult AddGroupToLesson(int groupId, int lessonId)
         {
             _groupService.AddGroupToLesson(groupId, lessonId);
-            return $"Group {groupId} add  Lesson Id:{lessonId}";
+            return NoContent();
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
@@ -122,10 +122,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public string RemoveGroupFromLesson(int groupId, int lessonId)
+        public ActionResult RemoveGroupFromLesson(int groupId, int lessonId)
         {
             _groupService.RemoveGroupFromLesson(groupId, lessonId);
-            return $"Group {groupId} remove  Lesson Id:{lessonId}";
+            return NoContent();
         }
 
         // api/Group/{groupId}/material/{materialId}

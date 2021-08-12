@@ -68,11 +68,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public CourseInfoShortOutputModel AddCourse([FromBody] CourseInputModel model)
+        public ActionResult<CourseInfoShortOutputModel> AddCourse([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            int id = _courseService.AddCourse(dto);
-            return GetCourseSimple(id);
+            var course = _courseService.AddCourse(dto);
+            var output = _mapper.Map<CourseInfoShortOutputModel>(course);
+            return StatusCode(201, output);
         }
 
         [HttpDelete("{id}")]
@@ -80,9 +81,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteCourse(int id)
+        public ActionResult DeleteCourse(int id)
         {
             _courseService.DeleteCourse(id);
+            return NoContent();
         }
 
         [HttpPut("{id}")]
