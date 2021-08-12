@@ -38,7 +38,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<TagDto>(model);
             dto = _service.AddTag(dto);
-            var output = _mapper.Map<UserUpdateInfoOutPutModel>(dto);
+            var output = _mapper.Map<TagOutputModel>(dto);
             return StatusCode(201, output);
         }
 

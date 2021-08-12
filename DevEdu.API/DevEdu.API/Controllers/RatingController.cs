@@ -44,7 +44,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<StudentRatingDto>(model);
             var authorUserInfo = this.GetUserIdAndRoles();
             dto = _service.AddStudentRating(dto, authorUserInfo);
-            var output = _mapper.Map<UserUpdateInfoOutPutModel>(dto);
+            var output = _mapper.Map<StudentRatingOutputModel>(dto);
             return StatusCode(201, output);
         }
 
