@@ -1,4 +1,4 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Core;
 using Microsoft.Extensions.Options;
 using System;
 using System.Data;
@@ -8,25 +8,11 @@ namespace DevEdu.DAL.Repositories
 {
     public abstract class BaseRepository
     {
-
         protected IDbConnection _connection;
-        protected readonly DatabaseSettings _options;
-
         protected BaseRepository(IOptions<DatabaseSettings> options)
         {
-            var envName = CheckString(options.Value.ConnectionString);
-
-            var сonnectionString = Environment.GetEnvironmentVariable(envName); 
+            var сonnectionString = options.Value.ConnectionString;
              _connection = new SqlConnection(сonnectionString);
-        }
-        private string CheckString(string str)
-        {
-            string result = str;
-            if (str.Contains("{{") && str.Contains("}}"))
-            {
-                result = str.Replace("{{", "").Replace("}}", "");
-            }
-            return result;
         }
     }
 }

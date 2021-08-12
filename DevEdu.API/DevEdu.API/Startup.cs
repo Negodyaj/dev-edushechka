@@ -5,35 +5,32 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
 using System.Text.Json.Serialization;
-using System.Net;
-using DevEdu.DAL.Models;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using DevEdu.Core;
 using System;
-using System.IO;
-using System.Linq;
 
 namespace DevEdu.API
 {
     public class Startup
     {
-         public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
+            var environmentAccess = "ASPNETCORE_ENVIRONMENT";
             var builder = new ConfigurationBuilder()
-                .AddJsonFile(string.Format("appsettings.{0}.json", configuration.GetSection("ASPNETCORE_ENVIRONMENT").Value));
+                .AddJsonFile(string.Format("appsettings.{0}.json", configuration
+                .GetSection(environmentAccess).Value));
 
             Configuration = builder.Build();
-            
+            SetEnvironmentVariableForConfiguration("AuthSettings:KeyForToken");
+            SetEnvironmentVariableForConfiguration("AuthSettings:TokenLifeTime");
+            SetEnvironmentVariableForConfiguration("DatabaseSettings:ConnectionString");
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -45,7 +42,7 @@ namespace DevEdu.API
             services.AddOptions<AuthSettings>()
                 .Bind(Configuration.GetSection(nameof(AuthSettings)))
                 .ValidateDataAnnotations();
-            
+
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IMaterialRepository, MaterialRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
@@ -99,7 +96,7 @@ namespace DevEdu.API
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-           
+
             var provider = services.BuildServiceProvider();
             var authOptions = provider.GetRequiredService<IAuthOptions>();
 
@@ -152,7 +149,7 @@ namespace DevEdu.API
             else if (env.IsProduction())
             {
                 app.UseExceptionHandler("/Error");
-                
+
             }
             app.UseOpenApi();
 
@@ -178,6 +175,27 @@ namespace DevEdu.API
             {
                 endpoints.MapControllers();
             });
+        }
+        private string RemoveCurlyBrackets(string str)
+        {
+            string result = str;
+            if (str.Contains("{{") && str.Contains("}}"))
+            {
+                result = str.Replace("{{", "").Replace("}}", "");
+            }
+            return result;
+        }
+        private string GetEnvironmentVariable(string section)
+        {
+            var envKey = Configuration.GetSection(section).Value;
+            var env = RemoveCurlyBrackets(envKey);
+            env = Environment.GetEnvironmentVariable(env);
+            return env;
+        }
+        private void SetEnvironmentVariableForConfiguration(string section)
+        {
+            var env = GetEnvironmentVariable(section);
+            Configuration.GetSection(section).Value = env;
         }
     }
 }
