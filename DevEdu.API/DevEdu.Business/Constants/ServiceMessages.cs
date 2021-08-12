@@ -20,8 +20,6 @@
         public const string UserWithRoleDoesntBelongToGroup = "{0} with id {1} doesn`t belong to group with id {2}";
         public const string UserDoesntBelongToGroup = "User with id {0} doesn`t belong to group with id {1}";
         public const string UserDoesntHaveRole = "User {0} doesn`t have role {1}";
-        public const string MinimumAllowedValueMessage = "{0} less than allowed value = {1}";
-        public const string MinimumAllowedValueWithTwoParamsMessage = "{0} or {1} less than allowed value = {2}";
         public const string EntityWithEmailNotFoundMessage = "{0} with email = {1} was not found";
         public const string UserAndTeacherAreNotSame = "User with id = {0} and teacher with id = {1} are not the same";
         public const string UserDoesntBelongToLesson = "User with id {0} doesn`t belong to lesson with id {1}";

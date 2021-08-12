@@ -92,7 +92,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public TopicOutputModel UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
-
             var dto = _mapper.Map<TopicDto>(model);
             var output = _topicService.UpdateTopic(id, dto);
             return _mapper.Map<TopicOutputModel>(output);
@@ -107,7 +106,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult AddTagToTopic(int topicId, int tagId)
         {
-            _topicService.AddTagToTopic(topicId, tagId);
+            _topicService.AddTagToTopic(topicId, tagId);
             return StatusCode(201);
         }
 
