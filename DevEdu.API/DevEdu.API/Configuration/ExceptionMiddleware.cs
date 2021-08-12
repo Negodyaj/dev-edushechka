@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -63,7 +62,7 @@ namespace DevEdu.API.Configuration
             return context.Response.WriteAsync(result);
         }
 
-        private static Task HandleValidationExceptionMessageAsync(HttpContext context, Exception exception)
+        private static Task HandleValidationExceptionMessageAsync(HttpContext context, ValidationException exception)
         {
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(new ValidationExceptionResponse(exception));

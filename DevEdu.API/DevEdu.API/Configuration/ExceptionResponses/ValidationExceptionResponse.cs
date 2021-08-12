@@ -7,30 +7,30 @@ namespace DevEdu.API.Configuration
 {
     public class ValidationExceptionResponse
     {
-        public const int CODE = 1001;
-        public const string MESSAGE = "Validation Error";
-        public List<ValidationError> ValidationErrors { get; set; }
+        public int Code { get; set; }
+        public string Message { get; set; }
+        public List<ValidationError> Errors { get; set; }
 
-        public ValidationExceptionResponse(Exception exception)
+        public ValidationExceptionResponse(ValidationException exception)
         {
-            ValidationErrors = new List<ValidationError>();
-            ValidationErrors.Add(new ValidationError
+            Errors = new List<ValidationError>();
+            Errors.Add(new ValidationError
             {
                 Code = 422,
-                Message = exception.Message,
-                Description = exception.Message
+                Field = exception.Field,
+                Message = exception.Message
             });
         }
         public ValidationExceptionResponse(ModelStateDictionary modelState)
         {
-            ValidationErrors = new List<ValidationError>();
+            Errors = new List<ValidationError>();
             foreach (var state in modelState)
             {
-                ValidationErrors.Add(new ValidationError
+                Errors.Add(new ValidationError
                 {
                     Code = 422,
-                    Message = state.Key,
-                    Description = state.Value.Errors[0].ErrorMessage
+                    Field = state.Key,
+                    Message = state.Value.Errors[0].ErrorMessage
                 });
             }
         }
