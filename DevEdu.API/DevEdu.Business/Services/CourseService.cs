@@ -50,7 +50,11 @@ namespace DevEdu.Business.Services
             _groupValidationHelper = groupValidationHelper;
         }
 
-        public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
+        public CourseDto AddCourse(CourseDto courseDto)
+        {
+            int addedCourseId = _courseRepository.AddCourse(courseDto);
+            return _courseRepository.GetCourse(addedCourseId);
+        }
 
         public void DeleteCourse(int id)
         {

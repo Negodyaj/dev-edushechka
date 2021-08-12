@@ -69,21 +69,22 @@ namespace DevEdu.API.Controllers
         [Description("Create new course")]
         [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Methodist)]
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status201Created)]
-        public CourseInfoShortOutputModel AddCourse([FromBody] CourseInputModel model)
+        public ActionResult<CourseInfoShortOutputModel> AddCourse([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            int id = _courseService.AddCourse(dto);
-            return GetCourseSimple(id);
+            var course = _courseService.AddCourse(dto);
+            var output = _mapper.Map<CourseInfoShortOutputModel>(course);
+            return StatusCode(201, output);
         }
 
         [HttpDelete("{id}")]
         [Description("Delete course by id")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-
-        public void DeleteCourse(int id)
+        public ActionResult DeleteCourse(int id)
         {
             _courseService.DeleteCourse(id);
+            return NoContent();
         }
 
         [HttpPut("{id}")]
