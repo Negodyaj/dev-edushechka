@@ -79,12 +79,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public HomeworkInfoOutputModel AddHomework(int groupId, int taskId, [FromBody] HomeworkInputModel model)
+        public ActionResult<HomeworkInfoOutputModel> AddHomework(int groupId, int taskId, [FromBody] HomeworkInputModel model)
         {
             var userId = this.GetUserId();
             var dto = _mapper.Map<HomeworkDto>(model);
             var hw = _homeworkService.AddHomework(groupId, taskId, dto, userId);
-            return _mapper.Map<HomeworkInfoOutputModel>(hw);
+            var output = _mapper.Map<HomeworkInfoOutputModel>(hw);
+            return StatusCode(201, output);
         }
 
         //  api/homework/1
@@ -94,10 +95,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteHomework(int id)
+        public ActionResult DeleteHomework(int id)
         {
             var userId = this.GetUserId();
             _homeworkService.DeleteHomework(id, userId);
+            return NoContent();
         }
 
         //  api/homework/1

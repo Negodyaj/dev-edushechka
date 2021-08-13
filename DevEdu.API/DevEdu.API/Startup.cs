@@ -1,17 +1,21 @@
+using DevEdu.API.Common;
 using DevEdu.API.Configuration;
 using DevEdu.Business.Configuration;
-using DevEdu.Business.Services;
-using DevEdu.Business.ValidationHelpers;
-using DevEdu.DAL.Repositories;
+using DevEdu.API.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
+using System;
+using System.Linq;
 using System.Text.Json.Serialization;
+using System.Net;
 
 namespace DevEdu.API
 {
@@ -28,53 +32,9 @@ namespace DevEdu.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
-
-            services.AddScoped<IMaterialRepository, MaterialRepository>();
-            services.AddScoped<ITaskRepository, TaskRepository>();
-            services.AddScoped<IStudentAnswerOnTaskRepository, StudentAnswerOnTaskRepository>();
-            services.AddScoped<ICourseRepository, CourseRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<INotificationRepository, NotificationRepository>();
-            services.AddScoped<ICommentRepository, CommentRepository>();
-            services.AddScoped<IGroupRepository, GroupRepository>();
-            services.AddScoped<IPaymentRepository, PaymentRepository>();
-            services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<ILessonRepository, LessonRepository>();
-            services.AddScoped<ITagRepository, TagRepository>();
-            services.AddScoped<ITopicRepository, TopicRepository>();
-            services.AddScoped<IRatingRepository, RatingRepository>();
-            services.AddScoped<IHomeworkRepository, HomeworkRepository>();
-
-            services.AddScoped<ICommentService, CommentService>();
-            services.AddScoped<ITagService, TagService>();
-            services.AddScoped<IGroupService, GroupService>();
-            services.AddScoped<IMaterialService, MaterialService>();
-            services.AddScoped<ITaskService, TaskService>();
-            services.AddScoped<ICourseService, CourseService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ICourseService, CourseService>();
-            services.AddScoped<ILessonService, LessonService>();
-            services.AddScoped<ITopicService, TopicService>();
-            services.AddScoped<IRatingService, RatingService>();
-            services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>();
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IHomeworkService, HomeworkService>();
-
-            services.AddScoped<ICommentValidationHelper, CommentValidationHelper>();
-            services.AddScoped<ICourseValidationHelper, CourseValidationHelper>();
-            services.AddScoped<IGroupValidationHelper, GroupValidationHelper>();
-            services.AddScoped<ILessonValidationHelper, LessonValidationHelper>();
-            services.AddScoped<IMaterialValidationHelper, MaterialValidationHelper>();
-            services.AddScoped<INotificationValidationHelper, NotificationValidationHelper>();
-            services.AddScoped<IPaymentValidationHelper, PaymentValidationHelper>();
-            services.AddScoped<IRatingValidationHelper, RatingValidationHelper>();
-            services.AddScoped<IStudentAnswerOnTaskValidationHelper, StudentAnswerOnTaskValidationHelper>();
-            services.AddScoped<ITagValidationHelper, TagValidationHelper>();
-            services.AddScoped<ITaskValidationHelper, TaskValidationHelper>();
-            services.AddScoped<ITopicValidationHelper, TopicValidationHelper>();
-            services.AddScoped<IUserValidationHelper, UserValidationHelper>();
-            services.AddScoped<IHomeworkValidationHelper, HomeworkValidationHelper>();
+            services.AddRepositories();
+            services.AddCustomServices();
+            services.AddValidationHelpers();
 
             services.AddControllers();
 
@@ -83,6 +43,15 @@ namespace DevEdu.API
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                })
+
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.InvalidModelStateResponseFactory = context =>
+                    {
+                        var exc = new ValidationExceptionResponse(context.ModelState);
+                        return new UnprocessableEntityObjectResult(exc);
+                    };
                 });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -124,7 +93,7 @@ namespace DevEdu.API
             services.AddOptions();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. 
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

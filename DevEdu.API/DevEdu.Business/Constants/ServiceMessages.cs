@@ -3,8 +3,7 @@
     public static class ServiceMessages
     {
         public const string EntityNotFoundMessage = "{0} with id = {1} was not found";
-        public const string EntityNotFoundByUserId = "{0} by user id = {1} was not found";
-        public const string UserOnLessonNotFoundMessage = "User with id = {0} not found on lesson with id = {1}";
+        public const string EntityNotFoundByUserId = "{0} by user id = {1} was not found";       
         public const string UserInGroupNotFoundMessage = "User with id = {0} not found in group with id = {1}";
         public const string UserHasNoAccessMessage = "The user with id = {0} does not have access to the data of this group";
         public const string EntityDoesntHaveAcessMessage = "{0} with id = {1} does not have access to the {2} with id = {3}";
@@ -20,9 +19,6 @@
         public const string UserWithRoleDoesntAuthorizeToGroup = "User with id = {0} doesn't belong to group {1} as {2}";
         public const string UserWithRoleDoesntBelongToGroup = "{0} with id {1} doesn`t belong to group with id {2}";
         public const string UserDoesntBelongToGroup = "User with id {0} doesn`t belong to group with id {1}";
-        public const string UserDoesntHaveRole = "User {0} doesn`t have role {1}";
-        public const string MinimumAllowedValueMessage = "{0} less than allowed value = {1}";
-        public const string MinimumAllowedValueWithTwoParamsMessage = "{0} or {1} less than allowed value = {2}";
         public const string EntityWithEmailNotFoundMessage = "{0} with email = {1} was not found";
         public const string UserAndTeacherAreNotSame = "User with id = {0} and teacher with id = {1} are not the same";
         public const string UserDoesntBelongToLesson = "User with id {0} doesn`t belong to lesson with id {1}";

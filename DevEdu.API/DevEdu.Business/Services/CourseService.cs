@@ -39,7 +39,11 @@ namespace DevEdu.Business.Services
             _topicValidationHelper = topicValidationHelper;
         }
 
-        public int AddCourse(CourseDto courseDto) => _courseRepository.AddCourse(courseDto);
+        public CourseDto AddCourse(CourseDto courseDto)
+        {
+            int addedCourseId = _courseRepository.AddCourse(courseDto);
+            return _courseRepository.GetCourse(addedCourseId);
+        }
 
         public void DeleteCourse(int id) => _courseRepository.DeleteCourse(id);
 
@@ -78,7 +82,7 @@ namespace DevEdu.Business.Services
         public List<int> AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _topicValidationHelper.CheckTopicsExistence(listDto);
+            _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFound(listDto);
             foreach (var topic in listDto)
             {
                 topic.Course = new CourseDto() { Id = courseId };
@@ -125,7 +129,7 @@ namespace DevEdu.Business.Services
             if (topics == null || topics.Count == 0)
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _topicValidationHelper.CheckTopicsExistence(topics);
+            _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFound(topics);
             CheckUniquenessPositions(topics);
             CheckUniquenessTopics(topics);
             var topicsInDatabase = _courseRepository.SelectAllTopicsByCourseId(courseId);
@@ -172,20 +176,20 @@ namespace DevEdu.Business.Services
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
-                throw new ValidationException(ServiceMessages.SamePositionsInCourseTopics);
+                throw new ValidationException(nameof(CourseTopicDto.Position), ServiceMessages.SamePositionsInCourseTopics);
             }
         }
         private void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
-                throw new ValidationException(ServiceMessages.SameTopicsInCourseTopics);
+                throw new ValidationException(nameof(CourseTopicDto.Topic), ServiceMessages.SameTopicsInCourseTopics);
             }
         }
         private void CheckCourseAndTopicExistences(int courseId, int topicId)
         {
             _courseValidationHelper.CheckCourseExistence(courseId);
-            _topicValidationHelper.CheckTopicExistence(topicId);
+            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
 
         }
         private void CheckCourseAndMaterialExistences(int courseId, int materialId)

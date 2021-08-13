@@ -276,6 +276,8 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
+       
+
         public int GetPresentGroupForStudentByUserId(int userId)
         {
             return _connection.QuerySingle<int>(
@@ -284,5 +286,7 @@ namespace DevEdu.DAL.Repositories
                    commandType: CommandType.StoredProcedure
               );
         }
+
+
     }
 }

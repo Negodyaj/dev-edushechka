@@ -96,8 +96,8 @@ namespace DevEdu.API.Configuration
             CreateMap<UserDto, UserInfoOutPutModel>();
             CreateMap<UserDto, UserFullInfoOutPutModel>()
                 .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src => src.RegistrationDate.ToString(_dateFormat)))
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToString(_dateFormat)))
-                .ForMember(dest => dest.ExileDate, opt => opt.MapFrom(src => src.ExileDate.ToString(_dateFormat)));
+                .ForMember(dest => dest.ExileDate, opt => opt.MapFrom(src => src.ExileDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
             CreateMap<UserDto, UserUpdateInfoOutPutModel>();
             CreateMap<UserDto, UserInfoOutPutModel>();
             CreateMap<UserDto, UserInfoShortOutputModel>();

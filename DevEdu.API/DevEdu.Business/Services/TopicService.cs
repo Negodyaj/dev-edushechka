@@ -26,23 +26,35 @@ namespace DevEdu.Business.Services
         }
 
         public int AddTopic(TopicDto topicDto)
-        {
-            var topicId = _topicRepository.AddTopic(topicDto);
-            if (topicDto.Tags == null || topicDto.Tags.Count == 0)
-                return topicId;
+        {       
+            var topicId = _topicRepository.AddTopic(topicDto);            
+                if (topicDto.Tags == null || topicDto.Tags.Count == 0)
+                    return topicId;
 
-            topicDto.Tags.ForEach(tag => AddTagToTopic(topicId, tag.Id));
-            return topicId;
+                topicDto.Tags.ForEach(tag => AddTagToTopic(topicId, tag.Id));            
+                return topicId;
         }
 
-        public void DeleteTopic(int id) => _topicRepository.DeleteTopic(id);
+        public void DeleteTopic(int id)
+        {              
+            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(id);            
+                _topicRepository.DeleteTopic(id);            
+        }
 
-        public TopicDto GetTopic(int id) => _topicRepository.GetTopic(id);
+        public TopicDto GetTopic(int id)
+        {
+           var topicDto= _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(id);
+            return topicDto;
+        }
 
-        public List<TopicDto> GetAllTopics() => _topicRepository.GetAllTopics();
+        public List<TopicDto> GetAllTopics()
+        {
+            return _topicRepository.GetAllTopics();
+        } 
 
         public TopicDto UpdateTopic(int id, TopicDto topicDto)
         {
+            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(id);            
             topicDto.Id = id;
             _topicRepository.UpdateTopic(topicDto);
             return _topicRepository.GetTopic(id);
@@ -50,14 +62,14 @@ namespace DevEdu.Business.Services
 
         public int AddTagToTopic(int topicId, int tagId)
         {
-            _topicValidationHelper.CheckTopicExistence(topicId);
+            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
             _tagValidationHelper.CheckTagExistence(tagId);
             return _topicRepository.AddTagToTopic(topicId, tagId);
         }
 
         public int DeleteTagFromTopic(int topicId, int tagId)
         {
-            _topicValidationHelper.CheckTopicExistence(topicId);
+            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
             _tagValidationHelper.CheckTagExistence(tagId);
             return _topicRepository.DeleteTagFromTopic(topicId, tagId);
         }
