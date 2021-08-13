@@ -1,15 +1,21 @@
+using DevEdu.API.Common;
 using DevEdu.API.Configuration;
 using DevEdu.Business.Configuration;
 using DevEdu.API.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
+using System;
+using System.Linq;
 using System.Text.Json.Serialization;
+using System.Net;
 
 namespace DevEdu.API
 {
@@ -37,6 +43,15 @@ namespace DevEdu.API
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                })
+
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.InvalidModelStateResponseFactory = context =>
+                    {
+                        var exc = new ValidationExceptionResponse(context.ModelState);
+                        return new UnprocessableEntityObjectResult(exc);
+                    };
                 });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -78,7 +93,7 @@ namespace DevEdu.API
             services.AddOptions();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. 
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
