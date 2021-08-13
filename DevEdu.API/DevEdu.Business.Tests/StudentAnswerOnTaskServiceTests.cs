@@ -51,9 +51,9 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             int countEntry = 2;
 
-            _userRepository.Setup(x => x.SelectUserById(userId)).Returns(userDto);
-            _groupRepository.Setup(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id)).Returns(CommentData.GetGroupsDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
+            _userRepository.Setup(x => x.GetUserById(userId)).Returns(userDto);
+            _groupRepository.Setup(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id)).Returns(GroupData.GetGroupDtos());
+            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
             _studentAnswerOnTaskRepoMock.Setup(x => x.AddStudentAnswerOnTask(studentAnswerDto)).Returns(expectedStudentAnswerId);
 
             // When
@@ -80,9 +80,9 @@ namespace DevEdu.Business.Tests
             var userDto = UserData.GetUserDto();
             var userId = 1;
 
-            _userRepository.Setup(x => x.SelectUserById(userId)).Returns(userDto);
+            _userRepository.Setup(x => x.GetUserById(userId)).Returns(userDto);
             _groupRepository.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(taskListDtos);
-            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
             _studentAnswerOnTaskRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(taskId)).Returns(studentAnswersList);
             _taskRepository.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
@@ -213,7 +213,7 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _studentAnswerOnTaskRepoMock.Setup(x => x.GetAllAnswersByStudentId(userId)).Returns(studentAnswersListDto);
-            _userRepository.Setup(x => x.SelectUserById(userId)).Returns(userDto);
+            _userRepository.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
             // When
             var dto = _sut.GetAllAnswersByStudentId(userId, userInfo);
@@ -221,7 +221,7 @@ namespace DevEdu.Business.Tests
             // Then
             Assert.AreEqual(studentAnswersListDto, dto);
             _studentAnswerOnTaskRepoMock.Verify(x => x.GetAllAnswersByStudentId(userId), Times.Once);
-            _userRepository.Verify(x => x.SelectUserById(userId), Times.Once);
+            _userRepository.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
 
@@ -262,9 +262,9 @@ namespace DevEdu.Business.Tests
             int anotherUserId = 10;
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
 
-            _userRepository.Setup(x => x.SelectUserById(anotherUserId)).Returns(userDto);
+            _userRepository.Setup(x => x.GetUserById(anotherUserId)).Returns(userDto);
             _groupRepository.Setup(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id)).Returns(CommentData.GetGroupsDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
             _studentAnswerOnTaskRepoMock.Setup(x => x.AddStudentAnswerOnTask(studentAnswerOnTaskDto)).Returns(expectedStudentAnswerId);
 
             // When
@@ -276,7 +276,7 @@ namespace DevEdu.Business.Tests
             _studentAnswerOnTaskRepoMock.Verify(x => x.AddStudentAnswerOnTask(studentAnswerOnTaskDto), Times.Never);
             _groupRepository.Verify(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
-            _userRepository.Verify(x => x.SelectUserById(anotherUserId), Times.Once);
+            _userRepository.Verify(x => x.GetUserById(anotherUserId), Times.Once);
         }
 
 
@@ -440,9 +440,9 @@ namespace DevEdu.Business.Tests
             var anotherUserId = 2;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId);
 
-            _userRepository.Setup(x => x.SelectUserById(anotherUserId)).Returns(user);
+            _userRepository.Setup(x => x.GetUserById(anotherUserId)).Returns(user);
             _groupRepository.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(taskListDtos);
-            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
             _studentAnswerOnTaskRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(taskId)).Returns(studentAnswersList);
             _taskRepository.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
@@ -472,9 +472,9 @@ namespace DevEdu.Business.Tests
             var userId = 1;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), taskId);
 
-            _userRepository.Setup(x => x.SelectUserById(userId)).Returns(user);
+            _userRepository.Setup(x => x.GetUserById(userId)).Returns(user);
             _groupRepository.Setup(x => x.GetGroupsByTaskId(anotherTaskId)).Returns(taskListDtos);
-            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
             _taskRepository.Setup(x => x.GetTaskById(anotherTaskId)).Returns(task);
 
             // When
@@ -500,10 +500,9 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var user = UserData.GetUserDto();
             var userId = 1;
-            var anotherUserId = 2;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), taskId);
 
-            _userRepository.Setup(x => x.SelectUserById(userId)).Returns(user);
+            _userRepository.Setup(x => x.GetUserById(userId)).Returns(user);
             _taskRepository.Setup(x => x.GetTaskById(taskId)).Returns(task);
             _groupRepository.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(taskListDtos);
             _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetAnotherListGroupDtos());

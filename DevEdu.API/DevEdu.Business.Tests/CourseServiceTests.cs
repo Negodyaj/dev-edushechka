@@ -57,12 +57,13 @@ namespace DevEdu.Business.Tests
             var courseId = 1;
 
             _courseRepositoryMock.Setup(x => x.AddCourse(courseDto)).Returns(courseId);
+            _courseRepositoryMock.Setup(x => x.GetCourse(courseId)).Returns(courseDto);
 
             //When
             var actualCourse = _sut.AddCourse(courseDto);
 
             //Than
-            Assert.AreEqual(courseId, actualCourse);
+            Assert.AreEqual(courseId, actualCourse.Id);
             _courseRepositoryMock.Verify(x => x.AddCourse(courseDto), Times.Once());
         }
 
