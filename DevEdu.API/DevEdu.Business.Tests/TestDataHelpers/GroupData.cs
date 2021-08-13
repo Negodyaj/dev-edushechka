@@ -302,5 +302,75 @@ namespace DevEdu.Business.Tests
                 Tutors = null
             };
         }
+
+        public static List<GroupDto> GetAnotherListGroupDtos()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto
+                {
+                    Id = 4,
+                    Name = "Веселые ребята",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Древесные клен",
+                        Description = "Курс для пней",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "С зимы по лето - по зиму и снова по лето",
+                    PaymentPerMonth = 1010.0M,
+                    Students = null,
+                    Teachers = null,
+                    Tutors = null,
+                    IsDeleted = false
+                },
+                new GroupDto
+                {
+                    Id = 5,
+                    Name = "Окорок",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Как быстро бегать",
+                        Description = "Курс для птиц",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Вечерние занятия с 19-00",
+                    PaymentPerMonth = 2828.0M,
+                    Students = null,
+                    Teachers = null,
+                    Tutors = null,
+                    IsDeleted = false
+                },
+                new GroupDto
+                {
+                    Id = 6,
+                    Name = "Посмотри",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Делаем красиво",
+                        Description = "качаем глаза",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Среда, четверг 14:00",
+                    PaymentPerMonth = 1707.0M,
+                    Students = null,
+                    Teachers = null,
+                    Tutors = null,
+                    IsDeleted = false
+                }
+            };
+        }
     }
 }

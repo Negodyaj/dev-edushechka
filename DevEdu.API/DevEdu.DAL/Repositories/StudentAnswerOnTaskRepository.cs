@@ -26,14 +26,14 @@ namespace DevEdu.DAL.Repositories
 
         }
 
-        public void DeleteStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
+        public void DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
             _connection.Execute(
                 _taskStudentDelete,
                 new
                 {
-                    TaskId = dto.Task.Id,
-                    StudentId = dto.User.Id
+                    TaskId = taskId,
+                    StudentId = studentId
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -77,9 +77,9 @@ namespace DevEdu.DAL.Repositories
 
         public StudentAnswerOnTaskDto GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
-
             StudentAnswerOnTaskDto result = default;
-            return _connection
+
+            var query = _connection
                 .Query<StudentAnswerOnTaskDto, UserDto, TaskDto, TaskStatus, StudentAnswerOnTaskDto>(
                 _taskStudentSelectByTaskAndStudent,
                 (studentAnswer, user, task, taskStatus) =>
@@ -100,6 +100,8 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
              )
              .FirstOrDefault();
+
+            return result;
         }
 
         public void UpdateStudentAnswerOnTask(StudentAnswerOnTaskDto dto)
