@@ -38,7 +38,7 @@ namespace DevEdu.Business.Tests
                 _groupRepoMock.Object,
                 _courseRepoMock.Object);
             _userValidationHelper = new UserValidationHelper(_userRepoMock.Object);
-            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object);
+            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object, _userRepoMock.Object);
             _sut = new GroupService(_groupRepoMock.Object,
                                     _userRepoMock.Object,
                                     _groupValidationHelper,
