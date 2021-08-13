@@ -12,8 +12,6 @@ namespace DevEdu.Business.Tests
         private Mock<ITagRepository> _tagRepoMock;
         private Mock<ICourseRepository> _courseRepoMock;
         private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
-        private TaskValidationHelper _taskHelper;
-        private TagValidationHelper _tagHelper;
         private TaskService _sut;
 
         [SetUp]
@@ -23,9 +21,9 @@ namespace DevEdu.Business.Tests
             _tagRepoMock = new Mock<ITagRepository>();
             _courseRepoMock = new Mock<ICourseRepository>();
             _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
-            _taskHelper = new TaskValidationHelper(_taskRepoMock.Object);
-            _tagHelper = new TagValidationHelper(_tagRepoMock.Object);
-            _sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, _taskHelper, _tagHelper);
+            var taskHelper = new TaskValidationHelper(_taskRepoMock.Object);
+            var tagHelper = new TagValidationHelper(_tagRepoMock.Object);
+            _sut = new TaskService(_taskRepoMock.Object, _courseRepoMock.Object, _studentAnswerRepoMock.Object, taskHelper, tagHelper);
         }
 
         [Test]

@@ -22,7 +22,6 @@ namespace DevEdu.Business.Tests
         private TaskValidationHelper _taskHelper;
         private GroupService _sut;
 
-
         [SetUp]
         public void Setup()
         {
@@ -68,7 +67,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.AddGroup(groupDto), Times.Once);
         }
 
-        [TestCase(Role.Student)]
+        [TestCase(Role.Manager)]
         public async Task GetGroup_GroupIdForStudentRole_GroupDtoWithListOfStudentsReturned(Role role)
         {
             //Given            
