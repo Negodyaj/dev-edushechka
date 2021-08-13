@@ -14,6 +14,7 @@ using NSwag.Generation.Processors.Security;
 using System.Text.Json.Serialization;
 using DevEdu.Core;
 using System;
+using System.Collections.Generic;
 
 namespace DevEdu.API
 {
@@ -26,12 +27,7 @@ namespace DevEdu.API
             var builder = new ConfigurationBuilder().AddJsonFile($"appsettings.{currentEnvironment}.json");
 
             Configuration = builder.Build();
-            
-
-            
-            SetEnvironmentVariableForConfiguration("AuthSettings:KeyForToken");
-            SetEnvironmentVariableForConfiguration("AuthSettings:TokenLifeTime");
-            SetEnvironmentVariableForConfiguration("DatabaseSettings:ConnectionString");
+            SetEnvironmentVariableForConfiguration(Configuration);
         }
         public IConfiguration Configuration { get; }
 
@@ -178,26 +174,21 @@ namespace DevEdu.API
                 endpoints.MapControllers();
             });
         }
+        private void SetEnvironmentVariableForConfiguration(IConfiguration configuration)
+        {
+            foreach (var item in configuration.AsEnumerable())
+            {
+                if (item.Value != null && item.Value.Contains("{{"))
+                {
+                    var envName = RemoveCurlyBrackets(item.Value);
+                    var envValue = Environment.GetEnvironmentVariable(envName);
+                    configuration.GetSection(item.Key).Value = envValue;
+                }
+            }
+        }
         private string RemoveCurlyBrackets(string str)
         {
-            string result = str;
-            if (str.Contains("{{") && str.Contains("}}"))
-            {
-                result = str.Replace("{{", "").Replace("}}", "");
-            }
-            return result;
-        }
-        private string GetEnvironmentVariable(string section)
-        {
-            var envKey = Configuration.GetSection(section).Value;
-            var env = RemoveCurlyBrackets(envKey);
-            env = Environment.GetEnvironmentVariable(env);
-            return env;
-        }
-        private void SetEnvironmentVariableForConfiguration(string section)
-        {
-            var env = GetEnvironmentVariable(section);
-            Configuration.GetSection(section).Value = env;
+            return  str.Replace("{{", "").Replace("}}", "");
         }
     }
 }
