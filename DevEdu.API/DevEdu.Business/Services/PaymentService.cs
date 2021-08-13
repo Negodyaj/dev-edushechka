@@ -46,7 +46,6 @@ namespace DevEdu.Business.Services
             if (paymentInDb.IsDeleted)
                 throw new EntityNotFoundException(ServiceMessages.PaymentDeleted);
             dto.User = new UserDto { Id = paymentInDb.User.Id };
-
             dto.Id = id;
             _paymentRepository.UpdatePayment(dto);
         }

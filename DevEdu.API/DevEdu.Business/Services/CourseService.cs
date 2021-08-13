@@ -106,7 +106,7 @@ namespace DevEdu.Business.Services
         public List<int> AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto)
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
-            _topicValidationHelper.CheckTopicsExistence(listDto);
+            _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFound(listDto);
             foreach (var topic in listDto)
             {
                 topic.Course = new CourseDto() { Id = courseId };
@@ -136,14 +136,14 @@ namespace DevEdu.Business.Services
         public int AddCourseMaterialReference(int courseId, int materialId)
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
             return _courseRepository.AddCourseMaterialReference(courseId, materialId);
         }
 
         public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
             _courseRepository.RemoveCourseMaterialReference(courseId, materialId);
         }
 
@@ -153,7 +153,7 @@ namespace DevEdu.Business.Services
             if (topics == null || topics.Count == 0)
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
-            _topicValidationHelper.CheckTopicsExistence(topics);
+            _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFound(topics);
             CheckUniquenessPositions(topics);
             CheckUniquenessTopics(topics);
             var topicsInDatabase = _courseRepository.SelectAllTopicsByCourseId(courseId);
@@ -185,11 +185,11 @@ namespace DevEdu.Business.Services
         }
         public CourseTopicDto GetCourseTopicById(int id)
         {
-            return _topicRepository.GetCourseTopicById(id);
+            return _topicValidationHelper.GetCourseTopicByIdAndThrowIfNotFound(id);
         }
-        public List<CourseTopicDto> GetCourseTopicBuSevealId(List<int> ids)
+        public List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids)
         {
-            return _topicRepository.GetCourseTopicBuSevealId(ids);
+            return _topicValidationHelper.GetCourseTopicBySeveralIdAndThrowIfNotFound(ids);
         }
         public void DeleteAllTopicsByCourseId(int courseId)
         {
@@ -200,26 +200,26 @@ namespace DevEdu.Business.Services
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
-                throw new ValidationException(ServiceMessages.SamePositionsInCourseTopics);
+                throw new ValidationException(nameof(CourseTopicDto.Position), ServiceMessages.SamePositionsInCourseTopics);
             }
         }
         private void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
-                throw new ValidationException(ServiceMessages.SameTopicsInCourseTopics);
+                throw new ValidationException(nameof(CourseTopicDto.Topic), ServiceMessages.SameTopicsInCourseTopics);
             }
         }
         private void CheckCourseAndTopicExistences(int courseId, int topicId)
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
-            _topicValidationHelper.CheckTopicExistence(topicId);
+            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
 
         }
         private void CheckCourseAndMaterialExistences(int courseId, int materialId)
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
         }
 
     }

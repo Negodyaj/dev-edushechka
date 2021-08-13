@@ -49,13 +49,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public CommentInfoOutputModel AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel model)
+        public ActionResult<CommentInfoOutputModel> AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
             var comment = _commentService.AddCommentToLesson(lessonId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
-            return output;
+            return StatusCode(201,output);
         }
 
         //  api/comment/to-student-answer/1
@@ -66,13 +66,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public CommentInfoOutputModel AddCommentToStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel model)
+        public ActionResult<CommentInfoOutputModel> AddCommentToStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
             var comment = _commentService.AddCommentToStudentAnswer(taskStudentId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
-            return output;
+            return StatusCode(201, output);
         }
 
         //  api/comment/5
@@ -82,10 +82,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteComment(int id)
+        public ActionResult DeleteComment(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
             _commentService.DeleteComment(id, userInfo);
+            return NoContent();
         }
 
         //  api/comment/5

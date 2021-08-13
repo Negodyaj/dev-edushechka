@@ -28,27 +28,26 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpPost("/register")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public UserFullInfoOutPutModel Register([FromBody] UserInsertInputModel model)
+        public ActionResult<UserFullInfoOutPutModel> Register([FromBody] UserInsertInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);
             dto.Password = _authService.HashPassword(dto.Password);
             var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUser(dto));
-
-            return addedUser;
+            return StatusCode(201, addedUser);
         }
 
         [HttpPost("/sign-in")]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public string SignIn(UserSignInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);
-            return _authService.SignIn(dto);
+            var token = _authService.SignIn(dto);
+            return token;
         }
     }
 }

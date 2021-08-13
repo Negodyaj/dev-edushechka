@@ -1,5 +1,6 @@
-﻿using DevEdu.DAL.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -20,8 +21,8 @@ namespace DevEdu.DAL.Repositories
         public List<GroupDto> GetGroupsByMaterialId(int id);
         int GetPresentGroupForStudentByUserId(int userId);
         List<GroupDto> GetGroupsByTaskId(int taskId);
-        List<GroupDto> GetGroupsByUserId(int userId);
         List<GroupDto> GetGroupsByLessonId(int lessonId);
         List<GroupDto> GetGroupsByCourseId(int courseId);
+        public List<GroupDto> GetGroupsByUserId(int userId);
     }
 }

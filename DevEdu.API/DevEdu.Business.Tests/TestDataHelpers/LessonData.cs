@@ -11,17 +11,17 @@ namespace DevEdu.Business.Tests
 
         public static int LessonId = 30;
 
-        public static LessonDto GetAddedLessonDto()
+        public static LessonDto GetLessonDto()
         {
             return new LessonDto
             {
-                Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
-                TeacherComment = "Good",
+                Id = 6,
+                Date = DateTime.ParseExact("01.01.2021", _dateFormat, CultureInfo.InvariantCulture),
+                TeacherComment = "Comment",
                 Teacher = new UserDto
                 {
-                    Id = 3
-                },
-                LinkToRecord = "http://link.com"
+                    Id = 10
+                }
             };
         }
 
@@ -29,7 +29,6 @@ namespace DevEdu.Business.Tests
         {
             return new LessonDto
             {
-                Id = LessonId,
                 Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                 TeacherComment = "Good",
                 LinkToRecord = "http://link.com"
@@ -47,7 +46,13 @@ namespace DevEdu.Business.Tests
                 {
                     Id = 3
                 },
-                LinkToRecord = "http://link.com"
+                LinkToRecord = "http://link.com",
+                Topics = new List<TopicDto>
+                {
+                    new TopicDto {Id = 4},
+                    new TopicDto {Id = 2},
+                    new TopicDto {Id = 3},
+                }
             };
         }
 
@@ -59,13 +64,7 @@ namespace DevEdu.Business.Tests
                     Id = 2,
                     Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                     TeacherComment = "Good",
-                    Teacher = new UserDto {
-                        Id = 3,
-                        FirstName = "Olga",
-                        LastName = "Ivanovna",
-                        Email = "olga@mail.ru",
-                        Photo = " http://photo.jpg"
-                    },
+                    Teacher = UserData.GetTeacherDto(),
                     Topics = new List<TopicDto>()
                     {
                         new TopicDto{
@@ -79,13 +78,7 @@ namespace DevEdu.Business.Tests
                     Id = 5,
                     Date = DateTime.ParseExact("12.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                     TeacherComment = "Good",
-                    Teacher = new UserDto {
-                        Id = 3,
-                        FirstName = "Olga",
-                        LastName = "Ivanovna",
-                        Email = "olga@mail.ru",
-                        Photo = " http://photo.jpg"
-                    },
+                    Teacher = UserData.GetTeacherDto(),
                     Topics = new List<TopicDto>()
                     {
                         new TopicDto{
@@ -111,7 +104,7 @@ namespace DevEdu.Business.Tests
                     Feedback = "ok",
                     IsPresent = true,
                     AbsenceReason = null,
-                    User = new UserDto
+                    Student = new UserDto
                     {
                         Id = 12,
                         FirstName = "Petr",
@@ -127,7 +120,7 @@ namespace DevEdu.Business.Tests
                     Feedback = "ok",
                     IsPresent = false,
                     AbsenceReason = "ill",
-                    User = new UserDto
+                    Student = new UserDto
                     {
                         Id = 18,
                         FirstName = "Ivan",
@@ -146,7 +139,7 @@ namespace DevEdu.Business.Tests
             return new StudentLessonDto
             {
                 Id = 42,
-                User = new UserDto { Id = 42 },
+                Student = new UserDto { Id = 42 },
                 Lesson = new LessonDto { Id = 30 },
                 Feedback = "feedback",
                 IsPresent = true,
@@ -183,18 +176,26 @@ namespace DevEdu.Business.Tests
 
         }
 
-        public static LessonDto GetLessonDto()
-        {
-            return new LessonDto
-            {
-                Id = 30
-            };
-        }
         public static UserDto GetUserDto()
         {
             return new UserDto
             {
                 Id = 42
+            };
+        }
+        public static List<GroupDto> GetGroupsDto()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto
+                {
+                    Id = 10
+                },
+
+                new GroupDto
+                {
+                    Id = 20
+                }
             };
         }
     }

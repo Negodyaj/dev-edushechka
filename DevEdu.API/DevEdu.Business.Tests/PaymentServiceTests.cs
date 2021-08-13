@@ -7,6 +7,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
@@ -60,7 +61,7 @@ namespace DevEdu.Business.Tests
             //Given
             var userId = 2;
             var paymentsInDB = PaymentData.GetPeyments();
-            _userRepositoryMock.Setup(x => x.SelectUserById(userId)).Returns(new UserDto() { Id = userId });
+            _userRepositoryMock.Setup(x => x.GetUserById(userId)).Returns(new UserDto() { Id = userId });
             _paymentRepoMock.Setup(x => x.GetPaymentsByUser(userId)).Returns(paymentsInDB);
             //When
             _sut.GetPaymentsByUserId(userId);
@@ -73,12 +74,26 @@ namespace DevEdu.Business.Tests
             //Given
             var userId = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "user", userId);
-            _userRepositoryMock.Setup(x => x.SelectUserById(userId));
+            _userRepositoryMock.Setup(x => x.GetUserById(userId));
             //When
             var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetPaymentsByUserId(userId));
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
             _paymentRepoMock.Verify(x => x.GetPaymentsByUser(userId), Times.Never);
+        }
+        [Test]
+        public void GetPaymentsByUserId_ValidUserIdEntityInDataBaseIsAbssent_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var userId = 2;
+            var exp = string.Format(ServiceMessages.EntityNotFoundByUserId, "payments", userId);
+            _userRepositoryMock.Setup(x => x.GetUserById(userId)).Returns(new UserDto() { Id = userId });
+            _paymentRepoMock.Setup(x => x.GetPaymentsByUser(userId));
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetPaymentsByUserId(userId));
+            //Then
+            Assert.That(result.Message, Is.EqualTo(exp));
+            _paymentRepoMock.Verify(x => x.GetPaymentsByUser(userId), Times.Once);
         }
         [Test]
         public void AddPayment_WithSimpleDto_PaymentWasAdded()
@@ -178,5 +193,39 @@ namespace DevEdu.Business.Tests
             //Then
             _paymentRepoMock.Verify(x => x.SelectPaymentsBySeveralId(ids), Times.Once);
         }
-    }
+        [Test]
+        public void SelectPaymentsBySeveralId_WithListId_SomeIdAreAbsentInDb_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var payments = PaymentData.GetPeyments();
+            var ids = new List<int>() { 1, 4, 3 };
+            _paymentRepoMock.Setup(x => x.SelectPaymentsBySeveralId(ids)).Returns(payments);
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.SelectPaymentsBySeveralId(ids));
+            //Then
+            Assert.That(result.Message, Is.EqualTo(ServiceMessages.EntityNotFound));
+            _paymentRepoMock.Verify(x => x.SelectPaymentsBySeveralId(ids), Times.Once);
+        }
+        [Test]
+        public void UpdatePayment_PaymentIsDeleted_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var id = 4;
+            var paymentInDb = new PaymentDto()
+            {
+                Id = 4,
+                Date = DateTime.Now,
+                IsDeleted = true,
+                User = new UserDto() { Id = 1 }
+            };
+            var exp = ServiceMessages.PaymentDeleted;
+            PaymentDto payment = PaymentData.GetPayment();
+            _paymentRepoMock.Setup(x => x.GetPayment(id)).Returns(paymentInDb);
+            //When
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.UpdatePayment(id, payment));
+            //Then
+            Assert.That(result.Message, Is.EqualTo(exp));
+            _paymentRepoMock.Verify(x => x.UpdatePayment(payment), Times.Never);
+        }
+     }
 }

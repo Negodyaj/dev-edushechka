@@ -37,6 +37,8 @@ namespace DevEdu.API.Controllers
         [Description("Get course by id with topics")]
         [Authorize]
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public CourseInfoShortOutputModel GetCourseSimple(int id)
         {
             var course = _courseService.GetCourse(id);
@@ -47,7 +49,8 @@ namespace DevEdu.API.Controllers
         [Description("Get course by id full")]
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
-
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public CourseInfoFullOutputModel GetCourseFull(int id)
         {
             var userToken = this.GetUserIdAndRoles();
@@ -69,6 +72,8 @@ namespace DevEdu.API.Controllers
         [Description("Create new course")]
         [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Methodist)]
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<CourseInfoShortOutputModel> AddCourse([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
@@ -81,6 +86,8 @@ namespace DevEdu.API.Controllers
         [Description("Delete course by id")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteCourse(int id)
         {
             _courseService.DeleteCourse(id);
@@ -91,6 +98,9 @@ namespace DevEdu.API.Controllers
         [Description("Update course by Id")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public CourseInfoShortOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
@@ -101,14 +111,14 @@ namespace DevEdu.API.Controllers
         //  api/course/{CourseId}/Material/{MaterialId}
         [AuthorizeRoles(Role.Methodist)]
         [HttpPost("{courseId}/material/{materialId}")]
-        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("Add material to course")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void AddCourseMaterialReference(int courseId, int materialId)
+        public ActionResult AddCourseMaterialReference(int courseId, int materialId)
         {
             _courseService.AddCourseMaterialReference(courseId, materialId);
+            return NoContent();
         }
 
         //  api/course/{CourseId}/Material/{MaterialId}
@@ -118,14 +128,17 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void RemoveCourseMaterialReference(int courseId, int materialId)
+        public ActionResult RemoveCourseMaterialReference(int courseId, int materialId)
         {
             _courseService.RemoveCourseMaterialReference(courseId, materialId);
+            return NoContent();
         }
 
         [HttpPost("{courseId}/task/{taskId}")]
         [Description("Add task to course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public string AddTaskToCourse(int courseId, int taskId)
         {
             _courseService.AddTaskToCourse(courseId, taskId);
@@ -135,6 +148,8 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{courseId}/task/{taskId}")]
         [Description("Delete task from course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public string RemoveTaskFromCourse(int courseId, int taskId)
         {
             _courseService.DeleteTaskFromCourse(courseId, taskId);
@@ -145,6 +160,9 @@ namespace DevEdu.API.Controllers
         [HttpPost("{courseId}/topic/{topicId}")]
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Add topic to course")]
         public CourseTopicOutputModel AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
         {
@@ -158,13 +176,16 @@ namespace DevEdu.API.Controllers
         [HttpPost("{courseId}/add-topics")]
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Add topics to course")]
         public List<CourseTopicOutputModel> AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
         {
             var dto = _mapper.Map<List<CourseTopicDto>>(inputModel);
 
             var id = _courseService.AddTopicsToCourse(courseId, dto);
-            dto = _courseService.GetCourseTopicBuSevealId(id);
+            dto = _courseService.GetCourseTopicBySeveralId(id);
             return _mapper.Map<List<CourseTopicOutputModel>>(dto);
         }
 
@@ -173,15 +194,19 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("Delete topic from course")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
-        public string DeleteTopicFromCourse(int courseId, int topicId)
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public ActionResult DeleteTopicFromCourse(int courseId, int topicId)
         {
             _courseService.DeleteTopicFromCourse(courseId, topicId);
-            return $"Topic Id:{topicId} deleted from course Id:{courseId}";
+            return NoContent();
         }
 
         [HttpGet("{courseId}/topics")]
-        [Description("Get all topics by course id ")]
+        [Description("Get all topics by course id")]
         [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<CourseTopicOutputModel> SelectAllTopicsByCourseId(int courseId)
         {
             var list = _courseService.SelectAllTopicsByCourseId(courseId);
@@ -194,11 +219,14 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("updates topics in the course")]
         [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public List<CourseTopicOutputModel> UpdateCourseTopicsByCourseId(int courseId, [FromBody] List<CourseTopicUpdateInputModel> topics)
         {
             var list = _mapper.Map<List<CourseTopicDto>>(topics);
             var ids = _courseService.UpdateCourseTopicsByCourseId(courseId, list);
-            list = _courseService.GetCourseTopicBuSevealId(ids);
+            list = _courseService.GetCourseTopicBySeveralId(ids);
             return _mapper.Map<List<CourseTopicOutputModel>>(list);
         }
     }

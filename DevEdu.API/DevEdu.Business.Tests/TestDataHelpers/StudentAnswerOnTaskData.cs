@@ -6,6 +6,8 @@ namespace DevEdu.Business.Tests
 {
     public class StudentAnswerOnTaskData
     {
+        public static DateTime _timeNow = DateTime.Now;
+
         public static StudentAnswerOnTaskDto DtoForTaskIdAndUserId()
         {
             return new StudentAnswerOnTaskDto
@@ -211,7 +213,7 @@ namespace DevEdu.Business.Tests
                 },
 
                 TaskStatus = (DAL.Enums.TaskStatus)2,
-                CompletedDate = DateTime.Now,
+                CompletedDate = new DateTime(_timeNow.Year, _timeNow.Month, _timeNow.Day, _timeNow.Hour, _timeNow.Minute, _timeNow.Second),
                 IsDeleted = false
             };
         }

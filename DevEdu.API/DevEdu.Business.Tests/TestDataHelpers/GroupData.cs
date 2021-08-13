@@ -77,7 +77,104 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<GroupDto> GetGroupsDto()
+        public static List<GroupDto> GetGroupDtos()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto
+                {
+                    Id = 1,
+                    Name = "Котейка",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Ололошки",
+                        Description = "Курс для котиков",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Понедельник 10-20",
+                    PaymentPerMonth = 5479.0M,
+                    Students = null,
+                    Teachers = new List<UserDto>()
+                    {
+                        new UserDto {
+                            Id = 2, 
+                            Roles = new List<Role>()
+                            {
+                                Role.Teacher
+                            }
+                        },
+                    },
+                    Tutors = null,
+                    IsDeleted = false
+                },
+                new GroupDto
+                {
+                    Id = 2,
+                    Name = "Котейка",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Ололошки",
+                        Description = "Курс для котиков",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Понедельник 10-20",
+                    PaymentPerMonth = 5479.0M,
+                    Students = null,
+                    Teachers = new List<UserDto>()
+                    {
+                        new UserDto {
+                            Id = 2,
+                            Roles = new List<Role>()
+                            {
+                                Role.Teacher
+                            }
+                        },
+                    },
+                    Tutors = null,
+                    IsDeleted = false
+                },
+                new GroupDto
+                {
+                    Id = 3,
+                    Name = "Котейка",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Ололошки",
+                        Description = "Курс для котиков",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Понедельник 10-20",
+                    PaymentPerMonth = 5479.0M,
+                    Students = null,
+                    Teachers =  new List<UserDto>()
+                    {
+                        new UserDto {
+                            Id = 2,
+                            Roles = new List<Role>()
+                            {
+                                Role.Teacher
+                            }
+                        },
+                    },
+                    Tutors = null,
+                    IsDeleted = false
+                }                
+            };
+        }
+
+        public static List<GroupDto> GetAnotherGroupDtos()
         {
             return new List<GroupDto>
             {
@@ -104,7 +201,7 @@ namespace DevEdu.Business.Tests
                 },
                 new GroupDto
                 {
-                    Id = 1,
+                    Id = 2,
                     Name = "Котейка",
                     Course = new CourseDto
                     {
@@ -125,7 +222,7 @@ namespace DevEdu.Business.Tests
                 },
                 new GroupDto
                 {
-                    Id = 1,
+                    Id = 3,
                     Name = "Котейка",
                     Course = new CourseDto
                     {
@@ -203,6 +300,76 @@ namespace DevEdu.Business.Tests
                 Students = null,
                 Teachers = null,
                 Tutors = null
+            };
+        }
+
+        public static List<GroupDto> GetAnotherListGroupDtos()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto
+                {
+                    Id = 4,
+                    Name = "Веселые ребята",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Древесные клен",
+                        Description = "Курс для пней",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "С зимы по лето - по зиму и снова по лето",
+                    PaymentPerMonth = 1010.0M,
+                    Students = null,
+                    Teachers = null,
+                    Tutors = null,
+                    IsDeleted = false
+                },
+                new GroupDto
+                {
+                    Id = 5,
+                    Name = "Окорок",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Как быстро бегать",
+                        Description = "Курс для птиц",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Вечерние занятия с 19-00",
+                    PaymentPerMonth = 2828.0M,
+                    Students = null,
+                    Teachers = null,
+                    Tutors = null,
+                    IsDeleted = false
+                },
+                new GroupDto
+                {
+                    Id = 6,
+                    Name = "Посмотри",
+                    Course = new CourseDto
+                    {
+                        Id = 1,
+                        Name = "Делаем красиво",
+                        Description = "качаем глаза",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Среда, четверг 14:00",
+                    PaymentPerMonth = 1707.0M,
+                    Students = null,
+                    Teachers = null,
+                    Tutors = null,
+                    IsDeleted = false
+                }
             };
         }
     }

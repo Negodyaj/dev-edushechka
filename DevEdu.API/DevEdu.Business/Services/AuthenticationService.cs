@@ -73,7 +73,7 @@ namespace DevEdu.Business.Services
 
         private ClaimsIdentity GetIdentity(string username, string password)
         {
-            var user = _userRepository.SelectUserByEmail(username);
+            var user = _userRepository.GetUserByEmail(username);
 
             var claims = new List<Claim>();
             if (user != null)
