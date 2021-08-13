@@ -51,7 +51,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task AddGroup_NotParams_GroupAdded()
+        public async Task AddGroup_NoEntry_GroupCreated()
         {
             //Given            
             var groupId = 2;
@@ -68,7 +68,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task GetGroupWithListStudents_ByIdAndByRoleStudent_ReturnGroupDto()
+        public async Task GetGroup_GroupIdForStudentRole_GroupDtoWithListOfStudentsReturned()
         {
             //Given            
             var groupId = 2;
@@ -93,7 +93,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task GetGroups_NotParams_ReturnListGroupDto()
+        public async Task GetGroups_NoEntry_ListOfGroupDtoReturned()
         {
             //Given
             var groupDtos = GroupData.GetGroupsDto();
@@ -109,7 +109,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task DeleteGroup_ById_ReturnVoid()
+        public async Task DeleteGroup_GroupId_GroupDeleted()
         {
             //Given
             var groupId = 2;
@@ -127,7 +127,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task UpdateGroupNameAndTimetable_ByIdAndGroupDto_ReturnGroupDto()
+        public async Task UpdateGroup_GroupIdAndGroupDto_UpdatedGroupDtoReturned()
         {
             //Given
             var groupId = 1;
@@ -149,7 +149,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task ChangeGroupStatus_ByGroupIdAndStatusId_ReturnGroupDto()
+        public async Task ChangeGroupStatus_GroupIdAndStatusId_GroupDtoReturned()
         {
             //Given            
             var groupId = 3;
@@ -169,7 +169,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task AddGroupToLesson_ByGroupIdAndLessonId_ReturnString()
+        public async Task AddGroupToLesson_GroupIdAndLessonId_GroupLessonReferenceCreated()
         {
             //Given
             var groupId = 1;
@@ -192,7 +192,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task RemoveGroupFromLesson_ByGroupIdAndLessonId_ReturnVoid()
+        public async Task RemoveGroupFromLesson_GroupIdAndLessonId_GroupLessonReferenceDeleted()
         {
             //Given
             var groupId = 1;
@@ -216,7 +216,7 @@ namespace DevEdu.Business.Tests
 
 
         [Test]
-        public async Task AddMaterialToGroup_IntGroupIdAndMaterialId_AddMaterialToGroup()
+        public async Task AddMaterialToGroup_GroupIdAndMaterialId_GroupMaterialReferenceCreated()
         {
             //Given
             var groupId = 2;
@@ -242,7 +242,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task DeleteMaterialFromGroup_IntGroupIdAndMaterialId_DeleteMaterialFromGroup()
+        public async Task DeleteMaterialFromGroup_GroupIdAndMaterialId_GroupMaterialReferenceDeleted()
         {
             //Given
             var groupId = 2;
@@ -267,7 +267,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task AddUserToGroup_ByGroupIdAndLessonIdAndRole_ReturnVoid()
+        public async Task AddUserToGroup_GroupIdLessonIdAndRoleId_UserGroupReferenceCreated()
         {
             //Given
             var groupId = 2;
@@ -291,7 +291,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task DeleteUserFromGroup_ByGroupIdAndUserId_ReturnVoid()
+        public async Task DeleteUserFromGroup_GroupIdAndUserId_UserGroupReferenceDeleted()
         {
             //Given
             var groupId = 2;
@@ -315,7 +315,7 @@ namespace DevEdu.Business.Tests
 
 
         [Test]
-        public async Task AddTaskToGroup_GroupTaskDto_GroupTaskCreated()
+        public async Task AddTaskToGroup_GroupIdTaskIdAndGroupTaskDto_GroupTaskReferenceCreated()
         {
             //Given
             var groupId = 1;
@@ -341,7 +341,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task GetGroupTaskByBothId_IntGroupIdAndTaskId_ReturnedGroupTasDto()
+        public async Task GetGroupTask_GroupIdAndTaskId_GroupTaskDtoReturned()
         {
             //Given
             var groupId = 2;
@@ -366,7 +366,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task UpdateGroupTask_GroupTaskDto_ReturnUpdatedGroupTaskDto()
+        public async Task UpdateGroupTask_GroupIdTaskIdAndGroupTaskDto_UpdatedGroupTaskDtoReturned()
         {
             //Given
             var groupId = 2;
@@ -393,7 +393,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task DeleteGroupTask_IntGroupIdAndTaskId_DeleteGroupTask()
+        public async Task DeleteTaskFromGroup_GroupIdAndTaskId_GroupTaskReferenceDeleted()
         {
             //Given
             var groupId = 1;
@@ -417,7 +417,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task GetTasksByGroupId_IntGroupId_ReturnedListOfGroupTaskDtoWithTask()
+        public async Task GetTasksByGroupId_GroupId_ListOfGroupTaskDtoWithTaskReturned()
         {
             //Given
             var groupId = 2;
