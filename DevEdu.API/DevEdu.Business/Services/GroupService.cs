@@ -106,7 +106,7 @@ namespace DevEdu.Business.Services
         private void CheckGroupAndLessonExistence(int groupId, int lessonId)
         {
             _groupValidationHelper.CheckGroupExistence(groupId);
-            _lessonValidationHelper.CheckLessonExistence(lessonId);
+            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
         }
     }
 }

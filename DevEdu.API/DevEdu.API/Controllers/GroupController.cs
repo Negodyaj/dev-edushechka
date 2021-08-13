@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
@@ -112,7 +111,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public string AddGroupToLesson(int groupId, int lessonId)
         public ActionResult AddGroupToLesson(int groupId, int lessonId)
         {
             _groupService.AddGroupToLesson(groupId, lessonId);
@@ -126,7 +124,6 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public string RemoveGroupFromLesson(int groupId, int lessonId)
         public ActionResult RemoveGroupFromLesson(int groupId, int lessonId)
         {
             _groupService.RemoveGroupFromLesson(groupId, lessonId);
