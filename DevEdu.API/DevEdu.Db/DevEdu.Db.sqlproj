@@ -252,6 +252,7 @@
     <Build Include="StoredProcedures\StudentRating\StudentRating_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAllAnswersByTaskId.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectAllAnswersByUserId.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectByCourseId.sql" />
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_SelectById.sql" />
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_SelectBySeveralId.sql" />
     <Build Include="StoredProcedures\Task_Student\Task_Student_SelectById.sql" />

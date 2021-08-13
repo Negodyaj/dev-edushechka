@@ -2,10 +2,12 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
@@ -18,8 +20,10 @@ namespace DevEdu.Business.Tests
         private Mock<IGroupRepository> _groupRepositoryMock;
         private Mock<IMaterialRepository> _materialRepositoryMock;
         private CourseValidationHelper _courseValidationHelper;
+        private TopicValidationHelper _topicValidationHelper;
+        private TaskValidationHelper _taskValidationHelper;
         private MaterialValidationHelper _materialValidationHelper;
-        private ITopicValidationHelper _topicValidationHelper;
+        private GroupValidationHelper _groupValidationHelper;
         private CourseService _sut;
 
 
@@ -32,6 +36,9 @@ namespace DevEdu.Business.Tests
             _groupRepositoryMock = new Mock<IGroupRepository>();
             _materialRepositoryMock = new Mock<IMaterialRepository>();
             _courseValidationHelper = new CourseValidationHelper(_courseRepositoryMock.Object);
+            _topicValidationHelper = new TopicValidationHelper(_topicRepositoryMock.Object);
+            _taskValidationHelper = new TaskValidationHelper(_taskRepositoryMock.Object, _groupRepositoryMock.Object);
+            _groupValidationHelper = new GroupValidationHelper(_groupRepositoryMock.Object);
             _materialValidationHelper = new MaterialValidationHelper(
                 _materialRepositoryMock.Object,
                 _groupRepositoryMock.Object,
@@ -43,9 +50,12 @@ namespace DevEdu.Business.Tests
                 _topicRepositoryMock.Object,
                 _taskRepositoryMock.Object,
                 _materialRepositoryMock.Object,
+                _groupRepositoryMock.Object,
                 _courseValidationHelper,
+                _topicValidationHelper,
+                _taskValidationHelper,
                 _materialValidationHelper,
-                _topicValidationHelper
+                _groupValidationHelper
             );
         }
 
@@ -84,7 +94,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetCourseById_IntCourseId_ReturnCourseWithGroups()
+        public void GetCourseById_IntCourseId_ReturnCourseWithTopics()
         {
             //Given
             var courseDto = CourseData.GetCourseDto();
@@ -99,25 +109,48 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Verify(x => x.GetCourse(courseId), Times.Once);
             _taskRepositoryMock.Verify(x => x.GetTasksByCourseId(courseId), Times.Never);
             _materialRepositoryMock.Verify(x => x.GetMaterialsByCourseId(courseId), Times.Never);
-            _topicRepositoryMock.Verify(x => x.GetTopicsByCourseId(courseId), Times.Never);
+            _groupRepositoryMock.Verify(x => x.GetGroupsByCourseId(courseId), Times.Never);
         }
-        [Test]
-        public void GetCourseById_IntCourseId_ReturnCourseWithGroups_Topics_Materials_Tasks()
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void GetCourseById_IntCourseIdByTeacherOrTutor_ReturnCourseWithTopics_Groups_Materials_Tasks(Enum role)
         {
             //Given
             var courseDto = CourseData.GetCourseDto();
             var courseId = 1;
+            var userToken = UserIdentityInfoData.GetUserIdentityWithRole(role);
             _courseRepositoryMock.Setup(x => x.GetCourse(courseId)).Returns(courseDto);
 
             //When
-            var dto = _sut.GetFullCourseInfo(courseId);
+            var dto = _sut.GetFullCourseInfo(courseId, userToken);
 
             //Than
             Assert.AreEqual(courseDto, dto);
             _courseRepositoryMock.Verify(x => x.GetCourse(courseId), Times.Once);
             _taskRepositoryMock.Verify(x => x.GetTasksByCourseId(courseId), Times.Once);
             _materialRepositoryMock.Verify(x => x.GetMaterialsByCourseId(courseId), Times.Once);
-            _topicRepositoryMock.Verify(x => x.GetTopicsByCourseId(courseId), Times.Once);
+            _groupRepositoryMock.Verify(x => x.GetGroupsByCourseId(courseId), Times.Once);
+        }
+
+        [TestCase(Role.Methodist)]
+        public void GetCourseById_IntCourseIdByMethodist_ReturnCourseWithTopics_Groups_Materials(Enum role)
+        {
+            //Given
+            var courseDto = CourseData.GetCourseDto();
+            var courseId = 1;
+            var userToken = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            _courseRepositoryMock.Setup(x => x.GetCourse(courseId)).Returns(courseDto);
+
+            //When
+            var dto = _sut.GetFullCourseInfo(courseId, userToken);
+
+            //Than
+            Assert.AreEqual(courseDto, dto);
+            _courseRepositoryMock.Verify(x => x.GetCourse(courseId), Times.Once);
+            _taskRepositoryMock.Verify(x => x.GetTasksByCourseId(courseId), Times.Never);
+            _materialRepositoryMock.Verify(x => x.GetMaterialsByCourseId(courseId), Times.Once);
+            _groupRepositoryMock.Verify(x => x.GetGroupsByCourseId(courseId), Times.Once);
         }
 
         [Test]

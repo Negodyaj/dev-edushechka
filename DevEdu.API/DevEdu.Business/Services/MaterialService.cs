@@ -83,7 +83,7 @@ namespace DevEdu.Business.Services
         public int AddMaterialWithCourses(MaterialDto dto, List<int> tags, List<int> courses)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(courses, nameof(courses));
-            courses.ForEach(course => _courseValidationHelper.CheckCourseExistence(course));
+            courses.ForEach(course => _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(course));
 
             var materialId = AddMaterial(dto, tags);
             courses.ForEach(course => _courseRepository.AddCourseMaterialReference(course, materialId));
