@@ -20,6 +20,8 @@ namespace DevEdu.Business.ValidationHelpers
             var payment = _paymentRepository.GetPayment(paymentId);
             if (payment == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(payment), paymentId));
+            if (payment.IsDeleted)
+                throw new EntityNotFoundException(ServiceMessages.PaymentDeleted);
             return payment;
         }
         public List<PaymentDto> GetPaymentsByUserIdAndThrowIfNotFound(int userId)

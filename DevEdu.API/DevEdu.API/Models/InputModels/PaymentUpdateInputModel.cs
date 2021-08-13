@@ -18,6 +18,6 @@ namespace DevEdu.API.Models.InputModels
         public int Sum { get; set; }
         
         [Required(ErrorMessage = IsPaidRequired)]
-        public int IsPaid { get; set; }
+        public bool IsPaid { get; set; }
     }
 }
