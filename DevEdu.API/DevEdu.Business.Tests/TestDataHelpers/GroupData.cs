@@ -8,9 +8,6 @@ namespace DevEdu.Business.Tests
 {
     public class GroupData
     {
-        public const Role RoleStudent = Role.Student;
-        public const GroupStatus StatusGroup = GroupStatus.Forming;
-
         public static UserIdentityInfo GetUserInfo()
         {
             return new UserIdentityInfo() { UserId = 1, Roles = new() { Role.Admin, Role.Manager } };

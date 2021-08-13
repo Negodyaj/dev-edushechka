@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
@@ -67,20 +68,19 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.AddGroup(groupDto), Times.Once);
         }
 
-        [Test]
-        public async Task GetGroup_GroupIdForStudentRole_GroupDtoWithListOfStudentsReturned()
+        [TestCase(Role.Student)]
+        public async Task GetGroup_GroupIdForStudentRole_GroupDtoWithListOfStudentsReturned(Role role)
         {
             //Given            
             var groupId = 2;
             var groupId2 = 3;
-            var roleStudent = GroupData.RoleStudent;
             var groupDto = GroupData.GetGroupDto();
             var studentDtos = UserData.GetListUsersDto();
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
             _groupRepoMock.Setup(x => x.GetGroup(groupId2));
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)roleStudent)).Returns(studentDtos);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)role)).Returns(studentDtos);
 
             //When
             var actualGroupDto = await _sut.GetGroup(groupId, userInfo);
@@ -89,7 +89,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(groupDto, actualGroupDto);
             _groupRepoMock.Verify(x => x.GetGroup(groupId2), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)roleStudent), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)role), Times.Once);
         }
 
         [Test]
@@ -148,24 +148,23 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.UpdateGroup(groupDto), Times.Once);
         }
 
-        [Test]
-        public async Task ChangeGroupStatus_GroupIdAndStatusId_GroupDtoReturned()
+        [TestCase(GroupStatus.Forming)]
+        public async Task ChangeGroupStatus_GroupIdAndStatusId_GroupDtoReturned(GroupStatus status)
         {
             //Given            
             var groupId = 3;
-            var groupStatus = GroupData.StatusGroup;
             var groupDto = GroupData.GetGroupDto();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
-            _groupRepoMock.Setup(x => x.ChangeGroupStatus(groupId, (int)groupStatus)).ReturnsAsync(groupDto);
+            _groupRepoMock.Setup(x => x.ChangeGroupStatus(groupId, (int)status)).ReturnsAsync(groupDto);
 
             //When
-            var actualGroupDto = await _sut.ChangeGroupStatus(groupId, groupStatus);
+            var actualGroupDto = await _sut.ChangeGroupStatus(groupId, status);
 
             //Then
             Assert.AreEqual(groupDto, actualGroupDto);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _groupRepoMock.Verify(x => x.ChangeGroupStatus(groupId, (int)groupStatus), Times.Once);
+            _groupRepoMock.Verify(x => x.ChangeGroupStatus(groupId, (int)status), Times.Once);
         }
 
         [Test]
@@ -266,15 +265,14 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.RemoveGroupMaterialReference(groupId, materialId), Times.Once);
         }
 
-        [Test]
-        public async Task AddUserToGroup_GroupIdLessonIdAndRoleId_UserGroupReferenceCreated()
+        [TestCase(Role.Student)]
+        public async Task AddUserToGroup_GroupIdLessonIdAndRoleId_UserGroupReferenceCreated(Role role)
         {
             //Given
             var groupId = 2;
             var userId = 3;
             var groupDto = GroupData.GetGroupDto();
             var userDto = UserData.GetUserDto();
-            var role = GroupData.RoleStudent;
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
