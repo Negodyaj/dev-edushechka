@@ -22,15 +22,20 @@ namespace DevEdu.Business.ValidationHelpers
             _lessonRepository = lessonRepository;
             _groupRepository = groupRepository;
             _userRepository = userRepository;
-            
         }
 
-        public LessonDto CheckLessonExistence(int lessonId)
+        public LessonDto GetLessonByIdAndThrowIfNotFound(int lessonId)
         {
             var lesson = _lessonRepository.SelectLessonById(lessonId);
             if (lesson == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(lesson), lessonId));
             return lesson;
+        }
+
+        public void CheckTopicLessonReferenceIsUnique(LessonDto lesson, int topicId)
+        {
+            if (lesson.Topics.Any(topic => topic.Id == topicId))
+                throw new ValidationException(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lesson.Id, topicId));
         }
 
         public void CheckUserAndTeacherAreSame(UserIdentityInfo userIdentity, int teacherId)
@@ -59,14 +64,21 @@ namespace DevEdu.Business.ValidationHelpers
             }
         }
 
-
-        public void CheckUserInLessonAccess(int lessonId, int userId)
+        public void CheckUserBelongsToLesson(int lessonId, int userId)
         {
             var groupsByLesson = _groupRepository.GetGroupsByLessonId(lessonId);
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
             var result = groupsByUser.FirstOrDefault(gu => groupsByLesson.Any(gl => gl.Id == gu.Id));
             if (result == default)
-                throw new AuthorizationException(string.Format(ServiceMessages.UserOnLessonNotFoundMessage, userId, lessonId));
+                throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userId, lessonId));
         }
+        public void CheckAttendanceExistence(int lessonId, int userId)
+        {
+            var attandance = _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
+            if (attandance == default)
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(attandance), lessonId, userId));
+
+        }
+
     }
 }

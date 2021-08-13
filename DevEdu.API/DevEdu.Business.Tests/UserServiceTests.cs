@@ -33,15 +33,15 @@ namespace DevEdu.Business.Tests
 
             _repoMock.Setup(x => x.AddUser(user)).Returns(UserData.expectedUserId);
             _repoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
-            _repoMock.Setup(x => x.SelectUserById(expectedUserId)).Returns(new UserDto { Id = expectedUserId });
+            _repoMock.Setup(x => x.GetUserById(expectedUserId)).Returns(new UserDto { Id = expectedUserId });
 
             //When
-            var actual = _sut.AddUser(user);
+            var actualDto = _sut.AddUser(user);
 
             //Then
-            Assert.AreEqual(UserData.expectedUserId, actual.Id);
+            Assert.AreEqual(UserData.expectedUserId, actualDto.Id);
             _repoMock.Verify(x => x.AddUser(user), Times.Once);
-            _repoMock.Verify(x => x.AddUserRole(actual.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            _repoMock.Verify(x => x.AddUserRole(actualDto.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
         }
 
         [Test]
@@ -49,29 +49,29 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedDto = UserData.GetUserDto();
-            _repoMock.Setup(x => x.SelectUserById(UserData.expectedUserId)).Returns(expectedDto);
+            _repoMock.Setup(x => x.GetUserById(UserData.expectedUserId)).Returns(expectedDto);
 
             //When
-            var actualDto = _sut.SelectUserById(UserData.expectedUserId);
+            var actualDto = _sut.GetUserById(UserData.expectedUserId);
 
             //Then
             Assert.AreEqual(expectedDto, actualDto);
-            _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.AtLeastOnce);
+            _repoMock.Verify(x => x.GetUserById(UserData.expectedUserId), Times.Once);
         }
 
         [Test]
         public void SelectUserByEmail_UserEmail_ReturnUserDto()
         {
             //Given
-            var user = UserData.GetUserDto();
-            _repoMock.Setup(x => x.SelectUserByEmail(user.Email)).Returns(user);
+            var expectedDto = UserData.GetUserDto();
+            _repoMock.Setup(x => x.GetUserByEmail(expectedDto.Email)).Returns(expectedDto);
 
             //When
-            var actualUser = _sut.SelectUserByEmail(user.Email);
+            var actualDto = _sut.GetUserByEmail(expectedDto.Email);
 
             //Then
-            Assert.AreEqual(user, actualUser);
-            _repoMock.Verify(x => x.SelectUserByEmail(user.Email), Times.Once);
+            Assert.AreEqual(expectedDto, actualDto);
+            _repoMock.Verify(x => x.GetUserByEmail(expectedDto.Email), Times.Once);
         }
 
         [Test]
@@ -79,34 +79,34 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedList = UserData.GetListUsersDto();
-            _repoMock.Setup(x => x.SelectUsers()).Returns(expectedList);
+            _repoMock.Setup(x => x.GetAllUsers()).Returns(expectedList);
 
             //When
-            var actualList = _sut.SelectUsers();
+            var actualList = _sut.GetAllUsers();
 
             //Then
             Assert.AreEqual(expectedList, actualList);
-            _repoMock.Verify(x => x.SelectUsers(), Times.Once);
+            _repoMock.Verify(x => x.GetAllUsers(), Times.Once);
         }
 
         [Test]
         public void UpdateUser_UserDto_ReturnUpdateUserDto()
         {
             //Given
-            var expectedDto = UserData.GetUserDto();
+            var expectedDto =  UserData.GetUserDto();
             var expectedAnotherDto = UserData.GetAnotherUserDto();
             var expectedMinimumCallCount = 2;
 
-            _repoMock.Setup(x => x.UpdateUser(expectedDto));
-            _repoMock.Setup(x => x.SelectUserById(expectedDto.Id)).Returns(expectedAnotherDto);
+            _repoMock.Setup(x => x.UpdateUser(expectedAnotherDto));
+            _repoMock.Setup(x => x.GetUserById(expectedAnotherDto.Id)).Returns(expectedDto);
 
             //When
-            var actualDto = _sut.UpdateUser(expectedDto);
+            var actualDto = _sut.UpdateUser(expectedAnotherDto);
 
             //Then
-            Assert.AreEqual(expectedAnotherDto, actualDto);
-            _repoMock.Verify(x => x.UpdateUser(expectedDto), Times.Once);
-            _repoMock.Verify(x => x.SelectUserById(expectedDto.Id), Times.AtLeast(expectedMinimumCallCount));
+            Assert.AreEqual(expectedDto, actualDto);
+            _repoMock.Verify(x => x.UpdateUser(expectedAnotherDto), Times.Once);
+            _repoMock.Verify(x => x.GetUserById(expectedAnotherDto.Id), Times.AtLeast(expectedMinimumCallCount));
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace DevEdu.Business.Tests
 
             _repoMock.Setup(x => x.AddUser(expectedUser)).Returns(UserData.expectedUserId);
             _repoMock.Setup(x => x.AddUserRole(UserData.expectedUserId, It.IsAny<int>()));
-            _repoMock.Setup(x => x.SelectUserById(UserData.expectedUserId)).Returns(expectedUser);
+            _repoMock.Setup(x => x.GetUserById(UserData.expectedUserId)).Returns(expectedUser);
 
             //When
             var actualUser = _sut.AddUser(expectedUser);
@@ -126,7 +126,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedUser, actualUser);
             _repoMock.Verify(x => x.AddUser(expectedUser), Times.Once);
             _repoMock.Verify(x => x.AddUserRole(actualUser.Id, It.IsAny<int>()), Times.Never);
-            _repoMock.Verify(x => x.SelectUserById(UserData.expectedUserId), Times.AtLeastOnce);
+            _repoMock.Verify(x => x.GetUserById(UserData.expectedUserId), Times.Once);
         }
 
         [TestCase(1)]
@@ -139,10 +139,11 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.SelectUserById(userId));
+                () => _sut.GetUserById(userId));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
+            _repoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
         [Test]
@@ -155,11 +156,11 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.SelectUserByEmail(user.Email));
+                () => _sut.GetUserByEmail(user.Email));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _repoMock.Verify(x => x.SelectUserByEmail(user.Email), Times.Once);
+            _repoMock.Verify(x => x.GetUserByEmail(user.Email), Times.Once);
         }
 
         [Test]
@@ -175,13 +176,11 @@ namespace DevEdu.Business.Tests
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _repoMock.Verify(x => x.SelectUserById(user.Id), Times.Once);
+            _repoMock.Verify(x => x.GetUserById(user.Id), Times.Once);
             _repoMock.Verify(x => x.UpdateUser(user), Times.Never);
         }
 
-        [TestCase(1)]
         [TestCase(100)]
-        [TestCase(100500)]
         public void DeleteUser_WhenDoNotHaveMatchesInDataBase_EntityNotFoundException(int id)
         {
             //Given
@@ -229,6 +228,59 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _repoMock.Verify(x => x.DeleteUserRole(userId, roleId), Times.Never);
+        }
+       
+        [Test]
+        public void AddUserRole_UserIdAndRoleId_UserRoleWasCreated()
+        {
+            //Given
+            var roleId = 6;
+            var user = UserData.GetUserDto();
+            var userId = user.Id;
+            _repoMock.Setup(x => x.AddUserRole(userId, roleId));
+            _repoMock.Setup(x => x.GetUserById(userId)).Returns(user);
+
+            //When
+            _sut.AddUserRole(userId, roleId);
+
+            //Then
+            _repoMock.Verify(x => x.AddUserRole(userId, roleId), Times.Once);
+            _repoMock.Verify(x => x.GetUserById(userId), Times.Once);
+        }
+
+        [Test]
+        public void DeleteUserRole_UserIdAndRoleId_UserRoleWasDeleted()
+        {
+            //Given
+            var roleId = 6;
+            var user = UserData.GetUserDto();
+            var userId = user.Id;
+            _repoMock.Setup(x => x.DeleteUserRole(userId, roleId));
+            _repoMock.Setup(x => x.GetUserById(userId)).Returns(user);
+
+            //When
+            _sut.DeleteUserRole(userId, roleId);
+
+            //Then
+            _repoMock.Verify(x => x.DeleteUserRole(userId, roleId), Times.Once);
+            _repoMock.Verify(x => x.GetUserById(userId), Times.Once);
+        }
+
+        [Test]
+        public void DeleteUser_UserId_UserWasDeleted()
+        {
+            //Given
+            var user = UserData.GetUserDto();
+            var userId = user.Id;
+            _repoMock.Setup(x => x.DeleteUser(userId));
+            _repoMock.Setup(x => x.GetUserById(userId)).Returns(user);
+
+            //When
+            _sut.DeleteUser(userId);
+
+            //Than
+            _repoMock.Verify(x => x.DeleteUser(userId), Times.Once);
+            _repoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
     }
 }

@@ -72,7 +72,7 @@ namespace DevEdu.Business.Services
         public void AddUserToGroup(int groupId, int userId, int roleId)
         {
             _groupValidationHelper.CheckGroupExistence(groupId);
-            var user = _userRepository.SelectUserById(userId);
+            var user = _userRepository.GetUserById(userId);
             if (user == default)
             {
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
@@ -87,7 +87,7 @@ namespace DevEdu.Business.Services
         public void DeleteUserFromGroup(int groupId, int userId)
         {
             _groupValidationHelper.CheckGroupExistence(groupId);
-            var user = _userRepository.SelectUserById(userId);
+            var user = _userRepository.GetUserById(userId);
             if (user == default)
             {
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
@@ -100,7 +100,7 @@ namespace DevEdu.Business.Services
         {
             var userId = userInfo.UserId;
             _groupValidationHelper.CheckGroupExistence(groupId);
-            _materialValidationHelper.CheckMaterialExistence(materialId);
+            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
             if (!userInfo.IsAdmin())
                 _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
         }

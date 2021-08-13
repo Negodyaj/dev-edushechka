@@ -41,31 +41,31 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher)]
         [HttpPost("teacher")]
         [Description("Add new task by teacher")]
-        [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public TaskInfoOutputModel AddTaskByTeacher([FromBody] TaskByTeacherInputModel model)
+        public ActionResult<TaskInfoOutputModel> AddTaskByTeacher([FromBody] TaskByTeacherInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
             var homeworkDto = _mapper.Map<HomeworkDto>(model.Homework);
             var task = _taskService.AddTaskByTeacher(taskDto, homeworkDto, model.GroupId, model.Tags);
-
-            return _mapper.Map<TaskInfoOutputModel>(task);
+            var output = _mapper.Map<TaskInfoOutputModel>(task);
+            return StatusCode(201, output);
         }
 
         // api/task/methodist
         [AuthorizeRoles(Role.Methodist)]
         [HttpPost("methodist")]
         [Description("Add new task by methodist")]
-        [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public TaskInfoOutputModel AddTaskByMethodist([FromBody] TaskByMethodistInputModel model)
+        public ActionResult<TaskInfoOutputModel> AddTaskByMethodist([FromBody] TaskByMethodistInputModel model)
         {
             var taskDto = _mapper.Map<TaskDto>(model);
             var task = _taskService.AddTaskByMethodist(taskDto, model.CourseIds, model.Tags);
-
-            return _mapper.Map<TaskInfoOutputModel>(task);
+            var output = _mapper.Map<TaskInfoOutputModel>(task);
+            return StatusCode(201, output);
         }
 
         // api/task/{taskId}
@@ -105,13 +105,15 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteTask(int taskId)
+        public ActionResult DeleteTask(int taskId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
             _taskService.DeleteTask(taskId, userIdentityInfo);
+            return NoContent();
         }
 
-        //  api/Task/1
+
+        //  api/Task/1 
         [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet("{taskId}")]
         [Description("Get task by Id with tags")]
@@ -125,7 +127,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
         }
 
-        //  api/Task/1/with-courses
+        //  api/Task/1/with-courses 
         [AuthorizeRoles(Role.Methodist)]
         [HttpGet("{taskId}/with-courses")]
         [Description("Get task by Id with tags and courses")]
@@ -139,7 +141,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
         }
 
-        //  api/Task/1/with-answers
+        //  api/Task/1/with-answers 
         [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [HttpGet("{taskId}/with-answers")]
         [Description("Get task by Id with tags and answers")]
@@ -153,7 +155,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
         }
 
-        //  api/Task/1/with-courses
+        //  api/Task/1/with-courses 
         [AuthorizeRoles(Role.Teacher)]
         [HttpGet("{taskId}/with-groups")]
         [Description("Get task by Id with tags and groups")]
@@ -167,7 +169,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<TaskInfoWithGroupsOutputModel>(taskDto);
         }
 
-        //  api/Task
+        //  api/Task 
         [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet]
         [Description("Get all tasks with tags")]
@@ -180,7 +182,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<TaskInfoOutputModel>>(taskDtos);
         }
 
-        // api/task/{taskId}/tag/{tagId}
+        // api/task/{taskId}/tag/{tagId} 
         [HttpPost("{taskId}/tag/{tagId}")]
         [Description("Add tag to task")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -191,7 +193,7 @@ namespace DevEdu.API.Controllers
             _taskService.AddTagToTask(taskId, tagId);
         }
 
-        // api/task/{taskId}/tag/{tagId}
+        // api/task/{taskId}/tag/{tagId} 
         [HttpDelete("{taskId}/tag/{tagId}")]
         [Description("Delete tag from task")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -202,7 +204,7 @@ namespace DevEdu.API.Controllers
             _taskService.DeleteTagFromTask(taskId, tagId);
         }
 
-        // api/task/{taskId}/student/{studentId}
+        // api/task/{taskId}/student/{studentId} 
         [HttpPost("{taskId}/student/{studentId}")]
         [AuthorizeRoles(Role.Student)]
         [Description("Add student answer on task")]
@@ -210,7 +212,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public StudentAnswerOnTaskFullOutputModel AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
+        public ActionResult<StudentAnswerOnTaskFullOutputModel> AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
             var userInfo = this.GetUserIdAndRoles();
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
@@ -218,10 +220,10 @@ namespace DevEdu.API.Controllers
             var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId, userInfo);
             var output = _mapper.Map<StudentAnswerOnTaskFullOutputModel>(studentAnswerDto);
 
-            return output;
+            return StatusCode(201, output);
         }
 
-        // api/task/{taskId}/all-answers
+        // api/task/{taskId}/all-answers 
         [HttpGet("{taskId}/all-answers")]
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist)]
         [Description("Get all student answers on tasks by task")]
@@ -237,7 +239,7 @@ namespace DevEdu.API.Controllers
             return output;
         }
 
-        // api/task/{taskId}/student/{studentId}
+        // api/task/{taskId}/student/{studentId} 
         [HttpGet("{taskId}/student/{studentId}")]
         [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [Description("Get student answer on task by task and student")]
@@ -253,7 +255,7 @@ namespace DevEdu.API.Controllers
             return output;
         }
 
-        // api/task/{taskId}/student/{studentId}
+        // api/task/{taskId}/student/{studentId} 
         [HttpPut("{taskId}/student/{studentId}")]
         [AuthorizeRoles(Role.Student)]
         [Description("Update student answer on task")]
@@ -270,7 +272,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<StudentAnswerOnTaskFullOutputModel>(output);
         }
 
-        // api/task/{taskId}/student/{studentId}
+        // api/task/{taskId}/student/{studentId} 
         [HttpDelete("{taskId}/student/{studentId}")]
         [AuthorizeRoles(Role.Student)]
         [Description("Delete student answer on task")]
@@ -278,13 +280,14 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public void DeleteStudentAnswerOnTask(int taskId, int studentId)
+        public ActionResult DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
             var userInfo = this.GetUserIdAndRoles();
             _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(taskId, studentId, userInfo);
+            return NoContent();
         }
 
-        // api/task/{taskId}/student/{studentId}/change-status/{statusId}
+        // api/task/{taskId}/student/{studentId}/change-status/{statusId} 
         [HttpPut("{taskId}/student/{studentId}/change-status/{statusId}")]
         [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [Description("Update task status of student answer")]
@@ -300,7 +303,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<StudentAnswerOnTaskFullOutputModel>(output);
         }
 
-        // api/task/answer/by-user/42
+        // api/task/answer/by-user/42 
         [HttpGet("answer/by-user/{userId}")]
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student, Role.Methodist)]
         [Description("Get all answers of student")]

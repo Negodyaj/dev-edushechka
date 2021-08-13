@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Configuration;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
@@ -111,10 +110,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public string AddGroupToLesson(int groupId, int lessonId)
+        public ActionResult AddGroupToLesson(int groupId, int lessonId)
         {
             _groupService.AddGroupToLesson(groupId, lessonId);
-            return $"Group {groupId} add  Lesson Id:{lessonId}";
+            return NoContent();
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
@@ -123,10 +122,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public string RemoveGroupFromLesson(int groupId, int lessonId)
+        public ActionResult RemoveGroupFromLesson(int groupId, int lessonId)
         {
             _groupService.RemoveGroupFromLesson(groupId, lessonId);
-            return $"Group {groupId} remove  Lesson Id:{lessonId}";
+            return NoContent();
         }
 
         // api/Group/{groupId}/material/{materialId}
@@ -136,10 +135,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void AddGroupMaterialReference(int groupId, int materialId)
+        public ActionResult AddGroupMaterialReference(int groupId, int materialId)
         {
             var userInfo = this.GetUserIdAndRoles();
             _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
+            return NoContent();
         }
 
         // api/Group/{groupId}/material/{materialId}
@@ -149,10 +149,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void RemoveGroupMaterialReference(int groupId, int materialId)
+        public ActionResult RemoveGroupMaterialReference(int groupId, int materialId)
         {
             var userInfo = this.GetUserIdAndRoles();
             _groupService.RemoveGroupMaterialReference(groupId, materialId, userInfo);
+            return NoContent();
         }
 
         //  api/group/1/user/2/role/1
@@ -162,7 +163,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void AddUserToGroup(int groupId, int userId, int roleId) => _groupService.AddUserToGroup(groupId, userId, roleId);
+        public ActionResult AddUserToGroup(int groupId, int userId, int roleId)
+        {
+            _groupService.AddUserToGroup(groupId, userId, roleId);
+            return NoContent();
+        }
 
         //  api/group/1/user/2
         [AuthorizeRoles(Role.Manager)]
@@ -171,6 +176,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteUserFromGroup(int groupId, int userId) => _groupService.DeleteUserFromGroup(userId, groupId);
+        public ActionResult DeleteUserFromGroup(int groupId, int userId)
+        {
+            _groupService.DeleteUserFromGroup(userId, groupId);
+            return NoContent();
+        }
     }
 }

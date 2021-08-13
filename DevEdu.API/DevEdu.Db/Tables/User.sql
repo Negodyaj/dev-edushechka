@@ -3,7 +3,7 @@
 	FirstName			nvarchar(50)	NOT NULL,
 	LastName			nvarchar(50)	NOT NULL,
 	Patronymic 			nvarchar(50)	NOT NULL,
-	Email				nvarchar(50)	NOT NULL, 
+	Email				nvarchar(50)	NOT NULL UNIQUE, 
 	Username			nvarchar(50)	NOT NULL,
 	Password			nvarchar(200)	NOT NULL,
 	RegistrationDate	datetime		NOT NULL,
