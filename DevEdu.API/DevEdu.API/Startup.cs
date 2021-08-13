@@ -22,9 +22,10 @@ namespace DevEdu.API
         public Startup(IConfiguration configuration)
         {
             var environmentAccess = "ASPNETCORE_ENVIRONMENT";
+                environmentAccess = configuration
+                .GetSection(environmentAccess).Value;
             var builder = new ConfigurationBuilder()
-                .AddJsonFile(string.Format("appsettings.{0}.json", configuration
-                .GetSection(environmentAccess).Value));
+                .AddJsonFile(string.Format("appsettings.{0}.json", environmentAccess));
 
             Configuration = builder.Build();
             SetEnvironmentVariableForConfiguration("AuthSettings:KeyForToken");
