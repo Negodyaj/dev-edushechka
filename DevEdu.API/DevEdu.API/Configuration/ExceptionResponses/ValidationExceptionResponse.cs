@@ -1,6 +1,5 @@
 ﻿using DevEdu.Business.Exceptions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
 using System.Collections.Generic;
 
 namespace DevEdu.API.Configuration
@@ -13,13 +12,10 @@ namespace DevEdu.API.Configuration
 
         public ValidationExceptionResponse(ValidationException exception)
         {
-            Errors = new List<ValidationError>();
-            Errors.Add(new ValidationError
+            Errors = new List<ValidationError>
             {
-                Code = 422,
-                Field = exception.Field,
-                Message = exception.Message
-            });
+                new ValidationError {Code = 422, Field = exception.Field, Message = exception.Message}
+            };
         }
         public ValidationExceptionResponse(ModelStateDictionary modelState)
         {

@@ -77,10 +77,6 @@ namespace DevEdu.Business.Services
             {
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
             }
-            if (!user.Roles.Contains((Role)roleId))
-            {
-                throw new ValidationException(string.Format(ServiceMessages.UserDoesntHaveRole, userId, (Role)roleId));
-            }
             _groupRepository.AddUserToGroup(groupId, userId, roleId);
         }
 

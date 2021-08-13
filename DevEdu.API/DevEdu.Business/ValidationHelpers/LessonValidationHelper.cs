@@ -35,13 +35,13 @@ namespace DevEdu.Business.ValidationHelpers
         public void CheckTopicLessonReferenceIsUnique(LessonDto lesson, int topicId)
         {
             if (lesson.Topics.Any(topic => topic.Id == topicId))
-                throw new ValidationException(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lesson.Id, topicId));
+                throw new ValidationException(nameof(topicId), string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lesson.Id, topicId));
         }
 
         public void CheckUserAndTeacherAreSame(UserIdentityInfo userIdentity, int teacherId)
         {
             if (userIdentity.UserId != teacherId)
-                throw new ValidationException(string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.UserId, teacherId));
+                throw new ValidationException(nameof(teacherId), string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.UserId, teacherId));
         }
 
         public void CheckUserBelongsToLesson(UserIdentityInfo userIdentity, LessonDto lesson)

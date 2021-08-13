@@ -72,9 +72,10 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckPassedValuesAreUnique(List<int> values, string entity)
         {
-            if (!(values.Distinct().Count() == values.Count))
-                throw new ValidationException(string.Format(ServiceMessages.DuplicateValuesProvided, entity));
+            if (values.Distinct().Count() != values.Count)
+                throw new ValidationException(entity, string.Format(ServiceMessages.DuplicateValuesProvided, entity));
         }
+        
         private MaterialDto GetMaterialIfAllowedToUserByGroup(MaterialDto material, int userId)
         {
             var groupsByMaterial = _groupRepository.GetGroupsByMaterialId(material.Id);

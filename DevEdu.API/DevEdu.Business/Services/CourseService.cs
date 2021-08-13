@@ -176,14 +176,14 @@ namespace DevEdu.Business.Services
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
-                throw new ValidationException(ServiceMessages.SamePositionsInCourseTopics);
+                throw new ValidationException(nameof(CourseTopicDto.Position), ServiceMessages.SamePositionsInCourseTopics);
             }
         }
         private void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
-                throw new ValidationException(ServiceMessages.SameTopicsInCourseTopics);
+                throw new ValidationException(nameof(CourseTopicDto.Topic), ServiceMessages.SameTopicsInCourseTopics);
             }
         }
         private void CheckCourseAndTopicExistences(int courseId, int topicId)

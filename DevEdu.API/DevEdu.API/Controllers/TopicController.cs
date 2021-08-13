@@ -106,7 +106,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult AddTagToTopic(int topicId, int tagId)
         {
-            _topicService.AddTagToTopic(topicId, tagId);
+            _topicService.AddTagToTopic(topicId, tagId);
+
             return StatusCode(201);
         }
 

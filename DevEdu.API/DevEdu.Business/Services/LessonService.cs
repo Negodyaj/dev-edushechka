@@ -119,7 +119,7 @@ namespace DevEdu.Business.Services
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
             if(_lessonRepository.DeleteTopicFromLesson(lessonId, topicId) == 0)
             {
-                throw new ValidationException(string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId));
+                throw new ValidationException(nameof(topicId), string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId));
             }
         }
 
