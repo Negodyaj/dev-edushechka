@@ -178,7 +178,6 @@ namespace DevEdu.API.Controllers
             return StatusCode(201, outPut);
         }
 
-
         // api/lesson/{lessonId}/student/{studentId}
         [AuthorizeRoles(Role.Teacher)]
         [HttpDelete("{lessonId}/student/{studentId}")]

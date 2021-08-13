@@ -206,6 +206,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId} 
         [HttpPost("{taskId}/student/{studentId}")]
+        [AuthorizeRoles(Role.Student)]
         [Description("Add student answer on task")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -213,9 +214,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<StudentAnswerOnTaskFullOutputModel> AddStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
+            var userInfo = this.GetUserIdAndRoles();
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
-            _studentAnswerOnTaskService.AddStudentAnswerOnTask(taskId, studentId, taskAnswerDto);
-            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            _studentAnswerOnTaskService.AddStudentAnswerOnTask(taskId, studentId, taskAnswerDto, userInfo);
+            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId, userInfo);
             var output = _mapper.Map<StudentAnswerOnTaskFullOutputModel>(studentAnswerDto);
 
             return StatusCode(201, output);
@@ -223,13 +225,15 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/all-answers 
         [HttpGet("{taskId}/all-answers")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist)]
         [Description("Get all student answers on tasks by task")]
         [ProducesResponseType(typeof(List<StudentAnswerOnTaskFullOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<StudentAnswerOnTaskFullOutputModel> GetAllStudentAnswersOnTask(int taskId)
         {
-            var studentAnswersDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTask(taskId);
+            var userInfo = this.GetUserIdAndRoles();
+            var studentAnswersDto = _studentAnswerOnTaskService.GetAllStudentAnswersOnTask(taskId, userInfo);
             var output = _mapper.Map<List<StudentAnswerOnTaskFullOutputModel>>(studentAnswersDto);
 
             return output;
@@ -237,13 +241,15 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId} 
         [HttpGet("{taskId}/student/{studentId}")]
-        [Description("Get student answers on tasks by student and task")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
+        [Description("Get student answer on task by task and student")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public StudentAnswerOnTaskFullOutputModel GetStudentAnswerOnTaskByTaskIdAndStudentId(int taskId, int studentId)
         {
-            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            var userInfo = this.GetUserIdAndRoles();
+            var studentAnswerDto = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId, userInfo);
             var output = _mapper.Map<StudentAnswerOnTaskFullOutputModel>(studentAnswerDto);
 
             return output;
@@ -251,6 +257,7 @@ namespace DevEdu.API.Controllers
 
         // api/task/{taskId}/student/{studentId} 
         [HttpPut("{taskId}/student/{studentId}")]
+        [AuthorizeRoles(Role.Student)]
         [Description("Update student answer on task")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -258,14 +265,16 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public StudentAnswerOnTaskFullOutputModel UpdateStudentAnswerOnTask(int taskId, int studentId, [FromBody] StudentAnswerOnTaskInputModel inputModel)
         {
+            var userInfo = this.GetUserIdAndRoles();
             var taskAnswerDto = _mapper.Map<StudentAnswerOnTaskDto>(inputModel);
-            var output = _studentAnswerOnTaskService.UpdateStudentAnswerOnTask(taskId, studentId, taskAnswerDto);
+            var output = _studentAnswerOnTaskService.UpdateStudentAnswerOnTask(taskId, studentId, taskAnswerDto, userInfo);
 
             return _mapper.Map<StudentAnswerOnTaskFullOutputModel>(output);
         }
 
         // api/task/{taskId}/student/{studentId} 
         [HttpDelete("{taskId}/student/{studentId}")]
+        [AuthorizeRoles(Role.Student)]
         [Description("Delete student answer on task")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -273,34 +282,39 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult DeleteStudentAnswerOnTask(int taskId, int studentId)
         {
-            _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(taskId, studentId);
+            var userInfo = this.GetUserIdAndRoles();
+            _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(taskId, studentId, userInfo);
 
             return NoContent();
         }
 
         // api/task/{taskId}/student/{studentId}/change-status/{statusId} 
         [HttpPut("{taskId}/student/{studentId}/change-status/{statusId}")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [Description("Update task status of student answer")]
         [ProducesResponseType(typeof(StudentAnswerOnTaskFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public StudentAnswerOnTaskFullOutputModel UpdateStatusOfStudentAnswer(int taskId, int studentId, int statusId)
         {
-            _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId);
-            var output = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
+            var userInfo = this.GetUserIdAndRoles();
+            _studentAnswerOnTaskService.ChangeStatusOfStudentAnswerOnTask(taskId, studentId, statusId, userInfo);
+            var output = _studentAnswerOnTaskService.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId, userInfo);
 
             return _mapper.Map<StudentAnswerOnTaskFullOutputModel>(output);
         }
 
         // api/task/answer/by-user/42 
         [HttpGet("answer/by-user/{userId}")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student, Role.Methodist)]
         [Description("Get all answers of student")]
         [ProducesResponseType(typeof(List<StudentAnswerOnTaskOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<StudentAnswerOnTaskOutputModel> GetAllAnswersByStudentId(int userId)
         {
-            var answersDto = _studentAnswerOnTaskService.GetAllAnswersByStudentId(userId);
+            var userInfo = this.GetUserIdAndRoles();
+            var answersDto = _studentAnswerOnTaskService.GetAllAnswersByStudentId(userId, userInfo);
             var output = _mapper.Map<List<StudentAnswerOnTaskOutputModel>>(answersDto);
 
             return output;
