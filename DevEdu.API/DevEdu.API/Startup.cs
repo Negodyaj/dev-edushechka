@@ -19,15 +19,16 @@ namespace DevEdu.API
 {
     public class Startup
     {
+        private const string _pathToEnvironment = "ASPNETCORE_ENVIRONMENT";
         public Startup(IConfiguration configuration)
         {
-            var environmentAccess = "ASPNETCORE_ENVIRONMENT";
-                environmentAccess = configuration
-                .GetSection(environmentAccess).Value;
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile(string.Format("appsettings.{0}.json", environmentAccess));
+            var currentEnvironment = configuration.GetValue<string>(_pathToEnvironment);
+            var builder = new ConfigurationBuilder().AddJsonFile($"appsettings.{currentEnvironment}.json");
 
             Configuration = builder.Build();
+            
+
+            
             SetEnvironmentVariableForConfiguration("AuthSettings:KeyForToken");
             SetEnvironmentVariableForConfiguration("AuthSettings:TokenLifeTime");
             SetEnvironmentVariableForConfiguration("DatabaseSettings:ConnectionString");
