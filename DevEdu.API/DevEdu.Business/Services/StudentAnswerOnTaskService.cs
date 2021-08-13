@@ -12,8 +12,6 @@ namespace DevEdu.Business.Services
 {
     public class StudentAnswerOnTaskService : IStudentAnswerOnTaskService
     {
-        private const string _dateFormat = "dd.MM.yyyy HH:mm:ss";
-
         private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
         private readonly IStudentAnswerOnTaskValidationHelper _studentAnswerOnTaskValidationHelper;
         private readonly IUserValidationHelper _userValidationHelper;

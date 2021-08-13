@@ -284,6 +284,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             _studentAnswerOnTaskService.DeleteStudentAnswerOnTask(taskId, studentId, userInfo);
+
             return NoContent();
         }
 
