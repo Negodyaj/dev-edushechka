@@ -7,6 +7,7 @@ BEGIN
 		sh.Answer,
 		sh.CompletedDate,
 		sh.StatusId as Id,
+		h.Id,
 		h.StartDate,
 		h.EndDate,
 		t.Id,

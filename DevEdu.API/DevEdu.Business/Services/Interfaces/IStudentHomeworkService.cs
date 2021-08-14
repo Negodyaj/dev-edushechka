@@ -6,7 +6,7 @@ namespace DevEdu.Business.Services
 {
     public interface IStudentHomeworkService
     {
-        int AddStudentAnswerOnTask(int homeworkId, int studentId, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo);
+        int AddStudentAnswerOnTask(int homeworkId, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo);
         void DeleteStudentAnswerOnTask(int id, UserIdentityInfo userInfo);
         StudentHomeworkDto UpdateStudentAnswerOnTask(int id, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo);
         int ChangeStatusOfStudentAnswerOnTask(int id, int statusId, UserIdentityInfo userInfo);

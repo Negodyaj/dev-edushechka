@@ -14,7 +14,7 @@ namespace DevEdu.DAL.Repositories
         private const string _studentHomeworkDelete = "dbo.Student_Homework_Delete";
         private const string _studentHomeworkUpdateAnswer = "dbo.Student_Homework_UpdateAnswer";
         private const string _studentHomeworkUpdateStatusId = "dbo.Student_Homework_UpdateStatusId";
-        private const string _studentHomeworkSelectById = "dbo.Task_Student_SelectById";
+        private const string _studentHomeworkSelectById = "dbo.Student_Homework_SelectById";
         private const string _studentHomeworkSelectAllAnswersByTaskId = "dbo.Student_Homework_SelectAllAnswersByTaskId";
         private const string _studentHomeworkSelectAnswersByUserId = "dbo.Student_Homework_SelectAllAnswersByUserId";
 
@@ -77,11 +77,12 @@ namespace DevEdu.DAL.Repositories
         public StudentHomeworkDto GetStudentAnswerOnTaskById(int id)
         {
             var result = _connection
-                .Query<StudentHomeworkDto, UserDto, TaskDto, TaskStatus, StudentHomeworkDto>(
+                .Query<StudentHomeworkDto, UserDto, HomeworkDto, TaskDto, TaskStatus, StudentHomeworkDto>(
                     _studentHomeworkSelectById,
-                    (studentAnswer, user, task, taskStatus) =>
+                    (studentAnswer, user, homework, task, taskStatus) =>
                     {
                         studentAnswer.User = user;
+                        studentAnswer.Homework = homework;
                         studentAnswer.Homework.Task = task;
                         studentAnswer.TaskStatus = taskStatus;
 
@@ -119,7 +120,8 @@ namespace DevEdu.DAL.Repositories
 
         public List<StudentHomeworkDto> GetAllAnswersByStudentId(int userId)
         {
-            return _connection.Query<StudentHomeworkDto, TaskStatus, HomeworkDto, TaskDto, StudentHomeworkDto>(
+            return _connection
+                .Query<StudentHomeworkDto, TaskStatus, HomeworkDto, TaskDto, StudentHomeworkDto>(
                     _studentHomeworkSelectAnswersByUserId,
                     (answerDto, taskStatus, homework, task) =>
                     {

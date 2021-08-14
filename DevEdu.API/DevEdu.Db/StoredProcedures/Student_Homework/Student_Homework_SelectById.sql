@@ -23,7 +23,7 @@ BEGIN
 		t.IsDeleted,
 		sh.StatusId as Id
 	FROM Student_Homework sh
-		inner join [User] u on u.Id = sh.StatusId
+		inner join [User] u on u.Id = sh.StudentId
 		inner join Homework h on h.Id = sh.HomeworkId
 		inner join Task t on t.Id = h.TaskId
 	WHERE sh.Id =  @Id

@@ -28,14 +28,14 @@ namespace DevEdu.Business.Services
             _taskValidationHelper = taskValidationHelper;
         }
 
-        public int AddStudentAnswerOnTask(int homeworkId, int studentId, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo)
+        public int AddStudentAnswerOnTask(int homeworkId, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
-            if (!userInfo.IsAdmin())
-                _studentHomeworkValidationHelper.CheckUserInStudentAnswerAccess(studentId, userInfo.UserId);
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userInfo.UserId);
+            //if (!userInfo.IsAdmin())
+            //    _studentHomeworkValidationHelper.CheckUserInStudentAnswerAccess(userInfo.UserId, userInfo.UserId);
 
             taskAnswerDto.Homework = new HomeworkDto { Id = homeworkId };
-            taskAnswerDto.User = new UserDto { Id = studentId };
+            taskAnswerDto.User = new UserDto { Id = userInfo.UserId };
 
             var studentAnswerId = _studentHomeworkRepository.AddStudentAnswerOnHomework(taskAnswerDto);
 
@@ -72,6 +72,22 @@ namespace DevEdu.Business.Services
                     completedDate = DateTime.Now;
 
                 completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day, completedDate.Hour, completedDate.Minute, completedDate.Second);
+                var status = _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTask(id, statusId, completedDate);
+
+                return status;
+            }
+
+            if (userInfo.IsAdmin())
+            {
+                _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
+
+                DateTime completedDate = default;
+
+                if (statusId == (int) TaskStatus.Accepted)
+                    completedDate = DateTime.Now;
+
+                completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day,
+                    completedDate.Hour, completedDate.Minute, completedDate.Second);
                 var status = _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTask(id, statusId, completedDate);
 
                 return status;
