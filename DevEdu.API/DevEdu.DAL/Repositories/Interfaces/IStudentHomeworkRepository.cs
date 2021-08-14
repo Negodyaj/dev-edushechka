@@ -12,6 +12,6 @@ namespace DevEdu.DAL.Repositories
         int ChangeStatusOfStudentAnswerOnTask(int id, int statusId, DateTime completedDate);
         void UpdateStudentAnswerOnTask(StudentHomeworkDto dto);
         List<StudentHomeworkDto> GetAllAnswersByStudentId(int userId);
-        StudentHomeworkDto GetStudentAnswerOnTaskById(int id);
+        StudentHomeworkDto GetStudentHomeworkById(int id);
     }
 }

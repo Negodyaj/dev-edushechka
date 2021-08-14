@@ -12,7 +12,6 @@ namespace DevEdu.DAL.Models
         public TaskStatus TaskStatus { get; set; }
         public string Answer { get; set; }
         public DateTime? CompletedDate { get; set; }
-        public List<CommentDto> Comments { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

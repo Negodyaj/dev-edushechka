@@ -1,9 +1,7 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
-using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace DevEdu.Business.ValidationHelpers
@@ -25,13 +23,22 @@ namespace DevEdu.Business.ValidationHelpers
 
         public StudentHomeworkDto GetStudentAnswerByIdAndThrowIfNotFound(int id)
         {
-            var studentAnswerOnTask = _studentHomeworkRepository.GetStudentAnswerOnTaskById(id);
+            var studentAnswerOnTask = _studentHomeworkRepository.GetStudentHomeworkById(id);
             if (studentAnswerOnTask == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTask), id));
             return studentAnswerOnTask;
         }
 
-        public void CheckUserInStudentAnswerAccess(int studentId, int userId)
+        public void CheckUserBelongsToHomework(int groupId, int userId)
+        {
+            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var group = _groupRepository.GetGroup(groupId);
+            var result = groupsByUser.FirstOrDefault(gu => gu.Id == @group.Id);
+            if (result == default)
+                throw new AuthorizationException(string.Format(ServiceMessages.UserInGroupNotFoundMessage, userId, groupId));
+        }
+
+        public void CheckUserInStudentHomeworkAccess(int studentId, int userId)
         {
             var groupsByStudent = _groupRepository.GetGroupsByUserId(studentId);
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
@@ -40,34 +47,10 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
         }
 
-        public void CheckUserComplianceToStudentAnswer(StudentHomeworkDto dto, int userId)
+        public void CheckUserComplianceToStudentHomework(int studentId, int userId)
         {
-            if (dto.User.Id != userId)
+            if (studentId != userId)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
-        }
-
-        public List<StudentHomeworkDto> GetStudentAnswerOnTaskAllowedToUser(int taskId, int userId)
-        {
-            var groupsByTask = _groupRepository.GetGroupsByTaskId(taskId);
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
-
-            var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
-
-            if (result == default)
-                return null;
-
-            return _studentHomeworkRepository.GetAllStudentAnswersOnTask(taskId);
-        }
-
-        public void CheckUserAccessToStudentAnswerByUserId(UserIdentityInfo userInfo, StudentHomeworkDto studentAnswerDto)
-        {
-            var userId = userInfo.UserId;
-
-            if (userInfo.IsAdmin())
-            {
-                return;
-            }
-            CheckUserComplianceToStudentAnswer(studentAnswerDto, userId);
         }
     }
 }

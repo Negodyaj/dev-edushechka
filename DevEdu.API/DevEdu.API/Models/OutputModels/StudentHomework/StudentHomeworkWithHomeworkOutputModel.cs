@@ -1,6 +1,6 @@
 ﻿namespace DevEdu.API.Models.OutputModels
 {
-    public class StudentHomeworkFullOutputModel : StudentHomeworkOutputModel
+    public class StudentHomeworkWithHomeworkOutputModel : StudentHomeworkOutputModel
     {
         public HomeworkInfoFullOutputModel Homework { get; set; }
     }

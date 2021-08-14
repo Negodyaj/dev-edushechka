@@ -1,15 +1,12 @@
-﻿using DevEdu.Business.IdentityInfo;
-using DevEdu.DAL.Models;
-using System.Collections.Generic;
+﻿using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.ValidationHelpers
 {
     public interface IStudentHomeworkValidationHelper
     {
         StudentHomeworkDto GetStudentAnswerByIdAndThrowIfNotFound(int id);
-        void CheckUserInStudentAnswerAccess(int studentId, int userId);
-        void CheckUserComplianceToStudentAnswer(StudentHomeworkDto dto, int userId);
-        List<StudentHomeworkDto> GetStudentAnswerOnTaskAllowedToUser(int taskId, int userId);
-        void CheckUserAccessToStudentAnswerByUserId(UserIdentityInfo userInfo, StudentHomeworkDto studentAnswerDto);
+        void CheckUserInStudentHomeworkAccess(int studentId, int userId);
+        void CheckUserBelongsToHomework(int groupId, int userId);
+        void CheckUserComplianceToStudentHomework(int studentId, int userId);
     }
 }

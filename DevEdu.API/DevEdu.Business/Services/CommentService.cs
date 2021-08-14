@@ -43,7 +43,7 @@ namespace DevEdu.Business.Services
             var studentAnswer = _studentAnswerValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(taskStudentId);
             var studentId = studentAnswer.User.Id;
             if (!userInfo.IsAdmin())
-                _studentAnswerValidationHelper.CheckUserInStudentAnswerAccess(studentId, userInfo.UserId);
+                _studentAnswerValidationHelper.CheckUserInStudentHomeworkAccess(studentId, userInfo.UserId);
 
             dto.StudentAnswer = new StudentHomeworkDto { Id = taskStudentId };
             var id = _commentRepository.AddComment(dto);

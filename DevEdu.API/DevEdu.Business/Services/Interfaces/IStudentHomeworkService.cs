@@ -8,10 +8,10 @@ namespace DevEdu.Business.Services
     {
         int AddStudentAnswerOnTask(int homeworkId, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo);
         void DeleteStudentAnswerOnTask(int id, UserIdentityInfo userInfo);
-        StudentHomeworkDto UpdateStudentAnswerOnTask(int id, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo);
+        StudentHomeworkDto UpdateStudentAnswerOnTask(int id, StudentHomeworkDto updatedDto, UserIdentityInfo userInfo);
         int ChangeStatusOfStudentAnswerOnTask(int id, int statusId, UserIdentityInfo userInfo);
-        StudentHomeworkDto GetStudentHomeworkId(int id, UserIdentityInfo userInfo);
-        List<StudentHomeworkDto> GetAllStudentAnswersOnTask(int taskId, UserIdentityInfo userInfo);
+        StudentHomeworkDto GetStudentHomeworkById(int id, UserIdentityInfo userInfo);
+        List<StudentHomeworkDto> GetAllStudentAnswersOnTask(int taskId);
         List<StudentHomeworkDto> GetAllAnswersByStudentId(int userId, UserIdentityInfo userInfo);
     }
 }

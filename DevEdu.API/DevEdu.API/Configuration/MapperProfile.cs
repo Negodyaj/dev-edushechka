@@ -106,11 +106,11 @@ namespace DevEdu.API.Configuration
             CreateMap<TaskDto, TaskInfoWithGroupsOutputModel>();
             CreateMap<TaskDto, TaskInfoWithAnswersOutputModel>();
             CreateMap<TagDto, TagOutputModel>();
-            CreateMap<StudentHomeworkDto, StudentHomeworkFullOutputModel>()
+            CreateMap<StudentHomeworkDto, StudentHomeworkWithHomeworkOutputModel>()
                 .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
             CreateMap<StudentHomeworkDto, StudentHomeworkOutputModel>()
                 .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
-            CreateMap<StudentHomeworkDto, StudentHomeworkOutputModel2>()
+            CreateMap<StudentHomeworkDto, StudentHomeworkWithTaskOutputModel>()
                 .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
             CreateMap<GroupDto, GroupInfoOutputModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));

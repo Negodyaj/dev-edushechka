@@ -5,8 +5,6 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using DevEdu.Business.IdentityInfo;
-using DevEdu.Business.Exceptions;
-using DevEdu.Business.Constants;
 
 namespace DevEdu.Business.Services
 {
@@ -16,111 +14,83 @@ namespace DevEdu.Business.Services
         private readonly IStudentHomeworkValidationHelper _studentHomeworkValidationHelper;
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly ITaskValidationHelper _taskValidationHelper;
+        private readonly IHomeworkValidationHelper _homeworkValidationHelper;
 
-        public StudentHomeworkService(IStudentHomeworkRepository studentHomeworkRepository, 
+        public StudentHomeworkService
+        (
+            IStudentHomeworkRepository studentHomeworkRepository,
             IStudentHomeworkValidationHelper studentHomeworkValidationHelper,
             IUserValidationHelper userValidationHelper,
-            ITaskValidationHelper taskValidationHelper)
+            ITaskValidationHelper taskValidationHelper,
+            IHomeworkValidationHelper homeworkValidationHelper
+        )
         {
             _studentHomeworkRepository = studentHomeworkRepository;
             _studentHomeworkValidationHelper = studentHomeworkValidationHelper;
             _userValidationHelper = userValidationHelper;
             _taskValidationHelper = taskValidationHelper;
+            _homeworkValidationHelper = homeworkValidationHelper;
         }
 
         public int AddStudentAnswerOnTask(int homeworkId, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userInfo.UserId);
-            //if (!userInfo.IsAdmin())
-            //    _studentHomeworkValidationHelper.CheckUserInStudentAnswerAccess(userInfo.UserId, userInfo.UserId);
-
+            var homework = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId); 
+            _studentHomeworkValidationHelper.CheckUserBelongsToHomework(homework.Group.Id, userInfo.UserId);
             taskAnswerDto.Homework = new HomeworkDto { Id = homeworkId };
             taskAnswerDto.User = new UserDto { Id = userInfo.UserId };
-
-            var studentAnswerId = _studentHomeworkRepository.AddStudentAnswerOnHomework(taskAnswerDto);
-
-            return studentAnswerId;
+            return _studentHomeworkRepository.AddStudentAnswerOnHomework(taskAnswerDto);
         }
 
         public void DeleteStudentAnswerOnTask(int id, UserIdentityInfo userInfo)
         {
-            var checkedStudentAnswerDto = _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
-            _studentHomeworkValidationHelper.CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
+            var dto = _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
+            if (!userInfo.IsAdmin())
+                _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(dto.User.Id, userInfo.UserId);
             _studentHomeworkRepository.DeleteStudentHomework(id);
         }
 
-        public StudentHomeworkDto UpdateStudentAnswerOnTask(int id, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo)
+        public StudentHomeworkDto UpdateStudentAnswerOnTask(int id, StudentHomeworkDto updatedDto, UserIdentityInfo userInfo)
         {
-            var checkedStudentAnswerDto = _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
-            _studentHomeworkValidationHelper.CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
-
-            taskAnswerDto.Id = id;
-            _studentHomeworkRepository.UpdateStudentAnswerOnTask(taskAnswerDto);
-
-            return _studentHomeworkRepository.GetStudentAnswerOnTaskById(id);
+            var dto = _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
+            if (!userInfo.IsAdmin())
+                _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(dto.User.Id, userInfo.UserId);
+            updatedDto.Id = id;
+            _studentHomeworkRepository.UpdateStudentAnswerOnTask(updatedDto);
+            return _studentHomeworkRepository.GetStudentHomeworkById(id);
         }
 
         public int ChangeStatusOfStudentAnswerOnTask(int id, int statusId, UserIdentityInfo userInfo)
         {
-            if (!userInfo.Roles.Contains(Role.Student) && !userInfo.Roles.Contains(Role.Manager))
-            {
-                _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
-
-                DateTime completedDate = default;
-
-                if (statusId == (int)TaskStatus.Accepted)
-                    completedDate = DateTime.Now;
-
-                completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day, completedDate.Hour, completedDate.Minute, completedDate.Second);
-                var status = _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTask(id, statusId, completedDate);
-
-                return status;
-            }
-
-            if (userInfo.IsAdmin())
-            {
-                _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
-
-                DateTime completedDate = default;
-
-                if (statusId == (int) TaskStatus.Accepted)
-                    completedDate = DateTime.Now;
-
-                completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day,
-                    completedDate.Hour, completedDate.Minute, completedDate.Second);
-                var status = _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTask(id, statusId, completedDate);
-
-                return status;
-            }
-
-            throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userInfo.UserId));
-        }
-        public StudentHomeworkDto GetStudentHomeworkId(int id, UserIdentityInfo userInfo)
-        {
-            var checkedStudentAnswerDto = _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
-            _studentHomeworkValidationHelper.CheckUserAccessToStudentAnswerByUserId(userInfo, checkedStudentAnswerDto);
-            return checkedStudentAnswerDto;
+            var dto = _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
+            if (!userInfo.IsAdmin())
+                _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccess(dto.User.Id, userInfo.UserId);
+            DateTime completedDate = default;
+            if (statusId == (int)TaskStatus.Accepted)
+                completedDate = DateTime.Now;
+            completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day, completedDate.Hour, completedDate.Minute, completedDate.Second);
+            return _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTask(id, statusId, completedDate);
         }
 
-        public List<StudentHomeworkDto> GetAllStudentAnswersOnTask(int taskId, UserIdentityInfo userInfo)
+        public StudentHomeworkDto GetStudentHomeworkById(int id, UserIdentityInfo userInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userInfo.UserId);
+            var dto = _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
+            if (!userInfo.IsAdmin())
+                _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccess(dto.User.Id, userInfo.UserId);
+            return dto;
+        }
+
+        public List<StudentHomeworkDto> GetAllStudentAnswersOnTask(int taskId)
+        {
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-
-            if (!userInfo.Roles.Contains(Role.Admin))
-            {
-                return _studentHomeworkValidationHelper.GetStudentAnswerOnTaskAllowedToUser(taskId, userInfo.UserId);
-            }
-
             return _studentHomeworkRepository.GetAllStudentAnswersOnTask(taskId);
         }
 
         public List<StudentHomeworkDto> GetAllAnswersByStudentId(int userId, UserIdentityInfo userInfo)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-
-            var dto = _studentHomeworkRepository.GetAllAnswersByStudentId(userId);
-            return dto;
+            if (userInfo.IsStudent())
+                _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(userId, userInfo.UserId);
+            return _studentHomeworkRepository.GetAllAnswersByStudentId(userId);
         }
     }
 }

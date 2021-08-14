@@ -74,7 +74,7 @@ namespace DevEdu.DAL.Repositories
             return statusId;
         }
 
-        public StudentHomeworkDto GetStudentAnswerOnTaskById(int id)
+        public StudentHomeworkDto GetStudentHomeworkById(int id)
         {
             var result = _connection
                 .Query<StudentHomeworkDto, UserDto, HomeworkDto, TaskDto, TaskStatus, StudentHomeworkDto>(
