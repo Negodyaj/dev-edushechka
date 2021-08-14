@@ -6,12 +6,12 @@ namespace DevEdu.DAL.Repositories
 {
     public interface IStudentHomeworkRepository
     {
-        int AddStudentAnswerOnHomework(StudentHomeworkDto taskAnswerDto);
+        int AddStudentHomework(StudentHomeworkDto taskAnswerDto);
         void DeleteStudentHomework(int id);
         List<StudentHomeworkDto> GetAllStudentAnswersOnTask(int taskId);
         int ChangeStatusOfStudentAnswerOnTask(int id, int statusId, DateTime completedDate);
-        void UpdateStudentAnswerOnTask(StudentHomeworkDto dto);
-        List<StudentHomeworkDto> GetAllAnswersByStudentId(int userId);
+        void UpdateStudentHomework(StudentHomeworkDto dto);
+        List<StudentHomeworkDto> GetAllStudentHomeworkByStudentId(int userId);
         StudentHomeworkDto GetStudentHomeworkById(int id);
     }
 }

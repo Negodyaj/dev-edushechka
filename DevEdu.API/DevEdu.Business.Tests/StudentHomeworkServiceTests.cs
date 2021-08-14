@@ -12,186 +12,183 @@ namespace DevEdu.Business.Tests
 {
     public class StudentAnswerOnTaskServiceTests
     {
-        private Mock<IStudentHomeworkRepository> _studentAnswerOnTaskRepoMock;
-        private Mock<ITaskRepository> _taskRepository;
-        private Mock<IGroupRepository> _groupRepository;
-        private Mock<IUserRepository> _userRepository;
-        private Mock<IHomeworkRepository> _homeworkRepository;
+        private Mock<IStudentHomeworkRepository> _studentHomeworkRepoMock;
+        private Mock<ITaskRepository> _taskRepoMock;
+        private Mock<IGroupRepository> _groupRepoMock;
+        private Mock<IUserRepository> _userRepoMock;
+        private Mock<IHomeworkRepository> _homeworkRepoMock;
         private StudentHomeworkService _sut;
 
         [SetUp]
         public void Setup()
         {
-            _studentAnswerOnTaskRepoMock = new Mock<IStudentHomeworkRepository>();
-            _taskRepository = new Mock<ITaskRepository>();
-            _groupRepository = new Mock<IGroupRepository>();
-            _userRepository = new Mock<IUserRepository>();
-            _homeworkRepository = new Mock<IHomeworkRepository>();
+            _studentHomeworkRepoMock = new Mock<IStudentHomeworkRepository>();
+            _taskRepoMock = new Mock<ITaskRepository>();
+            _groupRepoMock = new Mock<IGroupRepository>();
+            _userRepoMock = new Mock<IUserRepository>();
+            _homeworkRepoMock = new Mock<IHomeworkRepository>();
             _sut = new StudentHomeworkService(
-                   _studentAnswerOnTaskRepoMock.Object,
-                   new StudentHomeworkValidationHelper(_studentAnswerOnTaskRepoMock.Object, _groupRepository.Object),
-                   new UserValidationHelper(_userRepository.Object),
-                   new TaskValidationHelper(_taskRepository.Object, _groupRepository.Object),
-                   new HomeworkValidationHelper(_homeworkRepository.Object)
+                   _studentHomeworkRepoMock.Object,
+                   new StudentHomeworkValidationHelper(_studentHomeworkRepoMock.Object, _groupRepoMock.Object),
+                   new UserValidationHelper(_userRepoMock.Object),
+                   new TaskValidationHelper(_taskRepoMock.Object, _groupRepoMock.Object),
+                   new HomeworkValidationHelper(_homeworkRepoMock.Object)
                 );
         }
 
         [TestCase(Role.Student)]
-        public void AddStudentAnswerOnTask_ExistingTaskIdAndStudentIdAndStudentAnswerOnTaskInputModelPassed_StudentAnswerWasAdded(Enum role)
+        public void AddStudentHomework_ExistingHomeworkIdAndStudentIdAndStudentHomeworkInputModelPassed_StudentHomeworkWasAdded(Enum role)
         {
             // Given
-            var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
-            var studentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
-            var userDto = UserData.GetUserDto();
-            const int homeworkId = 1;
+            var expectedDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             const int userId = 1;
-            const int expectedStudentAnswerId = 1;
+            const int groupId = 1;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            const int countEntry = 2;
 
-            _userRepository.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _groupRepository.Setup(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id)).Returns(GroupData.GetGroupDtos());
-            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
-            _studentAnswerOnTaskRepoMock.Setup(x => x.AddStudentAnswerOnHomework(studentAnswerDto)).Returns(expectedStudentAnswerId);
+            _homeworkRepoMock.Setup(x => x.GetHomework(homeworkDto.Id)).Returns(homeworkDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+            _studentHomeworkRepoMock.Setup(x => x.AddStudentHomework(expectedDto)).Returns(expectedDto.Id);
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(expectedDto.Id)).Returns(expectedDto);
 
             // When
-            int actualAnswerId = _sut.AddStudentAnswerOnTask(homeworkId, studentAnswerDto, userInfo);
+            var actualDto = _sut.AddStudentHomework(homeworkDto.Id, expectedDto, userInfo);
 
             // Then
-            Assert.AreEqual(expectedStudentAnswerId, actualAnswerId);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.AddStudentAnswerOnHomework(studentAnswerDto), Times.Once);
-            _groupRepository.Verify(x => x.GetGroupsByUserId(userId), Times.Exactly(countEntry));
+            Assert.AreEqual(expectedDto, actualDto);
+            _homeworkRepoMock.Verify(x => x.GetHomework(homeworkDto.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(expectedDto), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(expectedDto.Id), Times.Once);
+            
         }
 
-        [TestCase(Role.Teacher)]
-        [TestCase(Role.Tutor)]
-        [TestCase(Role.Methodist)]
-        public void GetAllStudentAnswersOnTask_ExistingTaskIdPassed_StudentAnswersGotList(Enum role)
+        [Test]
+        public void GetAllStudentHomework_ExistingTaskIdPassed_StudentHomeworkGotList()
         {
             // Given
             var studentAnswersList = StudentAnswerOnTaskData.GetListStudentAnswersOnTaskDto();
             const int taskId = 1;
             var taskDto = TaskData.GetAnotherTaskDtoWithTags();
-            var taskListDtos = TaskData.GetListOfGroups();
-            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var userDto = UserData.GetUserDto();
-            var userId = 1;
 
-            _userRepository.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _groupRepository.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(taskListDtos);
-            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(taskId)).Returns(studentAnswersList);
-            _taskRepository.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _studentHomeworkRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(taskId)).Returns(studentAnswersList);
+            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
             // When
-            var dtoList = _sut.GetAllStudentAnswersOnTask(taskId);
+            var dtoList = _sut.GetAllStudentHomeworkOnTask(taskId);
 
             // Then
             Assert.AreEqual(studentAnswersList, dtoList);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(taskId), Times.Once);
-            _taskRepository.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public void GetStudentAnswerOnTaskByTaskIdAndStudentId_ExistingTaskIdAndStudentIdPassed_StudentAnswerGot(Enum role)
+        public void GetStudentHomeworkById_ExistingStudentHomeworkIdPassed_StudentAnswerGot(Enum role)
         {
             // Given
             var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var dtoForTaskIdAndUserId = StudentAnswerOnTaskData.DtoForTaskIdAndUserId();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentHomeworkById(dtoForTaskIdAndUserId.Id)).Returns(studentAnswerDto);
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(dtoForTaskIdAndUserId.Id)).Returns(studentAnswerDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentAnswerDto.User.Id)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
 
             // When
             var dto = _sut.GetStudentHomeworkById(dtoForTaskIdAndUserId.Id, userInfo);
 
             // Then
             Assert.AreEqual(studentAnswerDto, dto);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentHomeworkById(dtoForTaskIdAndUserId.Id), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(dtoForTaskIdAndUserId.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(studentAnswerDto.User.Id), Times.Exactly(2));
         }
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public void ChangeStatusOfStudentAnswerOnTask_ExistingTaskIdStudentIdAndStatusIdPassed_StatusChangeded(Enum role)
+        public void ChangeStatusOfStudentHomework_ExistingStudentHomeworkIdPassed_StatusChangeded(Enum role)
         {
             // Given
             var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             const int homeworkId = 1;
-            const int userId = 1;
             const int statusId = (int)TaskStatus.Returned;
-            DateTime CompletedDate = default;
+            DateTime completedDate = default;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentAnswerDto);
-            _studentAnswerOnTaskRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, statusId, CompletedDate)).Returns(statusId);
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentAnswerDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentAnswerDto.User.Id)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
+            _studentHomeworkRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, statusId, completedDate)).Returns(statusId);
 
             // When
-            var actualStatusId = _sut.ChangeStatusOfStudentAnswerOnTask(homeworkId, statusId, userInfo);
+            var actualStatusId = _sut.UpdateStatusOfStudentHomework(homeworkId, statusId, userInfo);
 
             // Then
             Assert.AreEqual(statusId, actualStatusId);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, statusId, CompletedDate), Times.Once);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, statusId, completedDate), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(studentAnswerDto.User.Id), Times.Exactly(2));
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public void ChangeStatusOfStudentAnswerOnTask_ExistingTaskIdStudentIdAndTaskStatusAcceptedPassed_CompletedDateChanged(Enum role)
+        public void ChangeStatusOfStudentHomework_ExistingStudentHomeworkIdPassed_CompletedDateChanged(Enum role)
         {
             // Given
             var acceptedStatusDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskWithAcceptedTaskStatusDto();
             const int homeworkId = 1;
-            const int userId = 1;
-            const int acceptedSatusId = (int)TaskStatus.Accepted;
+            const int acceptedStatusId = (int)TaskStatus.Accepted;
             DateTime dateTime = DateTime.Now;
             dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
 
             int countEntry = 2;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, acceptedSatusId, dateTime)).Returns(acceptedSatusId);
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(acceptedStatusDto);
+            _studentHomeworkRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, acceptedStatusId, dateTime)).Returns(acceptedStatusId);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(acceptedStatusDto.User.Id)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(acceptedStatusDto);
 
             // When
-            var actualStatusId = _sut.ChangeStatusOfStudentAnswerOnTask(homeworkId, acceptedSatusId, userInfo);
+            var actualStatusId = _sut.UpdateStatusOfStudentHomework(homeworkId, acceptedStatusId, userInfo);
             var dto = _sut.GetStudentHomeworkById(homeworkId, userInfo);
 
             // Then
             Assert.AreEqual(dateTime, dto.CompletedDate);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, acceptedSatusId, dateTime), Times.Once);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Exactly(countEntry));
+            _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, acceptedStatusId, dateTime), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(acceptedStatusDto.User.Id), Times.Exactly(4));
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Exactly(countEntry));
         }
 
         [TestCase(Role.Student)]
-        public void UpdateStudentAnswerOnTask_ExistingTaskIdStudentIdAndTaskAnswerDtoPassed_ReturnStudentAnswerOnTaskDto(Enum role)
+        public void UpdateStudentHomework_ExistingTaskIdStudentIdAndTaskAnswerDtoPassed_ReturnStudentHomeworkDto(Enum role)
         {
             // Given
             var changedStudentAnswerDto = StudentAnswerOnTaskData.GetChangedStudentAnswerOnTaskDto();
-            var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             const int homeworkId = 1;
-            const int userId = 1;
             var onlyAnswer = StudentAnswerOnTaskData.GetAnswerOfStudent();
-            const int countEntry = 2;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.UpdateStudentAnswerOnTask(onlyAnswer));
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(changedStudentAnswerDto);
+            _studentHomeworkRepoMock.Setup(x => x.UpdateStudentHomework(onlyAnswer));
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(changedStudentAnswerDto);
 
             // When
-            var actualDto = _sut.UpdateStudentAnswerOnTask(homeworkId, onlyAnswer, userInfo);
+            var actualDto = _sut.UpdateStudentHomework(homeworkId, onlyAnswer, userInfo);
 
             // Then
             Assert.AreEqual(changedStudentAnswerDto, actualDto);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.UpdateStudentAnswerOnTask(onlyAnswer), Times.Once);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Exactly(countEntry));
+            _studentHomeworkRepoMock.Verify(x => x.UpdateStudentHomework(onlyAnswer), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Exactly(2));
         }
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
         [TestCase(Role.Methodist)]
-        public void GetAllAnswersByStudentId_ExistingUserIdPassed_ReturnListOfStudentAnswerOnTaskDto(Enum role)
+        public void GetAllStudentHomeworkByStudentId_ExistingUserIdPassed_ReturnListOfStudentAnswerOnTaskDto(Enum role)
         {
             // Given
             var studentAnswersListDto = StudentAnswerOnTaskData.GetAllAnswerOfStudent();
@@ -199,138 +196,135 @@ namespace DevEdu.Business.Tests
             var userDto = UserData.GetUserDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetAllAnswersByStudentId(userId)).Returns(studentAnswersListDto);
-            _userRepository.Setup(x => x.GetUserById(userId)).Returns(userDto);
+            _studentHomeworkRepoMock.Setup(x => x.GetAllStudentHomeworkByStudentId(userId)).Returns(studentAnswersListDto);
+            _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
             // When
-            var dto = _sut.GetAllAnswersByStudentId(userId, userInfo);
+            var dto = _sut.GetAllStudentHomeworkByStudentId(userId, userInfo);
 
             // Then
             Assert.AreEqual(studentAnswersListDto, dto);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetAllAnswersByStudentId(userId), Times.Once);
-            _userRepository.Verify(x => x.GetUserById(userId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.GetAllStudentHomeworkByStudentId(userId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
         [TestCase(Role.Student)]
-        public void DeleteStudentAnswerOnTask_ExistingTaskIdAndStudentId_StudentAnswerWasDeleted(Enum role)
+        public void DeleteStudentHomework_ExistingStudentHomeworkId_StudentHomeworkWasDeleted(Enum role)
         {
             // Given
             var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
-            var userDto = UserData.GetUserDto();
             const int homeworkId = 1;
-            const int userId = 1;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentAnswerDto);
-            _studentAnswerOnTaskRepoMock.Setup(x => x.DeleteStudentHomework(homeworkId));
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentAnswerDto);
+            _studentHomeworkRepoMock.Setup(x => x.DeleteStudentHomework(homeworkId));
 
             // When
-            _sut.DeleteStudentAnswerOnTask(homeworkId, userInfo);
+            _sut.DeleteStudentHomework(homeworkId, userInfo);
 
             // Than
-            _studentAnswerOnTaskRepoMock.Verify(x => x.DeleteStudentHomework(homeworkId), Times.Once);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.DeleteStudentHomework(homeworkId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
         }
 
         [TestCase(Role.Student)]
-        public void AddStudentAnswerOnTask_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
+        public void AddStudentHomework_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             // Given
-            var studentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
-            var userDto = UserData.GetUserDto();
-            var groupTaskDtos = TaskData.GetListOfGroups();
-            var groupsByUser = TaskData.GetListOfSameGroups();
+            //var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
+            //_homeworkRepoMock.Setup(x => x.GetHomework(homeworkDto.Id)).Returns(homeworkDto);
+            //_homeworkRepoMock.Verify(x => x.GetHomework(homeworkDto.Id), Times.Once);
+            var studentHomework = CommentData.GetStudentHomeworkDto();
+            var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             const int homeworkId = 1;
             const int expectedStudentAnswerId = 1;
+            const int groupId = 1;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var userId = userInfo.UserId;
-            const int anotherUserId = 10;
-            var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
+            var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, userId, homeworkDto.Group.Id);
 
-            _userRepository.Setup(x => x.GetUserById(anotherUserId)).Returns(userDto);
-            _groupRepository.Setup(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id)).Returns(CommentData.GetGroupsDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
-            _studentAnswerOnTaskRepoMock.Setup(x => x.AddStudentAnswerOnHomework(studentAnswerOnTaskDto)).Returns(expectedStudentAnswerId);
+            _homeworkRepoMock.Setup(x => x.GetHomework(homeworkDto.Id)).Returns(homeworkDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(GroupData.GetGroupDto());
+            _studentHomeworkRepoMock.Setup(x => x.AddStudentHomework(studentHomework)).Returns(expectedStudentAnswerId);
 
             // When
             var actualException = Assert.Throws<AuthorizationException>(
-                () => _sut.AddStudentAnswerOnTask(homeworkId, studentAnswerOnTaskDto, userInfo));
+                () => _sut.AddStudentHomework(homeworkId, studentHomework, userInfo));
 
             // Then
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
-            _studentAnswerOnTaskRepoMock.Verify(x => x.AddStudentAnswerOnHomework(studentAnswerOnTaskDto), Times.Never);
-            _groupRepository.Verify(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id), Times.Once);
-            _groupRepository.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
-            _userRepository.Verify(x => x.GetUserById(anotherUserId), Times.Once);
+            _homeworkRepoMock.Verify(x => x.GetHomework(homeworkDto.Id), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(studentHomework), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
         }
 
         [TestCase(Role.Student)]
-        public void AddStudentAnswerOnTask_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void AddStudentHomework_WhenHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
-            const int homeworkId = 1;
-            var studentAnswerOnTaskDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
-            var user = UserData.GetUserDto();
+            var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
+            var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), studentAnswerOnTaskDto.User.Id);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), studentHomework.User.Id);
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddStudentAnswerOnTask(homeworkId, studentAnswerOnTaskDto, userInfo));
+                () => _sut.AddStudentHomework(homework.Id, studentHomework, userInfo));
 
             // Than
-            Assert.That(actualException.Message, Is.EqualTo(expectedException));
+            Assert.That(actualException.Message, Is.EqualTo(expectedException)); 
+            _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(studentHomework), Times.Never);
         }
 
         [TestCase(Role.Student)]
-        public void DeleteStudentAnswerOnTask_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void DeleteStudentHomework_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
-            var studentAnswerOnTaskDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             const int homeworkId = 1;
-            const int userId = 4;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTaskDto), studentAnswerOnTaskDto.Id);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.Id);
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
-                () => _sut.DeleteStudentAnswerOnTask(homeworkId, userInfo));
+                () => _sut.DeleteStudentHomework(homeworkId, userInfo));
 
             //Than
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
+            _studentHomeworkRepoMock.Verify(x => x.DeleteStudentHomework(studentHomework.Id), Times.Never);
         }
 
         [TestCase(Role.Student, 2)]
-        public void DeleteStudentAnswerOnTask_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        public void DeleteStudentHomework_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
         {
             // Given
-            var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             const int homeworkId = 1;
-            const int expectedUserId = 1;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role, userId);
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentAnswerDto);
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentHomework);
 
             // When
             var actualException = Assert.Throws<AuthorizationException>(
-                    () => _sut.DeleteStudentAnswerOnTask(homeworkId, userInfo));
+                    () => _sut.DeleteStudentHomework(homeworkId, userInfo));
 
             // Than
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.DeleteStudentHomework(studentHomework.Id), Times.Never);
         }
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public void GetStudentAnswerOnTaskByTaskIdAndStudentId_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void GetStudentHomeworkById_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             const int homeworkId = 1;
-            var studentAnswerOnTaskDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
-            var user = UserData.GetUserDto();
+            var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTaskDto), studentAnswerOnTaskDto.User.Id);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.User.Id);
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
@@ -338,19 +332,22 @@ namespace DevEdu.Business.Tests
 
             // Than
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
+            _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(studentHomework), Times.Never);
         }
 
-        [TestCase(Role.Teacher, 2)]
-        [TestCase(Role.Tutor, 2)]
-        public void GetStudentAnswerOnTaskByTaskIdAndStudentId_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void GetStudentHomeworkById_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             //Given
-            var studentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
-            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role, userId);
+            var studentHomework = CommentData.GetStudentHomeworkDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             const int homeworkId = 1;
-            var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
+            var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userInfo.UserId);
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentAnswerOnTaskDto);
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentHomework);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentHomework.User.Id)).Returns(GroupData.GetGroupDtos());
 
             //When
             var actualException = Assert.Throws<AuthorizationException>(
@@ -358,138 +355,88 @@ namespace DevEdu.Business.Tests
 
             //Than
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userInfo.UserId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(studentHomework), Times.Never);
         }
 
         [TestCase(Role.Student)]
-        public void UpdateStudentAnswerOnTask_WhenStudentAnswerIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void UpdateStudentHomework_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
-            var studentAnswerOnTaskDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             const int homeworkId = 1;
-            const int userId = 1;
             var onlyAnswer = StudentAnswerOnTaskData.GetAnswerOfStudent();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTaskDto), studentAnswerOnTaskDto.Id);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.Id);
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
-                    () => _sut.UpdateStudentAnswerOnTask(homeworkId, onlyAnswer, userInfo));
+                    () => _sut.UpdateStudentHomework(homeworkId, onlyAnswer, userInfo));
 
             // Then
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
+            _studentHomeworkRepoMock.Verify(x => x.UpdateStudentHomework(studentHomework), Times.Never);
+
         }
 
         [TestCase(Role.Student, 2)]
-        public void UpdateStudentAnswerOnTask_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        public void UpdateStudentHomework_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
         {
             //Given
-            var studentAnswerOnTaskDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role, userId);
-            const int homeworkId = 1;
-            const int expectedUserId = 1;
-
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
 
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentAnswerOnTaskDto);
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(studentHomework.Id)).Returns(studentHomework);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentHomework.User.Id)).Returns(GroupData.GetGroupDtos());
 
             //When
             var actualException = Assert.Throws<AuthorizationException>(
-                    () => _sut.GetStudentHomeworkById(homeworkId, userInfo));
+                    () => _sut.GetStudentHomeworkById(studentHomework.Id, userInfo));
 
             //Than
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(studentHomework.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userInfo.UserId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.UpdateStudentHomework(studentHomework), Times.Never);
         }
 
-        [TestCase(Role.Teacher)]
-        [TestCase(Role.Tutor)]
-        [TestCase(Role.Methodist)]
-        public void GetAllStudentAnswersOnTask_WhenUserIdDoNotHaveInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        [Test]
+        public void GetAllStudentHomeworkByTask_WhenTaskIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             // Given
-            var studentAnswersList = StudentAnswerOnTaskData.GetListStudentAnswersOnTaskDto();
-            const int taskId = 1;
-            var taskDto = TaskData.GetAnotherTaskDtoWithTags();
-            var taskListDtos = TaskData.GetListOfGroups();
-            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var user = UserData.GetUserDto();
-            var userId = 1;
-            var anotherUserId = 2;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId);
-
-            _userRepository.Setup(x => x.GetUserById(anotherUserId)).Returns(user);
-            _groupRepository.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(taskListDtos);
-            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
-            _studentAnswerOnTaskRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(taskId)).Returns(studentAnswersList);
-            _taskRepository.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            const int task = 1;
+            const int userId = 1;
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), userId);
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
-                    () => _sut.GetAllStudentAnswersOnTask(taskId));
+                    () => _sut.GetAllStudentHomeworkOnTask(task));
 
             // Then
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(taskId), Times.Never);
+            _studentHomeworkRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(task), Times.Never);
         }
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Methodist)]
-        public void GetAllStudentAnswersOnTask_WheTaskIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void GetAllStudentHomeworkByStudentId_WhenStudentIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
-            var studentAnswersList = StudentAnswerOnTaskData.GetListStudentAnswersOnTaskDto();
-            const int taskId = 1;
-            var anotherTaskId = 2;
-            var task = TaskData.GetAnotherTaskDtoWithTags();
-            var taskListDtos = TaskData.GetListOfGroups();
+            const int user=0;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var user = UserData.GetUserDto();
-            var userId = 1;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), taskId);
-
-            _userRepository.Setup(x => x.GetUserById(userId)).Returns(user);
-            _groupRepository.Setup(x => x.GetGroupsByTaskId(anotherTaskId)).Returns(taskListDtos);
-            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
-            _taskRepository.Setup(x => x.GetTaskById(anotherTaskId)).Returns(task);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), user);
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
-                    () => _sut.GetAllStudentAnswersOnTask(taskId));
+                () => _sut.GetAllStudentHomeworkByStudentId(user, userInfo));
 
             // Then
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(taskId), Times.Never);
-        }
-
-        [TestCase(Role.Teacher)]
-        [TestCase(Role.Tutor)]
-        [TestCase(Role.Methodist)]
-        public void GetAllStudentAnswersOnTask_WhenUserIsNotInGroup_StudentAnswerWasNull(Enum role)
-        {
-            // Given
-            var studentAnswersList = StudentAnswerOnTaskData.GetListStudentAnswersOnTaskDto();
-            const int taskId = 1;
-            var task = TaskData.GetAnotherTaskDtoWithTags();
-            var taskListDtos = TaskData.GetListOfGroups();
-            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var user = UserData.GetUserDto();
-            var userId = 1;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), taskId);
-
-            _userRepository.Setup(x => x.GetUserById(userId)).Returns(user);
-            _taskRepository.Setup(x => x.GetTaskById(taskId)).Returns(task);
-            _groupRepository.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(taskListDtos);
-            _groupRepository.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetAnotherListGroupDtos());
-
-            // When
-            var emptyList = _sut.GetAllStudentAnswersOnTask(taskId); ;
-
-            // Then
-            Assert.AreEqual(emptyList, null);
-            _studentAnswerOnTaskRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(taskId), Times.Never);
-            _taskRepository.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.GetAllStudentHomeworkByStudentId(user), Times.Never);
         }
     }
 }

@@ -32,36 +32,37 @@ namespace DevEdu.Business.Services
             _homeworkValidationHelper = homeworkValidationHelper;
         }
 
-        public int AddStudentAnswerOnTask(int homeworkId, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo)
+        public StudentHomeworkDto AddStudentHomework(int homeworkId, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo)
         {
             var homework = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId); 
             _studentHomeworkValidationHelper.CheckUserBelongsToHomework(homework.Group.Id, userInfo.UserId);
             taskAnswerDto.Homework = new HomeworkDto { Id = homeworkId };
             taskAnswerDto.User = new UserDto { Id = userInfo.UserId };
-            return _studentHomeworkRepository.AddStudentAnswerOnHomework(taskAnswerDto);
+            var id=_studentHomeworkRepository.AddStudentHomework(taskAnswerDto);
+            return _studentHomeworkRepository.GetStudentHomeworkById(id);
         }
 
-        public void DeleteStudentAnswerOnTask(int id, UserIdentityInfo userInfo)
+        public void DeleteStudentHomework(int id, UserIdentityInfo userInfo)
         {
-            var dto = _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
+            var dto = _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(id);
             if (!userInfo.IsAdmin())
                 _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(dto.User.Id, userInfo.UserId);
             _studentHomeworkRepository.DeleteStudentHomework(id);
         }
 
-        public StudentHomeworkDto UpdateStudentAnswerOnTask(int id, StudentHomeworkDto updatedDto, UserIdentityInfo userInfo)
+        public StudentHomeworkDto UpdateStudentHomework(int id, StudentHomeworkDto updatedDto, UserIdentityInfo userInfo)
         {
-            var dto = _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
+            var dto = _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(id);
             if (!userInfo.IsAdmin())
                 _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(dto.User.Id, userInfo.UserId);
             updatedDto.Id = id;
-            _studentHomeworkRepository.UpdateStudentAnswerOnTask(updatedDto);
+            _studentHomeworkRepository.UpdateStudentHomework(updatedDto);
             return _studentHomeworkRepository.GetStudentHomeworkById(id);
         }
 
-        public int ChangeStatusOfStudentAnswerOnTask(int id, int statusId, UserIdentityInfo userInfo)
+        public int UpdateStatusOfStudentHomework(int id, int statusId, UserIdentityInfo userInfo)
         {
-            var dto = _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
+            var dto = _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(id);
             if (!userInfo.IsAdmin())
                 _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccess(dto.User.Id, userInfo.UserId);
             DateTime completedDate = default;
@@ -73,24 +74,24 @@ namespace DevEdu.Business.Services
 
         public StudentHomeworkDto GetStudentHomeworkById(int id, UserIdentityInfo userInfo)
         {
-            var dto = _studentHomeworkValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(id);
+            var dto = _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(id);
             if (!userInfo.IsAdmin())
                 _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccess(dto.User.Id, userInfo.UserId);
             return dto;
         }
 
-        public List<StudentHomeworkDto> GetAllStudentAnswersOnTask(int taskId)
+        public List<StudentHomeworkDto> GetAllStudentHomeworkOnTask(int taskId)
         {
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             return _studentHomeworkRepository.GetAllStudentAnswersOnTask(taskId);
         }
 
-        public List<StudentHomeworkDto> GetAllAnswersByStudentId(int userId, UserIdentityInfo userInfo)
+        public List<StudentHomeworkDto> GetAllStudentHomeworkByStudentId(int userId, UserIdentityInfo userInfo)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
             if (userInfo.IsStudent())
                 _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(userId, userInfo.UserId);
-            return _studentHomeworkRepository.GetAllAnswersByStudentId(userId);
+            return _studentHomeworkRepository.GetAllStudentHomeworkByStudentId(userId);
         }
     }
 }

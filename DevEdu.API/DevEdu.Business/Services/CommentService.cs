@@ -40,7 +40,7 @@ namespace DevEdu.Business.Services
 
         public CommentDto AddCommentToStudentAnswer(int taskStudentId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var studentAnswer = _studentAnswerValidationHelper.GetStudentAnswerByIdAndThrowIfNotFound(taskStudentId);
+            var studentAnswer = _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(taskStudentId);
             var studentId = studentAnswer.User.Id;
             if (!userInfo.IsAdmin())
                 _studentAnswerValidationHelper.CheckUserInStudentHomeworkAccess(studentId, userInfo.UserId);

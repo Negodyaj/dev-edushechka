@@ -48,7 +48,7 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static StudentHomeworkDto GetStudentAnswerOnTaskDto()
+        public static StudentHomeworkDto GetStudentHomeworkDto()
         {
             return new StudentHomeworkDto
             {

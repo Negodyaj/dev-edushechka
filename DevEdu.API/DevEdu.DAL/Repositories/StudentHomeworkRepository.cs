@@ -23,7 +23,7 @@ namespace DevEdu.DAL.Repositories
 
         }
 
-        public int AddStudentAnswerOnHomework(StudentHomeworkDto dto)
+        public int AddStudentHomework(StudentHomeworkDto dto)
         {
             return _connection.QuerySingle<int>(
                 _studentHomeworkInsert,
@@ -45,7 +45,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
-        public void UpdateStudentAnswerOnTask(StudentHomeworkDto dto)
+        public void UpdateStudentHomework(StudentHomeworkDto dto)
         {
             _connection.Execute(
                 _studentHomeworkUpdateAnswer,
@@ -118,7 +118,7 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public List<StudentHomeworkDto> GetAllAnswersByStudentId(int userId)
+        public List<StudentHomeworkDto> GetAllStudentHomeworkByStudentId(int userId)
         {
             return _connection
                 .Query<StudentHomeworkDto, TaskStatus, HomeworkDto, TaskDto, StudentHomeworkDto>(

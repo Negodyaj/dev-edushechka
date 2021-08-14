@@ -21,12 +21,12 @@ namespace DevEdu.Business.ValidationHelpers
             _groupRepository = groupRepository;
         }
 
-        public StudentHomeworkDto GetStudentAnswerByIdAndThrowIfNotFound(int id)
+        public StudentHomeworkDto GetStudentHomeworkByIdAndThrowIfNotFound(int id)
         {
-            var studentAnswerOnTask = _studentHomeworkRepository.GetStudentHomeworkById(id);
-            if (studentAnswerOnTask == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTask), id));
-            return studentAnswerOnTask;
+            var studentHomework = _studentHomeworkRepository.GetStudentHomeworkById(id);
+            if (studentHomework == default)
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), id));
+            return studentHomework;
         }
 
         public void CheckUserBelongsToHomework(int groupId, int userId)

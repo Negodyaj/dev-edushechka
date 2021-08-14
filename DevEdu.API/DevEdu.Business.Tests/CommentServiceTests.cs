@@ -83,7 +83,7 @@ namespace DevEdu.Business.Tests
             const int taskStudentId = 1;
             const int expectedCommentId = 1;
             const int expectedStudentAnswerOnTaskId = 1;
-            var studentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
+            var studentAnswerOnTaskDto = CommentData.GetStudentHomeworkDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var userId = userInfo.UserId;
 
@@ -225,7 +225,7 @@ namespace DevEdu.Business.Tests
             //Given
             var commentDto = CommentData.GetCommentDto();
             const int taskStudentId = 1;
-            var studentAnswerOnTask = CommentData.GetStudentAnswerOnTaskDto();
+            var studentAnswerOnTask = CommentData.GetStudentHomeworkDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTask), studentAnswerOnTask.Id);
 
@@ -243,7 +243,7 @@ namespace DevEdu.Business.Tests
         public void AddCommentToStudentAnswer_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             //Given
-            var studentAnswerOnTaskDto = CommentData.GetStudentAnswerOnTaskDto();
+            var studentAnswerOnTaskDto = CommentData.GetStudentHomeworkDto();
             var commentDto = CommentData.GetCommentDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var userId = userInfo.UserId;
