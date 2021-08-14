@@ -48,9 +48,9 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static StudentAnswerOnTaskDto GetStudentAnswerOnTaskDto()
+        public static StudentHomeworkDto GetStudentAnswerOnTaskDto()
         {
-            return new StudentAnswerOnTaskDto
+            return new StudentHomeworkDto
             {
                 Id = 1,
                 User = new UserDto

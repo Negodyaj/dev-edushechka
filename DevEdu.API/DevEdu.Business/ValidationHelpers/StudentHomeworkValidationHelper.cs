@@ -8,31 +8,24 @@ using System.Linq;
 
 namespace DevEdu.Business.ValidationHelpers
 {
-    public class StudentAnswerOnTaskValidationHelper : IStudentAnswerOnTaskValidationHelper
+    public class StudentHomeworkValidationHelper : IStudentHomeworkValidationHelper
     {
-        private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
+        private readonly IStudentHomeworkRepository _studentHomeworkRepository;
         private readonly IGroupRepository _groupRepository;
 
-        public StudentAnswerOnTaskValidationHelper
+        public StudentHomeworkValidationHelper
         (
-            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository,
+            IStudentHomeworkRepository studentHomeworkRepository,
             IGroupRepository groupRepository
         )
         {
-            _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
+            _studentHomeworkRepository = studentHomeworkRepository;
             _groupRepository = groupRepository;
         }
 
-        public void CheckStudentAnswerOnTaskExistence(int taskId, int userId)
+        public StudentHomeworkDto GetStudentAnswerByIdAndThrowIfNotFound(int id)
         {
-            var studentAnswerOnTask = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, userId);
-            if (studentAnswerOnTask == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTask), taskId, userId));
-        }
-
-        public StudentAnswerOnTaskDto CheckStudentAnswerOnTaskExistence(int id)
-        {
-            var studentAnswerOnTask = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskById(id);
+            var studentAnswerOnTask = _studentHomeworkRepository.GetStudentAnswerOnTaskById(id);
             if (studentAnswerOnTask == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTask), id));
             return studentAnswerOnTask;
@@ -47,22 +40,13 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
         }
 
-        public void CheckUserComplianceToStudentAnswer(StudentAnswerOnTaskDto dto, int userId)
+        public void CheckUserComplianceToStudentAnswer(StudentHomeworkDto dto, int userId)
         {
             if (dto.User.Id != userId)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
         }
 
-        public StudentAnswerOnTaskDto GetStudentAnswerByTaskIdAndStudentIdOrThrowIfNotFound(int taskId, int studentId)
-        {
-            var studentAnswerOnTaskDto = _studentAnswerOnTaskRepository.GetStudentAnswerOnTaskByTaskIdAndStudentId(taskId, studentId);
-            if (studentAnswerOnTaskDto == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTaskDto), taskId, studentId));
-
-            return studentAnswerOnTaskDto;
-        }
-
-        public List<StudentAnswerOnTaskDto> GetStudentAnswerOnTaskAllowedToUser(int taskId, int userId)
+        public List<StudentHomeworkDto> GetStudentAnswerOnTaskAllowedToUser(int taskId, int userId)
         {
             var groupsByTask = _groupRepository.GetGroupsByTaskId(taskId);
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
@@ -72,10 +56,10 @@ namespace DevEdu.Business.ValidationHelpers
             if (result == default)
                 return null;
 
-            return _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
+            return _studentHomeworkRepository.GetAllStudentAnswersOnTask(taskId);
         }
 
-        public void CheckUserAccessToStudentAnswerByUserId(UserIdentityInfo userInfo, StudentAnswerOnTaskDto studentAnswerDto)
+        public void CheckUserAccessToStudentAnswerByUserId(UserIdentityInfo userInfo, StudentHomeworkDto studentAnswerDto)
         {
             var userId = userInfo.UserId;
 

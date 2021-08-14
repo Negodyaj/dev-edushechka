@@ -45,7 +45,7 @@ namespace DevEdu.DAL.Repositories
         {
             CommentDto result = default;
             return _connection
-                .Query<CommentDto, UserDto, Role, LessonDto, StudentAnswerOnTaskDto, CommentDto>(
+                .Query<CommentDto, UserDto, Role, LessonDto, StudentHomeworkDto, CommentDto>(
                     _commentSelectByIdProcedure,
                     (comment, user, role, lesson, studentAnswer) =>
                     {

@@ -16,7 +16,7 @@ namespace DevEdu.Business.Tests
     {
         private Mock<ITaskRepository> _taskRepoMock;
         private Mock<ICourseRepository> _courseRepoMock;
-        private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
+        private Mock<IStudentHomeworkRepository> _studentAnswerRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
         private Mock<IUserRepository> _userRepoMock;
         private Mock<IHomeworkRepository> _homeworkRepoMock;
@@ -27,7 +27,7 @@ namespace DevEdu.Business.Tests
         {
             _taskRepoMock = new Mock<ITaskRepository>();
             _courseRepoMock = new Mock<ICourseRepository>();
-            _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
+            _studentAnswerRepoMock = new Mock<IStudentHomeworkRepository>();
             _groupRepoMock = new Mock<IGroupRepository>();
             _userRepoMock = new Mock<IUserRepository>();
             _homeworkRepoMock = new Mock<IHomeworkRepository>();

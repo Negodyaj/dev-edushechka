@@ -14,12 +14,12 @@ namespace DevEdu.Business.Tests
     {
         private Mock<ICommentRepository> _commentRepoMock;
         private Mock<ILessonRepository> _lessonRepoMock;
-        private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
+        private Mock<IStudentHomeworkRepository> _studentAnswerRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
         private Mock<IUserRepository> _userRepoMock;
         private CommentValidationHelper _commentValidationHelper;
         private LessonValidationHelper _lessonValidationHelper;
-        private StudentAnswerOnTaskValidationHelper _studentAnswerValidationHelper;
+        private StudentHomeworkValidationHelper _studentAnswerValidationHelper;
         private CommentService _sut;
 
         [SetUp]
@@ -28,11 +28,11 @@ namespace DevEdu.Business.Tests
             _commentRepoMock = new Mock<ICommentRepository>();
             _lessonRepoMock = new Mock<ILessonRepository>();
             _groupRepoMock = new Mock<IGroupRepository>();
-            _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
+            _studentAnswerRepoMock = new Mock<IStudentHomeworkRepository>();
             _userRepoMock = new Mock<IUserRepository>();
             _commentValidationHelper = new CommentValidationHelper(_commentRepoMock.Object);
             _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object, _userRepoMock.Object);
-            _studentAnswerValidationHelper = new StudentAnswerOnTaskValidationHelper(_studentAnswerRepoMock.Object, _groupRepoMock.Object);
+            _studentAnswerValidationHelper = new StudentHomeworkValidationHelper(_studentAnswerRepoMock.Object, _groupRepoMock.Object);
             _sut = new CommentService
             (
                 _commentRepoMock.Object,
