@@ -81,7 +81,7 @@ namespace DevEdu.API.Controllers
 
         // api/StudentHomework/{id}/change-status/{statusId} 
         [HttpPut("{id}/change-status/{statusId}")]
-        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [Description("Update homework status")]
         [ProducesResponseType(typeof(StudentHomeworkWithHomeworkOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]

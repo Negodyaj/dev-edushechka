@@ -264,6 +264,8 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), studentHomework.User.Id);
 
+            _studentHomeworkRepoMock.Setup(x => x.AddStudentHomework(studentHomework)).Returns(studentHomework.Id);
+
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
                 () => _sut.AddStudentHomework(homework.Id, studentHomework, userInfo));
@@ -281,6 +283,8 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             const int homeworkId = 1;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.Id);
+
+            _studentHomeworkRepoMock.Setup(x => x.DeleteStudentHomework(studentHomework.Id));
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
@@ -301,6 +305,7 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
 
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentHomework);
+            _studentHomeworkRepoMock.Setup(x => x.DeleteStudentHomework(studentHomework.Id));
 
             // When
             var actualException = Assert.Throws<AuthorizationException>(
@@ -328,7 +333,6 @@ namespace DevEdu.Business.Tests
 
             // Than
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
-            _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(studentHomework), Times.Never);
         }
 
         [TestCase(Role.Teacher)]
@@ -353,7 +357,6 @@ namespace DevEdu.Business.Tests
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userInfo.UserId), Times.Once);
-            _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(studentHomework), Times.Never);
         }
 
         [TestCase(Role.Student)]
