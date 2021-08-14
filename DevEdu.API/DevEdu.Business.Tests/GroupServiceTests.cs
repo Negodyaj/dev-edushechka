@@ -19,10 +19,6 @@ namespace DevEdu.Business.Tests
         private Mock<ILessonRepository> _lessonRepoMock;
         private Mock<ICourseRepository> _courseRepoMock;
         private GroupService _sut;
-        private MaterialValidationHelper _materialValidationHelper;
-        private GroupValidationHelper _groupValidationHelper;
-        private UserValidationHelper _userValidationHelper;
-        private LessonValidationHelper _lessonValidationHelper;
 
         [SetUp]
         public void Setup()
@@ -32,19 +28,16 @@ namespace DevEdu.Business.Tests
             _materialRepoMock = new Mock<IMaterialRepository>();
             _courseRepoMock = new Mock<ICourseRepository>();
             _lessonRepoMock = new Mock<ILessonRepository>();
-            _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
-            _materialValidationHelper = new MaterialValidationHelper(
-                _materialRepoMock.Object,
-                _groupRepoMock.Object,
-                _courseRepoMock.Object);
-            _userValidationHelper = new UserValidationHelper(_userRepoMock.Object);
-            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object, _userRepoMock.Object);
+            var groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
+            var userValidationHelper = new UserValidationHelper(_userRepoMock.Object);
+            var materialValidationHelper = new MaterialValidationHelper(_materialRepoMock.Object, _groupRepoMock.Object, _courseRepoMock.Object);
+            var lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object, _userRepoMock.Object);
             _sut = new GroupService(_groupRepoMock.Object,
                                     _userRepoMock.Object,
-                                    _groupValidationHelper,
-                                    _materialValidationHelper,
-                                    _userValidationHelper,
-                                    _lessonValidationHelper);
+                                    groupValidationHelper,
+                                    materialValidationHelper,
+                                    userValidationHelper,
+                                    lessonValidationHelper);
         }
 
         [Test]
