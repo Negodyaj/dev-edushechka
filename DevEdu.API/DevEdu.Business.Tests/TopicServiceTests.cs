@@ -6,8 +6,6 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
-using DevEdu.Business.Tests.Data;
-using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {

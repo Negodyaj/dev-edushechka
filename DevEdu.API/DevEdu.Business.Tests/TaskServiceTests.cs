@@ -16,7 +16,7 @@ namespace DevEdu.Business.Tests
     {
         private Mock<ITaskRepository> _taskRepoMock;
         private Mock<ICourseRepository> _courseRepoMock;
-        private Mock<IStudentAnswerOnTaskRepository> _studentAnswerRepoMock;
+        private Mock<IStudentHomeworkRepository> _studentAnswerRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
         private Mock<IUserRepository> _userRepoMock;
         private Mock<IHomeworkRepository> _homeworkRepoMock;
@@ -27,7 +27,7 @@ namespace DevEdu.Business.Tests
         {
             _taskRepoMock = new Mock<ITaskRepository>();
             _courseRepoMock = new Mock<ICourseRepository>();
-            _studentAnswerRepoMock = new Mock<IStudentAnswerOnTaskRepository>();
+            _studentAnswerRepoMock = new Mock<IStudentHomeworkRepository>();
             _groupRepoMock = new Mock<IGroupRepository>();
             _userRepoMock = new Mock<IUserRepository>();
             _homeworkRepoMock = new Mock<IHomeworkRepository>();
@@ -507,7 +507,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
-            _studentAnswerRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(taskId)).Returns(studentAnswersDtos);
+            _studentAnswerRepoMock.Setup(x => x.GetAllStudentHomeworkByTask(taskId)).Returns(studentAnswersDtos);
             taskDto.StudentAnswers = studentAnswersDtos;
 
             //When
@@ -516,7 +516,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(taskDto, dto);
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
-            _studentAnswerRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(taskId), Times.Once);
+            _studentAnswerRepoMock.Verify(x => x.GetAllStudentHomeworkByTask(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 

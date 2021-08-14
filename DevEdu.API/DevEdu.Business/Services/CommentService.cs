@@ -10,14 +10,14 @@ namespace DevEdu.Business.Services
         private readonly ICommentRepository _commentRepository;
         private readonly ICommentValidationHelper _commentValidationHelper;
         private readonly ILessonValidationHelper _lessonValidationHelper;
-        private readonly IStudentAnswerOnTaskValidationHelper _studentAnswerValidationHelper;
+        private readonly IStudentHomeworkValidationHelper _studentAnswerValidationHelper;
 
         public CommentService
         (
             ICommentRepository commentRepository,
             ICommentValidationHelper commentValidationHelper,
             ILessonValidationHelper lessonValidationHelper,
-            IStudentAnswerOnTaskValidationHelper studentAnswerValidationHelper
+            IStudentHomeworkValidationHelper studentAnswerValidationHelper
         )
         {
             _commentRepository = commentRepository;
@@ -38,14 +38,15 @@ namespace DevEdu.Business.Services
             return _commentRepository.GetComment(id);
         }
 
-        public CommentDto AddCommentToStudentAnswer(int taskStudentId, CommentDto dto, UserIdentityInfo userInfo)
+        public CommentDto AddCommentToStudentAnswer(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var studentAnswer = _studentAnswerValidationHelper.CheckStudentAnswerOnTaskExistence(taskStudentId);
+            var studentAnswer = _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(studentHomeworkId);
             var studentId = studentAnswer.User.Id;
             if (!userInfo.IsAdmin())
-                _studentAnswerValidationHelper.CheckUserInStudentAnswerAccess(studentId, userInfo.UserId);
+                _studentAnswerValidationHelper.CheckUserInStudentHomeworkAccess(studentId, userInfo.UserId);
 
-            dto.StudentAnswer = new StudentAnswerOnTaskDto { Id = taskStudentId };
+            dto.User = new UserDto { Id = userInfo.UserId };
+            dto.StudentHomework = new StudentHomeworkDto { Id = studentHomeworkId };
             var id = _commentRepository.AddComment(dto);
             return _commentRepository.GetComment(id);
         }

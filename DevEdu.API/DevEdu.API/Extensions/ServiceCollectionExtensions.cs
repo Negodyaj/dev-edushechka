@@ -11,7 +11,7 @@ namespace DevEdu.API.Extensions
         {
             services.AddScoped<IMaterialRepository, MaterialRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
-            services.AddScoped<IStudentAnswerOnTaskRepository, StudentAnswerOnTaskRepository>();
+            services.AddScoped<IStudentHomeworkRepository, StudentHomeworkRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
@@ -42,7 +42,7 @@ namespace DevEdu.API.Extensions
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>();
+            services.AddScoped<IStudentHomeworkService, StudentHomeworkService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IHomeworkService, HomeworkService>();
 
@@ -59,7 +59,7 @@ namespace DevEdu.API.Extensions
             services.AddScoped<INotificationValidationHelper, NotificationValidationHelper>();
             services.AddScoped<IPaymentValidationHelper, PaymentValidationHelper>();
             services.AddScoped<IRatingValidationHelper, RatingValidationHelper>();
-            services.AddScoped<IStudentAnswerOnTaskValidationHelper, StudentAnswerOnTaskValidationHelper>();
+            services.AddScoped<IStudentHomeworkValidationHelper, StudentHomeworkValidationHelper>();
             services.AddScoped<ITagValidationHelper, TagValidationHelper>();
             services.AddScoped<ITaskValidationHelper, TaskValidationHelper>();
             services.AddScoped<ITopicValidationHelper, TopicValidationHelper>();
