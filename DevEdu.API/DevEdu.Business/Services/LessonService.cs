@@ -5,6 +5,7 @@ using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Services
 {
@@ -68,7 +69,8 @@ namespace DevEdu.Business.Services
             _groupValidationHelper.CheckGroupExistence(groupId);
             if (!userIdentity.IsAdmin())
             {
-                _userValidationHelper.CheckUserBelongToGroup(groupId, userIdentity.UserId, userIdentity.Roles);
+                var currentRole = userIdentity.IsTeacher() ? Role.Teacher : Role.Student;
+                _userValidationHelper.CheckAuthorizationUserToGroup(groupId, userIdentity.UserId, currentRole);
             }
             var result = _lessonRepository.SelectAllLessonsByGroupId(groupId);
             return result;

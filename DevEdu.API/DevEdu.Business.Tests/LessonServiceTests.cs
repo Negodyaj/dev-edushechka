@@ -332,12 +332,12 @@ namespace DevEdu.Business.Tests
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var group = GroupData.GetGroupDto();
             var lessons = new List<UserDto> { };
-            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToGroup, userIdentity.UserId, group.Id);
+            var expectedException = string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, userIdentity.UserId, group.Id, Role.Teacher);
 
             _groupRepository.Setup(x => x.GetGroup(group.Id)).Returns(group);
             _userRepository.Setup(x => x.GetUsersByGroupIdAndRole(group.Id, It.IsAny<int>())).Returns(lessons);
             //When
-            var ex = Assert.Throws<ValidationException>(() => _sut.SelectAllLessonsByGroupId(userIdentity, group.Id));
+            var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectAllLessonsByGroupId(userIdentity, group.Id));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
