@@ -8,7 +8,7 @@ namespace DevEdu.DAL.Repositories
     {
         int AddStudentHomework(StudentHomeworkDto taskAnswerDto);
         void DeleteStudentHomework(int id);
-        List<StudentHomeworkDto> GetAllStudentAnswersOnTask(int taskId);
+        List<StudentHomeworkDto> GetAllStudentHomeworkByTask(int taskId);
         int ChangeStatusOfStudentAnswerOnTask(int id, int statusId, DateTime completedDate);
         void UpdateStudentHomework(StudentHomeworkDto dto);
         List<StudentHomeworkDto> GetAllStudentHomeworkByStudentId(int userId);

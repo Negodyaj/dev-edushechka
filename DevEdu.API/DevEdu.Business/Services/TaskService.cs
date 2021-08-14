@@ -113,7 +113,7 @@ namespace DevEdu.Business.Services
         public TaskDto GetTaskWithAnswersById(int taskId, UserIdentityInfo userIdentityInfo)
         {
             var taskDto = GetTaskById(taskId, userIdentityInfo);
-            taskDto.StudentAnswers = _studentHomeworkRepository.GetAllStudentAnswersOnTask(taskId);
+            taskDto.StudentAnswers = _studentHomeworkRepository.GetAllStudentHomeworkByTask(taskId);
             return taskDto;
         }
 

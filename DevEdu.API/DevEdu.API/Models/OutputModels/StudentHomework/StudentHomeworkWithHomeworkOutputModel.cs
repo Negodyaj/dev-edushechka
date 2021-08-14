@@ -2,6 +2,6 @@
 {
     public class StudentHomeworkWithHomeworkOutputModel : StudentHomeworkOutputModel
     {
-        public HomeworkInfoFullOutputModel Homework { get; set; }
+        public HomeworkInfoWithTaskOutputModel Homework { get; set; }
     }
 }

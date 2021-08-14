@@ -29,26 +29,6 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        //public static StudentHomeworkDto GetTaskIdStudentIdAndStatusIdDto()
-        //{
-        //    return new StudentHomeworkDto
-        //    {
-        //        Homework = new HomeworkDto
-        //        {
-        //            Task = new TaskDto
-        //            {
-        //                Id = 1
-        //            }
-        //        },
-        //        User = new UserDto
-        //        {
-        //            Id = 1
-        //        },
-        //        TaskStatus = (DAL.Enums.TaskStatus)3
-
-        //    };
-        //}
-
         public static StudentHomeworkDto GetAnswerOfStudent()
         {
             return new StudentHomeworkDto

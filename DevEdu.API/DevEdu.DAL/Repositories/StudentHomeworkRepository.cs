@@ -45,6 +45,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
+
         public void UpdateStudentHomework(StudentHomeworkDto dto)
         {
             _connection.Execute(
@@ -96,7 +97,7 @@ namespace DevEdu.DAL.Repositories
             return result;
         }
 
-        public List<StudentHomeworkDto> GetAllStudentAnswersOnTask(int taskId)
+        public List<StudentHomeworkDto> GetAllStudentHomeworkByTask(int taskId)
         {
             return _connection
                 .Query<StudentHomeworkDto, TaskStatus, UserDto, StudentHomeworkDto>(

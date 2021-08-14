@@ -225,9 +225,9 @@ namespace DevEdu.Business.Tests
             //Given
             var commentDto = CommentData.GetCommentDto();
             const int taskStudentId = 1;
-            var studentAnswerOnTask = CommentData.GetStudentHomeworkDto();
+            var studentHomework = CommentData.GetStudentHomeworkDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentAnswerOnTask), studentAnswerOnTask.Id);
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(

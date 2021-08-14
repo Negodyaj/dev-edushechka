@@ -62,7 +62,6 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
             _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(expectedDto), Times.Once);
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(expectedDto.Id), Times.Once);
-            
         }
 
         [Test]
@@ -73,7 +72,7 @@ namespace DevEdu.Business.Tests
             const int taskId = 1;
             var taskDto = TaskData.GetAnotherTaskDtoWithTags();
 
-            _studentHomeworkRepoMock.Setup(x => x.GetAllStudentAnswersOnTask(taskId)).Returns(studentAnswersList);
+            _studentHomeworkRepoMock.Setup(x => x.GetAllStudentHomeworkByTask(taskId)).Returns(studentAnswersList);
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
             // When
@@ -81,7 +80,7 @@ namespace DevEdu.Business.Tests
 
             // Then
             Assert.AreEqual(studentAnswersList, dtoList);
-            _studentHomeworkRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(taskId), Times.Once);
+            _studentHomeworkRepoMock.Verify(x => x.GetAllStudentHomeworkByTask(taskId), Times.Once);
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
         }
 
@@ -231,9 +230,6 @@ namespace DevEdu.Business.Tests
         public void AddStudentHomework_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             // Given
-            //var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
-            //_homeworkRepoMock.Setup(x => x.GetHomework(homeworkDto.Id)).Returns(homeworkDto);
-            //_homeworkRepoMock.Verify(x => x.GetHomework(homeworkDto.Id), Times.Once);
             var studentHomework = CommentData.GetStudentHomeworkDto();
             var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             const int homeworkId = 1;
@@ -273,7 +269,7 @@ namespace DevEdu.Business.Tests
                 () => _sut.AddStudentHomework(homework.Id, studentHomework, userInfo));
 
             // Than
-            Assert.That(actualException.Message, Is.EqualTo(expectedException)); 
+            Assert.That(actualException.Message, Is.EqualTo(expectedException));
             _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(studentHomework), Times.Never);
         }
 
@@ -377,7 +373,6 @@ namespace DevEdu.Business.Tests
             // Then
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
             _studentHomeworkRepoMock.Verify(x => x.UpdateStudentHomework(studentHomework), Times.Never);
-
         }
 
         [TestCase(Role.Student, 2)]
@@ -417,7 +412,7 @@ namespace DevEdu.Business.Tests
 
             // Then
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
-            _studentHomeworkRepoMock.Verify(x => x.GetAllStudentAnswersOnTask(task), Times.Never);
+            _studentHomeworkRepoMock.Verify(x => x.GetAllStudentHomeworkByTask(task), Times.Never);
         }
 
         [TestCase(Role.Teacher)]
@@ -426,7 +421,7 @@ namespace DevEdu.Business.Tests
         public void GetAllStudentHomeworkByStudentId_WhenStudentIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
-            const int user=0;
+            const int user = 0;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), user);
 

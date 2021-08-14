@@ -34,11 +34,11 @@ namespace DevEdu.Business.Services
 
         public StudentHomeworkDto AddStudentHomework(int homeworkId, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo)
         {
-            var homework = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId); 
+            var homework = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
             _studentHomeworkValidationHelper.CheckUserBelongsToHomework(homework.Group.Id, userInfo.UserId);
             taskAnswerDto.Homework = new HomeworkDto { Id = homeworkId };
             taskAnswerDto.User = new UserDto { Id = userInfo.UserId };
-            var id=_studentHomeworkRepository.AddStudentHomework(taskAnswerDto);
+            var id = _studentHomeworkRepository.AddStudentHomework(taskAnswerDto);
             return _studentHomeworkRepository.GetStudentHomeworkById(id);
         }
 
@@ -83,7 +83,7 @@ namespace DevEdu.Business.Services
         public List<StudentHomeworkDto> GetAllStudentHomeworkOnTask(int taskId)
         {
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            return _studentHomeworkRepository.GetAllStudentAnswersOnTask(taskId);
+            return _studentHomeworkRepository.GetAllStudentHomeworkByTask(taskId);
         }
 
         public List<StudentHomeworkDto> GetAllStudentHomeworkByStudentId(int userId, UserIdentityInfo userInfo)
