@@ -2,7 +2,7 @@
 	Id int NOT NULL IDENTITY(1,1),
 	UserId int NOT NULL,
 	LessonId int,
-	TaskStudentId int,
+	StudentHomeworkId int,
 	Text nvarchar(max) NOT NULL,
 	Date datetime NOT NULL,
 	IsDeleted bit NOT NULL DEFAULT '0',
@@ -24,7 +24,7 @@ ON UPDATE NO ACTION
 GO
 ALTER TABLE [Comment] CHECK CONSTRAINT [Comment_fk1]
 GO
-ALTER TABLE [Comment] WITH CHECK ADD CONSTRAINT [Comment_fk2] FOREIGN KEY ([TaskStudentId]) REFERENCES [Student_Homework]([Id])
+ALTER TABLE [Comment] WITH CHECK ADD CONSTRAINT [Comment_fk2] FOREIGN KEY ([StudentHomeworkId]) REFERENCES [Student_Homework]([Id])
 ON UPDATE NO ACTION
 GO
 ALTER TABLE [Comment] CHECK CONSTRAINT [Comment_fk2]

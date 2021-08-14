@@ -25,7 +25,7 @@ namespace DevEdu.DAL.Repositories
                 {
                     userId = dto.User.Id,
                     lessonId = dto.Lesson == null ? null : (int?)dto.Lesson.Id,
-                    taskStudentId = dto.StudentAnswer == null ? null : (int?)dto.StudentAnswer.Id,
+                    studentHomeworkId = dto.StudentHomework == null ? null : (int?)dto.StudentHomework.Id,
                     dto.Text
                 },
                 commandType: CommandType.StoredProcedure
@@ -47,7 +47,7 @@ namespace DevEdu.DAL.Repositories
             return _connection
                 .Query<CommentDto, UserDto, Role, LessonDto, StudentHomeworkDto, CommentDto>(
                     _commentSelectByIdProcedure,
-                    (comment, user, role, lesson, studentAnswer) =>
+                    (comment, user, role, lesson, studentHomework) =>
                     {
                         if (result == null)
                         {
@@ -55,7 +55,7 @@ namespace DevEdu.DAL.Repositories
                             result.User = user;
                             result.User.Roles = new List<Role> { role };
                             result.Lesson = lesson;
-                            result.StudentAnswer = studentAnswer;
+                            result.StudentHomework = studentHomework;
                         }
                         else
                         {

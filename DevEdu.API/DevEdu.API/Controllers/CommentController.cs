@@ -60,17 +60,17 @@ namespace DevEdu.API.Controllers
 
         //  api/comment/to-student-answer/1
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
-        [HttpPost("to-student-answer/{taskStudentId}")]
+        [HttpPost("to-student-answer/{studentHomeworkId}")]
         [Description("Add new comment to student answer")]
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<CommentInfoOutputModel> AddCommentToStudentAnswer(int taskStudentId, [FromBody] CommentAddInputModel model)
+        public ActionResult<CommentInfoOutputModel> AddCommentToStudentAnswer(int studentHomeworkId, [FromBody] CommentAddInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var comment = _commentService.AddCommentToStudentAnswer(taskStudentId, dto, userInfo);
+            var comment = _commentService.AddCommentToStudentAnswer(studentHomeworkId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
             return StatusCode(201, output);
         }

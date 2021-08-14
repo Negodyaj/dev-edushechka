@@ -38,14 +38,15 @@ namespace DevEdu.Business.Services
             return _commentRepository.GetComment(id);
         }
 
-        public CommentDto AddCommentToStudentAnswer(int taskStudentId, CommentDto dto, UserIdentityInfo userInfo)
+        public CommentDto AddCommentToStudentAnswer(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var studentAnswer = _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(taskStudentId);
+            var studentAnswer = _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(studentHomeworkId);
             var studentId = studentAnswer.User.Id;
             if (!userInfo.IsAdmin())
                 _studentAnswerValidationHelper.CheckUserInStudentHomeworkAccess(studentId, userInfo.UserId);
 
-            dto.StudentAnswer = new StudentHomeworkDto { Id = taskStudentId };
+            dto.User = new UserDto { Id = userInfo.UserId };
+            dto.StudentHomework = new StudentHomeworkDto { Id = studentHomeworkId };
             var id = _commentRepository.AddComment(dto);
             return _commentRepository.GetComment(id);
         }
