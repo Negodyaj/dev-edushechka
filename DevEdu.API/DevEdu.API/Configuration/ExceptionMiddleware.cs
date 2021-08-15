@@ -18,8 +18,6 @@ namespace DevEdu.API.Configuration
         private const int AuthorizationCode = 1000;
         private const int ValidationCode = 1001;
         private const int EntityCode = 1002;
-        private readonly int _forbiden = (int)HttpStatusCode.Forbidden;
-        private readonly int _notFound = (int)HttpStatusCode.NotFound;
 
         public ExceptionMiddleware(RequestDelegate next)
         {
@@ -34,7 +32,7 @@ namespace DevEdu.API.Configuration
             }
             catch (AuthorizationException ex)
             {
-                await HandlerExceptionMessageAsync(context, ex, AuthorizationCode, MessageAuthorization, _forbiden);
+                await HandlerExceptionMessageAsync(context, ex, AuthorizationCode, MessageAuthorization, HttpStatusCode.Forbidden);
             }
             catch (ValidationException ex)
             {
@@ -42,7 +40,7 @@ namespace DevEdu.API.Configuration
             }
             catch (EntityNotFoundException ex)
             {
-                await HandlerExceptionMessageAsync(context, ex, EntityCode, MessageEntity, _notFound);
+                await HandlerExceptionMessageAsync(context, ex, EntityCode, MessageEntity, HttpStatusCode.NotFound);
             }
             catch (Exception ex)
             {
@@ -50,7 +48,7 @@ namespace DevEdu.API.Configuration
             }
         }
 
-        private static Task HandlerExceptionMessageAsync(HttpContext context, Exception exception, int code, string message, int httpStatusCode)
+        private static Task HandlerExceptionMessageAsync(HttpContext context, Exception exception, int code, string message, HttpStatusCode httpStatusCode)
         {
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(
@@ -61,7 +59,7 @@ namespace DevEdu.API.Configuration
                     Description = exception.Message
                 }
             );
-            context.Response.StatusCode = httpStatusCode;
+            context.Response.StatusCode = (int)httpStatusCode;
             return context.Response.WriteAsync(result);
         }
 
