@@ -9,6 +9,7 @@ using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -49,7 +50,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTaskByTeacher_WithoutTags_TaskCreated()
+        public async Task AddTaskByTeacher_WithoutTags_TaskCreated()
         {
             //Given
             var taskDto = TaskData.GetTaskDtoWithoutTags();
@@ -62,7 +63,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByTeacher(taskDto, homework, expectedGroupId, null);
+            var actualTask = await _sut.AddTaskByTeacher(taskDto, homework, expectedGroupId, null);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
@@ -72,7 +73,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTaskByTeacher_WithTags_TaskWithTagsCreated()
+        public async Task AddTaskByTeacher_WithTags_TaskWithTagsCreated()
         {
             //Given
             var taskDto = TaskData.GetTaskDtoWithTags();
@@ -86,7 +87,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByTeacher(taskDto, homework, expectedGroupId, tagsIds);
+            var actualTask = await _sut.AddTaskByTeacher(taskDto, homework, expectedGroupId, tagsIds);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);

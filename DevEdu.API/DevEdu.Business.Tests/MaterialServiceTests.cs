@@ -69,7 +69,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMaterials, actualMaterials);
             _materialRepoMock.Verify(x => x.GetAllMaterials(), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Exactly(groupsByMaterial.Count));
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 2));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 3));
             _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Exactly(coursesByMaterial.Count));
         }
 
@@ -288,7 +288,7 @@ namespace DevEdu.Business.Tests
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Once);
             _materialRepoMock.Verify(x => x.GetMaterialsByTagId(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Exactly(groupsByMaterial.Count));
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 2));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 3));
             _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Exactly(coursesByMaterial.Count));
         }
 

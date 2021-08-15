@@ -85,12 +85,14 @@ namespace DevEdu.Business.Tests
             var courseId = 1;
 
             _courseRepositoryMock.Setup(x => x.DeleteCourse(courseId));
+            _courseRepositoryMock.Setup(x => x.GetCourse(courseId)).Returns(courseDto);
 
             //When
             _sut.DeleteCourse(courseId);
 
             //Than
             _courseRepositoryMock.Verify(x => x.DeleteCourse(courseId), Times.Once());
+            _courseRepositoryMock.Verify(x => x.GetCourse(courseId), Times.Once());
         }
 
         [Test]

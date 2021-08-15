@@ -43,7 +43,7 @@ namespace DevEdu.Business.Tests
             var expectedDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             const int userId = 1;
-            const int groupId = 1;
+            const int groupId = 2;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _homeworkRepoMock.Setup(x => x.GetHomework(homeworkDto.Id)).Returns(homeworkDto);
@@ -59,7 +59,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedDto, actualDto);
             _homeworkRepoMock.Verify(x => x.GetHomework(homeworkDto.Id), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Never);
             _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(expectedDto), Times.Once);
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(expectedDto.Id), Times.Once);
         }
