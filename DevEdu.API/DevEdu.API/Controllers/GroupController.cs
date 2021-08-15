@@ -36,11 +36,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<GroupOutputModel> AddGroup([FromBody] GroupInputModel model)
+        public async Task<ActionResult<GroupOutputModel>> AddGroup([FromBody] GroupInputModel model)
         {
             var dto = _mapper.Map<GroupDto>(model);
             var result = await _groupService.AddGroup(dto);
-            return _mapper.Map<GroupOutputModel>(result);
+            var output = _mapper.Map<GroupOutputModel>(result);
+            return StatusCode(201, output);
         }
 
         //  api/Group/5
@@ -104,7 +105,7 @@ namespace DevEdu.API.Controllers
         [HttpPut("{groupId}/change-status/{statusId}")]
         [Description("Change group status by id")]
         [AuthorizeRoles(Role.Manager)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(GroupOutputBaseModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<GroupOutputBaseModel> ChangeGroupStatus(int groupId, GroupStatus statusId)
@@ -118,15 +119,15 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/lesson/{lessonId}")]
         [Description("Add group lesson reference")]
         [AuthorizeRoles(Role.Teacher)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> AddGroupToLesson(int groupId, int lessonId)
+        public async Task<ActionResult<int>> AddGroupToLesson(int groupId, int lessonId)
         {
             var userInfo = this.GetUserIdAndRoles();
 
-            await _groupService.AddGroupToLesson(groupId, lessonId, userInfo);
-            return NoContent();
+            var output = await _groupService.AddGroupToLesson(groupId, lessonId, userInfo);
+            return StatusCode(201, output);
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
@@ -148,15 +149,15 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/material/{materialId}")]
         [Description("Add material to group")]
         [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<int> AddGroupMaterialReference(int groupId, int materialId)
+        public async Task<ActionResult<int>> AddGroupMaterialReference(int groupId, int materialId)
         {
             var userInfo = this.GetUserIdAndRoles();
 
-            return await _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
+            var output = await _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
+            return StatusCode(201, output);
         }
 
         // api/Group/{groupId}/material/{materialId}
@@ -164,14 +165,14 @@ namespace DevEdu.API.Controllers
         [Description("Remove material from group")]
         [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<int> RemoveGroupMaterialReference(int groupId, int materialId)
+        public async Task<IActionResult> RemoveGroupMaterialReference(int groupId, int materialId)
         {
             var userInfo = this.GetUserIdAndRoles();
 
-            return await _groupService.RemoveGroupMaterialReference(groupId, materialId, userInfo);
+            await _groupService.RemoveGroupMaterialReference(groupId, materialId, userInfo);
+            return NoContent();
         }
 
         //  api/group/1/user/2/role/1
