@@ -29,6 +29,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/tag
+        [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Methodist)]
         [HttpPost]
         [Description("Add tag to database")]
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status201Created)]

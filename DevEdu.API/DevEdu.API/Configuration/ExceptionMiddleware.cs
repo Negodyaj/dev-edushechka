@@ -18,6 +18,8 @@ namespace DevEdu.API.Configuration
         private const int AuthorizationCode = 1000;
         private const int ValidationCode = 1001;
         private const int EntityCode = 1002;
+        private readonly int _forbiden = (int)HttpStatusCode.Forbidden;
+        private readonly int _notFound = (int)HttpStatusCode.NotFound;
 
         public ExceptionMiddleware(RequestDelegate next)
         {
@@ -32,15 +34,15 @@ namespace DevEdu.API.Configuration
             }
             catch (AuthorizationException ex)
             {
-                await HandlerExceptionMessageAsync(context, ex, AuthorizationCode, MessageAuthorization);
+                await HandlerExceptionMessageAsync(context, ex, AuthorizationCode, MessageAuthorization, _forbiden);
             }
-            catch (ValidationException ex) //422
+            catch (ValidationException ex)
             {
                 await HandleValidationExceptionMessageAsync(context, ex, ValidationCode, MessageValidation);
             }
-            catch (EntityNotFoundException ex) //404
+            catch (EntityNotFoundException ex)
             {
-                await HandlerExceptionMessageAsync(context, ex, EntityCode, MessageEntity);
+                await HandlerExceptionMessageAsync(context, ex, EntityCode, MessageEntity, _notFound);
             }
             catch (Exception ex)
             {
@@ -48,7 +50,7 @@ namespace DevEdu.API.Configuration
             }
         }
 
-        private static Task HandlerExceptionMessageAsync(HttpContext context, Exception exception, int code, string message)
+        private static Task HandlerExceptionMessageAsync(HttpContext context, Exception exception, int code, string message, int httpStatusCode)
         {
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(
@@ -59,7 +61,7 @@ namespace DevEdu.API.Configuration
                     Description = exception.Message
                 }
             );
-            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+            context.Response.StatusCode = httpStatusCode;
             return context.Response.WriteAsync(result);
         }
 
@@ -68,7 +70,7 @@ namespace DevEdu.API.Configuration
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(new ValidationExceptionResponse(exception)
             {
-                Code= code,
+                Code = code,
                 Message = message
             });
             context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;

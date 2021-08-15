@@ -106,18 +106,18 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public CourseDto UpdateCourse(CourseDto courseDto)
+        public void UpdateCourse(CourseDto courseDto)
         {
-            return _connection.QuerySingle<CourseDto>(
-                _courseUpdateProcedure,
-                new
-                {
-                    CourseId = courseDto.Id,
-                    courseDto.Name,
-                    courseDto.Description
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            _connection.Execute(
+               _courseUpdateProcedure,
+               new
+               {
+                   courseDto.Id,
+                   courseDto.Name,
+                   courseDto.Description
+               },
+               commandType: CommandType.StoredProcedure
+           );
         }
 
         public void AddTaskToCourse(int courseId, int taskId)
