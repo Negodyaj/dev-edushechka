@@ -11,6 +11,7 @@ namespace DevEdu.Business.Tests
     public class GroupServiceTests
     {
         private Mock<IGroupRepository> _groupRepoMock;
+        private Mock<IMaterialRepository> _materialRepoMock;
         private Mock<IUserRepository> _userRepoMock;
         private Mock<ILessonRepository> _lessonRepoMock;
         private Mock<IMaterialRepository> _materialRepoMock;
@@ -95,7 +96,7 @@ namespace DevEdu.Business.Tests
         public async Task GetGroups_NoEntry_ListOfGroupDtoReturned()
         {
             //Given
-            var groupDtos = GroupData.GetGroupsDto();
+            var groupDtos = GroupData.GetGroupDtos();
 
             _groupRepoMock.Setup(x => x.GetGroups()).ReturnsAsync(groupDtos);
 

@@ -4,6 +4,5 @@
     {
         public string Feedback { get; set; }
         public UserInfoShortOutputModel User { get; set; }
-
     }
 }

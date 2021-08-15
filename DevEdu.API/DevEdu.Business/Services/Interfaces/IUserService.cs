@@ -5,13 +5,13 @@ namespace DevEdu.Business.Services
 {
     public interface IUserService
     {
-        int AddUser(UserDto dto);
+        UserDto AddUser(UserDto dto);
         void AddUserRole(int userId, int roleId);
         void DeleteUser(int id);
         void DeleteUserRole(int userId, int roleId);
-        UserDto SelectUserById(int id);
-        public UserDto SelectUserByEmail(string email);
-        List<UserDto> SelectUsers();
+        UserDto GetUserById(int id);
+        public UserDto GetUserByEmail(string email);
+        List<UserDto> GetAllUsers();
         UserDto UpdateUser(UserDto dto);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 
 namespace DevEdu.Business.ValidationHelpers
@@ -13,11 +14,12 @@ namespace DevEdu.Business.ValidationHelpers
             _ratingRepository = ratingRepository;
         }
 
-        public void CheckRaitingExistence(int ratingId)
+        public StudentRatingDto CheckRaitingExistenceAndReturnDto(int ratingId)
         {
             var rating = _ratingRepository.SelectStudentRatingById(ratingId);
             if (rating == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(rating), ratingId));
+            return rating;
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using DevEdu.API.Common;
-using DevEdu.API.Configuration.ExceptionResponses;
-using DevEdu.API.Extensions;
 using DevEdu.API.Models;
+using DevEdu.API.Common;
+using DevEdu.API.Configuration;
+using DevEdu.API.Extensions;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
@@ -49,7 +50,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(GroupFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<GroupFullOutputModel> GetGroup(int id)
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public GroupFullOutputModel GetGroup(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
 
@@ -63,12 +65,24 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        public async Task<List<GroupOutputModel>> GetAllGroups()
+        public List<GroupOutputModel> GetAllGroups()
         {
             var dto = await _groupService.GetGroups();
             return _mapper.Map<List<GroupOutputModel>>(dto);
         }
 
+        //  api/Group
+        [HttpPost]
+        [Description("Add new Group")]
+        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public GroupOutputModel AddGroup([FromBody] GroupInputModel model)
+        {
+            var dto = _mapper.Map<GroupDto>(model);
+            var result = _groupService.AddGroup(dto);
+            return _mapper.Map<GroupOutputModel>(result);
+        }
 
         //  api/Group
         [HttpDelete("{id}")]
@@ -77,7 +91,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task DeleteGroup(int id)
+        public void DeleteGroup(int id)
         {
             await _groupService.DeleteGroup(id);
         }
@@ -85,12 +99,11 @@ namespace DevEdu.API.Controllers
         //  api/Group/{Id}
         [HttpPut("{id}")]
         [Description("Update Group by id")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(GroupInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<GroupInfoOutputModel> UpdateGroup(int id, [FromBody] GroupInputModel model)
+        public GroupInfoOutputModel UpdateGroup(int id, [FromBody] GroupInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
 
@@ -102,11 +115,10 @@ namespace DevEdu.API.Controllers
         //  api/Group/{groupId}/change-status/{statusId}
         [HttpPut("{groupId}/change-status/{statusId}")]
         [Description("Change group status by id")]
-        [AuthorizeRoles(Role.Manager)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(GroupOutputBaseModel), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<GroupOutputBaseModel> ChangeGroupStatus(int groupId, GroupStatus statusId)
+        public GroupOutputBaseModel ChangeGroupStatus(int groupId, int statusId)
         {
             var output = await _groupService.ChangeGroupStatus(groupId, statusId);
             return _mapper.Map<GroupOutputBaseModel>(output);
@@ -116,164 +128,86 @@ namespace DevEdu.API.Controllers
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpPost("{groupId}/lesson/{lessonId}")]
         [Description("Add group lesson reference")]
-        [AuthorizeRoles(Role.Teacher)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [AuthorizeRoles(Role.Manager, Role.Teacher)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<string> AddGroupToLesson(int groupId, int lessonId)
+        public ActionResult AddGroupToLesson(int groupId, int lessonId)
         {
-            var userInfo = this.GetUserIdAndRoles();
-
-            await _groupService.AddGroupToLesson(groupId, lessonId, userInfo);
-            return $"Group {groupId} add  Lesson Id:{lessonId}";
+            _groupService.AddGroupToLesson(groupId, lessonId);
+            return NoContent();
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
         [HttpDelete("{groupId}/lesson/{lessonId}")]
         [Description("Delete lesson from groupId")]
-        [AuthorizeRoles(Role.Teacher)]
+        [AuthorizeRoles(Role.Manager, Role.Teacher)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<string> RemoveGroupFromLesson(int groupId, int lessonId)
+        public ActionResult RemoveGroupFromLesson(int groupId, int lessonId)
         {
-            var userInfo = this.GetUserIdAndRoles();
-
-            await _groupService.RemoveGroupFromLesson(groupId, lessonId, userInfo);
-            return $"Group {groupId} remove  Lesson Id:{lessonId}";
+            _groupService.RemoveGroupFromLesson(groupId, lessonId);
+            return NoContent();
         }
 
         // api/Group/{groupId}/material/{materialId}
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [HttpPost("{groupId}/material/{materialId}")]
         [Description("Add material to group")]
-        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<int> AddGroupMaterialReference(int groupId, int materialId)
+        public ActionResult AddGroupMaterialReference(int groupId, int materialId)
         {
             var userInfo = this.GetUserIdAndRoles();
-
-            return await _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
+            _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
+            return NoContent();
         }
 
         // api/Group/{groupId}/material/{materialId}
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [HttpDelete("{groupId}/material/{materialId}")]
         [Description("Remove material from group")]
-        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<int> RemoveGroupMaterialReference(int groupId, int materialId)
+        public ActionResult RemoveGroupMaterialReference(int groupId, int materialId)
         {
             var userInfo = this.GetUserIdAndRoles();
-
-            return await _groupService.RemoveGroupMaterialReference(groupId, materialId, userInfo);
+            _groupService.RemoveGroupMaterialReference(groupId, materialId, userInfo);
+            return NoContent();
         }
 
         //  api/group/1/user/2/role/1
+        [AuthorizeRoles(Role.Manager)]
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
         [Description("Add user to group")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task AddUserToGroup(int groupId, int userId, Role roleId)
+        public ActionResult AddUserToGroup(int groupId, int userId, int roleId)
         {
-            var userInfo = this.GetUserIdAndRoles();
+            _groupService.AddUserToGroup(groupId, userId, roleId);
+            return NoContent();
+        }
 
             await _groupService.AddUserToGroup(groupId, userId, roleId, userInfo);
         }
 
         //  api/group/1/user/2
+        [AuthorizeRoles(Role.Manager)]
         [HttpDelete("{groupId}/user/{userId}")]
         [Description("Delete user from group")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task DeleteUserFromGroup(int userId, int groupId)
+        public ActionResult DeleteUserFromGroup(int groupId, int userId)
         {
-            var userInfo = this.GetUserIdAndRoles();
-
-            await _groupService.DeleteUserFromGroup(userId, groupId, userInfo);
-        }
-
-        //  api/group/1/task/1
-        [HttpGet("{groupId}/task/{taskId}")]
-        [Description("Return task group by both id")]
-        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
-        [ProducesResponseType(typeof(GroupTaskInfoFullOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<GroupTaskInfoFullOutputModel> GetGroupTask(int groupId, int taskId)
-        {
-            var userInfo = this.GetUserIdAndRoles();
-
-            var dto = await _groupService.GetGroupTask(groupId, taskId, userInfo);
-            var output = _mapper.Map<GroupTaskInfoFullOutputModel>(dto);
-            return output;
-        }
-
-        //  api/group/1/task/
-        [HttpGet("{groupId}/tasks")]
-        [Description("Get all tasks by group")]
-        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
-        [ProducesResponseType(typeof(List<GroupTaskInfoWithTaskOutputModel>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        public async Task<List<GroupTaskInfoWithTaskOutputModel>> GetTasksByGroupId(int groupId)
-        {
-            var userInfo = this.GetUserIdAndRoles();
-
-            var dto = await _groupService.GetTasksByGroupId(groupId, userInfo);
-            var output = _mapper.Map<List<GroupTaskInfoWithTaskOutputModel>>(dto);
-            return output;
-        }
-
-        //  api/group/1/task/1
-        [HttpPost("{groupId}/task/{taskId}")]
-        [Description("Add task to group")]
-        [AuthorizeRoles(Role.Teacher)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<int> AddTaskToGroup(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
-        {
-            var userInfo = this.GetUserIdAndRoles();
-
-            var dto = _mapper.Map<GroupTaskDto>(model);
-            return await _groupService.AddTaskToGroup(groupId, taskId, dto, userInfo);
-        }
-
-        //  api/group/1/task/1
-        [HttpDelete("{groupId}/task/{taskId}")]
-        [Description("Delete task from group")]
-        [AuthorizeRoles(Role.Teacher)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task DeleteTaskFromGroup(int groupId, int taskId)
-        {
-            var userInfo = this.GetUserIdAndRoles();
-
-            await _groupService.DeleteTaskFromGroup(groupId, taskId, userInfo);
-        }
-
-        //  api/comment/5
-        [HttpPut("{groupId}/task/{taskId}")]
-        [Description("Update task by group")]
-        [AuthorizeRoles(Role.Teacher)]
-        [ProducesResponseType(typeof(GroupTaskInfoOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<GroupTaskInfoOutputModel> UpdateGroupTask(int groupId, int taskId, [FromBody] GroupTaskInputModel model)
-        {
-            var userInfo = this.GetUserIdAndRoles();
-
-            var dto = _mapper.Map<GroupTaskDto>(model);
-            var output = await _groupService.UpdateGroupTask(groupId, taskId, dto, userInfo);
-            return _mapper.Map<GroupTaskInfoOutputModel>(output);
+            _groupService.DeleteUserFromGroup(userId, groupId);
+            return NoContent();
         }
     }
 }

@@ -4,6 +4,6 @@ namespace DevEdu.API.Models
 {
     public class TaskInfoWithAnswersOutputModel : TaskInfoOutputModel
     {
-        public List<StudentAnswerOnTaskInfoOutputModel> StudentAnswers { get; set; }
+        public List<StudentHomeworkOutputModel> StudentAnswers { get; set; }
     }
 }

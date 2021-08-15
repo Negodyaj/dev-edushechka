@@ -1,20 +1,23 @@
 using DevEdu.DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace DevEdu.Business.Tests
 {
     public static class CommentData
     {
-        public const int ExpectedCommentId = 42;
-        public const int CommentId = 1;
-        public const int UserId = 1;
+        private const string _dateFormat = "dd.MM.yyyy";
 
         public static CommentDto GetCommentDto()
         {
             return new CommentDto
             {
                 Id = 1,
+                Lesson = new LessonDto
+                {
+                    Id = 1
+                },
                 Text = "comment1",
                 User = new UserDto
                 {
@@ -24,8 +27,52 @@ namespace DevEdu.Business.Tests
                     Email = "CatJack@meow.cat",
                     Photo = "Cat.jpg"
                 },
-                Date = DateTime.Parse("19.07.2021"),
+                Date = DateTime.ParseExact("19.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                 IsDeleted = false
+            };
+        }
+
+        public static LessonDto GetLessonDto()
+        {
+            return new LessonDto
+            {
+                Id = 1
+            };
+        }
+
+        public static StudentLessonDto GetStudentLessonDto()
+        {
+            return new StudentLessonDto
+            {
+                Id = 1
+            };
+        }
+
+        public static StudentHomeworkDto GetStudentHomeworkDto()
+        {
+            return new StudentHomeworkDto
+            {
+                Id = 1,
+                User = new UserDto
+                {
+                    Id = 10
+                }
+            };
+        }
+
+        public static List<GroupDto> GetGroupsDto()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto
+                {
+                    Id = 10
+                },
+
+                new GroupDto
+                {
+                    Id = 20
+                }
             };
         }
 
@@ -45,7 +92,7 @@ namespace DevEdu.Business.Tests
                         Email = "CatJack@meow.cat",
                         Photo = "Cat.jpg"
                     },
-                    Date = DateTime.Parse("19.07.2021"),
+                    Date = DateTime.ParseExact("19.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                     IsDeleted = false
                 },
                 new CommentDto
@@ -60,7 +107,7 @@ namespace DevEdu.Business.Tests
                         Email = "ZlooEvil@dark.hell",
                         Photo = "Zloo.jpg"
                     },
-                    Date = DateTime.Parse("22.02.2021"),
+                    Date = DateTime.ParseExact("22.02.2021", _dateFormat, CultureInfo.InvariantCulture),
                     IsDeleted = false
                 },
                 new CommentDto
@@ -75,7 +122,7 @@ namespace DevEdu.Business.Tests
                         Email = "AntonTeacher@back.sharp",
                         Photo = "Anton.jpg"
                     },
-                    Date = DateTime.Parse("30.03.2021"),
+                    Date = DateTime.ParseExact("30.03.2021", _dateFormat, CultureInfo.InvariantCulture),
                     IsDeleted = false
                 }
             };

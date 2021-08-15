@@ -1,4 +1,5 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
@@ -6,20 +7,21 @@ namespace DevEdu.Business.Services
     public interface ICourseService
     {
         CourseDto GetCourse(int id);
-        CourseDto GetFullCourseInfo(int id);
-        int AddCourse(CourseDto courseDto);
+        CourseDto GetFullCourseInfo(int id, UserIdentityInfo userToken);
+        CourseDto AddCourse(CourseDto courseDto);
         void DeleteCourse(int id);
         List<CourseDto> GetCourses();
-        List<CourseDto> GetCoursesForAdmin();
-        void UpdateCourse(int id, CourseDto courseDto);
-        void AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
-        void AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto);
-        void UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics);
+        CourseDto UpdateCourse(int id, CourseDto courseDto);
+        int AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
+        List<int> AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto);
+        List<int> UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics);
         void DeleteTopicFromCourse(int courseId, int topicId);
         List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId);
         void DeleteTaskFromCourse(int courseId, int taskId);
         public void AddTaskToCourse(int courseId, int taskId);
         int AddCourseMaterialReference(int courseId, int materialId);
-        int RemoveCourseMaterialReference(int courseId, int materialId);
+        void RemoveCourseMaterialReference(int courseId, int materialId);
+        CourseTopicDto GetCourseTopicById(int id);
+        List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids);
     }
 }

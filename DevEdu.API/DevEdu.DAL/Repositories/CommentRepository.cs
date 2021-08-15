@@ -12,20 +12,21 @@ namespace DevEdu.DAL.Repositories
         private const string _commentAddProcedure = "dbo.Comment_Insert";
         private const string _commentDeleteProcedure = "dbo.Comment_Delete";
         private const string _commentSelectByIdProcedure = "dbo.Comment_SelectById";
-        private const string _commentSelectAllByUserIdProcedure = "dbo.Comment_SelectAllByUserId";
         private const string _commentUpdateProcedure = "dbo.Comment_Update";
         private const string _commentsFromLessonSelectByLessonIdProcedure = "dbo.Comment_SelectByLessonId";
 
         public CommentRepository() { }
 
-        public int AddComment(CommentDto commentDto)
+        public int AddComment(CommentDto dto)
         {
             return _connection.QuerySingle<int>(
                 _commentAddProcedure,
                 new
                 {
-                    userId = commentDto.User.Id,
-                    commentDto.Text
+                    userId = dto.User.Id,
+                    lessonId = dto.Lesson == null ? null : (int?)dto.Lesson.Id,
+                    studentHomeworkId = dto.StudentHomework == null ? null : (int?)dto.StudentHomework.Id,
+                    dto.Text
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -44,15 +45,17 @@ namespace DevEdu.DAL.Repositories
         {
             CommentDto result = default;
             return _connection
-                .Query<CommentDto, UserDto, Role, CommentDto>(
+                .Query<CommentDto, UserDto, Role, LessonDto, StudentHomeworkDto, CommentDto>(
                     _commentSelectByIdProcedure,
-                    (comment, user, role) =>
+                    (comment, user, role, lesson, studentHomework) =>
                     {
                         if (result == null)
                         {
                             result = comment;
                             result.User = user;
                             result.User.Roles = new List<Role> { role };
+                            result.Lesson = lesson;
+                            result.StudentHomework = studentHomework;
                         }
                         else
                         {
@@ -67,47 +70,14 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
         }
 
-        public List<CommentDto> GetCommentsByUser(int userId)
-        {
-            var commentDictionary = new Dictionary<int, CommentDto>();
-            CommentDto result;
-
-            return _connection
-                .Query<CommentDto, UserDto, Role, CommentDto>(
-                    _commentSelectAllByUserIdProcedure,
-                    (comment, user, role) =>
-                    {
-
-                        if (!commentDictionary.TryGetValue(comment.Id, out result))
-                        {
-                            result = comment;
-                            result.User = user;
-                            result.User.Roles = new List<Role> { role };
-                            commentDictionary.Add(comment.Id, result);
-                        }
-                        else
-                        {
-                            result.User.Roles.Add(role);
-                        }
-
-                        return result;
-                    },
-                    new { userId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
-                .Distinct()
-                .ToList();
-        }
-
-        public void UpdateComment(CommentDto commentDto)
+        public void UpdateComment(CommentDto dto)
         {
             _connection.Execute(
                 _commentUpdateProcedure,
                 new
                 {
-                    commentDto.Id,
-                    commentDto.Text
+                    dto.Id,
+                    dto.Text
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -115,9 +85,16 @@ namespace DevEdu.DAL.Repositories
 
         public List<CommentDto> SelectCommentsFromLessonByLessonId(int lessonId)
         {
+            CommentDto result = default;
             return _connection
-                .Query<CommentDto>(
+                .Query<CommentDto, UserDto, CommentDto>(
                     _commentsFromLessonSelectByLessonIdProcedure,
+                    (comment, user) =>
+                    {
+                        result = comment;
+                        result.User = user;
+                        return result;
+                    },
                     new { lessonId },
                     commandType: CommandType.StoredProcedure
                 )

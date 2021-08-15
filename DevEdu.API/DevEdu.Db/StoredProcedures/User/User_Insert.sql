@@ -4,12 +4,12 @@
 	@Patronymic 		nvarchar(50),
 	@Email				nvarchar(50),
 	@Username			nvarchar(50),
-	@Password			nvarchar(200),
+	@Password			nvarchar(200),                            
 	@ContractNumber		nvarchar(50),
 	@CityId				int,
 	@BirthDate			date,
-	@GitHubAccount		nvarchar(50) NULL,
-	@Photo				nvarchar(150),
+	@GitHubAccount		nvarchar(50)	NULL,
+	@Photo				nvarchar(150)	NULL,
 	@PhoneNumber		nvarchar(12)
 AS
 BEGIN
