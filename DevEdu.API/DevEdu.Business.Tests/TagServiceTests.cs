@@ -88,7 +88,7 @@ namespace DevEdu.Business.Tests
             _tagRepoMock.Setup(x => x.SelectTagById(tagId)).Returns(expectedTagDto);
 
             //When
-            var actualTagDto = _sut.UpdateTag(inputTagDto, tagId);
+            var actualTagDto = _sut.UpdateTag(inputTagDto, tagId);  
 
             //Than
             Assert.AreEqual(expectedTagDto, actualTagDto);

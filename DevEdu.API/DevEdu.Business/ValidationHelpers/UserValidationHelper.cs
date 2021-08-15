@@ -31,7 +31,7 @@ namespace DevEdu.Business.ValidationHelpers
             var usersInGroup = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
             if (usersInGroup == default || usersInGroup.FirstOrDefault(u => u.Id == userId) == default)
             {
-                throw new ValidationException(nameof(StudentRaitingDto.User), string.Format(ServiceMessages.UserWithRoleDoesntBelongToGroup, role.ToString(), userId, groupId));
+                throw new ValidationException(nameof(StudentRatingDto.User), string.Format(ServiceMessages.UserWithRoleDoesntBelongToGroup, role.ToString(), userId, groupId));
             }
         }
 

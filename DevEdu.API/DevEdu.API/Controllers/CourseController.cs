@@ -8,6 +8,8 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using DevEdu.API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,7 +34,8 @@ namespace DevEdu.API.Controllers
         }
 
         [HttpGet("{id}/simple")]
-        [Description("Get course by id with groups")]
+        [Description("Get course by id with topics")]
+        [Authorize]
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -44,27 +47,30 @@ namespace DevEdu.API.Controllers
 
         [HttpGet("{id}/full")]
         [Description("Get course by id full")]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public CourseInfoFullOutputModel GetCourseFull(int id)
         {
-            var course = _courseService.GetFullCourseInfo(id);
+            var userToken = this.GetUserIdAndRoles();
+            var course = _courseService.GetFullCourseInfo(id, userToken);
             return _mapper.Map<CourseInfoFullOutputModel>(course);
         }
 
         [HttpGet]
         [Description("Get all courses")]
-        [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        public List<CourseInfoFullOutputModel> GetAllCoursesWithGroups()
+        [Authorize]
+        [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
+        public List<CourseInfoShortOutputModel> GetAllCoursesWithGrops()
         {
             var courses = _courseService.GetCourses();
-            return _mapper.Map<List<CourseInfoFullOutputModel>>(courses);
+            return _mapper.Map<List<CourseInfoShortOutputModel>>(courses);
         }
 
         [HttpPost]
         [Description("Create new course")]
+        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Methodist)]
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
@@ -78,6 +84,7 @@ namespace DevEdu.API.Controllers
 
         [HttpDelete("{id}")]
         [Description("Delete course by id")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -89,6 +96,7 @@ namespace DevEdu.API.Controllers
 
         [HttpPut("{id}")]
         [Description("Update course by Id")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]

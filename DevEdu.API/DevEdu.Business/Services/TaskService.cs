@@ -11,7 +11,7 @@ namespace DevEdu.Business.Services
     {
         private readonly ITaskRepository _taskRepository;
         private readonly ICourseRepository _courseRepository;
-        private readonly IStudentAnswerOnTaskRepository _studentAnswerOnTaskRepository;
+        private readonly IStudentHomeworkRepository _studentHomeworkRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IHomeworkRepository _homeworkRepository;
         private readonly ITaskValidationHelper _taskValidationHelper;
@@ -20,7 +20,7 @@ namespace DevEdu.Business.Services
         public TaskService(
             ITaskRepository taskRepository,
             ICourseRepository courseRepository,
-            IStudentAnswerOnTaskRepository studentAnswerOnTaskRepository,
+            IStudentHomeworkRepository studentHomeworkRepository,
             IGroupRepository groupRepository,
             IHomeworkRepository homeworkRepository,
             ITaskValidationHelper taskValidationHelper,
@@ -29,7 +29,7 @@ namespace DevEdu.Business.Services
         {
             _taskRepository = taskRepository;
             _courseRepository = courseRepository;
-            _studentAnswerOnTaskRepository = studentAnswerOnTaskRepository;
+            _studentHomeworkRepository = studentHomeworkRepository;
             _groupRepository = groupRepository;
             _homeworkRepository = homeworkRepository;
             _taskValidationHelper = taskValidationHelper;
@@ -113,7 +113,7 @@ namespace DevEdu.Business.Services
         public TaskDto GetTaskWithAnswersById(int taskId, UserIdentityInfo userIdentityInfo)
         {
             var taskDto = GetTaskById(taskId, userIdentityInfo);
-            taskDto.StudentAnswers = _studentAnswerOnTaskRepository.GetAllStudentAnswersOnTask(taskId);
+            taskDto.StudentAnswers = _studentHomeworkRepository.GetAllStudentHomeworkByTask(taskId);
             return taskDto;
         }
 

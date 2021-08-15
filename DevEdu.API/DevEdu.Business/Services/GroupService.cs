@@ -16,6 +16,7 @@ namespace DevEdu.Business.Services
         private readonly IGroupValidationHelper _groupValidationHelper;
         private readonly IMaterialValidationHelper _materialValidationHelper;
         private readonly IUserValidationHelper _userValidationHelper;
+        private readonly ILessonValidationHelper _lessonValidationHelper;
 
         public GroupService
         (
@@ -23,14 +24,17 @@ namespace DevEdu.Business.Services
             IUserRepository userRepository,
             IGroupValidationHelper groupValidationHelper,
             IMaterialValidationHelper materialValidationHelper,
-            IUserValidationHelper userValidationHelper
+            IUserValidationHelper userValidationHelper,
+            ILessonValidationHelper lessonValidationHelper
         )
         {
             _groupRepository = groupRepository;
             _userRepository = userRepository;
+            _lessonValidationHelper = lessonValidationHelper;
             _groupValidationHelper = groupValidationHelper;
             _materialValidationHelper = materialValidationHelper;
             _userValidationHelper = userValidationHelper;
+            _lessonValidationHelper = lessonValidationHelper;
         }
 
         public int AddGroup(GroupDto groupDto) => _groupRepository.AddGroup(groupDto);
@@ -47,8 +51,6 @@ namespace DevEdu.Business.Services
         }
 
         public List<GroupDto> GetGroups() => _groupRepository.GetGroups();
-
-        public int AddGroupLesson(int groupId, int lessonId) => _groupRepository.AddGroupToLesson(groupId, lessonId);
 
         public int RemoveGroupLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
 
@@ -99,6 +101,12 @@ namespace DevEdu.Business.Services
             _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
             if (!userInfo.IsAdmin())
                 _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
+        }
+
+        private void CheckGroupAndLessonExistence(int groupId, int lessonId)
+        {
+            _groupValidationHelper.CheckGroupExistence(groupId);
+            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
         }
     }
 }

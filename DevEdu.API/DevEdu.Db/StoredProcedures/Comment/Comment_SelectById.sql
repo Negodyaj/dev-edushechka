@@ -16,13 +16,13 @@ BEGIN
 		l.Id as Id,
 		l.Date,
 		l.TeacherComment,
-		ts.Id as Id,
-		ts.Answer,
-		ts.CompletedDate
+		sh.Id as Id,
+		sh.Answer,
+		sh.CompletedDate
 	FROM dbo.Comment c
 		inner join [User] u on u.Id=c.UserId
 		inner join User_Role ur on ur.UserId=u.Id
 		left join Lesson l on l.Id=c.LessonId
-		left join Task_Student ts on ts .Id=c.TaskStudentId
+		left join Student_Homework sh on sh.Id=c.StudentHomeworkId
 	WHERE (c.Id = @Id)
 END

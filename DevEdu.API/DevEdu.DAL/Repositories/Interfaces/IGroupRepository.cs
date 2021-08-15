@@ -22,6 +22,7 @@ namespace DevEdu.DAL.Repositories
         int GetPresentGroupForStudentByUserId(int userId);
         List<GroupDto> GetGroupsByTaskId(int taskId);
         List<GroupDto> GetGroupsByLessonId(int lessonId);
+        List<GroupDto> GetGroupsByCourseId(int courseId);
         public List<GroupDto> GetGroupsByUserId(int userId);
     }
 }

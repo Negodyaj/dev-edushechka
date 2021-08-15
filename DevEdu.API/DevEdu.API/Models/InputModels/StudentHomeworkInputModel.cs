@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DevEdu.API.Models.InputModels
 {
-    public class StudentAnswerOnTaskInputModel
+    public class StudentHomeworkInputModel
     {
         [Required(ErrorMessage = ValidationMessage.StudentAnswerRequired)]
         public string Answer { get; set; }
