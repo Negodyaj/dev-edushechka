@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DevEdu.Core
 {
-    public static class Extensions
+    public static class ConfigurationExtensions
     {
          public static void SetEnvironmentVariableForConfiguration(this IConfiguration configuration)
         {
