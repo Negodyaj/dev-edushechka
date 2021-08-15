@@ -3,7 +3,6 @@ using DevEdu.API.Models;
 using DevEdu.DAL.Models;
 using System;
 using System.Globalization;
-using DevEdu.API.Models;
 
 namespace DevEdu.API.Configuration
 {

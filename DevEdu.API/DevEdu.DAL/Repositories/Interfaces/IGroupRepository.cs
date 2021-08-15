@@ -18,12 +18,12 @@ namespace DevEdu.DAL.Repositories
         Task<GroupDto> ChangeGroupStatus(int groupId, int statusId);
         Task<int> AddGroupMaterialReference(int groupId, int materialId);
         Task<int> RemoveGroupMaterialReference(int groupId, int materialId);
-        Task<int> AddTaskToGroup(GroupTaskDto groupTaskDto);
         Task DeleteTaskFromGroup(int groupId, int taskId);
-        Task<List<GroupTaskDto>> GetTaskGroupByGroupId(int groupId);
-        Task<GroupTaskDto> GetGroupTask(int groupId, int taskId);
-        Task UpdateGroupTask(GroupTaskDto groupTaskDto);
         List<GroupDto> GetGroupsByMaterialId(int id);
         Task<int> GetPresentGroupForStudentByUserId(int userId);
+        List<GroupDto> GetGroupsByTaskId(int taskId);
+        List<GroupDto> GetGroupsByLessonId(int lessonId);
+        List<GroupDto> GetGroupsByCourseId(int courseId);
+        List<GroupDto> GetGroupsByUserId(int userId);
     }
 }

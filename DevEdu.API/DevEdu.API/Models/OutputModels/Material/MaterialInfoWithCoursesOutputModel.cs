@@ -1,4 +1,6 @@
-﻿namespace DevEdu.API.Models
+﻿using System.Collections.Generic;
+
+namespace DevEdu.API.Models
 {
     public class MaterialInfoWithCoursesOutputModel : MaterialInfoOutputModel
     {

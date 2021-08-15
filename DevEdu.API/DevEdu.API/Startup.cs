@@ -1,21 +1,16 @@
-using DevEdu.API.Common;
 using DevEdu.API.Configuration;
-using DevEdu.Business.Configuration;
 using DevEdu.API.Extensions;
+using DevEdu.Business.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
-using System;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Net;
 
 namespace DevEdu.API
 {

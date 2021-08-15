@@ -20,10 +20,6 @@ namespace DevEdu.Business.Services
         Task<int> RemoveGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo);
         Task AddUserToGroup(int groupId, int userId, Role roleId, UserIdentityInfo userInfo);
         Task DeleteUserFromGroup(int userId, int groupId, UserIdentityInfo userInfo);
-        Task<int> AddTaskToGroup(int groupId, int taskId, GroupTaskDto dto, UserIdentityInfo userInfo);
         Task DeleteTaskFromGroup(int groupId, int taskId, UserIdentityInfo userInfo);
-        Task<List<GroupTaskDto>> GetTasksByGroupId(int groupId, UserIdentityInfo userInfo);
-        Task<GroupTaskDto> GetGroupTask(int id, int taskId, UserIdentityInfo userInfo);
-        Task<GroupTaskDto> UpdateGroupTask(int groupId, int taskId, GroupTaskDto groupTaskDto, UserIdentityInfo userInfo);
     }
 }

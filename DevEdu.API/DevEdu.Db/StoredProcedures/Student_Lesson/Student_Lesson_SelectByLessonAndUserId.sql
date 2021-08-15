@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE dbo.Student_Lesson_SelectByLessonAndUserId
-    @UserId int,
-    @LessonId int
+	@UserId int,
+	@LessonId int
 AS
 BEGIN
 	SELECT 

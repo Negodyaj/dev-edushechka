@@ -190,7 +190,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public void AddTagToTask(int taskId, int tagId)
         {
-            return _taskService.AddTagToTask(taskId, tagId);
+            _taskService.AddTagToTask(taskId, tagId);
         }
 
         // api/task/{taskId}/tag/{tagId} 

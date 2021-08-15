@@ -16,11 +16,6 @@ namespace DevEdu.DAL.Repositories
         private const string _groupSelectAllProcedure = "dbo.Group_SelectAll";
         private const string _groupUpdateByIdProcedure = "dbo.Group_UpdateById";
         private const string _groupUpdateGroupStatusProcedure = "dbo.Group_UpdateGroupStatus";
-        private const string _groupSelectAllByTaskIdProcedure = "dbo.Group_SelectAllByTaskId";
-        private const string _groupSelectGroupsByUserIdProcedure = "dbo.Group_SelectAllByUserId";
-        private const string _groupSelectGroupsByLessonIdProcedure = "dbo.Group_SelectAllByLessonId";
-        private const string _groupSelectByCourse = "dbo.Group_SelectByCourseId";
-
         private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
         private const string _userGroupDeleteProcedure = "dbo.Tag_Delete";
         private const string _insertGroupLesson = "dbo.Group_Lesson_Insert";
@@ -28,8 +23,13 @@ namespace DevEdu.DAL.Repositories
         private const string _insertGroupMaterial = "dbo.Group_Material_Insert";
         private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
         private const string _groupSelectAllByMaterialIdProcedure = "dbo.Group_SelectByMaterialId";
-
+        private const string _taskFromGroupDeleteProcedure = "dbo.Group_Task_Delete";
+        private const string _groupSelectByCourse = "dbo.Group_SelectByCourseId";
+        private const string _groupSelectAllByTaskIdProcedure = "dbo.Group_SelectAllByTaskId";
+        private const string _groupSelectGroupsByUserIdProcedure = "dbo.Group_SelectAllByUserId";
+        private const string _groupSelectGroupsByLessonIdProcedure = "dbo.Group_SelectAllByLessonId";
         private const string _groupSelectPresentGroupForStudentByUserId = "dbo.Group_SelectPresentGroupForStudentByUserId";
+        
         public GroupRepository() { }
 
         public async Task<int> AddGroup(GroupDto groupDto)
@@ -215,23 +215,6 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public async Task<int> AddTaskToGroup(GroupTaskDto groupTaskDto)
-        {
-            return await _connection
-            .QuerySingleAsync<int>
-            (
-                _taskToGroupAddProcedure,
-                new
-                {
-                    GroupId = groupTaskDto.Group.Id,
-                    TaskId = groupTaskDto.Task.Id,
-                    groupTaskDto.StartDate,
-                    groupTaskDto.EndDate
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
-
         public async Task DeleteTaskFromGroup(int groupId, int taskId)
         {
             await _connection.ExecuteAsync
@@ -246,66 +229,7 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public async Task<List<GroupTaskDto>> GetTaskGroupByGroupId(int groupId)
-        {
-            GroupTaskDto result;
-            return (List<GroupTaskDto>)await _connection
-            .QueryAsync<GroupTaskDto, TaskDto, GroupTaskDto>
-            (
-                _taskGroupSelectAllByGroupIdProcedure,
-                (groupTask, task) =>
-                {
-                    result = groupTask;
-                    result.Task = task;
-                    return result;
-                },
-                new { groupId },
-                splitOn: "Id",
-                commandType: CommandType.StoredProcedure
-            );
-        }
-
-        public async Task<GroupTaskDto> GetGroupTask(int groupId, int taskId)
-        {
-            GroupTaskDto result = default;
-            var answer = await _connection
-            .QueryAsync<GroupTaskDto, TaskDto, GroupDto, GroupStatus, GroupTaskDto>
-            (
-                _taskGroupSelectByIdProcedure,
-                (groupTask, task, group, groupStatus) =>
-                {
-                    result = groupTask;
-                    result.Task = task;
-                    result.Group = group;
-                    result.Group.GroupStatus = groupStatus;
-                    return result;
-                },
-                new
-                {
-                    groupId,
-                    taskId
-                },
-                splitOn: "Id",
-                commandType: CommandType.StoredProcedure
-            );
-            return answer.FirstOrDefault();
-        }
-
-        public async Task UpdateGroupTask(GroupTaskDto groupTaskDto)
-        {
-            await _connection.ExecuteAsync
-            (
-                _taskGroupUpdateProcedure,
-                new
-                {
-                    GroupId = groupTaskDto.Group.Id,
-                    TaskId = groupTaskDto.Task.Id,
-                    groupTaskDto.StartDate,
-                    groupTaskDto.EndDate
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
+       
         public List<GroupDto> GetGroupsByMaterialId(int id)
         {
             return _connection.Query<GroupDto>
@@ -324,6 +248,73 @@ namespace DevEdu.DAL.Repositories
                 new { Id = userId },
                 commandType: CommandType.StoredProcedure
             );
+        }
+
+        public List<GroupDto> GetGroupsByCourseId(int courseId)
+        {
+            return _connection.Query<GroupDto>(
+                    _groupSelectByCourse,
+                    new { courseId },
+                    commandType: CommandType.StoredProcedure)
+                .ToList();
+        }
+
+        public List<GroupDto> GetGroupsByTaskId(int taskId)
+        {
+            GroupDto result;
+            return _connection
+                .Query<GroupDto, GroupStatus, GroupDto>(
+                    _groupSelectAllByTaskIdProcedure,
+                    (group, groupStatus) =>
+                    {
+                        result = group;
+                        result.GroupStatus = groupStatus;
+                        return result;
+                    },
+                    new { taskId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+
+        public List<GroupDto> GetGroupsByLessonId(int lessonId)
+        {
+            GroupDto result;
+            return _connection
+                .Query<GroupDto, GroupStatus, GroupDto>(
+                    _groupSelectGroupsByLessonIdProcedure,
+                    (group, groupStatus) =>
+                    {
+                        result = group;
+                        result.GroupStatus = groupStatus;
+                        return result;
+                    },
+                    new { lessonId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
+        }
+
+        public List<GroupDto> GetGroupsByUserId(int userId)
+        {
+            GroupDto result;
+            return _connection
+                .Query<GroupDto, GroupStatus, CourseDto, GroupDto>(
+                    _groupSelectGroupsByUserIdProcedure,
+                    (group, groupStatus, course) =>
+                    {
+                        result = group;
+                        result.GroupStatus = groupStatus;
+                        result.Course = course;
+                        return result;
+                    },
+                    new { userId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .ToList();
         }
     }
 }
