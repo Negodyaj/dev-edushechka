@@ -77,9 +77,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task DeleteGroup(int id)
+        public async Task<IActionResult> DeleteGroup(int id)
         {
             await _groupService.DeleteGroup(id);
+            return NoContent();
         }
 
         //  api/Group/{Id}
@@ -180,11 +181,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task AddUserToGroup(int groupId, int userId, Role roleId)
+        public async Task<IActionResult> AddUserToGroup(int groupId, int userId, Role roleId)
         {
             var userInfo = this.GetUserIdAndRoles();
 
             await _groupService.AddUserToGroup(groupId, userId, roleId, userInfo);
+            return NoContent();
         }
 
         //  api/group/1/user/2
@@ -194,11 +196,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task DeleteUserFromGroup(int userId, int groupId)
+        public async Task<IActionResult> DeleteUserFromGroup(int userId, int groupId)
         {
             var userInfo = this.GetUserIdAndRoles();
 
             await _groupService.DeleteUserFromGroup(userId, groupId, userInfo);
+            return NoContent();
         }
 
         //  api/group/1/task/1
@@ -208,11 +211,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task DeleteTaskFromGroup(int groupId, int taskId)
+        public async Task<IActionResult> DeleteTaskFromGroup(int groupId, int taskId)
         {
             var userInfo = this.GetUserIdAndRoles();
 
             await _groupService.DeleteTaskFromGroup(groupId, taskId, userInfo);
+            return NoContent();
         }
     }
 }
