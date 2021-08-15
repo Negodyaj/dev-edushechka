@@ -165,21 +165,5 @@ namespace DevEdu.API
                 endpoints.MapControllers();
             });
         }
-        //private void SetEnvironmentVariableForConfiguration( IConfiguration configuration)
-        //{
-        //    foreach (var item in configuration.AsEnumerable())
-        //    {
-        //        if (item.Value != null && item.Value.Contains("{{"))
-        //        {
-        //            var envName = RemoveCurlyBrackets(item.Value);
-        //            var envValue = Environment.GetEnvironmentVariable(envName);
-        //            configuration.GetSection(item.Key).Value = envValue;
-        //        }
-        //    }
-        //}
-        //private string RemoveCurlyBrackets(string str)
-        //{
-        //    return  str.Replace("{{", "").Replace("}}", "");
-        //}
     }
 }
