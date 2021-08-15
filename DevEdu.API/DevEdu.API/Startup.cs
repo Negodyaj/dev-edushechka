@@ -27,7 +27,8 @@ namespace DevEdu.API
             var builder = new ConfigurationBuilder().AddJsonFile($"appsettings.{currentEnvironment}.json");
 
             Configuration = builder.Build();
-            SetEnvironmentVariableForConfiguration(Configuration);
+            Configuration.SetEnvironmentVariableForConfiguration();
+            
         }
         public IConfiguration Configuration { get; }
 
@@ -70,7 +71,6 @@ namespace DevEdu.API
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IAuthOptions, AuthOptions>();
 
             services.AddScoped<ICommentValidationHelper, CommentValidationHelper>();
             services.AddScoped<ICourseValidationHelper, CourseValidationHelper>();
@@ -94,10 +94,6 @@ namespace DevEdu.API
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-
-            var provider = services.BuildServiceProvider();
-            var authOptions = provider.GetRequiredService<IAuthOptions>();
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -110,7 +106,7 @@ namespace DevEdu.API
                         ValidateAudience = true,
                         ValidAudience = AuthOptions.Audience,
                         ValidateLifetime = true,
-                        IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true
                     };
                 });
@@ -144,11 +140,6 @@ namespace DevEdu.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            else if (env.IsProduction())
-            {
-                app.UseExceptionHandler("/Error");
-
-            }
             app.UseOpenApi();
 
             app.UseSwaggerUi3();
@@ -174,21 +165,21 @@ namespace DevEdu.API
                 endpoints.MapControllers();
             });
         }
-        private void SetEnvironmentVariableForConfiguration(IConfiguration configuration)
-        {
-            foreach (var item in configuration.AsEnumerable())
-            {
-                if (item.Value != null && item.Value.Contains("{{"))
-                {
-                    var envName = RemoveCurlyBrackets(item.Value);
-                    var envValue = Environment.GetEnvironmentVariable(envName);
-                    configuration.GetSection(item.Key).Value = envValue;
-                }
-            }
-        }
-        private string RemoveCurlyBrackets(string str)
-        {
-            return  str.Replace("{{", "").Replace("}}", "");
-        }
+        //private void SetEnvironmentVariableForConfiguration( IConfiguration configuration)
+        //{
+        //    foreach (var item in configuration.AsEnumerable())
+        //    {
+        //        if (item.Value != null && item.Value.Contains("{{"))
+        //        {
+        //            var envName = RemoveCurlyBrackets(item.Value);
+        //            var envValue = Environment.GetEnvironmentVariable(envName);
+        //            configuration.GetSection(item.Key).Value = envValue;
+        //        }
+        //    }
+        //}
+        //private string RemoveCurlyBrackets(string str)
+        //{
+        //    return  str.Replace("{{", "").Replace("}}", "");
+        //}
     }
 }
