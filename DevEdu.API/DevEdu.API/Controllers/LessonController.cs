@@ -116,7 +116,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public LessonInfoWithCommentsOutputModel GetAllLessonsWithComments(int id)
+        public LessonInfoWithCommentsOutputModel GetLessonWithComments(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
             var dto = _lessonService.SelectLessonWithCommentsById(userIdentity, id);
@@ -130,7 +130,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public LessonInfoWithStudentsAndCommentsOutputModel GetAllLessonsWithStudentsAndComments(int id)
+        public LessonInfoWithStudentsAndCommentsOutputModel GetLessonWithStudentsAndComments(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
             var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(userIdentity, id);
