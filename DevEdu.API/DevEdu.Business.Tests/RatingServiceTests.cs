@@ -45,7 +45,7 @@ namespace DevEdu.Business.Tests
             var authorUserInfo = RatingData.GetTeacherIdentityInfo();
             var usersInGroup = UserData.GetListUsersDto();
 
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
             _userRepoMock.Setup(x => x.GetUserById(studentId)).Returns(student);
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student)).Returns(usersInGroup);
@@ -79,7 +79,7 @@ namespace DevEdu.Business.Tests
             var authorUserInfo = RatingData.GetAdminIdentityInfo();
             var usersInGroup = UserData.GetListUsersDto();
 
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
             _userRepoMock.Setup(x => x.GetUserById(studentId)).Returns(student);
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student)).Returns(usersInGroup);
@@ -110,7 +110,7 @@ namespace DevEdu.Business.Tests
             var groupId = expectedStudentRatingDto.Group.Id;
             GroupDto group = default;
 
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
 
             //When
             Assert.Throws<EntityNotFoundException>(() => _sut.AddStudentRating(expectedStudentRatingDto, authorUserInfo));
@@ -136,7 +136,7 @@ namespace DevEdu.Business.Tests
             var groupId = group.Id;
             var usersInGroup = UserData.GetListUsersDto();
 
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
 
             //When
@@ -164,7 +164,7 @@ namespace DevEdu.Business.Tests
             UserDto student = default;
             var usersInGroup = UserData.GetListUsersDto();
 
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
             _userRepoMock.Setup(x => x.GetUserById(studentId)).Returns(student);
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
 
@@ -193,7 +193,7 @@ namespace DevEdu.Business.Tests
             var groupId = group.Id;
             var usersInGroup = UserData.GetListUsersDto();
 
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
             _userRepoMock.Setup(x => x.GetUserById(studentId)).Returns(student);
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student)).Returns(usersInGroup);
@@ -359,7 +359,7 @@ namespace DevEdu.Business.Tests
             var group = expectedStudentRatingDtos[0].Group;
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingByGroupId(groupId)).Returns(expectedStudentRatingDtos);
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
 
             //When
             var actualStudentRatingDtos = _sut.GetStudentRatingByGroupId(groupId, authorUserInfo);
@@ -382,7 +382,7 @@ namespace DevEdu.Business.Tests
             var usersInGroup = UserData.GetListUsersDto();
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingByGroupId(groupId)).Returns(expectedStudentRatingDtos);
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(authorUserInfo.UserId, (int)Role.Teacher)).Returns(usersInGroup);
 
             //When
@@ -404,7 +404,7 @@ namespace DevEdu.Business.Tests
             var authorUserInfo = RatingData.GetManagerIdentityInfo();
             GroupDto group = default;
 
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(group);
+            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
 
             //When
             Assert.Throws<EntityNotFoundException>(() => _sut.GetStudentRatingByGroupId(groupId, authorUserInfo));

@@ -1,4 +1,4 @@
-﻿namespace DevEdu.API.Models.OutputModels
+﻿namespace DevEdu.API.Models
 {
     public class StudentLessonOutputModel
     {
@@ -7,6 +7,5 @@
 		public string Feedback { get; set; }
 		public bool IsPresent { get; set; }
 		public string AbsenceReason { get; set; }
-
     }
 }

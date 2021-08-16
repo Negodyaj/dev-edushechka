@@ -1,4 +1,4 @@
-﻿namespace DevEdu.API.Models.InputModels
+﻿namespace DevEdu.API.Models
 {
     public class TaskByTeacherUpdateInputModel : TaskInputModel
     {

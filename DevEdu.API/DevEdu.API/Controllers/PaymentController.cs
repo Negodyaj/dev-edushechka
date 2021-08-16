@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DevEdu.API.Common;
-using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels.Payment;
+using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;

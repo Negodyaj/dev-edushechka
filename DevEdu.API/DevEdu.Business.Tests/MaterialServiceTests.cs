@@ -69,7 +69,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMaterials, actualMaterials);
             _materialRepoMock.Verify(x => x.GetAllMaterials(), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Exactly(groupsByMaterial.Count));
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 2));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 3));
             _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Exactly(coursesByMaterial.Count));
         }
 
@@ -288,7 +288,7 @@ namespace DevEdu.Business.Tests
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Once);
             _materialRepoMock.Verify(x => x.GetMaterialsByTagId(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Exactly(groupsByMaterial.Count));
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 2));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 3));
             _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Exactly(coursesByMaterial.Count));
         }
 
@@ -355,7 +355,7 @@ namespace DevEdu.Business.Tests
 
             for(int i = 0; i < groups.Count; i++)
             {
-                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
+                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
                 _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
                 _tagRepoMock.Setup(x => x.SelectTagById(tags[i])).Returns(tagDtos[i]);
@@ -391,7 +391,7 @@ namespace DevEdu.Business.Tests
 
             for (int i = 0; i < groups.Count; i++)
             {
-                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
+                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
                 _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
@@ -448,7 +448,7 @@ namespace DevEdu.Business.Tests
 
             for (int i = 0; i < groups.Count; i++)
             {
-                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
+                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
                 _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
@@ -480,7 +480,7 @@ namespace DevEdu.Business.Tests
 
             for (int i = 0; i < groups.Count; i++)
             {
-                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
+                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
                 _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
@@ -515,7 +515,7 @@ namespace DevEdu.Business.Tests
 
             for (int i = 0; i < groups.Count; i++)
             {
-                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
+                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
                 _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
                 _tagRepoMock.Setup(x => x.SelectTagById(tags[i])).Returns(tagDtos[i]);
@@ -552,7 +552,7 @@ namespace DevEdu.Business.Tests
 
             for (int i = 0; i < groups.Count; i++)
             {
-                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).Returns(groupDtos[i]);
+                _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
                 _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
