@@ -9,5 +9,6 @@ namespace DevEdu.API.Models
         public TaskStatus TaskStatus { get; set; }
         public string CompletedDate { get; set; }
         public UserInfoShortOutputModel User { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
