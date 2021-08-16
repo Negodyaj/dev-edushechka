@@ -119,15 +119,15 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/lesson/{lessonId}")]
         [Description("Add group lesson reference")]
         [AuthorizeRoles(Role.Teacher)]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<int>> AddGroupToLesson(int groupId, int lessonId)
+        public async Task<ActionResult> AddGroupToLesson(int groupId, int lessonId)
         {
             var userInfo = this.GetUserIdAndRoles();
 
             var output = await _groupService.AddGroupToLesson(groupId, lessonId, userInfo);
-            return StatusCode(201, output);
+            return NoContent();
         }
 
         // api/Group/{groupId}/lesson/{lessonId}
@@ -149,15 +149,15 @@ namespace DevEdu.API.Controllers
         [HttpPost("{groupId}/material/{materialId}")]
         [Description("Add material to group")]
         [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<int>> AddGroupMaterialReference(int groupId, int materialId)
+        public async Task<ActionResult> AddGroupMaterialReference(int groupId, int materialId)
         {
             var userInfo = this.GetUserIdAndRoles();
 
             var output = await _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
-            return StatusCode(201, output);
+            return NoContent();
         }
 
         // api/Group/{groupId}/material/{materialId}
