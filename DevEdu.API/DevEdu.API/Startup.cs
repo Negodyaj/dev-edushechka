@@ -15,6 +15,7 @@ using System.Text.Json.Serialization;
 using DevEdu.Core;
 using System;
 using System.Collections.Generic;
+using DevEdu.API.Extensions;
 
 namespace DevEdu.API
 {
@@ -94,23 +95,7 @@ namespace DevEdu.API
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = AuthOptions.Issuer,
-                        ValidateAudience = true,
-                        ValidAudience = AuthOptions.Audience,
-                        ValidateLifetime = true,
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        ValidateIssuerSigningKey = true
-                    };
-                });
-
+            services.AddBearerAuthentication();
             services.AddSwaggerDocument(document =>
             {
                 document.DocumentName = "Endpoints for DevEdu";
