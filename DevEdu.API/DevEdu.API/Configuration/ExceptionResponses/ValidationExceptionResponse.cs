@@ -10,6 +10,9 @@ namespace DevEdu.API.Configuration
         public string Message { get; set; }
         public List<ValidationError> Errors { get; set; }
 
+        private const int ValidationCode = 1001;
+        private const string MessageValidation = "Validation exception";
+
         public ValidationExceptionResponse(ValidationException exception)
         {
             Errors = new List<ValidationError>
@@ -19,6 +22,8 @@ namespace DevEdu.API.Configuration
         }
         public ValidationExceptionResponse(ModelStateDictionary modelState)
         {
+            Code = ValidationCode;
+            Message = MessageValidation;
             Errors = new List<ValidationError>();
             foreach (var state in modelState)
             {
