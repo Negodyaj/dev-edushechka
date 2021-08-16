@@ -90,7 +90,8 @@ namespace DevEdu.Business.Services
 
         public CourseDto UpdateCourse(int id, CourseDto courseDto)
         {
-            var checkedCourse = _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(id);
+            _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(id);
+            courseDto.Id = id;
             _courseRepository.UpdateCourse(courseDto);
             return _courseRepository.GetCourse(id);
         }

@@ -3,9 +3,9 @@
 AS
 BEGIN
 	SELECT 
-	Id,
-	Name 
-	from [dbo].[Tag]
-	WHERE 
-	Id = @Id
+		Id,
+		Name,
+		IsDeleted
+	FROM Tag
+	WHERE Id = @Id
 END
