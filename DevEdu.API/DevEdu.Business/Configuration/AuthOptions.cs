@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DevEdu.Business.Configuration
 {
-    public class AuthOptions //: IAuthOptions
+    public class AuthOptions 
     {
         public const string Issuer = "MyAuthServer"; // for example auth.myserver.com
         public const string Audience = "MyAuthClient"; // for example myserver.com
