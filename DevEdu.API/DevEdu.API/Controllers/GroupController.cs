@@ -126,7 +126,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
 
-            var output = await _groupService.AddGroupToLesson(groupId, lessonId, userInfo);
+            await _groupService.AddGroupToLesson(groupId, lessonId, userInfo);
             return NoContent();
         }
 
@@ -156,7 +156,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
 
-            var output = await _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
+            await _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
             return NoContent();
         }
 
