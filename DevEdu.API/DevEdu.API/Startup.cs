@@ -22,15 +22,16 @@ namespace DevEdu.API
     public class Startup
     {
         private const string _pathToEnvironment = "ASPNETCORE_ENVIRONMENT";
+        
         public Startup(IConfiguration configuration)
         {
             var currentEnvironment = configuration.GetValue<string>(_pathToEnvironment);
             var builder = new ConfigurationBuilder().AddJsonFile($"appsettings.{currentEnvironment}.json");
 
             Configuration = builder.Build();
-            Configuration.SetEnvironmentVariableForConfiguration();
-            
+            Configuration.SetEnvironmentVariableForConfiguration();            
         }
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.

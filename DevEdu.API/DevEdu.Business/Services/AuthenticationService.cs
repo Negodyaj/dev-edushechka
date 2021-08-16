@@ -30,11 +30,11 @@ namespace DevEdu.Business.Services
             }
 
             var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.Issuer,
-                audience: AuthOptions.Audience,
+                issuer: _options.Issuer,
+                audience: _options.Audience,
                 notBefore: DateTime.UtcNow,
                 claims: identity.Claims,//Here we are adding claims to JWT
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(AuthOptions.Lifetime)),
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(_options.Lifetime)),
                 signingCredentials: new SigningCredentials(_options.GetSymmetricSecurityKey(),
                     SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);

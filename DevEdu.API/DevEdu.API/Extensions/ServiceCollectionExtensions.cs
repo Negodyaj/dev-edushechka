@@ -9,8 +9,9 @@ namespace DevEdu.API.Extensions
     {
         public static void AddBearerAuthentication(this IServiceCollection services)
         {
-            var provider = services.BuildServiceProvider();
-            var authOptions = provider.GetRequiredService<IAuthOptions>();
+            var provider = services.BuildServiceProvider(); 
+            var authOptions = provider.GetRequiredService<IAuthOptions>(); 
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -19,9 +20,9 @@ namespace DevEdu.API.Extensions
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
-                        ValidIssuer = AuthOptions.Issuer,
+                        ValidIssuer = authOptions.Issuer,
                         ValidateAudience = true,
-                        ValidAudience = AuthOptions.Audience,
+                        ValidAudience = authOptions.Audience,
                         ValidateLifetime = true,
                         IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true
