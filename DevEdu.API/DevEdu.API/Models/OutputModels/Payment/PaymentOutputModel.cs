@@ -1,4 +1,4 @@
-﻿namespace DevEdu.API.Models.OutputModels.Payment
+﻿namespace DevEdu.API.Models
 {
     public class PaymentOutputModel
     {

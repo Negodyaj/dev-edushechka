@@ -18,10 +18,7 @@ namespace DevEdu.DAL.Repositories
         private const string _materialSelectAllByTagIdProcedure = "dbo.Material_SelectAllByTagId";
         private const string _materialSelectAllByCourseIdProcedure = "dbo.Material_SelectByCourseId";
 
-        public MaterialRepository()
-        {
-
-        }
+        public MaterialRepository() {}
 
         public int AddMaterial(MaterialDto material)
         {

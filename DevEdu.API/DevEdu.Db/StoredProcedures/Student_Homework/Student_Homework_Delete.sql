@@ -2,8 +2,8 @@
 	@Id int
 AS
 BEGIN
-    UPDATE Student_Homework
-    SET
-        IsDeleted = 1
-    WHERE Id = @Id
+	UPDATE Student_Homework
+	SET
+		IsDeleted = 1
+	WHERE Id = @Id
 END
