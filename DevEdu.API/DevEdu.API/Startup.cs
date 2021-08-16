@@ -72,6 +72,7 @@ namespace DevEdu.API
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAuthOptions, AuthOptions>();
 
             services.AddScoped<ICommentValidationHelper, CommentValidationHelper>();
             services.AddScoped<ICourseValidationHelper, CourseValidationHelper>();

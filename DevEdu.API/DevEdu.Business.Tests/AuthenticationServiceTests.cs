@@ -18,7 +18,8 @@ namespace DevEdu.Business.Tests
         [SetUp]
         public void Setup()
         {
-            _sut = new AuthenticationService(new Mock<IUserRepository>().Object);
+            _sut = new AuthenticationService(new Mock<IUserRepository>().Object,
+                                             new Mock<IAuthOptions>().Object);
         }
 
         [Test]

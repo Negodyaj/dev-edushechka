@@ -14,11 +14,11 @@ namespace DevEdu.Business.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
-
-        public AuthenticationService(IUserRepository userRepository)
+        private readonly IAuthOptions _options;
+        public AuthenticationService(IUserRepository userRepository, IAuthOptions authOptions)
         {
             _userRepository = userRepository;
-            
+            _options = authOptions;
         }
 
         public string SignIn(UserDto dto)
@@ -35,7 +35,7 @@ namespace DevEdu.Business.Services
                 notBefore: DateTime.UtcNow,
                 claims: identity.Claims,//Here we are adding claims to JWT
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(AuthOptions.Lifetime)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
+                signingCredentials: new SigningCredentials(_options.GetSymmetricSecurityKey(),
                     SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
