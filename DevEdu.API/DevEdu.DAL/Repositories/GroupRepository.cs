@@ -103,13 +103,13 @@ namespace DevEdu.DAL.Repositories
                 _groupUpdateByIdProcedure,
                 new
                 {
-                    Id = groupDto.Id,
-                    Name = groupDto.Name,
+                    groupDto.Id,
+                    groupDto.Name,
                     CourseId = groupDto.Course.Id,
                     GroupStatusId = (int)groupDto.GroupStatus,
-                    StartDate = groupDto.StartDate,
-                    Timetable = groupDto.Timetable,
-                    PaymentPerMonth = groupDto.PaymentPerMonth
+                    groupDto.StartDate,
+                    groupDto.Timetable,
+                    groupDto.PaymentPerMonth
                 },
                 commandType: CommandType.StoredProcedure
             );
