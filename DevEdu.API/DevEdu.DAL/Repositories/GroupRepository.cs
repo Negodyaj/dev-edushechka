@@ -32,8 +32,6 @@ namespace DevEdu.DAL.Repositories
         private const string _groupSelectGroupsByLessonIdProcedure = "dbo.Group_SelectAllByLessonId";
         private const string _groupSelectPresentGroupForStudentByUserId = "dbo.Group_SelectPresentGroupForStudentByUserId";
         public GroupRepository(IOptions<DatabaseSettings> options) : base(options) { }
-        
-        public GroupRepository() { }
 
         public async Task<int> AddGroup(GroupDto groupDto)
         {
