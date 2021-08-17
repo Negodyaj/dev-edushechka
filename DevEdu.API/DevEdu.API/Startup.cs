@@ -1,20 +1,15 @@
 using DevEdu.API.Configuration;
 using DevEdu.API.Extensions;
 using DevEdu.Business.Configuration;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
 using System.Text.Json.Serialization;
 using DevEdu.Core;
-using System;
-using System.Collections.Generic;
-using DevEdu.API.Extensions;
 
 namespace DevEdu.API
 {
@@ -36,12 +31,13 @@ namespace DevEdu.API
         // This method gets called by the runtime. Use this method to add services to the container. 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOptions<DatabaseSettings>()
-                .Bind(Configuration.GetSection(nameof(DatabaseSettings)))
-                .ValidateDataAnnotations();
-            services.AddOptions<AuthSettings>()
-                .Bind(Configuration.GetSection(nameof(AuthSettings)))
-                .ValidateDataAnnotations();
+            //services.AddOptions<DatabaseSettings>()
+            //    .Bind(Configuration.GetSection(nameof(DatabaseSettings)))
+            //    .ValidateDataAnnotations();
+            //services.AddOptions<AuthSettings>()
+            //    .Bind(Configuration.GetSection(nameof(AuthSettings)))
+            //    .ValidateDataAnnotations();
+            services.Binding?onfigurationToClasses(Configuration);
 
             services.AddAutoMapper(typeof(Startup));
             services.AddRepositories();

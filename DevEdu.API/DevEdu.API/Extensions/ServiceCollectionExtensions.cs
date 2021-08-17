@@ -5,11 +5,23 @@ using Microsoft.Extensions.DependencyInjection;
 using DevEdu.Business.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using DevEdu.Core;
+using Microsoft.Extensions.Configuration;
+
 
 namespace DevEdu.API.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        public static void BindingСonfigurationToClasses(this IServiceCollection services,IConfiguration configuration)
+        {
+            services.AddOptions<DatabaseSettings>()
+                .Bind(configuration.GetSection(nameof(DatabaseSettings)))
+                .ValidateDataAnnotations();
+            services.AddOptions<AuthSettings>()
+                .Bind(configuration.GetSection(nameof(AuthSettings)))
+                .ValidateDataAnnotations();
+        }
         public static void AddBearerAuthentication(this IServiceCollection services)
         {
             var provider = services.BuildServiceProvider();
