@@ -1,4 +1,4 @@
-using DevEdu.API.Configuration;
+﻿using DevEdu.API.Configuration;
 using DevEdu.API.Extensions;
 using DevEdu.Business.Configuration;
 using Microsoft.AspNetCore.Builder;
@@ -31,14 +31,7 @@ namespace DevEdu.API
         // This method gets called by the runtime. Use this method to add services to the container. 
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddOptions<DatabaseSettings>()
-            //    .Bind(Configuration.GetSection(nameof(DatabaseSettings)))
-            //    .ValidateDataAnnotations();
-            //services.AddOptions<AuthSettings>()
-            //    .Bind(Configuration.GetSection(nameof(AuthSettings)))
-            //    .ValidateDataAnnotations();
-            services.Binding?onfigurationToClasses(Configuration);
-
+            services.AddAppConfiguration(Configuration);
             services.AddAutoMapper(typeof(Startup));
             services.AddRepositories();
             services.AddCustomServices();

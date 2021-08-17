@@ -13,7 +13,7 @@ namespace DevEdu.API.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void BindingСonfigurationToClasses(this IServiceCollection services,IConfiguration configuration)
+        public static void AddAppConfiguration(this IServiceCollection services,IConfiguration configuration)
         {
             services.AddOptions<DatabaseSettings>()
                 .Bind(configuration.GetSection(nameof(DatabaseSettings)))
