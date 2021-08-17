@@ -7,12 +7,12 @@ BEGIN
       C.Name,
       C.Description,
       C.IsDeleted,
-	  G.Id,
-	  G.Timetable
-	  
+	  T.Id,
+	  T.Name,
+	  T.Duration
 
   FROM [dbo].[Course] C WITH (NOLOCK)
-
-  LEFT JOIN [Group] G WITH (NOLOCK) ON C.Id = G.CourseId
+  LEFT JOIN Course_Topic CT (NOLOCK) ON CT.CourseId = C.Id
+  LEFT JOIN [Topic] T WITH (NOLOCK) ON CT.TopicId = T.Id AND T.IsDeleted = 0 
 	WHERE (C.Id = @Id)
 END

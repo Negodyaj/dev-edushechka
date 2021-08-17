@@ -1,9 +1,9 @@
+using Dapper;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Dapper;
 using DevEdu.Core;
-using DevEdu.DAL.Models;
 using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
@@ -58,18 +58,18 @@ namespace DevEdu.DAL.Repositories
         {
             CourseDto result = default;
             return _connection
-                .Query<CourseDto, GroupDto, CourseDto>(
+                .Query<CourseDto, TopicDto, CourseDto>(
                 _courseSelectByIdProcedure,
-                (course, group) =>
+                (course, topic) =>
                 {
                     if (result == null)
                     {
                         result = course;
-                        result.Groups = new List<GroupDto> { group };
+                        result.Topics = new List<TopicDto> { topic };
                     }
                     else
                     {
-                        result.Groups.Add(group);
+                        result.Topics.Add(topic);
                     }
                     return result;
                 },
@@ -85,20 +85,20 @@ namespace DevEdu.DAL.Repositories
             var courseDictionary = new Dictionary<int, CourseDto>();
             CourseDto result;
             return _connection
-                .Query<CourseDto, GroupDto, CourseDto>(
+                .Query<CourseDto, TopicDto, CourseDto>(
                     _courseSelectAllProcedure,
-                    (course, group) =>
+                    (course, topic) =>
                     {
 
                         if (!courseDictionary.TryGetValue(course.Id, out result))
                         {
                             result = course;
-                            result.Groups = new List<GroupDto> { group };
+                            result.Topics = new List<TopicDto> { topic };
                             courseDictionary.Add(course.Id, result);
                         }
                         else
                         {
-                            result.Groups.Add(group);
+                            result.Topics.Add(topic);
                         }
 
                         return result;
@@ -110,18 +110,18 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public CourseDto UpdateCourse(CourseDto courseDto)
+        public void UpdateCourse(CourseDto courseDto)
         {
-            return _connection.QuerySingle<CourseDto>(
-                _courseUpdateProcedure,
-                new
-                {
-                    CourseId = courseDto.Id,
-                    courseDto.Name,
-                    courseDto.Description
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            _connection.Execute(
+               _courseUpdateProcedure,
+               new
+               {
+                   courseDto.Id,
+                   courseDto.Name,
+                   courseDto.Description
+               },
+               commandType: CommandType.StoredProcedure
+           );
         }
 
         public void AddTaskToCourse(int courseId, int taskId)
@@ -226,17 +226,17 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int RemoveCourseMaterialReference(int courseId, int materialId)
+        public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
-            return _connection.Execute(
-                _deleteCourseMaterial,
-                new
-                {
-                    courseId,
-                    materialId
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            _connection.Execute(
+               _deleteCourseMaterial,
+               new
+               {
+                   courseId,
+                   materialId
+               },
+               commandType: CommandType.StoredProcedure
+           );
         }
     }
 }

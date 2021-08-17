@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using DevEdu.DAL.Models;
+using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
@@ -9,22 +9,37 @@ namespace DevEdu.Business.Tests
 
         public static TaskDto GetTaskDtoWithoutTags()
         {
-            return new TaskDto {Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true};
+            return new TaskDto { Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true };
         }
 
         public static TaskDto GetTaskDtoWithTags()
         {
             return new TaskDto
             {
+                Id = 1,
                 Name = "Task1",
                 Description = "Description1",
                 Links = "noLinks",
                 IsRequired = true,
                 Tags = new List<TagDto>
                 {
-                    new TagDto {Id = 1},
-                    new TagDto {Id = 2},
-                    new TagDto {Id = 3}
+                    new TagDto
+                    {
+                        Id = 13,
+                        Name = "Tag",
+                        IsDeleted = false
+                    },
+                    new TagDto
+                    {
+                        Id = 15,
+                        Name = "DevEdu",
+                        IsDeleted = false
+                    },
+                    new TagDto
+                    {
+                        Id = 14,
+                        Name = "Tag"
+                    }
                 }
             };
         }
@@ -33,6 +48,7 @@ namespace DevEdu.Business.Tests
         {
             return new TaskDto
             {
+                Id = 1,
                 Name = "Task2",
                 Description = "Description2",
                 Links = "noLinks",
@@ -57,13 +73,33 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static List<StudentAnswerOnTaskForTaskDto> GetListOfStudentAnswers()
+        public static List<StudentHomeworkDto> GetListOfStudentAnswers()
         {
-            return new List<StudentAnswerOnTaskForTaskDto>
+            return new List<StudentHomeworkDto>
             {
-                new StudentAnswerOnTaskForTaskDto {Id = 1},
-                new StudentAnswerOnTaskForTaskDto {Id = 2},
-                new StudentAnswerOnTaskForTaskDto {Id = 3}
+                new StudentHomeworkDto {Id = 1},
+                new StudentHomeworkDto {Id = 2},
+                new StudentHomeworkDto {Id = 3}
+            };
+        }
+
+        public static List<GroupDto> GetListOfGroups()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto {Id = 1},
+                new GroupDto {Id = 2},
+                new GroupDto {Id = 3}
+            };
+        }
+
+        public static List<GroupDto> GetListOfSameGroups()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto {Id = 1},
+                new GroupDto {Id = 2},
+                new GroupDto {Id = 3}
             };
         }
 
@@ -73,41 +109,86 @@ namespace DevEdu.Business.Tests
             {
                 new TaskDto
                 {
+                    Id = 1,
                     Name = "Task1",
                     Description = "Description1",
                     Links = "noLinks",
                     IsRequired = true,
                     Tags = new List<TagDto>
                     {
-                        new TagDto {Id = 1},
-                        new TagDto {Id = 2},
-                        new TagDto {Id = 3}
+                        new TagDto
+                        {
+                            Id = 13,
+                            Name = "Tag",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 15,
+                            Name = "DevEdu",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 14,
+                            Name = "Tag"
+                        }
                     }
                 },
                 new TaskDto
                 {
+                     Id = 2,
                     Name = "Task2",
                     Description = "Description2",
                     Links = "noLinks",
                     IsRequired = true,
                     Tags = new List<TagDto>
                     {
-                        new TagDto {Id = 4},
-                        new TagDto {Id = 5},
-                        new TagDto {Id = 6}
+                        new TagDto
+                        {
+                            Id = 18,
+                            Name = "Tag",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 19,
+                            Name = "DevEdu",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 20,
+                            Name = "Tag"
+                        }
                     }
                 },
                 new TaskDto
                 {
+                    Id = 3,
                     Name = "Task3",
                     Description = "Description3",
                     Links = "noLinks",
                     IsRequired = true,
                     Tags = new List<TagDto>
                     {
-                        new TagDto {Id = 2},
-                        new TagDto {Id = 4},
-                        new TagDto {Id = 6}
+                        new TagDto
+                        {
+                            Id = 21,
+                            Name = "Tag",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 22,
+                            Name = "DevEdu",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 23,
+                            Name = "Tag"
+                        }
                     }
                 }
             };

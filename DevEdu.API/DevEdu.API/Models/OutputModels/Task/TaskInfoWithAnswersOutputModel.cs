@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace DevEdu.API.Models.OutputModels
+namespace DevEdu.API.Models
 {
     public class TaskInfoWithAnswersOutputModel : TaskInfoOutputModel
     {
-        public List<StudentAnswerOnTaskInfoOutputModel> StudentAnswers { get; set; }
+        public List<StudentHomeworkOutputModel> StudentAnswers { get; set; }
     }
 }

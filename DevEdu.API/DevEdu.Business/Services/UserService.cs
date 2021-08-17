@@ -28,31 +28,31 @@ namespace DevEdu.Business.Services
 
             foreach (var role in dto.Roles)
             {
-                AddUserRole(addedUserId, (int)role);
+                _userRepository.AddUserRole(addedUserId, (int)role);
             }
 
-            var response = _userRepository.SelectUserById(addedUserId);
+            var response = _userRepository.GetUserById(addedUserId);
             return response;
         }
 
-        public UserDto SelectUserById(int id)
+        public UserDto GetUserById(int id)
         {
             var user = _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
             return user;
         }
 
-        public UserDto SelectUserByEmail(string email)
+        public UserDto GetUserByEmail(string email)
         {
-            var user = _userRepository.SelectUserByEmail(email);
+            var user = _userRepository.GetUserByEmail(email);
             if (user == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithEmailNotFoundMessage, nameof(user), email));
 
             return user;
         }
 
-        public List<UserDto> SelectUsers()
+        public List<UserDto> GetAllUsers()
         {
-            var list = _userRepository.SelectUsers();
+            var list = _userRepository.GetAllUsers();
             return list;
         }
 
@@ -61,7 +61,7 @@ namespace DevEdu.Business.Services
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(dto.Id);
 
             _userRepository.UpdateUser(dto);
-            var user = _userRepository.SelectUserById(dto.Id);
+            var user = _userRepository.GetUserById(dto.Id);
             return user;
         }
 
@@ -74,14 +74,12 @@ namespace DevEdu.Business.Services
         public void AddUserRole(int userId, int roleId)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-
             _userRepository.AddUserRole(userId, roleId);
         }
 
         public void DeleteUserRole(int userId, int roleId)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-
             _userRepository.DeleteUserRole(userId, roleId);
         }
     }

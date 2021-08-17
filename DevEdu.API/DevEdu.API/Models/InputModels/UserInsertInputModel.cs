@@ -1,12 +1,11 @@
 ﻿using DevEdu.API.Common;
-using System;
+using DevEdu.DAL.Enums;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using DevEdu.DAL.Enums;
 using static DevEdu.API.Common.ValidationMessage;
 
-namespace DevEdu.API.Models.InputModels
+namespace DevEdu.API.Models
 {
     public class UserInsertInputModel
     {

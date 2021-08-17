@@ -1,8 +1,9 @@
-﻿namespace DevEdu.API.Models.OutputModels
+﻿namespace DevEdu.API.Models
 {
     public class CourseInfoBaseOutputModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

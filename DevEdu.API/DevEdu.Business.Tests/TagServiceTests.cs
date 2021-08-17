@@ -6,7 +6,7 @@ using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 
-namespace DevEdu.Business.Tests.Tag
+namespace DevEdu.Business.Tests
 {
     public class TagServiceTests
     {
@@ -60,7 +60,7 @@ namespace DevEdu.Business.Tests.Tag
         }
 
         [Test]
-        public void DeleteTag_TagDoesntExist_EntityNotFoundException()
+        public void DeleteTag_TagDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             TagDto tagDto = default;
@@ -77,7 +77,7 @@ namespace DevEdu.Business.Tests.Tag
         }
 
         [Test]
-        public void UpdateTag_TagDto_Id_TagDto()
+        public void UpdateTag_TagDto_Id_TagDtoUpdatedAndReturned()
         {
             //Given
             var expectedTagDto = TagData.GetOutputTagDto();
@@ -88,7 +88,7 @@ namespace DevEdu.Business.Tests.Tag
             _tagRepoMock.Setup(x => x.SelectTagById(tagId)).Returns(expectedTagDto);
 
             //When
-            var actualTagDto = _sut.UpdateTag(inputTagDto, tagId);
+            var actualTagDto = _sut.UpdateTag(inputTagDto, tagId);  
 
             //Than
             Assert.AreEqual(expectedTagDto, actualTagDto);
@@ -97,7 +97,7 @@ namespace DevEdu.Business.Tests.Tag
         }
 
         [Test]
-        public void UpdateTag_TagDoesntExist_EntityNotFoundException()
+        public void UpdateTag_TagDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             TagDto expectedTagDto = default;
@@ -116,10 +116,10 @@ namespace DevEdu.Business.Tests.Tag
         }
 
         [Test]
-        public void GetAllTags_NoEntries_ListTagDto()
+        public void GetAllTags_NoEntries_ListTagDtoReturned()
         {
             //Given
-            var expectedTagDtos = TagData.GetListTagDto();
+            var expectedTagDtos = TagData.GetListTagData();
 
             _tagRepoMock.Setup(x => x.SelectAllTags()).Returns(expectedTagDtos);
 
@@ -132,7 +132,7 @@ namespace DevEdu.Business.Tests.Tag
         }
 
         [Test]
-        public void GetTagById_Id_TagDto()
+        public void GetTagById_Id_TagDtoReturned()
         {
             //Given
             var expectedTagDto = TagData.GetOutputTagDto();
@@ -149,7 +149,7 @@ namespace DevEdu.Business.Tests.Tag
         }
 
         [Test]
-        public void GetTagById_TagDoesntExist_EntityNotFoundException()
+        public void GetTagById_TagDoesntExist_EntityNotFoundExceptionThrown()
         {
             //Given
             TagDto expectedTagDto = default;
@@ -162,6 +162,6 @@ namespace DevEdu.Business.Tests.Tag
 
             //Than
             _tagRepoMock.Verify(x => x.SelectTagById(tagId), Times.Once);
-        }        
+        }
     }
 }

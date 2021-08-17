@@ -4,13 +4,13 @@ As
 Begin
   Update dbo.Course_Topic
   Set 
-    TopicId = src.TopicId,
+	TopicId = src.TopicId,
 	Position = src.Position
 
   From 
-    @tblCourseTopic src
+	@tblCourseTopic src
   Where 
-    dbo.Course_Topic.CourseId = src.CourseId
-    and
-    dbo.Course_Topic.TopicId = src.TopicId
+	dbo.Course_Topic.CourseId = src.CourseId
+	and
+	dbo.Course_Topic.TopicId = src.TopicId
 End

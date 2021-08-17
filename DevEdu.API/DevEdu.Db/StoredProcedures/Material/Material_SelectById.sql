@@ -19,5 +19,5 @@ BEGIN
 			inner join dbo.Tag_Material tm on tm.TagId = t.Id
 			WHERE t.IsDeleted = 0
 	) x on x.MaterialId = m.Id
-	WHERE m.Id = @Id AND m.IsDeleted = 0 
+	WHERE m.Id = @Id 
 END

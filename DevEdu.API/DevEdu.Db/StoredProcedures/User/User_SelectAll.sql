@@ -6,7 +6,6 @@ BEGIN
 		u.FirstName,
 		u.LastName,
 		u.Email,
-		u.IsDeleted,
 		u.Photo,
 		u.CityId as Id,
 		ur.RoleId as Id

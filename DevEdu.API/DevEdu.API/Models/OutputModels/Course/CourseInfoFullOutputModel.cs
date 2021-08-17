@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace DevEdu.API.Models.OutputModels
+namespace DevEdu.API.Models
 {
-    public class CourseInfoFullOutputModel: CourseInfoShortOutputModel
+    public class CourseInfoFullOutputModel : CourseInfoShortOutputModel
     {
-        public List<TopicOutputModel> Topics { get; set; }
         public List<MaterialInfoOutputModel> Materials { get; set; }
         public List<TaskInfoOutputModel> Tasks { get; set; }
+        public List<GroupOutputModel> Groups { get; set; }
     }
 }

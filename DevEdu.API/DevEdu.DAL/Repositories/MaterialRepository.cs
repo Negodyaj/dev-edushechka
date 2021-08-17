@@ -23,9 +23,7 @@ namespace DevEdu.DAL.Repositories
         
 
         public MaterialRepository(IOptions<DatabaseSettings> options) : base(options)
-        {
             
-        }
 
         public int AddMaterial(MaterialDto material)
         {

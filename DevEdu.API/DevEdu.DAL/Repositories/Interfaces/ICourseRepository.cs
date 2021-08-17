@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Models;
+using System.Collections.Generic;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -9,7 +9,7 @@ namespace DevEdu.DAL.Repositories
         void DeleteCourse(int id);
         CourseDto GetCourse(int id);
         List<CourseDto> GetCourses();
-        CourseDto UpdateCourse(CourseDto courseDto);
+        void UpdateCourse(CourseDto courseDto);
         void AddTaskToCourse(int courseId, int taskId);
         void DeleteTaskFromCourse(int courseId, int taskId);
         List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId);
@@ -18,6 +18,6 @@ namespace DevEdu.DAL.Repositories
         List<CourseDto> GetCoursesToTaskByTaskId(int id);
         public List<CourseDto> GetCoursesByMaterialId(int id);
         int AddCourseMaterialReference(int courseId, int materialId);
-        int RemoveCourseMaterialReference(int courseId, int materialId);
+        void RemoveCourseMaterialReference(int courseId, int materialId);
     }
 }

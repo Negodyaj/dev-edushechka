@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[Tag_Task_Insert]
-	@TagId int ,
+	@TagId  int,
 	@TaskId int
 AS
 	Insert into [dbo].[Tag_Task] ([TagId],[TaskId])

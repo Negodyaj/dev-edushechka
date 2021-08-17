@@ -1,11 +1,10 @@
 using DevEdu.API.Configuration;
+using DevEdu.API.Extensions;
 using DevEdu.Business.Configuration;
-using DevEdu.Business.Services;
-using DevEdu.Business.ValidationHelpers;
-using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,7 +33,7 @@ namespace DevEdu.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // This method gets called by the runtime. Use this method to add services to the container. 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions<DatabaseSettings>()
@@ -45,48 +44,10 @@ namespace DevEdu.API
                 .ValidateDataAnnotations();
 
             services.AddAutoMapper(typeof(Startup));
-            services.AddScoped<IMaterialRepository, MaterialRepository>();
-            services.AddScoped<ITaskRepository, TaskRepository>();
-            services.AddScoped<IStudentAnswerOnTaskRepository, StudentAnswerOnTaskRepository>();
-            services.AddScoped<ICourseRepository, CourseRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<INotificationRepository, NotificationRepository>();
-            services.AddScoped<ICommentRepository, CommentRepository>();
-            services.AddScoped<IGroupRepository, GroupRepository>();
-            services.AddScoped<IPaymentRepository, PaymentRepository>();
-            services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<ILessonRepository, LessonRepository>();
-            services.AddScoped<ITagRepository, TagRepository>();
-            services.AddScoped<ITopicRepository, TopicRepository>();
-            services.AddScoped<IRatingRepository, RatingRepository>();
-            services.AddScoped<ICommentService, CommentService>();
-            services.AddScoped<ITagService, TagService>();
-            services.AddScoped<IGroupService, GroupService>();
-            services.AddScoped<IMaterialService, MaterialService>();
-            services.AddScoped<ITaskService, TaskService>();
-            services.AddScoped<ICourseService, CourseService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ICourseService, CourseService>();
-            services.AddScoped<ILessonService, LessonService>();
-            services.AddScoped<ITopicService, TopicService>();
-            services.AddScoped<IRatingService, RatingService>();
-            services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IStudentAnswerOnTaskService, StudentAnswerOnTaskService>();
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddRepositories();
+            services.AddCustomServices();
+            services.AddValidationHelpers();
             services.AddScoped<IAuthOptions, AuthOptions>();
-
-            services.AddScoped<ICommentValidationHelper, CommentValidationHelper>();
-            services.AddScoped<ICourseValidationHelper, CourseValidationHelper>();
-            services.AddScoped<IGroupValidationHelper, GroupValidationHelper>();
-            services.AddScoped<ILessonValidationHelper, LessonValidationHelper>();
-            services.AddScoped<IMaterialValidationHelper, MaterialValidationHelper>();
-            services.AddScoped<INotificationValidationHelper, NotificationValidationHelper>();
-            services.AddScoped<IPaymentValidationHelper, PaymentValidationHelper>();
-            services.AddScoped<IRatingValidationHelper, RatingValidationHelper>();
-            services.AddScoped<ITagValidationHelper, TagValidationHelper>();
-            services.AddScoped<ITaskValidationHelper, TaskValidationHelper>();
-            services.AddScoped<ITopicValidationHelper, TopicValidationHelper>();
-            services.AddScoped<IUserValidationHelper, UserValidationHelper>();
 
             services.AddControllers();
 
@@ -95,6 +56,15 @@ namespace DevEdu.API
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                })
+
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.InvalidModelStateResponseFactory = context =>
+                    {
+                        var exc = new ValidationExceptionResponse(context.ModelState);
+                        return new UnprocessableEntityObjectResult(exc);
+                    };
                 });
 
             services.AddBearerAuthentication();
@@ -116,7 +86,7 @@ namespace DevEdu.API
                 document.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT token"));
             });
 
-            // Add framework services.
+            // Add framework services. 
             services.AddOptions();
         }
 
@@ -133,20 +103,20 @@ namespace DevEdu.API
 
             app.UseMiddleware<ExceptionMiddleware>();
 
-            //This middleware is used to redirects HTTP requests to HTTPS.  
+            //This middleware is used to redirects HTTP requests to HTTPS.   
             app.UseHttpsRedirection();
 
-            //This middleware is used to returns static files and short-circuits further request processing.   
+            //This middleware is used to returns static files and short-circuits further request processing.    
             app.UseStaticFiles();
 
-            //This middleware is used to route requests.   
+            //This middleware is used to route requests.    
             app.UseRouting();
 
-            //This middleware is used to authorizes a user to access secure resources.  
+            //This middleware is used to authorizes a user to access secure resources.   
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //This middleware is used to add Razor Pages endpoints to the request pipeline.   
+            //This middleware is used to add Razor Pages endpoints to the request pipeline.    
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DevEdu.DAL.Enums;
-
-namespace DevEdu.API.Models.OutputModels
+﻿namespace DevEdu.API.Models
 {
     public class NotificationInfoOutputModel
     {

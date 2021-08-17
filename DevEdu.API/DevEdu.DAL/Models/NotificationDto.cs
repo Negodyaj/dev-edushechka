@@ -1,8 +1,7 @@
-﻿using System;
-using DevEdu.DAL.Enums;
+﻿using DevEdu.DAL.Enums;
+using System;
 
 namespace DevEdu.DAL.Models
-    
 {
     public class NotificationDto : BaseDto
     {

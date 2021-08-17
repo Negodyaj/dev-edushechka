@@ -1,7 +1,7 @@
 ﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 
-namespace DevEdu.API.Models.OutputModels
+namespace DevEdu.API.Models
 {
     public class GroupOutputModel
     {

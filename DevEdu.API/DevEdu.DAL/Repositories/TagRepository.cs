@@ -19,7 +19,6 @@ namespace DevEdu.DAL.Repositories
         public TagRepository(IOptions<DatabaseSettings> options) : base(options)
         {
         }
-
         public int AddTag(TagDto tagDto)
         {
             return _connection.QuerySingleOrDefault<int>(

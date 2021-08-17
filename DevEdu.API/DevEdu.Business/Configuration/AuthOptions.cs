@@ -1,7 +1,7 @@
-﻿using System.Text;
-using DevEdu.Core;
+﻿using DevEdu.Core;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DevEdu.Business.Configuration
 {

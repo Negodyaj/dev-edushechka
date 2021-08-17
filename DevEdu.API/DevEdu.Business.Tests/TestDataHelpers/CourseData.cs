@@ -1,15 +1,10 @@
-﻿using DevEdu.DAL.Models;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Tests
 {
     public class CourseData
     {
-        public CourseData()
-        {
-
-        }
-
         public static CourseDto GetUpdCourseDto()
         {
             return new CourseDto
@@ -17,21 +12,17 @@ namespace DevEdu.Business.Tests
                 Id = 1,
                 Name = "C#",
                 Description = "api",
-                Groups = new List<GroupDto>
+                Topics = new List<TopicDto>
                 {
-                    new GroupDto
+                    new TopicDto
                     {
                         Id = 1,
-                        Name = "Volosatiye Zmei",
-                        PaymentPerMonth = 10000,
-                        Timetable = "Morning"
+                        Name = "Scooter"
                     },
-                    new GroupDto
+                    new TopicDto
                     {
                         Id = 2,
-                        Name = "Zhidkie Osnovi",
-                        PaymentPerMonth = 20000,
-                        Timetable = "Evening"
+                        Name = "E-e-e-e-a"
                     }
                 }
             };
@@ -163,6 +154,7 @@ namespace DevEdu.Business.Tests
 
             return courseTopicsDto;
         }
+
         public static List<CourseTopicDto> GetListCourseTopicDtoFromDataBase()
         {
             List<CourseTopicDto> courseTopicsDto = new List<CourseTopicDto>();
@@ -173,6 +165,7 @@ namespace DevEdu.Business.Tests
 
             return courseTopicsDto;
         }
+
         public static List<TopicDto> GetTopics()
         {
             List<TopicDto> topicsDto = new List<TopicDto>();
@@ -190,6 +183,7 @@ namespace DevEdu.Business.Tests
 
             return topicsDto;
         }
+
         public static List<TopicDto> GetTopicsFromBDUseWhenTopicAbsent()
         {
             List<TopicDto> topicsDto = new List<TopicDto>();
@@ -201,5 +195,104 @@ namespace DevEdu.Business.Tests
             return topicsDto;
         }
 
+        public static List<CourseDto> GetCoursesDtos()
+        {
+            return new List<CourseDto>
+            {
+                new CourseDto
+                {
+                    Id = 1,
+                    Name = "Курс первый",
+                    Description = "Лучший",
+                    Groups = new List<GroupDto>
+                    {
+                        new GroupDto {Id = 1},
+                        new GroupDto {Id = 1},
+                        new GroupDto {Id = 1}
+                    },
+                    Topics = new List<TopicDto>
+                    {
+                        new TopicDto {Id = 2},
+                        new TopicDto {Id = 3},
+                        new TopicDto {Id = 5}
+                    },
+                    Materials = new List<MaterialDto>
+                    {
+                        new MaterialDto {Id = 2},
+                        new MaterialDto {Id = 3},
+                        new MaterialDto {Id = 5}
+                    },
+                    Tasks = new List<TaskDto>
+                    {
+                        new TaskDto {Id = 2},
+                        new TaskDto {Id = 3},
+                        new TaskDto {Id = 5}
+                    },
+                    IsDeleted = false
+                },
+                new CourseDto
+                {
+                    Id = 2,
+                    Name = "Курс первый",
+                    Description = "Лучший",
+                    Groups = new List<GroupDto>
+                    {
+                        new GroupDto {Id = 2},
+                        new GroupDto {Id = 3},
+                        new GroupDto {Id = 5}
+                    },
+                    Topics = new List<TopicDto>
+                    {
+                        new TopicDto {Id = 2},
+                        new TopicDto {Id = 3},
+                        new TopicDto {Id = 5}
+                    },
+                    Materials = new List<MaterialDto>
+                    {
+                        new MaterialDto {Id = 2},
+                        new MaterialDto {Id = 3},
+                        new MaterialDto {Id = 5}
+                    },
+                    Tasks = new List<TaskDto>
+                    {
+                        new TaskDto {Id = 2},
+                        new TaskDto {Id = 3},
+                        new TaskDto {Id = 5}
+                    },
+                    IsDeleted = false
+                },
+                new CourseDto
+                {
+                    Id = 3,
+                    Name = "Курс первый",
+                    Description = "Лучший",
+                    Groups = new List<GroupDto>
+                    {
+                        new GroupDto {Id = 2},
+                        new GroupDto {Id = 3},
+                        new GroupDto {Id = 5}
+                    },
+                    Topics = new List<TopicDto>
+                    {
+                        new TopicDto {Id = 2},
+                        new TopicDto {Id = 3},
+                        new TopicDto {Id = 5}
+                    },
+                    Materials = new List<MaterialDto>
+                    {
+                        new MaterialDto {Id = 2},
+                        new MaterialDto {Id = 3},
+                        new MaterialDto {Id = 5}
+                    },
+                    Tasks = new List<TaskDto>
+                    {
+                        new TaskDto {Id = 2},
+                        new TaskDto {Id = 3},
+                        new TaskDto {Id = 5}
+                    },
+                    IsDeleted = false
+                }
+            };
+        }
     }
 }

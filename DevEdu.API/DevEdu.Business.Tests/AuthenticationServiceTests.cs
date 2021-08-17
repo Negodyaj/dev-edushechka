@@ -4,10 +4,6 @@ using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -40,7 +36,7 @@ namespace DevEdu.Business.Tests
         {
             string password = "password";
             byte[] salt = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-            
+
             Assert.Throws<ArgumentException>(() => _sut.HashPassword(password, salt));
         }
 

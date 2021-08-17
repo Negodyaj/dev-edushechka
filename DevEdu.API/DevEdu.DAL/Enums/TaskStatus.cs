@@ -2,7 +2,7 @@
 {
     public enum TaskStatus
     {
-        Checked = 1,
+        Unchecked = 1,
         Accepted,
         Returned
     }

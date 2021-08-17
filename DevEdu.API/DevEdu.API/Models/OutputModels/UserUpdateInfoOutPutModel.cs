@@ -1,6 +1,6 @@
 ﻿using DevEdu.DAL.Enums;
 
-namespace DevEdu.API.Models.OutputModels
+namespace DevEdu.API.Models
 {
     public class UserUpdateInfoOutPutModel
     {

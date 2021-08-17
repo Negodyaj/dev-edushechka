@@ -1,13 +1,13 @@
-﻿using System;
+﻿using DevEdu.Business.Configuration;
+using DevEdu.DAL.Models;
+using DevEdu.DAL.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using DevEdu.Business.Configuration;
-using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace DevEdu.Business.Services
 {
@@ -75,7 +75,7 @@ namespace DevEdu.Business.Services
 
         private ClaimsIdentity GetIdentity(string username, string password)
         {
-            var user = _userRepository.SelectUserByEmail(username);
+            var user = _userRepository.GetUserByEmail(username);
 
             var claims = new List<Claim>();
             if (user != null)

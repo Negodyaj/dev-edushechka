@@ -9,9 +9,9 @@ namespace DevEdu.DAL.Repositories
         void AddUserRole(int userId, int roleId);
         void DeleteUser(int id);
         void DeleteUserRole(int userId, int roleId);
-        UserDto SelectUserById(int id);
-        public UserDto SelectUserByEmail(string email);
-        List<UserDto> SelectUsers();
+        UserDto GetUserById(int id);
+        public UserDto GetUserByEmail(string email);
+        List<UserDto> GetAllUsers();
         void UpdateUser(UserDto user);
         List<UserDto> GetUsersByGroupIdAndRole(int GroupId, int Role);
     }

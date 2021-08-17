@@ -45,11 +45,10 @@
         public const string IsPaidRequired = "IsPaid cannot be empty";
         public const string WrongFormatBirthDate = "BirthDate must be format 'dd.MM.yyyy'";
         public const string WrongFormatDate = "the date must be in the format dd.mm.yyyy";
-        public const string RoleIdRequired = "RoleId cannot be empty";
-        public const string WrongFormatEmailFormat = "Email must be provided";
         public const string StudentAnswerRequired = "Answer of student must be provided";
-        public const string CommentUserIdRequired = "UserId of comment must be provided";
         public const string CommentTextRequired = "Text of comment must be provided";
+        public const string GroupsRequired = "At least one groupId must be provided";
+        public const string CoursesRequired = "At least one courseId must be provided";
         public const string GroupStatusIdRequired = "GroupStatusId must be provided";
         public const string TimetableRequired = "Timetable must be provided";
         public const string PaymentPerMonthRequired = "PaymentPerMonth must be provided";
