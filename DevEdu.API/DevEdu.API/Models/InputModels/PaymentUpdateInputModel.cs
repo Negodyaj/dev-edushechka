@@ -14,6 +14,6 @@ namespace DevEdu.API.Models
         public int Sum { get; set; }
 
         [Required(ErrorMessage = IsPaidRequired)]
-        public int IsPaid { get; set; }
+        public bool IsPaid { get; set; }
     }
 }

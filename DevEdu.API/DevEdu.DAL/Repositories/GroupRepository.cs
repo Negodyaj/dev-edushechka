@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -29,8 +31,7 @@ namespace DevEdu.DAL.Repositories
         private const string _groupSelectGroupsByUserIdProcedure = "dbo.Group_SelectAllByUserId";
         private const string _groupSelectGroupsByLessonIdProcedure = "dbo.Group_SelectAllByLessonId";
         private const string _groupSelectPresentGroupForStudentByUserId = "dbo.Group_SelectPresentGroupForStudentByUserId";
-        
-        public GroupRepository() { }
+        public GroupRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public async Task<int> AddGroup(GroupDto groupDto)
         {

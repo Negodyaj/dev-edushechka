@@ -3,6 +3,8 @@ using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using DevEdu.Core;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -27,6 +29,8 @@ namespace DevEdu.DAL.Repositories
 
         private const string _courseSelectByTaskIdProcedure = "dbo.Course_SelectByTaskId";
         private const string _courseSelectAllByMaterialIdProcedure = "dbo.Course_SelectByMaterialId";
+
+        public CourseRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddCourse(CourseDto courseDto)
         {

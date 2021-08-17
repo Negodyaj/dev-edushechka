@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,10 +20,7 @@ namespace DevEdu.DAL.Repositories
         private const string _studentHomeworkSelectAllAnswersByTaskId = "dbo.Student_Homework_SelectAllAnswersByTaskId";
         private const string _studentHomeworkSelectAnswersByUserId = "dbo.Student_Homework_SelectAllAnswersByUserId";
 
-        public StudentHomeworkRepository()
-        {
-
-        }
+        public StudentHomeworkRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddStudentHomework(StudentHomeworkDto dto)
         {

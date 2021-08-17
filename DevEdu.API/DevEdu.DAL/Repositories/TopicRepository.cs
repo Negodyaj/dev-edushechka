@@ -3,6 +3,8 @@ using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using DevEdu.Core;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -25,7 +27,7 @@ namespace DevEdu.DAL.Repositories
         private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
         private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
 
-        public TopicRepository() { }
+        public TopicRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddTopic(TopicDto topicDto)
         {

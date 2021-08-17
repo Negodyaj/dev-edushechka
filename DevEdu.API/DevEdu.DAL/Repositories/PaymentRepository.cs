@@ -3,11 +3,13 @@ using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using DevEdu.Core;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
     public class PaymentRepository : BaseRepository, IPaymentRepository
-    {
+    { 
         private const string _paymentAddProcedure = "dbo.Payment_Insert";
         private const string _paymentDeleteProcedure = "dbo.Payment_Delete";
         private const string _paymentSelectByIdProcedure = "dbo.Payment_SelectById";
@@ -18,7 +20,7 @@ namespace DevEdu.DAL.Repositories
         private const string _paymentType = "[dbo].[PaymentType]";
         private const string _idType = "[dbo].[IdType]";
 
-        public PaymentRepository() { }
+        public PaymentRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddPayment(PaymentDto paymentDto)
         {

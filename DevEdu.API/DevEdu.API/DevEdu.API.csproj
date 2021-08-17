@@ -12,6 +12,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_WebToolingArtifacts Remove="Properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
@@ -21,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevEdu.Business\DevEdu.Business.csproj" />
+    <ProjectReference Include="..\DevEdu.Core\DevEdu.Core.csproj" />
     <ProjectReference Include="..\DevEdu.DAL\DevEdu.DAL.csproj" />
   </ItemGroup>
 
