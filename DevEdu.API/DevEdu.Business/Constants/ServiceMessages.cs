@@ -14,7 +14,6 @@
         public const string LessonTopicReferenceNotFound = "No reference between lesson with id = {0} and topic with id = {1} was found";
         public const string LessonTopicReferenceAlreadyExists = "Reference between lesson with id = {0} and topic with id = {1} already exists";
         public const string DuplicateValuesProvided = "Duplicate Ids for {0} were provided";
-        public const string DuplicateTagsValuesProvided = "Tags with same Ids were provided";
         public const string AccessToMaterialDenied = "User with id = {0} doesn't have access to material with id = {1}";
         public const string UserWithRoleDoesntAuthorizeToGroup = "User with id = {0} doesn't belong to group {1} as {2}";
         public const string UserWithRoleDoesntBelongToGroup = "{0} with id {1} doesn`t belong to group with id {2}";

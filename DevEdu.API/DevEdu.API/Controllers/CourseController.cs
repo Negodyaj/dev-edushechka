@@ -7,7 +7,6 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 using DevEdu.API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
