@@ -1,5 +1,4 @@
-﻿using DevEdu.Business.IdentityInfo;
-using DevEdu.DAL.Enums;
+﻿using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace DevEdu.Business.Tests
 
         public static UserDto GetUserDto()
         {
-            return new UserDto
+            return new()
             {
                 Id = 1,
                 FirstName = "Admin",
@@ -37,7 +36,7 @@ namespace DevEdu.Business.Tests
 
         public static UserDto GetAnotherUserDto()
         {
-            return new UserDto
+            return new()
             {
                 Id = 2,
                 FirstName = "Student",
@@ -60,15 +59,10 @@ namespace DevEdu.Business.Tests
         {
             return new UserDto
             {
-
                 Id = 3,
-
                 FirstName = "Olga",
-
                 LastName = "Ivanovna",
-
                 Email = "olga@mail.ru",
-
                 Photo = " http://photo.jpg"
             };
         }
@@ -77,7 +71,7 @@ namespace DevEdu.Business.Tests
         {
             return new List<UserDto>
             {
-                new UserDto
+                new()
                 {
                     Id = 1,
                     FirstName = "Admin",
@@ -98,7 +92,7 @@ namespace DevEdu.Business.Tests
                             Role.Admin
                         }
                 },
-                new UserDto
+                new()
                 {
                     Id = 2,
                     FirstName = "Student",
@@ -115,7 +109,7 @@ namespace DevEdu.Business.Tests
                     PhoneNumber = "StudentPhoneNumber",
                     Roles = new List<Role> { Role.Student }
                 },
-                new UserDto
+                new()
                 {
                     Id = 3,
                     FirstName = "Manager",
@@ -137,7 +131,7 @@ namespace DevEdu.Business.Tests
 
         public static UserDto GetUserDtoOutOfList()
         {
-            return new UserDto
+            return new()
             {
                 Id = 10,
                 FirstName = "Student",
@@ -160,19 +154,19 @@ namespace DevEdu.Business.Tests
         {
             return new List<List<UserDto>>
             {
-                new List<UserDto>
+                new()
                 {
                     new UserDto {Id = 2},
                     new UserDto {Id = 3},
                     new UserDto {Id = 4},
                 },
-                new List<UserDto>
+                new()
                 {
                     new UserDto {Id = 2},
                     new UserDto {Id = 5},
                     new UserDto {Id = 6},
                 },
-                new List<UserDto>
+                new()
                 {
                     new UserDto {Id = 2},
                     new UserDto {Id = 7},
@@ -185,19 +179,19 @@ namespace DevEdu.Business.Tests
         {
             return new List<List<UserDto>>
             {
-                new List<UserDto>
+                new()
                 {
                     new UserDto {Id = 2},
                     new UserDto {Id = 3},
                     new UserDto {Id = 4},
                 },
-                new List<UserDto>
+                new()
                 {
                     new UserDto {Id = 2},
                     new UserDto {Id = 5},
                     new UserDto {Id = 6},
                 },
-                new List<UserDto>
+                new()
                 {
                     new UserDto {Id = 9},
                     new UserDto {Id = 7},

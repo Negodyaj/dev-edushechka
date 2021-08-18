@@ -1,6 +1,5 @@
 ﻿using DevEdu.Core;
 using Microsoft.Extensions.Options;
-using System;
 using System.Data;
 using System.Data.SqlClient;
 
