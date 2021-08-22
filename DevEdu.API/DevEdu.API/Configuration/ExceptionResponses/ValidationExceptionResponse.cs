@@ -27,6 +27,8 @@ namespace DevEdu.API.Configuration
             Errors = new List<ValidationError>();
             foreach (var state in modelState)
             {
+                if (state.Value.Errors.Count == 0)
+                    continue;
                 Errors.Add(new ValidationError
                 {
                     Code = 422,
