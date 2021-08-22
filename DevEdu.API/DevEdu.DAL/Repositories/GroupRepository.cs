@@ -41,8 +41,8 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     Name = groupDto.Name,
-                    Course = groupDto.Course.Id,
-                    StartData = groupDto.StartDate,
+                    CourseId = groupDto.Course.Id,
+                    StartDate = groupDto.StartDate,
                     Timetable = groupDto.Timetable,
                     PaymentPerMonth = groupDto.PaymentPerMonth,
                 },
