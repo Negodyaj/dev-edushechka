@@ -8,7 +8,7 @@ namespace DevEdu.Business.Services
 {
     public interface IGroupService
     {
-        Task<int> AddGroup(GroupDto groupDto);
+        Task<GroupDto> AddGroup(GroupDto groupDto);
         Task DeleteGroup(int id);
         Task<GroupDto> GetGroup(int id, UserIdentityInfo userInfo);
         Task<List<GroupDto>> GetGroups();

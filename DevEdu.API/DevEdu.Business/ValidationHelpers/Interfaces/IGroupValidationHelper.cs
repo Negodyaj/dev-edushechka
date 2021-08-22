@@ -1,11 +1,12 @@
 ﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Models;
 using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
     public interface IGroupValidationHelper
     {
-        Task CheckGroupExistence(int groupId);
+        Task<GroupDto> CheckGroupExistence(int groupId);
         void CheckUserInGroupExistence(int groupId, int userId);
         void CheckAccessGetGroupMembers(int groupId, UserIdentityInfo userInfo);
         void CheckAccessGroup(UserIdentityInfo userInfo , int groupId);

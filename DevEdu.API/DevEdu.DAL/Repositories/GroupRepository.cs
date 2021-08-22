@@ -40,8 +40,11 @@ namespace DevEdu.DAL.Repositories
                 _groupInsertProcedure,
                 new
                 {
-                    groupDto.Name,
-                    groupDto.Course
+                    Name = groupDto.Name,
+                    Course = groupDto.Course.Id,
+                    StartData = groupDto.StartDate,
+                    Timetable = groupDto.Timetable,
+                    PaymentPerMonth = groupDto.PaymentPerMonth,
                 },
                 commandType: CommandType.StoredProcedure
             );

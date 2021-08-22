@@ -189,6 +189,7 @@ namespace DevEdu.Business.Tests
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithoutGroupAndTask();
             var group = GroupData.GetGroupDto();
+            group.Id = 0;
             var task = TaskData.GetTaskDtoWithoutTags();
             const int userId = 1;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), group.Id);

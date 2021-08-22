@@ -1,6 +1,7 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,11 +17,12 @@ namespace DevEdu.Business.ValidationHelpers
             _groupRepository = groupRepository;
         }
 
-        public async Task CheckGroupExistence(int groupId)
+        public async Task<GroupDto> CheckGroupExistence(int groupId)
         {
             var group = await _groupRepository.GetGroup(groupId);
             if (group == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), groupId));
+            return group;
         }
 
         public void CheckUserInGroupExistence(int groupId, int userId)
