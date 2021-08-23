@@ -32,6 +32,21 @@ namespace DevEdu.API.Controllers
 
         //  api/notification/5
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
+        [HttpGet("by-userInfo")]
+        [Description("Return notification by userInfo")]
+        [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public List<NotificationInfoOutputModel> GetAllNotificationByUser()
+        {
+            var userInfo = this.GetUserIdAndRoles();
+            var dto = _notificationService.GetAllNotificationByUser(userInfo);
+            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
+            return output;
+        }
+
+        //  api/notification/5
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet("{id}")]
         [Description("Return notification by id")]
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]

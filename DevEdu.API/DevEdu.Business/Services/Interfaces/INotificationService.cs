@@ -6,6 +6,7 @@ namespace DevEdu.Business.Services
 {
     public interface INotificationService
     {
+        public List<NotificationDto> GetAllNotificationByUser(UserIdentityInfo userInfo);
         NotificationDto GetNotification(int id);
         List<NotificationDto> GetNotificationsByUserId(int userId);
         List<NotificationDto> GetNotificationsByGroupId(int groupId);

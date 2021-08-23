@@ -4,6 +4,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using DevEdu.DAL.Enums;
+using System.Linq;
 
 namespace DevEdu.Business.Services
 {
@@ -11,6 +12,7 @@ namespace DevEdu.Business.Services
     {
         private readonly INotificationValidationHelper _notificationValidationHelper;
         private readonly INotificationRepository _notificationRepository;
+        private readonly IGroupRepository _groupRepository;
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly IGroupValidationHelper _groupValidationHelper;
 
@@ -26,9 +28,33 @@ namespace DevEdu.Business.Services
             _groupValidationHelper = groupValidationHelper;
         }
 
+        public List<NotificationDto> GetAllNotificationByUser(UserIdentityInfo userInfo)
+        {
+            var rolesList = userInfo.Roles;
+            List<NotificationDto> list = GetNotificationsByUserId(userInfo.UserId);
+
+            foreach (Role role in rolesList)
+            {
+                var listByRole = GetNotificationsByRoleId((int)role);
+                list = list.Union(listByRole).ToList();
+            }
+            if (userInfo.IsStudent())
+            {
+                var groupList = _groupRepository.GetGroupsByUserId(userInfo.UserId);
+                foreach (GroupDto group in groupList)
+                {
+                    var listByRole = GetNotificationsByGroupId(group.Id);
+                    list = list.Union(listByRole).ToList();
+                }
+
+            }
+            list = list.OrderByDescending(o => o.Date).ToList();
+            return list;
+        }
+
         public NotificationDto GetNotification(int id)
         {
-            var dto =_notificationValidationHelper.GetNotificationByIdAndThrowIfNotFound(id);
+            var dto = _notificationValidationHelper.GetNotificationByIdAndThrowIfNotFound(id);
             return dto;
         }
 
