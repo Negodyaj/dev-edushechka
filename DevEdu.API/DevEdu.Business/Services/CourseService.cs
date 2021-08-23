@@ -128,11 +128,20 @@ namespace DevEdu.Business.Services
             return list;
         }
 
-        public void DeleteTaskFromCourse(int courseId, int taskId) =>
+        public void DeleteTaskFromCourse(int courseId, int taskId)
+        {
+            _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             _courseRepository.DeleteTaskFromCourse(courseId, taskId);
+        }
+            
 
-        public void AddTaskToCourse(int courseId, int taskId) =>
+        public void AddTaskToCourse(int courseId, int taskId)
+        {
+            _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
             _courseRepository.AddTaskToCourse(courseId, taskId);
+        }
+            
 
         public int AddCourseMaterialReference(int courseId, int materialId)
         {
