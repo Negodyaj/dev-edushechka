@@ -26,13 +26,13 @@ namespace DevEdu.Business.Services
 
         public void DeleteTag(int id)
         {
-            _tagValidationHelper.CheckTagExistence(id);
+            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(id);
             _repository.DeleteTag(id);
         }
 
         public TagDto UpdateTag(TagDto dto, int id)
         {
-            _tagValidationHelper.CheckTagExistence(id);
+            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(id);
             dto.Id = id;
             _repository.UpdateTag(dto);
             return _repository.SelectTagById(id);
@@ -40,6 +40,6 @@ namespace DevEdu.Business.Services
 
         public List<TagDto> GetAllTags() => _repository.SelectAllTags();
 
-        public TagDto GetTagById(int id) => _tagValidationHelper.CheckTagExistence(id);
+        public TagDto GetTagById(int id) => _tagValidationHelper.GetTagByIdAndThrowIfNotFound(id);
     }
 }

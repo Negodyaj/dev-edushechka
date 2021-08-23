@@ -14,7 +14,7 @@ namespace DevEdu.Business.ValidationHelpers
             _tagRepository = tagRepository;
         }
 
-        public TagDto CheckTagExistence(int tagId)
+        public TagDto GetTagByIdAndThrowIfNotFound(int tagId)
         {
             var tag = _tagRepository.SelectTagById(tagId);
             if (tag == default)

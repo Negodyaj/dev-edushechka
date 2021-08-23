@@ -4,6 +4,6 @@ namespace DevEdu.Business.ValidationHelpers
 {
     public interface ITagValidationHelper
     {
-        TagDto CheckTagExistence(int tagId);
+        TagDto GetTagByIdAndThrowIfNotFound(int tagId);
     }
 }
