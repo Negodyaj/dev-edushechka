@@ -31,7 +31,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/StudentHomework/task/{taskId} 
-        [HttpPost("/homework/{homeworkId}")]
+        [HttpPost("{homeworkId}")]
         [AuthorizeRoles(Role.Student)]
         [Description("Add student homework")]
         [ProducesResponseType(typeof(StudentHomeworkWithHomeworkOutputModel), StatusCodes.Status201Created)]
