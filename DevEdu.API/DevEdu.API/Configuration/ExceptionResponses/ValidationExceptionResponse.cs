@@ -29,6 +29,8 @@ namespace DevEdu.API.Configuration.ExceptionResponses
             Errors = new List<ValidationError>();
             foreach (var state in modelState)
             {
+                if (state.Value.Errors.Count == 0)
+                    continue;
                 Errors.Add(new ValidationError
                 {
                     Code = GetValidationCode(state.Value.Errors[0].ErrorMessage),
