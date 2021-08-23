@@ -61,13 +61,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Add one payment")]
-        public ActionResult<PaymentOutputModel> AddPayment([FromBody] PaymentInputModel model)
+        public PaymentOutputModel AddPayment([FromBody] PaymentInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
             int id = _paymentService.AddPayment(dto);
             dto.Id = id;
-            var output = _mapper.Map<PaymentOutputModel>(dto);
-            return StatusCode(201,output);
+            var output = _paymentService.GetPayment(dto.Id);
+            return _mapper.Map<PaymentOutputModel>(output);
         }
 
         //  api/payment/5
