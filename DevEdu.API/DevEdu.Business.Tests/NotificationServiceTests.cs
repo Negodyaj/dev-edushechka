@@ -153,7 +153,7 @@ namespace DevEdu.Business.Tests
             const int userId = 1;
             var userDto = UserData.GetUserDto();
             _notificationRepoMock.Setup(x => x.GetNotificationsByUserId(userId)).Returns(notificationsList);
-            _userRepoMock.Setup(x => x.SelectUserById(userId)).Returns(userDto);
+            _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
             //When
             var listOfDto = _sut.GetNotificationsByUserId(userId);
@@ -161,7 +161,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(notificationsList, listOfDto);
             _notificationRepoMock.Verify(x => x.GetNotificationsByUserId(userId), Times.Once);
-            _userRepoMock.Verify(x => x.SelectUserById(userId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
         [Test]
@@ -170,10 +170,10 @@ namespace DevEdu.Business.Tests
             //Given
             var notificationsList = NotificationData.GetListNotificationByGroupDto();
             const int groupId = 1;
-            var groupDto = GroupData.GetGroupDto();
+           // var groupDto = GroupData.GetGroupDto();
 
             _notificationRepoMock.Setup(x => x.GetNotificationsByGroupId(groupId)).Returns(notificationsList);
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
+           // _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
 
             //When
             var listOfDto = _sut.GetNotificationsByGroupId(groupId);
@@ -181,7 +181,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(notificationsList, listOfDto);
             _notificationRepoMock.Verify(x => x.GetNotificationsByGroupId(groupId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+          //  _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
         }
 
         [Test]
