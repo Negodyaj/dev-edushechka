@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using DevEdu.API.Common;
+using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Configuration
 {

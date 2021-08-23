@@ -1,9 +1,9 @@
-﻿using DevEdu.Business.Exceptions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using System.Collections.Generic;
 using DevEdu.API.Common;
-using System.Collections.Generic;
+using DevEdu.Business.Exceptions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace DevEdu.API.Configuration
+namespace DevEdu.API.Configuration.ExceptionResponses
 {
     public class ValidationExceptionResponse
     {
