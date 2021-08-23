@@ -1,29 +1,29 @@
-using DevEdu.API.Common;
-using DevEdu.API.Configuration;
-using DevEdu.Business.Configuration;
+﻿using DevEdu.API.Configuration;
 using DevEdu.API.Extensions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using DevEdu.Business.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using NSwag.Generation.Processors.Security;
-using System;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Net;
+using DevEdu.Core;
 
 namespace DevEdu.API
 {
     public class Startup
     {
+        private const string _pathToEnvironment = "ASPNETCORE_ENVIRONMENT";
+        
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var currentEnvironment = configuration.GetValue<string>(_pathToEnvironment);
+            var builder = new ConfigurationBuilder().AddJsonFile($"appsettings.{currentEnvironment}.json");
+
+            Configuration = builder.Build();
+            Configuration.SetEnvironmentVariableForConfiguration();            
         }
 
         public IConfiguration Configuration { get; }
@@ -31,10 +31,12 @@ namespace DevEdu.API
         // This method gets called by the runtime. Use this method to add services to the container. 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAppConfiguration(Configuration);
             services.AddAutoMapper(typeof(Startup));
             services.AddRepositories();
             services.AddCustomServices();
             services.AddValidationHelpers();
+            services.AddScoped<IAuthOptions, AuthOptions>();
 
             services.AddControllers();
 
@@ -54,23 +56,7 @@ namespace DevEdu.API
                     };
                 });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = AuthOptions.Issuer,
-                        ValidateAudience = true,
-                        ValidAudience = AuthOptions.Audience,
-                        ValidateLifetime = true,
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        ValidateIssuerSigningKey = true
-                    };
-                });
-
+            services.AddBearerAuthentication();
             services.AddSwaggerDocument(document =>
             {
                 document.DocumentName = "Endpoints for DevEdu";
@@ -99,9 +85,10 @@ namespace DevEdu.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseOpenApi();
-                app.UseSwaggerUi3();
             }
+            app.UseOpenApi();
+
+            app.UseSwaggerUi3();
 
             app.UseMiddleware<ExceptionMiddleware>();
 

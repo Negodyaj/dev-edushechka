@@ -4,6 +4,7 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -48,7 +49,7 @@ namespace DevEdu.Business.Services
             return task;
         }
 
-        public TaskDto AddTaskByTeacher(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds)
+        public async Task<TaskDto> AddTaskByTeacher(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds)
         {
             var taskId = _taskRepository.AddTask(taskDto);
             var task = _taskRepository.GetTaskById(taskId);
@@ -56,7 +57,7 @@ namespace DevEdu.Business.Services
                 tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
             if (homework != null)
             {
-                homework.Group = _groupRepository.GetGroup(groupId);
+                homework.Group = await _groupRepository.GetGroup(groupId);
                 homework.Task = task;
                 _homeworkRepository.AddHomework(homework);
             }

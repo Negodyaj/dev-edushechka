@@ -2,11 +2,10 @@
 using DevEdu.API.Common;
 using DevEdu.API.Configuration;
 using DevEdu.API.Extensions;
-using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using DevEdu.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -185,6 +184,7 @@ namespace DevEdu.API.Controllers
         // api/task/{taskId}/tag/{tagId} 
         [HttpPost("{taskId}/tag/{tagId}")]
         [Description("Add tag to task")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -196,6 +196,7 @@ namespace DevEdu.API.Controllers
         // api/task/{taskId}/tag/{tagId} 
         [HttpDelete("{taskId}/tag/{tagId}")]
         [Description("Delete tag from task")]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]

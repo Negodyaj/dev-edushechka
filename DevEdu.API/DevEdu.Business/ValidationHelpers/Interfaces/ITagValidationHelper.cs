@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DevEdu.Business.ValidationHelpers
+﻿namespace DevEdu.Business.ValidationHelpers
 {
     public interface ITagValidationHelper
     {

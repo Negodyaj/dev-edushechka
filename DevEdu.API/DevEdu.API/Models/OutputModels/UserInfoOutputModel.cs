@@ -1,8 +1,7 @@
 ﻿using DevEdu.DAL.Enums;
-using System;
 using System.Collections.Generic;
 
-namespace DevEdu.API.Models.OutputModels
+namespace DevEdu.API.Models
 {
     public class UserInfoOutPutModel
     {

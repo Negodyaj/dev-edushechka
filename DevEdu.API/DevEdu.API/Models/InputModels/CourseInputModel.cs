@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DevEdu.API.Models.InputModels
+namespace DevEdu.API.Models
 {
     public class CourseInputModel
     {

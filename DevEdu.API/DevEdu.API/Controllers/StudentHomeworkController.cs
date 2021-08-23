@@ -2,8 +2,7 @@
 using DevEdu.API.Common;
 using DevEdu.API.Configuration;
 using DevEdu.API.Extensions;
-using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
@@ -32,7 +31,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/StudentHomework/task/{taskId} 
-        [HttpPost("/homework/{homeworkId}")]
+        [HttpPost("{homeworkId}")]
         [AuthorizeRoles(Role.Student)]
         [Description("Add student homework")]
         [ProducesResponseType(typeof(StudentHomeworkWithHomeworkOutputModel), StatusCodes.Status201Created)]

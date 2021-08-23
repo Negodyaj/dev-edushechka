@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using DevEdu.API.Configuration;
-using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Models;
 using DevEdu.Business.Services;
+using DevEdu.API.Configuration;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

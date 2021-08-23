@@ -1,19 +1,16 @@
 using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.API.Configuration;
-using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
-using DevEdu.API.Models.OutputModels.Lesson;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using DevEdu.API.Models;
 
 namespace DevEdu.API.Controllers
 {
@@ -116,7 +113,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public LessonInfoWithCommentsOutputModel GetAllLessonsWithComments(int id)
+        public LessonInfoWithCommentsOutputModel GetLessonWithComments(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
             var dto = _lessonService.SelectLessonWithCommentsById(userIdentity, id);
@@ -130,7 +127,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public LessonInfoWithStudentsAndCommentsOutputModel GetAllLessonsWithStudentsAndComments(int id)
+        public LessonInfoWithStudentsAndCommentsOutputModel GetLessonWithStudentsAndComments(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
             var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(userIdentity, id);

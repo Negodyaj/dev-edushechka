@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace DevEdu.API.Models.OutputModels
+namespace DevEdu.API.Models
 {
     public class StudentHomeworkWithTaskOutputModel
     {
@@ -10,5 +10,6 @@ namespace DevEdu.API.Models.OutputModels
         public TaskStatus TaskStatus { get; set; }
         public HomeworkInfoWithTaskOutputModel Homework { get; set; }
         public TagOutputModel Task { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

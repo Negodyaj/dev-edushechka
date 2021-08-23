@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -16,7 +18,7 @@ namespace DevEdu.DAL.Repositories
         private const string _studentRatingSelectByUserIdProcedure = "dbo.StudentRating_SelectByUserId";
         private const string _studentRatingSelectByGroupIdProcedure = "dbo.StudentRating_SelectByGroupId";
         private const string _studentRatingUpdateProcedure = "dbo.StudentRating_Update";
-
+        public RatingRepository(IOptions<DatabaseSettings> options) : base(options) {  }
         public int AddStudentRating(StudentRatingDto studentRatingDto)
         {
             var userId = studentRatingDto.User.Id;

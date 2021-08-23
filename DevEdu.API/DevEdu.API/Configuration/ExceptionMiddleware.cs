@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -12,12 +11,12 @@ namespace DevEdu.API.Configuration
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private const string MessageAuthorization = "Authorization exception";
-        private const string MessageValidation = "Validation exception";
-        private const string MessageEntity = "Entity not found exception";
-        private const int AuthorizationCode = 1000;
-        private const int ValidationCode = 1001;
-        private const int EntityCode = 1002;
+        private const string _messageAuthorization = "Authorization exception";
+        private const string _messageValidation = "Validation exception";
+        private const string _messageEntity = "Entity not found exception";
+        private const int _authorizationCode = 1000;
+        private const int _validationCode = 1001;
+        private const int _entityCode = 1002;
 
         public ExceptionMiddleware(RequestDelegate next)
         {
@@ -32,15 +31,15 @@ namespace DevEdu.API.Configuration
             }
             catch (AuthorizationException ex)
             {
-                await HandlerExceptionMessageAsync(context, ex, AuthorizationCode, MessageAuthorization);
+                await HandlerExceptionMessageAsync(context, ex, HttpStatusCode.Forbidden);
             }
-            catch (ValidationException ex) //422
+            catch (ValidationException ex)
             {
-                await HandleValidationExceptionMessageAsync(context, ex, ValidationCode, MessageValidation);
+                await HandleValidationExceptionMessageAsync(context, ex, _validationCode, _messageValidation);
             }
-            catch (EntityNotFoundException ex) //404
+            catch (EntityNotFoundException ex)
             {
-                await HandlerExceptionMessageAsync(context, ex, EntityCode, MessageEntity);
+                await HandlerExceptionMessageAsync(context, ex, HttpStatusCode.NotFound);
             }
             catch (Exception ex)
             {
@@ -48,8 +47,10 @@ namespace DevEdu.API.Configuration
             }
         }
 
-        private static Task HandlerExceptionMessageAsync(HttpContext context, Exception exception, int code, string message)
+        private static Task HandlerExceptionMessageAsync(HttpContext context, Exception exception, HttpStatusCode statusCode)
         {
+            var code = statusCode == HttpStatusCode.Forbidden ? _authorizationCode : _entityCode;
+            var message = statusCode == HttpStatusCode.Forbidden ? _messageAuthorization : _messageEntity;
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(
                 new ExceptionResponse
@@ -59,7 +60,7 @@ namespace DevEdu.API.Configuration
                     Description = exception.Message
                 }
             );
-            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+            context.Response.StatusCode = (int)statusCode;
             return context.Response.WriteAsync(result);
         }
 
@@ -68,7 +69,7 @@ namespace DevEdu.API.Configuration
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(new ValidationExceptionResponse(exception)
             {
-                Code= code,
+                Code = code,
                 Message = message
             });
             context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;

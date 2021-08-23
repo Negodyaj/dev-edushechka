@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DevEdu.API.Common;
-using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
+using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
@@ -29,6 +28,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/tag
+        [AuthorizeRoles(Role.Teacher, Role.Manager, Role.Methodist)]
         [HttpPost]
         [Description("Add tag to database")]
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status201Created)]

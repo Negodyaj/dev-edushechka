@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
-using DevEdu.API.Models.InputModels;
-using DevEdu.API.Models.OutputModels;
-using DevEdu.API.Models.OutputModels.Lesson;
-using DevEdu.API.Models.OutputModels.Payment;
+using DevEdu.API.Models;
 using DevEdu.DAL.Models;
 using System;
 using System.Globalization;
-using DevEdu.API.Models;
 
 namespace DevEdu.API.Configuration
 {
@@ -30,6 +26,7 @@ namespace DevEdu.API.Configuration
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<GroupInputModel, GroupDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
+                .ForMember(dest => dest.Course, opt => opt.MapFrom(src => new CourseDto { Id = src.CourseId }))
                 .ForMember(dest => dest.GroupStatus, opt => opt.MapFrom(src => src.GroupStatusId != null ? src.GroupStatusId : null));
             CreateMap<HomeworkInputModel, HomeworkDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))

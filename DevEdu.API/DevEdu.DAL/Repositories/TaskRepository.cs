@@ -3,6 +3,8 @@ using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using DevEdu.Core;
+using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -17,7 +19,7 @@ namespace DevEdu.DAL.Repositories
         private const string _tagTaskAddProcedure = "dbo.Tag_Task_Insert";
         private const string _tagTaskDeleteProcedure = "dbo.Tag_Task_Delete";
 
-        public TaskRepository()
+        public TaskRepository(IOptions<DatabaseSettings> options) : base(options)
         {
 
         }

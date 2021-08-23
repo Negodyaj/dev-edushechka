@@ -7,33 +7,34 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
 
 namespace DevEdu.Business.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
-
-        public AuthenticationService(IUserRepository userRepository)
+        private readonly IAuthOptions _options;
+        public AuthenticationService(IUserRepository userRepository, IAuthOptions authOptions)
         {
             _userRepository = userRepository;
+            _options = authOptions;
         }
 
         public string SignIn(UserDto dto)
         {
             var identity = GetIdentity(dto.Email, dto.Password);
             if (identity == null)
-            {
-                return null;
-            }
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
 
             var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.Issuer,
-                audience: AuthOptions.Audience,
+                issuer: _options.Issuer,
+                audience: _options.Audience,
                 notBefore: DateTime.UtcNow,
                 claims: identity.Claims,//Here we are adding claims to JWT
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(AuthOptions.Lifetime)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(_options.Lifetime)),
+                signingCredentials: new SigningCredentials(_options.GetSymmetricSecurityKey(),
                     SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
@@ -49,50 +50,43 @@ namespace DevEdu.Business.Services
 
         public string HashPassword(string pass, byte[] salt = default)
         {
-            if (salt == default)
-            {
-                salt = GetSalt();
-            }
-            var pkbdf2 = new Rfc2898DeriveBytes(pass, salt, 10000, HashAlgorithmName.SHA384);
-            byte[] hash = pkbdf2.GetBytes(20);
-            byte[] hashBytes = new byte[36];
+            salt ??= GetSalt();
+            var pbkdf2 = new Rfc2898DeriveBytes(pass, salt, 10000, HashAlgorithmName.SHA384);
+            var hash = pbkdf2.GetBytes(20);
+            var hashBytes = new byte[36];
             Array.Copy(salt, 0, hashBytes, 0, 16);
             Array.Copy(hash, 0, hashBytes, 16, 20);
-            string hashedPassword = Convert.ToBase64String(hashBytes);
+            var hashedPassword = Convert.ToBase64String(hashBytes);
             return hashedPassword;
         }
 
         public bool Verify(string hashedPassword, string userPassword)
         {
-            byte[] hashBytes = Convert.FromBase64String(hashedPassword);
-            byte[] salt = new byte[16];
+            var hashBytes = Convert.FromBase64String(hashedPassword);
+            var salt = new byte[16];
             Array.Copy(hashBytes, 0, salt, 0, 16);
-            string result = HashPassword(userPassword, salt);
+            var result = HashPassword(userPassword, salt);
             return result == hashedPassword;
         }
 
         private ClaimsIdentity GetIdentity(string username, string password)
         {
             var user = _userRepository.GetUserByEmail(username);
+            if (user == null)
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
 
             var claims = new List<Claim>();
-            if (user != null)
+            if (Verify(user.Password, password))
             {
-                if (Verify(user.Password, password))
+                claims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
+                foreach (var role in user.Roles)
                 {
-                    claims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
-                    foreach (var role in user.Roles)
-                    {
-                        claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString()));
-                    }
-                };
-
-                ClaimsIdentity claimsIdentity =
-                    new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
-                        ClaimsIdentity.DefaultRoleClaimType);
-                return claimsIdentity;
+                    claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString()));
+                }
             }
-            return null;
+
+            var claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            return claimsIdentity;
         }
     }
 }

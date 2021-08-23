@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevEdu.API.Models;
 using DevEdu.API.Common;
 using DevEdu.API.Configuration;
 using DevEdu.API.Extensions;

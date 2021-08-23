@@ -289,7 +289,7 @@ namespace DevEdu.Business.Tests
             var expected = LessonData.GetLessons();
             var group = GroupData.GetGroupDto();
 
-            _groupRepository.Setup(x => x.GetGroup(group.Id)).Returns(group);
+            _groupRepository.Setup(x => x.GetGroup(group.Id)).ReturnsAsync(group);
             _userRepository
                 .Setup(x => x.GetUsersByGroupIdAndRole(group.Id, It.IsAny<int>()))
                 .Returns(new List<UserDto> { userDto });
@@ -313,7 +313,7 @@ namespace DevEdu.Business.Tests
             var groupId = 3;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "group", groupId);
 
-            _groupRepository.Setup(x => x.GetGroup(groupId)).Returns(It.IsAny<GroupDto>());
+            _groupRepository.Setup(x => x.GetGroup(groupId)).ReturnsAsync(It.IsAny<GroupDto>());
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectAllLessonsByGroupId(userIdentity, groupId));
@@ -334,7 +334,7 @@ namespace DevEdu.Business.Tests
             var lessons = new List<UserDto> { };
             var expectedException = string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, userIdentity.UserId, group.Id, Role.Teacher);
 
-            _groupRepository.Setup(x => x.GetGroup(group.Id)).Returns(group);
+            _groupRepository.Setup(x => x.GetGroup(group.Id)).ReturnsAsync(group);
             _userRepository.Setup(x => x.GetUsersByGroupIdAndRole(group.Id, It.IsAny<int>())).Returns(lessons);
             //When
             var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectAllLessonsByGroupId(userIdentity, group.Id));

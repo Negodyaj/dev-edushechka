@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DevEdu.API.Models.InputModels
+namespace DevEdu.API.Models
 {
     public class MaterialWithTagsInputModel : MaterialInputModel
     {

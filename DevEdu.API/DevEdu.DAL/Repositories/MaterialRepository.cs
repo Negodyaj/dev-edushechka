@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -18,10 +20,9 @@ namespace DevEdu.DAL.Repositories
         private const string _materialSelectAllByTagIdProcedure = "dbo.Material_SelectAllByTagId";
         private const string _materialSelectAllByCourseIdProcedure = "dbo.Material_SelectByCourseId";
 
-        public MaterialRepository()
-        {
+        
 
-        }
+        public MaterialRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddMaterial(MaterialDto material)
         {

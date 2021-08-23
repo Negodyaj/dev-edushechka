@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using static DevEdu.API.Common.ValidationMessage;
 
-namespace DevEdu.API.Models.InputModels
+namespace DevEdu.API.Models
 {
     public class PaymentInputModel
     {
@@ -17,6 +17,6 @@ namespace DevEdu.API.Models.InputModels
         public int UserId { get; set; }
 
         [Required(ErrorMessage = IsPaidRequired)]
-        public int IsPaid { get; set; }
+        public bool IsPaid { get; set; }
     }
 }

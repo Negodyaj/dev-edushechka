@@ -1,11 +1,10 @@
-﻿using DevEdu.Business.Constants;
-using DevEdu.Business.Exceptions;
-using DevEdu.Business.IdentityInfo;
+﻿using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -13,100 +12,189 @@ namespace DevEdu.Business.Services
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IGroupValidationHelper _groupValidationHelper;
-        private readonly IMaterialValidationHelper _materialValidationHelper;
-        private readonly IUserValidationHelper _userValidationHelper;
-        private readonly ILessonValidationHelper _lessonValidationHelper;
+        private readonly IGroupValidationHelper _groupHelper;
+        private readonly ILessonValidationHelper _lessonHelper;
+        private readonly IMaterialValidationHelper _materialHelper;
+        private readonly IUserValidationHelper _userHelper;
+        private readonly ITaskValidationHelper _taskHelper;
 
         public GroupService
         (
             IGroupRepository groupRepository,
+            IGroupValidationHelper groupHelper,
             IUserRepository userRepository,
-            IGroupValidationHelper groupValidationHelper,
-            IMaterialValidationHelper materialValidationHelper,
-            IUserValidationHelper userValidationHelper,
-            ILessonValidationHelper lessonValidationHelper
+            IUserValidationHelper userHelper,
+            ILessonValidationHelper lessonHelper,
+            IMaterialValidationHelper materialHelper,
+            ITaskValidationHelper taskHelper
         )
         {
             _groupRepository = groupRepository;
             _userRepository = userRepository;
-            _lessonValidationHelper = lessonValidationHelper;
-            _groupValidationHelper = groupValidationHelper;
-            _materialValidationHelper = materialValidationHelper;
-            _userValidationHelper = userValidationHelper;
-            _lessonValidationHelper = lessonValidationHelper;
+            _groupHelper = groupHelper;
+            _lessonHelper = lessonHelper;
+            _materialHelper = materialHelper;
+            _userHelper = userHelper;
+            _taskHelper = taskHelper;
         }
 
-        public int AddGroup(GroupDto groupDto) => _groupRepository.AddGroup(groupDto);
-
-        public void DeleteGroup(int id) => _groupRepository.DeleteGroup(id);
-
-        public GroupDto GetGroup(int id)
+        public async Task<GroupDto> AddGroup(GroupDto groupDto)
         {
-            var dto = _groupRepository.GetGroup(id);
-            dto.Students = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Student);
-            dto.Tutors = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Tutor);
-            dto.Teachers = _userRepository.GetUsersByGroupIdAndRole(id, (int)Role.Teacher);
+            groupDto.Id = await _groupRepository.AddGroup(groupDto);
+            return groupDto;
+        }
+
+        public async Task DeleteGroup(int id)
+        {
+            await _groupHelper.CheckGroupExistence(id);
+
+            await _groupRepository.DeleteGroup(id);
+        }
+
+        public async Task<GroupDto> GetGroup(int groupId, UserIdentityInfo userInfo)
+        {
+            await _groupHelper.CheckGroupExistence(groupId);
+            //_groupHelper.CheckAccessGetGroupMembers(groupId, userInfo);
+
+            var dto = await _groupRepository.GetGroup(groupId);
+            if (dto != null)
+            {
+                var tasks = new List<Task>
+                {
+                    Task.Run(() => { dto.Students =
+                        _userRepository.GetUsersByGroupIdAndRole(groupId, (int)Role.Student);}),
+                    Task.Run(() => { dto.Tutors =
+                        _userRepository.GetUsersByGroupIdAndRole(groupId, (int)Role.Tutor);}),
+                    Task.Run(() => { dto.Teachers =
+                        _userRepository.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher);})
+                };
+                await Task.WhenAll(tasks);
+            }
             return dto;
         }
 
-        public List<GroupDto> GetGroups() => _groupRepository.GetGroups();
+        public async Task<List<GroupDto>> GetGroups() => await _groupRepository.GetGroups();
 
-        public int RemoveGroupLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
-
-        public GroupDto UpdateGroup(int id, GroupDto groupDto) => _groupRepository.UpdateGroup(id, groupDto);
-        public GroupDto ChangeGroupStatus(int groupId, int statusId) => _groupRepository.ChangeGroupStatus(groupId, statusId);
-
-        public void AddGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
+        public async Task<int> AddGroupLesson(int groupId, int lessonId)
         {
-            CheckAccessAndExistenceAndThrowIfNotFound(groupId, materialId, userInfo);
-            _groupRepository.AddGroupMaterialReference(groupId, materialId);
+            await _groupHelper.CheckGroupExistence(groupId);
+            _lessonHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+
+            return await _groupRepository.AddGroupToLesson(groupId, lessonId);
         }
 
-        public void RemoveGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
+        public async Task RemoveGroupLesson(int groupId, int lessonId)
         {
-            CheckAccessAndExistenceAndThrowIfNotFound(groupId, materialId, userInfo);
-            _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
+            await _groupHelper.CheckGroupExistence(groupId);
+            _lessonHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+
+            await _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
         }
 
-        public int AddGroupToLesson(int groupId, int lessonId) => _groupRepository.AddGroupToLesson(groupId, lessonId);
-        public int RemoveGroupFromLesson(int groupId, int lessonId) => _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
-        public void AddUserToGroup(int groupId, int userId, int roleId)
+        public async Task<GroupDto> UpdateGroup(int id, GroupDto groupDto, UserIdentityInfo userInfo)
         {
-            _groupValidationHelper.CheckGroupExistence(groupId);
-            var user = _userRepository.GetUserById(userId);
-            if (user == default)
-            {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
-            }
-            _groupRepository.AddUserToGroup(groupId, userId, roleId);
+            await _groupHelper.CheckGroupExistence(id);
+            //_groupHelper.CheckAccessGroup(userInfo, id);
+
+            groupDto.Id = id;
+            return await _groupRepository.UpdateGroup(groupDto);
         }
 
-        public void DeleteUserFromGroup(int groupId, int userId)
+        public async Task<GroupDto> ChangeGroupStatus(int groupId, GroupStatus statusId)
         {
-            _groupValidationHelper.CheckGroupExistence(groupId);
-            var user = _userRepository.GetUserById(userId);
-            if (user == default)
-            {
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
-            }
-            _userValidationHelper.CheckUserBelongToGroup(groupId, userId, user.Roles);
-            _groupRepository.DeleteUserFromGroup(userId, groupId);
+            await _groupHelper.CheckGroupExistence(groupId);
+
+            return await _groupRepository.ChangeGroupStatus(groupId, (int)statusId);
         }
 
-        private void CheckAccessAndExistenceAndThrowIfNotFound(int groupId, int materialId, UserIdentityInfo userInfo)
+        public async Task<int> AddGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
+        {
+            await _groupHelper.CheckGroupExistence(groupId);
+            _materialHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
+            //_groupHelper.CheckAccessGroupAndMaterial(userInfo, groupId, materialId);
+
+            return await _groupRepository.AddGroupMaterialReference(groupId, materialId);
+        }
+
+        public async Task<int> RemoveGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
+        {
+            await _groupHelper.CheckGroupExistence(groupId);
+            _materialHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
+            //_groupHelper.CheckAccessGroupAndMaterial(userInfo, groupId, materialId);
+
+            return await _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
+        }
+
+        public async Task<int> AddGroupToLesson(int groupId, int lessonId, UserIdentityInfo userInfo)
+        {
+            await _groupHelper.CheckGroupExistence(groupId);
+            _lessonHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            //_groupHelper.CheckAccessGroupAndLesson(userInfo, groupId, lessonId);
+
+            return await _groupRepository.AddGroupToLesson(groupId, lessonId);
+        }
+
+        public async Task RemoveGroupFromLesson(int groupId, int lessonId, UserIdentityInfo userInfo)
+        {
+            await _groupHelper.CheckGroupExistence(groupId);
+            _lessonHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            //_groupHelper.CheckAccessGroupAndLesson(userInfo, groupId, lessonId);
+
+            await _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
+        }
+
+        public async Task AddUserToGroup(int groupId, int userId, Role roleId, UserIdentityInfo userInfo)
+        {
+            await _groupHelper.CheckGroupExistence(groupId);
+            _userHelper.GetUserByIdAndThrowIfNotFound(userId);
+            //_groupHelper.CheckAccessGroupAndUser(userInfo, groupId, userId);
+
+
+            await _groupRepository.AddUserToGroup(groupId, userId, (int)roleId);
+        }
+
+        public async Task DeleteUserFromGroup(int userId, int groupId, UserIdentityInfo userInfo)
+        {
+            await _groupHelper.CheckGroupExistence(groupId);
+            _userHelper.GetUserByIdAndThrowIfNotFound(userId);
+            //_groupHelper.CheckAccessGroupAndUser(userInfo, groupId, userId);
+
+            await _groupRepository.DeleteUserFromGroup(userId, groupId);
+        }
+
+        public async Task DeleteTaskFromGroup(int groupId, int taskId, UserIdentityInfo userInfo)
+        {
+            await _groupHelper.CheckGroupExistence(groupId);
+           // _groupHelper.CheckAccessGroupAndTask(userInfo, groupId, taskId);
+            _taskHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+
+            await _groupRepository.DeleteTaskFromGroup(groupId, taskId);
+        }
+
+        private void CheckUserAccessByRoleAndId(UserIdentityInfo userInfo, GroupDto dto)
         {
             var userId = userInfo.UserId;
-            _groupValidationHelper.CheckGroupExistence(groupId);
-            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
-            if (!userInfo.IsAdmin())
-                _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
+            if (userInfo.IsAdmin())
+            {
+                return;
+            }
+
+            CheckUserAccessToGroupData(dto, userId);
+
+            if (userInfo.IsStudent())
+            {
+
+            }
         }
 
-        private void CheckGroupAndLessonExistence(int groupId, int lessonId)
+        private void CheckUserAccessToGroupData(GroupDto dto, int userId)
         {
-            _groupValidationHelper.CheckGroupExistence(groupId);
-            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            if (dto.Course != default)
+            {
+            }
+            else
+            {
+            }
         }
     }
 }
