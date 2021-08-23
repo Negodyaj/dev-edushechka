@@ -9,10 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
-    [AuthorizeRoles(Role.Manager)]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentController : Controller
@@ -28,6 +29,7 @@ namespace DevEdu.API.Controllers
 
         //  api/payment/5
         [HttpGet("{id}")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -39,7 +41,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/payment/user/1
-        [AuthorizeRoles(Role.Student)]
+        [AuthorizeRoles(Role.Manager, Role.Student)]
         [HttpGet("user/{userId}")]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -53,6 +55,7 @@ namespace DevEdu.API.Controllers
 
         //  api/payment
         [HttpPost]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -69,6 +72,7 @@ namespace DevEdu.API.Controllers
 
         //  api/payment/5
         [HttpDelete("{id}")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType (StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -81,6 +85,7 @@ namespace DevEdu.API.Controllers
 
         //  api/payment/5
         [HttpPut("{id}")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -96,6 +101,7 @@ namespace DevEdu.API.Controllers
 
         //  api/payment/bulk
         [HttpPost("bulk")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
