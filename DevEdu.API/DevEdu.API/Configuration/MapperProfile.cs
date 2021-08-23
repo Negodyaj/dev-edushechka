@@ -135,7 +135,7 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<PaymentDto, PaymentOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)))
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src =>
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src =>
                new UserInfoShortOutputModel
                {
                    Id = src.User.Id,
