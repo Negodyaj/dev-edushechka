@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSwag.Generation.Processors.Security;
 using System.Text.Json.Serialization;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.Core;
 
 namespace DevEdu.API
