@@ -1,3 +1,4 @@
+using System;
 using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.Business.Services;
@@ -9,12 +10,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Extensions;
-using Microsoft.AspNetCore.Authorization;
 using DevEdu.API.Models;
 
 namespace DevEdu.API.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class LessonController : Controller
@@ -36,7 +35,7 @@ namespace DevEdu.API.Controllers
         // api/lesson
         [AuthorizeRolesAttribute(Role.Teacher)]
         [HttpPost]
-        [Description("Add a lesson.")]
+        [Description("Add a lesson")]
         [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
@@ -45,8 +44,8 @@ namespace DevEdu.API.Controllers
             var lessonDto = _mapper.Map<LessonDto>(inputModel);
             var userIdentity = this.GetUserIdAndRoles();
             var addedLesson = _lessonService.AddLesson(userIdentity, lessonDto, inputModel.TopicIds);
-            var output =  _mapper.Map<LessonInfoOutputModel>(addedLesson);
-            return StatusCode(201, output);
+            var output = _mapper.Map<LessonInfoOutputModel>(addedLesson);
+            return Created(new Uri("", UriKind.Relative), output);
         }
 
         // api/lesson/{id}
@@ -90,7 +89,7 @@ namespace DevEdu.API.Controllers
         {
             var userIdentity = this.GetUserIdAndRoles();
             var dto = _lessonService.SelectAllLessonsByGroupId(userIdentity, id);
-            return  _mapper.Map<List<LessonInfoOutputModel>>(dto);
+            return _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
         // api/lesson/teacherId/{id}
@@ -105,7 +104,7 @@ namespace DevEdu.API.Controllers
             var dto = _lessonService.SelectAllLessonsByTeacherId(id);
             return _mapper.Map<List<LessonInfoWithCourseOutputModel>>(dto);
         }
-        
+
         // api/lesson/{id}/with-comments
         [AuthorizeRolesAttribute(Role.Student)]
         [HttpGet("{id}/with-comments")]
@@ -131,7 +130,7 @@ namespace DevEdu.API.Controllers
         {
             var userIdentity = this.GetUserIdAndRoles();
             var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(userIdentity, id);
-            return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel> (dto);
+            return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel>(dto);
         }
 
         // api/lesson/{lessonId}/topic/{toppicId}
@@ -167,7 +166,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult< StudentLessonOutputModel> AddStudentToLesson(int lessonId, int studentId)
+        public ActionResult<StudentLessonOutputModel> AddStudentToLesson(int lessonId, int studentId)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _lessonService.AddStudentToLesson(lessonId, studentId, userInfo);
@@ -225,7 +224,7 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher)]
         [HttpPut("{lessonId}/student/{studentId}/attendance")]
         [Description("Update Attendance for lesson")]
-        [ProducesResponseType(typeof(StudentLessonOutputModel),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status200OK)]
         public StudentLessonOutputModel UpdateStudentAttendanceOnLesson(int lessonId, int studentId, [FromBody] AttendanceInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();

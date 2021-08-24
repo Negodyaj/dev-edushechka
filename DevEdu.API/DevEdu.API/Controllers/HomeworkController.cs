@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.API.Extensions;
 using DevEdu.API.Models;
@@ -37,8 +38,7 @@ namespace DevEdu.API.Controllers
         {
             var userId = this.GetUserId();
             var dto = _homeworkService.GetHomework(id, userId);
-            var output = _mapper.Map<HomeworkInfoFullOutputModel>(dto);
-            return output;
+            return _mapper.Map<HomeworkInfoFullOutputModel>(dto);
         }
 
         //  api/homework/by-group/{groupId}
@@ -48,12 +48,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<HomeworkInfoWithTaskOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<HomeworkInfoWithTaskOutputModel> GetHomeworkByGroupId(int groupId)
+        public List<HomeworkInfoWithTaskOutputModel> GetHomeworksByGroupId(int groupId)
         {
             var userId = this.GetUserId();
-            var dto = _homeworkService.GetHomeworkByGroupId(groupId, userId);
-            var output = _mapper.Map<List<HomeworkInfoWithTaskOutputModel>>(dto);
-            return output;
+            var list = _homeworkService.GetHomeworksByGroupId(groupId, userId);
+            return _mapper.Map<List<HomeworkInfoWithTaskOutputModel>>(list);
         }
 
         //  api/homework/by-task/{taskId}
@@ -63,11 +62,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<HomeworkInfoWithGroupOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<HomeworkInfoWithGroupOutputModel> GetHomeworkByTaskId(int taskId)
+        public List<HomeworkInfoWithGroupOutputModel> GetHomeworksByTaskId(int taskId)
         {
-            var dto = _homeworkService.GetHomeworkByTaskId(taskId);
-            var output = _mapper.Map<List<HomeworkInfoWithGroupOutputModel>>(dto);
-            return output;
+            var list = _homeworkService.GetHomeworkByTaskId(taskId);
+            return _mapper.Map<List<HomeworkInfoWithGroupOutputModel>>(list);
         }
 
         //  api/homework/group/1/task/1
@@ -84,7 +82,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<HomeworkDto>(model);
             var hw = _homeworkService.AddHomework(groupId, taskId, dto, userId);
             var output = _mapper.Map<HomeworkInfoOutputModel>(hw);
-            return StatusCode(201, output);
+            return Created(new Uri("group/{groupId}/task/{taskId}", UriKind.Relative), output);
         }
 
         //  api/homework/1

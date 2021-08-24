@@ -34,7 +34,7 @@ namespace DevEdu.Business.Services
             return dto;
         }
 
-        public List<HomeworkDto> GetHomeworkByGroupId(int groupId, int userId)
+        public List<HomeworkDto> GetHomeworksByGroupId(int groupId, int userId)
         {
             var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
             _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);

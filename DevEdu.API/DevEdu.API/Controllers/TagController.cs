@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
@@ -39,7 +40,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<TagDto>(model);
             dto = _service.AddTag(dto);
             var output = _mapper.Map<TagOutputModel>(dto);
-            return StatusCode(201, output);
+            return Created(new Uri("", UriKind.Relative), output);
         }
 
         // api/tag/1
@@ -77,7 +78,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public List<TagOutputModel> GetAllTags()
         {
-            List<TagDto> queryResult = _service.GetAllTags();
+            var queryResult = _service.GetAllTags();
             return _mapper.Map<List<TagOutputModel>>(queryResult);
         }
 
@@ -89,8 +90,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public TagOutputModel GetTagById(int id)
         {
-            TagDto queryResult = _service.GetTagById(id);
-            return _mapper.Map<TagOutputModel>(queryResult);
+            var dto = _service.GetTagById(id);
+            return _mapper.Map<TagOutputModel>(dto);
         }
     }
 }

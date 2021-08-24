@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DevEdu.API.Models;
 using DevEdu.API.Common;
 using DevEdu.API.Extensions;
@@ -36,8 +37,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _commentService.GetComment(id, userInfo);
-            var output = _mapper.Map<CommentInfoOutputModel>(dto);
-            return output;
+            return _mapper.Map<CommentInfoOutputModel>(dto);
         }
 
         //  api/comment/to-lesson/1
@@ -54,7 +54,8 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<CommentDto>(model);
             var comment = _commentService.AddCommentToLesson(lessonId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
-            return StatusCode(201,output);
+
+            return Created(new Uri("to-lesson/{lessonId}", UriKind.Relative), output);
         }
 
         //  api/comment/to-student-answer/1
@@ -71,7 +72,8 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<CommentDto>(model);
             var comment = _commentService.AddCommentToStudentAnswer(studentHomeworkId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
-            return StatusCode(201, output);
+
+            return Created(new Uri("to-student-answer/{studentHomeworkId}", UriKind.Relative), output);
         }
 
         //  api/comment/5
@@ -100,8 +102,8 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var output = _commentService.UpdateComment(id, dto, userInfo);
-            return _mapper.Map<CommentInfoOutputModel>(output);
+            var updateDto = _commentService.UpdateComment(id, dto, userInfo);
+            return _mapper.Map<CommentInfoOutputModel>(updateDto);
         }
     }
 }
