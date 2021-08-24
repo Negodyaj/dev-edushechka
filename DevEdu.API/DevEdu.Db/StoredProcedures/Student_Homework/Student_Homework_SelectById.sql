@@ -4,9 +4,11 @@ AS
 BEGIN
 	SELECT
 		sh.Id,
-		sh.HomeworkId,	
 		sh.Answer,
 		sh.CompletedDate,
+		sh.HomeworkId as Id,
+		h.StartDate,
+		h.EndDate,
 		u.Id,
 		u.Username,
 		u.FirstName,

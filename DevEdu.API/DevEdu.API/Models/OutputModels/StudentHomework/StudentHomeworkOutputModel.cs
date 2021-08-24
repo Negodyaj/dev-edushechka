@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+﻿using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Models
 {
