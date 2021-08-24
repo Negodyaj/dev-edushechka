@@ -75,11 +75,8 @@ namespace DevEdu.DAL.Repositories
                         task = taskDto;
                         task.Tags = new List<TagDto> { TagDto };
                     }
-                    else
-                    {
+                    if (TagDto != null)
                         task.Tags.Add(TagDto);
-                    }
-
                     return taskDto;
                 },
                 new { id },
