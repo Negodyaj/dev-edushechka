@@ -5,6 +5,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Linq;
 using System.Threading.Tasks;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -17,7 +18,7 @@ namespace DevEdu.Business.ValidationHelpers
             _groupRepository = groupRepository;
         }
 
-        public async Task<GroupDto> CheckGroupExistence(int groupId)
+        public async Task<GroupDto> CheckGroupExistenceAsync(int groupId)
         {
             var group = await _groupRepository.GetGroup(groupId);
             if (group == default)
@@ -28,15 +29,23 @@ namespace DevEdu.Business.ValidationHelpers
         public void CheckUserInGroupExistence(int groupId, int userId)
         {
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
-            var group = _groupRepository.GetGroup(groupId);
+            var group = Task.Run(async () => await _groupRepository.GetGroup(groupId)).Result;
             var result = groupsByUser.FirstOrDefault(gu => gu.Id == @group.Id);
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserInGroupNotFoundMessage, userId, groupId));
         }
 
-        public void CheckAccessGetGroupMembers(int groupId, UserIdentityInfo userInfo)
+        public bool CheckAccessGetGroupMembers(int groupId, UserIdentityInfo userInfo)
         {
-            throw new System.NotImplementedException();
+            bool isAccess = false;
+            foreach (var role in userInfo.Roles)
+            {
+                if (role is Role.Manager or Role.Admin)
+                {
+                    isAccess = true;
+                }
+            }
+            return isAccess;
         }
 
         public void CheckAccessGroup(UserIdentityInfo userInfo, int groupId)

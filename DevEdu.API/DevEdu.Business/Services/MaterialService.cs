@@ -1,6 +1,7 @@
 ﻿using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Enums;
@@ -71,7 +72,7 @@ namespace DevEdu.Business.Services
             _materilaValidationHelper.CheckPassedValuesAreUnique(groups, nameof(groups));
             groups.ForEach(group =>
             {
-                _groupValidationHelper.CheckGroupExistence(group);
+                var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(group)).GetAwaiter().GetResult();
                 var currentRole = user.IsTeacher() ? Role.Teacher : Role.Tutor;
                 _userValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, currentRole);
             });

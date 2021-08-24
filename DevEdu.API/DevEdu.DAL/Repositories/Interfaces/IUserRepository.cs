@@ -1,5 +1,6 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -14,5 +15,6 @@ namespace DevEdu.DAL.Repositories
         List<UserDto> GetAllUsers();
         void UpdateUser(UserDto user);
         List<UserDto> GetUsersByGroupIdAndRole(int GroupId, int Role);
+        Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int GroupId, int Role);
     }
 }

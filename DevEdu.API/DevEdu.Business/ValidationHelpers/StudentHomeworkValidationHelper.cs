@@ -3,6 +3,7 @@ using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -32,7 +33,7 @@ namespace DevEdu.Business.ValidationHelpers
         public void CheckUserBelongsToHomework(int groupId, int userId)
         {
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
-            var group = _groupRepository.GetGroup(groupId);
+            var group = Task.Run(async () => await _groupRepository.GetGroup(groupId)).Result;
             var result = groupsByUser.FirstOrDefault(gu => gu.Id == @group.Id);
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserInGroupNotFoundMessage, userId, groupId));
