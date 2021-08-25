@@ -14,11 +14,13 @@ namespace DevEdu.DAL.Repositories
         private const string _studentRatingInsertProcedure = "dbo.StudentRating_Insert";
         private const string _studentRatingDeleteProcedure = "dbo.StudentRating_Delete";
         private const string _studentRatingSelectAllProcedure = "dbo.StudentRating_SelectAll";
-        private const string _studentRatingSelectByIDProcedure = "dbo.StudentRating_SelectById";
+        private const string _studentRatingSelectByIdProcedure = "dbo.StudentRating_SelectById";
         private const string _studentRatingSelectByUserIdProcedure = "dbo.StudentRating_SelectByUserId";
         private const string _studentRatingSelectByGroupIdProcedure = "dbo.StudentRating_SelectByGroupId";
         private const string _studentRatingUpdateProcedure = "dbo.StudentRating_Update";
+       
         public RatingRepository(IOptions<DatabaseSettings> options) : base(options) {  }
+        
         public int AddStudentRating(StudentRatingDto studentRatingDto)
         {
             var userId = studentRatingDto.User.Id;
@@ -69,7 +71,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection.Query<StudentRatingDto, GroupDto, RatingTypeDto, UserDto, Role, StudentRatingDto>
                 (
-                _studentRatingSelectByIDProcedure,
+                _studentRatingSelectByIdProcedure,
                 (studentRating, group, ratingType, user, role) =>
                 {
                     studentRating.RatingType = ratingType;
