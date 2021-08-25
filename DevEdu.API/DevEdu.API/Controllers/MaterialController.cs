@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Extensions;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {
@@ -41,7 +42,7 @@ namespace DevEdu.API.Controllers
             var id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
             dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
             var output = _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
-            return Created(new Uri("with-groups", UriKind.Relative), output);
+            return Created(new Uri("api/material/{id}/full", UriKind.Relative), output);
         }
 
         // api/material/with-courses
@@ -58,7 +59,7 @@ namespace DevEdu.API.Controllers
             var id = _materialService.AddMaterialWithCourses(dto, materialModel.TagsIds, materialModel.CoursesIds);
             dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
             var output = _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
-            return Created(new Uri("with-courses", UriKind.Relative), output);
+            return Created(new Uri("api/material/{id}/full", UriKind.Relative), output);
         }
 
         // api/material
@@ -74,7 +75,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<MaterialInfoOutputModel>>(list);
         }
 
-        // api/material/5/full
+        // api/material/{id}/full
         [AuthorizeRoles(Role.Methodist)]
         [HttpGet("{id}/full")]
         [Description("Get material by id with tags, courses and groups")]

@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {
@@ -42,10 +43,10 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<GroupDto>(model);
             var result = await _groupService.AddGroup(dto);
             var output = _mapper.Map<GroupOutputModel>(result);
-            return Created(new Uri("", UriKind.Relative), output);
+            return Created(new Uri("api/Group/{id}", UriKind.Relative), output);
         }
 
-        //  api/Group/5
+        //  api/Group/{id}
         [HttpGet("{id}")]
         [Description("Return Group by id")]
         [ProducesResponseType(typeof(GroupFullOutputModel), StatusCodes.Status200OK)]

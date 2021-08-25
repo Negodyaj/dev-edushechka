@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
@@ -25,7 +26,7 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
         }
 
-        //  api/notification/5
+        //  api/notification/{id}
         [HttpGet("{id}")]
         [Description("Return notification by id")]
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
@@ -85,7 +86,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<NotificationDto>(inputModel);
             var outputDto = _notificationService.AddNotification(dto);
             var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);
-            return Created(new Uri("", UriKind.Relative), result);
+            return Created(new Uri("api/notification/{id}", UriKind.Relative), result);
         }
 
         //  api/notification/5

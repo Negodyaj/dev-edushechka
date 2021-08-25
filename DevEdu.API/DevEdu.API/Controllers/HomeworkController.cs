@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {
@@ -27,7 +28,7 @@ namespace DevEdu.API.Controllers
             _homeworkService = homeworkService;
         }
 
-        //  api/homework/1
+        //  api/homework/{id}
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet("{id}")]
         [Description("Return homework by id")]
@@ -82,7 +83,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<HomeworkDto>(model);
             var hw = _homeworkService.AddHomework(groupId, taskId, dto, userId);
             var output = _mapper.Map<HomeworkInfoOutputModel>(hw);
-            return Created(new Uri("group/{groupId}/task/{taskId}", UriKind.Relative), output);
+            return Created(new Uri("api/homework/{id}", UriKind.Relative), output);
         }
 
         //  api/homework/1

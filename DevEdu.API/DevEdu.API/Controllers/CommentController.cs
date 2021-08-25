@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {
@@ -55,7 +56,7 @@ namespace DevEdu.API.Controllers
             var comment = _commentService.AddCommentToLesson(lessonId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
 
-            return Created(new Uri("to-lesson/{lessonId}", UriKind.Relative), output);
+            return Created(new Uri("api/comment/{id}", UriKind.Relative), output);
         }
 
         //  api/comment/to-student-answer/1
@@ -73,7 +74,7 @@ namespace DevEdu.API.Controllers
             var comment = _commentService.AddCommentToStudentAnswer(studentHomeworkId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
 
-            return Created(new Uri("to-student-answer/{studentHomeworkId}", UriKind.Relative), output);
+            return Created(new Uri("api/comment/{id}", UriKind.Relative), output);
         }
 
         //  api/comment/5

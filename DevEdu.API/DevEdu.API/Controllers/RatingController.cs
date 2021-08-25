@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {
@@ -42,7 +43,7 @@ namespace DevEdu.API.Controllers
             var authorUserInfo = this.GetUserIdAndRoles();
             dto = _service.AddStudentRating(dto, authorUserInfo);
             var output = _mapper.Map<StudentRatingOutputModel>(dto);
-            return Created(new Uri("", UriKind.Relative), output);
+            return Created(new Uri("api/rating/by-group/{groupId}", UriKind.Relative), output);
         }
 
         // api/rating/1
@@ -85,7 +86,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
 
-        // api/rating/by-group/1
+        // api/rating/by-group/{groupId}
         [HttpGet("by-group/{groupId}")]
         [Description("Get StudentRating from database by GroupID")]
         [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status200OK)]

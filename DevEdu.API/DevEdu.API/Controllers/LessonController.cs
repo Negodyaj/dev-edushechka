@@ -11,6 +11,7 @@ using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Extensions;
 using DevEdu.API.Models;
+using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {
@@ -45,7 +46,7 @@ namespace DevEdu.API.Controllers
             var userIdentity = this.GetUserIdAndRoles();
             var addedLesson = _lessonService.AddLesson(userIdentity, lessonDto, inputModel.TopicIds);
             var output = _mapper.Map<LessonInfoOutputModel>(addedLesson);
-            return Created(new Uri("", UriKind.Relative), output);
+            return Created(new Uri("api/lesson/{id}/full-info", UriKind.Relative), output);
         }
 
         // api/lesson/{id}
@@ -119,7 +120,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<LessonInfoWithCommentsOutputModel>(dto);
         }
 
-        // api/lesson/{id}/full-info"
+        // api/lesson/{id}/full-info
         [AuthorizeRolesAttribute(Role.Teacher)]
         [HttpGet("{id}/full-info")]
         [Description("Get the lesson with students and comments by id.")]
@@ -156,7 +157,7 @@ namespace DevEdu.API.Controllers
         public ActionResult AddTopicToLesson(int lessonId, int topicId)
         {
             _lessonService.AddTopicToLesson(lessonId, topicId);
-            return NoContent();
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
         // api/lesson/{lessonId}/student/{studentId}
@@ -171,7 +172,7 @@ namespace DevEdu.API.Controllers
             var userInfo = this.GetUserIdAndRoles();
             var dto = _lessonService.AddStudentToLesson(lessonId, studentId, userInfo);
             var outPut = _mapper.Map<StudentLessonOutputModel>(dto);
-            return StatusCode(201, outPut);
+            return Created(new Uri("api/lesson/{id}/full-info", UriKind.Relative), outPut);
         }
 
         // api/lesson/{lessonId}/student/{studentId}

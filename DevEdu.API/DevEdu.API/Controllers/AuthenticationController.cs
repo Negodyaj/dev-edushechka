@@ -3,6 +3,7 @@ using AutoMapper;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ namespace DevEdu.API.Controllers
             dto.Password = _authService.HashPassword(dto.Password);
             var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUser(dto));
 
-            return Created(new Uri("/register", UriKind.Relative), addedUser);
+            return Created(new Uri("api/user/{userId}", UriKind.Relative), addedUser);
         }
 
         [HttpPost("/sign-in")]

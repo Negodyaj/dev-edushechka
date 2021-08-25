@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
@@ -40,7 +41,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<TagDto>(model);
             dto = _service.AddTag(dto);
             var output = _mapper.Map<TagOutputModel>(dto);
-            return Created(new Uri("", UriKind.Relative), output);
+            return Created(new Uri("api/tag/{id}", UriKind.Relative), output);
         }
 
         // api/tag/1
@@ -82,9 +83,9 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<TagOutputModel>>(queryResult);
         }
 
-        // api/tag/1
+        // api/tag/{id}
         [HttpGet("{id}")]
-        [Description("Get tag from database by ID")]
+        [Description("Get tag from database by id")]
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]

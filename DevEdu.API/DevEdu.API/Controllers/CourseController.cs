@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {
@@ -77,7 +78,7 @@ namespace DevEdu.API.Controllers
             var course = _courseService.AddCourse(dto);
             var output = _mapper.Map<CourseInfoShortOutputModel>(course);
 
-            return Created(new Uri("", UriKind.Relative), output);
+            return Created(new Uri("api/course/{id}/full", UriKind.Relative), output);
         }
 
         [HttpDelete("{id}")]

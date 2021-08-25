@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {
@@ -62,7 +63,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<TopicDto>(model);
             var topicId = _topicService.AddTopic(dto);
             var output = GetTopicById(topicId);
-           return Created(new Uri("Add topic", UriKind.Relative), output);
+            return Created(new Uri("api/topic/{id}", UriKind.Relative), output);
         }
 
         //  api/topic/{id}
@@ -97,13 +98,13 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpPost("{topicId}/tag/{tagId}")]
         [Description("Add tag to topic")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult AddTagToTopic(int topicId, int tagId)
         {
-           var output= _topicService.AddTagToTopic(topicId, tagId);
-           return Created(new Uri("{topicId}/tag/{tagId}", UriKind.Relative), output);
+            _topicService.AddTagToTopic(topicId, tagId);
+            return NoContent();
         }
 
         //  api/topic/{topicId}/tag/{tagId}

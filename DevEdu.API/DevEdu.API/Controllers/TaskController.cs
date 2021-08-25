@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {
@@ -42,7 +43,7 @@ namespace DevEdu.API.Controllers
             var homeworkDto = _mapper.Map<HomeworkDto>(model.Homework);
             var task = _taskService.AddTaskByTeacher(taskDto, homeworkDto, model.GroupId, model.Tags);
             var output = _mapper.Map<TaskInfoOutputModel>(task);
-            return Created(new Uri("teacher", UriKind.Relative), output);
+            return Created(new Uri("api/task/{Id}", UriKind.Relative), output);
         }
 
         // api/task/methodist
@@ -57,7 +58,7 @@ namespace DevEdu.API.Controllers
             var taskDto = _mapper.Map<TaskDto>(model);
             var task = _taskService.AddTaskByMethodist(taskDto, model.CourseIds, model.Tags);
             var output = _mapper.Map<TaskInfoOutputModel>(task);
-            return Created(new Uri("methodist", UriKind.Relative), output);
+            return Created(new Uri("api/task/{Id}", UriKind.Relative), output);
         }
 
         // api/task/{taskId}
@@ -104,17 +105,17 @@ namespace DevEdu.API.Controllers
             return NoContent();
         }
 
-        //  api/Task/1 
+        //  api/task/{Id}
         [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
-        [HttpGet("{taskId}")]
+        [HttpGet("{id}")]
         [Description("Get task by Id with tags")]
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public TaskInfoOutputModel GetTaskWithTags(int taskId)
+        public TaskInfoOutputModel GetTaskWithTags(int id)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
-            var taskDto = _taskService.GetTaskById(taskId, userIdentityInfo);
+            var taskDto = _taskService.GetTaskById(id, userIdentityInfo);
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
         }
 

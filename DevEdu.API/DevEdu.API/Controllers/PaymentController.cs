@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {
@@ -27,7 +28,7 @@ namespace DevEdu.API.Controllers
             _paymentService = paymentService;
         }
 
-        //  api/payment/5
+        //  api/payment/{id}
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -65,7 +66,7 @@ namespace DevEdu.API.Controllers
             var id = _paymentService.AddPayment(dto);
             dto.Id = id;
             var output = _mapper.Map<PaymentOutputModel>(dto);
-            return Created(new Uri("", UriKind.Relative), output);
+            return Created(new Uri("api/payment/{id}", UriKind.Relative), output);
         }
 
         //  api/payment/5
