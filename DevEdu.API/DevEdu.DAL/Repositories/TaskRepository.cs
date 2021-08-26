@@ -77,16 +77,17 @@ namespace DevEdu.DAL.Repositories
                             task = taskDto;
                             task.Tags = new List<TagDto> { tagDto };
                         }
-                        else
+
+                        if (tagDto != null)
                         {
                             task.Tags.Add(tagDto);
                         }
 
                         return taskDto;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure)
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();
         }
 
