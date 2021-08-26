@@ -91,6 +91,5 @@ namespace DevEdu.API.Configuration
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             return context.Response.WriteAsync(result);
         }
-
     }
 }

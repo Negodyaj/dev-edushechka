@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Extensions;
 using DevEdu.API.Configuration.ExceptionResponses;
-using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {

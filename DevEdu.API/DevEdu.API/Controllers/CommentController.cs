@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
-using DevEdu.Business.Services.Interfaces;
 
 namespace DevEdu.API.Controllers
 {

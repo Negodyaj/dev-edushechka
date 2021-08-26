@@ -3,7 +3,6 @@ using AutoMapper;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.API.Configuration.ExceptionResponses;
-using DevEdu.Business.Services.Interfaces;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

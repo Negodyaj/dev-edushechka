@@ -3,7 +3,6 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
