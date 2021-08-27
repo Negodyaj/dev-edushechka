@@ -47,7 +47,7 @@ namespace DevEdu.API.Controllers
         {
             var taskDto = _mapper.Map<TaskDto>(model);
             var homeworkDto = _mapper.Map<HomeworkDto>(model.Homework);
-            var task = _taskService.AddTaskByTeacher(taskDto, homeworkDto, model.GroupId, model.Tags);
+            var task = _taskService.AddTaskByTeacher(taskDto, homeworkDto, model.GroupId, model.Tags).GetAwaiter().GetResult();
             var output = _mapper.Map<TaskInfoOutputModel>(task);
             return StatusCode(201, output);
         }
@@ -75,7 +75,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public TaskInfoOutputModel UpdateTaskByTeacher(int taskId, [FromBody] TaskByTeacherUpdateInputModel model)
+        public TaskInfoOutputModel UpdateTaskByTeacher(int taskId, [FromBody] TaskInputModel model)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
             TaskDto taskDto = _mapper.Map<TaskDto>(model);
@@ -184,25 +184,27 @@ namespace DevEdu.API.Controllers
         // api/task/{taskId}/tag/{tagId} 
         [HttpPost("{taskId}/tag/{tagId}")]
         [Description("Add tag to task")]
-        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void AddTagToTask(int taskId, int tagId)
+        public ActionResult AddTagToTask(int taskId, int tagId)
         {
             _taskService.AddTagToTask(taskId, tagId);
+            return NoContent();
         }
 
         // api/task/{taskId}/tag/{tagId} 
         [HttpDelete("{taskId}/tag/{tagId}")]
         [Description("Delete tag from task")]
-        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public void DeleteTagFromTask(int taskId, int tagId)
+        public ActionResult DeleteTagFromTask(int taskId, int tagId)
         {
             _taskService.DeleteTagFromTask(taskId, tagId);
+            return NoContent();
         }
     }
 }

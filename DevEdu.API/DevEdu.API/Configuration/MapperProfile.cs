@@ -49,6 +49,8 @@ namespace DevEdu.API.Configuration
             CreateMap<LessonUpdateInputModel, LessonDto>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<TagInputModel, TagDto>();
+            CreateMap<TaskInputModel, TaskDto>()
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(tagId => new TagDto { Id = tagId })));
             CreateMap<TaskByTeacherInputModel, TaskDto>()
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(tagId => new TagDto { Id = tagId })))
                 .ForMember(dest => dest.Groups, opt => opt.MapFrom(src => new List<GroupDto> { new GroupDto { Id = src.GroupId } }));
