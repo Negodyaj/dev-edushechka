@@ -63,14 +63,14 @@ namespace DevEdu.Business.Services
         public int AddTagToTopic(int topicId, int tagId)
         {
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-            _tagValidationHelper.CheckTagExistence(tagId);
+            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tagId);
             return _topicRepository.AddTagToTopic(topicId, tagId);
         }
 
         public int DeleteTagFromTopic(int topicId, int tagId)
         {
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-            _tagValidationHelper.CheckTagExistence(tagId);
+            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tagId);
             return _topicRepository.DeleteTagFromTopic(topicId, tagId);
         }
     }
