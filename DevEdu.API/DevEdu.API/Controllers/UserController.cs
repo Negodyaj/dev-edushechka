@@ -85,7 +85,7 @@ namespace DevEdu.API.Controllers
 
         // api/user/{userId}/role/{roleId}
         [AuthorizeRoles()]
-        [HttpPost("{userId}/role/{roleId}")]
+        [HttpPost("{userId}/role/{role}")]
         [Description("Add new role to user")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -98,7 +98,7 @@ namespace DevEdu.API.Controllers
 
         // api/user/{userId}/role/{roleId}
         [AuthorizeRoles()]
-        [HttpDelete("{userId}/role/{roleId}")]
+        [HttpDelete("{userId}/role/{role}")]
         [Description("Delete role from user")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
