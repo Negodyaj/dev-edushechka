@@ -1,4 +1,4 @@
-﻿namespace DevEdu.API.Configuration
+﻿namespace DevEdu.API.Configuration.ExceptionResponses
 {
     public class ExceptionResponse
     {

@@ -1,4 +1,4 @@
-﻿namespace DevEdu.Business.Exceptions
+﻿namespace DevEdu.API.Configuration.ExceptionResponses
 {
     public class ValidationError
     {

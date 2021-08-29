@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DevEdu.API.Configuration.ExceptionResponses;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {

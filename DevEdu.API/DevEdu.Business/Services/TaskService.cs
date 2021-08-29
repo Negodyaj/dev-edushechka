@@ -40,9 +40,9 @@ namespace DevEdu.Business.Services
         public TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds)
         {
             var taskId = _taskRepository.AddTask(taskDto);
-            var task = _taskRepository.GetTaskById(taskId);
             if (tagsIds != null && tagsIds.Count != 0)
                 tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
+            var task = _taskRepository.GetTaskById(taskId);
             if (coursesIds != null && coursesIds.Count != 0)
                 coursesIds.ForEach(courseId => _courseRepository.AddTaskToCourse(courseId, taskId));
 
@@ -52,9 +52,9 @@ namespace DevEdu.Business.Services
         public async Task<TaskDto> AddTaskByTeacher(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds)
         {
             var taskId = _taskRepository.AddTask(taskDto);
-            var task = _taskRepository.GetTaskById(taskId);
             if (tagsIds != null && tagsIds.Count != 0)
                 tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
+            var task = _taskRepository.GetTaskById(taskId);
             if (homework != null)
             {
                 homework.Group = await _groupRepository.GetGroup(groupId);
