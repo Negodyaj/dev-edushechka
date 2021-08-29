@@ -66,7 +66,7 @@ namespace DevEdu.Business.Services
         }
         public List<NotificationDto> GetNotificationsByGroupId(int groupId)
         {
-            _groupValidationHelper.CheckGroupExistence(groupId);
+            _groupValidationHelper.CheckGroupExistenceAsync(groupId);
             var list = _notificationRepository.GetNotificationsByGroupId(groupId);
             return list;
         }
@@ -80,7 +80,7 @@ namespace DevEdu.Business.Services
         {
             if (userInfo.IsTeacher() && dto.Group == null)
             {
-
+                _notificationValidationHelper.CheckNotificationIsForGroup(dto, userInfo.UserId);
             }
             _notificationValidationHelper.CheckRoleIdUserIdGroupIdIsNotNull(dto);
             var output = _notificationRepository.AddNotification(dto);
