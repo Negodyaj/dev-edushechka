@@ -6,6 +6,7 @@ namespace DevEdu.API.Models
 {
     public class MaterialWithCoursesInputModel : MaterialWithTagsInputModel
     {
+        [Required(ErrorMessage = GroupsRequired)]
         [MinLength(1, ErrorMessage = CoursesRequired)]
         public List<int> CoursesIds { get; set; }
     }
