@@ -19,11 +19,13 @@ namespace DevEdu.Business.Services
 
         public NotificationService(INotificationRepository notificationRepository,
             INotificationValidationHelper notificationValidationHelper,
+            IGroupRepository groupRepository,
             IUserValidationHelper userValidationHelper,
             IGroupValidationHelper groupValidationHelper)
         {
             _notificationRepository = notificationRepository;
             _notificationValidationHelper = notificationValidationHelper;
+            _groupRepository = groupRepository;
             _userValidationHelper = userValidationHelper;
             _groupValidationHelper = groupValidationHelper;
         }
