@@ -73,6 +73,8 @@ namespace DevEdu.Business.Services
             groups.ForEach(group =>
             {
                 var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(group)).GetAwaiter().GetResult();
+                if (user.IsAdmin())
+                    return;
                 var currentRole = user.IsTeacher() ? Role.Teacher : Role.Tutor;
                 _userValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, currentRole);
             });
