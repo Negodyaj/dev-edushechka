@@ -13,8 +13,6 @@ namespace DevEdu.Business.Tests
     {
         private Mock<ITopicRepository> _topicRepoMock;
         private Mock<ITagRepository> _tagRepoMock;
-        private TopicValidationHelper _topicValidationHelper;
-        private Mock<ITagValidationHelper> _tagValidationHelperMock;
         private ITopicService _sut;
 
         [SetUp]
@@ -22,8 +20,6 @@ namespace DevEdu.Business.Tests
         {
             _topicRepoMock = new Mock<ITopicRepository>();
             _tagRepoMock = new Mock<ITagRepository>();
-            _topicValidationHelper = new TopicValidationHelper(_topicRepoMock.Object);
-            _tagValidationHelperMock = new Mock<ITagValidationHelper>();
             _sut = new TopicService(
             _topicRepoMock.Object,
             _tagRepoMock.Object,
