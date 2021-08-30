@@ -45,7 +45,8 @@ namespace DevEdu.API.Controllers
             var userIdentity = this.GetUserIdAndRoles();
             var addedLesson = _lessonService.AddLesson(userIdentity, lessonDto, inputModel.TopicIds);
             var output = _mapper.Map<LessonInfoOutputModel>(addedLesson);
-            return Created(new Uri("api/lesson/{id}/full-info", UriKind.Relative), output);
+
+            return Created(new Uri($"api/Lesson/{output.Id}", UriKind.RelativeOrAbsolute), output);
         }
 
         // api/lesson/{id}
@@ -170,8 +171,8 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _lessonService.AddStudentToLesson(lessonId, studentId, userInfo);
-            var outPut = _mapper.Map<StudentLessonOutputModel>(dto);
-            return Created(new Uri("api/lesson/{id}/full-info", UriKind.Relative), outPut);
+            var output = _mapper.Map<StudentLessonOutputModel>(dto);
+            return Created(new Uri($"api/Lesson/{output.Id}/full-info", UriKind.RelativeOrAbsolute), output);
         }
 
         // api/lesson/{lessonId}/student/{studentId}

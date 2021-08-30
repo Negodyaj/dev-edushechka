@@ -42,7 +42,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<GroupDto>(model);
             var result = await _groupService.AddGroup(dto);
             var output = _mapper.Map<GroupOutputModel>(result);
-            return Created(new Uri("api/Group/{id}", UriKind.Relative), output);
+            return Created(new Uri($"api/Group/{output.Id}", UriKind.RelativeOrAbsolute), output);
         }
 
         //  api/Group/{id}

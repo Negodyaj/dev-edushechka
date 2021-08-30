@@ -65,7 +65,7 @@ namespace DevEdu.API.Controllers
             var id = _paymentService.AddPayment(dto);
             dto.Id = id;
             var output = _mapper.Map<PaymentOutputModel>(dto);
-            return Created(new Uri("api/payment/{id}", UriKind.Relative), output);
+            return Created(new Uri($"api/Payment/{output.Id}", UriKind.RelativeOrAbsolute), output);
         }
 
         //  api/payment/5

@@ -41,7 +41,7 @@ namespace DevEdu.API.Controllers
             var id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
             dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
             var output = _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
-            return Created(new Uri("api/material/{id}/full", UriKind.Relative), output);
+            return Created(new Uri($"api/Material/{output.Id}/full", UriKind.RelativeOrAbsolute), output);
         }
 
         // api/material/with-courses
@@ -58,7 +58,7 @@ namespace DevEdu.API.Controllers
             var id = _materialService.AddMaterialWithCourses(dto, materialModel.TagsIds, materialModel.CoursesIds);
             dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
             var output = _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
-            return Created(new Uri("api/material/{id}/full", UriKind.Relative), output);
+            return Created(new Uri($"api/Material/{output.Id}/full", UriKind.RelativeOrAbsolute), output);
         }
 
         // api/material

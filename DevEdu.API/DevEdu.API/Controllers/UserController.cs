@@ -40,7 +40,7 @@ namespace DevEdu.API.Controllers
             var dtoResult = _userService.UpdateUser(dtoEntry);
             var outPut = _mapper.Map<UserUpdateInfoOutPutModel>(dtoResult);
 
-            return Created(new Uri("api/user/{userId}", UriKind.Relative), outPut);
+            return Created(new Uri($"api/User/{outPut.Id}", UriKind.RelativeOrAbsolute), outPut);
         }
 
         // api/user/{userId}
