@@ -112,6 +112,8 @@ namespace DevEdu.API.Configuration
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<StudentHomeworkDto, StudentHomeworkWithHomeworkOutputModel>()
                 .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
+            CreateMap<StudentHomeworkDto, StudentHomeworkShortOutputModel>()
+                .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
             CreateMap<StudentHomeworkDto, StudentHomeworkOutputModel>()
                 .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
             CreateMap<StudentHomeworkDto, StudentHomeworkWithTaskOutputModel>()
