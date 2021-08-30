@@ -121,7 +121,7 @@ namespace DevEdu.Business.Services
 
         public List<MaterialDto> GetMaterialsByTagId(int tagId, UserIdentityInfo user)
         {
-            _tagValidationHelper.CheckTagExistence(tagId);
+            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tagId);
 
             var allMaterialsByTag = _materialRepository.GetMaterialsByTagId(tagId);
             if (!(user.IsAdmin() || user.IsMethodist()))
@@ -137,7 +137,7 @@ namespace DevEdu.Business.Services
                 return _materialRepository.AddMaterial(dto);
 
             _materilaValidationHelper.CheckPassedValuesAreUnique(tags, nameof(tags));
-            tags.ForEach(tag => _tagValidationHelper.CheckTagExistence(tag));
+            tags.ForEach(tag => _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tag));
 
             var materialId = _materialRepository.AddMaterial(dto);
             tags.ForEach(tag => _materialRepository.AddTagToMaterial(materialId, tag));
@@ -162,7 +162,7 @@ namespace DevEdu.Business.Services
         private void CheckMaterialAndTagExistence(int materialId, int tagId)
         {
             _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
-            _tagValidationHelper.CheckTagExistence(tagId);
+            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tagId);
         }
     }
 }
