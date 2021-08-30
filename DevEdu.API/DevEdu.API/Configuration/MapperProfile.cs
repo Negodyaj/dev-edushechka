@@ -2,7 +2,9 @@
 using DevEdu.API.Models;
 using DevEdu.DAL.Models;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace DevEdu.API.Configuration
 {
@@ -35,7 +37,7 @@ namespace DevEdu.API.Configuration
             CreateMap<MaterialWithCoursesInputModel, MaterialDto>();
             CreateMap<MaterialWithGroupsInputModel, MaterialDto>();
             CreateMap<MaterialWithTagsInputModel, MaterialDto>();
-            CreateMap<NotificationAddInputModel, NotificationDto>() 
+            CreateMap<NotificationAddInputModel, NotificationDto>()
                 .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.GroupId != null ? new GroupDto { Id = (int)src.GroupId } : null))
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserId != null ? new UserDto { Id = (int)src.UserId } : null))
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.RoleId != null ? src.RoleId : null));
@@ -47,8 +49,14 @@ namespace DevEdu.API.Configuration
             CreateMap<LessonUpdateInputModel, LessonDto>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<TagInputModel, TagDto>();
-            CreateMap<TaskByTeacherInputModel, TaskDto>();
-            CreateMap<TaskByMethodistInputModel, TaskDto>();
+            CreateMap<TaskInputModel, TaskDto>()
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(tagId => new TagDto { Id = tagId })));
+            CreateMap<TaskByTeacherInputModel, TaskDto>()
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(tagId => new TagDto { Id = tagId })))
+                .ForMember(dest => dest.Groups, opt => opt.MapFrom(src => new List<GroupDto> { new GroupDto { Id = src.GroupId } }));
+            CreateMap<TaskByMethodistInputModel, TaskDto>()
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(tagId => new TagDto { Id = tagId })))
+                .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.CourseIds.Select(courseId => new CourseDto { Id = courseId })));
             CreateMap<TopicInputModel, TopicDto>();
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();

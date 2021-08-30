@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration;
 using Microsoft.AspNetCore.Authorization;
+using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {

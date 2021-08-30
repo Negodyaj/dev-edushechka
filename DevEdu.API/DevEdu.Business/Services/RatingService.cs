@@ -4,6 +4,7 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -25,7 +26,7 @@ namespace DevEdu.Business.Services
 
         public StudentRatingDto AddStudentRating(StudentRatingDto studentRatingDto, UserIdentityInfo authorUserInfo)
         {
-            _groupValidationHelper.CheckGroupExistence(studentRatingDto.Group.Id);
+            var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(studentRatingDto.Group.Id)).GetAwaiter().GetResult();
             if (!authorUserInfo.IsAdmin())
             {
                 _userValidationHelper.CheckAuthorizationUserToGroup(studentRatingDto.Group.Id, authorUserInfo.UserId, Role.Teacher);
@@ -63,7 +64,7 @@ namespace DevEdu.Business.Services
             {
                 _userValidationHelper.CheckAuthorizationUserToGroup(groupId, authorUserInfo.UserId, Role.Teacher);
             }
-            _groupValidationHelper.CheckGroupExistence(groupId);
+            var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
             return _repository.SelectStudentRatingByGroupId(groupId);
         }
 

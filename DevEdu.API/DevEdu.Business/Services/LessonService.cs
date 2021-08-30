@@ -3,6 +3,7 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Enums;
@@ -66,7 +67,7 @@ namespace DevEdu.Business.Services
 
         public List<LessonDto> SelectAllLessonsByGroupId(UserIdentityInfo userIdentity, int groupId)
         {
-            _groupValidationHelper.CheckGroupExistence(groupId);
+            var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
             if (!userIdentity.IsAdmin())
             {
                 var currentRole = userIdentity.IsTeacher() ? Role.Teacher : Role.Student;

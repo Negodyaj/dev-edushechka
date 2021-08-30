@@ -3,7 +3,9 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using DevEdu.Core;
 
@@ -179,7 +181,7 @@ namespace DevEdu.DAL.Repositories
 
         public List<UserDto> GetUsersByGroupIdAndRole(int groupId, int roleId)
         {
-            return _connection.Query<UserDto>
+            var www = _connection.Query<UserDto>
             (
                 _userSelectByGroupIdAndRole,
                 new
@@ -189,6 +191,21 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             ).ToList();
+            return www;
+        }
+
+        public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int roleId)
+        {
+            return (List<UserDto>)await _connection.QueryAsync<UserDto>
+            (
+                _userSelectByGroupIdAndRole,
+                new
+                {
+                    groupId,
+                    roleId
+                },
+                commandType: CommandType.StoredProcedure
+            );
         }
     }
 }

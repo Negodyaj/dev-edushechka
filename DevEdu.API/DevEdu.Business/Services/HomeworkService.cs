@@ -2,6 +2,7 @@
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -35,7 +36,7 @@ namespace DevEdu.Business.Services
 
         public List<HomeworkDto> GetHomeworkByGroupId(int groupId, int userId)
         {
-            _groupValidationHelper.CheckGroupExistence(groupId);
+            var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
             _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
             return _homeworkRepository.GetHomeworkByGroupId(groupId);
         }
@@ -48,7 +49,8 @@ namespace DevEdu.Business.Services
 
         public HomeworkDto AddHomework(int groupId, int taskId, HomeworkDto dto, int userId)
         {
-            _groupValidationHelper.CheckGroupExistence(groupId);
+            var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
+            _groupValidationHelper.CheckGroupExistenceAsync(groupId);
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
             dto.Group = new GroupDto { Id = groupId };

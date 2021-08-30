@@ -59,7 +59,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(homeworkDto, actualHomeworkDto);
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Exactly(2));
+            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Exactly(3));
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
 
             _homeworkRepoMock.Verify(x => x.AddHomework(homeworkDto), Times.Once);
@@ -220,7 +220,7 @@ namespace DevEdu.Business.Tests
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.AtMost(2));
         }
 
         [Test]
@@ -243,7 +243,7 @@ namespace DevEdu.Business.Tests
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Exactly(2));
+            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Exactly(3));
             _groupRepoMock.Verify(x => x.GetGroupsByUserId(group.Id), Times.Once);
             _taskRepoMock.Verify(x => x.GetTaskById(task.Id), Times.Once);
         }
