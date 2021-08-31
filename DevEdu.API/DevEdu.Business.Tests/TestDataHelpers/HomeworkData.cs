@@ -46,6 +46,33 @@ namespace DevEdu.Business.Tests
             };
         }
 
+        public static HomeworkDto GetAnotherHomeworkDtoWithGroupAndTask()
+        {
+            return new HomeworkDto
+            {
+                Id = 1,
+                Task = new TaskDto
+                {
+                    Id = 1,
+                    Name = "task",
+                    Description = "Description",
+                    Links = "Links",
+                    IsRequired = true,
+                    IsDeleted = false
+                },
+                Group = new GroupDto
+                {
+                    Id = 100,
+                    Name = "group",
+                    GroupStatus = new GroupStatus(),
+                    StartDate = DateTime.ParseExact("01.01.2021", _dateFormat, CultureInfo.InvariantCulture),
+                    IsDeleted = false
+                },
+                StartDate = DateTime.ParseExact("28.10.2020", _dateFormat, CultureInfo.InvariantCulture),
+                EndDate = DateTime.ParseExact("28.10.2021", _dateFormat, CultureInfo.InvariantCulture)
+            };
+        }
+
         public static List<HomeworkDto> GetListOfHomeworkDtoWithTask()
         {
             return new List<HomeworkDto>

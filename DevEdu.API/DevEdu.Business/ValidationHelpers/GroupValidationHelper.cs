@@ -29,8 +29,7 @@ namespace DevEdu.Business.ValidationHelpers
         public void CheckUserInGroupExistence(int groupId, int userId)
         {
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
-            var group = Task.Run(async () => await _groupRepository.GetGroup(groupId)).Result;
-            var result = groupsByUser.FirstOrDefault(gu => gu.Id == @group.Id);
+            var result = groupsByUser.FirstOrDefault(gu => gu.Id == groupId);
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserInGroupNotFoundMessage, userId, groupId));
         }

@@ -296,6 +296,5 @@ namespace DevEdu.Business.Tests
                 Tutors = null
             };
         }
-
     }
 }
