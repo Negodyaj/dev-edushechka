@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.API.Models;
 using DevEdu.DAL.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -13,7 +13,6 @@ using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TopicController : Controller
@@ -63,10 +62,9 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<TopicDto>(model);
             var topicId = _topicService.AddTopic(dto);
             var output = GetTopicById(topicId);
-            return StatusCode(201, output);
+            return Created(new Uri($"api/Topic/{output.Id}", UriKind.Relative), output);
         }
 
-        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         //  api/topic/{id}
         [AuthorizeRoles(Role.Methodist, Role.Manager)]
         [HttpDelete("{id}")]
@@ -80,7 +78,6 @@ namespace DevEdu.API.Controllers
             return NoContent();
         }
 
-        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         //  api/topic/{id}
         [AuthorizeRoles(Role.Methodist, Role.Manager)]
         [HttpPut("{id}")]
@@ -100,14 +97,13 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpPost("{topicId}/tag/{tagId}")]
         [Description("Add tag to topic")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult AddTagToTopic(int topicId, int tagId)
         {
             _topicService.AddTagToTopic(topicId, tagId);
-
-            return StatusCode(201);
+            return NoContent();
         }
 
         //  api/topic/{topicId}/tag/{tagId}

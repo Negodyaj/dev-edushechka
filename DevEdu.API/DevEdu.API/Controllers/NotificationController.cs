@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
@@ -24,7 +25,7 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
         }
 
-        //  api/notification/5
+        //  api/notification/{id}
         [HttpGet("{id}")]
         [Description("Return notification by id")]
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
@@ -33,8 +34,7 @@ namespace DevEdu.API.Controllers
         public NotificationInfoOutputModel GetNotification(int id)
         {
             var dto = _notificationService.GetNotification(id);
-            var output = _mapper.Map<NotificationInfoOutputModel>(dto);
-            return output;
+            return _mapper.Map<NotificationInfoOutputModel>(dto);
         }
 
         //  api/notification/by-user/1
@@ -45,9 +45,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<NotificationInfoOutputModel> GetAllNotificationsByUserId(int userId)
         {
-            var dto = _notificationService.GetNotificationsByUserId(userId);
-            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
-            return output;
+            var list = _notificationService.GetNotificationsByUserId(userId);
+            return _mapper.Map<List<NotificationInfoOutputModel>>(list);
         }
 
         //  api/notification/by-group/1
@@ -59,8 +58,7 @@ namespace DevEdu.API.Controllers
         public List<NotificationInfoOutputModel> GetAllNotificationsByGroupId(int groupId)
         {
             var dto = _notificationService.GetNotificationsByGroupId(groupId);
-            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
-            return output;
+            return _mapper.Map<List<NotificationInfoOutputModel>>(dto);
         }
 
         //  api/notification/by-role/1
@@ -72,8 +70,7 @@ namespace DevEdu.API.Controllers
         public List<NotificationInfoOutputModel> GetAllNotificationsByRoleId(int roleId)
         {
             var dto = _notificationService.GetNotificationsByRoleId(roleId);
-            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
-            return output;
+            return _mapper.Map<List<NotificationInfoOutputModel>>(dto);
         }
 
         //  api/notification
@@ -86,9 +83,9 @@ namespace DevEdu.API.Controllers
         public ActionResult<NotificationInfoOutputModel> AddNotification([FromBody] NotificationAddInputModel inputModel)
         {
             var dto = _mapper.Map<NotificationDto>(inputModel);
-            var output = _notificationService.AddNotification(dto);
-            var model = _mapper.Map<NotificationInfoOutputModel>(output);
-            return StatusCode(201,model);
+            var outputDto = _notificationService.AddNotification(dto);
+            var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);
+            return Created(new Uri($"api/Notification/{result.Id}", UriKind.Relative), result);
         }
 
         //  api/notification/5
@@ -113,8 +110,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<NotificationDto>(inputModel);
             var output = _notificationService.UpdateNotification(id, dto);
-            var model = _mapper.Map<NotificationInfoOutputModel>(output);
-            return model;
+            return _mapper.Map<NotificationInfoOutputModel>(output);
         }
     }
 }

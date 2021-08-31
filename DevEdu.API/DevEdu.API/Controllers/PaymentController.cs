@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using DevEdu.API.Configuration.ExceptionResponses;
 
@@ -28,7 +28,7 @@ namespace DevEdu.API.Controllers
             _paymentService = paymentService;
         }
 
-        //  api/payment/5
+        //  api/payment/{id}
         [HttpGet("{id}")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
@@ -37,8 +37,8 @@ namespace DevEdu.API.Controllers
         [Description("Get payment by id")]
         public PaymentOutputModel GetPayment(int id)
         {
-            var payment = _paymentService.GetPayment(id);
-            return _mapper.Map<PaymentOutputModel>(payment);
+            var dto = _paymentService.GetPayment(id);
+            return _mapper.Map<PaymentOutputModel>(dto);
         }
 
         //  api/payment/user/1
@@ -50,8 +50,8 @@ namespace DevEdu.API.Controllers
         [Description("Get all payments by user id")]
         public List<PaymentOutputModel> SelectAllPaymentsByUserId(int userId)
         {
-            var payment = _paymentService.GetPaymentsByUserId(userId);
-            return _mapper.Map<List<PaymentOutputModel>>(payment);
+            var list = _paymentService.GetPaymentsByUserId(userId);
+            return _mapper.Map<List<PaymentOutputModel>>(list);
         }
 
         //  api/payment
@@ -65,11 +65,10 @@ namespace DevEdu.API.Controllers
         public ActionResult<PaymentOutputModel> AddPayment([FromBody] PaymentInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
-            int id = _paymentService.AddPayment(dto);
+            var id = _paymentService.AddPayment(dto);
             dto.Id = id;
-            var paymentInDb = _paymentService.GetPayment(dto.Id);
-            var output = _mapper.Map<PaymentOutputModel>(paymentInDb);
-            return StatusCode(201, output);
+            var output = _mapper.Map<PaymentOutputModel>(dto);
+            return Created(new Uri($"api/Payment/{output.Id}", UriKind.Relative), output);
         }
 
         //  api/payment/5

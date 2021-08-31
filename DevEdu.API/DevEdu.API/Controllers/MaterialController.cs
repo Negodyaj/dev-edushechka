@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -14,7 +14,6 @@ using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MaterialController : Controller
@@ -28,7 +27,7 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
         }
 
-        // api/material
+        // api/material/with-groups
         [AuthorizeRoles(Role.Teacher, Role.Tutor)]
         [HttpPost("with-groups")]
         [Description("Add material with groups")]
@@ -39,13 +38,13 @@ namespace DevEdu.API.Controllers
         public ActionResult<MaterialInfoWithGroupsOutputModel> AddMaterialWithGroups([FromBody] MaterialWithGroupsInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            int id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
+            var id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
             dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
             var output = _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
-            return StatusCode(201, output);
+            return Created(new Uri($"api/Material/{output.Id}/full", UriKind.Relative), output);
         }
 
-        // api/material
+        // api/material/with-courses
         [AuthorizeRoles(Role.Methodist)]
         [HttpPost("with-courses")]
         [Description("Add material with courses")]
@@ -56,10 +55,10 @@ namespace DevEdu.API.Controllers
         public ActionResult<MaterialInfoWithCoursesOutputModel> AddMaterialWithCourses([FromBody] MaterialWithCoursesInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            int id = _materialService.AddMaterialWithCourses(dto, materialModel.TagsIds, materialModel.CoursesIds);
+            var id = _materialService.AddMaterialWithCourses(dto, materialModel.TagsIds, materialModel.CoursesIds);
             dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
             var output = _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
-            return StatusCode(201, output);
+            return Created(new Uri($"api/Material/{output.Id}/full", UriKind.Relative), output);
         }
 
         // api/material
@@ -71,11 +70,11 @@ namespace DevEdu.API.Controllers
         public List<MaterialInfoOutputModel> GetAllMaterials()
         {
             var user = this.GetUserIdAndRoles();
-            var dto = _materialService.GetAllMaterials(user);
-            return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
+            var list = _materialService.GetAllMaterials(user);
+            return _mapper.Map<List<MaterialInfoOutputModel>>(list);
         }
 
-        // api/material/5/full
+        // api/material/{id}/full
         [AuthorizeRoles(Role.Methodist)]
         [HttpGet("{id}/full")]
         [Description("Get material by id with tags, courses and groups")]
@@ -142,7 +141,7 @@ namespace DevEdu.API.Controllers
         public string AddTagToMaterial(int materialId, int tagId)
         {
             _materialService.AddTagToMaterial(materialId, tagId);
-            return $"Tag id: {tagId} added for material id: {materialId}";
+            return $"Tag id:{tagId} was added to material id:{materialId}";
         }
 
         // api/material/{materialId}/tag/{tagId}
@@ -168,8 +167,8 @@ namespace DevEdu.API.Controllers
         public List<MaterialInfoOutputModel> GetMaterialsByTagId(int tagId)
         {
             var user = this.GetUserIdAndRoles();
-            var dto = _materialService.GetMaterialsByTagId(tagId, user);
-            return _mapper.Map<List<MaterialInfoOutputModel>>(dto);
+            var list = _materialService.GetMaterialsByTagId(tagId, user);
+            return _mapper.Map<List<MaterialInfoOutputModel>>(list);
         }
     }
 }

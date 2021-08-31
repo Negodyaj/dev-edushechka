@@ -18,7 +18,9 @@ namespace DevEdu.DAL.Repositories
         private const string _notificationSelectAllByGroupIdProcedure = "dbo.Notification_SelectAllByGroupId";
         private const string _notificationSelectAllByRoleIdProcedure = "dbo.Notification_SelectAllByRoleId";
         private const string _notificationUpdateProcedure = "dbo.Notification_Update";
+        
         public NotificationRepository(IOptions<DatabaseSettings> options) : base(options) { }
+        
         public int AddNotification(NotificationDto notificationDto)
         {
             return _connection.QuerySingle<int>(

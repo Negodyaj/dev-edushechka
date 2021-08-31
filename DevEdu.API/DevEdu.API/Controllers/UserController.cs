@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
@@ -9,11 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevEdu.API.Configuration.ExceptionResponses;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : Controller
@@ -40,7 +39,7 @@ namespace DevEdu.API.Controllers
             var dtoEntry = _mapper.Map<UserDto>(model);
             var dtoResult = _userService.UpdateUser(dtoEntry);
             var outPut = _mapper.Map<UserUpdateInfoOutPutModel>(dtoResult);
-            return StatusCode(201, outPut);
+            return Created(new Uri($"api/User/{outPut.Id}", UriKind.Relative), outPut);
         }
 
         // api/user/{userId}
@@ -53,8 +52,7 @@ namespace DevEdu.API.Controllers
         public UserFullInfoOutPutModel GetUserById(int userId)
         {
             var dto = _userService.GetUserById(userId);
-            var outPut = _mapper.Map<UserFullInfoOutPutModel>(dto);
-            return outPut;
+            return _mapper.Map<UserFullInfoOutPutModel>(dto);
         }
 
         // api/user
@@ -66,8 +64,7 @@ namespace DevEdu.API.Controllers
         public List<UserInfoOutPutModel> GetAllUsers()
         {
             var listDto = _userService.GetAllUsers();
-            var listOutPut = _mapper.Map<List<UserInfoOutPutModel>>(listDto);
-            return listOutPut;
+            return _mapper.Map<List<UserInfoOutPutModel>>(listDto);
         }
 
         // api/user/{userId}
@@ -87,13 +84,13 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles()]
         [HttpPost("{userId}/role/{role}")]
         [Description("Add new role to user")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult AddRoleToUser(int userId, Role role)
         {
             _userService.AddUserRole(userId, (int)role);
-            return StatusCode(201);
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
         // api/user/{userId}/role/{roleId}

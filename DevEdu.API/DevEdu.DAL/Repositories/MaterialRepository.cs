@@ -10,24 +10,22 @@ namespace DevEdu.DAL.Repositories
 {
     public class MaterialRepository : BaseRepository, IMaterialRepository
     {
-        private const string _materialAddProcedure = "dbo.Material_Insert";
+        private const string _materialInsertProcedure = "dbo.Material_Insert";
         private const string _materialSelectAllProcedure = "dbo.Material_SelectAll";
         private const string _materialSelectByIdProcedure = "dbo.Material_SelectById";
         private const string _materialUpdateProcedure = "dbo.Material_Update";
         private const string _materialDeleteProcedure = "dbo.Material_Delete";
-        private const string _addTagToMaterialProcedure = "dbo.Material_Tag_Insert";
-        private const string _deleteTagFromMaterialProcedure = "dbo.Material_Tag_Delete";
+        private const string _materialTagInsertProcedure = "dbo.Material_Tag_Insert";
+        private const string _materialTagDeleteProcedure = "dbo.Material_Tag_Delete";
         private const string _materialSelectAllByTagIdProcedure = "dbo.Material_SelectAllByTagId";
         private const string _materialSelectAllByCourseIdProcedure = "dbo.Material_SelectByCourseId";
-
         
-
         public MaterialRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddMaterial(MaterialDto material)
         {
             return _connection.QuerySingle<int>(
-                _materialAddProcedure,
+                _materialInsertProcedure,
                 new { material.Content },
                 commandType: CommandType.StoredProcedure
             );
@@ -64,7 +62,7 @@ namespace DevEdu.DAL.Repositories
         public MaterialDto GetMaterialById(int id)
         {
             MaterialDto result = default;
-            _connection
+            return _connection
                 .Query<MaterialDto, TagDto, MaterialDto>(
                     _materialSelectByIdProcedure,
                     (material, tag) =>
@@ -89,8 +87,6 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure
                 )
                 .FirstOrDefault();
-
-            return result;
         }
 
         public int UpdateMaterial(MaterialDto material)
@@ -122,7 +118,7 @@ namespace DevEdu.DAL.Repositories
         public void AddTagToMaterial(int materialId, int tagId)
         {
             _connection.Execute(
-                _addTagToMaterialProcedure,
+                _materialTagInsertProcedure,
                 new
                 {
                     materialId,
@@ -135,7 +131,7 @@ namespace DevEdu.DAL.Repositories
         public int DeleteTagFromMaterial(int materialId, int tagId)
         {
             return _connection.Execute(
-                _deleteTagFromMaterialProcedure,
+                _materialTagDeleteProcedure,
                 new
                 {
                     materialId,
@@ -154,6 +150,7 @@ namespace DevEdu.DAL.Repositories
                     (material, tag) =>
                     {
                         MaterialDto materialEntry;
+
                         if (!materialDictionary.TryGetValue(material.Id, out materialEntry))
                         {
                             materialEntry = material;

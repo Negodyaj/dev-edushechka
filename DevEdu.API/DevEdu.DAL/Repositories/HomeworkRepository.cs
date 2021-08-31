@@ -11,7 +11,7 @@ namespace DevEdu.DAL.Repositories
 {
     public class HomeworkRepository : BaseRepository, IHomeworkRepository
     {
-        private const string _homeworkAddProcedure = "dbo.Homework_Insert";
+        private const string _homeworkInsertProcedure = "dbo.Homework_Insert";
         private const string _homeworkDeleteProcedure = "dbo.Homework_Delete";
         private const string _homeworkSelectAllByGroupIdProcedure = "dbo.Homework_SelectAllByGroupId";
         private const string _homeworkSelectByIdProcedure = "dbo.Homework_SelectById";
@@ -20,10 +20,10 @@ namespace DevEdu.DAL.Repositories
 
         public HomeworkRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
-    public int AddHomework(HomeworkDto homeworkDto)
+        public int AddHomework(HomeworkDto homeworkDto)
         {
             return _connection.QuerySingle<int>(
-                _homeworkAddProcedure,
+                _homeworkInsertProcedure,
                 new
                 {
                     GroupId = homeworkDto.Group.Id,
@@ -70,6 +70,7 @@ namespace DevEdu.DAL.Repositories
                         result.Task = task;
                         result.Group = group;
                         result.Group.GroupStatus = groupStatus;
+
                         return result;
                     },
                     new { id },
@@ -89,6 +90,7 @@ namespace DevEdu.DAL.Repositories
                     {
                         result = groupTask;
                         result.Task = task;
+
                         return result;
                     },
                     new { groupId },
@@ -100,7 +102,7 @@ namespace DevEdu.DAL.Repositories
 
         public List<HomeworkDto> GetHomeworkByTaskId(int taskId)
         {
-            HomeworkDto result;
+            HomeworkDto result = default;
             return _connection
                 .Query<HomeworkDto, GroupDto, GroupStatus, HomeworkDto>(
                     _homeworkSelectAllByTaskIdProcedure,
@@ -109,6 +111,7 @@ namespace DevEdu.DAL.Repositories
                         result = groupTask;
                         result.Group = group;
                         result.Group.GroupStatus = groupStatus;
+
                         return result;
                     },
                     new { taskId },
