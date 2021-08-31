@@ -31,7 +31,7 @@ namespace DevEdu.Business.Tests
             _studentAnswerRepoMock = new Mock<IStudentHomeworkRepository>();
             _userRepoMock = new Mock<IUserRepository>();
             _commentValidationHelper = new CommentValidationHelper(_commentRepoMock.Object);
-            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object, _userRepoMock.Object);
+            _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object);
             _studentAnswerValidationHelper = new StudentHomeworkValidationHelper(_studentAnswerRepoMock.Object, _groupRepoMock.Object);
             _sut = new CommentService
             (

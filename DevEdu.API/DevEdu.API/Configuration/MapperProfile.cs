@@ -23,8 +23,7 @@ namespace DevEdu.API.Configuration
             CreateMap<AttendanceInputModel, StudentLessonDto>();
             CreateMap<CourseInputModel, CourseDto>();
             CreateMap<CourseTopicInputModel, CourseTopicDto>();
-            CreateMap<CommentAddInputModel, CommentDto>();
-            CreateMap<CommentUpdateInputModel, CommentDto>();
+            CreateMap<CommentInputModel, CommentDto>();
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<GroupInputModel, GroupDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
@@ -112,6 +111,8 @@ namespace DevEdu.API.Configuration
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<StudentHomeworkDto, StudentHomeworkWithHomeworkOutputModel>()
                 .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
+            CreateMap<StudentHomeworkDto, StudentHomeworkShortOutputModel>()
+                .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
             CreateMap<StudentHomeworkDto, StudentHomeworkOutputModel>()
                 .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
             CreateMap<StudentHomeworkDto, StudentHomeworkWithTaskOutputModel>()
@@ -145,7 +146,7 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<PaymentDto, PaymentOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)))
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src =>
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src =>
                new UserInfoShortOutputModel
                {
                    Id = src.User.Id,

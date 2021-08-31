@@ -20,7 +20,7 @@ namespace DevEdu.API.Controllers
     [AuthorizeRoles(Role.Teacher, Role.Manager)]
     public class RatingController : Controller
     {
-        private IRatingService _service;
+        private readonly IRatingService _service;
 
         private readonly IMapper _mapper;
 

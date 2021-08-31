@@ -21,19 +21,13 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ITaskService _taskService;
-        private readonly IStudentHomeworkService _studentHomeworkService;
-        private readonly ICommentService _commentService;
 
         public TaskController(
             IMapper mapper,
-            ITaskService taskService,
-            IStudentHomeworkService studentHomeworkService,
-            ICommentService commentService)
+            ITaskService taskService)
         {
             _taskService = taskService;
             _mapper = mapper;
-            _studentHomeworkService = studentHomeworkService;
-            _commentService = commentService;
         }
 
         // api/task/teacher

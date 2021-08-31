@@ -11,17 +11,14 @@ namespace DevEdu.Business.ValidationHelpers
     {
         private readonly ILessonRepository _lessonRepository;
         private readonly IGroupRepository _groupRepository;
-        private readonly IUserRepository _userRepository;
 
         public LessonValidationHelper(
             ILessonRepository lessonRepository,
-            IGroupRepository groupRepository,
-            IUserRepository userRepository
+            IGroupRepository groupRepository
         )
         {
             _lessonRepository = lessonRepository;
             _groupRepository = groupRepository;
-            _userRepository = userRepository;
         }
 
         public LessonDto GetLessonByIdAndThrowIfNotFound(int lessonId)
