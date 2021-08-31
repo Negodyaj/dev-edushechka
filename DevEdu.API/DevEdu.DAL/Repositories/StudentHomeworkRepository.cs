@@ -77,9 +77,9 @@ namespace DevEdu.DAL.Repositories
         public StudentHomeworkDto GetStudentHomeworkById(int id)
         {
             var result = _connection
-                .Query<StudentHomeworkDto, UserDto, HomeworkDto, TaskDto, TaskStatus, StudentHomeworkDto>(
+                .Query<StudentHomeworkDto, HomeworkDto, UserDto, TaskDto, TaskStatus, StudentHomeworkDto>(
                     _studentHomeworkSelectByIdProcedure,
-                    (studentAnswer, user, homework, task, taskStatus) =>
+                    (studentAnswer, homework, user, task, taskStatus) =>
                     {
                         studentAnswer.User = user;
                         studentAnswer.Homework = homework;

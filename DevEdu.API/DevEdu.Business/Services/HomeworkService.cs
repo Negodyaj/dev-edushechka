@@ -3,6 +3,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Services
 {
@@ -27,17 +28,18 @@ namespace DevEdu.Business.Services
             _taskValidationHelper = taskValidationHelper;
         }
 
-        public HomeworkDto GetHomework(int homeworkId, int userId)
+        public HomeworkDto GetHomework(int homeworkId, UserIdentityInfo userInfo)
         {
             var dto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            CheckAccessAndExistenceAndThrowIfNotFound(userId, dto);
+            CheckAccessAndExistenceAndThrowIfNotFound(userInfo, dto);
             return dto;
         }
 
-        public List<HomeworkDto> GetHomeworksByGroupId(int groupId, int userId)
+        public List<HomeworkDto> GetHomeworkByGroupId(int groupId, UserIdentityInfo userInfo)
         {
-            var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
-            _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
+            Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
+            if (!userInfo.IsAdmin())
+                _groupValidationHelper.CheckUserInGroupExistence(groupId, userInfo.UserId);
             return _homeworkRepository.GetHomeworkByGroupId(groupId);
         }
 
@@ -47,40 +49,41 @@ namespace DevEdu.Business.Services
             return _homeworkRepository.GetHomeworkByTaskId(taskId);
         }
 
-        public HomeworkDto AddHomework(int groupId, int taskId, HomeworkDto dto, int userId)
+        public HomeworkDto AddHomework(int groupId, int taskId, HomeworkDto dto, UserIdentityInfo userInfo)
         {
-            var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
-            _groupValidationHelper.CheckGroupExistenceAsync(groupId);
+            Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
+            if (!userInfo.IsAdmin())
+                _groupValidationHelper.CheckUserInGroupExistence(groupId, userInfo.UserId);
             dto.Group = new GroupDto { Id = groupId };
             dto.Task = new TaskDto { Id = taskId };
             var id = _homeworkRepository.AddHomework(dto);
             return _homeworkRepository.GetHomework(id);
         }
 
-        public void DeleteHomework(int homeworkId, int userId)
+        public void DeleteHomework(int homeworkId, UserIdentityInfo userInfo)
         {
             var dto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            CheckAccessAndExistenceAndThrowIfNotFound(userId, dto);
+            CheckAccessAndExistenceAndThrowIfNotFound(userInfo, dto);
 
             _homeworkRepository.DeleteHomework(homeworkId);
         }
 
-        public HomeworkDto UpdateHomework(int homeworkId, HomeworkDto dto, int userId)
+        public HomeworkDto UpdateHomework(int homeworkId, HomeworkDto dto, UserIdentityInfo userInfo)
         {
             _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            CheckAccessAndExistenceAndThrowIfNotFound(userId, dto);
+            CheckAccessAndExistenceAndThrowIfNotFound(userInfo, dto);
 
             dto.Id = homeworkId;
             _homeworkRepository.UpdateHomework(dto);
             return _homeworkRepository.GetHomework(homeworkId);
         }
 
-        private void CheckAccessAndExistenceAndThrowIfNotFound(int userId, HomeworkDto dto)
+        private void CheckAccessAndExistenceAndThrowIfNotFound(UserIdentityInfo userInfo, HomeworkDto dto)
         {
+            if (userInfo.IsAdmin()) { return; }
             var groupId = dto.Group.Id;
-            _groupValidationHelper.CheckUserInGroupExistence(groupId, userId);
+            _groupValidationHelper.CheckUserInGroupExistence(groupId, userInfo.UserId);
         }
     }
 }

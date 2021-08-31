@@ -88,7 +88,6 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 ValidationMessage.WrongFormatBirthDate => 1042,
                 ValidationMessage.WrongFormatDate => 1043,
                 ValidationMessage.StudentAnswerRequired => 1044,
-                ValidationMessage.CommentTextRequired => 1045,
                 ValidationMessage.GroupsRequired => 1046,
                 ValidationMessage.CoursesRequired => 1047,
                 ValidationMessage.GroupStatusIdRequired => 1048,

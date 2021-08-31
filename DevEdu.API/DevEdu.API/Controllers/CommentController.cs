@@ -48,7 +48,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<CommentInfoOutputModel> AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel model)
+        public ActionResult<CommentInfoOutputModel> AddCommentToLesson(int lessonId, [FromBody] CommentInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
@@ -66,7 +66,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<CommentInfoOutputModel> AddCommentToStudentAnswer(int studentHomeworkId, [FromBody] CommentAddInputModel model)
+        public ActionResult<CommentInfoOutputModel> AddCommentToStudentAnswer(int studentHomeworkId, [FromBody] CommentInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
@@ -98,7 +98,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
+        public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);

@@ -16,7 +16,6 @@ namespace DevEdu.Business.Tests
     public class TaskServiceTests
     {
         private Mock<ITaskRepository> _taskRepoMock;
-        private Mock<ITagRepository> _tagRepoMock;
         private Mock<ICourseRepository> _courseRepoMock;
         private Mock<IStudentHomeworkRepository> _studentAnswerRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
@@ -28,7 +27,6 @@ namespace DevEdu.Business.Tests
         public void Setup()
         {
             _taskRepoMock = new Mock<ITaskRepository>();
-            _tagRepoMock = new Mock<ITagRepository>();
             _courseRepoMock = new Mock<ICourseRepository>();
             _studentAnswerRepoMock = new Mock<IStudentHomeworkRepository>();
             _groupRepoMock = new Mock<IGroupRepository>();

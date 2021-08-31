@@ -98,6 +98,7 @@ namespace DevEdu.DAL.Repositories
                         return result;
                     },
                     new { lessonId },
+                    splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
                 .Distinct()

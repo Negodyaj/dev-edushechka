@@ -68,16 +68,19 @@ namespace DevEdu.DAL.Repositories
         public TaskDto GetTaskById(int id)
         {
             TaskDto task = default;
-            return _connection.Query<TaskDto, TagDto, TaskDto>(
+            return _connection
+                .Query<TaskDto, TagDto, TaskDto>(
                     _taskSelectByIdProcedure,
-                    (taskDto, tagDto) =>
+                    (taskDto, tagDto) => 
                     {
-                        task = taskDto;
-                        task.Tags = new List<TagDto>();
-                    }
-                    if (TagDto != null)
-                        task.Tags.Add(TagDto);
-                    return taskDto;
+                        {
+                            task = taskDto;
+                            task.Tags = new List<TagDto>();
+
+                        }
+                        if (tagDto != null)
+                            task.Tags.Add(tagDto);
+                        return taskDto;
                 },
                 new { id },
                 splitOn: "Id",

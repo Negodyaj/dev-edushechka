@@ -34,8 +34,9 @@ namespace DevEdu.Business.Services
 
         public StudentHomeworkDto AddStudentHomework(int homeworkId, StudentHomeworkDto taskAnswerDto, UserIdentityInfo userInfo)
         {
-            var homework = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            _studentHomeworkValidationHelper.CheckUserBelongsToHomework(homework.Group.Id, userInfo.UserId);
+            var homeworkDto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
+            if (!userInfo.IsAdmin())
+                _studentHomeworkValidationHelper.CheckUserBelongsToHomework(homeworkDto.Group.Id, userInfo.UserId);
             taskAnswerDto.Homework = new HomeworkDto { Id = homeworkId };
             taskAnswerDto.User = new UserDto { Id = userInfo.UserId };
             var id = _studentHomeworkRepository.AddStudentHomework(taskAnswerDto);

@@ -4,9 +4,14 @@ AS
 BEGIN
 	SELECT 
 		c.Id,
-		c.UserId,
 		c.Text,
-		c.Date
+		c.Date,
+		u.Id,
+		u.FirstName,
+		u.LastName,
+		u.Email,
+		u.Photo
 	FROM dbo.Comment as c
 		inner join Lesson l on l.Id = @LessonId 
+		inner join [User] u on u.Id = c.UserId
 END

@@ -36,8 +36,7 @@ namespace DevEdu.Business.Tests
                 new UserValidationHelper(_userRepository.Object),
                 new LessonValidationHelper(
                     _lessonRepository.Object,
-                    _groupRepository.Object,
-                    _userRepository.Object),
+                    _groupRepository.Object),
                 new TopicValidationHelper(_topicRepository.Object),
                 new GroupValidationHelper(_groupRepository.Object)
                 );

@@ -11,7 +11,7 @@ namespace DevEdu.API.Common
         public override bool IsValid(object value)
         {
             CultureInfo cultureInfo = CultureInfo.CreateSpecificCulture("ru-RU");
-            return DateTime.TryParseExact(value.ToString(), _dateFormat, cultureInfo, DateTimeStyles.None, out var date);
+            return value == null || DateTime.TryParseExact(value.ToString(), _dateFormat, cultureInfo, DateTimeStyles.None, out var date);
         }
     }
 }
