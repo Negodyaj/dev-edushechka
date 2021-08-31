@@ -8,4 +8,4 @@ namespace DevEdu.Business.IdentityInfo
         public int UserId { get; set; }
         public List<Role> Roles { get; set; }
     }
-}
+} 
