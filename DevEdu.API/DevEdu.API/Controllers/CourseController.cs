@@ -76,8 +76,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<CourseDto>(model);
             var course = _courseService.AddCourse(dto);
             var output = _mapper.Map<CourseInfoShortOutputModel>(course);
-
-            return Created(new Uri($"api/Course/{output.Id}/full", UriKind.RelativeOrAbsolute), output);
+            return Created(new Uri($"api/Course/{output.Id}/full", UriKind.Relative), output);
         }
 
         [HttpDelete("{id}")]

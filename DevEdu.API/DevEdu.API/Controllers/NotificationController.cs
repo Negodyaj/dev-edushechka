@@ -85,7 +85,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<NotificationDto>(inputModel);
             var outputDto = _notificationService.AddNotification(dto);
             var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);
-            return Created(new Uri($"api/Notification/{result.Id}", UriKind.RelativeOrAbsolute), result);
+            return Created(new Uri($"api/Notification/{result.Id}", UriKind.Relative), result);
         }
 
         //  api/notification/5

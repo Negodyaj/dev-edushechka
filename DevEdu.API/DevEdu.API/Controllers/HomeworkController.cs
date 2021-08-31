@@ -84,7 +84,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<HomeworkDto>(model);
             var hw = _homeworkService.AddHomework(groupId, taskId, dto, userInfo);
             var output = _mapper.Map<HomeworkInfoOutputModel>(hw);
-            return Created(new Uri($"api/Homework/{output.Id}", UriKind.RelativeOrAbsolute), output);
+            return Created(new Uri($"api/Homework/{output.Id}", UriKind.Relative), output);
         }
 
         //  api/homework/1

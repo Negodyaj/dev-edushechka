@@ -62,7 +62,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<TopicDto>(model);
             var topicId = _topicService.AddTopic(dto);
             var output = GetTopicById(topicId);
-            return Created(new Uri($"api/Topic/{output.Id}", UriKind.RelativeOrAbsolute), output);
+            return Created(new Uri($"api/Topic/{output.Id}", UriKind.Relative), output);
         }
 
         //  api/topic/{id}

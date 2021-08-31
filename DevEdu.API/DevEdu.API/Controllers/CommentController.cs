@@ -54,8 +54,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<CommentDto>(model);
             var comment = _commentService.AddCommentToLesson(lessonId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
-
-            return Created(new Uri($"api/Comment/{output.Id}", UriKind.RelativeOrAbsolute), output);
+            return Created(new Uri($"api/Comment/{output.Id}", UriKind.Relative), output);
         }
 
         //  api/comment/to-student-answer/1
@@ -72,8 +71,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<CommentDto>(model);
             var comment = _commentService.AddCommentToStudentAnswer(studentHomeworkId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
-
-            return Created(new Uri($"api/Comment/{output.Id}", UriKind.RelativeOrAbsolute), output);
+            return Created(new Uri($"api/Comment/{output.Id}", UriKind.Relative), output);
         }
 
         //  api/comment/5

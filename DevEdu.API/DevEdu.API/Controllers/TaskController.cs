@@ -42,7 +42,7 @@ namespace DevEdu.API.Controllers
             var homeworkDto = _mapper.Map<HomeworkDto>(model.Homework);
             var task = _taskService.AddTaskByTeacher(taskDto, homeworkDto, model.GroupId, model.Tags).GetAwaiter().GetResult();
             var output = _mapper.Map<TaskInfoOutputModel>(task);
-            return Created(new Uri($"api/Task/{output.Id}", UriKind.RelativeOrAbsolute), output);
+            return Created(new Uri($"api/Task/{output.Id}", UriKind.Relative), output);
         }
 
         // api/task/methodist
@@ -57,7 +57,7 @@ namespace DevEdu.API.Controllers
             var taskDto = _mapper.Map<TaskDto>(model);
             var task = _taskService.AddTaskByMethodist(taskDto, model.CourseIds, model.Tags);
             var output = _mapper.Map<TaskInfoOutputModel>(task);
-            return Created(new Uri($"api/Task/{output.Id}", UriKind.RelativeOrAbsolute), output);
+            return Created(new Uri($"api/Task/{output.Id}", UriKind.Relative), output);
         }
 
         // api/task/{taskId}

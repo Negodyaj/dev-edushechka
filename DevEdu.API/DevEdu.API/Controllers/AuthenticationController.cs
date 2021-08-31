@@ -36,7 +36,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<UserDto>(model);
             dto.Password = _authService.HashPassword(dto.Password);
             var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUser(dto));
-            return Created(new Uri($"api/User/{addedUser.Id}", UriKind.RelativeOrAbsolute), addedUser);
+            return Created(new Uri($"api/User/{addedUser.Id}", UriKind.Relative), addedUser);
         }
 
         [HttpPost("/sign-in")]

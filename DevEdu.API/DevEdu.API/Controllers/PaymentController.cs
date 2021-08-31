@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using DevEdu.API.Configuration.ExceptionResponses;
 
@@ -69,7 +68,7 @@ namespace DevEdu.API.Controllers
             var id = _paymentService.AddPayment(dto);
             dto.Id = id;
             var output = _mapper.Map<PaymentOutputModel>(dto);
-            return Created(new Uri($"api/Payment/{output.Id}", UriKind.RelativeOrAbsolute), output);
+            return Created(new Uri($"api/Payment/{output.Id}", UriKind.Relative), output);
         }
 
         //  api/payment/5

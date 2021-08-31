@@ -42,7 +42,7 @@ namespace DevEdu.API.Controllers
             var authorUserInfo = this.GetUserIdAndRoles();
             dto = _service.AddStudentRating(dto, authorUserInfo);
             var output = _mapper.Map<StudentRatingOutputModel>(dto);
-            return Created(new Uri($"api/Rating/by-user/{output.Id}", UriKind.RelativeOrAbsolute), output);
+            return Created(new Uri($"api/Rating/by-user/{output.Id}", UriKind.Relative), output);
         }
 
         // api/rating/1

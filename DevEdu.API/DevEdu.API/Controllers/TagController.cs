@@ -40,7 +40,7 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<TagDto>(model);
             dto = _service.AddTag(dto);
             var output = _mapper.Map<TagOutputModel>(dto);
-            return Created(new Uri($"api/Tag/{output.Id}", UriKind.RelativeOrAbsolute), output);
+            return Created(new Uri($"api/Tag/{output.Id}", UriKind.Relative), output);
         }
 
         // api/tag/1
