@@ -71,11 +71,13 @@ namespace DevEdu.Business.Services
 
         public HomeworkDto UpdateHomework(int homeworkId, HomeworkDto dto, UserIdentityInfo userInfo)
         {
-            _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            CheckAccessAndExistenceAndThrowIfNotFound(userInfo, dto);
+            var homeworkDto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
+            CheckAccessAndExistenceAndThrowIfNotFound(userInfo, homeworkDto);
 
-            dto.Id = homeworkId;
-            _homeworkRepository.UpdateHomework(dto);
+            homeworkDto.Id = homeworkId;
+            homeworkDto.StartDate = dto.StartDate;
+            homeworkDto.EndDate = dto.EndDate;
+            _homeworkRepository.UpdateHomework(homeworkDto);
             return _homeworkRepository.GetHomework(homeworkId);
         }
 
