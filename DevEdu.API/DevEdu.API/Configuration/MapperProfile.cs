@@ -132,9 +132,15 @@ namespace DevEdu.API.Configuration
             CreateMap<StudentLessonDto, StudentLessonOutputModel>();
             CreateMap<StudentRatingDto, StudentRatingOutputModel>();
             CreateMap<RatingTypeDto, RatingTypeOutputModel>();
-            CreateMap<HomeworkDto, HomeworkInfoWithGroupOutputModel>();
-            CreateMap<HomeworkDto, HomeworkInfoWithTaskOutputModel>();
-            CreateMap<HomeworkDto, HomeworkInfoFullOutputModel>();
+            CreateMap<HomeworkDto, HomeworkInfoWithGroupOutputModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString(_dateFormat)));
+            CreateMap<HomeworkDto, HomeworkInfoWithTaskOutputModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString(_dateFormat)));
+            CreateMap<HomeworkDto, HomeworkInfoFullOutputModel>()
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString(_dateFormat)));
             CreateMap<HomeworkDto, HomeworkInfoOutputModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.ToString(_dateFormat)));
