@@ -13,9 +13,7 @@ namespace DevEdu.Business.Tests
         private Mock<INotificationRepository> _notificationRepoMock;
         private Mock<IUserRepository> _userRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
-        private NotificationValidationHelper _notificationValidationHelper;
-        private UserValidationHelper _userValidationHelper;
-        private GroupValidationHelper _groupValidationHelper;
+
         private NotificationService _sut;
 
         [SetUp]
@@ -24,10 +22,13 @@ namespace DevEdu.Business.Tests
             _notificationRepoMock = new Mock<INotificationRepository>();
             _userRepoMock = new Mock<IUserRepository>();
             _groupRepoMock = new Mock<IGroupRepository>();
-            _userValidationHelper = new UserValidationHelper(_userRepoMock.Object);
-            _notificationValidationHelper = new NotificationValidationHelper(_notificationRepoMock.Object);
-            _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
-            _sut = new NotificationService(_notificationRepoMock.Object, _notificationValidationHelper, _userValidationHelper, _groupValidationHelper);
+
+            _sut = new NotificationService(
+                _notificationRepoMock.Object,
+                new NotificationValidationHelper(_notificationRepoMock.Object),
+                _groupRepoMock.Object,
+                new UserValidationHelper(_userRepoMock.Object),
+                new GroupValidationHelper(_groupRepoMock.Object));
         }
 
         [TestCase(Role.Admin)]
@@ -88,7 +89,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Admin)]
-        public void GetNotification_NotificationDto_GetNotification(Enum role)
+        public void GetNotification_ExistingNotificationIdPassed_NotificationReturned(Enum role)
         {
             //Given
             var notificationDto = NotificationData.GetNotificationDtoForRole();
@@ -127,7 +128,7 @@ namespace DevEdu.Business.Tests
 
         [TestCase(Role.Manager)]
         [TestCase(Role.Admin)]
-        public void DeleteNotification_IntNotificationId_DeleteNotification(Enum role)
+        public void DeleteNotification_ExistingNotificationIdPassed_NotificationRemoved(Enum role)
         {
             //Given
             const int notificationId = 1;
@@ -136,7 +137,7 @@ namespace DevEdu.Business.Tests
 
             _notificationRepoMock.Setup(x => x.GetNotification(notificationId)).Returns(notificationDto);
             _notificationRepoMock.Setup(x => x.DeleteNotification(notificationId));
-            
+
 
             //When
             _sut.DeleteNotification(notificationId, userInfo);
@@ -170,10 +171,10 @@ namespace DevEdu.Business.Tests
             //Given
             var notificationsList = NotificationData.GetListNotificationByGroupDto();
             const int groupId = 1;
-           // var groupDto = GroupData.GetGroupDto();
+            // var groupDto = GroupData.GetGroupDto();
 
             _notificationRepoMock.Setup(x => x.GetNotificationsByGroupId(groupId)).Returns(notificationsList);
-           // _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
+            // _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
 
             //When
             var listOfDto = _sut.GetNotificationsByGroupId(groupId);
@@ -181,7 +182,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(notificationsList, listOfDto);
             _notificationRepoMock.Verify(x => x.GetNotificationsByGroupId(groupId), Times.Once);
-          //  _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            //  _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
         }
 
         [Test]

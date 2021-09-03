@@ -21,7 +21,7 @@
         public const string EntityWithEmailNotFoundMessage = "{0} with email = {1} was not found";
         public const string UserAndTeacherAreNotSame = "User with id = {0} and teacher with id = {1} are not the same";
         public const string UserDoesntBelongToLesson = "User with id {0} doesn`t belong to lesson with id {1}";
-        public const string AccessToNotificationDenied = "User with id = {0} doesn't have access to notification with id = {1}";
+        public const string AccessToNotificationDenied = "User with id = {0} doesn't have access to this notification ";
         public const string MoreOnePropertyHaveAValueMessage = "Only one property ({0}, {1} or {2}) should have a value";
     }
 }

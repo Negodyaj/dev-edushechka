@@ -33,25 +33,25 @@ namespace DevEdu.Business.Services
         public List<NotificationDto> GetAllNotificationByUser(UserIdentityInfo userInfo)
         {
             var rolesList = userInfo.Roles;
-            List<NotificationDto> list = GetNotificationsByUserId(userInfo.UserId);
+            List<NotificationDto> notifications = GetNotificationsByUserId(userInfo.UserId);
 
             foreach (Role role in rolesList)
             {
                 var listByRole = GetNotificationsByRoleId((int)role);
-                list = list.Union(listByRole).ToList();
+                notifications.AddRange(listByRole);
             }
             if (userInfo.IsStudent())
             {
                 var groupList = _groupRepository.GetGroupsByUserId(userInfo.UserId);
                 foreach (GroupDto group in groupList)
                 {
-                    var listByRole = GetNotificationsByGroupId(group.Id);
-                    list = list.Union(listByRole).ToList();
+                    var listByGroup = GetNotificationsByGroupId(group.Id);
+                    notifications.AddRange(listByGroup);
                 }
 
             }
-            list = list.OrderByDescending(o => o.Date).ToList();
-            return list;
+            notifications = notifications.OrderByDescending(o => o.Date).ToList();
+            return notifications;
         }
 
         public NotificationDto GetNotification(int id)
@@ -80,9 +80,10 @@ namespace DevEdu.Business.Services
 
         public NotificationDto AddNotification(NotificationDto dto, UserIdentityInfo userInfo)
         {
-            if (userInfo.IsTeacher() && dto.Group == null)
+            if (userInfo.IsTeacher())
             {
                 _notificationValidationHelper.CheckNotificationIsForGroup(dto, userInfo.UserId);
+                _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, userInfo.UserId, Role.Teacher);
             }
             _notificationValidationHelper.CheckRoleIdUserIdGroupIdIsNotNull(dto);
             var output = _notificationRepository.AddNotification(dto);

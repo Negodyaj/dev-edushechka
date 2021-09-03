@@ -30,7 +30,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/notification/5
-        [HttpGet("by-userInfo")]
+        [HttpGet]
         [Description("Return notification by userInfo")]
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
