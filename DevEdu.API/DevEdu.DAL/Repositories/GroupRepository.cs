@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using DevEdu.Core;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {

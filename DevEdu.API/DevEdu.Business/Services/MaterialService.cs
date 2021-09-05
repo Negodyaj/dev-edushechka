@@ -1,10 +1,10 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DevEdu.Business.ValidationHelpers;
-using DevEdu.Business.IdentityInfo;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Services
 {

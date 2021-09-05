@@ -1,6 +1,6 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using DevEdu.API.Common;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Extensions;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
@@ -8,9 +8,9 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {

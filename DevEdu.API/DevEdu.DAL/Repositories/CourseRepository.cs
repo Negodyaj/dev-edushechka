@@ -1,10 +1,10 @@
 using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using DevEdu.Core;
-using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -83,14 +83,12 @@ namespace DevEdu.DAL.Repositories
         public List<CourseDto> GetCourses()
         {
             var courseDictionary = new Dictionary<int, CourseDto>();
-            CourseDto result;
             return _connection
                 .Query<CourseDto, TopicDto, CourseDto>(
                     _courseSelectAllProcedure,
                     (course, topic) =>
                     {
-
-                        if (!courseDictionary.TryGetValue(course.Id, out result))
+                        if (!courseDictionary.TryGetValue(course.Id, out CourseDto result))
                         {
                             result = course;
                             result.Topics = new List<TopicDto> { topic };

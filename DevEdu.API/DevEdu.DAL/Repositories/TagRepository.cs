@@ -1,10 +1,10 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Microsoft.Extensions.Options;
-using DevEdu.Core;
 
 namespace DevEdu.DAL.Repositories
 {

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Dapper;
+﻿using Dapper;
 using DevEdu.Core;
 using DevEdu.DAL.Models;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -85,29 +85,27 @@ namespace DevEdu.DAL.Repositories
             var lessonDictionary = new Dictionary<int, LessonDto>();
 
             var list = _connection
-               .Query<LessonDto, UserDto, TopicDto, LessonDto>(
-                   _lessonSelectAllByGroupIdProcedure,
-                   (lesson, teacher, topic) =>
-                   {
-                       LessonDto lessonEntry;
+                .Query<LessonDto, UserDto, TopicDto, LessonDto>(
+                    _lessonSelectAllByGroupIdProcedure,
+                    (lesson, teacher, topic) =>
+                    {
+                        if (!lessonDictionary.TryGetValue(lesson.Id, out var lessonEntry))
+                        {
+                            lessonEntry = lesson;
+                            lessonEntry.Teacher = teacher;
+                            lessonEntry.Topics = new List<TopicDto>();
+                            lessonDictionary.Add(lessonEntry.Id, lessonEntry);
+                        }
 
-                       if (!lessonDictionary.TryGetValue(lesson.Id, out lessonEntry))
-                       {
-                           lessonEntry = lesson;
-                           lessonEntry.Teacher = teacher;
-                           lessonEntry.Topics = new List<TopicDto>();
-                           lessonDictionary.Add(lessonEntry.Id, lessonEntry);
-                       }
-
-                       lessonEntry.Topics.Add(topic);
-                       return lessonEntry;
-                   },
-                   new { groupId },
-                   splitOn: "Id",
-                   commandType: CommandType.StoredProcedure
-               )
-               .Distinct()
-               .ToList();
+                        lessonEntry.Topics.Add(topic);
+                        return lessonEntry;
+                    },
+                    new { groupId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .Distinct()
+                .ToList();
 
             return list;
         }
@@ -121,9 +119,7 @@ namespace DevEdu.DAL.Repositories
                    _lessonSelectAllByTeacherIdProcedure,
                    (lesson, teacher, topic, course) =>
                    {
-                       LessonDto lessonEntry;
-
-                       if (!lessonDictionary.TryGetValue(lesson.Id, out lessonEntry))
+                       if (!lessonDictionary.TryGetValue(lesson.Id, out var lessonEntry))
                        {
                            lessonEntry = lesson;
                            lessonEntry.Teacher = teacher;
@@ -294,8 +290,8 @@ namespace DevEdu.DAL.Repositories
         }
 
 
-        public StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int studentId)      
-        {            
+        public StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int studentId)
+        {
             return _connection.Query<StudentLessonDto, LessonDto, UserDto, StudentLessonDto>(
                 _studentLessonSelectByLessonAndUserIdProcedure,
                 (studentLesson, lesson, user) =>

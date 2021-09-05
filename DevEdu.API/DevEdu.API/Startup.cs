@@ -1,6 +1,8 @@
 ﻿using DevEdu.API.Configuration;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Extensions;
 using DevEdu.Business.Configuration;
+using DevEdu.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -9,22 +11,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSwag.Generation.Processors.Security;
 using System.Text.Json.Serialization;
-using DevEdu.API.Configuration.ExceptionResponses;
-using DevEdu.Core;
 
 namespace DevEdu.API
 {
     public class Startup
     {
         private const string _pathToEnvironment = "ASPNETCORE_ENVIRONMENT";
-        
+
         public Startup(IConfiguration configuration)
         {
             var currentEnvironment = configuration.GetValue<string>(_pathToEnvironment);
             var builder = new ConfigurationBuilder().AddJsonFile($"appsettings.{currentEnvironment}.json");
 
             Configuration = builder.Build();
-            Configuration.SetEnvironmentVariableForConfiguration();            
+            Configuration.SetEnvironmentVariableForConfiguration();
         }
 
         public IConfiguration Configuration { get; }

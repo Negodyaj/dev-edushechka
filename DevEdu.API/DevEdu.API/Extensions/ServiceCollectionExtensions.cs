@@ -1,19 +1,19 @@
-﻿using DevEdu.Business.Services;
+﻿using DevEdu.Business.Configuration;
+using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
-using DevEdu.DAL.Repositories;
-using Microsoft.Extensions.DependencyInjection;
-using DevEdu.Business.Configuration;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using DevEdu.Core;
+using DevEdu.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace DevEdu.API.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddAppConfiguration(this IServiceCollection services,IConfiguration configuration)
+        public static void AddAppConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddOptions<DatabaseSettings>()
                 .Bind(configuration.GetSection(nameof(DatabaseSettings)))

@@ -1,12 +1,12 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using DevEdu.Core;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -101,14 +101,12 @@ namespace DevEdu.DAL.Repositories
         public List<UserDto> GetAllUsers()
         {
             var userDictionary = new Dictionary<int, UserDto>();
-            UserDto userEntry;
-
             return _connection
                 .Query<UserDto, City, Role, UserDto>(
                 _userSelectAllProcedure,
                 (user, city, role) =>
                 {
-                    if (!userDictionary.TryGetValue(user.Id, out userEntry))
+                    if (!userDictionary.TryGetValue(user.Id, out UserDto userEntry))
                     {
                         userEntry = user;
                         userEntry.City = city;

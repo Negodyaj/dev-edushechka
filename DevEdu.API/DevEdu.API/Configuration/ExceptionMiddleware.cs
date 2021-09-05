@@ -1,10 +1,10 @@
-﻿using DevEdu.Business.Exceptions;
+﻿using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Configuration
 {
@@ -41,11 +41,11 @@ namespace DevEdu.API.Configuration
             }
             catch (ValidationException ex)
             {
-                await HandleValidationExceptionMessageAsync(context, ex, _messageValidation);
+                await HandlerValidationExceptionMessageAsync(context, ex, _messageValidation);
             }
             catch (Exception ex)
             {
-                await HandleExceptionMessageAsync(context, ex);
+                await HandlerExceptionMessageAsync(context, ex);
             }
         }
 
@@ -68,7 +68,7 @@ namespace DevEdu.API.Configuration
             return context.Response.WriteAsync(result);
         }
 
-        private static Task HandleValidationExceptionMessageAsync(HttpContext context, ValidationException exception, string message)
+        private static Task HandlerValidationExceptionMessageAsync(HttpContext context, ValidationException exception, string message)
         {
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(new ValidationExceptionResponse(exception)
@@ -79,7 +79,7 @@ namespace DevEdu.API.Configuration
             return context.Response.WriteAsync(result);
         }
 
-        private static Task HandleExceptionMessageAsync(HttpContext context, Exception exception)
+        private static Task HandlerExceptionMessageAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(new

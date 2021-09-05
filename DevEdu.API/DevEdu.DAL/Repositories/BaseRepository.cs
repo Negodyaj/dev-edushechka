@@ -11,7 +11,7 @@ namespace DevEdu.DAL.Repositories
 
         protected BaseRepository(IOptions<DatabaseSettings> options)
         {
-             _connection = new SqlConnection(options.Value.ConnectionString);
+            _connection = new SqlConnection(options.Value.ConnectionString);
         }
     }
 }

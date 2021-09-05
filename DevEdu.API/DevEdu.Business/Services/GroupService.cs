@@ -57,24 +57,10 @@ namespace DevEdu.Business.Services
 
             var dto = await _groupRepository.GetGroup(groupId);
             var isAccess = _groupHelper.CheckAccessGetGroupMembers(groupId, userInfo);
-            if (isAccess && dto != null)
-            {
-                dto.Students = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student);
-                dto.Tutors = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Tutor);
-                dto.Teachers = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher);
-                #region Мульти подключение из-за чего возникает ошибка "Unable to cast object of type 'System.Data.ProviderBase.DbConnectionClosedConnecting' to type 'System.Data.SqlClient.SqlInternalConnectionTds'."
-                //var tasks = new List<Task>  // 
-                //{
-                //    Task.Run(async () =>  { dto.Students =
-                //        await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student);}),
-                //    Task.Run(async() => { dto.Tutors =
-                //        await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Tutor);}),
-                //    Task.Run(async() => { dto.Teachers =
-                //        await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher);})
-                //};
-                //await Task.WhenAll(tasks);
-                #endregion
-            }
+            if (!isAccess || dto == null) return dto;
+            dto.Students = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student);
+            dto.Tutors = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Tutor);
+            dto.Teachers = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher);
             return dto;
         }
 
@@ -99,7 +85,6 @@ namespace DevEdu.Business.Services
         public async Task<GroupDto> UpdateGroup(int id, GroupDto groupDto, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(id);
-            //_groupHelper.CheckAccessGroup(userInfo, id);
 
             groupDto.Id = id;
             return await _groupRepository.UpdateGroup(groupDto);
@@ -116,7 +101,6 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
             _materialHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
-            //_groupHelper.CheckAccessGroupAndMaterial(userInfo, groupId, materialId);
 
             return await _groupRepository.AddGroupMaterialReference(groupId, materialId);
         }
@@ -125,7 +109,6 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
             _materialHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
-            //_groupHelper.CheckAccessGroupAndMaterial(userInfo, groupId, materialId);
 
             return await _groupRepository.RemoveGroupMaterialReference(groupId, materialId);
         }
@@ -134,7 +117,6 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
             _lessonHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
-            //_groupHelper.CheckAccessGroupAndLesson(userInfo, groupId, lessonId);
 
             return await _groupRepository.AddGroupToLesson(groupId, lessonId);
         }
@@ -143,7 +125,6 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
             _lessonHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
-            //_groupHelper.CheckAccessGroupAndLesson(userInfo, groupId, lessonId);
 
             await _groupRepository.RemoveGroupFromLesson(groupId, lessonId);
         }
@@ -152,7 +133,6 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
             _userHelper.GetUserByIdAndThrowIfNotFound(userId);
-            //_groupHelper.CheckAccessGroupAndUser(userInfo, groupId, userId);
 
 
             await _groupRepository.AddUserToGroup(groupId, userId, (int)roleId);
@@ -162,7 +142,6 @@ namespace DevEdu.Business.Services
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
             _userHelper.GetUserByIdAndThrowIfNotFound(userId);
-            //_groupHelper.CheckAccessGroupAndUser(userInfo, groupId, userId);
 
             await _groupRepository.DeleteUserFromGroup(userId, groupId);
         }
@@ -170,36 +149,9 @@ namespace DevEdu.Business.Services
         public async Task DeleteTaskFromGroup(int groupId, int taskId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-           // _groupHelper.CheckAccessGroupAndTask(userInfo, groupId, taskId);
             _taskHelper.GetTaskByIdAndThrowIfNotFound(taskId);
 
             await _groupRepository.DeleteTaskFromGroup(groupId, taskId);
-        }
-
-        private void CheckUserAccessByRoleAndId(UserIdentityInfo userInfo, GroupDto dto)
-        {
-            var userId = userInfo.UserId;
-            if (userInfo.IsAdmin())
-            {
-                return;
-            }
-
-            CheckUserAccessToGroupData(dto, userId);
-
-            if (userInfo.IsStudent())
-            {
-
-            }
-        }
-
-        private void CheckUserAccessToGroupData(GroupDto dto, int userId)
-        {
-            if (dto.Course != default)
-            {
-            }
-            else
-            {
-            }
         }
     }
 }

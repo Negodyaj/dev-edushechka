@@ -16,7 +16,6 @@ namespace DevEdu.Business.Tests
         private Mock<ILessonRepository> _lessonRepoMock;
         private Mock<IStudentHomeworkRepository> _studentAnswerRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
-        private Mock<IUserRepository> _userRepoMock;
         private CommentValidationHelper _commentValidationHelper;
         private LessonValidationHelper _lessonValidationHelper;
         private StudentHomeworkValidationHelper _studentAnswerValidationHelper;
@@ -29,7 +28,6 @@ namespace DevEdu.Business.Tests
             _lessonRepoMock = new Mock<ILessonRepository>();
             _groupRepoMock = new Mock<IGroupRepository>();
             _studentAnswerRepoMock = new Mock<IStudentHomeworkRepository>();
-            _userRepoMock = new Mock<IUserRepository>();
             _commentValidationHelper = new CommentValidationHelper(_commentRepoMock.Object);
             _lessonValidationHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object);
             _studentAnswerValidationHelper = new StudentHomeworkValidationHelper(_studentAnswerRepoMock.Object, _groupRepoMock.Object);
@@ -281,9 +279,9 @@ namespace DevEdu.Business.Tests
             Assert.That(ex.Message, Is.EqualTo(expectedException));
         }
 
-        [TestCase(Role.Teacher,2)]
-        [TestCase(Role.Tutor,2)]
-        [TestCase(Role.Student,2)]
+        [TestCase(Role.Teacher, 2)]
+        [TestCase(Role.Tutor, 2)]
+        [TestCase(Role.Student, 2)]
         public void GetComment_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
         {
             //Given

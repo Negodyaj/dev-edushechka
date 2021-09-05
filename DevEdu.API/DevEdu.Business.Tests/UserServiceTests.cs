@@ -93,7 +93,7 @@ namespace DevEdu.Business.Tests
         public void UpdateUser_UserDto_ReturnUpdateUserDto()
         {
             //Given
-            var expectedDto =  UserData.GetUserDto();
+            var expectedDto = UserData.GetUserDto();
             var expectedAnotherDto = UserData.GetAnotherUserDto();
             var expectedMinimumCallCount = 2;
 
@@ -229,7 +229,7 @@ namespace DevEdu.Business.Tests
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _repoMock.Verify(x => x.DeleteUserRole(userId, roleId), Times.Never);
         }
-       
+
         [Test]
         public void AddUserRole_UserIdAndRoleId_UserRoleWasCreated()
         {

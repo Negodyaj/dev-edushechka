@@ -2,12 +2,12 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
-using DevEdu.DAL.Models;
-using DevEdu.DAL.Enums;
 using System.Linq;
 
 namespace DevEdu.Business.Tests

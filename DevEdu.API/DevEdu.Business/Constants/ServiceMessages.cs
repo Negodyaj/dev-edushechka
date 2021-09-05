@@ -3,7 +3,7 @@
     public static class ServiceMessages
     {
         public const string EntityNotFoundMessage = "{0} with id = {1} was not found";
-        public const string EntityNotFoundByUserId = "{0} by user id = {1} was not found";       
+        public const string EntityNotFoundByUserId = "{0} by user id = {1} was not found";
         public const string UserInGroupNotFoundMessage = "User with id = {0} not found in group with id = {1}";
         public const string UserHasNoAccessMessage = "The user with id = {0} does not have access to the data of this group";
         public const string EntityDoesntHaveAcessMessage = "{0} with id = {1} does not have access to the {2} with id = {3}";
