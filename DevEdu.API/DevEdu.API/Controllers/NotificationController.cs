@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
 using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Models;
+using DevEdu.API.Common;
+using DevEdu.API.Configuration;
+using DevEdu.API.Extensions;
 using DevEdu.Business.Services;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -25,28 +29,18 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
         }
 
-        //  api/notification/{id}
-        [HttpGet("{id}")]
-        [Description("Return notification by id")]
+        //  api/notification/5
+        [HttpGet]
+        [Description("Return notification by userInfo")]
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public NotificationInfoOutputModel GetNotification(int id)
+        public List<NotificationInfoOutputModel> GetAllNotificationByUser()
         {
-            var dto = _notificationService.GetNotification(id);
-            return _mapper.Map<NotificationInfoOutputModel>(dto);
-        }
-
-        //  api/notification/by-user/1
-        [HttpGet("by-user/{userId}")]
-        [Description("Return notifications by user")]
-        [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<NotificationInfoOutputModel> GetAllNotificationsByUserId(int userId)
-        {
-            var list = _notificationService.GetNotificationsByUserId(userId);
-            return _mapper.Map<List<NotificationInfoOutputModel>>(list);
+            var userInfo = this.GetUserIdAndRoles();
+            var dto = _notificationService.GetAllNotificationByUser(userInfo);
+            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
+            return output;
         }
 
         //  api/notification/by-group/1
@@ -58,7 +52,8 @@ namespace DevEdu.API.Controllers
         public List<NotificationInfoOutputModel> GetAllNotificationsByGroupId(int groupId)
         {
             var dto = _notificationService.GetNotificationsByGroupId(groupId);
-            return _mapper.Map<List<NotificationInfoOutputModel>>(dto);
+            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
+            return output;
         }
 
         //  api/notification/by-role/1
@@ -70,10 +65,12 @@ namespace DevEdu.API.Controllers
         public List<NotificationInfoOutputModel> GetAllNotificationsByRoleId(int roleId)
         {
             var dto = _notificationService.GetNotificationsByRoleId(roleId);
-            return _mapper.Map<List<NotificationInfoOutputModel>>(dto);
+            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
+            return output;
         }
 
         //  api/notification
+        [AuthorizeRoles(Role.Teacher, Role.Manager)]
         [HttpPost]
         [Description("Add new notification")]
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status201Created)]
@@ -82,13 +79,15 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<NotificationInfoOutputModel> AddNotification([FromBody] NotificationAddInputModel inputModel)
         {
+            var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<NotificationDto>(inputModel);
-            var outputDto = _notificationService.AddNotification(dto);
-            var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);
+            var outputDto = _notificationService.AddNotification(dto, userInfo);
+            var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);     
             return Created(new Uri($"api/Notification/{result.Id}", UriKind.Relative), result);
         }
 
         //  api/notification/5
+        [AuthorizeRoles(Role.Teacher, Role.Manager)]
         [HttpDelete("{id}")]
         [Description("Delete notification by id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -96,21 +95,26 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteNotification(int id)
         {
-            _notificationService.DeleteNotification(id);
+            var userInfo = this.GetUserIdAndRoles();
+            _notificationService.DeleteNotification(id, userInfo);
             return NoContent();
         }
 
         //  api/notification/5
+        [AuthorizeRoles(Role.Teacher, Role.Manager)]
         [HttpPut("{id}")]
         [Description("Update notification by id")]
         [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public NotificationInfoOutputModel UpdateNotification(int id, [FromBody] NotificationUpdateInputModel inputModel)
         {
+            var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<NotificationDto>(inputModel);
-            var output = _notificationService.UpdateNotification(id, dto);
-            return _mapper.Map<NotificationInfoOutputModel>(output);
+            var output = _notificationService.UpdateNotification(id, dto, userInfo);
+            var model = _mapper.Map<NotificationInfoOutputModel>(output);
+            return model;
         }
     }
 }

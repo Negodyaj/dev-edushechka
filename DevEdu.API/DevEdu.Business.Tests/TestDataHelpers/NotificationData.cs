@@ -6,7 +6,7 @@ namespace DevEdu.Business.Tests
 {
     public static class NotificationData
     {
-        public static NotificationDto GetNotificationDtoByRole()
+        public static NotificationDto GetNotificationDtoForRole()
         {
             return new NotificationDto
             {
@@ -17,7 +17,7 @@ namespace DevEdu.Business.Tests
                 IsDeleted = false
             };
         }
-        public static NotificationDto GetNotificationDtoByUser()
+        public static NotificationDto GetNotificationDtoForUser()
         {
             return new NotificationDto
             {
@@ -35,7 +35,7 @@ namespace DevEdu.Business.Tests
                 IsDeleted = false
             };
         }
-        public static NotificationDto GetNotificationByGroupDto()
+        public static NotificationDto GetNotificationForGroupDto()
         {
             return new NotificationDto
             {

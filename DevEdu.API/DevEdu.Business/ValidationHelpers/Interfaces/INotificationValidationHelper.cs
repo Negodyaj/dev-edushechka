@@ -1,7 +1,11 @@
-﻿namespace DevEdu.Business.ValidationHelpers
+﻿using DevEdu.DAL.Models;
+
+namespace DevEdu.Business.ValidationHelpers
 {
     public interface INotificationValidationHelper
     {
-        void CheckNotificationExistence(int notificationId);
+        NotificationDto GetNotificationByIdAndThrowIfNotFound(int notificationId);
+        void CheckNotificationIsForGroup(NotificationDto dto, int userId);
+        void CheckRoleIdUserIdGroupIdIsNotNull(NotificationDto dto);
     }
 }

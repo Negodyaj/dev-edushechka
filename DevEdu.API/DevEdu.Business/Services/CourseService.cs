@@ -20,6 +20,8 @@ namespace DevEdu.Business.Services
         private readonly IGroupRepository _groupRepository;
         private readonly ICourseValidationHelper _courseValidationHelper;
         private readonly ITopicValidationHelper _topicValidationHelper;
+        private readonly ITaskValidationHelper _taskValidationHelper;
+
         private readonly IMaterialValidationHelper _materialValidationHelper;
 
         public CourseService
@@ -122,11 +124,20 @@ namespace DevEdu.Business.Services
             return list;
         }
 
-        public void DeleteTaskFromCourse(int courseId, int taskId) =>
+        public void DeleteTaskFromCourse(int courseId, int taskId)
+        {
+            _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             _courseRepository.DeleteTaskFromCourse(courseId, taskId);
+        }
+            
 
-        public void AddTaskToCourse(int courseId, int taskId) =>
+        public void AddTaskToCourse(int courseId, int taskId)
+        {
+            _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
             _courseRepository.AddTaskToCourse(courseId, taskId);
+        }
+            
 
         public int AddCourseMaterialReference(int courseId, int materialId)
         {
