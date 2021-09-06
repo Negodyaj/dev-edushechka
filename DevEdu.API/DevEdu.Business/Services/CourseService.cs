@@ -63,25 +63,18 @@ namespace DevEdu.Business.Services
             var course = _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(id);
             return course;
         }
-        public CourseDto GetFullCourseInfo(int id, UserIdentityInfo userToken)
+
+        public CourseDto GetFullCourseInfo(int id, UserIdentityInfo userToken) 
         {
             var course = GetCourse(id);
-            if (userToken.Roles.Contains(Role.Admin) ||
-                userToken.Roles.Contains(Role.Teacher) ||
-                userToken.Roles.Contains(Role.Tutor))
 
                 course.Tasks = _taskRepository.GetTasksByCourseId(course.Id);
             course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
-
-            if (userToken.Roles.Contains(Role.Admin) ||
-                userToken.Roles.Contains(Role.Teacher) ||
-                userToken.Roles.Contains(Role.Tutor) ||
-                userToken.Roles.Contains(Role.Methodist))
-                course.Groups = _groupRepository.GetGroupsByCourseId(course.Id);
+            course.Groups = _groupRepository.GetGroupsByCourseId(course.Id);
 
             return course;
-
         }
+
         public List<CourseDto> GetCourses() => _courseRepository.GetCourses();
 
         public CourseDto UpdateCourse(int id, CourseDto courseDto)

@@ -45,7 +45,7 @@ namespace DevEdu.API.Controllers
 
         [HttpGet("{id}/full")]
         [Description("Get course by id full")]
-        [AuthorizeRoles(Role.Manager, Role.Methodist)]
+        [AuthorizeRoles(Role.Teacher, Role.Methodist, Role.Tutor)]
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -81,7 +81,7 @@ namespace DevEdu.API.Controllers
 
         [HttpDelete("{id}")]
         [Description("Delete course by id")]
-        [AuthorizeRoles(Role.Manager)]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -93,7 +93,7 @@ namespace DevEdu.API.Controllers
 
         [HttpPut("{id}")]
         [Description("Update course by Id")]
-        [AuthorizeRoles(Role.Manager)]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -130,6 +130,7 @@ namespace DevEdu.API.Controllers
             _courseService.RemoveCourseMaterialReference(courseId, materialId);
             return NoContent();
         }
+
 
         [HttpPost("{courseId}/task/{taskId}")]
         [Description("Add task to course")]
