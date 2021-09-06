@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using DevEdu.API.Common;
+﻿using DevEdu.API.Common;
 using DevEdu.Business.Exceptions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Configuration.ExceptionResponses
 {
@@ -39,7 +39,7 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 });
             }
         }
-        
+
         private static int GetValidationCode(string exception)
         {
             return exception switch
@@ -88,7 +88,6 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 ValidationMessage.WrongFormatBirthDate => 1042,
                 ValidationMessage.WrongFormatDate => 1043,
                 ValidationMessage.StudentAnswerRequired => 1044,
-                ValidationMessage.CommentTextRequired => 1045,
                 ValidationMessage.GroupsRequired => 1046,
                 ValidationMessage.CoursesRequired => 1047,
                 ValidationMessage.GroupStatusIdRequired => 1048,

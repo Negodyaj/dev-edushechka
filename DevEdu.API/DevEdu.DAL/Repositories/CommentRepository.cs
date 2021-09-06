@@ -2,8 +2,8 @@
 using DevEdu.Core;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
-using System.Collections.Generic;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
@@ -11,18 +11,18 @@ namespace DevEdu.DAL.Repositories
 {
     public class CommentRepository : BaseRepository, ICommentRepository
     {
-        private const string _commentAddProcedure = "dbo.Comment_Insert";
+        private const string _commentInsertProcedure = "dbo.Comment_Insert";
         private const string _commentDeleteProcedure = "dbo.Comment_Delete";
         private const string _commentSelectByIdProcedure = "dbo.Comment_SelectById";
         private const string _commentUpdateProcedure = "dbo.Comment_Update";
-        private const string _commentsFromLessonSelectByLessonIdProcedure = "dbo.Comment_SelectByLessonId";
+        private const string _commentsToLessonSelectByLessonIdProcedure = "dbo.Comment_SelectByLessonId";
 
-        public CommentRepository(IOptions<DatabaseSettings> options) : base(options){ }
+        public CommentRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddComment(CommentDto dto)
         {
             return _connection.QuerySingle<int>(
-                _commentAddProcedure,
+                _commentInsertProcedure,
                 new
                 {
                     userId = dto.User.Id,
@@ -90,7 +90,7 @@ namespace DevEdu.DAL.Repositories
             CommentDto result = default;
             return _connection
                 .Query<CommentDto, UserDto, CommentDto>(
-                    _commentsFromLessonSelectByLessonIdProcedure,
+                    _commentsToLessonSelectByLessonIdProcedure,
                     (comment, user) =>
                     {
                         result = comment;
@@ -98,6 +98,7 @@ namespace DevEdu.DAL.Repositories
                         return result;
                     },
                     new { lessonId },
+                    splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
                 .Distinct()

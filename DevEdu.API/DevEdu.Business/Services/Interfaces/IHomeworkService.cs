@@ -1,15 +1,16 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Models;
 using System.Collections.Generic;
 
 namespace DevEdu.Business.Services
 {
     public interface IHomeworkService
     {
-        HomeworkDto GetHomework(int homeworkId, int userId);
-        List<HomeworkDto> GetHomeworkByGroupId(int groupId, int userId);
+        HomeworkDto GetHomework(int homeworkId, UserIdentityInfo userInfo);
+        List<HomeworkDto> GetHomeworkByGroupId(int groupId, UserIdentityInfo userInfo);
         List<HomeworkDto> GetHomeworkByTaskId(int taskId);
-        HomeworkDto AddHomework(int groupId, int taskId, HomeworkDto dto, int userId);
-        void DeleteHomework(int homeworkId, int userId);
-        HomeworkDto UpdateHomework(int homeworkId, HomeworkDto dto, int userId);
+        HomeworkDto AddHomework(int groupId, int taskId, HomeworkDto dto, UserIdentityInfo userInfo);
+        void DeleteHomework(int homeworkId, UserIdentityInfo userInfo);
+        HomeworkDto UpdateHomework(int homeworkId, HomeworkDto dto, UserIdentityInfo userInfo);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevEdu.API.Common;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Extensions;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
@@ -7,21 +8,18 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Configuration.ExceptionResponses;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     [AuthorizeRoles(Role.Teacher, Role.Manager)]
     public class RatingController : Controller
     {
-        private IRatingService _service;
-
+        private readonly IRatingService _service;
         private readonly IMapper _mapper;
 
         public RatingController(IMapper mapper, IRatingService service)
@@ -44,7 +42,7 @@ namespace DevEdu.API.Controllers
             var authorUserInfo = this.GetUserIdAndRoles();
             dto = _service.AddStudentRating(dto, authorUserInfo);
             var output = _mapper.Map<StudentRatingOutputModel>(dto);
-            return StatusCode(201, output);
+            return Created(new Uri($"api/Rating/by-user/{output.Id}", UriKind.Relative), output);
         }
 
         // api/rating/1
@@ -87,7 +85,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
 
-        // api/rating/by-group/1
+        // api/rating/by-group/{groupId}
         [HttpGet("by-group/{groupId}")]
         [Description("Get StudentRating from database by GroupID")]
         [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status200OK)]

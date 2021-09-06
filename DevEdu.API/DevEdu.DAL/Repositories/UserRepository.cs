@@ -1,26 +1,25 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using DevEdu.Core;
 
 namespace DevEdu.DAL.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
-        private const string _userAddProcedure = "dbo.User_Insert";
+        private const string _userInsertProcedure = "dbo.User_Insert";
         private const string _userSelectByIdProcedure = "dbo.User_SelectById";
         private const string _userSelectByEmailProcedure = "dbo.User_SelectByEmail";
         private const string _userSelectAllProcedure = "dbo.User_SelectAll";
         private const string _userSelectByGroupIdAndRole = "dbo.User_SelectByGroupIdAndRole";
         private const string _userUpdateProcedure = "dbo.User_Update";
         private const string _userDeleteProcedure = "dbo.User_Delete";
-        private const string _userRoleAddProcedure = "dbo.User_Role_Insert";
+        private const string _userRoleInsertProcedure = "dbo.User_Role_Insert";
         private const string _userRoleDeleteProcedure = "dbo.User_Role_Delete";
 
         public UserRepository(IOptions<DatabaseSettings> options) : base(options) { }
@@ -28,7 +27,7 @@ namespace DevEdu.DAL.Repositories
         public int AddUser(UserDto user)
         {
             return _connection.QuerySingle<int>(
-                _userAddProcedure,
+                _userInsertProcedure,
                 new
                 {
                     user.FirstName,
@@ -101,31 +100,27 @@ namespace DevEdu.DAL.Repositories
 
         public List<UserDto> GetAllUsers()
         {
-            var UserDictionary = new Dictionary<int, UserDto>();
-
+            var userDictionary = new Dictionary<int, UserDto>();
             return _connection
                 .Query<UserDto, City, Role, UserDto>(
                 _userSelectAllProcedure,
                 (user, city, role) =>
                 {
-                    UserDto userEntry;
-
-                    if (!UserDictionary.TryGetValue(user.Id, out userEntry))
+                    if (!userDictionary.TryGetValue(user.Id, out UserDto userEntry))
                     {
                         userEntry = user;
                         userEntry.City = city;
                         userEntry.Roles = new List<Role>();
-                        UserDictionary.Add(user.Id, userEntry);
+                        userDictionary.Add(user.Id, userEntry);
                     }
-
                     userEntry.Roles.Add(role);
 
                     return userEntry;
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure)
-                .Distinct<UserDto>()
-                .ToList<UserDto>();
+                .Distinct()
+                .ToList();
         }
 
         public void UpdateUser(UserDto user)
@@ -158,7 +153,7 @@ namespace DevEdu.DAL.Repositories
         public void AddUserRole(int userId, int roleId)
         {
             _connection.QuerySingleOrDefault<int>(
-                _userRoleAddProcedure,
+                _userRoleInsertProcedure,
                 new
                 {
                     userId,

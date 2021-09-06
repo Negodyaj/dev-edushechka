@@ -102,7 +102,7 @@ namespace DevEdu.Business.Tests
                     Teachers = new List<UserDto>()
                     {
                         new UserDto {
-                            Id = 2, 
+                            Id = 2,
                             Roles = new List<Role>()
                             {
                                 Role.Teacher
@@ -171,7 +171,7 @@ namespace DevEdu.Business.Tests
                     },
                     Tutors = null,
                     IsDeleted = false
-                }                
+                }
             };
         }
 
@@ -224,6 +224,55 @@ namespace DevEdu.Business.Tests
             };
         }
 
+        public static List<GroupDto> GetAnotherListDtos()
+        {
+            return new List<GroupDto>
+            {
+                new GroupDto
+                {
+                    Id = 4,
+                    Name = "Петровичи",
+                    Course = new CourseDto
+                    {
+                        Id = 5,
+                        Name = "Маляристов",
+                        Description = "Курс для маляров",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Среда 10-20",
+                    PaymentPerMonth = 5789.0M,
+                    Students = null,
+                    Teachers = null,
+                    Tutors = null,
+                    IsDeleted = false
+                },
+                new GroupDto
+                {
+                    Id = 5,
+                    Name = "Рукаделы",
+                    Course = new CourseDto
+                    {
+                        Id = 6,
+                        Name = "Гончарство",
+                        Description = "Курс для Гончаристов",
+                        Groups = null,
+                        IsDeleted = false
+                    },
+                    GroupStatus = GroupStatus.Forming,
+                    StartDate = DateTime.MaxValue,
+                    Timetable = "Понедельник 10-20",
+                    PaymentPerMonth = 7894.0M,
+                    Students = null,
+                    Teachers = null,
+                    Tutors = null,
+                    IsDeleted = false
+                }
+            };
+        }
+
         public static GroupDto GetAnotherGroupDto()
         {
             return new GroupDto
@@ -247,6 +296,5 @@ namespace DevEdu.Business.Tests
                 Tutors = null
             };
         }
-
     }
 }

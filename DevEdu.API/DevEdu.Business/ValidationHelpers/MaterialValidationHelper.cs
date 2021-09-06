@@ -43,9 +43,9 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckTeacherAccessToMaterialForDeleteAndUpdate(int userId, MaterialDto material)
         {
-            if (material.Groups == null || 
-                material.Groups.Count == 0 || 
-                GetMaterialIfAllowedToUserByGroup(material, userId) == null) 
+            if (material.Groups == null ||
+                material.Groups.Count == 0 ||
+                GetMaterialIfAllowedToUserByGroup(material, userId) == null)
             {
                 throw new AuthorizationException(string.
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
@@ -75,7 +75,7 @@ namespace DevEdu.Business.ValidationHelpers
             if (values.Distinct().Count() != values.Count)
                 throw new ValidationException(entity, string.Format(ServiceMessages.DuplicateValuesProvided, entity));
         }
-        
+
         private MaterialDto GetMaterialIfAllowedToUserByGroup(MaterialDto material, int userId)
         {
             var groupsByMaterial = _groupRepository.GetGroupsByMaterialId(material.Id);
@@ -91,7 +91,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var coursesByMaterial = _courseRepository.GetCoursesByMaterialId(material.Id);
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
-            List<int> coursesByUser = new List<int>();
+            List<int> coursesByUser = new();
             groupsByUser.ForEach(group => coursesByUser.Add(group.Course.Id));
 
             var result = coursesByMaterial.FirstOrDefault(сm => coursesByUser.Any(сu => сu == сm.Id));

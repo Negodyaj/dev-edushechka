@@ -11,17 +11,14 @@ namespace DevEdu.Business.ValidationHelpers
     {
         private readonly ILessonRepository _lessonRepository;
         private readonly IGroupRepository _groupRepository;
-        private readonly IUserRepository _userRepository;
 
         public LessonValidationHelper(
             ILessonRepository lessonRepository,
-            IGroupRepository groupRepository,
-            IUserRepository userRepository
+            IGroupRepository groupRepository
         )
         {
             _lessonRepository = lessonRepository;
             _groupRepository = groupRepository;
-            _userRepository = userRepository;
         }
 
         public LessonDto GetLessonByIdAndThrowIfNotFound(int lessonId)
@@ -50,14 +47,14 @@ namespace DevEdu.Business.ValidationHelpers
             {
                 var studentGroups = _groupRepository.GetGroupsByUserId(userIdentity.UserId);
                 var result = studentGroups.Where(sg => (lesson.Groups).Any(lg => lg.Id == sg.Id));
-                if (result.Count() == 0)
+                if (!result.Any())
                 {
                     throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id));
                 }
             }
-            else if(userIdentity.IsTeacher())
+            else if (userIdentity.IsTeacher())
             {
-                if(userIdentity.UserId != lesson.Teacher.Id)
+                if (userIdentity.UserId != lesson.Teacher.Id)
                 {
                     throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id));
                 }
@@ -72,13 +69,12 @@ namespace DevEdu.Business.ValidationHelpers
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userId, lessonId));
         }
+
         public void CheckAttendanceExistence(int lessonId, int userId)
         {
-            var attandance = _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
-            if (attandance == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(attandance), lessonId, userId));
-
+            var attendance = _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
+            if (attendance == default)
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(attendance), lessonId));
         }
-
     }
 }

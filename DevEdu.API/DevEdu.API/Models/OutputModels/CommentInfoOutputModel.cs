@@ -6,7 +6,7 @@
         public string Text { get; set; }
         public UserInfoOutPutModel User { get; set; }
         public LessonInfoOutputModel Lesson { get; set; }
-        public StudentHomeworkWithHomeworkOutputModel StudentAnswer { get; set; }
+        public StudentHomeworkShortOutputModel StudentHomework { get; set; }
         public string Date { get; set; }
         public bool IsDeleted { get; set; }
     }

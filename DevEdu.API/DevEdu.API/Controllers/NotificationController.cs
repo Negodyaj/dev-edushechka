@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Models;
 using DevEdu.API.Common;
 using DevEdu.API.Configuration;
@@ -9,10 +10,9 @@ using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Configuration.ExceptionResponses;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {
@@ -43,6 +43,32 @@ namespace DevEdu.API.Controllers
             return output;
         }
 
+        //  api/notification/by-group/1
+        [HttpGet("by-group/{groupId}")]
+        [Description("Return notifications by group")]
+        [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public List<NotificationInfoOutputModel> GetAllNotificationsByGroupId(int groupId)
+        {
+            var dto = _notificationService.GetNotificationsByGroupId(groupId);
+            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
+            return output;
+        }
+
+        //  api/notification/by-role/1
+        [HttpGet("by-role/{roleId}")]
+        [Description("Return notifications by role")]
+        [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public List<NotificationInfoOutputModel> GetAllNotificationsByRoleId(int roleId)
+        {
+            var dto = _notificationService.GetNotificationsByRoleId(roleId);
+            var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
+            return output;
+        }
+
         //  api/notification
         [AuthorizeRoles(Role.Teacher, Role.Manager)]
         [HttpPost]
@@ -55,9 +81,9 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<NotificationDto>(inputModel);
+            return Created(new Uri($"api/Notification/{result.Id}", UriKind.Relative), result);
+            var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);
             var output = _notificationService.AddNotification(dto, userInfo);
-            var model = _mapper.Map<NotificationInfoOutputModel>(output);
-            return StatusCode(201, model);
         }
 
         //  api/notification/5

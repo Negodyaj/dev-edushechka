@@ -2,19 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Models\OutputModels\User\**" />
-    <Content Remove="Models\OutputModels\User\**" />
-    <EmbeddedResource Remove="Models\OutputModels\User\**" />
-    <None Remove="Models\OutputModels\User\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <_WebToolingArtifacts Remove="Properties\launchSettings.json" />
   </ItemGroup>
-
+   
   <ItemGroup>
     <Content Include="Properties\launchSettings.json" />
   </ItemGroup>

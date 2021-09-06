@@ -1,31 +1,31 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using DevEdu.Core;
-using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
     public class PaymentRepository : BaseRepository, IPaymentRepository
-    { 
-        private const string _paymentAddProcedure = "dbo.Payment_Insert";
+    {
+        private const string _paymentInsertProcedure = "dbo.Payment_Insert";
         private const string _paymentDeleteProcedure = "dbo.Payment_Delete";
         private const string _paymentSelectByIdProcedure = "dbo.Payment_SelectById";
-        private const string _paymentAllByUserIdProcedure = "dbo.Payment_SelectAllByUserId";
+        private const string _paymentSelectAllByUserIdProcedure = "dbo.Payment_SelectAllByUserId";
         private const string _paymentUpdateProcedure = "dbo.Payment_Update";
-        private const string _addPaymentsProcedure = "[dbo].[Payment_BulkInsert]";
-        private const string _selectPaymentsBySeveralId = "[dbo].[Payment_SelectBySeveralId]";
-        private const string _paymentType = "[dbo].[PaymentType]";
-        private const string _idType = "[dbo].[IdType]";
+        private const string _paymentsBulkInsertProcedure = "dbo.Payment_BulkInsert";
+        private const string _paymentsSelectBySeveralIdProcedure = "dbo.Payment_SelectBySeveralId";
+        private const string _paymentType = "dbo.PaymentType";
+        private const string _idType = "dbo.IdType";
 
         public PaymentRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddPayment(PaymentDto paymentDto)
         {
             return _connection.QuerySingle<int>(
-                _paymentAddProcedure,
+                _paymentInsertProcedure,
                 new
                 {
                     userId = paymentDto.User.Id,
@@ -72,7 +72,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<PaymentDto, UserDto, PaymentDto>(
-                    _paymentAllByUserIdProcedure,
+                    _paymentSelectAllByUserIdProcedure,
                     (payment, user) =>
                     {
                         payment.User = user;
@@ -99,6 +99,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
             );
         }
+
         public List<int> AddPayments(List<PaymentDto> payments)
         {
             var table = new DataTable();
@@ -112,12 +113,13 @@ namespace DevEdu.DAL.Repositories
                 table.Rows.Add(bill.Date, bill.Sum, bill.User.Id, bill.IsPaid);
             }
             var response = _connection.Query<int>(
-               _addPaymentsProcedure,
+               _paymentsBulkInsertProcedure,
                new { tblPayment = table.AsTableValuedParameter(_paymentType) },
                commandType: CommandType.StoredProcedure
                ).ToList();
             return response;
         }
+
         public List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids)
         {
             var table = new DataTable();
@@ -127,7 +129,7 @@ namespace DevEdu.DAL.Repositories
                 table.Rows.Add(i);
             }
             var response = _connection.Query<PaymentDto, UserDto, PaymentDto>(
-              _selectPaymentsBySeveralId,
+              _paymentsSelectBySeveralIdProcedure,
                (paymentDto, userDto) =>
                {
                    paymentDto.User = userDto;

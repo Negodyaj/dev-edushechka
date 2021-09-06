@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
-using DevEdu.API.Models;
 using DevEdu.API.Common;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Extensions;
+using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.ComponentModel;
-using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {
@@ -36,8 +37,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _commentService.GetComment(id, userInfo);
-            var output = _mapper.Map<CommentInfoOutputModel>(dto);
-            return output;
+            return _mapper.Map<CommentInfoOutputModel>(dto);
         }
 
         //  api/comment/to-lesson/1
@@ -48,13 +48,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<CommentInfoOutputModel> AddCommentToLesson(int lessonId, [FromBody] CommentAddInputModel model)
+        public ActionResult<CommentInfoOutputModel> AddCommentToLesson(int lessonId, [FromBody] CommentInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
             var comment = _commentService.AddCommentToLesson(lessonId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
-            return StatusCode(201,output);
+            return Created(new Uri($"api/Comment/{output.Id}", UriKind.Relative), output);
         }
 
         //  api/comment/to-student-answer/1
@@ -65,13 +65,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<CommentInfoOutputModel> AddCommentToStudentAnswer(int studentHomeworkId, [FromBody] CommentAddInputModel model)
+        public ActionResult<CommentInfoOutputModel> AddCommentToStudentAnswer(int studentHomeworkId, [FromBody] CommentInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
             var comment = _commentService.AddCommentToStudentAnswer(studentHomeworkId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
-            return StatusCode(201, output);
+            return Created(new Uri($"api/Comment/{output.Id}", UriKind.Relative), output);
         }
 
         //  api/comment/5
@@ -96,12 +96,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentUpdateInputModel model)
+        public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var output = _commentService.UpdateComment(id, dto, userInfo);
-            return _mapper.Map<CommentInfoOutputModel>(output);
+            var updateDto = _commentService.UpdateComment(id, dto, userInfo);
+            return _mapper.Map<CommentInfoOutputModel>(updateDto);
         }
     }
 }

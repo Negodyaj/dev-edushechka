@@ -12,20 +12,20 @@ namespace DevEdu.DAL.Repositories
 {
     public class StudentHomeworkRepository : BaseRepository, IStudentHomeworkRepository
     {
-        private const string _studentHomeworkInsert = "dbo.Student_Homework_Insert";
-        private const string _studentHomeworkDelete = "dbo.Student_Homework_Delete";
-        private const string _studentHomeworkUpdateAnswer = "dbo.Student_Homework_UpdateAnswer";
-        private const string _studentHomeworkUpdateStatusId = "dbo.Student_Homework_UpdateStatusId";
-        private const string _studentHomeworkSelectById = "dbo.Student_Homework_SelectById";
-        private const string _studentHomeworkSelectAllAnswersByTaskId = "dbo.Student_Homework_SelectAllAnswersByTaskId";
-        private const string _studentHomeworkSelectAnswersByUserId = "dbo.Student_Homework_SelectAllAnswersByUserId";
+        private const string _studentHomeworkInsertProcedure = "dbo.Student_Homework_Insert";
+        private const string _studentHomeworkDeleteProcedure = "dbo.Student_Homework_Delete";
+        private const string _studentHomeworkUpdateAnswerProcedure = "dbo.Student_Homework_UpdateAnswer";
+        private const string _studentHomeworkUpdateStatusIdProcedure = "dbo.Student_Homework_UpdateStatusId";
+        private const string _studentHomeworkSelectByIdProcedure = "dbo.Student_Homework_SelectById";
+        private const string _studentHomeworkSelectAllAnswersByTaskIdProcedure = "dbo.Student_Homework_SelectAllAnswersByTaskId";
+        private const string _studentHomeworkSelectAnswersByUserIdProcedure = "dbo.Student_Homework_SelectAllAnswersByUserId";
 
         public StudentHomeworkRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddStudentHomework(StudentHomeworkDto dto)
         {
             return _connection.QuerySingle<int>(
-                _studentHomeworkInsert,
+                _studentHomeworkInsertProcedure,
                 new
                 {
                     HomeworkId = dto.Homework.Id,
@@ -39,7 +39,7 @@ namespace DevEdu.DAL.Repositories
         public void DeleteStudentHomework(int id)
         {
             _connection.Execute(
-                _studentHomeworkDelete,
+                _studentHomeworkDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
@@ -48,7 +48,7 @@ namespace DevEdu.DAL.Repositories
         public void UpdateStudentHomework(StudentHomeworkDto dto)
         {
             _connection.Execute(
-                _studentHomeworkUpdateAnswer,
+                _studentHomeworkUpdateAnswerProcedure,
                 new
                 {
                     dto.Id,
@@ -61,7 +61,7 @@ namespace DevEdu.DAL.Repositories
         public int ChangeStatusOfStudentAnswerOnTask(int id, int statusId, DateTime completedDate)
         {
             _connection.Execute(
-                _studentHomeworkUpdateStatusId,
+                _studentHomeworkUpdateStatusIdProcedure,
                 new
                 {
                     id,
@@ -77,9 +77,9 @@ namespace DevEdu.DAL.Repositories
         public StudentHomeworkDto GetStudentHomeworkById(int id)
         {
             var result = _connection
-                .Query<StudentHomeworkDto, UserDto, HomeworkDto, TaskDto, TaskStatus, StudentHomeworkDto>(
-                    _studentHomeworkSelectById,
-                    (studentAnswer, user, homework, task, taskStatus) =>
+                .Query<StudentHomeworkDto, HomeworkDto, UserDto, TaskDto, TaskStatus, StudentHomeworkDto>(
+                    _studentHomeworkSelectByIdProcedure,
+                    (studentAnswer, homework, user, task, taskStatus) =>
                     {
                         studentAnswer.User = user;
                         studentAnswer.Homework = homework;
@@ -100,7 +100,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<StudentHomeworkDto, TaskStatus, UserDto, StudentHomeworkDto>(
-                _studentHomeworkSelectAllAnswersByTaskId,
+                _studentHomeworkSelectAllAnswersByTaskIdProcedure,
                 (studentAnswer, taskStatus, user) =>
                 {
                     studentAnswer.TaskStatus = taskStatus;
@@ -122,7 +122,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<StudentHomeworkDto, TaskStatus, HomeworkDto, TaskDto, StudentHomeworkDto>(
-                    _studentHomeworkSelectAnswersByUserId,
+                    _studentHomeworkSelectAnswersByUserIdProcedure,
                     (answerDto, taskStatus, homework, task) =>
                     {
                         answerDto.TaskStatus = taskStatus;

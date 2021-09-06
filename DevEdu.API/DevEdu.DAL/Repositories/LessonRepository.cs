@@ -1,46 +1,45 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Microsoft.Extensions.Options;
-using DevEdu.Core;
 
 namespace DevEdu.DAL.Repositories
 {
     public class LessonRepository : BaseRepository, ILessonRepository
     {
-        private const string _lessonAddProcedure = "dbo.Lesson_Insert";
+        private const string _lessonInsertProcedure = "dbo.Lesson_Insert";
         private const string _lessonDeleteProcedure = "dbo.Lesson_Delete";
         private const string _lessonSelectAllByGroupIdProcedure = "dbo.Lesson_SelectAllByGroupId";
         private const string _lessonSelectAllByTeacherIdProcedure = "dbo.Lesson_SelectAllByTeacherId";
         private const string _lessonSelectByIdProcedure = "dbo.Lesson_SelectById";
         private const string _lessonUpdateProcedure = "dbo.Lesson_Update";
 
-        private const string _topicAddToLessonProcedure = "dbo.Lesson_Topic_Insert";
-        private const string _topicDeleteFromLessonProcedure = "dbo.Lesson_Topic_Delete";
+        private const string _lessonTopicInsertProcedure = "dbo.Lesson_Topic_Insert";
+        private const string _lessonTopicDeleteProcedure = "dbo.Lesson_Topic_Delete";
 
         private const string _studentLessonInsertProcedure = "dbo.Student_Lesson_Insert";
         private const string _studentLessonDeleteProcedure = "dbo.Student_Lesson_Delete";
-        private const string _updateFeedbackProcedure = "dbo.Student_Lesson_UpdateFeedback";
-        private const string _updateAbsenceReasonProcedure = "dbo.Student_Lesson_UpdateAbsenceReason";
-        private const string _updateIsPresentProcedure = "dbo.Student_Lesson_UpdateIsPresent";
-        private const string _selectAllFeedbackByLessonIdProcedure = "dbo.Student_Lesson_SelectAllFeedbackByLessonId";
-        private const string _selectByLessonAndUserIdProcedure = "dbo.Student_Lesson_SelectByLessonAndUserId";
-
+        private const string _studentLessonUpdateFeedbackProcedure = "dbo.Student_Lesson_UpdateFeedback";
+        private const string _studentLessonUpdateAbsenceReasonProcedure = "dbo.Student_Lesson_UpdateAbsenceReason";
+        private const string _studentLessonUpdateIsPresentProcedure = "dbo.Student_Lesson_UpdateIsPresent";
+        private const string _studentLessonSelectAllFeedbackByLessonIdProcedure = "dbo.Student_Lesson_SelectAllFeedbackByLessonId";
+        private const string _studentLessonSelectByLessonAndUserIdProcedure = "dbo.Student_Lesson_SelectByLessonAndUserId";
 
         public LessonRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public int AddLesson(LessonDto lessonDto)
         {
             return _connection.QueryFirst<int>(
-                _lessonAddProcedure,
+                _lessonInsertProcedure,
                 new
                 {
-                    Date = lessonDto.Date,
-                    TeacherComment = lessonDto.TeacherComment,
+                    lessonDto.Date,
+                    lessonDto.TeacherComment,
                     TeacherId = lessonDto.Teacher.Id,
-                    LinkToRecord = lessonDto.LinkToRecord
+                    lessonDto.LinkToRecord
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -58,7 +57,7 @@ namespace DevEdu.DAL.Repositories
         public int DeleteTopicFromLesson(int lessonId, int topicId)
         {
             return _connection.Execute(
-                _topicDeleteFromLessonProcedure,
+                _lessonTopicDeleteProcedure,
                 new
                 {
                     lessonId,
@@ -71,7 +70,7 @@ namespace DevEdu.DAL.Repositories
         public void AddTopicToLesson(int lessonId, int topicId)
         {
             _connection.Execute(
-                _topicAddToLessonProcedure,
+                _lessonTopicInsertProcedure,
                 new
                 {
                     lessonId,
@@ -86,29 +85,27 @@ namespace DevEdu.DAL.Repositories
             var lessonDictionary = new Dictionary<int, LessonDto>();
 
             var list = _connection
-               .Query<LessonDto, UserDto, TopicDto, LessonDto>(
-                   _lessonSelectAllByGroupIdProcedure,
-                   (lesson, teacher, topic) =>
-                   {
-                       LessonDto lessonEntry;
+                .Query<LessonDto, UserDto, TopicDto, LessonDto>(
+                    _lessonSelectAllByGroupIdProcedure,
+                    (lesson, teacher, topic) =>
+                    {
+                        if (!lessonDictionary.TryGetValue(lesson.Id, out var lessonEntry))
+                        {
+                            lessonEntry = lesson;
+                            lessonEntry.Teacher = teacher;
+                            lessonEntry.Topics = new List<TopicDto>();
+                            lessonDictionary.Add(lessonEntry.Id, lessonEntry);
+                        }
 
-                       if (!lessonDictionary.TryGetValue(lesson.Id, out lessonEntry))
-                       {
-                           lessonEntry = lesson;
-                           lessonEntry.Teacher = teacher;
-                           lessonEntry.Topics = new List<TopicDto>();
-                           lessonDictionary.Add(lessonEntry.Id, lessonEntry);
-                       }
-
-                       lessonEntry.Topics.Add(topic);
-                       return lessonEntry;
-                   },
-                   new { groupId },
-                   splitOn: "Id",
-                   commandType: CommandType.StoredProcedure
-               )
-               .Distinct()
-               .ToList();
+                        lessonEntry.Topics.Add(topic);
+                        return lessonEntry;
+                    },
+                    new { groupId },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .Distinct()
+                .ToList();
 
             return list;
         }
@@ -122,9 +119,7 @@ namespace DevEdu.DAL.Repositories
                    _lessonSelectAllByTeacherIdProcedure,
                    (lesson, teacher, topic, course) =>
                    {
-                       LessonDto lessonEntry;
-
-                       if (!lessonDictionary.TryGetValue(lesson.Id, out lessonEntry))
+                       if (!lessonDictionary.TryGetValue(lesson.Id, out var lessonEntry))
                        {
                            lessonEntry = lesson;
                            lessonEntry.Teacher = teacher;
@@ -234,7 +229,7 @@ namespace DevEdu.DAL.Repositories
         public void UpdateStudentFeedbackForLesson(StudentLessonDto studentLessonDto)
         {
             _connection.Execute(
-                _updateFeedbackProcedure,
+                _studentLessonUpdateFeedbackProcedure,
                  new
                  {
                      studentLessonDto.Feedback,
@@ -248,7 +243,7 @@ namespace DevEdu.DAL.Repositories
         public void UpdateStudentAbsenceReasonOnLesson(StudentLessonDto studentLessonDto)
         {
             _connection.Execute(
-                _updateAbsenceReasonProcedure,
+                _studentLessonUpdateAbsenceReasonProcedure,
                  new
                  {
                      studentLessonDto.AbsenceReason,
@@ -262,7 +257,7 @@ namespace DevEdu.DAL.Repositories
         public void UpdateStudentAttendanceOnLesson(StudentLessonDto studentLessonDto)
         {
             _connection.Execute(
-                _updateIsPresentProcedure,
+                _studentLessonUpdateIsPresentProcedure,
                  new
                  {
                      studentLessonDto.IsPresent,
@@ -277,7 +272,7 @@ namespace DevEdu.DAL.Repositories
         {
             StudentLessonDto result;
             var list = _connection.Query<StudentLessonDto, UserDto, StudentLessonDto>(
-                _selectAllFeedbackByLessonIdProcedure,
+                _studentLessonSelectAllFeedbackByLessonIdProcedure,
                 (studentLesson, user) =>
                 {
                     result = studentLesson;
@@ -295,10 +290,10 @@ namespace DevEdu.DAL.Repositories
         }
 
 
-        public StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int studentId)      
-        {            
+        public StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int studentId)
+        {
             return _connection.Query<StudentLessonDto, LessonDto, UserDto, StudentLessonDto>(
-                _selectByLessonAndUserIdProcedure,
+                _studentLessonSelectByLessonAndUserIdProcedure,
                 (studentLesson, lesson, user) =>
                 {
                     var result = studentLesson;

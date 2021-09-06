@@ -1,10 +1,10 @@
 using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using DevEdu.Core;
-using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -16,13 +16,13 @@ namespace DevEdu.DAL.Repositories
         private const string _courseSelectByIdProcedure = "dbo.Course_SelectById";
         private const string _courseSelectAllProcedure = "dbo.Course_SelectAll";
         private const string _courseUpdateProcedure = "dbo.Course_Update";
-        private const string _selectAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_SelectAllByCourseId]";
-        private const string _updateCourseTopicsProcedure = "[dbo].[Course_Topic_Update]";
-        private const string _deleteAllTopicsByCourseIdProcedure = "[dbo].[Course_Topic_DeleteAllTopicsByCourseId]";
-        private const string _course_TopicType = "dbo.Course_TopicType";
+        private const string _courseTopicSelectAllByCourseIdProcedure = "dbo.Course_Topic_SelectAllByCourseId";
+        private const string _courseTopicUpdateProcedure = "dbo.Course_Topic_Update";
+        private const string _courseTopicDeleteAllTopicsByCourseIdProcedure = "dbo.Course_Topic_DeleteAllTopicsByCourseId";
+        private const string _courseTopicType = "dbo.Course_TopicType";
 
-        private const string _insertCourseMaterial = "dbo.Course_Material_Insert";
-        private const string _deleteCourseMaterial = "dbo.Course_Material_Delete";
+        private const string _courseMaterialInsertProcedure = "dbo.Course_Material_Insert";
+        private const string _courseMaterialDeleteProcedure = "dbo.Course_Material_Delete";
 
         private const string _сourseTaskInsertProcedure = "dbo.Course_Task_Insert";
         private const string _сourseTaskDeleteProcedure = "dbo.Course_Task_Delete";
@@ -83,14 +83,12 @@ namespace DevEdu.DAL.Repositories
         public List<CourseDto> GetCourses()
         {
             var courseDictionary = new Dictionary<int, CourseDto>();
-            CourseDto result;
             return _connection
                 .Query<CourseDto, TopicDto, CourseDto>(
                     _courseSelectAllProcedure,
                     (course, topic) =>
                     {
-
-                        if (!courseDictionary.TryGetValue(course.Id, out result))
+                        if (!courseDictionary.TryGetValue(course.Id, out CourseDto result))
                         {
                             result = course;
                             result.Topics = new List<TopicDto> { topic };
@@ -154,7 +152,7 @@ namespace DevEdu.DAL.Repositories
         {
             return _connection
                 .Query<CourseTopicDto, TopicDto, CourseTopicDto>(
-                    _selectAllTopicsByCourseIdProcedure,
+                    _courseTopicSelectAllByCourseIdProcedure,
                     (courseTopicDto, topicDto) =>
                     {
                         courseTopicDto.Topic = topicDto;
@@ -167,6 +165,7 @@ namespace DevEdu.DAL.Repositories
                 )
                 .ToList();
         }
+
         public void UpdateCourseTopicsByCourseId(List<CourseTopicDto> topics)
         {
             var dt = new DataTable();
@@ -179,15 +178,16 @@ namespace DevEdu.DAL.Repositories
                 dt.Rows.Add(topic.Course.Id, topic.Topic.Id, topic.Position);
             }
             _connection.Execute(
-                _updateCourseTopicsProcedure,
-                new { tblCourseTopic = dt.AsTableValuedParameter(_course_TopicType) },
+                _courseTopicUpdateProcedure,
+                new { tblCourseTopic = dt.AsTableValuedParameter(_courseTopicType) },
                 commandType: CommandType.StoredProcedure
                 );
         }
+
         public void DeleteAllTopicsByCourseId(int courseId)
         {
             _connection.Execute(
-                _deleteAllTopicsByCourseIdProcedure,
+                _courseTopicDeleteAllTopicsByCourseIdProcedure,
                 new { courseId },
                 commandType: CommandType.StoredProcedure
                 );
@@ -216,7 +216,7 @@ namespace DevEdu.DAL.Repositories
         public int AddCourseMaterialReference(int courseId, int materialId)
         {
             return _connection.Execute(
-                _insertCourseMaterial,
+                _courseMaterialInsertProcedure,
                 new
                 {
                     courseId,
@@ -229,7 +229,7 @@ namespace DevEdu.DAL.Repositories
         public void RemoveCourseMaterialReference(int courseId, int materialId)
         {
             _connection.Execute(
-               _deleteCourseMaterial,
+               _courseMaterialDeleteProcedure,
                new
                {
                    courseId,

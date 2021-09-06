@@ -1,32 +1,33 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using DevEdu.Core;
-using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
     public class TaskRepository : BaseRepository, ITaskRepository
     {
-        private const string _taskAddProcedure = "dbo.Task_Insert";
+        private const string _taskInsertProcedure = "dbo.Task_Insert";
         private const string _taskDeleteProcedure = "dbo.Task_Delete";
         private const string _taskSelectByIdProcedure = "dbo.Task_SelectById";
         private const string _taskSelectByCourseIdProcedure = "dbo.Task_SelectByCourseId";
-        private const string _taskSelectAlldProcedure = "dbo.Task_SelectAll";
+        private const string _taskSelectAllProcedure = "dbo.Task_SelectAll";
         private const string _taskUpdateProcedure = "dbo.Task_Update";
-        private const string _tagTaskAddProcedure = "dbo.Tag_Task_Insert";
+
+        private const string _tagTaskInsertProcedure = "dbo.Tag_Task_Insert";
         private const string _tagTaskDeleteProcedure = "dbo.Tag_Task_Delete";
 
         public TaskRepository(IOptions<DatabaseSettings> options) : base(options)
         {
-
         }
+
         public int AddTask(TaskDto taskDto)
         {
             int taskId = _connection.QuerySingle<int>(
-                _taskAddProcedure,
+                _taskInsertProcedure,
                 new
                 {
                     taskDto.Name,
@@ -63,32 +64,32 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure
                 );
         }
+
         public TaskDto GetTaskById(int id)
         {
             TaskDto task = default;
-            _connection.Query<TaskDto, TagDto, TaskDto>(
-                _taskSelectByIdProcedure,
-                (taskDto, TagDto) =>
-                {
-                    if (task == null)
+            return _connection
+                .Query<TaskDto, TagDto, TaskDto>(
+                    _taskSelectByIdProcedure,
+                    (taskDto, tagDto) =>
                     {
-                        task = taskDto;
-                        task.Tags = new List<TagDto>();
-                    }
-                    if (TagDto != null)
-                        task.Tags.Add(TagDto);
-                    return taskDto;
-                },
+                        {
+                            task = taskDto;
+                            task.Tags = new List<TagDto>();
+
+                        }
+                        if (tagDto != null)
+                            task.Tags.Add(tagDto);
+                        return taskDto;
+                    },
                 new { id },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();
-            return task;
         }
 
         public List<TaskDto> GetTasksByCourseId(int courseId)
         {
-            var taskList = new List<TaskDto>();
             return _connection.Query<TaskDto>(
                     _taskSelectByCourseIdProcedure,
                     new { courseId },
@@ -101,31 +102,30 @@ namespace DevEdu.DAL.Repositories
             var taskDictionary = new Dictionary<int, TaskDto>();
 
             var list = _connection.Query<TaskDto, TagDto, TaskDto>(
-                    _taskSelectAlldProcedure,
-                (taskDto, TagDto) =>
+                    _taskSelectAllProcedure,
+                (taskDto, tagDto) =>
                 {
-                    TaskDto taskDtoEntry;
-
-                    if (!taskDictionary.TryGetValue(taskDto.Id, out taskDtoEntry))
+                    if (!taskDictionary.TryGetValue(taskDto.Id, out var taskDtoEntry))
                     {
                         taskDtoEntry = taskDto;
                         taskDtoEntry.Tags = new List<TagDto>();
                         taskDictionary.Add(taskDtoEntry.Id, taskDtoEntry);
                     }
-                    taskDtoEntry.Tags.Add(TagDto);
+                    taskDtoEntry.Tags.Add(tagDto);
+
                     return taskDtoEntry;
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure)
                 .Distinct()
-                .ToList<TaskDto>();
+                .ToList();
             return list;
         }
 
         public int AddTagToTask(int taskId, int tagId)
         {
             return _connection
-                .Execute(_tagTaskAddProcedure,
+                .Execute(_tagTaskInsertProcedure,
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure
                 );

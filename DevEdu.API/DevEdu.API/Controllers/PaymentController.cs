@@ -1,18 +1,20 @@
 ﻿using AutoMapper;
 using DevEdu.API.Common;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {
-    [AuthorizeRoles(Role.Manager)]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentController : Controller
@@ -26,20 +28,21 @@ namespace DevEdu.API.Controllers
             _paymentService = paymentService;
         }
 
-        //  api/payment/5
+        //  api/payment/{id}
         [HttpGet("{id}")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Get payment by id")]
         public PaymentOutputModel GetPayment(int id)
         {
-            var payment = _paymentService.GetPayment(id);
-            return _mapper.Map<PaymentOutputModel>(payment);
+            var dto = _paymentService.GetPayment(id);
+            return _mapper.Map<PaymentOutputModel>(dto);
         }
 
         //  api/payment/user/1
-        [AuthorizeRoles(Role.Student)]
+        [AuthorizeRoles(Role.Manager, Role.Student)]
         [HttpGet("user/{userId}")]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -47,12 +50,13 @@ namespace DevEdu.API.Controllers
         [Description("Get all payments by user id")]
         public List<PaymentOutputModel> SelectAllPaymentsByUserId(int userId)
         {
-            var payment = _paymentService.GetPaymentsByUserId(userId);
-            return _mapper.Map<List<PaymentOutputModel>>(payment);
+            var list = _paymentService.GetPaymentsByUserId(userId);
+            return _mapper.Map<List<PaymentOutputModel>>(list);
         }
 
         //  api/payment
         [HttpPost]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -61,15 +65,16 @@ namespace DevEdu.API.Controllers
         public ActionResult<PaymentOutputModel> AddPayment([FromBody] PaymentInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
-            int id = _paymentService.AddPayment(dto);
+            var id = _paymentService.AddPayment(dto);
             dto.Id = id;
             var output = _mapper.Map<PaymentOutputModel>(dto);
-            return StatusCode(201,output);
+            return Created(new Uri($"api/Payment/{output.Id}", UriKind.Relative), output);
         }
 
         //  api/payment/5
         [HttpDelete("{id}")]
-        [ProducesResponseType (StatusCodes.Status204NoContent)]
+        [AuthorizeRoles(Role.Manager)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Delete payment by id")]
@@ -81,6 +86,7 @@ namespace DevEdu.API.Controllers
 
         //  api/payment/5
         [HttpPut("{id}")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -96,6 +102,7 @@ namespace DevEdu.API.Controllers
 
         //  api/payment/bulk
         [HttpPost("bulk")]
+        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]

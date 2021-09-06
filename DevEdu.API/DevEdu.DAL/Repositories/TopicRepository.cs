@@ -1,10 +1,10 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using DevEdu.Core;
-using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -16,16 +16,17 @@ namespace DevEdu.DAL.Repositories
         private const string _topicSelectByCourseIdProcedure = "dbo.Topic_SelectByCourseId";
         private const string _topicSelectAllProcedure = "dbo.Topic_SelectAll";
         private const string _topicUpdateProcedure = "dbo.Topic_Update";
-        private const string _addTopicToCourseProcedure = "[dbo].[Course_Topic_Insert]";
-        private const string _addMultipleTopicsToCourseProcedure = "[dbo].[Course_Topic_AddMultiple]";
-        private const string _deleteTopicToCourseProcedure = "[dbo].[Course_Topic_Delete]";
-        private const string _getCourseTopicByIdProcedure = "[dbo].[Course_Topic_SelectById]";
-        private const string _getCourseTopicBuSevealIdProcedure = "[dbo].[Course_Topic_SelectBySeveralId]";
-        private const string _course_TopicType = "dbo.Course_TopicType";
-        private const string _idType = "[dbo].[IdType]";
 
-        private const string _tagToTopicAddProcedure = "dbo.Tag_Topic_Insert";
-        private const string _tagFromTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
+        private const string _courseTopicInsertProcedure = "dbo.Course_Topic_Insert";
+        private const string _courseTopicAddMultipleProcedure = "dbo.Course_Topic_AddMultiple";
+        private const string _courseTopicDeleteProcedure = "dbo.Course_Topic_Delete";
+        private const string _courseTopicSelectByIdProcedure = "dbo.Course_Topic_SelectById";
+        private const string _courseTopicSelectBySeveralIdProcedure = "dbo.Course_Topic_SelectBySeveralId";
+        private const string _courseTopicType = "dbo.Course_TopicType";
+        private const string _idType = "dbo.IdType";
+
+        private const string _tagTopicInsertProcedure = "dbo.Tag_Topic_Insert";
+        private const string _tagTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
 
         public TopicRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
@@ -87,7 +88,7 @@ namespace DevEdu.DAL.Repositories
         public int AddTopicToCourse(CourseTopicDto dto)
         {
             return _connection.QuerySingle<int>(
-                _addTopicToCourseProcedure,
+                _courseTopicInsertProcedure,
                 new { CourseId = dto.Course.Id, TopicId = dto.Topic.Id, dto.Position },
                 commandType: CommandType.StoredProcedure
                 );
@@ -96,7 +97,7 @@ namespace DevEdu.DAL.Repositories
         public void DeleteTopicFromCourse(int courseId, int topicId)
         {
             _connection.Execute(
-                _deleteTopicToCourseProcedure,
+                _courseTopicDeleteProcedure,
                 new { courseId, topicId },
                 commandType: CommandType.StoredProcedure
                 );
@@ -105,7 +106,7 @@ namespace DevEdu.DAL.Repositories
         public int AddTagToTopic(int topicId, int tagId)
         {
             return _connection.Execute(
-                _tagToTopicAddProcedure,
+                _tagTopicInsertProcedure,
                 new
                 {
                     topicId,
@@ -118,7 +119,7 @@ namespace DevEdu.DAL.Repositories
         public int DeleteTagFromTopic(int topicId, int tagId)
         {
             return _connection.Execute(
-                _tagFromTopicDeleteProcedure,
+                _tagTopicDeleteProcedure,
                 new
                 {
                     topicId,
@@ -140,8 +141,8 @@ namespace DevEdu.DAL.Repositories
                 dt.Rows.Add(topic.Course.Id, topic.Topic.Id, topic.Position);
             }
             return _connection.Query<int>(
-                _addMultipleTopicsToCourseProcedure,
-                new { tblCourseTopic = dt.AsTableValuedParameter(_course_TopicType) },
+                _courseTopicAddMultipleProcedure,
+                new { tblCourseTopic = dt.AsTableValuedParameter(_courseTopicType) },
                 commandType: CommandType.StoredProcedure
                 ).ToList();
         }
@@ -156,10 +157,11 @@ namespace DevEdu.DAL.Repositories
                 ).
                 ToList();
         }
+
         public CourseTopicDto GetCourseTopicById(int id)
         {
             var response = _connection.Query<CourseTopicDto, TopicDto, CourseTopicDto>(
-                _getCourseTopicByIdProcedure,
+                _courseTopicSelectByIdProcedure,
                 (course, topic) =>
                 {
                     course.Topic = topic;
@@ -171,6 +173,7 @@ namespace DevEdu.DAL.Repositories
                 ).FirstOrDefault();
             return response;
         }
+
         public List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids)
         {
             var table = new DataTable();
@@ -180,7 +183,7 @@ namespace DevEdu.DAL.Repositories
                 table.Rows.Add(i);
             }
             var response = _connection.Query<CourseTopicDto, TopicDto, CourseTopicDto>(
-                _getCourseTopicBuSevealIdProcedure,
+                _courseTopicSelectBySeveralIdProcedure,
                 (course, topic) =>
                 {
                     course.Topic = topic;

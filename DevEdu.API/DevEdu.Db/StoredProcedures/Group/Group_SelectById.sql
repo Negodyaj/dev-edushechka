@@ -5,7 +5,7 @@ BEGIN
 	SELECT 
 		G.[Id],
 		G.[Name],
-		G.[GroupStatusId],
+		G.[GroupStatusId] GroupStatus,
 		G.[StartDate],
 		G.[Timetable],
 		G.[PaymentPerMonth],

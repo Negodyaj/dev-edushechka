@@ -21,9 +21,7 @@ namespace DevEdu.Business.Tests
         private Mock<IMaterialRepository> _materialRepositoryMock;
         private CourseValidationHelper _courseValidationHelper;
         private TopicValidationHelper _topicValidationHelper;
-        private TaskValidationHelper _taskValidationHelper;
         private MaterialValidationHelper _materialValidationHelper;
-        private GroupValidationHelper _groupValidationHelper;
         private CourseService _sut;
 
 
@@ -37,8 +35,6 @@ namespace DevEdu.Business.Tests
             _materialRepositoryMock = new Mock<IMaterialRepository>();
             _courseValidationHelper = new CourseValidationHelper(_courseRepositoryMock.Object);
             _topicValidationHelper = new TopicValidationHelper(_topicRepositoryMock.Object);
-            _taskValidationHelper = new TaskValidationHelper(_taskRepositoryMock.Object, _groupRepositoryMock.Object);
-            _groupValidationHelper = new GroupValidationHelper(_groupRepositoryMock.Object);
             _materialValidationHelper = new MaterialValidationHelper(
                 _materialRepositoryMock.Object,
                 _groupRepositoryMock.Object,
@@ -53,9 +49,7 @@ namespace DevEdu.Business.Tests
                 _groupRepositoryMock.Object,
                 _courseValidationHelper,
                 _topicValidationHelper,
-                _taskValidationHelper,
-                _materialValidationHelper,
-                _groupValidationHelper
+                _materialValidationHelper
             );
         }
 
@@ -295,11 +289,13 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var givenCourseId = 7;
-            var givenCourseTopicsToUpdate = new List<CourseTopicDto>();
-            givenCourseTopicsToUpdate.Add(new CourseTopicDto { Position = 1, Id = 8, Topic = new TopicDto { Id = 8 } });
-            givenCourseTopicsToUpdate.Add(new CourseTopicDto { Position = 3, Id = 6, Topic = new TopicDto { Id = 6 } });
-            givenCourseTopicsToUpdate.Add(new CourseTopicDto { Position = 6, Id = 9, Topic = new TopicDto { Id = 9 } });
-            givenCourseTopicsToUpdate.Add(new CourseTopicDto { Position = 8, Id = 2, Topic = new TopicDto { Id = 2 } });
+            var givenCourseTopicsToUpdate = new List<CourseTopicDto>
+            {
+                new CourseTopicDto {Position = 1, Id = 8, Topic = new TopicDto {Id = 8}},
+                new CourseTopicDto {Position = 3, Id = 6, Topic = new TopicDto {Id = 6}},
+                new CourseTopicDto {Position = 6, Id = 9, Topic = new TopicDto {Id = 9}},
+                new CourseTopicDto {Position = 8, Id = 2, Topic = new TopicDto {Id = 2}}
+            };
 
             var topicsInDB = CourseData.GetTopics();
             var courseToicsFromDB = CourseData.GetListCourseTopicDtoFromDataBase();
@@ -380,23 +376,24 @@ namespace DevEdu.Business.Tests
             Assert.That(exception.Message, Is.EqualTo(ServiceMessages.SamePositionsInCourseTopics));
             _courseRepositoryMock.Verify(x => x.DeleteAllTopicsByCourseId(givenCourseId), Times.Never);
             _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Never);
-
         }
 
         [Test]
         public void UpdateCourseTopicsByCourseId_WhenTopicsAreNotUnique_ValidationExceptionThrown()
         {
             var givenCourseId = 3;
-            var givenTopicsToUpdate = new List<CourseTopicDto>();
+            var givenTopicsToUpdate = new List<CourseTopicDto>
+            {
+                new CourseTopicDto {Position = 4, Id = 15, Topic = new TopicDto {Id = 15}},
+                new CourseTopicDto {Position = 3, Id = 21, Topic = new TopicDto {Id = 21}},
+                new CourseTopicDto {Position = 1, Id = 15, Topic = new TopicDto {Id = 15}}
+            };
 
-            givenTopicsToUpdate.Add(new CourseTopicDto { Position = 4, Id = 15, Topic = new TopicDto { Id = 15 } });
-            givenTopicsToUpdate.Add(new CourseTopicDto { Position = 3, Id = 21, Topic = new TopicDto { Id = 21 } });
-            givenTopicsToUpdate.Add(new CourseTopicDto { Position = 1, Id = 15, Topic = new TopicDto { Id = 15 } });
-            List<TopicDto> topicsDto = new List<TopicDto>();
+            List<TopicDto> topicsDto = new()
+            {
+                new TopicDto {Id = 15}, new TopicDto {Id = 21}, new TopicDto {Id = 15}
+            };
 
-            topicsDto.Add(new TopicDto { Id = 15 });
-            topicsDto.Add(new TopicDto { Id = 21 });
-            topicsDto.Add(new TopicDto { Id = 15 });
 
             var toicsFromDB = CourseData.GetListCourseTopicDtoFromDataBase();
             _courseRepositoryMock.Setup(x => x.GetCourse(givenCourseId)).Returns(new CourseDto() { Id = givenCourseId });

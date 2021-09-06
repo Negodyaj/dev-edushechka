@@ -18,19 +18,24 @@ namespace DevEdu.DAL.Repositories
         private const string _groupSelectAllProcedure = "dbo.Group_SelectAll";
         private const string _groupUpdateByIdProcedure = "dbo.Group_UpdateById";
         private const string _groupUpdateGroupStatusProcedure = "dbo.Group_UpdateGroupStatus";
-        private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
-        private const string _userGroupDeleteProcedure = "dbo.Tag_Delete";
-        private const string _insertGroupLesson = "dbo.Group_Lesson_Insert";
-        private const string _deleteGroupLesson = "dbo.Group_Lesson_Delete";
-        private const string _insertGroupMaterial = "dbo.Group_Material_Insert";
-        private const string _deleteGroupMaterial = "dbo.Group_Material_Delete";
         private const string _groupSelectAllByMaterialIdProcedure = "dbo.Group_SelectByMaterialId";
-        private const string _taskFromGroupDeleteProcedure = "dbo.Group_Task_Delete";
-        private const string _groupSelectByCourse = "dbo.Group_SelectByCourseId";
+        private const string _groupSelectByCourseProcedure = "dbo.Group_SelectByCourseId";
         private const string _groupSelectAllByTaskIdProcedure = "dbo.Group_SelectAllByTaskId";
         private const string _groupSelectGroupsByUserIdProcedure = "dbo.Group_SelectAllByUserId";
         private const string _groupSelectGroupsByLessonIdProcedure = "dbo.Group_SelectAllByLessonId";
-        private const string _groupSelectPresentGroupForStudentByUserId = "dbo.Group_SelectPresentGroupForStudentByUserId";
+        private const string _groupSelectPresentGroupForStudentByUserIdProcedure = "dbo.Group_SelectPresentGroupForStudentByUserId";
+
+        private const string _groupLessonInsertProcedure = "dbo.Group_Lesson_Insert";
+        private const string _groupLessonDeleteProcedure = "dbo.Group_Lesson_Delete";
+
+        private const string _groupMaterialInsertProcedure = "dbo.Group_Material_Insert";
+        private const string _groupMaterialDeleteProcedure = "dbo.Group_Material_Delete";
+
+        private const string _groupTaskDeleteProcedure = "dbo.Group_Task_Delete";
+
+        private const string _userGroupInsertProcedure = "dbo.User_Group_Insert";
+        private const string _userGroupDeleteProcedure = "dbo.User_Group_Delete";
+
         public GroupRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public async Task<int> AddGroup(GroupDto groupDto)
@@ -40,11 +45,11 @@ namespace DevEdu.DAL.Repositories
                 _groupInsertProcedure,
                 new
                 {
-                    Name = groupDto.Name,
+                    groupDto.Name,
                     CourseId = groupDto.Course.Id,
-                    StartDate = groupDto.StartDate,
-                    Timetable = groupDto.Timetable,
-                    PaymentPerMonth = groupDto.PaymentPerMonth,
+                    groupDto.StartDate,
+                    groupDto.Timetable,
+                    groupDto.PaymentPerMonth,
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -71,6 +76,7 @@ namespace DevEdu.DAL.Repositories
                     GroupDto dto = group;
                     group.Course = course;
                     group.Students = new List<UserDto>();
+
                     return dto;
                 },
                 new { id },
@@ -91,6 +97,7 @@ namespace DevEdu.DAL.Repositories
                     GroupDto groupDto;
                     groupDto = group;
                     groupDto.Course = course;
+
                     return groupDto;
                 },
                 splitOn: "Id",
@@ -100,7 +107,6 @@ namespace DevEdu.DAL.Repositories
 
         public async Task<GroupDto> UpdateGroup(GroupDto groupDto)
         {
-
             return await _connection
             .QuerySingleAsync<GroupDto>
             (
@@ -138,7 +144,7 @@ namespace DevEdu.DAL.Repositories
         {
             return await _connection.ExecuteAsync
             (
-                _insertGroupLesson,
+                _groupLessonInsertProcedure,
                 new
                 {
                     groupId,
@@ -152,7 +158,7 @@ namespace DevEdu.DAL.Repositories
         {
             await _connection.ExecuteAsync
             (
-                 _deleteGroupLesson,
+                 _groupLessonDeleteProcedure,
                  new
                  {
                      groupId,
@@ -166,7 +172,7 @@ namespace DevEdu.DAL.Repositories
         {
             return await _connection.ExecuteAsync
             (
-                _insertGroupMaterial,
+                _groupMaterialInsertProcedure,
                 new
                 {
                     groupId,
@@ -180,7 +186,7 @@ namespace DevEdu.DAL.Repositories
         {
             return await _connection.ExecuteAsync
             (
-                _deleteGroupMaterial,
+                _groupMaterialDeleteProcedure,
                 new
                 {
                     groupId,
@@ -223,7 +229,7 @@ namespace DevEdu.DAL.Repositories
         {
             await _connection.ExecuteAsync
             (
-                _taskFromGroupDeleteProcedure,
+                _groupTaskDeleteProcedure,
                 new
                 {
                     groupId,
@@ -233,7 +239,6 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-       
         public List<GroupDto> GetGroupsByMaterialId(int id)
         {
             return _connection.Query<GroupDto>
@@ -248,7 +253,7 @@ namespace DevEdu.DAL.Repositories
         {
             return await _connection.QuerySingleAsync<int>
             (
-                _groupSelectPresentGroupForStudentByUserId,
+                _groupSelectPresentGroupForStudentByUserIdProcedure,
                 new { Id = userId },
                 commandType: CommandType.StoredProcedure
             );
@@ -257,7 +262,7 @@ namespace DevEdu.DAL.Repositories
         public List<GroupDto> GetGroupsByCourseId(int courseId)
         {
             return _connection.Query<GroupDto>(
-                    _groupSelectByCourse,
+                    _groupSelectByCourseProcedure,
                     new { courseId },
                     commandType: CommandType.StoredProcedure)
                 .ToList();

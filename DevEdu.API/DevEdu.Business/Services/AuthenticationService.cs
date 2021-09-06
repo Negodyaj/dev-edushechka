@@ -1,4 +1,6 @@
 ﻿using DevEdu.Business.Configuration;
+using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.IdentityModel.Tokens;
@@ -7,8 +9,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using DevEdu.Business.Constants;
-using DevEdu.Business.Exceptions;
 
 namespace DevEdu.Business.Services
 {

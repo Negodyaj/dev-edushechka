@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevEdu.API.Common;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Extensions;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
@@ -8,10 +9,10 @@ using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Controllers
 {
@@ -41,10 +42,10 @@ namespace DevEdu.API.Controllers
             var dto = _mapper.Map<GroupDto>(model);
             var result = await _groupService.AddGroup(dto);
             var output = _mapper.Map<GroupOutputModel>(result);
-            return StatusCode(201, output);
+            return Created(new Uri($"api/Group/{output.Id}", UriKind.Relative), output);
         }
 
-        //  api/Group/5
+        //  api/Group/{id}
         [HttpGet("{id}")]
         [Description("Return Group by id")]
         [ProducesResponseType(typeof(GroupFullOutputModel), StatusCodes.Status200OK)]
@@ -66,10 +67,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public async Task<List<GroupOutputModel>> GetAllGroups()
         {
-            var dto = await _groupService.GetGroups();
-            return _mapper.Map<List<GroupOutputModel>>(dto);
+            var list = await _groupService.GetGroups();
+            return _mapper.Map<List<GroupOutputModel>>(list);
         }
-
 
         //  api/Group
         [HttpDelete("{id}")]
@@ -110,8 +110,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<GroupOutputBaseModel> ChangeGroupStatus(int groupId, GroupStatus statusId)
         {
-            var output = await _groupService.ChangeGroupStatus(groupId, statusId);
-            return _mapper.Map<GroupOutputBaseModel>(output);
+            var dto = await _groupService.ChangeGroupStatus(groupId, statusId);
+            return _mapper.Map<GroupOutputBaseModel>(dto);
         }
 
         //add group_lesson relation
