@@ -33,7 +33,8 @@ namespace DevEdu.Business.Services
             IGroupRepository groupRepository,
             ICourseValidationHelper courseValidationHelper,
             ITopicValidationHelper topicValidationHelper,
-            IMaterialValidationHelper materialValidationHelper
+            IMaterialValidationHelper materialValidationHelper, 
+            ITaskValidationHelper taskValidationHelper
         )
         {
             _courseRepository = courseRepository;
@@ -44,6 +45,7 @@ namespace DevEdu.Business.Services
             _courseValidationHelper = courseValidationHelper;
             _topicValidationHelper = topicValidationHelper;
             _materialValidationHelper = materialValidationHelper;
+            _taskValidationHelper = taskValidationHelper;
         }
 
         public CourseDto AddCourse(CourseDto courseDto)

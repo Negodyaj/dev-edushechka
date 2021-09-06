@@ -22,6 +22,7 @@ namespace DevEdu.Business.Tests
         private CourseValidationHelper _courseValidationHelper;
         private TopicValidationHelper _topicValidationHelper;
         private MaterialValidationHelper _materialValidationHelper;
+        private ITaskValidationHelper _taskValidationHelper;
         private CourseService _sut;
 
 
@@ -35,6 +36,7 @@ namespace DevEdu.Business.Tests
             _materialRepositoryMock = new Mock<IMaterialRepository>();
             _courseValidationHelper = new CourseValidationHelper(_courseRepositoryMock.Object);
             _topicValidationHelper = new TopicValidationHelper(_topicRepositoryMock.Object);
+            _taskValidationHelper = new TaskValidationHelper(_taskRepositoryMock.Object, _groupRepositoryMock.Object);
             _materialValidationHelper = new MaterialValidationHelper(
                 _materialRepositoryMock.Object,
                 _groupRepositoryMock.Object,
@@ -49,7 +51,8 @@ namespace DevEdu.Business.Tests
                 _groupRepositoryMock.Object,
                 _courseValidationHelper,
                 _topicValidationHelper,
-                _materialValidationHelper
+                _materialValidationHelper,
+                _taskValidationHelper
             );
         }
 
