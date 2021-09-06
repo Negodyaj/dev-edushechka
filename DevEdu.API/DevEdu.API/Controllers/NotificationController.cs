@@ -30,7 +30,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/notification/5
-        [HttpGet("by-userInfo")]
+        [HttpGet]
         [Description("Return notification by userInfo")]
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -81,9 +81,9 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<NotificationDto>(inputModel);
+            var outputDto = _notificationService.AddNotification(dto, userInfo);
+            var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);     
             return Created(new Uri($"api/Notification/{result.Id}", UriKind.Relative), result);
-            var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);
-            var output = _notificationService.AddNotification(dto, userInfo);
         }
 
         //  api/notification/5

@@ -13,9 +13,6 @@ namespace DevEdu.Business.Tests
         private Mock<INotificationRepository> _notificationRepoMock;
         private Mock<IUserRepository> _userRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
-        private NotificationValidationHelper _notificationValidationHelper;
-        private UserValidationHelper _userValidationHelper;
-        private GroupValidationHelper _groupValidationHelper;
         private NotificationService _sut;
 
         [SetUp]
@@ -24,10 +21,11 @@ namespace DevEdu.Business.Tests
             _notificationRepoMock = new Mock<INotificationRepository>();
             _userRepoMock = new Mock<IUserRepository>();
             _groupRepoMock = new Mock<IGroupRepository>();
-            _userValidationHelper = new UserValidationHelper(_userRepoMock.Object);
-            _notificationValidationHelper = new NotificationValidationHelper(_notificationRepoMock.Object);
-            _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
-            _sut = new NotificationService(_notificationRepoMock.Object, _notificationValidationHelper, _userValidationHelper, _groupValidationHelper);
+            _sut = new NotificationService(_notificationRepoMock.Object,
+                new NotificationValidationHelper(_notificationRepoMock.Object),
+                _groupRepoMock.Object, 
+                new UserValidationHelper(_userRepoMock.Object),
+                new GroupValidationHelper(_groupRepoMock.Object));
         }
 
         [TestCase(Role.Admin)]

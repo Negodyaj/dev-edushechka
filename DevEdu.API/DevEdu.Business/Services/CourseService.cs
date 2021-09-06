@@ -20,6 +20,8 @@ namespace DevEdu.Business.Services
         private readonly IGroupRepository _groupRepository;
         private readonly ICourseValidationHelper _courseValidationHelper;
         private readonly ITopicValidationHelper _topicValidationHelper;
+        private readonly ITaskValidationHelper _taskValidationHelper;
+
         private readonly IMaterialValidationHelper _materialValidationHelper;
 
         public CourseService
