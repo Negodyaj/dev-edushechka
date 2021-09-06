@@ -27,7 +27,7 @@ namespace DevEdu.Business.ValidationHelpers
         public void CheckNotificationIsForGroup(NotificationDto dto, int userId)
         {
             if (dto.Group == null)
-                throw new AuthorizationException(string.Format(ServiceMessages.AccessToNotificationDenied, userId, dto.Id));
+                throw new AuthorizationException(string.Format(ServiceMessages.AccessToNotificationDenied, userId));
         }
 
         public void CheckRoleIdUserIdGroupIdIsNotNull(NotificationDto dto)
