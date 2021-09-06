@@ -24,7 +24,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock = new Mock<IGroupRepository>();
             _sut = new NotificationService(_notificationRepoMock.Object,
                 new NotificationValidationHelper(_notificationRepoMock.Object),
-                _groupRepoMock.Object, 
+                _groupRepoMock.Object,
                 new UserValidationHelper(_userRepoMock.Object),
                 new GroupValidationHelper(_groupRepoMock.Object));
 

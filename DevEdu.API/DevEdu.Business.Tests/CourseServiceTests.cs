@@ -394,7 +394,9 @@ namespace DevEdu.Business.Tests
 
             List<TopicDto> topicsDto = new()
             {
-                new TopicDto {Id = 15}, new TopicDto {Id = 21}, new TopicDto {Id = 15}
+                new TopicDto { Id = 15 },
+                new TopicDto { Id = 21 },
+                new TopicDto { Id = 15 }
             };
 
 

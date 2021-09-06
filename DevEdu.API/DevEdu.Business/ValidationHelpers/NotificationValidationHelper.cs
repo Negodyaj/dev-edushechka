@@ -1,8 +1,7 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
-using DevEdu.DAL.Repositories;
 using DevEdu.DAL.Models;
-using DevEdu.DAL.Enums;
+using DevEdu.DAL.Repositories;
 using System;
 
 namespace DevEdu.Business.ValidationHelpers

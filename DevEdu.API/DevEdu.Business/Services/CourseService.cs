@@ -2,7 +2,6 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
-using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
@@ -21,7 +20,6 @@ namespace DevEdu.Business.Services
         private readonly ICourseValidationHelper _courseValidationHelper;
         private readonly ITopicValidationHelper _topicValidationHelper;
         private readonly ITaskValidationHelper _taskValidationHelper;
-
         private readonly IMaterialValidationHelper _materialValidationHelper;
 
         public CourseService
@@ -33,7 +31,7 @@ namespace DevEdu.Business.Services
             IGroupRepository groupRepository,
             ICourseValidationHelper courseValidationHelper,
             ITopicValidationHelper topicValidationHelper,
-            IMaterialValidationHelper materialValidationHelper, 
+            IMaterialValidationHelper materialValidationHelper,
             ITaskValidationHelper taskValidationHelper
         )
         {
@@ -66,11 +64,11 @@ namespace DevEdu.Business.Services
             return course;
         }
 
-        public CourseDto GetFullCourseInfo(int id, UserIdentityInfo userToken) 
+        public CourseDto GetFullCourseInfo(int id, UserIdentityInfo userToken)
         {
             var course = GetCourse(id);
 
-                course.Tasks = _taskRepository.GetTasksByCourseId(course.Id);
+            course.Tasks = _taskRepository.GetTasksByCourseId(course.Id);
             course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
             course.Groups = _groupRepository.GetGroupsByCourseId(course.Id);
 
@@ -125,14 +123,14 @@ namespace DevEdu.Business.Services
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             _courseRepository.DeleteTaskFromCourse(courseId, taskId);
         }
-            
+
 
         public void AddTaskToCourse(int courseId, int taskId)
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
             _courseRepository.AddTaskToCourse(courseId, taskId);
         }
-            
+
 
         public int AddCourseMaterialReference(int courseId, int materialId)
         {

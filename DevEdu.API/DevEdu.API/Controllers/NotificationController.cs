@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using DevEdu.API.Configuration.ExceptionResponses;
-using DevEdu.API.Models;
 using DevEdu.API.Common;
-using DevEdu.API.Configuration;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Extensions;
+using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
@@ -82,7 +81,7 @@ namespace DevEdu.API.Controllers
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<NotificationDto>(inputModel);
             var outputDto = _notificationService.AddNotification(dto, userInfo);
-            var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);     
+            var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);
             return Created(new Uri($"api/Notification/{result.Id}", UriKind.Relative), result);
         }
 
