@@ -227,5 +227,5 @@ namespace DevEdu.Business.Tests
             Assert.That(result.Message, Is.EqualTo(exp));
             _paymentRepoMock.Verify(x => x.UpdatePayment(payment), Times.Never);
         }
-     }
+    }
 }

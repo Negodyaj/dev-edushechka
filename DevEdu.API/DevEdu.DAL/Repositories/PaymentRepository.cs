@@ -1,15 +1,15 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using DevEdu.Core;
-using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
     public class PaymentRepository : BaseRepository, IPaymentRepository
-    { 
+    {
         private const string _paymentInsertProcedure = "dbo.Payment_Insert";
         private const string _paymentDeleteProcedure = "dbo.Payment_Delete";
         private const string _paymentSelectByIdProcedure = "dbo.Payment_SelectById";

@@ -1,14 +1,14 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Models;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DevEdu.API.Configuration.ExceptionResponses;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DevEdu.API.Controllers
 {

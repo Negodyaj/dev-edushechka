@@ -1,10 +1,10 @@
 ﻿using Dapper;
+using DevEdu.Core;
 using DevEdu.DAL.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using DevEdu.Core;
-using Microsoft.Extensions.Options;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -71,7 +71,7 @@ namespace DevEdu.DAL.Repositories
             return _connection
                 .Query<TaskDto, TagDto, TaskDto>(
                     _taskSelectByIdProcedure,
-                    (taskDto, tagDto) => 
+                    (taskDto, tagDto) =>
                     {
                         {
                             task = taskDto;
@@ -81,7 +81,7 @@ namespace DevEdu.DAL.Repositories
                         if (tagDto != null)
                             task.Tags.Add(tagDto);
                         return taskDto;
-                },
+                    },
                 new { id },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure)

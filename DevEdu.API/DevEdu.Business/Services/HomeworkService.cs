@@ -1,9 +1,9 @@
-﻿using DevEdu.Business.ValidationHelpers;
+﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Services
 {

@@ -102,7 +102,7 @@ namespace DevEdu.Business.Tests
                     Teachers = new List<UserDto>()
                     {
                         new UserDto {
-                            Id = 2, 
+                            Id = 2,
                             Roles = new List<Role>()
                             {
                                 Role.Teacher
@@ -171,7 +171,7 @@ namespace DevEdu.Business.Tests
                     },
                     Tutors = null,
                     IsDeleted = false
-                }                
+                }
             };
         }
 

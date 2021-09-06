@@ -1,12 +1,12 @@
-﻿using DevEdu.Business.IdentityInfo;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
+using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DevEdu.Business.Constants;
-using DevEdu.Business.Exceptions;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Services
 {
@@ -82,7 +82,7 @@ namespace DevEdu.Business.Services
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(teacherId);
             return _lessonRepository.SelectAllLessonsByTeacherId(teacherId);
         }
-               
+
         public LessonDto SelectLessonWithCommentsById(UserIdentityInfo userIdentity, int id)
         {
             var lesson = _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(id);
@@ -120,7 +120,7 @@ namespace DevEdu.Business.Services
         {
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-            if(_lessonRepository.DeleteTopicFromLesson(lessonId, topicId) == 0)
+            if (_lessonRepository.DeleteTopicFromLesson(lessonId, topicId) == 0)
             {
                 throw new ValidationException(nameof(topicId), string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId));
             }
@@ -135,7 +135,7 @@ namespace DevEdu.Business.Services
         }
 
         public StudentLessonDto AddStudentToLesson(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
-        {           
+        {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             if (!userIdentityInfo.IsAdmin())
@@ -147,7 +147,7 @@ namespace DevEdu.Business.Services
 
         public void DeleteStudentFromLesson(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
         {
-           
+
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
@@ -157,7 +157,7 @@ namespace DevEdu.Business.Services
         }
 
         public StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
-        {            
+        {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
@@ -183,10 +183,10 @@ namespace DevEdu.Business.Services
         }
 
         public StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
-        {            
+        {
             if (!userIdentityInfo.IsAdmin())
                 _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userIdentityInfo.UserId);
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId); 
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
@@ -196,12 +196,12 @@ namespace DevEdu.Business.Services
         }
 
         public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId, UserIdentityInfo userIdentityInfo)
-        {            
+        {
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
-            if (userIdentityInfo.IsStudent() || userIdentityInfo.IsTeacher())          
-                _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userIdentityInfo.UserId);            
+            if (userIdentityInfo.IsStudent() || userIdentityInfo.IsTeacher())
+                _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userIdentityInfo.UserId);
             return _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
-        }                
+        }
 
 
     }

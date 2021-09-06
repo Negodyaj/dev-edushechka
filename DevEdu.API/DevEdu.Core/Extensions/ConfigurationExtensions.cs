@@ -5,7 +5,7 @@ namespace DevEdu.Core
 {
     public static class ConfigurationExtensions
     {
-         public static void SetEnvironmentVariableForConfiguration(this IConfiguration configuration)
+        public static void SetEnvironmentVariableForConfiguration(this IConfiguration configuration)
         {
             foreach (var item in configuration.AsEnumerable())
             {

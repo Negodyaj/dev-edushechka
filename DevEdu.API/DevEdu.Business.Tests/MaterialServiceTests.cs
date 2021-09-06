@@ -224,7 +224,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.GetMaterialByIdWithTags(material.Id, user)); 
+                () => _sut.GetMaterialByIdWithTags(material.Id, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -353,7 +353,7 @@ namespace DevEdu.Business.Tests
 
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
-            for(int i = 0; i < groups.Count; i++)
+            for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
                 _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
@@ -441,7 +441,7 @@ namespace DevEdu.Business.Tests
             //Given
             var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
             var groups = new List<int>() { 1, 2, 3 };
-            var groupDtos = new List<GroupDto> { new GroupDto { Id = 1}, new GroupDto { Id = 2 }, null };
+            var groupDtos = new List<GroupDto> { new GroupDto { Id = 1 }, new GroupDto { Id = 2 }, null };
             var usersInGroup = UserData.GetListsOfUsersInGroup();
             var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "group", groups[2]);
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };

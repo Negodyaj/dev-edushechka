@@ -1,10 +1,10 @@
-﻿using DevEdu.Business.Exceptions;
+﻿using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.Business.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using DevEdu.API.Configuration.ExceptionResponses;
 
 namespace DevEdu.API.Configuration
 {
@@ -33,11 +33,11 @@ namespace DevEdu.API.Configuration
             }
             catch (AuthorizationException ex)
             {
-                await HandlerExceptionMessageAsync(context, ex, HttpStatusCode.Forbidden);
+                await HandleExceptionMessageAsync(context, ex, HttpStatusCode.Forbidden);
             }
             catch (EntityNotFoundException ex)
             {
-                await HandlerExceptionMessageAsync(context, ex, HttpStatusCode.NotFound);
+                await HandleExceptionMessageAsync(context, ex, HttpStatusCode.NotFound);
             }
             catch (ValidationException ex)
             {
@@ -49,7 +49,7 @@ namespace DevEdu.API.Configuration
             }
         }
 
-        private static Task HandlerExceptionMessageAsync(HttpContext context, Exception exception, HttpStatusCode statusCode)
+        private static Task HandleExceptionMessageAsync(HttpContext context, Exception exception, HttpStatusCode statusCode)
         {
 
             var code = statusCode == HttpStatusCode.Forbidden ? _authorizationCode : _entityCode;

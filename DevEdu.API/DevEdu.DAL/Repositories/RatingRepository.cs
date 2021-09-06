@@ -18,9 +18,9 @@ namespace DevEdu.DAL.Repositories
         private const string _studentRatingSelectByUserIdProcedure = "dbo.StudentRating_SelectByUserId";
         private const string _studentRatingSelectByGroupIdProcedure = "dbo.StudentRating_SelectByGroupId";
         private const string _studentRatingUpdateProcedure = "dbo.StudentRating_Update";
-       
-        public RatingRepository(IOptions<DatabaseSettings> options) : base(options) {  }
-        
+
+        public RatingRepository(IOptions<DatabaseSettings> options) : base(options) { }
+
         public int AddStudentRating(StudentRatingDto studentRatingDto)
         {
             var userId = studentRatingDto.User.Id;

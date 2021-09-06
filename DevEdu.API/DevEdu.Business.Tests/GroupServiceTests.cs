@@ -297,6 +297,6 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
             _groupRepoMock.Verify(x => x.RemoveGroupFromLesson(groupId, userId), Times.Never);
-        }       
+        }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using DevEdu.API.Common;
+﻿using DevEdu.API.Common;
 using DevEdu.Business.Exceptions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Configuration.ExceptionResponses
 {
@@ -39,7 +39,7 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 });
             }
         }
-        
+
         private static int GetValidationCode(string exception)
         {
             return exception switch

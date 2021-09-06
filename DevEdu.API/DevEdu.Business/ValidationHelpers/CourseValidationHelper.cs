@@ -23,9 +23,8 @@ namespace DevEdu.Business.ValidationHelpers
             return course;
         }
 
-        public void CourseAccessValidate(CourseDto dto, int userId)
+        public void CourseAccessValidate(CourseDto course, int userId)
         {
-            var course = dto;
             if (course == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
         }

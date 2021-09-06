@@ -39,7 +39,7 @@ namespace DevEdu.Business.Tests
             _topicRepoMock.Setup(x => x.AddTopic(topicDto)).Returns(expectedTopicId);
             _topicRepoMock.Setup(x => x.AddTagToTopic(It.IsAny<int>(), It.IsAny<int>()));
 
-            
+
             //When
             var actualTopicId = _sut.AddTopic(topicDto);
 
@@ -61,7 +61,7 @@ namespace DevEdu.Business.Tests
             _topicRepoMock.Setup(x => x.GetTopic(expectedTopicId)).Returns(topicDto);
             _tagRepoMock.Setup(x => x.SelectTagById(It.IsAny<int>())).Returns(topicDto.Tags[0]);
 
-           
+
             //When
             var actualTopicId = _sut.AddTopic(topicDto);
 
@@ -95,14 +95,14 @@ namespace DevEdu.Business.Tests
             var topicDto = TopicData.GetTopicDtoWithoutTags();
             var topicId = 1;
 
-            _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(topicDto);            
+            _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(topicDto);
 
             //When
             var dto = _sut.GetTopic(topicId);
 
             //Than
             Assert.AreEqual(topicDto, dto);
-            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Once);           
+            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Once);
         }
 
         [Test]
@@ -111,13 +111,13 @@ namespace DevEdu.Business.Tests
             //Given
             var expectedList = TopicData.GetListTopicDto();
             _topicRepoMock.Setup(x => x.GetAllTopics()).Returns(expectedList);
-            
+
             //When
             var actualList = _sut.GetAllTopics();
 
             //Then
             Assert.AreEqual(expectedList, actualList);
-            _topicRepoMock.Verify(x => x.GetAllTopics(), Times.Once);           
+            _topicRepoMock.Verify(x => x.GetAllTopics(), Times.Once);
         }
 
         [Test]
@@ -129,14 +129,14 @@ namespace DevEdu.Business.Tests
 
             _topicRepoMock.Setup(x => x.UpdateTopic(topicDto));
             _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(topicDto);
-            
+
             //When
             var dto = _sut.UpdateTopic(topicId, topicDto);
 
             //Than
             Assert.AreEqual(topicDto, dto);
             _topicRepoMock.Verify(x => x.UpdateTopic(topicDto), Times.Once);
-            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Exactly(2));           
+            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Exactly(2));
         }
 
         [Test]

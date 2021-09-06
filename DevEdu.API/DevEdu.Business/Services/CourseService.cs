@@ -20,9 +20,7 @@ namespace DevEdu.Business.Services
         private readonly IGroupRepository _groupRepository;
         private readonly ICourseValidationHelper _courseValidationHelper;
         private readonly ITopicValidationHelper _topicValidationHelper;
-        private readonly ITaskValidationHelper _taskValidationHelper;
         private readonly IMaterialValidationHelper _materialValidationHelper;
-        private readonly IGroupValidationHelper _groupValidationHelper;
 
         public CourseService
         (
@@ -33,9 +31,7 @@ namespace DevEdu.Business.Services
             IGroupRepository groupRepository,
             ICourseValidationHelper courseValidationHelper,
             ITopicValidationHelper topicValidationHelper,
-            ITaskValidationHelper taskValidationHelper,
-            IMaterialValidationHelper materialValidationHelper,
-            IGroupValidationHelper groupValidationHelper
+            IMaterialValidationHelper materialValidationHelper
         )
         {
             _courseRepository = courseRepository;
@@ -45,9 +41,7 @@ namespace DevEdu.Business.Services
             _groupRepository = groupRepository;
             _courseValidationHelper = courseValidationHelper;
             _topicValidationHelper = topicValidationHelper;
-            _taskValidationHelper = taskValidationHelper;
             _materialValidationHelper = materialValidationHelper;
-            _groupValidationHelper = groupValidationHelper;
         }
 
         public CourseDto AddCourse(CourseDto courseDto)
@@ -67,21 +61,21 @@ namespace DevEdu.Business.Services
             var course = _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(id);
             return course;
         }
-        public CourseDto GetFullCourseInfo(int id, UserIdentityInfo userToken) 
+        public CourseDto GetFullCourseInfo(int id, UserIdentityInfo userToken)
         {
             var course = GetCourse(id);
             if (userToken.Roles.Contains(Role.Admin) ||
                 userToken.Roles.Contains(Role.Teacher) ||
                 userToken.Roles.Contains(Role.Tutor))
 
-            course.Tasks = _taskRepository.GetTasksByCourseId(course.Id);
+                course.Tasks = _taskRepository.GetTasksByCourseId(course.Id);
             course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
 
             if (userToken.Roles.Contains(Role.Admin) ||
                 userToken.Roles.Contains(Role.Teacher) ||
                 userToken.Roles.Contains(Role.Tutor) ||
                 userToken.Roles.Contains(Role.Methodist))
-                    course.Groups = _groupRepository.GetGroupsByCourseId(course.Id);
+                course.Groups = _groupRepository.GetGroupsByCourseId(course.Id);
 
             return course;
 
@@ -188,40 +182,39 @@ namespace DevEdu.Business.Services
         {
             return _topicValidationHelper.GetCourseTopicByIdAndThrowIfNotFound(id);
         }
+
         public List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids)
         {
             return _topicValidationHelper.GetCourseTopicBySeveralIdAndThrowIfNotFound(ids);
         }
+
         public void DeleteAllTopicsByCourseId(int courseId)
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
             _courseRepository.DeleteAllTopicsByCourseId(courseId);
         }
-        private void CheckUniquenessPositions(List<CourseTopicDto> topics)
+
+        private static void CheckUniquenessPositions(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
                 throw new ValidationException(nameof(CourseTopicDto.Position), ServiceMessages.SamePositionsInCourseTopics);
             }
         }
-        private void CheckUniquenessTopics(List<CourseTopicDto> topics)
+
+        private static void CheckUniquenessTopics(List<CourseTopicDto> topics)
         {
             if (topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
                 throw new ValidationException(nameof(CourseTopicDto.Topic), ServiceMessages.SameTopicsInCourseTopics);
             }
         }
+
         private void CheckCourseAndTopicExistences(int courseId, int topicId)
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
 
         }
-        private void CheckCourseAndMaterialExistences(int courseId, int materialId)
-        {
-            _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
-            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
-        }
-
     }
 }
