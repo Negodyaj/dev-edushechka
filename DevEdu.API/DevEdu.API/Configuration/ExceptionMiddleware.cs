@@ -33,23 +33,23 @@ namespace DevEdu.API.Configuration
             }
             catch (AuthorizationException ex)
             {
-                await HandlerExceptionMessageAsync(context, ex, HttpStatusCode.Forbidden);
+                await HandleExceptionMessageAsync(context, ex, HttpStatusCode.Forbidden);
             }
             catch (EntityNotFoundException ex)
             {
-                await HandlerExceptionMessageAsync(context, ex, HttpStatusCode.NotFound);
+                await HandleExceptionMessageAsync(context, ex, HttpStatusCode.NotFound);
             }
             catch (ValidationException ex)
             {
-                await HandlerValidationExceptionMessageAsync(context, ex, _messageValidation);
+                await HandleValidationExceptionMessageAsync(context, ex, _messageValidation);
             }
             catch (Exception ex)
             {
-                await HandlerExceptionMessageAsync(context, ex);
+                await HandleExceptionMessageAsync(context, ex);
             }
         }
 
-        private static Task HandlerExceptionMessageAsync(HttpContext context, Exception exception, HttpStatusCode statusCode)
+        private static Task HandleExceptionMessageAsync(HttpContext context, Exception exception, HttpStatusCode statusCode)
         {
 
             var code = statusCode == HttpStatusCode.Forbidden ? _authorizationCode : _entityCode;
@@ -68,7 +68,7 @@ namespace DevEdu.API.Configuration
             return context.Response.WriteAsync(result);
         }
 
-        private static Task HandlerValidationExceptionMessageAsync(HttpContext context, ValidationException exception, string message)
+        private static Task HandleValidationExceptionMessageAsync(HttpContext context, ValidationException exception, string message)
         {
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(new ValidationExceptionResponse(exception)
@@ -79,7 +79,7 @@ namespace DevEdu.API.Configuration
             return context.Response.WriteAsync(result);
         }
 
-        private static Task HandlerExceptionMessageAsync(HttpContext context, Exception exception)
+        private static Task HandleExceptionMessageAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
             var result = JsonConvert.SerializeObject(new
