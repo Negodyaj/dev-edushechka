@@ -113,7 +113,7 @@ namespace DevEdu.Business.Tests
             // Given
             var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             const int homeworkId = 1;
-            const int statusId = (int)TaskStatus.Returned;
+            const int statusId = (int)StudentHomeworkStatus.Returned;
             DateTime completedDate = default;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
@@ -139,7 +139,7 @@ namespace DevEdu.Business.Tests
             // Given
             var acceptedStatusDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskWithAcceptedTaskStatusDto();
             const int homeworkId = 1;
-            const int acceptedStatusId = (int)TaskStatus.Accepted;
+            const int acceptedStatusId = (int)StudentHomeworkStatus.Accepted;
             DateTime dateTime = DateTime.Now;
             dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
 

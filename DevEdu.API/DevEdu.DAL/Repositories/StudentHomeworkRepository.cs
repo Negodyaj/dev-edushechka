@@ -77,16 +77,16 @@ namespace DevEdu.DAL.Repositories
         public StudentHomeworkDto GetStudentHomeworkById(int id)
         {
             var result = _connection
-                .Query<StudentHomeworkDto, HomeworkDto, UserDto, TaskDto, TaskStatus, StudentHomeworkDto>(
+                .Query<StudentHomeworkDto, HomeworkDto, UserDto, TaskDto, StudentHomeworkStatus, StudentHomeworkDto>(
                     _studentHomeworkSelectByIdProcedure,
-                    (studentAnswer, homework, user, task, taskStatus) =>
+                    (studentHomework, homework, user, task, studentHomeworkStatus) =>
                     {
-                        studentAnswer.User = user;
-                        studentAnswer.Homework = homework;
-                        studentAnswer.Homework.Task = task;
-                        studentAnswer.TaskStatus = taskStatus;
+                        studentHomework.Homework = homework;
+                        studentHomework.User = user;
+                        studentHomework.Homework.Task = task;
+                        studentHomework.StudentHomeworkStatus = studentHomeworkStatus;
 
-                        return studentAnswer;
+                        return studentHomework;
                     },
                     new { id },
                     splitOn: "Id",
@@ -99,11 +99,11 @@ namespace DevEdu.DAL.Repositories
         public List<StudentHomeworkDto> GetAllStudentHomeworkByTask(int taskId)
         {
             return _connection
-                .Query<StudentHomeworkDto, TaskStatus, UserDto, StudentHomeworkDto>(
+                .Query<StudentHomeworkDto, StudentHomeworkStatus, UserDto, StudentHomeworkDto>(
                 _studentHomeworkSelectAllAnswersByTaskIdProcedure,
-                (studentAnswer, taskStatus, user) =>
+                (studentAnswer, studentHomeworkStatus, user) =>
                 {
-                    studentAnswer.TaskStatus = taskStatus;
+                    studentAnswer.StudentHomeworkStatus = studentHomeworkStatus;
                     studentAnswer.User = user;
 
                     return studentAnswer;
@@ -121,11 +121,11 @@ namespace DevEdu.DAL.Repositories
         public List<StudentHomeworkDto> GetAllStudentHomeworkByStudentId(int userId)
         {
             return _connection
-                .Query<StudentHomeworkDto, TaskStatus, HomeworkDto, TaskDto, StudentHomeworkDto>(
+                .Query<StudentHomeworkDto, StudentHomeworkStatus, HomeworkDto, TaskDto, StudentHomeworkDto>(
                     _studentHomeworkSelectAnswersByUserIdProcedure,
-                    (answerDto, taskStatus, homework, task) =>
+                    (answerDto, studentHomeworkStatus, homework, task) =>
                     {
-                        answerDto.TaskStatus = taskStatus;
+                        answerDto.StudentHomeworkStatus = studentHomeworkStatus;
                         answerDto.Homework = homework;
                         answerDto.Homework.Task = task;
                         return answerDto;

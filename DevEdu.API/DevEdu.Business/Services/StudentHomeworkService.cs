@@ -67,7 +67,7 @@ namespace DevEdu.Business.Services
             if (!userInfo.IsAdmin())
                 _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccess(dto.User.Id, userInfo.UserId);
             DateTime completedDate = default;
-            if (statusId == (int)TaskStatus.Accepted)
+            if (statusId == (int)StudentHomeworkStatus.Accepted)
                 completedDate = DateTime.Now;
             completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day, completedDate.Hour, completedDate.Minute, completedDate.Second);
             return _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTask(id, statusId, completedDate);
