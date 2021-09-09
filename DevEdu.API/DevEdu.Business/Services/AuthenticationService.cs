@@ -81,9 +81,7 @@ namespace DevEdu.Business.Services
 
             claims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
             claims.AddRange(user.Roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString())));
-            var claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-
-            return claimsIdentity;
+            return new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
         }
     }
 }
