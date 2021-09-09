@@ -37,9 +37,7 @@ namespace DevEdu.Business.Services
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(_options.Lifetime)),
                 signingCredentials: new SigningCredentials(_options.GetSymmetricSecurityKey(),
                     SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            return encodedJwt;
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
         public byte[] GetSalt()
