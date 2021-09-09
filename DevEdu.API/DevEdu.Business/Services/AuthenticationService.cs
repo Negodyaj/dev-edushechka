@@ -72,7 +72,7 @@ namespace DevEdu.Business.Services
         {
             var user = _userRepository.GetUserByEmail(username);
             if (user == null)
-                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+                throw new AuthorizationException(ServiceMessages.EntityNotFound);
 
             var claims = new List<Claim>();
             if (!Verify(user.Password, password)) throw new AuthorizationException(ServiceMessages.WrongPassword);
