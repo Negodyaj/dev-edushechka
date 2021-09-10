@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
@@ -36,9 +37,7 @@ namespace DevEdu.Business.Services
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(_options.Lifetime)),
                 signingCredentials: new SigningCredentials(_options.GetSymmetricSecurityKey(),
                     SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            return encodedJwt;
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
         public byte[] GetSalt()
@@ -73,20 +72,14 @@ namespace DevEdu.Business.Services
         {
             var user = _userRepository.GetUserByEmail(username);
             if (user == null)
-                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+                throw new AuthorizationException(ServiceMessages.EntityNotFound);
 
             var claims = new List<Claim>();
-            if (Verify(user.Password, password))
-            {
-                claims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
-                foreach (var role in user.Roles)
-                {
-                    claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString()));
-                }
-            }
+            if (!Verify(user.Password, password)) throw new AuthorizationException(ServiceMessages.WrongPassword);
 
-            var claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-            return claimsIdentity;
+            claims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
+            claims.AddRange(user.Roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString())));
+            return new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
         }
     }
 }

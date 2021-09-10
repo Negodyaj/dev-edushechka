@@ -76,14 +76,13 @@ namespace DevEdu.DAL.Repositories
         {
             UserDto result = default;
             return _connection
-                .Query<UserDto, City, Role, UserDto>(
+                .Query<UserDto, Role, UserDto>(
                     _userSelectByEmailProcedure,
-                    (user, city, role) =>
+                    (user, role) =>
                     {
                         if (result == null)
                         {
                             result = user;
-                            result.City = city;
                             result.Roles = new List<Role> { role };
                         }
                         else
@@ -174,30 +173,28 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public List<UserDto> GetUsersByGroupIdAndRole(int groupId, int roleId)
+        public List<UserDto> GetUsersByGroupIdAndRole(int groupId, int role)
         {
             var www = _connection.Query<UserDto>
             (
                 _userSelectByGroupIdAndRole,
                 new
                 {
-                    groupId,
-                    roleId
+                    groupId, roleId = role
                 },
                 commandType: CommandType.StoredProcedure
             ).ToList();
             return www;
         }
 
-        public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int roleId)
+        public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role)
         {
             return (List<UserDto>)await _connection.QueryAsync<UserDto>
             (
                 _userSelectByGroupIdAndRole,
                 new
                 {
-                    groupId,
-                    roleId
+                    groupId, roleId = role
                 },
                 commandType: CommandType.StoredProcedure
             );

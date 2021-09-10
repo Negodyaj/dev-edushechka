@@ -14,7 +14,7 @@ namespace DevEdu.DAL.Repositories
         public UserDto GetUserByEmail(string email);
         List<UserDto> GetAllUsers();
         void UpdateUser(UserDto user);
-        List<UserDto> GetUsersByGroupIdAndRole(int GroupId, int Role);
-        Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int GroupId, int Role);
+        List<UserDto> GetUsersByGroupIdAndRole(int groupId, int role);
+        Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role);
     }
 }
