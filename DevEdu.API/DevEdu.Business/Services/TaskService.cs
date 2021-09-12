@@ -98,7 +98,11 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var taskDto = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if (!userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            {
+                _taskValidationHelper.CheckMethodistAccessToTask(taskDto, userIdentityInfo.UserId);
+            }
+            if (!userIdentityInfo.Roles.Contains(Role.Admin) && !userIdentityInfo.Roles.Contains(Role.Methodist))
                 _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
 
             return taskDto;

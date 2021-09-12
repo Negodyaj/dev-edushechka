@@ -11,11 +11,13 @@ namespace DevEdu.Business.ValidationHelpers
     {
         private readonly ITaskRepository _taskRepository;
         private readonly IGroupRepository _groupRepository;
+        private readonly ICourseRepository _courseRepository;
 
-        public TaskValidationHelper(ITaskRepository taskRepository, IGroupRepository groupRepository)
+        public TaskValidationHelper(ITaskRepository taskRepository, IGroupRepository groupRepository, ICourseRepository courseRepository)
         {
             _taskRepository = taskRepository;
             _groupRepository = groupRepository;
+            _courseRepository = courseRepository;
         }
 
         public TaskDto GetTaskByIdAndThrowIfNotFound(int taskId)
@@ -38,6 +40,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckMethodistAccessToTask(TaskDto taskDto, int userId)
         {
+            taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(taskDto.Id);
             if (taskDto.Courses == null)
                 throw new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskDto.Id));
         }
