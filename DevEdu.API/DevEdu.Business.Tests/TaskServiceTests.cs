@@ -47,18 +47,6 @@ namespace DevEdu.Business.Tests
             );
         }
 
-        var userId = 10;
-        var groupDtos = TaskData.GetListOfGroups();
-        var groupsByUser = TaskData.GetListOfSameGroups();
-        var userDto = UserData.GetUserDto();
-        var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
-
-       
-        _taskRepoMock.Setup(x => x.UpdateTask(taskDto));
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(expectedTaskDto);
-        _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-        _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-        _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
         [Test]
         public async Task AddTaskByTeacher_WithoutTags_TaskCreated()
         {
@@ -73,12 +61,12 @@ namespace DevEdu.Business.Tests
             var userDto = UserData.GetUserDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
-            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
+            _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
+            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
             //When
             var actualTask = await _sut.AddTaskByTeacher(taskDto, homework, expectedGroupId, null, userIdentityInfo);
@@ -99,19 +87,27 @@ namespace DevEdu.Business.Tests
             var expectedGroupId = 10;
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             var tagsIds = new List<int> { 13, 15, 14 };
+            var userId = 10;
+            var groupDtos = TaskData.GetListOfGroups();
+            var groupsByUser = TaskData.GetListOfSameGroups();
+            var userDto = UserData.GetUserDto();
+            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
+            _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
             _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
             _taskRepoMock.Setup(x => x.AddTagToTask(taskId, It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
             //When
-            var actualTask = await _sut.AddTaskByTeacher(taskDto, homework, expectedGroupId, tagsIds);
+            var actualTask = await _sut.AddTaskByTeacher(taskDto, homework, expectedGroupId, tagsIds, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
             _taskRepoMock.Verify(x => x.AddTask(taskDto), Times.Once);
             _taskRepoMock.Verify(x => x.AddTagToTask(taskId, It.IsAny<int>()), Times.Exactly(taskDto.Tags.Count));
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Exactly(2));
         }
 
         [Test]
@@ -121,13 +117,21 @@ namespace DevEdu.Business.Tests
             var taskDto = TaskData.GetTaskDtoWithoutTags();
             var taskId = 1;
             var coursesIds = new List<int> { 1 };
+            var userId = 10;
+            var groupDtos = TaskData.GetListOfGroups();
+            var groupsByUser = TaskData.GetListOfSameGroups();
+            var userDto = UserData.GetUserDto();
+            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
+            _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
             _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
             _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByMethodist(taskDto, coursesIds, null);
+            var actualTask = _sut.AddTaskByMethodist(taskDto, coursesIds, null, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
@@ -144,19 +148,27 @@ namespace DevEdu.Business.Tests
             var taskId = 1;
             var coursesIds = new List<int> { 1 };
             var tagsIds = new List<int> { 13, 15, 14 };
+            var userId = 10;
+            var groupDtos = TaskData.GetListOfGroups();
+            var groupsByUser = TaskData.GetListOfSameGroups();
+            var userDto = UserData.GetUserDto();
+            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
+            _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
             _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
             _taskRepoMock.Setup(x => x.AddTagToTask(taskId, It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByMethodist(taskDto, coursesIds, tagsIds);
+            var actualTask = _sut.AddTaskByMethodist(taskDto, coursesIds, tagsIds, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
             _taskRepoMock.Verify(x => x.AddTask(taskDto), Times.Once);
             _taskRepoMock.Verify(x => x.AddTagToTask(taskId, It.IsAny<int>()), Times.Exactly(taskDto.Tags.Count));
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Exactly(2));
         }
 
         [Test]
@@ -165,13 +177,21 @@ namespace DevEdu.Business.Tests
             //Given
             var taskDto = TaskData.GetTaskDtoWithoutTags();
             var taskId = 1;
+            var userId = 10;
+            var groupDtos = TaskData.GetListOfGroups();
+            var groupsByUser = TaskData.GetListOfSameGroups();
+            var userDto = UserData.GetUserDto();
+            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
+            _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
             _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
             _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByMethodist(taskDto, null, null);
+            var actualTask = _sut.AddTaskByMethodist(taskDto, null, null, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);

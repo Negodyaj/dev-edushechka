@@ -41,7 +41,7 @@ namespace DevEdu.Business.Services
         {
             var taskId = _taskRepository.AddTask(taskDto);
             if (tagsIds != null && tagsIds.Count != 0)
-                tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId, userIdentityInfo));
+                AddTagsToTask(taskId, tagsIds, userIdentityInfo);
             var task = _taskRepository.GetTaskById(taskId);
             if (coursesIds != null && coursesIds.Count != 0)
                 coursesIds.ForEach(courseId => _courseRepository.AddTaskToCourse(courseId, taskId));
@@ -53,7 +53,7 @@ namespace DevEdu.Business.Services
         {
             var taskId = _taskRepository.AddTask(taskDto);
             if (tagsIds != null && tagsIds.Count != 0)
-                tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId, userIdentityInfo));
+                AddTagsToTask(taskId, tagsIds, userIdentityInfo);
             var task = _taskRepository.GetTaskById(taskId);
             if (homework != null)
             {
@@ -150,6 +150,20 @@ namespace DevEdu.Business.Services
                 _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
             }
             return _taskRepository.AddTagToTask(taskId, tagId);
+        }
+
+        public void AddTagsToTask(int taskId, List<int> tagsIds, UserIdentityInfo userIdentityInfo)
+        {
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
+            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
+                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            {
+                _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
+            }
+
+            tagsIds.ForEach(tagId => _taskRepository.AddTagToTask(taskId, tagId));
         }
 
         public int DeleteTagFromTask(int taskId, int tagId) => _taskRepository.DeleteTagFromTask(taskId, tagId);
