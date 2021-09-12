@@ -40,7 +40,7 @@ namespace DevEdu.Business.Tests
                 _homeworkRepoMock.Object,
                 new TaskValidationHelper(
                     _taskRepoMock.Object,
-                    _groupRepoMock.Object),
+                    _groupRepoMock.Object, _courseRepoMock.Object),
                 new UserValidationHelper(
                     _userRepoMock.Object
                 )

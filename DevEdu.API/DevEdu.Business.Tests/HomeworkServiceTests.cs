@@ -13,6 +13,7 @@ namespace DevEdu.Business.Tests
         private Mock<IHomeworkRepository> _homeworkRepoMock;
         private Mock<IGroupRepository> _groupRepoMock;
         private Mock<ITaskRepository> _taskRepoMock;
+        private Mock<ICourseRepository> _courseRepoMock;
         private HomeworkValidationHelper _homeworkValidationHelper;
         private GroupValidationHelper _groupValidationHelper;
         private TaskValidationHelper _taskValidationHelper;
@@ -24,9 +25,10 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock = new Mock<IHomeworkRepository>();
             _groupRepoMock = new Mock<IGroupRepository>();
             _taskRepoMock = new Mock<ITaskRepository>();
+            _courseRepoMock = new Mock<ICourseRepository>();
             _homeworkValidationHelper = new HomeworkValidationHelper(_homeworkRepoMock.Object);
             _groupValidationHelper = new GroupValidationHelper(_groupRepoMock.Object);
-            _taskValidationHelper = new TaskValidationHelper(_taskRepoMock.Object, _groupRepoMock.Object);
+            _taskValidationHelper = new TaskValidationHelper(_taskRepoMock.Object, _groupRepoMock.Object, _courseRepoMock.Object);
             _sut = new HomeworkService
             (
                 _homeworkRepoMock.Object,

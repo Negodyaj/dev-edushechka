@@ -29,7 +29,7 @@ namespace DevEdu.Business.Tests
             var userHelper = new UserValidationHelper(_userRepoMock.Object);
             var lessonHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object);
             var materialHelper = new MaterialValidationHelper(_materialRepoMock.Object, _groupRepoMock.Object, courseRepoMock.Object);
-            var taskHelper = new TaskValidationHelper(taskRepoMock.Object, _groupRepoMock.Object);
+            var taskHelper = new TaskValidationHelper(taskRepoMock.Object, _groupRepoMock.Object, courseRepoMock.Object);
             _sut = new
             (
                 _groupRepoMock.Object,

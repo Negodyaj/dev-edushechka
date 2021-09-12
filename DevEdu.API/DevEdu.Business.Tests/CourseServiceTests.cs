@@ -36,7 +36,7 @@ namespace DevEdu.Business.Tests
             _materialRepositoryMock = new Mock<IMaterialRepository>();
             _courseValidationHelper = new CourseValidationHelper(_courseRepositoryMock.Object, _groupRepositoryMock.Object);
             _topicValidationHelper = new TopicValidationHelper(_topicRepositoryMock.Object);
-            _taskValidationHelper = new TaskValidationHelper(_taskRepositoryMock.Object, _groupRepositoryMock.Object);
+            _taskValidationHelper = new TaskValidationHelper(_taskRepositoryMock.Object, _groupRepositoryMock.Object, _courseRepositoryMock.Object);
             _materialValidationHelper = new MaterialValidationHelper(
                 _materialRepositoryMock.Object,
                 _groupRepositoryMock.Object,
