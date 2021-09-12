@@ -130,7 +130,7 @@ namespace DevEdu.Business.Services
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var tasks = _taskRepository.GetTasks();
             var allowedTaskDtos = new List<TaskDto>();
-            if (userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Admin) || userIdentityInfo.Roles.Contains(Role.Methodist))
                 return tasks;
             foreach (var task in tasks)
             {
@@ -143,7 +143,7 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) || userIdentityInfo.Roles.Contains(Role.Tutor) && !userIdentityInfo.Roles.Contains(Role.Admin))
                 _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
             if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
@@ -156,7 +156,7 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) || userIdentityInfo.Roles.Contains(Role.Tutor) && !userIdentityInfo.Roles.Contains(Role.Admin))
                 _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
             if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
