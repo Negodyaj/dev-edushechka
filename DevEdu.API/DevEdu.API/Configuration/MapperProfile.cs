@@ -92,6 +92,7 @@ namespace DevEdu.API.Configuration
             CreateMap<CourseTopicDto, CourseTopicOutputModel>();
             CreateMap<CourseDto, CourseInfoFullOutputModel>();
             CreateMap<CourseDto, CourseInfoShortOutputModel>();
+            CreateMap<CourseDto, CourseInfoBaseOutputModel>();
             CreateMap<MaterialDto, MaterialInfoOutputModel>();
             CreateMap<MaterialDto, MaterialInfoFullOutputModel>();
             CreateMap<MaterialDto, MaterialInfoWithGroupsOutputModel>();

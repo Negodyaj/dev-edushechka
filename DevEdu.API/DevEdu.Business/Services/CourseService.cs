@@ -2,6 +2,7 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
@@ -67,6 +68,9 @@ namespace DevEdu.Business.Services
         public CourseDto GetFullCourseInfo(int id, UserIdentityInfo userToken)
         {
             var course = GetCourse(id);
+
+            if (!userToken.Roles.Contains(Role.Admin) && !userToken.Roles.Contains(Role.Methodist))
+                _courseValidationHelper.CourseAccessValidate(course, userToken.UserId);
 
             course.Tasks = _taskRepository.GetTasksByCourseId(course.Id);
             course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);

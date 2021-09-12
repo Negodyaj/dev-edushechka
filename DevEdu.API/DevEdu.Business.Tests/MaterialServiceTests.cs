@@ -36,7 +36,7 @@ namespace DevEdu.Business.Tests
                 _groupRepoMock.Object,
                 new GroupValidationHelper(_groupRepoMock.Object),
                 new TagValidationHelper(_tagRepoMock.Object),
-                new CourseValidationHelper(_courseRepoMock.Object),
+                new CourseValidationHelper(_courseRepoMock.Object, _groupRepoMock.Object),
                 new MaterialValidationHelper(
                     _materialRepoMock.Object,
                     _groupRepoMock.Object,

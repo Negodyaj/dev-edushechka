@@ -131,27 +131,28 @@ namespace DevEdu.API.Controllers
             return NoContent();
         }
 
-
+        [AuthorizeRoles(Role.Methodist)]
         [HttpPost("{courseId}/task/{taskId}")]
         [Description("Add task to course")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public string AddTaskToCourse(int courseId, int taskId)
+        public ActionResult AddTaskToCourse(int courseId, int taskId)
         {
             _courseService.AddTaskToCourse(courseId, taskId);
-            return $"Task Id:{taskId} was added to the Course:{courseId}";
+            return NoContent();
         }
 
+        [AuthorizeRoles(Role.Methodist)]
         [HttpDelete("{courseId}/task/{taskId}")]
         [Description("Delete task from course")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public string RemoveTaskFromCourse(int courseId, int taskId)
+        public ActionResult RemoveTaskFromCourse(int courseId, int taskId)
         {
             _courseService.DeleteTaskFromCourse(courseId, taskId);
-            return $"Task Id:{taskId} was deleted from Course:{courseId}";
+            return NoContent();
         }
 
         // api/course/{courseId}/topic/{topicId}

@@ -7,8 +7,8 @@ namespace DevEdu.Business.Services
 {
     public interface ITaskService
     {
-        public TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds);
-        public Task<TaskDto> AddTaskByTeacher(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds);
+        public TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds, UserIdentityInfo userIdentityInfo);
+        public Task<TaskDto> AddTaskByTeacher(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds, UserIdentityInfo userIdentityInfo);
 
         public TaskDto UpdateTask(TaskDto taskDto, int taskId, UserIdentityInfo userIdentityInfo);
         public int DeleteTask(int taskId, UserIdentityInfo userIdentityInfo);
@@ -18,7 +18,7 @@ namespace DevEdu.Business.Services
 
         public TaskDto GetTaskWithGroupsById(int taskId, UserIdentityInfo userIdentityInfo);
         public List<TaskDto> GetTasks(UserIdentityInfo userIdentityInfo);
-        public int AddTagToTask(int taskId, int tagId);
+        public int AddTagToTask(int taskId, int tagId, UserIdentityInfo userIdentityInfo);
         public int DeleteTagFromTask(int taskId, int tagId);
     }
 }

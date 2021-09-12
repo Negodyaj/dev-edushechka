@@ -47,6 +47,18 @@ namespace DevEdu.Business.Tests
             );
         }
 
+        var userId = 10;
+        var groupDtos = TaskData.GetListOfGroups();
+        var groupsByUser = TaskData.GetListOfSameGroups();
+        var userDto = UserData.GetUserDto();
+        var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+
+       
+        _taskRepoMock.Setup(x => x.UpdateTask(taskDto));
+            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(expectedTaskDto);
+        _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
+        _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
+        _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
         [Test]
         public async Task AddTaskByTeacher_WithoutTags_TaskCreated()
         {
@@ -55,13 +67,21 @@ namespace DevEdu.Business.Tests
             var taskId = 1;
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             var expectedGroupId = 10;
+            var userId = 10;
+            var groupDtos = TaskData.GetListOfGroups();
+            var groupsByUser = TaskData.GetListOfSameGroups();
+            var userDto = UserData.GetUserDto();
+            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
             _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             //When
-            var actualTask = await _sut.AddTaskByTeacher(taskDto, homework, expectedGroupId, null);
+            var actualTask = await _sut.AddTaskByTeacher(taskDto, homework, expectedGroupId, null, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);

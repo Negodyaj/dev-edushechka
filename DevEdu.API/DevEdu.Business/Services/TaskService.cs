@@ -37,11 +37,11 @@ namespace DevEdu.Business.Services
             _userValidationHelper = userValidationHelper;
         }
 
-        public TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds)
+        public TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds, UserIdentityInfo userIdentityInfo)
         {
             var taskId = _taskRepository.AddTask(taskDto);
             if (tagsIds != null && tagsIds.Count != 0)
-                tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
+                tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId, userIdentityInfo));
             var task = _taskRepository.GetTaskById(taskId);
             if (coursesIds != null && coursesIds.Count != 0)
                 coursesIds.ForEach(courseId => _courseRepository.AddTaskToCourse(courseId, taskId));
@@ -49,11 +49,11 @@ namespace DevEdu.Business.Services
             return task;
         }
 
-        public async Task<TaskDto> AddTaskByTeacher(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds)
+        public async Task<TaskDto> AddTaskByTeacher(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds, UserIdentityInfo userIdentityInfo)
         {
             var taskId = _taskRepository.AddTask(taskDto);
             if (tagsIds != null && tagsIds.Count != 0)
-                tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId));
+                tagsIds.ForEach(tagId => AddTagToTask(taskId, tagId, userIdentityInfo));
             var task = _taskRepository.GetTaskById(taskId);
             if (homework != null)
             {
@@ -139,8 +139,16 @@ namespace DevEdu.Business.Services
             return allowedTaskDtos;
         }
 
-        public int AddTagToTask(int taskId, int tagId)
+        public int AddTagToTask(int taskId, int tagId, UserIdentityInfo userIdentityInfo)
         {
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
+            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
+                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            {
+                _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
+            }
             return _taskRepository.AddTagToTask(taskId, tagId);
         }
 
