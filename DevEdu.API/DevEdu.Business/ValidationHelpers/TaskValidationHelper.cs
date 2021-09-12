@@ -2,6 +2,7 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DevEdu.Business.ValidationHelpers
@@ -50,6 +51,11 @@ namespace DevEdu.Business.ValidationHelpers
             if (result == default)
                 return null;
             return _taskRepository.GetTaskById(taskId);
+        }
+
+        public List<TaskDto> GetTasksAllowedToMethodist(List<TaskDto> taskDtos)
+        {
+            return (List<TaskDto>)taskDtos.Where(t => t.Courses != null);
         }
     }
 }
