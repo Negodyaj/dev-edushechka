@@ -73,7 +73,6 @@ namespace DevEdu.API.Extensions
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IRatingService, RatingService>();

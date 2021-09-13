@@ -7,7 +7,7 @@ namespace DevEdu.Business.Tests
 {
     public static class UserData
     {
-        public const int expectedUserId = 33;
+        public const int ExpectedUserId = 33;
 
         public static UserDto GetUserDto()
         {

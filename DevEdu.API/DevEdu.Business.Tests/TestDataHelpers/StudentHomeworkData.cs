@@ -1,12 +1,13 @@
-﻿using DevEdu.DAL.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 
-namespace DevEdu.Business.Tests
+namespace DevEdu.Business.Tests.TestDataHelpers
 {
     public class StudentAnswerOnTaskData
     {
-        public static DateTime _timeNow = DateTime.Now;
+        private static readonly DateTime _timeNow = DateTime.Now;
 
         public static StudentHomeworkDto DtoForTaskIdAndUserId()
         {
@@ -23,7 +24,7 @@ namespace DevEdu.Business.Tests
                 {
                     Id = 1
                 },
-                TaskStatus = (DAL.Enums.StudentHomeworkStatus)1,
+                TaskStatus = StudentHomeworkStatus.Unchecked,
                 CompletedDate = default,
                 IsDeleted = false
             };
@@ -62,7 +63,7 @@ namespace DevEdu.Business.Tests
                     Email = "petr@mail.com",
                     Photo = "peter.jpeg"
                 },
-                TaskStatus = (DAL.Enums.StudentHomeworkStatus)1,
+                TaskStatus = StudentHomeworkStatus.Unchecked,
                 CompletedDate = DateTime.Parse("01.01.2021"),
                 IsDeleted = false
             };
@@ -89,7 +90,7 @@ namespace DevEdu.Business.Tests
                     Email = "petr@mail.com",
                     Photo = "peter.jpeg"
                 },
-                TaskStatus = (DAL.Enums.StudentHomeworkStatus)2,
+                TaskStatus = StudentHomeworkStatus.Accepted,
                 CompletedDate = new DateTime(_timeNow.Year, _timeNow.Month, _timeNow.Day, _timeNow.Hour, _timeNow.Minute, _timeNow.Second),
                 IsDeleted = false
             };
@@ -116,7 +117,7 @@ namespace DevEdu.Business.Tests
                     Email = "petr@mail.com",
                     Photo = "peter.jpeg"
                 },
-                TaskStatus = (DAL.Enums.StudentHomeworkStatus)1,
+                TaskStatus = StudentHomeworkStatus.Unchecked,
                 CompletedDate = DateTime.Parse("01.01.2021"),
                 IsDeleted = false
             };
@@ -145,7 +146,7 @@ namespace DevEdu.Business.Tests
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = (DAL.Enums.StudentHomeworkStatus)1,
+                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -169,7 +170,7 @@ namespace DevEdu.Business.Tests
                         Email = "hubeker@uandex.ru",
                         Photo = "beker.jpeg"
                     },
-                    TaskStatus = (DAL.Enums.StudentHomeworkStatus)1,
+                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -193,7 +194,7 @@ namespace DevEdu.Business.Tests
                         Email = "linkeshot@mail.ru",
                         Photo = "shot.jpeg"
                     },
-                    TaskStatus = (DAL.Enums.StudentHomeworkStatus)1,
+                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -223,7 +224,7 @@ namespace DevEdu.Business.Tests
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = (DAL.Enums.StudentHomeworkStatus)1,
+                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -247,7 +248,7 @@ namespace DevEdu.Business.Tests
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = (DAL.Enums.StudentHomeworkStatus)1,
+                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("02.01.2021"),
                     IsDeleted = false
                 },
@@ -271,7 +272,7 @@ namespace DevEdu.Business.Tests
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = (DAL.Enums.StudentHomeworkStatus)1,
+                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("03.01.2021"),
                     IsDeleted = false
                 },

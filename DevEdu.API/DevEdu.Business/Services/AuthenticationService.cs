@@ -17,6 +17,7 @@ namespace DevEdu.Business.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IAuthOptions _options;
+
         public AuthenticationService(IUserRepository userRepository, IAuthOptions authOptions)
         {
             _userRepository = userRepository;

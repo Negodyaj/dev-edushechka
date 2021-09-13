@@ -7,7 +7,6 @@ using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace DevEdu.Business.Services
 {
     public class CourseService : ICourseService
