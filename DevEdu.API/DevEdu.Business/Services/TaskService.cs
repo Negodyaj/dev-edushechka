@@ -1,4 +1,5 @@
-﻿using DevEdu.Business.IdentityInfo;
+﻿using DevEdu.Business.Exceptions;
+using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
@@ -68,12 +69,12 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
-                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
             if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
                 _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
             }
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
+                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
 
             taskDto.Id = taskId;
             _taskRepository.UpdateTask(taskDto);
@@ -84,12 +85,12 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
-                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
             if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
                 _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
             }
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
+                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId); 
 
             return _taskRepository.DeleteTask(taskId);
         }
@@ -97,15 +98,37 @@ namespace DevEdu.Business.Services
         public TaskDto GetTaskById(int taskId, UserIdentityInfo userIdentityInfo)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
-            var taskDto = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            AuthorizationException exception = default;
+            bool authorized = true;
+           
             if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                _taskValidationHelper.CheckMethodistAccessToTask(taskDto, userIdentityInfo.UserId);
+                var mException = _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
+                if (mException != default)
+                {
+                    exception = mException;
+                    authorized = false;
+                }
+                else
+                    return task;
             }
             if (!userIdentityInfo.Roles.Contains(Role.Admin) && !userIdentityInfo.Roles.Contains(Role.Methodist))
-                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+            {
+                var uException = _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+                if (uException != default)
+                {
+                    exception = uException;
+                    authorized = false;
+                }
+                else
+                    return task;
+            }
 
-            return taskDto;
+            if (!authorized)
+                throw exception;
+
+            return task;
         }
 
         public TaskDto GetTaskWithCoursesById(int taskId, UserIdentityInfo userIdentityInfo)
@@ -151,12 +174,13 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if (userIdentityInfo.Roles.Contains(Role.Teacher) || userIdentityInfo.Roles.Contains(Role.Tutor) && !userIdentityInfo.Roles.Contains(Role.Admin))
-                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
             if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
                 _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
             }
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) || userIdentityInfo.Roles.Contains(Role.Tutor) && !userIdentityInfo.Roles.Contains(Role.Admin))
+                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+         
             return _taskRepository.AddTagToTask(taskId, tagId);
         }
 
@@ -164,12 +188,12 @@ namespace DevEdu.Business.Services
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
             var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
-            if (userIdentityInfo.Roles.Contains(Role.Teacher) || userIdentityInfo.Roles.Contains(Role.Tutor) && !userIdentityInfo.Roles.Contains(Role.Admin))
-                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
             if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
                 _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
             }
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) || userIdentityInfo.Roles.Contains(Role.Tutor) && !userIdentityInfo.Roles.Contains(Role.Admin))
+                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);  
 
             tagsIds.ForEach(tagId => _taskRepository.AddTagToTask(taskId, tagId));
         }

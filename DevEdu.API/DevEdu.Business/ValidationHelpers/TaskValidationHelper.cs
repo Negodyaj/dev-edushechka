@@ -28,21 +28,23 @@ namespace DevEdu.Business.ValidationHelpers
             return task;
         }
 
-        public void CheckUserAccessToTask(int taskId, int userId)
+        public AuthorizationException CheckUserAccessToTask(int taskId, int userId)
         {
             var groupsByTask = _groupRepository.GetGroupsByTaskId(taskId);
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
 
             var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
             if (result == default)
-                throw new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId));
+                return new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId));
+            return default;
         }
 
-        public void CheckMethodistAccessToTask(TaskDto taskDto, int userId)
+        public AuthorizationException CheckMethodistAccessToTask(TaskDto taskDto, int userId)
         {
             taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(taskDto.Id);
             if (taskDto.Courses == null)
-                throw new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskDto.Id));
+                return new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskDto.Id));
+            return default;
         }
 
         public TaskDto GetTaskAllowedToUser(int taskId, int userId)
