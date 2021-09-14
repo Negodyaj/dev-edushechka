@@ -13,12 +13,12 @@ namespace DevEdu.Business.Services
         public TaskDto UpdateTask(TaskDto taskDto, int taskId, UserIdentityInfo userIdentityInfo);
         public int DeleteTask(int taskId, UserIdentityInfo userIdentityInfo);
         public TaskDto GetTaskById(int taskId, UserIdentityInfo userIdentityInfo);
-        TaskDto GetTaskWithCoursesById(int taskId, UserIdentityInfo userIdentityInfo);
+        public TaskDto GetTaskWithCoursesById(int taskId, UserIdentityInfo userIdentityInfo);
         public TaskDto GetTaskWithAnswersById(int taskId, UserIdentityInfo userIdentityInfo);
 
         public TaskDto GetTaskWithGroupsById(int taskId, UserIdentityInfo userIdentityInfo);
         public List<TaskDto> GetTasks(UserIdentityInfo userIdentityInfo);
         public int AddTagToTask(int taskId, int tagId, UserIdentityInfo userIdentityInfo);
-        public int DeleteTagFromTask(int taskId, int tagId);
+        public int DeleteTagFromTask(int taskId, int tagId, UserIdentityInfo userIdentityInfo);
     }
 }

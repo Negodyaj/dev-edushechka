@@ -198,7 +198,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteTagFromTask(int taskId, int tagId)
         {
-            _taskService.DeleteTagFromTask(taskId, tagId);
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            _taskService.DeleteTagFromTask(taskId, tagId, userIdentityInfo);
             return NoContent();
         }
     }

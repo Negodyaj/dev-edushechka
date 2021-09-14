@@ -295,6 +295,41 @@ namespace DevEdu.Business.Services
             tagsIds.ForEach(tagId => _taskRepository.AddTagToTask(taskId, tagId));
         }
 
-        public int DeleteTagFromTask(int taskId, int tagId) => _taskRepository.DeleteTagFromTask(taskId, tagId);
+        public int DeleteTagFromTask(int taskId, int tagId, UserIdentityInfo userIdentityInfo)
+        {
+            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
+            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            AuthorizationException exception = default;
+            bool authorized = true;
+
+            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            {
+                var mException = _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
+                if (mException != default)
+                {
+                    exception = mException;
+                    authorized = false;
+                }
+                else
+                    return _taskRepository.DeleteTagFromTask(taskId, tagId);
+            }
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) || userIdentityInfo.Roles.Contains(Role.Tutor) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            {
+                var uException = _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+                if (uException != default)
+                {
+                    exception = uException;
+                    authorized = false;
+                }
+                else
+                    return _taskRepository.DeleteTagFromTask(taskId, tagId);
+            }
+
+            if (!authorized)
+                throw exception;
+
+            return _taskRepository.DeleteTagFromTask(taskId, tagId);
+        }
+        
     }
 }
