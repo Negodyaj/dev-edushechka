@@ -24,7 +24,14 @@ namespace DevEdu.Business.Services
         {
             var addedUserId = _userRepository.AddUser(dto);
 
-            if (dto.Roles != null && dto.Roles[0] != Role.Student)
+
+            if (dto.Roles == null || dto.Roles.Count == 0)
+            {
+                _userRepository.AddUserRole(addedUserId, Role.Student);
+                return _userRepository.GetUserById(addedUserId);
+            }
+
+            if (dto.Roles[0] != Role.Student || dto.Roles.Count > 1)
             {
                 if (userInfo.IsAdmin())
                 {
@@ -39,9 +46,7 @@ namespace DevEdu.Business.Services
                         ServiceMessages.AdminCanAddRolesToUserMessage, nameof(Role.Admin)));
                 }
             }
-
-            _userRepository.AddUserRole(addedUserId, Role.Student);
-
+            
             return _userRepository.GetUserById(addedUserId);
         }
 
