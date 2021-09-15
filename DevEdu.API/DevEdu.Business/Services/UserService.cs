@@ -5,6 +5,7 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Services
 {
@@ -19,7 +20,7 @@ namespace DevEdu.Business.Services
             _userValidationHelper = helper;
         }
 
-        public UserDto AddUser(UserDto dto)
+        public UserDto AddUser(UserDto dto, UserIdentityInfo userInfo)
         {
             if (dto.Roles == null || dto.Roles.Count == 0)
                 dto.Roles = new List<Role> { Role.Student };
@@ -35,7 +36,7 @@ namespace DevEdu.Business.Services
             return response;
         }
 
-        public UserDto GetUserById(int id)
+        public UserDto GetUserById(int id, UserIdentityInfo userInfo)
         {
             var user = _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
             return user;
@@ -50,13 +51,13 @@ namespace DevEdu.Business.Services
             return user;
         }
 
-        public List<UserDto> GetAllUsers()
+        public List<UserDto> GetAllUsers(UserIdentityInfo userInfo)
         {
             var list = _userRepository.GetAllUsers();
             return list;
         }
 
-        public UserDto UpdateUser(UserDto dto)
+        public UserDto UpdateUser(UserDto dto, UserIdentityInfo userInfo)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(dto.Id);
 
@@ -65,19 +66,19 @@ namespace DevEdu.Business.Services
             return user;
         }
 
-        public void DeleteUser(int id)
+        public void DeleteUser(int id, UserIdentityInfo userInfo)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
             _userRepository.DeleteUser(id);
         }
 
-        public void AddUserRole(int userId, int roleId)
+        public void AddUserRole(int userId, int roleId, UserIdentityInfo userInfo)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
             _userRepository.AddUserRole(userId, roleId);
         }
 
-        public void DeleteUserRole(int userId, int roleId)
+        public void DeleteUserRole(int userId, int roleId, UserIdentityInfo userInfo)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
             _userRepository.DeleteUserRole(userId, roleId);

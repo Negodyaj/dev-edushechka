@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DevEdu.API.Extensions;
 
 namespace DevEdu.API.Controllers
 {
@@ -36,8 +37,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<UserUpdateInfoOutPutModel> UpdateUserById([FromBody] UserUpdateInputModel model)
         {
+            var userInfo = this.GetUserIdAndRoles();
             var dtoEntry = _mapper.Map<UserDto>(model);
-            var dtoResult = _userService.UpdateUser(dtoEntry);
+            var dtoResult = _userService.UpdateUser(dtoEntry, userInfo);
             var outPut = _mapper.Map<UserUpdateInfoOutPutModel>(dtoResult);
             return Created(new Uri($"api/User/{outPut.Id}", UriKind.Relative), outPut);
         }
@@ -51,7 +53,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public UserFullInfoOutPutModel GetUserById(int userId)
         {
-            var dto = _userService.GetUserById(userId);
+            var userInfo = this.GetUserIdAndRoles();
+            var dto = _userService.GetUserById(userId, userInfo);
             return _mapper.Map<UserFullInfoOutPutModel>(dto);
         }
 
@@ -63,7 +66,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public List<UserInfoOutPutModel> GetAllUsers()
         {
-            var listDto = _userService.GetAllUsers();
+            var userInfo = this.GetUserIdAndRoles();
+            var listDto = _userService.GetAllUsers(userInfo);
             return _mapper.Map<List<UserInfoOutPutModel>>(listDto);
         }
 
@@ -76,7 +80,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteUser(int userId)
         {
-            _userService.DeleteUser(userId);
+            var userInfo = this.GetUserIdAndRoles();
+            _userService.DeleteUser(userId, userInfo);
             return NoContent();
         }
 
@@ -89,8 +94,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult AddRoleToUser(int userId, Role role)
         {
-            _userService.AddUserRole(userId, (int)role);
-            return StatusCode(StatusCodes.Status204NoContent);
+            var userInfo = this.GetUserIdAndRoles();
+            _userService.AddUserRole(userId, (int)role, userInfo);
+            return NoContent();
         }
 
         // api/user/{userId}/role/{roleId}
@@ -102,7 +108,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteRoleFromUser(int userId, Role role)
         {
-            _userService.DeleteUserRole(userId, (int)role);
+            var userInfo = this.GetUserIdAndRoles();
+            _userService.DeleteUserRole(userId, (int)role, userInfo);
             return NoContent();
         }
     }

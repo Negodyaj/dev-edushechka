@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using DevEdu.API.Common;
+using DevEdu.API.Extensions;
 using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Controllers
@@ -36,9 +37,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<UserFullInfoOutPutModel> Register([FromBody] UserInsertInputModel model)
         {
+            var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<UserDto>(model);
             dto.Password = _authService.HashPassword(dto.Password);
-            var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUser(dto));
+            var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUser(dto, userInfo));
             return Created(new Uri($"api/User/{addedUser.Id}", UriKind.Relative), addedUser);
         }
 
