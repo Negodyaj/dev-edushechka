@@ -281,7 +281,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             StudentRatingDto expectedStudentRatingDto = default;
-            var studentRatingId = UserData.GetUserDto().Id;
+            var studentRatingId = UserData.GetUserWithRolesStudentAndAdminDto().Id;
             var authorUserInfo = RatingData.GetTeacherOutOfGroupIdentityInfo();
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(studentRatingId)).Returns(expectedStudentRatingDto);

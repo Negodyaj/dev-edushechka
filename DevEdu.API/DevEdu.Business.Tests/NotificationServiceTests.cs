@@ -157,7 +157,7 @@ namespace DevEdu.Business.Tests
             //Given
             var notificationsList = NotificationData.GetListNotificationByUserDto();
             const int userId = 1;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             _notificationRepoMock.Setup(x => x.GetNotificationsByUserId(userId)).Returns(notificationsList);
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 

@@ -193,7 +193,7 @@ namespace DevEdu.Business.Tests
             // Given
             var studentAnswersListDto = StudentAnswerOnTaskData.GetAllAnswerOfStudent();
             const int userId = 1;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _studentHomeworkRepoMock.Setup(x => x.GetAllStudentHomeworkByStudentId(userId)).Returns(studentAnswersListDto);

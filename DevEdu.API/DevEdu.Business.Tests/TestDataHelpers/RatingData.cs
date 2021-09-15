@@ -16,7 +16,7 @@ namespace DevEdu.Business.Tests
                     {
                         Id = 1,
                         Group = new GroupDto { Id = 1 },
-                        User = UserData.GetAnotherUserDto(),
+                        User = UserData.GetStudentUserDto(),
                         RatingType = GetRatingTypeDtos()[0],
                         Rating = 80,
                         ReportingPeriodNumber = 2
@@ -25,7 +25,7 @@ namespace DevEdu.Business.Tests
                     {
                         Id = 2,
                         Group = new GroupDto { Id = 1 },
-                        User = UserData.GetAnotherUserDto(),
+                        User = UserData.GetStudentUserDto(),
                         RatingType = GetRatingTypeDtos()[1],
                         Rating = 50,
                         ReportingPeriodNumber = 2
@@ -51,7 +51,7 @@ namespace DevEdu.Business.Tests
             return new StudentRatingDto
             {
                 Group = new GroupDto { Id = 1 },
-                User = UserData.GetAnotherUserDto(),
+                User = UserData.GetStudentUserDto(),
                 RatingType = GetRatingTypeDtos()[0],
                 Rating = 80,
                 ReportingPeriodNumber = 2
@@ -65,7 +65,7 @@ namespace DevEdu.Business.Tests
             {
                 Id = 1,
                 Group = new GroupDto { Id = 1 },
-                User = UserData.GetAnotherUserDto(),
+                User = UserData.GetStudentUserDto(),
                 RatingType = GetRatingTypeDtos()[0],
                 Rating = 80,
                 ReportingPeriodNumber = 2

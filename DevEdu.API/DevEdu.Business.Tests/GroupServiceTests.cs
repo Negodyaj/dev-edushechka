@@ -260,7 +260,7 @@ namespace DevEdu.Business.Tests
             var groupId = 2;
             var userId = 3;
             var groupDto = GroupData.GetGroupDto();
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);
@@ -283,7 +283,7 @@ namespace DevEdu.Business.Tests
             var groupId = 2;
             var userId = 2;
             var groupDto = GroupData.GetGroupDto();
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(groupDto);

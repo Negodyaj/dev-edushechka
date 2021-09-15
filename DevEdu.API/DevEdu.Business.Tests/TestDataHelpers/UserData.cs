@@ -9,7 +9,7 @@ namespace DevEdu.Business.Tests
     {
         public const int ExpectedUserId = 33;
 
-        public static UserDto GetUserDto()
+        public static UserDto GetUserWithRolesStudentAndAdminDto()
         {
             return new()
             {
@@ -34,7 +34,28 @@ namespace DevEdu.Business.Tests
             };
         }
 
-        public static UserDto GetAnotherUserDto()
+        public static UserDto GetUserWithEmptyRolesDto()
+        {
+            return new()
+            {
+                Id = 1,
+                FirstName = "Admin",
+                LastName = "Adminov",
+                Patronymic = "Adminovich",
+                Email = "admin@admin.ad",
+                Username = "Admin01",
+                Password = "qwerty12345",
+                ContractNumber = "admin01",
+                City = (City)1,
+                BirthDate = DateTime.Today,
+                GitHubAccount = "admin/admin.git",
+                Photo = "https://localhost:IsAdmin/admin",
+                PhoneNumber = "adminPhoneNumber",
+                Roles = new List<Role>()
+            };
+        }
+
+        public static UserDto GetStudentUserDto()
         {
             return new()
             {

@@ -170,7 +170,7 @@ namespace DevEdu.Business.Tests
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -197,7 +197,7 @@ namespace DevEdu.Business.Tests
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -222,7 +222,7 @@ namespace DevEdu.Business.Tests
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -245,7 +245,7 @@ namespace DevEdu.Business.Tests
             var taskDto = TaskData.GetTaskDtoWithTags();
             var taskId = 1;
             var userId = 10;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -266,7 +266,7 @@ namespace DevEdu.Business.Tests
             var taskDto = TaskData.GetTaskDtoWithoutTags();
             var taskId = 1;
             var userId = 10;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
@@ -291,7 +291,7 @@ namespace DevEdu.Business.Tests
         {
             var taskId = 1;
             var userId = 10;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -312,7 +312,7 @@ namespace DevEdu.Business.Tests
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -335,7 +335,7 @@ namespace DevEdu.Business.Tests
             var taskDto = TaskData.GetTaskDtoWithTags();
             var taskId = 1;
             var userId = 10;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
 
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
@@ -359,7 +359,7 @@ namespace DevEdu.Business.Tests
             var groupsByUser = TaskData.GetListOfSameGroups();
             var taskId = 1;
             var userId = 10;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -381,7 +381,7 @@ namespace DevEdu.Business.Tests
         {
             var taskId = 1;
             var userId = 10;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -403,7 +403,7 @@ namespace DevEdu.Business.Tests
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -429,7 +429,7 @@ namespace DevEdu.Business.Tests
             var groupDtos = TaskData.GetListOfGroups();
             var taskId = 1;
             var userId = 10;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -453,7 +453,7 @@ namespace DevEdu.Business.Tests
         {
             var taskId = 1;
             var userId = 10;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -475,7 +475,7 @@ namespace DevEdu.Business.Tests
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -501,7 +501,7 @@ namespace DevEdu.Business.Tests
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -526,7 +526,7 @@ namespace DevEdu.Business.Tests
         {
             var taskId = 1;
             var userId = 10;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -548,7 +548,7 @@ namespace DevEdu.Business.Tests
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -573,7 +573,7 @@ namespace DevEdu.Business.Tests
             var groupsByUser = TaskData.GetListOfSameGroups();
             var taskId = 1;
             var userId = 10;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -596,7 +596,7 @@ namespace DevEdu.Business.Tests
         {
             var taskId = 1;
             var userId = 10;
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -619,7 +619,7 @@ namespace DevEdu.Business.Tests
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
@@ -643,7 +643,7 @@ namespace DevEdu.Business.Tests
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var sameGroupDtos = TaskData.GetListOfSameGroups();
-            var userDto = UserData.GetUserDto();
+            var userDto = UserData.GetUserWithRolesStudentAndAdminDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
