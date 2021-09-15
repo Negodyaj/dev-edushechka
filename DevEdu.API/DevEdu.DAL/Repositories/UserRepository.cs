@@ -76,9 +76,9 @@ namespace DevEdu.DAL.Repositories
         {
             UserDto result = default;
             return _connection
-                .Query<UserDto, Role, UserDto>(
+                .Query<UserDto, City, Role, UserDto>(
                     _userSelectByEmailProcedure,
-                    (user, role) =>
+                    (user, city, role) =>
                     {
                         if (result == null)
                         {

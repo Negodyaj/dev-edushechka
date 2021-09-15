@@ -73,6 +73,7 @@ namespace DevEdu.DAL.Repositories
                     _taskSelectByIdProcedure,
                     (taskDto, tagDto) =>
                     {
+                        if (task == default)
                         {
                             task = taskDto;
                             task.Tags = new List<TagDto>();
@@ -80,7 +81,7 @@ namespace DevEdu.DAL.Repositories
                         }
                         if (tagDto != null)
                             task.Tags.Add(tagDto);
-                        return taskDto;
+                        return task;
                     },
                 new { id },
                 splitOn: "Id",

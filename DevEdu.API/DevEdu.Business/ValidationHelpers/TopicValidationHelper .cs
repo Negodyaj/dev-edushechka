@@ -26,9 +26,12 @@ namespace DevEdu.Business.ValidationHelpers
         public void GetTopicByListDtoAndThrowIfNotFound(List<CourseTopicDto> topics)
         {
             var topicsFromBd = _topicRepository.GetAllTopics();
-            var areTopicsInDataBase = topics.All(d => topicsFromBd.Any(t => t.Id == d.Id));
+            var topicsIdsFromBd = topicsFromBd.Select(t => t.Id).ToList();
+            var topicIdsFromParametrs = topics.Select(t => t.Topic.Id).ToList();
 
-            if (!areTopicsInDataBase)
+            var areTopicsInDataBase = topicsIdsFromBd.Intersect(topicIdsFromParametrs).ToList();
+
+            if (areTopicsInDataBase.Count() != topicIdsFromParametrs.Count())
             {
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             }

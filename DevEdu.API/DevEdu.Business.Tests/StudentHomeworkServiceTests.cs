@@ -28,11 +28,12 @@ namespace DevEdu.Business.Tests
             _groupRepoMock = new Mock<IGroupRepository>();
             _userRepoMock = new Mock<IUserRepository>();
             _homeworkRepoMock = new Mock<IHomeworkRepository>();
+            var courseRepoMock = new Mock<ICourseRepository>();
             _sut = new StudentHomeworkService(
                    _studentHomeworkRepoMock.Object,
                    new StudentHomeworkValidationHelper(_studentHomeworkRepoMock.Object, _groupRepoMock.Object),
                    new UserValidationHelper(_userRepoMock.Object),
-                   new TaskValidationHelper(_taskRepoMock.Object, _groupRepoMock.Object),
+                   new TaskValidationHelper(_taskRepoMock.Object, _groupRepoMock.Object, courseRepoMock.Object),
                    new HomeworkValidationHelper(_homeworkRepoMock.Object)
                 );
         }

@@ -2,6 +2,7 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
@@ -67,6 +68,9 @@ namespace DevEdu.Business.Services
         {
             var course = GetCourse(id);
 
+            if (!userToken.Roles.Contains(Role.Admin) && !userToken.Roles.Contains(Role.Methodist))
+                _courseValidationHelper.CourseAccessValidate(course, userToken.UserId);
+
             course.Tasks = _taskRepository.GetTasksByCourseId(course.Id);
             course.Materials = _materialRepository.GetMaterialsByCourseId(course.Id);
             course.Groups = _groupRepository.GetGroupsByCourseId(course.Id);
@@ -127,6 +131,7 @@ namespace DevEdu.Business.Services
         public void AddTaskToCourse(int courseId, int taskId)
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             _courseRepository.AddTaskToCourse(courseId, taskId);
         }
 
@@ -217,7 +222,6 @@ namespace DevEdu.Business.Services
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-
         }
     }
 }

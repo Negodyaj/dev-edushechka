@@ -38,9 +38,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<TaskInfoOutputModel> AddTaskByTeacher([FromBody] TaskByTeacherInputModel model)
         {
+            var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = _mapper.Map<TaskDto>(model);
             var homeworkDto = _mapper.Map<HomeworkDto>(model.Homework);
-            var task = _taskService.AddTaskByTeacher(taskDto, homeworkDto, model.GroupId, model.Tags).GetAwaiter().GetResult();
+            var task = _taskService.AddTaskByTeacher(taskDto, homeworkDto, model.GroupId, model.Tags, userIdentityInfo).GetAwaiter().GetResult();
             var output = _mapper.Map<TaskInfoOutputModel>(task);
             return Created(new Uri($"api/Task/{output.Id}", UriKind.Relative), output);
         }
@@ -54,8 +55,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<TaskInfoOutputModel> AddTaskByMethodist([FromBody] TaskByMethodistInputModel model)
         {
+            var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = _mapper.Map<TaskDto>(model);
-            var task = _taskService.AddTaskByMethodist(taskDto, model.CourseIds, model.Tags);
+            var task = _taskService.AddTaskByMethodist(taskDto, model.CourseIds, model.Tags, userIdentityInfo);
             var output = _mapper.Map<TaskInfoOutputModel>(task);
             return Created(new Uri($"api/Task/{output.Id}", UriKind.Relative), output);
         }
@@ -182,7 +184,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult AddTagToTask(int taskId, int tagId)
         {
-            _taskService.AddTagToTask(taskId, tagId);
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            _taskService.AddTagToTask(taskId, tagId, userIdentityInfo);
             return NoContent();
         }
 
@@ -195,7 +198,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteTagFromTask(int taskId, int tagId)
         {
-            _taskService.DeleteTagFromTask(taskId, tagId);
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            _taskService.DeleteTagFromTask(taskId, tagId, userIdentityInfo);
             return NoContent();
         }
     }
