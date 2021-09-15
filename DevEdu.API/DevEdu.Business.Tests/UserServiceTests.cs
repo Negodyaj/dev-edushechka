@@ -31,18 +31,19 @@ namespace DevEdu.Business.Tests
             //Given
             var user = UserData.GetUserDto();
             var expectedUserId = UserData.ExpectedUserId;
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithAdminRole();
 
             _repoMock.Setup(x => x.AddUser(user)).Returns(UserData.ExpectedUserId);
-            _repoMock.Setup(x => x.AddUserRole(UserData.ExpectedUserId, It.IsAny<int>()));
+            _repoMock.Setup(x => x.AddUserRole(UserData.ExpectedUserId, It.IsAny<Role>()));
             _repoMock.Setup(x => x.GetUserById(expectedUserId)).Returns(new UserDto { Id = expectedUserId });
 
             //When
-            var actualDto = _sut.AddUser(user);
+            var actualDto = _sut.AddUser(user, userInfo);
 
             //Then
             Assert.AreEqual(UserData.ExpectedUserId, actualDto.Id);
             _repoMock.Verify(x => x.AddUser(user), Times.Once);
-            _repoMock.Verify(x => x.AddUserRole(actualDto.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            _repoMock.Verify(x => x.AddUserRole(actualDto.Id, It.IsAny<Role>()), Times.Exactly(user.Roles.Count - 1)); // -1 because Role.Student add automatically
         }
 
         [Test]
@@ -115,13 +116,14 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedUser = UserData.GetAnotherUserDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithAdminRole();
 
             _repoMock.Setup(x => x.AddUser(expectedUser)).Returns(UserData.ExpectedUserId);
             _repoMock.Setup(x => x.AddUserRole(UserData.ExpectedUserId, It.IsAny<Role>()));
             _repoMock.Setup(x => x.GetUserById(UserData.ExpectedUserId)).Returns(expectedUser);
 
             //When
-            var actualUser = _sut.AddUser(expectedUser);
+            var actualUser = _sut.AddUser(expectedUser, userInfo);
 
             //Then
             Assert.AreEqual(expectedUser, actualUser);
@@ -235,9 +237,10 @@ namespace DevEdu.Business.Tests
         public void AddUserRole_UserIdAndRoleId_UserRoleWasCreated()
         {
             //Given
-            var roleId = 6;
+            var roleId = Role.Student;
             var user = UserData.GetUserDto();
             var userId = user.Id;
+
             _repoMock.Setup(x => x.AddUserRole(userId, roleId));
             _repoMock.Setup(x => x.GetUserById(userId)).Returns(user);
 
@@ -253,7 +256,7 @@ namespace DevEdu.Business.Tests
         public void DeleteUserRole_UserIdAndRoleId_UserRoleWasDeleted()
         {
             //Given
-            var roleId = 6;
+            var roleId = Role.Student;
             var user = UserData.GetUserDto();
             var userId = user.Id;
             _repoMock.Setup(x => x.DeleteUserRole(userId, roleId));
