@@ -3,6 +3,7 @@
 AS
 BEGIN
 	SELECT 
+		U.Password,
 		U.Id,
 		UR.RoleId as id
 	FROM dbo.[User] U WITH (NOLOCK)
