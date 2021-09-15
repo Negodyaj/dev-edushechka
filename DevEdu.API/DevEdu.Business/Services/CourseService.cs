@@ -223,7 +223,6 @@ namespace DevEdu.Business.Services
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-
         }
     }
 }
