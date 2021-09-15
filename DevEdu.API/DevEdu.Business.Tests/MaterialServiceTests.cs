@@ -127,7 +127,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var material = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
-            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
+            var expectedMessage = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(material), material.Id);
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
@@ -220,7 +220,7 @@ namespace DevEdu.Business.Tests
             //Given
             var material = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { (Role)It.IsAny<int>() } };
-            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
+            var expectedMessage = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(material), material.Id);
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
@@ -242,7 +242,7 @@ namespace DevEdu.Business.Tests
             //Given
             var material = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { role } };
-            var expectedMessage = string.Format(ServiceMessages.AccessToMaterialDenied, user.UserId, material.Id);
+            var expectedMessage = string.Format(ServiceMessages.AccessToMaterialDeniedMessage, user.UserId, material.Id);
 
             _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(material.Id)).Returns(new List<CourseDto>());
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(material.Id)).Returns(new List<GroupDto>());
@@ -323,7 +323,7 @@ namespace DevEdu.Business.Tests
             var material = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
             var tag = TagData.GetListTagData()[0];
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { (Role)It.IsAny<int>() } };
-            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(tag), tag.Id);
+            var expectedMessage = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(tag), tag.Id);
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
@@ -417,7 +417,7 @@ namespace DevEdu.Business.Tests
             //Given
             var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
             var groups = new List<int>() { 1, 2, 2 };
-            var expectedMessage = string.Format(ServiceMessages.DuplicateValuesProvided, nameof(groups));
+            var expectedMessage = string.Format(ServiceMessages.DuplicateValuesProvidedMessage, nameof(groups));
             var user = new UserIdentityInfo() { UserId = 2 };
 
             //When
@@ -443,7 +443,7 @@ namespace DevEdu.Business.Tests
             var groups = new List<int>() { 1, 2, 3 };
             var groupDtos = new List<GroupDto> { new GroupDto { Id = 1 }, new GroupDto { Id = 2 }, null };
             var usersInGroup = UserData.GetListsOfUsersInGroup();
-            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "group", groups[2]);
+            var expectedMessage = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "group", groups[2]);
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
             for (int i = 0; i < groups.Count; i++)
@@ -476,7 +476,7 @@ namespace DevEdu.Business.Tests
             var groupDtos = GroupData.GetGroupDtos();
             var usersInGroup = UserData.GetAnotherListsOfUsersInGroup();
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
-            var expectedMessage = string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, user.UserId, groups[2], role.ToString());
+            var expectedMessage = string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroupMessage, user.UserId, groups[2], role.ToString());
 
             for (int i = 0; i < groups.Count; i++)
             {
@@ -509,7 +509,7 @@ namespace DevEdu.Business.Tests
             var tagDtos = new List<TagDto> { new TagDto { Id = 1 }, new TagDto { Id = 2 }, null };
             var groupDtos = GroupData.GetGroupDtos();
             var usersInGroup = UserData.GetListsOfUsersInGroup();
-            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", tags[2]);
+            var expectedMessage = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "tag", tags[2]);
 
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
@@ -546,7 +546,7 @@ namespace DevEdu.Business.Tests
             var tags = new List<int>() { 1, 2, 2 };
             var groupDtos = GroupData.GetGroupDtos();
             var usersInGroup = UserData.GetListsOfUsersInGroup();
-            var expectedMessage = string.Format(ServiceMessages.DuplicateValuesProvided, nameof(tags));
+            var expectedMessage = string.Format(ServiceMessages.DuplicateValuesProvidedMessage, nameof(tags));
 
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
@@ -637,7 +637,7 @@ namespace DevEdu.Business.Tests
             //Given
             var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
             var courses = new List<int>() { 1, 2, 2 };
-            var expectedMessage = string.Format(ServiceMessages.DuplicateValuesProvided, nameof(courses));
+            var expectedMessage = string.Format(ServiceMessages.DuplicateValuesProvidedMessage, nameof(courses));
             var user = new UserIdentityInfo() { UserId = 2 };
 
             //When
@@ -660,7 +660,7 @@ namespace DevEdu.Business.Tests
             var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
             var courses = new List<int>() { 1, 2, 3 };
             var courseDtos = new List<CourseDto> { new CourseDto { Id = 1 }, new CourseDto { Id = 2 }, null };
-            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "course", courses[2]);
+            var expectedMessage = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "course", courses[2]);
             var user = new UserIdentityInfo() { UserId = 2 };
 
             for (int i = 0; i < courses.Count; i++)
@@ -690,7 +690,7 @@ namespace DevEdu.Business.Tests
             var courseDtos = CourseData.GetCoursesDtos();
             var tags = new List<int>() { 1, 2, 3 };
             var tagDtos = new List<TagDto> { new TagDto { Id = 1 }, new TagDto { Id = 2 }, null };
-            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", tags[2]);
+            var expectedMessage = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "tag", tags[2]);
             var user = new UserIdentityInfo() { UserId = 2 };
 
             for (int i = 0; i < courses.Count; i++)
@@ -720,7 +720,7 @@ namespace DevEdu.Business.Tests
             var courses = new List<int>() { 1, 2, 3 };
             var courseDtos = CourseData.GetCoursesDtos();
             var tags = new List<int>() { 1, 2, 2 };
-            var expectedMessage = string.Format(ServiceMessages.DuplicateValuesProvided, nameof(tags));
+            var expectedMessage = string.Format(ServiceMessages.DuplicateValuesProvidedMessage, nameof(tags));
             var user = new UserIdentityInfo() { UserId = 2 };
 
             for (int i = 0; i < courses.Count; i++)
@@ -796,7 +796,7 @@ namespace DevEdu.Business.Tests
             //Given
             var materialToUpdate = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { (Role)It.IsAny<int>() } };
-            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "material", materialToUpdate.Id);
+            var expectedMessage = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "material", materialToUpdate.Id);
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
@@ -817,7 +817,7 @@ namespace DevEdu.Business.Tests
             var materialToUpdate = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { Role.Teacher } };
             var expectedMessage = string.
-                    Format(ServiceMessages.AccessToMaterialDenied, user.UserId, materialToUpdate.Id);
+                    Format(ServiceMessages.AccessToMaterialDeniedMessage, user.UserId, materialToUpdate.Id);
 
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToUpdate.Id)).Returns(materialToUpdate);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.UserId)).
@@ -845,7 +845,7 @@ namespace DevEdu.Business.Tests
             var expectedMaterial = MaterialData.GetUpdatedMaterialDtoWithTagsCoursesAndGroups();
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { Role.Methodist } };
             var expectedMessage = string.
-                    Format(ServiceMessages.AccessToMaterialDenied, user.UserId, materialToUpdate.Id);
+                    Format(ServiceMessages.AccessToMaterialDeniedMessage, user.UserId, materialToUpdate.Id);
 
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToUpdate.Id)).Returns(materialToUpdate);
 
@@ -910,7 +910,7 @@ namespace DevEdu.Business.Tests
             //Given
             var materialToDelete = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { (Role)It.IsAny<int>() } };
-            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "material", materialToDelete.Id);
+            var expectedMessage = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "material", materialToDelete.Id);
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
@@ -932,7 +932,7 @@ namespace DevEdu.Business.Tests
             var materialToDelete = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { Role.Teacher } };
             var expectedMessage = string.
-                    Format(ServiceMessages.AccessToMaterialDenied, user.UserId, materialToDelete.Id);
+                    Format(ServiceMessages.AccessToMaterialDeniedMessage, user.UserId, materialToDelete.Id);
 
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToDelete.Id)).Returns(materialToDelete);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.UserId)).
@@ -960,7 +960,7 @@ namespace DevEdu.Business.Tests
             var materialToDelete = MaterialData.GetMaterialDtoWithTagsCoursesAndGroups();
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { Role.Methodist } };
             var expectedMessage = string.
-                    Format(ServiceMessages.AccessToMaterialDenied, user.UserId, materialToDelete.Id);
+                    Format(ServiceMessages.AccessToMaterialDeniedMessage, user.UserId, materialToDelete.Id);
 
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToDelete.Id)).Returns(materialToDelete);
 
@@ -1014,7 +1014,7 @@ namespace DevEdu.Business.Tests
             //Given
             var givenMaterialId = 5;
             var givenTagId = 2;
-            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", givenTagId);
+            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "tag", givenTagId);
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
             _tagRepoMock.Setup(x => x.SelectTagById(givenTagId));
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
@@ -1032,7 +1032,7 @@ namespace DevEdu.Business.Tests
         {
             var givenMaterialId = 5;
             var givenTagId = 2;
-            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", givenMaterialId);
+            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "material", givenMaterialId);
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
             _tagRepoMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId }); ;
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId));
@@ -1051,7 +1051,7 @@ namespace DevEdu.Business.Tests
             //Given
             var givenMaterialId = 5;
             var givenTagId = 2;
-            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", givenTagId);
+            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "tag", givenTagId);
             _materialRepoMock.Setup(x => x.DeleteTagFromMaterial(givenMaterialId, givenTagId));
             _tagRepoMock.Setup(x => x.SelectTagById(givenTagId));
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
@@ -1069,7 +1069,7 @@ namespace DevEdu.Business.Tests
         {
             var givenMaterialId = 5;
             var givenTagId = 2;
-            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", givenMaterialId);
+            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "material", givenMaterialId);
             _materialRepoMock.Setup(x => x.AddTagToMaterial(givenMaterialId, givenTagId));
             _tagRepoMock.Setup(x => x.SelectTagById(givenTagId)).Returns(new TagDto { Id = givenTagId }); ;
             _materialRepoMock.Setup(x => x.GetMaterialById(givenMaterialId));

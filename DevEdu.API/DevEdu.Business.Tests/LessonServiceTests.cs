@@ -68,7 +68,7 @@ namespace DevEdu.Business.Tests
             //Given
             var lessonId = 5;
             var topicId = 7;
-            var expectedMessage = string.Format(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId));
+            var expectedMessage = string.Format(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "lesson", lessonId));
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(() =>
@@ -87,7 +87,7 @@ namespace DevEdu.Business.Tests
             //Given
             var lesson = LessonData.GetSelectedLessonDto();
             var topicId = 7;
-            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId);
+            var expectedMessage = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "topic", topicId);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
 
@@ -107,7 +107,7 @@ namespace DevEdu.Business.Tests
         {
             var lesson = LessonData.GetSelectedLessonDto();
             var topic = TopicData.GetAnotherTopicDtoWithoutTags();
-            var expectedMessage = string.Format(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lesson.Id, topic.Id));
+            var expectedMessage = string.Format(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExistsMessage, lesson.Id, topic.Id));
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
             _topicRepository.Setup(x => x.GetTopic(topic.Id)).Returns(topic);
@@ -149,7 +149,7 @@ namespace DevEdu.Business.Tests
             //Given
             var lessonId = 5;
             var topicId = 7;
-            var expectedMessage = string.Format(string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId));
+            var expectedMessage = string.Format(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "lesson", lessonId));
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(() =>
@@ -168,7 +168,7 @@ namespace DevEdu.Business.Tests
             //Given
             var lesson = LessonData.GetSelectedLessonDto();
             var topicId = 7;
-            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicId);
+            var expectedMessage = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "topic", topicId);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
 
@@ -188,7 +188,7 @@ namespace DevEdu.Business.Tests
         {
             var lesson = LessonData.GetSelectedLessonDto();
             var topic = TopicData.GetAnotherTopicDtoWithoutTags();
-            var expectedMessage = string.Format(string.Format(ServiceMessages.LessonTopicReferenceNotFound, lesson.Id, topic.Id));
+            var expectedMessage = string.Format(string.Format(ServiceMessages.LessonTopicReferenceNotFoundMessage, lesson.Id, topic.Id));
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
             _topicRepository.Setup(x => x.GetTopic(topic.Id)).Returns(topic);
@@ -243,7 +243,7 @@ namespace DevEdu.Business.Tests
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var addedLesson = LessonData.GetLessonDto();
-            var expectedException = string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.UserId, addedLesson.Teacher.Id);
+            var expectedException = string.Format(ServiceMessages.UserAndTeacherAreNotSameMessage, userIdentity.UserId, addedLesson.Teacher.Id);
 
             //When
             var ex = Assert.Throws<ValidationException>(() => _sut.AddLesson(userIdentity, addedLesson, null));
@@ -264,7 +264,7 @@ namespace DevEdu.Business.Tests
             var addedLesson = LessonData.GetSelectedLessonDto();
             var topicIds = new List<int> { 1 };
 
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicIds.First());
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "topic", topicIds.First());
 
             _lessonRepository.Setup(x => x.AddLesson(addedLesson)).Returns(It.IsAny<int>());
             _topicRepository.Setup(x => x.GetTopic(topicIds.First())).Returns(It.IsAny<TopicDto>());
@@ -310,7 +310,7 @@ namespace DevEdu.Business.Tests
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var groupId = 3;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "group", groupId);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "group", groupId);
 
             _groupRepository.Setup(x => x.GetGroup(groupId)).ReturnsAsync(It.IsAny<GroupDto>());
 
@@ -331,7 +331,7 @@ namespace DevEdu.Business.Tests
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var group = GroupData.GetGroupDto();
             var lessons = new List<UserDto> { };
-            var expectedException = string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, userIdentity.UserId, group.Id, Role.Teacher);
+            var expectedException = string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroupMessage, userIdentity.UserId, group.Id, Role.Teacher);
 
             _groupRepository.Setup(x => x.GetGroup(group.Id)).ReturnsAsync(group);
             _userRepository.Setup(x => x.GetUsersByGroupIdAndRole(group.Id, It.IsAny<int>())).Returns(lessons);
@@ -369,7 +369,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var teacherId = 3;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "user", teacherId);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "user", teacherId);
 
             _userRepository.Setup(x => x.GetUserById(teacherId)).Returns(It.IsAny<UserDto>());
 
@@ -414,7 +414,7 @@ namespace DevEdu.Business.Tests
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lessonId = LessonData.LessonId;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "lesson", lessonId);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(It.IsAny<LessonDto>());
 
@@ -436,7 +436,7 @@ namespace DevEdu.Business.Tests
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithStudentRole();
             var lesson = LessonData.GetLessonDto();
             var groups = new List<GroupDto> { };
-            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
+            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLessonMessage, userIdentity.UserId, lesson.Id);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
             _groupRepository.Setup(x => x.GetGroupsByUserId(userIdentity.UserId)).Returns(groups);
@@ -488,7 +488,7 @@ namespace DevEdu.Business.Tests
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lessonId = LessonData.LessonId;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "lesson", lessonId);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(It.IsAny<LessonDto>());
 
@@ -510,7 +510,7 @@ namespace DevEdu.Business.Tests
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var lesson = LessonData.GetLessonDto();
             var groups = new List<GroupDto> { };
-            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
+            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLessonMessage, userIdentity.UserId, lesson.Id);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
             _groupRepository.Setup(x => x.GetGroupsByUserId(userIdentity.UserId)).Returns(groups);
@@ -556,7 +556,7 @@ namespace DevEdu.Business.Tests
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lessonId = LessonData.LessonId;
             var updatedLesson = LessonData.GetLessonDto();
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "lesson", lessonId);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(It.IsAny<LessonDto>());
 
@@ -577,7 +577,7 @@ namespace DevEdu.Business.Tests
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var lesson = LessonData.GetLessonDto();
             var groups = new List<GroupDto> { };
-            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
+            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLessonMessage, userIdentity.UserId, lesson.Id);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
             _groupRepository.Setup(x => x.GetGroupsByUserId(userIdentity.UserId)).Returns(groups);
@@ -618,7 +618,7 @@ namespace DevEdu.Business.Tests
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lessonId = LessonData.LessonId;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "lesson", lessonId);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(It.IsAny<LessonDto>());
 
@@ -639,7 +639,7 @@ namespace DevEdu.Business.Tests
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var lesson = LessonData.GetLessonDto();
             var groups = new List<GroupDto> { };
-            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
+            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLessonMessage, userIdentity.UserId, lesson.Id);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
             _groupRepository.Setup(x => x.GetGroupsByUserId(userIdentity.UserId)).Returns(groups);

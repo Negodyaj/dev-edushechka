@@ -177,7 +177,7 @@ namespace DevEdu.Business.Tests
             var commentDto = CommentData.GetCommentDto();
             var lesson = CommentData.GetLessonDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(lesson), lesson.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(lesson), lesson.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -198,7 +198,7 @@ namespace DevEdu.Business.Tests
             var lessonDto = CommentData.GetLessonDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var userId = userInfo.UserId;
-            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userId, lessonId);
+            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLessonMessage, userId, lessonId);
 
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
             _groupRepoMock.Setup(x => x.GetGroupsByLessonId(lessonId)).Returns(CommentData.GetGroupsDto());
@@ -225,7 +225,7 @@ namespace DevEdu.Business.Tests
             const int taskStudentId = 1;
             var studentHomework = CommentData.GetStudentHomeworkDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(studentHomework), studentHomework.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -269,7 +269,7 @@ namespace DevEdu.Business.Tests
             //Given
             var comment = CommentData.GetCommentDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), comment.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(comment), comment.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -309,7 +309,7 @@ namespace DevEdu.Business.Tests
             //Given
             var comment = CommentData.GetCommentDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), comment.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(comment), comment.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -349,7 +349,7 @@ namespace DevEdu.Business.Tests
             //Given
             var comment = CommentData.GetCommentDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), comment.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(comment), comment.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(

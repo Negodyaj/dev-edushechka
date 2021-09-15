@@ -28,7 +28,7 @@ namespace DevEdu.Business.Services
         {
             var identity = GetIdentity(dto.Email, dto.Password);
             if (identity == null)
-                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFoundMessage);
 
             var jwt = new JwtSecurityToken(
                 issuer: _options.Issuer,
@@ -73,10 +73,10 @@ namespace DevEdu.Business.Services
         {
             var user = _userRepository.GetUserByEmail(username);
             if (user == null)
-                throw new AuthorizationException(ServiceMessages.EntityNotFound);
+                throw new AuthorizationException(ServiceMessages.EntityNotFoundMessage);
 
             var claims = new List<Claim>();
-            if (!Verify(user.Password, password)) throw new AuthorizationException(ServiceMessages.WrongPassword);
+            if (!Verify(user.Password, password)) throw new AuthorizationException(ServiceMessages.WrongPasswordMessage);
 
             claims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
             claims.AddRange(user.Roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString())));

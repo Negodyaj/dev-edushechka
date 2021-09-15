@@ -149,7 +149,7 @@ namespace DevEdu.Business.Services
         {
             List<int> response;
             if (topics == null || topics.Count == 0)
-                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFoundMessage);
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
             _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFound(topics);
             CheckUniquenessPositions(topics);
@@ -201,7 +201,7 @@ namespace DevEdu.Business.Services
         {
             if (topics.GroupBy(n => n.Position).Any(c => c.Count() > 1))
             {
-                throw new ValidationException(nameof(CourseTopicDto.Position), ServiceMessages.SamePositionsInCourseTopics);
+                throw new ValidationException(nameof(CourseTopicDto.Position), ServiceMessages.SamePositionsInCourseTopicsMessage);
             }
         }
 
@@ -209,7 +209,7 @@ namespace DevEdu.Business.Services
         {
             if (topics.GroupBy(n => n.Topic.Id).Any(c => c.Count() > 1))
             {
-                throw new ValidationException(nameof(CourseTopicDto.Topic), ServiceMessages.SameTopicsInCourseTopics);
+                throw new ValidationException(nameof(CourseTopicDto.Topic), ServiceMessages.SameTopicsInCourseTopicsMessage);
             }
         }
 

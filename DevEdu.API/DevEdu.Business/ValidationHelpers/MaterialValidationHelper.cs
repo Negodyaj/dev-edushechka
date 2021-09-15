@@ -28,7 +28,7 @@ namespace DevEdu.Business.ValidationHelpers
             var material = _materialRepository.GetMaterialById(materialId);
             if (material == default)
                 throw new EntityNotFoundException(string.
-                    Format(ServiceMessages.EntityNotFoundMessage, nameof(material), materialId));
+                    Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(material), materialId));
             return material;
         }
 
@@ -37,7 +37,7 @@ namespace DevEdu.Business.ValidationHelpers
             if (material.Courses == null || material.Courses.Count == 0)
             {
                 throw new AuthorizationException(string.
-                    Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
+                    Format(ServiceMessages.AccessToMaterialDeniedMessage, userId, material.Id));
             }
         }
 
@@ -48,7 +48,7 @@ namespace DevEdu.Business.ValidationHelpers
                 GetMaterialIfAllowedToUserByGroup(material, userId) == null)
             {
                 throw new AuthorizationException(string.
-                    Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
+                    Format(ServiceMessages.AccessToMaterialDeniedMessage, userId, material.Id));
             }
         }
 
@@ -58,7 +58,7 @@ namespace DevEdu.Business.ValidationHelpers
                  GetMaterialIfAllowedToUserByCourse(material, userId) == null)
             {
                 throw new AuthorizationException(string.
-                    Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
+                    Format(ServiceMessages.AccessToMaterialDeniedMessage, userId, material.Id));
             }
         }
         public List<MaterialDto> GetMaterialsAllowedToUser(List<MaterialDto> materials, int userId)
@@ -73,7 +73,7 @@ namespace DevEdu.Business.ValidationHelpers
         public void CheckPassedValuesAreUnique(List<int> values, string entity)
         {
             if (values.Distinct().Count() != values.Count)
-                throw new ValidationException(entity, string.Format(ServiceMessages.DuplicateValuesProvided, entity));
+                throw new ValidationException(entity, string.Format(ServiceMessages.DuplicateValuesProvidedMessage, entity));
         }
 
         private MaterialDto GetMaterialIfAllowedToUserByGroup(MaterialDto material, int userId)

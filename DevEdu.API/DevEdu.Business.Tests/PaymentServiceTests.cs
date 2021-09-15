@@ -46,7 +46,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var paymentId = 2;
-            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "payment", paymentId);
+            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "payment", paymentId);
             _paymentRepoMock.Setup(x => x.GetPayment(paymentId));
             _paymentValidationHelperMock.Setup(x => x.GetPaymentByIdAndThrowIfNotFound(paymentId));
             //When
@@ -73,7 +73,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var userId = 2;
-            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "user", userId);
+            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "user", userId);
             _userRepositoryMock.Setup(x => x.GetUserById(userId));
             //When
             var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetPaymentsByUserId(userId));
@@ -86,7 +86,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var userId = 2;
-            var exp = string.Format(ServiceMessages.EntityNotFoundByUserId, "payments", userId);
+            var exp = string.Format(ServiceMessages.EntityNotFoundByUserIdMessage, "payments", userId);
             _userRepositoryMock.Setup(x => x.GetUserById(userId)).Returns(new UserDto() { Id = userId });
             _paymentRepoMock.Setup(x => x.GetPaymentsByUser(userId));
             //When
@@ -121,7 +121,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var id = 2;
-            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "payment", id);
+            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "payment", id);
             _paymentRepoMock.Setup(x => x.GetPayment(id));
             //When
             var result = Assert.Throws<EntityNotFoundException>(() => _sut.DeletePayment(id));
@@ -146,7 +146,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var id = 2;
-            var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "payment", id);
+            var exp = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "payment", id);
             var payment = PaymentData.GetPayment();
             _paymentRepoMock.Setup(x => x.GetPayment(id));
             //When
@@ -161,7 +161,7 @@ namespace DevEdu.Business.Tests
             //Given
             var id = 4;
             var paymentInDb = PaymentData.GetPayment();
-            var exp = ServiceMessages.EntityNotFound;
+            var exp = ServiceMessages.EntityNotFoundMessage;
             PaymentDto payment = default;
             _paymentRepoMock.Setup(x => x.GetPayment(id)).Returns(paymentInDb);
             //When
@@ -203,7 +203,7 @@ namespace DevEdu.Business.Tests
             //When
             var result = Assert.Throws<EntityNotFoundException>(() => _sut.SelectPaymentsBySeveralId(ids));
             //Then
-            Assert.That(result.Message, Is.EqualTo(ServiceMessages.EntityNotFound));
+            Assert.That(result.Message, Is.EqualTo(ServiceMessages.EntityNotFoundMessage));
             _paymentRepoMock.Verify(x => x.SelectPaymentsBySeveralId(ids), Times.Once);
         }
         [Test]
@@ -218,7 +218,7 @@ namespace DevEdu.Business.Tests
                 IsDeleted = true,
                 User = new UserDto() { Id = 1 }
             };
-            var exp = ServiceMessages.PaymentDeleted;
+            var exp = ServiceMessages.PaymentDeletedMessage;
             PaymentDto payment = PaymentData.GetPayment();
             _paymentRepoMock.Setup(x => x.GetPayment(id)).Returns(paymentInDb);
             //When

@@ -20,16 +20,16 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var payment = _paymentRepository.GetPayment(paymentId);
             if (payment == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(payment), paymentId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(payment), paymentId));
             if (payment.IsDeleted)
-                throw new EntityNotFoundException(ServiceMessages.PaymentDeleted);
+                throw new EntityNotFoundException(ServiceMessages.PaymentDeletedMessage);
             return payment;
         }
         public List<PaymentDto> GetPaymentsByUserIdAndThrowIfNotFound(int userId)
         {
             var payments = _paymentRepository.GetPaymentsByUser(userId);
             if (payments == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundByUserId, nameof(payments), userId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundByUserIdMessage, nameof(payments), userId));
             return payments;
         }
         public List<PaymentDto> SelectPaymentsBySeveralIdAndThrowIfNotFound(List<int> ids)
@@ -37,7 +37,7 @@ namespace DevEdu.Business.ValidationHelpers
             var payments = _paymentRepository.SelectPaymentsBySeveralId(ids);
             CheckPaymentsExistence(payments, ids);
             if (payments == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFound));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage));
             return payments;
         }
         public void CheckPaymentsExistence(List<PaymentDto> payments, List<int> ids)
@@ -46,7 +46,7 @@ namespace DevEdu.Business.ValidationHelpers
 
             if (!arePaymentsInDataBase)
             {
-                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFoundMessage);
             }
         }
     }

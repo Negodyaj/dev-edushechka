@@ -295,7 +295,7 @@ namespace DevEdu.Business.Tests
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), studentHomework.User.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(homework), studentHomework.User.Id);
 
             _studentHomeworkRepoMock.Setup(x => x.AddStudentHomework(studentHomework)).Returns(studentHomework.Id);
 
@@ -315,7 +315,7 @@ namespace DevEdu.Business.Tests
             var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             const int homeworkId = 1;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(studentHomework), studentHomework.Id);
 
             _studentHomeworkRepoMock.Setup(x => x.DeleteStudentHomework(studentHomework.Id));
 
@@ -358,7 +358,7 @@ namespace DevEdu.Business.Tests
             const int homeworkId = 1;
             var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.User.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(studentHomework), studentHomework.User.Id);
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
@@ -400,7 +400,7 @@ namespace DevEdu.Business.Tests
             const int homeworkId = 1;
             var onlyAnswer = StudentAnswerOnTaskData.GetAnswerOfStudent();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(studentHomework), studentHomework.Id);
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
@@ -440,7 +440,7 @@ namespace DevEdu.Business.Tests
             // Given
             const int task = 1;
             const int userId = 1;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), userId);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(task), userId);
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
@@ -459,7 +459,7 @@ namespace DevEdu.Business.Tests
             // Given
             const int user = 0;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), user);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(user), user);
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(

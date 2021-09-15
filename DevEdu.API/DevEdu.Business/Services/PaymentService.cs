@@ -42,9 +42,9 @@ namespace DevEdu.Business.Services
         {
             var paymentInDb = _paymentValidationHelper.GetPaymentByIdAndThrowIfNotFound(id);
             if (dto == null)
-                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFoundMessage);
             if (paymentInDb.IsDeleted)
-                throw new EntityNotFoundException(ServiceMessages.PaymentDeleted);
+                throw new EntityNotFoundException(ServiceMessages.PaymentDeletedMessage);
             dto.User = new UserDto { Id = paymentInDb.User.Id };
             dto.Id = id;
             _paymentRepository.UpdatePayment(dto);

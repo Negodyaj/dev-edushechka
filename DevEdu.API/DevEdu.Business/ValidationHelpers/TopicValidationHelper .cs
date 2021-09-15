@@ -20,7 +20,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var topic = _topicRepository.GetTopic(topicId);
             if (topic == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(topic), topicId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(topic), topicId));
             return topic;
         }
         public void GetTopicByListDtoAndThrowIfNotFound(List<CourseTopicDto> topics)
@@ -30,14 +30,14 @@ namespace DevEdu.Business.ValidationHelpers
 
             if (!areTopicsInDataBase)
             {
-                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFoundMessage);
             }
         }
         public CourseTopicDto GetCourseTopicByIdAndThrowIfNotFound(int id)
         {
             var courseTopic = _topicRepository.GetCourseTopicById(id);
             if (courseTopic == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(courseTopic), id));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(courseTopic), id));
             return courseTopic;
         }
         public List<CourseTopicDto> GetCourseTopicBySeveralIdAndThrowIfNotFound(List<int> ids)
@@ -46,7 +46,7 @@ namespace DevEdu.Business.ValidationHelpers
             var areCourseTopicsInDataBase = ids.All(d => courseTopic.Any(t => t.Id == d));
             if (!areCourseTopicsInDataBase)
             {
-                throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+                throw new EntityNotFoundException(ServiceMessages.EntityNotFoundMessage);
             }
             return courseTopic;
         }

@@ -202,12 +202,12 @@ namespace DevEdu.Business.Tests
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
             _taskRepoMock.Setup(x => x.UpdateTask(taskDto)).Throws(
-                new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)));
+                new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "task", taskId)));
             _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
-                    .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
+                    .And.Message.EqualTo(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "task", taskId)),
                 () => _sut.UpdateTask(taskDto, taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.UpdateTask(taskDto), Times.Never);
@@ -297,7 +297,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
-                    .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
+                    .And.Message.EqualTo(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "task", taskId)),
                 () => _sut.DeleteTask(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.DeleteTask(taskId), Times.Never);
@@ -387,7 +387,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "task", taskId)),
                 () => _sut.GetTaskById(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
@@ -459,7 +459,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "task", taskId)),
                 () => _sut.GetTaskWithCoursesById(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
@@ -532,7 +532,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "task", taskId)),
                 () => _sut.GetTaskWithAnswersById(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
@@ -602,7 +602,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "task", taskId)),
                 () => _sut.GetTaskWithCoursesById(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);

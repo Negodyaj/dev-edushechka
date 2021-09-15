@@ -146,7 +146,7 @@ namespace DevEdu.Business.Tests
             var expectedTagId = 55;
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", expectedTopicId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "topic", expectedTopicId)),
                 () => _sut.AddTagToTopic(expectedTopicId, expectedTagId));
 
             _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, expectedTagId), Times.Never);
@@ -161,7 +161,7 @@ namespace DevEdu.Business.Tests
             _topicRepoMock.Setup(x => x.GetTopic(expectedTopicId)).Returns(TopicData.GetTopicDtoWithTags);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "tag", expectedTagId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, "tag", expectedTagId)),
             () => _sut.AddTagToTopic(expectedTopicId, expectedTagId));
 
             _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, expectedTagId), Times.Never);

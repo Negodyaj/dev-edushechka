@@ -183,7 +183,7 @@ namespace DevEdu.Business.Tests
             group.Id = 0;
             var task = TaskData.GetTaskDtoWithoutTags();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithAdminRole();
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), group.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(group), group.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -201,7 +201,7 @@ namespace DevEdu.Business.Tests
             var group = GroupData.GetGroupDto();
             var task = TaskData.GetTaskDtoWithoutTags();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithAdminRole();
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), task.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(task), task.Id);
 
             _groupRepoMock.Setup(x => x.GetGroup(group.Id)).ReturnsAsync(GroupData.GetGroupDto());
 
@@ -245,7 +245,7 @@ namespace DevEdu.Business.Tests
             //Given
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithAdminRole();
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), homework.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(homework), homework.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -283,7 +283,7 @@ namespace DevEdu.Business.Tests
             //Given
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithAdminRole();
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), homework.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(homework), homework.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -321,7 +321,7 @@ namespace DevEdu.Business.Tests
             //Given
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithAdminRole();
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), homework.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(homework), homework.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
@@ -402,7 +402,7 @@ namespace DevEdu.Business.Tests
             //Given
             var task = TaskData.GetTaskDtoWithoutTags();
 
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), task.Id);
+            var expectedException = string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(task), task.Id);
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(

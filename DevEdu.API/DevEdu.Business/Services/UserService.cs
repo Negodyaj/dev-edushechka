@@ -36,7 +36,7 @@ namespace DevEdu.Business.Services
                 else
                 {
                     throw new AuthorizationException(string.Format(
-                        ServiceMessages.AdminCanAddRolesToUserMessage, nameof(Role.Admin),nameof(dto.Roles)));
+                        ServiceMessages.AdminCanAddRolesToUserMessage, nameof(Role.Admin)));
                 }
             }
 

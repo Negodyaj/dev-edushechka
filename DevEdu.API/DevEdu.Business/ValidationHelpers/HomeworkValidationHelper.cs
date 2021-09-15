@@ -18,7 +18,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var homework = _homeworkRepository.GetHomework(homeworkId);
             if (homework == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), homeworkId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(homework), homeworkId));
             return homework;
         }
     }

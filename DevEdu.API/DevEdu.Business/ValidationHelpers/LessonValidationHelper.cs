@@ -25,20 +25,20 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var lesson = _lessonRepository.SelectLessonById(lessonId);
             if (lesson == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(lesson), lessonId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(lesson), lessonId));
             return lesson;
         }
 
         public void CheckTopicLessonReferenceIsUnique(LessonDto lesson, int topicId)
         {
             if (lesson.Topics.Any(topic => topic.Id == topicId))
-                throw new ValidationException(nameof(topicId), string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lesson.Id, topicId));
+                throw new ValidationException(nameof(topicId), string.Format(ServiceMessages.LessonTopicReferenceAlreadyExistsMessage, lesson.Id, topicId));
         }
 
         public void CheckUserAndTeacherAreSame(UserIdentityInfo userIdentity, int teacherId)
         {
             if (userIdentity.UserId != teacherId)
-                throw new ValidationException(nameof(teacherId), string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.UserId, teacherId));
+                throw new ValidationException(nameof(teacherId), string.Format(ServiceMessages.UserAndTeacherAreNotSameMessage, userIdentity.UserId, teacherId));
         }
 
         public void CheckUserBelongsToLesson(UserIdentityInfo userIdentity, LessonDto lesson)
@@ -49,14 +49,14 @@ namespace DevEdu.Business.ValidationHelpers
                 var result = studentGroups.Where(sg => (lesson.Groups).Any(lg => lg.Id == sg.Id));
                 if (!result.Any())
                 {
-                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id));
+                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLessonMessage, userIdentity.UserId, lesson.Id));
                 }
             }
             else if (userIdentity.IsTeacher())
             {
                 if (userIdentity.UserId != lesson.Teacher.Id)
                 {
-                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id));
+                    throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLessonMessage, userIdentity.UserId, lesson.Id));
                 }
             }
         }
@@ -67,14 +67,14 @@ namespace DevEdu.Business.ValidationHelpers
             var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
             var result = groupsByUser.FirstOrDefault(gu => groupsByLesson.Any(gl => gl.Id == gu.Id));
             if (result == default)
-                throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userId, lessonId));
+                throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLessonMessage, userId, lessonId));
         }
 
         public void CheckAttendanceExistence(int lessonId, int userId)
         {
             var attendance = _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
             if (attendance == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(attendance), lessonId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(attendance), lessonId));
         }
     }
 }

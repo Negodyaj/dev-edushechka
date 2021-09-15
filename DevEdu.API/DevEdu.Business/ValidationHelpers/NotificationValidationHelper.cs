@@ -19,14 +19,14 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var notification = _notificationRepository.GetNotification(notificationId);
             if (notification == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(notification), notificationId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(notification), notificationId));
             return notification;
         }
 
         public void CheckNotificationIsForGroup(NotificationDto dto, int userId)
         {
             if (dto.Group == null)
-                throw new AuthorizationException(string.Format(ServiceMessages.AccessToNotificationDenied, userId));
+                throw new AuthorizationException(string.Format(ServiceMessages.AccessToNotificationDeniedMessage, userId));
         }
 
         public void CheckRoleIdUserIdGroupIdIsNotNull(NotificationDto dto)

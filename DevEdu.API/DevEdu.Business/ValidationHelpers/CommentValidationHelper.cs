@@ -18,7 +18,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var comment = _commentRepository.GetComment(commentId);
             if (comment == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), commentId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(comment), commentId));
             return comment;
         }
 

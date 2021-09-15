@@ -22,7 +22,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var group = await _groupRepository.GetGroup(groupId);
             if (group == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), groupId));
+                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithIdNotFoundMessage, nameof(group), groupId));
             return group;
         }
 
