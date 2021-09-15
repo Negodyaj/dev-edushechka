@@ -132,6 +132,7 @@ namespace DevEdu.Business.Services
         public void AddTaskToCourse(int courseId, int taskId)
         {
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
             _courseRepository.AddTaskToCourse(courseId, taskId);
         }
 
