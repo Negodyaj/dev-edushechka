@@ -32,13 +32,13 @@ namespace DevEdu.Business.ValidationHelpers
 
             var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
             if (result == default)
-                throw new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId));
+                throw new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAccessMessage, "user", userId, "task", taskId));
         }
 
         public void CheckMethodistAccessToTask(TaskDto taskDto, int userId)
         {
             if (taskDto.Courses == null)
-                throw new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskDto.Id));
+                throw new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAccessMessage, "user", userId, "task", taskDto.Id));
         }
 
         public TaskDto GetTaskAllowedToUser(int taskId, int userId)

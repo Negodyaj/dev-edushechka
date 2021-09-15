@@ -231,7 +231,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAccessMessage, "user", userId, "task", taskId)),
                           () => _sut.UpdateTask(taskDto, taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.UpdateTask(taskDto), Times.Never);
@@ -252,7 +252,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAccessMessage, "user", userId, "task", taskId)),
                           () => _sut.UpdateTask(taskDto, taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.UpdateTask(taskDto), Times.Never);
@@ -321,7 +321,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAccessMessage, "user", userId, "task", taskId)),
                           () => _sut.DeleteTask(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.DeleteTask(taskId), Times.Never);
@@ -342,7 +342,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAccessMessage, "user", userId, "task", taskId)),
                           () => _sut.DeleteTask(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.DeleteTask(taskId), Times.Never);
@@ -412,7 +412,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAccessMessage, "user", userId, "task", taskId)),
                 () => _sut.GetTaskById(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
@@ -484,7 +484,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAccessMessage, "user", userId, "task", taskId)),
                 () => _sut.GetTaskWithCoursesById(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
@@ -557,7 +557,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAccessMessage, "user", userId, "task", taskId)),
                 () => _sut.GetTaskWithAnswersById(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
@@ -628,7 +628,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAccessMessage, "user", userId, "task", taskId)),
                 () => _sut.GetTaskWithCoursesById(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
