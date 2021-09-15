@@ -149,7 +149,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void AddUserRole(int userId, int roleId)
+        public void AddUserRole(int userId, Role roleId)
         {
             _connection.QuerySingleOrDefault<int>(
                 _userRoleInsertProcedure,
@@ -161,7 +161,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void DeleteUserRole(int userId, int roleId)
+        public void DeleteUserRole(int userId, Role roleId)
         {
             _connection.Execute(
                 _userRoleDeleteProcedure,
@@ -180,7 +180,8 @@ namespace DevEdu.DAL.Repositories
                 _userSelectByGroupIdAndRole,
                 new
                 {
-                    groupId, roleId = role
+                    groupId,
+                    roleId = role
                 },
                 commandType: CommandType.StoredProcedure
             ).ToList();
@@ -194,7 +195,8 @@ namespace DevEdu.DAL.Repositories
                 _userSelectByGroupIdAndRole,
                 new
                 {
-                    groupId, roleId = role
+                    groupId,
+                    roleId = role
                 },
                 commandType: CommandType.StoredProcedure
             );

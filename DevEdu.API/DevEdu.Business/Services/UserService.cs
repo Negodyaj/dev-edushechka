@@ -22,63 +22,63 @@ namespace DevEdu.Business.Services
 
         public UserDto AddUser(UserDto dto, UserIdentityInfo userInfo)
         {
-            if (dto.Roles == null || dto.Roles.Count == 0)
-                dto.Roles = new List<Role> { Role.Student };
-
             var addedUserId = _userRepository.AddUser(dto);
 
-            foreach (var role in dto.Roles)
+            if (dto.Roles != null && dto.Roles[0] != Role.Student)
             {
-                _userRepository.AddUserRole(addedUserId, (int)role);
+                if (userInfo.IsAdmin())
+                {
+                    foreach (var role in dto.Roles)
+                    {
+                        _userRepository.AddUserRole(addedUserId, role);
+                    }
+                }
+                else
+                {
+                    throw new AuthorizationException(string.Format(
+                        ServiceMessages.AdminCanAddRolesToUserMessage, nameof(Role.Admin),nameof(dto.Roles)));
+                }
             }
 
-            var response = _userRepository.GetUserById(addedUserId);
-            return response;
+            _userRepository.AddUserRole(addedUserId, Role.Student);
+
+            return _userRepository.GetUserById(addedUserId);
         }
 
-        public UserDto GetUserById(int id, UserIdentityInfo userInfo)
-        {
-            var user = _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
-            return user;
-        }
+        public UserDto GetUserById(int id) => _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
 
         public UserDto GetUserByEmail(string email)
         {
             var user = _userRepository.GetUserByEmail(email);
             if (user == default)
-                throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithEmailNotFoundMessage, nameof(user), email));
+                throw new EntityNotFoundException(string.Format(
+                    ServiceMessages.EntityWithEmailNotFoundMessage, nameof(user), email));
 
             return user;
         }
 
-        public List<UserDto> GetAllUsers(UserIdentityInfo userInfo)
-        {
-            var list = _userRepository.GetAllUsers();
-            return list;
-        }
+        public List<UserDto> GetAllUsers() => _userRepository.GetAllUsers();
 
-        public UserDto UpdateUser(UserDto dto, UserIdentityInfo userInfo)
+        public UserDto UpdateUser(UserDto dto)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(dto.Id);
-
             _userRepository.UpdateUser(dto);
-            var user = _userRepository.GetUserById(dto.Id);
-            return user;
+            return _userRepository.GetUserById(dto.Id);
         }
 
-        public void DeleteUser(int id, UserIdentityInfo userInfo)
+        public void DeleteUser(int id)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
             _userRepository.DeleteUser(id);
         }
 
-        public void AddUserRole(int userId, int roleId, UserIdentityInfo userInfo)
+        public void AddUserRole(int userId, Role roleId)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
             _userRepository.AddUserRole(userId, roleId);
         }
 
-        public void DeleteUserRole(int userId, int roleId, UserIdentityInfo userInfo)
+        public void DeleteUserRole(int userId, Role roleId)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
             _userRepository.DeleteUserRole(userId, roleId);

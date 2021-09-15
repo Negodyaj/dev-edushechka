@@ -24,5 +24,6 @@
         public const string AccessToNotificationDenied = "User with id = {0} doesn't have access to this notification ";
         public const string MoreOnePropertyHaveAValueMessage = "Only one property ({0}, {1} or {2}) should have a value";
         public const string WrongPassword = "WrongPassword";
+        public const string AdminCanAddRolesToUserMessage = "Only the {0} can add roles{1} to users";
     }
 }
