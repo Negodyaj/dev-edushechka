@@ -190,7 +190,7 @@ namespace DevEdu.API.Controllers
         [HttpDelete("{courseId}/topic/{topicId}")]
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [Description("Delete topic from course")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteTopicFromCourse(int courseId, int topicId)
