@@ -52,7 +52,7 @@ namespace DevEdu.API.Controllers
         public List<HomeworkInfoWithTaskOutputModel> GetHomeworksByGroupId(int groupId)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _homeworkService.GetHomeworkByGroupId(groupId, userInfo);
+            var dto = _homeworkService.GetHomeworkByGroupIdAsync(groupId, userInfo);
             var output = _mapper.Map<List<HomeworkInfoWithTaskOutputModel>>(dto);
             return output;
         }

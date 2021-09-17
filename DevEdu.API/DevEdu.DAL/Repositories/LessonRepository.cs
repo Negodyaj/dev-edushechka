@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -54,9 +55,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int DeleteTopicFromLesson(int lessonId, int topicId)
+        public async Task<int> DeleteTopicFromLessonAsync(int lessonId, int topicId)
         {
-            return _connection.Execute(
+            return await _connection.ExecuteAsync(
                 _lessonTopicDeleteProcedure,
                 new
                 {
@@ -80,12 +81,12 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public List<LessonDto> SelectAllLessonsByGroupId(int groupId)
+        public async Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(int groupId)
         {
             var lessonDictionary = new Dictionary<int, LessonDto>();
 
-            var list = _connection
-                .Query<LessonDto, UserDto, TopicDto, LessonDto>(
+            var list = (await _connection
+                .QueryAsync<LessonDto, UserDto, TopicDto, LessonDto>(
                     _lessonSelectAllByGroupIdProcedure,
                     (lesson, teacher, topic) =>
                     {
@@ -103,7 +104,7 @@ namespace DevEdu.DAL.Repositories
                     new { groupId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .Distinct()
                 .ToList();
 
@@ -167,10 +168,10 @@ namespace DevEdu.DAL.Repositories
             return result;
         }
 
-        public List<StudentLessonDto> SelectStudentsLessonByLessonId(int lessonId)
+        public async Task<List<StudentLessonDto>> SelectStudentsLessonByLessonIdAsync(int lessonId)
         {
-            return _connection
-                .Query<StudentLessonDto, UserDto, StudentLessonDto>(
+            return (await _connection
+                .QueryAsync<StudentLessonDto, UserDto, StudentLessonDto>(
                     "[dbo].[Student_Lesson_SelectByLessonId]",
                     (studentLesson, user) =>
                     {
@@ -180,13 +181,13 @@ namespace DevEdu.DAL.Repositories
                     new { lessonId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
 
-        public void UpdateLesson(LessonDto lessonDto)
+        public async Task UpdateLessonAsync(LessonDto lessonDto)
         {
-            _connection.QuerySingleOrDefault<int>(
+            await _connection.QuerySingleOrDefaultAsync<int>(
                _lessonUpdateProcedure,
                new
                {

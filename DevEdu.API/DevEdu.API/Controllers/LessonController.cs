@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -79,21 +80,21 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lesson/groupId/{id}
-        [AuthorizeRolesAttribute(Role.Teacher, Role.Student)]
+        [AuthorizeRoles(Role.Teacher, Role.Student)]
         [HttpGet("/by-groupId/{id}")]
         [Description("Get all lessons by groupId.")]
         [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<LessonInfoOutputModel> GetAllLessonsByGroupId(int id)
+        public async Task<List<LessonInfoOutputModel>> GetAllLessonsByGroupIdAsync(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            var dto = _lessonService.SelectAllLessonsByGroupId(userIdentity, id);
+            var dto = await _lessonService.SelectAllLessonsByGroupIdAsync(userIdentity, id);
             return _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
         // api/lesson/teacherId/{id}
-        [AuthorizeRolesAttribute(Role.Manager, Role.Methodist)]
+        [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [HttpGet("/by-teacherId/{id}")]
         [Description("Get all lessons by teacherId.")]
         [ProducesResponseType(typeof(List<LessonInfoWithCourseOutputModel>), StatusCodes.Status200OK)]

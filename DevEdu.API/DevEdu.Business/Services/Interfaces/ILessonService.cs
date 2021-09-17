@@ -1,6 +1,7 @@
 ﻿using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -8,7 +9,7 @@ namespace DevEdu.Business.Services
     {
         LessonDto AddLesson(UserIdentityInfo userIdentity, LessonDto lessonDto, List<int> topicIds);
         void DeleteLesson(UserIdentityInfo userIdentity, int id);
-        List<LessonDto> SelectAllLessonsByGroupId(UserIdentityInfo userIdentity, int id);
+        Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(UserIdentityInfo userIdentity, int id);
         List<LessonDto> SelectAllLessonsByTeacherId(int id);
         LessonDto SelectLessonWithCommentsById(UserIdentityInfo userIdentity, int id);
         LessonDto SelectLessonWithCommentsAndStudentsById(UserIdentityInfo userIdentity, int id);

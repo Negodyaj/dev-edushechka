@@ -35,9 +35,9 @@ namespace DevEdu.Business.Services
             return dto;
         }
 
-        public List<HomeworkDto> GetHomeworkByGroupId(int groupId, UserIdentityInfo userInfo)
+        public async Task<List<HomeworkDto>> GetHomeworkByGroupIdAsync(int groupId, UserIdentityInfo userInfo)
         {
-            Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
+            await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
             if (!userInfo.IsAdmin())
                 _groupValidationHelper.CheckUserInGroupExistence(groupId, userInfo.UserId);
             return _homeworkRepository.GetHomeworkByGroupId(groupId);

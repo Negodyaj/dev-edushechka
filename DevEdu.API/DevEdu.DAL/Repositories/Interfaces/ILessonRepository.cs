@@ -1,5 +1,6 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -7,12 +8,12 @@ namespace DevEdu.DAL.Repositories
     {
         int AddLesson(LessonDto lessonDto);
         void DeleteLesson(int id);
-        List<LessonDto> SelectAllLessonsByGroupId(int groupId);
+        Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(int groupId);
         List<LessonDto> SelectAllLessonsByTeacherId(int teacherId);
         LessonDto SelectLessonById(int id);
-        List<StudentLessonDto> SelectStudentsLessonByLessonId(int lessonId);
-        public void UpdateLesson(LessonDto lessonDto);
-        int DeleteTopicFromLesson(int lessonId, int topicId);
+        List<StudentLessonDto> SelectStudentsLessonByLessonIdAsync(int lessonId);
+        Task UpdateLessonAsync(LessonDto lessonDto);
+        int DeleteTopicFromLessonAsync(int lessonId, int topicId);
         void AddTopicToLesson(int lessonId, int topicId);
         void AddStudentToLesson(int lessonId, int userId);
         void DeleteStudentFromLesson(int lessonId, int userId);

@@ -132,7 +132,7 @@ namespace DevEdu.Business.Tests
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
             _topicRepository.Setup(x => x.GetTopic(topic.Id)).Returns(topic);
-            _lessonRepository.Setup(x => x.DeleteTopicFromLesson(lesson.Id, topic.Id)).Returns(1);
+            _lessonRepository.Setup(x => x.DeleteTopicFromLessonAsync(lesson.Id, topic.Id)).Returns(1);
 
             //When
             _sut.DeleteTopicFromLesson(lesson.Id, topic.Id);
@@ -140,7 +140,7 @@ namespace DevEdu.Business.Tests
             //Then
             _lessonRepository.Verify(x => x.SelectLessonById((lesson.Id)), Times.Once);
             _topicRepository.Verify(x => x.GetTopic((topic.Id)), Times.Once);
-            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lesson.Id, topic.Id), Times.Once);
+            _lessonRepository.Verify(x => x.DeleteTopicFromLessonAsync(lesson.Id, topic.Id), Times.Once);
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMessage, actual.Message);
             _lessonRepository.Verify(x => x.SelectLessonById((lessonId)), Times.Once);
             _topicRepository.Verify(x => x.GetTopic((topicId)), Times.Never);
-            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lessonId, topicId), Times.Never);
+            _lessonRepository.Verify(x => x.DeleteTopicFromLessonAsync(lessonId, topicId), Times.Never);
         }
 
         [Test]
@@ -180,7 +180,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMessage, actual.Message);
             _lessonRepository.Verify(x => x.SelectLessonById((lesson.Id)), Times.Once);
             _topicRepository.Verify(x => x.GetTopic((topicId)), Times.Once);
-            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lesson.Id, topicId), Times.Never);
+            _lessonRepository.Verify(x => x.DeleteTopicFromLessonAsync(lesson.Id, topicId), Times.Never);
         }
 
         [Test]
@@ -192,7 +192,7 @@ namespace DevEdu.Business.Tests
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
             _topicRepository.Setup(x => x.GetTopic(topic.Id)).Returns(topic);
-            _lessonRepository.Setup(x => x.DeleteTopicFromLesson(lesson.Id, topic.Id)).Returns(0);
+            _lessonRepository.Setup(x => x.DeleteTopicFromLessonAsync(lesson.Id, topic.Id)).Returns(0);
 
             //When
             var actual = Assert.Throws<ValidationException>(() =>
@@ -202,7 +202,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMessage, actual.Message);
             _lessonRepository.Verify(x => x.SelectLessonById((lesson.Id)), Times.Once);
             _topicRepository.Verify(x => x.GetTopic((topic.Id)), Times.Once);
-            _lessonRepository.Verify(x => x.DeleteTopicFromLesson(lesson.Id, topic.Id), Times.Once);
+            _lessonRepository.Verify(x => x.DeleteTopicFromLessonAsync(lesson.Id, topic.Id), Times.Once);
         }
 
         [Test]
@@ -405,7 +405,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Exactly(2));
             _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
             _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Once);
-            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Never);
+            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lessonId), Times.Never);
         }
 
         [Test]
@@ -426,7 +426,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
             _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Never);
-            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Never);
+            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lessonId), Times.Never);
         }
 
         [Test]
@@ -449,7 +449,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Once);
             _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lesson.Id), Times.Never);
-            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lesson.Id), Times.Never);
+            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lesson.Id), Times.Never);
         }
 
         [Test]
@@ -469,7 +469,7 @@ namespace DevEdu.Business.Tests
 
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(lesson);
             _commentRepository.Setup(x => x.SelectCommentsFromLessonByLessonId(lessonId)).Returns(comments);
-            _lessonRepository.Setup(x => x.SelectStudentsLessonByLessonId(lessonId)).Returns(students);
+            _lessonRepository.Setup(x => x.SelectStudentsLessonByLessonIdAsync(lessonId)).Returns(students);
 
             //When
             var actual = _sut.SelectLessonWithCommentsAndStudentsById(userIdentity, lessonId);
@@ -479,7 +479,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Exactly(2));
             _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
             _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Once);
-            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Once);
+            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lessonId), Times.Once);
         }
 
         [Test]
@@ -500,7 +500,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
             _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lessonId), Times.Never);
-            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lessonId), Times.Never);
+            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lessonId), Times.Never);
         }
 
         [Test]
@@ -523,7 +523,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByUserId(userIdentity.UserId), Times.Never);
             _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonId(lesson.Id), Times.Never);
-            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonId(lesson.Id), Times.Never);
+            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lesson.Id), Times.Never);
         }
 
         [Test]

@@ -65,7 +65,7 @@ namespace DevEdu.Business.Services
             _lessonRepository.DeleteLesson(id);
         }
 
-        public List<LessonDto> SelectAllLessonsByGroupId(UserIdentityInfo userIdentity, int groupId)
+        public async Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(UserIdentityInfo userIdentity, int groupId)
         {
             var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
             if (!userIdentity.IsAdmin())
@@ -73,7 +73,7 @@ namespace DevEdu.Business.Services
                 var currentRole = userIdentity.IsTeacher() ? Role.Teacher : Role.Student;
                 _userValidationHelper.CheckAuthorizationUserToGroup(groupId, userIdentity.UserId, currentRole);
             }
-            var result = _lessonRepository.SelectAllLessonsByGroupId(groupId);
+            var result = await _lessonRepository.SelectAllLessonsByGroupIdAsync(groupId);
             return result;
         }
 
@@ -99,7 +99,7 @@ namespace DevEdu.Business.Services
         public LessonDto SelectLessonWithCommentsAndStudentsById(UserIdentityInfo userIdentity, int id)
         {
             LessonDto result = SelectLessonWithCommentsById(userIdentity, id);
-            result.Students = _lessonRepository.SelectStudentsLessonByLessonId(id);
+            result.Students = _lessonRepository.SelectStudentsLessonByLessonIdAsync(id);
             return result;
         }
 
@@ -112,7 +112,7 @@ namespace DevEdu.Business.Services
             }
 
             lessonDto.Id = lessonId;
-            _lessonRepository.UpdateLesson(lessonDto);
+            _lessonRepository.UpdateLessonAsync(lessonDto);
             return _lessonRepository.SelectLessonById(lessonDto.Id);
         }
 
@@ -120,7 +120,7 @@ namespace DevEdu.Business.Services
         {
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-            if (_lessonRepository.DeleteTopicFromLesson(lessonId, topicId) == 0)
+            if (_lessonRepository.DeleteTopicFromLessonAsync(lessonId, topicId) == 0)
             {
                 throw new ValidationException(nameof(topicId), string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId));
             }

@@ -148,7 +148,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.GetHomeworkByGroupId(groupId)).Returns(homeworkList);
 
             //When
-            var dto = _sut.GetHomeworkByGroupId(groupId, userInfo);
+            var dto = _sut.GetHomeworkByGroupIdAsync(groupId, userInfo);
 
             //Than
             Assert.AreEqual(homeworkList, dto);
@@ -368,7 +368,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.GetHomeworkByGroupId(groupId)).Returns(homeworkList);
 
             //When
-            var dto = _sut.GetHomeworkByGroupId(groupId, userInfo);
+            var dto = _sut.GetHomeworkByGroupIdAsync(groupId, userInfo);
 
             //Than
             Assert.AreEqual(homeworkList, dto);
@@ -390,7 +390,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.GetHomeworkByGroupId(group.Id, userInfo));
+                () => _sut.GetHomeworkByGroupIdAsync(group.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
