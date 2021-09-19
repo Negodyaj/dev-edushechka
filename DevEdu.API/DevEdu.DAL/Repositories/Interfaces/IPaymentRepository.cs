@@ -1,16 +1,17 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
     public interface IPaymentRepository
     {
-        int AddPayment(PaymentDto paymentDto);
-        void DeletePayment(int id);
-        PaymentDto GetPayment(int id);
-        List<PaymentDto> GetPaymentsByUser(int userId);
-        void UpdatePayment(PaymentDto paymentDto);
-        List<int> AddPayments(List<PaymentDto> payments);
-        List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids);
+        Task<int> AddPaymentAsync(PaymentDto paymentDto);
+        Task DeletePaymentAsync(int id);
+        Task<PaymentDto> GetPaymentAsync(int id);
+        Task<List<PaymentDto>> GetPaymentsByUserAsync(int userId);
+        Task UpdatePaymentAsync(PaymentDto paymentDto);
+        Task<List<int>> AddPaymentsAsync(List<PaymentDto> payments);
+        Task<List<PaymentDto>> SelectPaymentsBySeveralIdAsync(List<int> ids);
     }
 }

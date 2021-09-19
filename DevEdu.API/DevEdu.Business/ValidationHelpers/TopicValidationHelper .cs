@@ -18,14 +18,14 @@ namespace DevEdu.Business.ValidationHelpers
 
         public TopicDto GetTopicByIdAndThrowIfNotFound(int topicId)
         {
-            var topic = _topicRepository.GetTopic(topicId);
+            var topic = _topicRepository.GetTopicAsync(topicId);
             if (topic == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(topic), topicId));
             return topic;
         }
         public void GetTopicByListDtoAndThrowIfNotFound(List<CourseTopicDto> topics)
         {
-            var topicsFromBd = _topicRepository.GetAllTopics();
+            var topicsFromBd = _topicRepository.GetAllTopicsAsync();
             var topicsIdsFromBd = topicsFromBd.Select(t => t.Id).ToList();
             var topicIdsFromParametrs = topics.Select(t => t.Topic.Id).ToList();
 
@@ -38,14 +38,14 @@ namespace DevEdu.Business.ValidationHelpers
         }
         public CourseTopicDto GetCourseTopicByIdAndThrowIfNotFound(int id)
         {
-            var courseTopic = _topicRepository.GetCourseTopicById(id);
+            var courseTopic = _topicRepository.GetCourseTopicByIdAsync(id);
             if (courseTopic == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(courseTopic), id));
             return courseTopic;
         }
         public List<CourseTopicDto> GetCourseTopicBySeveralIdAndThrowIfNotFound(List<int> ids)
         {
-            var courseTopic = _topicRepository.GetCourseTopicBySeveralId(ids);
+            var courseTopic = _topicRepository.GetCourseTopicBySeveralIdAsync(ids);
             var areCourseTopicsInDataBase = ids.All(d => courseTopic.Any(t => t.Id == d));
             if (!areCourseTopicsInDataBase)
             {

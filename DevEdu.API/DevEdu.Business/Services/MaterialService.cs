@@ -41,7 +41,7 @@ namespace DevEdu.Business.Services
 
         public List<MaterialDto> GetAllMaterials(UserIdentityInfo user)
         {
-            var allMaterials = _materialRepository.GetAllMaterials();
+            var allMaterials = _materialRepository.GetAllMaterialsAsync();
             if (!(user.IsAdmin() || user.IsMethodist()))
             {
                 return _materilaValidationHelper.GetMaterialsAllowedToUser(allMaterials, user.UserId);
@@ -53,7 +53,7 @@ namespace DevEdu.Business.Services
         {
             var dto = _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(id);
             dto.Courses = await _courseRepository.GetCoursesByMaterialIdAsync(id);
-            dto.Groups = _groupRepository.GetGroupsByMaterialId(id);
+            dto.Groups = _groupRepository.GetGroupsByMaterialIdAsync(id);
             return dto;
         }
 
@@ -79,7 +79,7 @@ namespace DevEdu.Business.Services
                 _userValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, currentRole);
             });
             var materialId = AddMaterial(dto, tags);
-            groups.ForEach(group => _groupRepository.AddGroupMaterialReference(group, materialId));
+            groups.ForEach(group => _groupRepository.AddGroupMaterialReferenceAsync(group, materialId));
             return materialId;
         }
 
@@ -99,33 +99,33 @@ namespace DevEdu.Business.Services
             CheckAccessToMaterialByRole(material, user);
 
             dto.Id = id;
-            _materialRepository.UpdateMaterial(dto);
-            return _materialRepository.GetMaterialById(dto.Id);
+            _materialRepository.UpdateMaterialAsync(dto);
+            return _materialRepository.GetMaterialByIdAsync(dto.Id);
         }
 
         public async Task DeleteMaterialAsync(int id, bool isDeleted, UserIdentityInfo user)
         {
             var material = await GetMaterialByIdWithCoursesAndGroupsAsync(id);
             CheckAccessToMaterialByRole(material, user);
-            _materialRepository.DeleteMaterial(id, isDeleted);
+            _materialRepository.DeleteMaterialAsync(id, isDeleted);
         }
 
         public void AddTagToMaterial(int materialId, int tagId)
         {
             CheckMaterialAndTagExistence(materialId, tagId);
-            _materialRepository.AddTagToMaterial(materialId, tagId);
+            _materialRepository.AddTagToMaterialAsync(materialId, tagId);
         }
         public void DeleteTagFromMaterial(int materialId, int tagId)
         {
             CheckMaterialAndTagExistence(materialId, tagId);
-            _materialRepository.DeleteTagFromMaterial(materialId, tagId);
+            _materialRepository.DeleteTagFromMaterialAsync(materialId, tagId);
         }
 
         public List<MaterialDto> GetMaterialsByTagId(int tagId, UserIdentityInfo user)
         {
             _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tagId);
 
-            var allMaterialsByTag = _materialRepository.GetMaterialsByTagId(tagId);
+            var allMaterialsByTag = _materialRepository.GetMaterialsByTagIdAsync(tagId);
             if (!(user.IsAdmin() || user.IsMethodist()))
             {
                 return _materilaValidationHelper.GetMaterialsAllowedToUser(allMaterialsByTag, user.UserId);
@@ -136,13 +136,13 @@ namespace DevEdu.Business.Services
         private int AddMaterial(MaterialDto dto, List<int> tags)
         {
             if (tags == null || tags.Count == 0)
-                return _materialRepository.AddMaterial(dto);
+                return _materialRepository.AddMaterialAsync(dto);
 
             _materilaValidationHelper.CheckPassedValuesAreUnique(tags, nameof(tags));
             tags.ForEach(tag => _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tag));
 
-            var materialId = _materialRepository.AddMaterial(dto);
-            tags.ForEach(tag => _materialRepository.AddTagToMaterial(materialId, tag));
+            var materialId = _materialRepository.AddMaterialAsync(dto);
+            tags.ForEach(tag => _materialRepository.AddTagToMaterialAsync(materialId, tag));
             return materialId;
         }
 

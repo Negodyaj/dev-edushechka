@@ -30,12 +30,12 @@ namespace DevEdu.Business.Services
             return _paymentValidationHelper.GetPaymentsByUserIdAndThrowIfNotFound(userId);
         }
 
-        public int AddPayment(PaymentDto dto) => _paymentRepository.AddPayment(dto);
+        public int AddPayment(PaymentDto dto) => _paymentRepository.AddPaymentAsync(dto);
 
         public void DeletePayment(int id)
         {
             _paymentValidationHelper.GetPaymentByIdAndThrowIfNotFound(id);
-            _paymentRepository.DeletePayment(id);
+            _paymentRepository.DeletePaymentAsync(id);
         }
 
         public void UpdatePayment(int id, PaymentDto dto)
@@ -47,12 +47,12 @@ namespace DevEdu.Business.Services
                 throw new EntityNotFoundException(ServiceMessages.PaymentDeleted);
             dto.User = new UserDto { Id = paymentInDb.User.Id };
             dto.Id = id;
-            _paymentRepository.UpdatePayment(dto);
+            _paymentRepository.UpdatePaymentAsync(dto);
         }
 
         public List<int> AddPayments(List<PaymentDto> payments)
         {
-            return _paymentRepository.AddPayments(payments);
+            return _paymentRepository.AddPaymentsAsync(payments);
         }
 
         public List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids)

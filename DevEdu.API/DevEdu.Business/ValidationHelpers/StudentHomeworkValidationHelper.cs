@@ -24,7 +24,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public StudentHomeworkDto GetStudentHomeworkByIdAndThrowIfNotFound(int id)
         {
-            var studentHomework = _studentHomeworkRepository.GetStudentHomeworkById(id);
+            var studentHomework = _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
             if (studentHomework == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), id));
             return studentHomework;
@@ -33,7 +33,7 @@ namespace DevEdu.Business.ValidationHelpers
         public async Task CheckUserBelongsToHomeworkAsync(int groupId, int userId)
         {
             var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
-            var group = Task.Run(async () => await _groupRepository.GetGroup(groupId)).Result;
+            var group = Task.Run(async () => await _groupRepository.GetGroupAsync(groupId)).Result;
             var result = groupsByUser.FirstOrDefault(gu => gu.Id == @group.Id);
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserInGroupNotFoundMessage, userId, groupId));

@@ -40,8 +40,8 @@ namespace DevEdu.Business.Services
                 _studentHomeworkValidationHelper.CheckUserBelongsToHomeworkAsync(homeworkDto.Group.Id, userInfo.UserId);
             taskAnswerDto.Homework = new HomeworkDto { Id = homeworkId };
             taskAnswerDto.User = new UserDto { Id = userInfo.UserId };
-            var id = _studentHomeworkRepository.AddStudentHomework(taskAnswerDto);
-            return _studentHomeworkRepository.GetStudentHomeworkById(id);
+            var id = _studentHomeworkRepository.AddStudentHomeworkAsync(taskAnswerDto);
+            return _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
         }
 
         public void DeleteStudentHomework(int id, UserIdentityInfo userInfo)
@@ -49,7 +49,7 @@ namespace DevEdu.Business.Services
             var dto = _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(id);
             if (!userInfo.IsAdmin())
                 _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(dto.User.Id, userInfo.UserId);
-            _studentHomeworkRepository.DeleteStudentHomework(id);
+            _studentHomeworkRepository.DeleteStudentHomeworkAsync(id);
         }
 
         public StudentHomeworkDto UpdateStudentHomework(int id, StudentHomeworkDto updatedDto, UserIdentityInfo userInfo)
@@ -58,8 +58,8 @@ namespace DevEdu.Business.Services
             if (!userInfo.IsAdmin())
                 _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(dto.User.Id, userInfo.UserId);
             updatedDto.Id = id;
-            _studentHomeworkRepository.UpdateStudentHomework(updatedDto);
-            return _studentHomeworkRepository.GetStudentHomeworkById(id);
+            _studentHomeworkRepository.UpdateStudentHomeworkAsync(updatedDto);
+            return _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
         }
 
         public int UpdateStatusOfStudentHomework(int id, int statusId, UserIdentityInfo userInfo)
@@ -71,7 +71,7 @@ namespace DevEdu.Business.Services
             if (statusId == (int)StudentHomeworkStatus.Accepted)
                 completedDate = DateTime.Now;
             completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day, completedDate.Hour, completedDate.Minute, completedDate.Second);
-            return _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTask(id, statusId, completedDate);
+            return _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, statusId, completedDate);
         }
 
         public StudentHomeworkDto GetStudentHomeworkById(int id, UserIdentityInfo userInfo)
@@ -85,7 +85,7 @@ namespace DevEdu.Business.Services
         public async Task<List<StudentHomeworkDto>> GetAllStudentHomeworkOnTaskAsync(int taskId)
         {
             await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
-            return _studentHomeworkRepository.GetAllStudentHomeworkByTask(taskId);
+            return _studentHomeworkRepository.GetAllStudentHomeworkByTaskAsync(taskId);
         }
 
         public List<StudentHomeworkDto> GetAllStudentHomeworkByStudentId(int userId, UserIdentityInfo userInfo)
@@ -93,7 +93,7 @@ namespace DevEdu.Business.Services
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
             if (userInfo.IsStudent())
                 _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(userId, userInfo.UserId);
-            return _studentHomeworkRepository.GetAllStudentHomeworkByStudentId(userId);
+            return _studentHomeworkRepository.GetAllStudentHomeworkByStudentIdAsync(userId);
         }
     }
 }

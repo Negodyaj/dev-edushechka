@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -18,11 +19,13 @@ namespace DevEdu.DAL.Repositories
         private const string _homeworkUpdateProcedure = "dbo.Homework_Update";
         private const string _homeworkSelectAllByTaskIdProcedure = "dbo.homework_SelectAllByTaskId";
 
-        public HomeworkRepository(IOptions<DatabaseSettings> options) : base(options) { }
-
-        public int AddHomework(HomeworkDto homeworkDto)
+        public HomeworkRepository(IOptions<DatabaseSettings> options) : base(options)
         {
-            return _connection.QuerySingle<int>(
+        }
+
+        public async Task<int> AddHomeworkAsync(HomeworkDto homeworkDto)
+        {
+            return await _connection.QuerySingleAsync<int>(
                 _homeworkInsertProcedure,
                 new
                 {
@@ -35,18 +38,18 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteHomework(int id)
+        public async Task DeleteHomeworkAsync(int id)
         {
-            _connection.Execute(
+           await _connection.ExecuteAsync(
                 _homeworkDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public void UpdateHomework(HomeworkDto homeworkDto)
+        public async Task UpdateHomeworkAsync(HomeworkDto homeworkDto)
         {
-            _connection.Execute(
+           await _connection.ExecuteAsync(
                 _homeworkUpdateProcedure,
                 new
                 {
@@ -58,66 +61,69 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public HomeworkDto GetHomework(int id)
+        public async Task<HomeworkDto> GetHomeworkAsync(int id)
         {
             HomeworkDto result = default;
-            return _connection
-                .Query<HomeworkDto, TaskDto, GroupDto, GroupStatus, HomeworkDto>(
-                    _homeworkSelectByIdProcedure,
-                    (groupTask, task, group, groupStatus) =>
-                    {
-                        result = groupTask;
-                        result.Task = task;
-                        result.Group = group;
-                        result.Group.GroupStatus = groupStatus;
 
-                        return result;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+            return (await _connection
+                .QueryAsync<HomeworkDto, TaskDto, GroupDto, GroupStatus, HomeworkDto>(
+                _homeworkSelectByIdProcedure,
+                (groupTask, task, group, groupStatus) =>
+                {
+                    result = groupTask;
+                    result.Task = task;
+                    result.Group = group;
+                    result.Group.GroupStatus = groupStatus;
+                    
+                    return result;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+                ))
                 .FirstOrDefault();
         }
 
-        public List<HomeworkDto> GetHomeworkByGroupId(int groupId)
+        public async Task<List<HomeworkDto>> GetHomeworkByGroupIdAsync(int groupId)
         {
-            HomeworkDto result;
-            return _connection
-                .Query<HomeworkDto, TaskDto, HomeworkDto>(
-                    _homeworkSelectAllByGroupIdProcedure,
-                    (groupTask, task) =>
-                    {
-                        result = groupTask;
-                        result.Task = task;
+            HomeworkDto result = default;
 
-                        return result;
-                    },
-                    new { groupId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+            return (await _connection
+                .QueryAsync<HomeworkDto, TaskDto, HomeworkDto>(
+                _homeworkSelectAllByGroupIdProcedure,
+                (groupTask, task) =>
+                {
+                    result = groupTask;
+                    result.Task = task;
+                    
+                    return result;
+                },
+                new { groupId },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+                ))
                 .ToList();
         }
 
-        public List<HomeworkDto> GetHomeworkByTaskId(int taskId)
+        public async Task<List<HomeworkDto>> GetHomeworkByTaskIdAsync(int taskId)
         {
             HomeworkDto result = default;
-            return _connection
-                .Query<HomeworkDto, GroupDto, GroupStatus, HomeworkDto>(
-                    _homeworkSelectAllByTaskIdProcedure,
-                    (groupTask, group, groupStatus) =>
-                    {
-                        result = groupTask;
-                        result.Group = group;
-                        result.Group.GroupStatus = groupStatus;
 
-                        return result;
-                    },
-                    new { taskId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+            return (await _connection
+                .QueryAsync<HomeworkDto, GroupDto, GroupStatus, HomeworkDto>(
+                _homeworkSelectAllByTaskIdProcedure,
+                (groupTask, group, groupStatus) =>
+                {
+                    result = groupTask;
+                    result.Group = group;
+                    result.Group.GroupStatus = groupStatus;
+                    
+                    return result;
+                },
+                new { taskId },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+                ))
                 .ToList();
         }
     }

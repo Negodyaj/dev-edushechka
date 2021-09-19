@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -20,11 +21,13 @@ namespace DevEdu.DAL.Repositories
         private const string _studentHomeworkSelectAllAnswersByTaskIdProcedure = "dbo.Student_Homework_SelectAllAnswersByTaskId";
         private const string _studentHomeworkSelectAnswersByUserIdProcedure = "dbo.Student_Homework_SelectAllAnswersByUserId";
 
-        public StudentHomeworkRepository(IOptions<DatabaseSettings> options) : base(options) { }
-
-        public int AddStudentHomework(StudentHomeworkDto dto)
+        public StudentHomeworkRepository(IOptions<DatabaseSettings> options) : base(options) 
         {
-            return _connection.QuerySingle<int>(
+        }
+
+        public async Task<int> AddStudentHomeworkAsync(StudentHomeworkDto dto)
+        {
+            return await _connection.QuerySingleAsync<int>(
                 _studentHomeworkInsertProcedure,
                 new
                 {
@@ -36,48 +39,48 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteStudentHomework(int id)
+        public async Task DeleteStudentHomeworkAsync(int id)
         {
-            _connection.Execute(
-                _studentHomeworkDeleteProcedure,
-                new { id },
-                commandType: CommandType.StoredProcedure
-            );
+            await _connection.ExecuteAsync(
+                 _studentHomeworkDeleteProcedure,
+                 new { id },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
-        public void UpdateStudentHomework(StudentHomeworkDto dto)
+        public async Task UpdateStudentHomeworkAsync(StudentHomeworkDto dto)
         {
-            _connection.Execute(
-                _studentHomeworkUpdateAnswerProcedure,
-                new
-                {
-                    dto.Id,
-                    dto.Answer
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            await _connection.ExecuteAsync(
+                 _studentHomeworkUpdateAnswerProcedure,
+                 new
+                 {
+                     dto.Id,
+                     dto.Answer
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
-        public int ChangeStatusOfStudentAnswerOnTask(int id, int statusId, DateTime completedDate)
+        public async Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate)
         {
-            _connection.Execute(
-                _studentHomeworkUpdateStatusIdProcedure,
-                new
-                {
-                    id,
-                    StatusId = statusId,
-                    CompletedDate = completedDate
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            await _connection.ExecuteAsync(
+                  _studentHomeworkUpdateStatusIdProcedure,
+                  new
+                  {
+                      id,
+                      StatusId = statusId,
+                      CompletedDate = completedDate
+                  },
+                  commandType: CommandType.StoredProcedure
+              );
 
             return statusId;
         }
 
-        public StudentHomeworkDto GetStudentHomeworkById(int id)
+        public async Task<StudentHomeworkDto> GetStudentHomeworkByIdAsync(int id)
         {
-            var result = _connection
-                .Query<StudentHomeworkDto, HomeworkDto, UserDto, TaskDto, StudentHomeworkStatus, StudentHomeworkDto>(
+            var result = (await _connection
+                .QueryAsync<StudentHomeworkDto, HomeworkDto, UserDto, TaskDto, StudentHomeworkStatus, StudentHomeworkDto>(
                     _studentHomeworkSelectByIdProcedure,
                     (studentHomework, homework, user, task, studentHomeworkStatus) =>
                     {
@@ -91,15 +94,15 @@ namespace DevEdu.DAL.Repositories
                     new { id },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .FirstOrDefault();
             return result;
         }
 
-        public List<StudentHomeworkDto> GetAllStudentHomeworkByTask(int taskId)
+        public async Task<List<StudentHomeworkDto>> GetAllStudentHomeworkByTaskAsync(int taskId)
         {
-            return _connection
-                .Query<StudentHomeworkDto, StudentHomeworkStatus, UserDto, StudentHomeworkDto>(
+            return (await _connection
+                .QueryAsync<StudentHomeworkDto, StudentHomeworkStatus, UserDto, StudentHomeworkDto>(
                 _studentHomeworkSelectAllAnswersByTaskIdProcedure,
                 (studentAnswer, studentHomeworkStatus, user) =>
                 {
@@ -114,14 +117,14 @@ namespace DevEdu.DAL.Repositories
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
 
-        public List<StudentHomeworkDto> GetAllStudentHomeworkByStudentId(int userId)
+        public async Task<List<StudentHomeworkDto>> GetAllStudentHomeworkByStudentIdAsync(int userId)
         {
-            return _connection
-                .Query<StudentHomeworkDto, StudentHomeworkStatus, HomeworkDto, TaskDto, StudentHomeworkDto>(
+            return (await _connection
+                .QueryAsync<StudentHomeworkDto, StudentHomeworkStatus, HomeworkDto, TaskDto, StudentHomeworkDto>(
                     _studentHomeworkSelectAnswersByUserIdProcedure,
                     (answerDto, studentHomeworkStatus, homework, task) =>
                     {
@@ -135,7 +138,7 @@ namespace DevEdu.DAL.Repositories
                         userId
                     },
                     splitOn: "Id",
-                    commandType: CommandType.StoredProcedure)
+                    commandType: CommandType.StoredProcedure))
                 .ToList();
         }
     }

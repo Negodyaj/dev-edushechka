@@ -16,7 +16,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public TagDto GetTagByIdAndThrowIfNotFound(int tagId)
         {
-            var tag = _tagRepository.SelectTagById(tagId);
+            var tag = _tagRepository.SelectTagByIdAsync(tagId);
             if (tag == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(tag), tagId));
             return tag;

@@ -175,7 +175,7 @@ namespace DevEdu.Business.Tests
             {
                 _taskRepositoryMock.Verify(x => x.GetTasksByCourseIdAsync(course.Id), Times.Never);
                 _materialRepositoryMock.Verify(x => x.GetMaterialsByCourseIdAsync(course.Id), Times.Never);
-                _topicRepositoryMock.Verify(x => x.GetTopicsByCourseId(course.Id), Times.Never);
+                _topicRepositoryMock.Verify(x => x.GetTopicsByCourseIdAsync(course.Id), Times.Never);
             }
         }
 
@@ -198,7 +198,7 @@ namespace DevEdu.Business.Tests
             _courseRepositoryMock.Verify(x => x.UpdateCourseAsync(courseDto), Times.Once);
             _taskRepositoryMock.Verify(x => x.GetTasksByCourseIdAsync(courseId), Times.Never);
             _materialRepositoryMock.Verify(x => x.GetMaterialsByCourseIdAsync(courseId), Times.Never);
-            _topicRepositoryMock.Verify(x => x.GetTopicsByCourseId(courseId), Times.Never);
+            _topicRepositoryMock.Verify(x => x.GetTopicsByCourseIdAsync(courseId), Times.Never);
         }
 
         [Test]
@@ -209,15 +209,15 @@ namespace DevEdu.Business.Tests
             var givenTopicId = 8;
             var courseTopicDto = new CourseTopicDto { Position = 3 };
 
-            _topicRepositoryMock.Setup(x => x.AddTopicToCourse(courseTopicDto));
+            _topicRepositoryMock.Setup(x => x.AddTopicToCourseAsync(courseTopicDto));
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto() { Id = givenCourseId });
-            _topicRepositoryMock.Setup(x => x.GetTopic(givenTopicId)).Returns(new TopicDto() { Id = givenTopicId });
+            _topicRepositoryMock.Setup(x => x.GetTopicAsync(givenTopicId)).Returns(new TopicDto() { Id = givenTopicId });
 
             //When
             _sut.AddTopicToCourseAsync(givenCourseId, givenTopicId, courseTopicDto);
             
             //Then
-            _topicRepositoryMock.Verify(x => x.AddTopicToCourse(courseTopicDto), Times.Once);
+            _topicRepositoryMock.Verify(x => x.AddTopicToCourseAsync(courseTopicDto), Times.Once);
 
         }
 
@@ -229,15 +229,15 @@ namespace DevEdu.Business.Tests
             var courseTopicsDto = CourseData.GetListCourseTopicDto();
             var topicsDto = CourseData.GetTopics();
 
-            _topicRepositoryMock.Setup(x => x.AddTopicsToCourse(courseTopicsDto));
+            _topicRepositoryMock.Setup(x => x.AddTopicsToCourseAsync(courseTopicsDto));
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto() { Id = givenCourseId });
-            _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsDto);
+            _topicRepositoryMock.Setup(x => x.GetAllTopicsAsync()).Returns(topicsDto);
 
             //When
             _sut.AddTopicsToCourseAsync(givenCourseId, courseTopicsDto);
             
             //Then
-            _topicRepositoryMock.Verify(x => x.AddTopicsToCourse(courseTopicsDto), Times.Once);
+            _topicRepositoryMock.Verify(x => x.AddTopicsToCourseAsync(courseTopicsDto), Times.Once);
         }
 
         [Test]
@@ -247,15 +247,15 @@ namespace DevEdu.Business.Tests
             var givenCourseId = 4;
             var givenTopicId = 7;
 
-            _topicRepositoryMock.Setup(x => x.DeleteTopicFromCourse(givenCourseId, givenTopicId));
+            _topicRepositoryMock.Setup(x => x.DeleteTopicFromCourseAsync(givenCourseId, givenTopicId));
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto() { Id = givenCourseId });
-            _topicRepositoryMock.Setup(x => x.GetTopic(givenTopicId)).Returns(new TopicDto() { Id = givenTopicId });
+            _topicRepositoryMock.Setup(x => x.GetTopicAsync(givenTopicId)).Returns(new TopicDto() { Id = givenTopicId });
 
             //When
             _sut.DeleteTopicFromCourseAsync(givenCourseId, givenTopicId);
            
             //Then
-            _topicRepositoryMock.Verify(x => x.DeleteTopicFromCourse(givenCourseId, givenTopicId), Times.Once);
+            _topicRepositoryMock.Verify(x => x.DeleteTopicFromCourseAsync(givenCourseId, givenTopicId), Times.Once);
         }
 
         [Test]
@@ -285,7 +285,7 @@ namespace DevEdu.Business.Tests
             var topicsInDb = CourseData.GetTopics();
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseIdAsync(givenCourseId)).ReturnsAsync(courseTopicsFromDb);
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
-            _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsInDb);
+            _topicRepositoryMock.Setup(x => x.GetAllTopicsAsync()).Returns(topicsInDb);
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto() { Id = givenCourseId });
 
             //When
@@ -315,7 +315,7 @@ namespace DevEdu.Business.Tests
           
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseIdAsync(givenCourseId)).ReturnsAsync(courseToicsFromDb);
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenCourseTopicsToUpdate));
-            _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsInDb);
+            _topicRepositoryMock.Setup(x => x.GetAllTopicsAsync()).Returns(topicsInDb);
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto() { Id = givenCourseId });
 
             //When
@@ -323,7 +323,7 @@ namespace DevEdu.Business.Tests
             
             //Then
             _courseRepositoryMock.Verify(x => x.DeleteAllTopicsByCourseIdAsync(givenCourseId), Times.Once);
-            _topicRepositoryMock.Verify(x => x.AddTopicsToCourse(givenCourseTopicsToUpdate), Times.Once);
+            _topicRepositoryMock.Verify(x => x.AddTopicsToCourseAsync(givenCourseTopicsToUpdate), Times.Once);
         }
 
         [Test]
@@ -335,7 +335,7 @@ namespace DevEdu.Business.Tests
             var courseToicsFromDb = new List<CourseTopicDto>();
             var topicsInDb = CourseData.GetTopics();
 
-            _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsInDb);
+            _topicRepositoryMock.Setup(x => x.GetAllTopicsAsync()).Returns(topicsInDb);
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseIdAsync(givenCourseId)).ReturnsAsync(courseToicsFromDb);
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto() { Id = givenCourseId });
@@ -345,7 +345,7 @@ namespace DevEdu.Business.Tests
             
             //Then
             _courseRepositoryMock.Verify(x => x.DeleteAllTopicsByCourseIdAsync(givenCourseId), Times.Never);
-            _topicRepositoryMock.Verify(x => x.AddTopicsToCourse(givenTopicsToUpdate), Times.Once);
+            _topicRepositoryMock.Verify(x => x.AddTopicsToCourseAsync(givenTopicsToUpdate), Times.Once);
         }
 
         [Test]
@@ -383,7 +383,7 @@ namespace DevEdu.Business.Tests
             givenTopicsToUpdate.Add(new CourseTopicDto { Position = 1, Id = 3, Topic = new TopicDto { Id = 3 } });
 
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseIdAsync(givenCourseId)).ReturnsAsync(topicsFromDb);
-            _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsDto);
+            _topicRepositoryMock.Setup(x => x.GetAllTopicsAsync()).Returns(topicsDto);
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto() { Id = givenCourseId });
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
 
@@ -418,7 +418,7 @@ namespace DevEdu.Business.Tests
 
             var topicsFromDb = CourseData.GetListCourseTopicDtoFromDataBase();
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto() { Id = givenCourseId });
-            _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsDto);
+            _topicRepositoryMock.Setup(x => x.GetAllTopicsAsync()).Returns(topicsDto);
             _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseIdAsync(givenCourseId)).ReturnsAsync(topicsFromDb);
             _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
 
@@ -440,7 +440,7 @@ namespace DevEdu.Business.Tests
             var materialDto = MaterialData.GetMaterialDtoWithoutTags();
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId)).ReturnsAsync(new CourseDto() { Id = courseId });
-            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialDto);
+            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).Returns(materialDto);
            
             //When
             _sut.AddCourseMaterialReferenceAsync(courseId, materialId);
@@ -458,7 +458,7 @@ namespace DevEdu.Business.Tests
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "course", courseId);
            
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId));
-            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialDto);
+            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).Returns(materialDto);
             
             //When
             var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.AddCourseMaterialReferenceAsync(courseId, materialId));
@@ -476,7 +476,7 @@ namespace DevEdu.Business.Tests
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", materialId);
             
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId)).ReturnsAsync(new CourseDto() { Id = courseId }); ;
-            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId));
+            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId));
            
             //When
             var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.AddCourseMaterialReferenceAsync(courseId, materialId));
@@ -493,7 +493,7 @@ namespace DevEdu.Business.Tests
             var materialId = 4;
             var materialDto = MaterialData.GetMaterialDtoWithoutTags();
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId)).ReturnsAsync(new CourseDto() { Id = courseId });
-            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialDto);
+            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).Returns(materialDto);
             
             //When
             _sut.RemoveCourseMaterialReferenceAsync(courseId, materialId);
@@ -512,7 +512,7 @@ namespace DevEdu.Business.Tests
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "course", courseId);
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId));
-            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId)).Returns(materialDto);
+            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).Returns(materialDto);
            
             //When
             var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.RemoveCourseMaterialReferenceAsync(courseId, materialId));
@@ -530,7 +530,7 @@ namespace DevEdu.Business.Tests
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "material", materialId);
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId)).ReturnsAsync(new CourseDto() { Id = courseId }); ;
-            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId));
+            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId));
             
             //When
             var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.RemoveCourseMaterialReferenceAsync(courseId, materialId));
@@ -606,7 +606,7 @@ namespace DevEdu.Business.Tests
             var givenTopicId = 0;
             CourseTopicDto topic = default;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "course", givenCourseId);
-            _topicRepositoryMock.Setup(x => x.AddTopicToCourse(topic));
+            _topicRepositoryMock.Setup(x => x.AddTopicToCourseAsync(topic));
            
             //When
             var exception = Assert.ThrowsAsync<EntityNotFoundException>(() =>
@@ -614,7 +614,7 @@ namespace DevEdu.Business.Tests
            
             //Then
             Assert.That(exception.Message, Is.EqualTo(exp));
-            _topicRepositoryMock.Verify(x => x.AddTopicToCourse(topic), Times.Never);
+            _topicRepositoryMock.Verify(x => x.AddTopicToCourseAsync(topic), Times.Never);
         }
 
         [Test]
@@ -627,7 +627,7 @@ namespace DevEdu.Business.Tests
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", givenTopicId);
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto() { Id = givenCourseId });
-            _topicRepositoryMock.Setup(x => x.AddTopicToCourse(topic));
+            _topicRepositoryMock.Setup(x => x.AddTopicToCourseAsync(topic));
             
             //When
             var exception = Assert.ThrowsAsync<EntityNotFoundException>(() =>
@@ -635,7 +635,7 @@ namespace DevEdu.Business.Tests
             
             //Then
             Assert.That(exception.Message, Is.EqualTo(exp));
-            _topicRepositoryMock.Verify(x => x.AddTopicToCourse(topic), Times.Never);
+            _topicRepositoryMock.Verify(x => x.AddTopicToCourseAsync(topic), Times.Never);
         }
 
         [Test]
@@ -647,8 +647,8 @@ namespace DevEdu.Business.Tests
             List<TopicDto> topicsInDB = CourseData.GetTopicsFromBDUseWhenTopicAbsent();
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto() { Id = givenCourseId });
-            _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsInDB);
-            _topicRepositoryMock.Setup(x => x.AddTopicsToCourse(courseTopic));
+            _topicRepositoryMock.Setup(x => x.GetAllTopicsAsync()).Returns(topicsInDB);
+            _topicRepositoryMock.Setup(x => x.AddTopicsToCourseAsync(courseTopic));
             
             //When
             var exp = Assert.ThrowsAsync<EntityNotFoundException>(() =>
@@ -656,7 +656,7 @@ namespace DevEdu.Business.Tests
             
             //Then
             Assert.That(ServiceMessages.EntityNotFound, Is.EqualTo(exp.Message));
-            _topicRepositoryMock.Verify(x => x.AddTopicsToCourse(courseTopic), Times.Never);
+            _topicRepositoryMock.Verify(x => x.AddTopicsToCourseAsync(courseTopic), Times.Never);
 
         }
 
@@ -668,9 +668,9 @@ namespace DevEdu.Business.Tests
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "course", givenCourseId);
             var topicsInDB = CourseData.GetTopics();
 
-            _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsInDB);
+            _topicRepositoryMock.Setup(x => x.GetAllTopicsAsync()).Returns(topicsInDB);
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId));
-            _topicRepositoryMock.Setup(x => x.AddTopicsToCourse(courseTopic));
+            _topicRepositoryMock.Setup(x => x.AddTopicsToCourseAsync(courseTopic));
            
             //When
             var result = Assert.ThrowsAsync<EntityNotFoundException>(() =>
@@ -678,7 +678,7 @@ namespace DevEdu.Business.Tests
            
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
-            _topicRepositoryMock.Verify(x => x.AddTopicsToCourse(courseTopic), Times.Never);
+            _topicRepositoryMock.Verify(x => x.AddTopicsToCourseAsync(courseTopic), Times.Never);
         }
 
         [Test]
@@ -697,7 +697,7 @@ namespace DevEdu.Business.Tests
             
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
-            _topicRepositoryMock.Verify(x => x.DeleteTopicFromCourse(givenCourseId, givenTopicId), Times.Never);
+            _topicRepositoryMock.Verify(x => x.DeleteTopicFromCourseAsync(givenCourseId, givenTopicId), Times.Never);
         }
 
         [Test]
@@ -716,7 +716,7 @@ namespace DevEdu.Business.Tests
             
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
-            _topicRepositoryMock.Verify(x => x.DeleteTopicFromCourse(givenCourseId, givenTopicId), Times.Never);
+            _topicRepositoryMock.Verify(x => x.DeleteTopicFromCourseAsync(givenCourseId, givenTopicId), Times.Never);
         }
 
         [Test]
@@ -749,7 +749,7 @@ namespace DevEdu.Business.Tests
             var exp = ServiceMessages.EntityNotFound;
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto { Id = givenCourseId });
-            _topicRepositoryMock.Setup(x => x.GetAllTopics()).Returns(topicsInBd);
+            _topicRepositoryMock.Setup(x => x.GetAllTopicsAsync()).Returns(topicsInBd);
            
             //When
             var result = Assert.ThrowsAsync<EntityNotFoundException>(() =>
@@ -788,7 +788,7 @@ namespace DevEdu.Business.Tests
             const int materialId = 1;
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId)).ReturnsAsync(CourseData.GetCourseDto());
-            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId)).Returns(MaterialData.GetMaterialDtoWithoutTags);
+            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).Returns(MaterialData.GetMaterialDtoWithoutTags);
             _courseRepositoryMock.Setup(x => x.AddCourseMaterialReferenceAsync(courseId, materialId));
 
             //When
@@ -796,7 +796,7 @@ namespace DevEdu.Business.Tests
 
             //Than
             _courseRepositoryMock.Verify(x => x.GetCourseAsync(courseId), Times.Once);
-            _materialRepositoryMock.Verify(x => x.GetMaterialById(materialId), Times.Once);
+            _materialRepositoryMock.Verify(x => x.GetMaterialByIdAsync(materialId), Times.Once);
             _courseRepositoryMock.Verify(x => x.AddCourseMaterialReferenceAsync(courseId, materialId), Times.Once);
         }
 
@@ -808,7 +808,7 @@ namespace DevEdu.Business.Tests
             const int materialId = 1;
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId)).ReturnsAsync(CourseData.GetCourseDto());
-            _materialRepositoryMock.Setup(x => x.GetMaterialById(materialId)).Returns(MaterialData.GetMaterialDtoWithoutTags);
+            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).Returns(MaterialData.GetMaterialDtoWithoutTags);
             _courseRepositoryMock.Setup(x => x.RemoveCourseMaterialReferenceAsync(courseId, materialId));
 
             //When
@@ -816,7 +816,7 @@ namespace DevEdu.Business.Tests
 
             //Than
             _courseRepositoryMock.Verify(x => x.GetCourseAsync(courseId), Times.Once);
-            _materialRepositoryMock.Verify(x => x.GetMaterialById(materialId), Times.Once);
+            _materialRepositoryMock.Verify(x => x.GetMaterialByIdAsync(materialId), Times.Once);
             _courseRepositoryMock.Verify(x => x.RemoveCourseMaterialReferenceAsync(courseId, materialId), Times.Once);
         }
 
@@ -893,13 +893,13 @@ namespace DevEdu.Business.Tests
             //Given
             var id = 3;
 
-            _topicRepositoryMock.Setup(x => x.GetCourseTopicById(id)).Returns(new CourseTopicDto() { Id = id });
+            _topicRepositoryMock.Setup(x => x.GetCourseTopicByIdAsync(id)).Returns(new CourseTopicDto() { Id = id });
 
             //When
             _sut.GetCourseTopicById(id);
 
             //Then
-            _topicRepositoryMock.Verify(x => x.GetCourseTopicById(id), Times.Once);
+            _topicRepositoryMock.Verify(x => x.GetCourseTopicByIdAsync(id), Times.Once);
         }
 
         [Test]
@@ -909,14 +909,14 @@ namespace DevEdu.Business.Tests
             var id = 3;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "courseTopic", id);
 
-            _topicRepositoryMock.Setup(x => x.GetCourseTopicById(id));
+            _topicRepositoryMock.Setup(x => x.GetCourseTopicByIdAsync(id));
 
             //When
             var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetCourseTopicById(id));
 
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
-            _topicRepositoryMock.Verify(x => x.GetCourseTopicById(id), Times.Once);
+            _topicRepositoryMock.Verify(x => x.GetCourseTopicByIdAsync(id), Times.Once);
         }
 
         [Test]
@@ -926,13 +926,13 @@ namespace DevEdu.Business.Tests
             var ids = new List<int>() { 15, 21, 13 };
             var courseTopicsInBd = CourseData.GetListCourseTopicDtoFromDataBase();
 
-            _topicRepositoryMock.Setup(x => x.GetCourseTopicBySeveralId(ids)).Returns(courseTopicsInBd);
+            _topicRepositoryMock.Setup(x => x.GetCourseTopicBySeveralIdAsync(ids)).Returns(courseTopicsInBd);
 
             //When
             _sut.GetCourseTopicBySeveralId(ids);
 
             //Then
-            _topicRepositoryMock.Verify(x => x.GetCourseTopicBySeveralId(ids), Times.Once);
+            _topicRepositoryMock.Verify(x => x.GetCourseTopicBySeveralIdAsync(ids), Times.Once);
         }
       
         [Test]
@@ -942,14 +942,14 @@ namespace DevEdu.Business.Tests
             var ids = new List<int>() { 15, 22, 13 };
             var courseTopicsInBd = CourseData.GetListCourseTopicDtoFromDataBase();
 
-            _topicRepositoryMock.Setup(x => x.GetCourseTopicBySeveralId(ids)).Returns(courseTopicsInBd);
+            _topicRepositoryMock.Setup(x => x.GetCourseTopicBySeveralIdAsync(ids)).Returns(courseTopicsInBd);
 
             //When
             var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetCourseTopicBySeveralId(ids));
 
             //Then
             Assert.That(result.Message, Is.EqualTo(ServiceMessages.EntityNotFound));
-            _topicRepositoryMock.Verify(x => x.GetCourseTopicBySeveralId(ids), Times.Once);
+            _topicRepositoryMock.Verify(x => x.GetCourseTopicBySeveralIdAsync(ids), Times.Once);
             }
     }
 }

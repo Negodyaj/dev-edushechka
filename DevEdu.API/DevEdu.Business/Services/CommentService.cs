@@ -34,8 +34,8 @@ namespace DevEdu.Business.Services
 
             dto.User = new UserDto { Id = userInfo.UserId };
             dto.Lesson = new LessonDto { Id = lessonId };
-            var id = _commentRepository.AddComment(dto);
-            return _commentRepository.GetComment(id);
+            var id = _commentRepository.AddCommentAsync(dto);
+            return _commentRepository.GetCommentAsync(id);
         }
 
         public CommentDto AddCommentToStudentAnswer(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo)
@@ -47,8 +47,8 @@ namespace DevEdu.Business.Services
 
             dto.User = new UserDto { Id = userInfo.UserId };
             dto.StudentHomework = new StudentHomeworkDto { Id = studentHomeworkId };
-            var id = _commentRepository.AddComment(dto);
-            return _commentRepository.GetComment(id);
+            var id = _commentRepository.AddCommentAsync(dto);
+            return _commentRepository.GetCommentAsync(id);
         }
 
         public CommentDto GetComment(int commentId, UserIdentityInfo userInfo)
@@ -62,7 +62,7 @@ namespace DevEdu.Business.Services
         {
             var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
             CheckUserAccessToCommentByUserId(userInfo, checkedDto);
-            _commentRepository.DeleteComment(commentId);
+            _commentRepository.DeleteCommentAsync(commentId);
         }
 
         public CommentDto UpdateComment(int commentId, CommentDto dto, UserIdentityInfo userInfo)
@@ -70,8 +70,8 @@ namespace DevEdu.Business.Services
             var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
             CheckUserAccessToCommentByUserId(userInfo, checkedDto);
             dto.Id = commentId;
-            _commentRepository.UpdateComment(dto);
-            return _commentRepository.GetComment(commentId);
+            _commentRepository.UpdateCommentAsync(dto);
+            return _commentRepository.GetCommentAsync(commentId);
         }
 
         private void CheckUserAccessToCommentByUserId(UserIdentityInfo userInfo, CommentDto dto)

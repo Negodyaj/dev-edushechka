@@ -40,13 +40,13 @@ namespace DevEdu.Business.Services
             await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
             if (!userInfo.IsAdmin())
                 _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userInfo.UserId);
-            return _homeworkRepository.GetHomeworkByGroupId(groupId);
+            return _homeworkRepository.GetHomeworkByGroupIdAsync(groupId);
         }
 
         public List<HomeworkDto> GetHomeworkByTaskId(int taskId)
         {
             _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
-            return _homeworkRepository.GetHomeworkByTaskId(taskId);
+            return _homeworkRepository.GetHomeworkByTaskIdAsync(taskId);
         }
 
         public HomeworkDto AddHomework(int groupId, int taskId, HomeworkDto dto, UserIdentityInfo userInfo)
@@ -57,8 +57,8 @@ namespace DevEdu.Business.Services
                 _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userInfo.UserId);
             dto.Group = new GroupDto { Id = groupId };
             dto.Task = new TaskDto { Id = taskId };
-            var id = _homeworkRepository.AddHomework(dto);
-            return _homeworkRepository.GetHomework(id);
+            var id = _homeworkRepository.AddHomeworkAsync(dto);
+            return _homeworkRepository.GetHomeworkAsync(id);
         }
 
         public void DeleteHomework(int homeworkId, UserIdentityInfo userInfo)
@@ -66,7 +66,7 @@ namespace DevEdu.Business.Services
             var dto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
             CheckAccessAndExistenceAndThrowIfNotFound(userInfo, dto);
 
-            _homeworkRepository.DeleteHomework(homeworkId);
+            _homeworkRepository.DeleteHomeworkAsync(homeworkId);
         }
 
         public HomeworkDto UpdateHomework(int homeworkId, HomeworkDto dto, UserIdentityInfo userInfo)
@@ -77,8 +77,8 @@ namespace DevEdu.Business.Services
             homeworkDto.Id = homeworkId;
             homeworkDto.StartDate = dto.StartDate;
             homeworkDto.EndDate = dto.EndDate;
-            _homeworkRepository.UpdateHomework(homeworkDto);
-            return _homeworkRepository.GetHomework(homeworkId);
+            _homeworkRepository.UpdateHomeworkAsync(homeworkDto);
+            return _homeworkRepository.GetHomeworkAsync(homeworkId);
         }
 
         private void CheckAccessAndExistenceAndThrowIfNotFound(UserIdentityInfo userInfo, HomeworkDto dto)

@@ -33,8 +33,8 @@ namespace DevEdu.Business.Services
             }
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentRatingDto.User.Id);
             _userValidationHelper.CheckUserBelongToGroup(studentRatingDto.Group.Id, studentRatingDto.User.Id, Role.Student);
-            var id = _repository.AddStudentRating(studentRatingDto);
-            return _repository.SelectStudentRatingById(id);
+            var id = _repository.AddStudentRatingAsync(studentRatingDto);
+            return _repository.SelectStudentRatingByIdAsync(id);
         }
 
         public void DeleteStudentRating(int id, UserIdentityInfo authorUserInfo)
@@ -44,18 +44,18 @@ namespace DevEdu.Business.Services
             {
                 _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, authorUserInfo.UserId, Role.Teacher);
             }
-            _repository.DeleteStudentRating(id);
+            _repository.DeleteStudentRatingAsync(id);
         }
 
         public List<StudentRatingDto> GetAllStudentRatings()
         {
-            return _repository.SelectAllStudentRatings();
+            return _repository.SelectAllStudentRatingsAsync();
         }
 
         public List<StudentRatingDto> GetStudentRatingByUserId(int userId)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-            return _repository.SelectStudentRatingByUserId(userId);
+            return _repository.SelectStudentRatingByUserIdAsync(userId);
         }
 
         public List<StudentRatingDto> GetStudentRatingByGroupId(int groupId, UserIdentityInfo authorUserInfo)
@@ -65,7 +65,7 @@ namespace DevEdu.Business.Services
                 _userValidationHelper.CheckAuthorizationUserToGroup(groupId, authorUserInfo.UserId, Role.Teacher);
             }
             var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
-            return _repository.SelectStudentRatingByGroupId(groupId);
+            return _repository.SelectStudentRatingByGroupIdAsync(groupId);
         }
 
         public StudentRatingDto UpdateStudentRating(int id, int value, int periodNumber, UserIdentityInfo authorUserInfo)
@@ -81,8 +81,8 @@ namespace DevEdu.Business.Services
                 Rating = value,
                 ReportingPeriodNumber = periodNumber
             };
-            _repository.UpdateStudentRating(dto);
-            return _repository.SelectStudentRatingById(id);
+            _repository.UpdateStudentRatingAsync(dto);
+            return _repository.SelectStudentRatingByIdAsync(id);
         }
     }
 }

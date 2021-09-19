@@ -6,14 +6,14 @@ namespace DevEdu.DAL.Repositories
 {
     public interface IMaterialRepository
     {
-        int AddMaterial(MaterialDto material);
-        void AddTagToMaterial(int materialId, int tagId);
-        int DeleteMaterial(int id, bool isDeleted);
-        int DeleteTagFromMaterial(int materialId, int tagId);
-        List<MaterialDto> GetAllMaterials();
-        MaterialDto GetMaterialById(int id);
-        int UpdateMaterial(MaterialDto material);
-        List<MaterialDto> GetMaterialsByTagId(int tagId);
+        Task<int> AddMaterialAsync(MaterialDto material);
+        Task AddTagToMaterialAsync(int materialId, int tagId);
+        Task<int> DeleteMaterialAsync(int id, bool isDeleted);
+        Task<int> DeleteTagFromMaterialAsync(int materialId, int tagId);
+        Task<List<MaterialDto>> GetAllMaterialsAsync();
+        Task<MaterialDto> GetMaterialByIdAsync(int id);
+        Task<int> UpdateMaterialAsync(MaterialDto material);
+        Task<List<MaterialDto>> GetMaterialsByTagIdAsync(int tagId);
         Task<List<MaterialDto>> GetMaterialsByCourseIdAsync(int courseId);
     }
 }

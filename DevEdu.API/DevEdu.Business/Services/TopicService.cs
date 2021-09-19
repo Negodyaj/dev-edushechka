@@ -25,7 +25,7 @@ namespace DevEdu.Business.Services
 
         public int AddTopic(TopicDto topicDto)
         {
-            var topicId = _topicRepository.AddTopic(topicDto);
+            var topicId = _topicRepository.AddTopicAsync(topicDto);
             if (topicDto.Tags == null || topicDto.Tags.Count == 0)
                 return topicId;
 
@@ -36,7 +36,7 @@ namespace DevEdu.Business.Services
         public void DeleteTopic(int id)
         {
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(id);
-            _topicRepository.DeleteTopic(id);
+            _topicRepository.DeleteTopicAsync(id);
         }
 
         public TopicDto GetTopic(int id)
@@ -47,29 +47,29 @@ namespace DevEdu.Business.Services
 
         public List<TopicDto> GetAllTopics()
         {
-            return _topicRepository.GetAllTopics();
+            return _topicRepository.GetAllTopicsAsync();
         }
 
         public TopicDto UpdateTopic(int id, TopicDto topicDto)
         {
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(id);
             topicDto.Id = id;
-            _topicRepository.UpdateTopic(topicDto);
-            return _topicRepository.GetTopic(id);
+            _topicRepository.UpdateTopicAsync(topicDto);
+            return _topicRepository.GetTopicAsync(id);
         }
 
         public int AddTagToTopic(int topicId, int tagId)
         {
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
             _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tagId);
-            return _topicRepository.AddTagToTopic(topicId, tagId);
+            return _topicRepository.AddTagToTopicAsync(topicId, tagId);
         }
 
         public int DeleteTagFromTopic(int topicId, int tagId)
         {
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
             _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tagId);
-            return _topicRepository.DeleteTagFromTopic(topicId, tagId);
+            return _topicRepository.DeleteTagFromTopicAsync(topicId, tagId);
         }
     }
 }

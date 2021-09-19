@@ -24,7 +24,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public LessonDto GetLessonByIdAndThrowIfNotFound(int lessonId)
         {
-            var lesson = _lessonRepository.SelectLessonById(lessonId);
+            var lesson = _lessonRepository.SelectLessonByIdAsync(lessonId);
             if (lesson == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(lesson), lessonId));
             return lesson;
@@ -73,7 +73,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckAttendanceExistence(int lessonId, int userId)
         {
-            var attendance = _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, userId);
+            var attendance = _lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, userId);
             if (attendance == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(attendance), lessonId));
         }

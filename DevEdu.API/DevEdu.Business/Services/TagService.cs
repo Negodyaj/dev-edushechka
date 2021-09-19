@@ -18,25 +18,25 @@ namespace DevEdu.Business.Services
 
         public TagDto AddTag(TagDto dto)
         {
-            dto.Id = _repository.AddTag(dto);
+            dto.Id = _repository.AddTagAsync(dto);
             return dto;
         }
 
         public void DeleteTag(int id)
         {
             _tagValidationHelper.GetTagByIdAndThrowIfNotFound(id);
-            _repository.DeleteTag(id);
+            _repository.DeleteTagAsync(id);
         }
 
         public TagDto UpdateTag(TagDto dto, int id)
         {
             _tagValidationHelper.GetTagByIdAndThrowIfNotFound(id);
             dto.Id = id;
-            _repository.UpdateTag(dto);
-            return _repository.SelectTagById(id);
+            _repository.UpdateTagAsync(dto);
+            return _repository.SelectTagByIdAsync(id);
         }
 
-        public List<TagDto> GetAllTags() => _repository.SelectAllTags();
+        public List<TagDto> GetAllTags() => _repository.SelectAllTagsAsync();
 
         public TagDto GetTagById(int id) => _tagValidationHelper.GetTagByIdAndThrowIfNotFound(id);
     }

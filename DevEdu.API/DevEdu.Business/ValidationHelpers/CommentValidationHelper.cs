@@ -16,7 +16,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public CommentDto GetCommentByIdAndThrowIfNotFound(int commentId)
         {
-            var comment = _commentRepository.GetComment(commentId);
+            var comment = _commentRepository.GetCommentAsync(commentId);
             if (comment == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), commentId));
             return comment;

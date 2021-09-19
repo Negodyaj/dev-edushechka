@@ -42,17 +42,17 @@ namespace DevEdu.Business.Services
             {
                 _lessonValidationHelper.CheckUserAndTeacherAreSame(userIdentity, lessonDto.Teacher.Id);
             }
-            int lessonId = _lessonRepository.AddLesson(lessonDto);
+            int lessonId = _lessonRepository.AddLessonAsync(lessonDto);
 
             if (topicIds != null)
             {
                 foreach (int topicId in topicIds)
                 {
                     _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-                    _lessonRepository.AddTopicToLesson(lessonId, topicId);
+                    _lessonRepository.AddTopicToLessonAsync(lessonId, topicId);
                 }
             }
-            return _lessonRepository.SelectLessonById(lessonId);
+            return _lessonRepository.SelectLessonByIdAsync(lessonId);
         }
 
         public void DeleteLesson(UserIdentityInfo userIdentity, int id)
@@ -62,7 +62,7 @@ namespace DevEdu.Business.Services
             {
                 _lessonValidationHelper.CheckUserBelongsToLessonAsync(userIdentity, lesson);
             }
-            _lessonRepository.DeleteLesson(id);
+            _lessonRepository.DeleteLessonAsync(id);
         }
 
         public async Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(UserIdentityInfo userIdentity, int groupId)
@@ -80,7 +80,7 @@ namespace DevEdu.Business.Services
         public List<LessonDto> SelectAllLessonsByTeacherId(int teacherId)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(teacherId);
-            return _lessonRepository.SelectAllLessonsByTeacherId(teacherId);
+            return _lessonRepository.SelectAllLessonsByTeacherIdAsync(teacherId);
         }
 
         public LessonDto SelectLessonWithCommentsById(UserIdentityInfo userIdentity, int id)
@@ -91,8 +91,8 @@ namespace DevEdu.Business.Services
                 _lessonValidationHelper.CheckUserBelongsToLessonAsync(userIdentity, lesson);
             }
 
-            LessonDto result = _lessonRepository.SelectLessonById(id);
-            result.Comments = _commentRepository.SelectCommentsFromLessonByLessonId(id);
+            LessonDto result = _lessonRepository.SelectLessonByIdAsync(id);
+            result.Comments = _commentRepository.SelectCommentsFromLessonByLessonIdAsync(id);
             return result;
         }
 
@@ -113,7 +113,7 @@ namespace DevEdu.Business.Services
 
             lessonDto.Id = lessonId;
             _lessonRepository.UpdateLessonAsync(lessonDto);
-            return _lessonRepository.SelectLessonById(lessonDto.Id);
+            return _lessonRepository.SelectLessonByIdAsync(lessonDto.Id);
         }
 
         public void DeleteTopicFromLesson(int lessonId, int topicId)
@@ -131,7 +131,7 @@ namespace DevEdu.Business.Services
             var lesson = _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
             _lessonValidationHelper.CheckTopicLessonReferenceIsUnique(lesson, topicId);
-            _lessonRepository.AddTopicToLesson(lessonId, topicId);
+            _lessonRepository.AddTopicToLessonAsync(lessonId, topicId);
         }
 
         public StudentLessonDto AddStudentToLesson(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
@@ -141,8 +141,8 @@ namespace DevEdu.Business.Services
             if (!userIdentityInfo.IsAdmin())
                 _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
 
-            _lessonRepository.AddStudentToLesson(lessonId, studentId);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
+            _lessonRepository.AddStudentToLessonAsync(lessonId, studentId);
+            return _lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, studentId);
         }
 
         public void DeleteStudentFromLesson(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
@@ -153,7 +153,7 @@ namespace DevEdu.Business.Services
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             if (!userIdentityInfo.IsAdmin())
                 _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
-            _lessonRepository.DeleteStudentFromLesson(lessonId, studentId);
+            _lessonRepository.DeleteStudentFromLessonAsync(lessonId, studentId);
         }
 
         public StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
@@ -165,8 +165,8 @@ namespace DevEdu.Business.Services
                 _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.Student = new UserDto { Id = studentId };
-            _lessonRepository.UpdateStudentFeedbackForLesson(studentLessonDto);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
+            _lessonRepository.UpdateStudentFeedbackForLessonAsync(studentLessonDto);
+            return _lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, studentId);
         }
 
         public StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
@@ -178,8 +178,8 @@ namespace DevEdu.Business.Services
                 _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.Student = new UserDto { Id = studentId };
-            _lessonRepository.UpdateStudentAbsenceReasonOnLesson(studentLessonDto);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
+            _lessonRepository.UpdateStudentAbsenceReasonOnLessonAsync(studentLessonDto);
+            return _lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, studentId);
         }
 
         public StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
@@ -191,8 +191,8 @@ namespace DevEdu.Business.Services
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.Student = new UserDto { Id = studentId };
-            _lessonRepository.UpdateStudentAttendanceOnLesson(studentLessonDto);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
+            _lessonRepository.UpdateStudentAttendanceOnLessonAsync(studentLessonDto);
+            return _lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, studentId);
         }
 
         public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId, UserIdentityInfo userIdentityInfo)
@@ -200,7 +200,7 @@ namespace DevEdu.Business.Services
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             if (userIdentityInfo.IsStudent() || userIdentityInfo.IsTeacher())
                 _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
-            return _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
+            return _lessonRepository.SelectAllFeedbackByLessonIdAsync(lessonId);
         }
 
 

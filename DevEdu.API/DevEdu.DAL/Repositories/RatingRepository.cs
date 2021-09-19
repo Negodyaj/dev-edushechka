@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -19,14 +20,17 @@ namespace DevEdu.DAL.Repositories
         private const string _studentRatingSelectByGroupIdProcedure = "dbo.StudentRating_SelectByGroupId";
         private const string _studentRatingUpdateProcedure = "dbo.StudentRating_Update";
 
-        public RatingRepository(IOptions<DatabaseSettings> options) : base(options) { }
+        public RatingRepository(IOptions<DatabaseSettings> options) : base(options)
+        {
+        }
 
-        public int AddStudentRating(StudentRatingDto studentRatingDto)
+        public async Task<int> AddStudentRatingAsync(StudentRatingDto studentRatingDto)
         {
             var userId = studentRatingDto.User.Id;
             var groupId = studentRatingDto.Group.Id;
             var ratingTypeId = studentRatingDto.RatingType.Id;
-            return _connection.QuerySingleOrDefault<int>(
+
+            return await _connection.QuerySingleOrDefaultAsync<int>(
                 _studentRatingInsertProcedure,
                 new
                 {
@@ -40,19 +44,19 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteStudentRating(int id)
+        public async Task DeleteStudentRatingAsync(int id)
         {
-            _connection.Execute(
-                _studentRatingDeleteProcedure,
-                new { id },
-                commandType: CommandType.StoredProcedure
-            );
+            await _connection.ExecuteAsync(
+                 _studentRatingDeleteProcedure,
+                 new { id },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
-        public List<StudentRatingDto> SelectAllStudentRatings()
+        public async Task<List<StudentRatingDto>> SelectAllStudentRatingsAsync()
         {
-            return _connection.Query<StudentRatingDto, GroupDto, RatingTypeDto, UserDto, Role, StudentRatingDto>
-                (
+            return (await _connection
+                .QueryAsync<StudentRatingDto, GroupDto, RatingTypeDto, UserDto, Role, StudentRatingDto>(
                 _studentRatingSelectAllProcedure,
                 (studentRating, group, ratingType, user, role) =>
                 {
@@ -63,14 +67,14 @@ namespace DevEdu.DAL.Repositories
                     return studentRating;
                 },
                 commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
 
-        public StudentRatingDto SelectStudentRatingById(int id)
+        public async Task<StudentRatingDto> SelectStudentRatingByIdAsync(int id)
         {
-            return _connection.Query<StudentRatingDto, GroupDto, RatingTypeDto, UserDto, Role, StudentRatingDto>
-                (
+            return (await _connection
+                .QueryAsync<StudentRatingDto, GroupDto, RatingTypeDto, UserDto, Role, StudentRatingDto>(
                 _studentRatingSelectByIdProcedure,
                 (studentRating, group, ratingType, user, role) =>
                 {
@@ -82,14 +86,14 @@ namespace DevEdu.DAL.Repositories
                 },
                 new { id },
                 commandType: CommandType.StoredProcedure
-                )
+                ))
                 .FirstOrDefault();
         }
 
-        public List<StudentRatingDto> SelectStudentRatingByUserId(int userId)
+        public async Task<List<StudentRatingDto>> SelectStudentRatingByUserIdAsync(int userId)
         {
-            return _connection.Query<StudentRatingDto, GroupDto, RatingTypeDto, UserDto, Role, StudentRatingDto>
-                (
+            return (await _connection
+                .QueryAsync<StudentRatingDto, GroupDto, RatingTypeDto, UserDto, Role, StudentRatingDto>(
                 _studentRatingSelectByUserIdProcedure,
                 (studentRating, group, ratingType, user, role) =>
                 {
@@ -101,16 +105,15 @@ namespace DevEdu.DAL.Repositories
                 },
                 new { userId },
                 commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
 
-        public List<StudentRatingDto> SelectStudentRatingByGroupId(int groupId)
+        public async Task<List<StudentRatingDto>> SelectStudentRatingByGroupIdAsync(int groupId)
         {
-            return _connection.Query<StudentRatingDto, GroupDto, RatingTypeDto, UserDto, Role, StudentRatingDto>
-                (
-                _studentRatingSelectByGroupIdProcedure,
-                (studentRating, group, ratingType, user, role) =>
+            return (await _connection
+                .QueryAsync<StudentRatingDto, GroupDto, RatingTypeDto, UserDto, Role, StudentRatingDto>(
+                _studentRatingSelectByGroupIdProcedure, (studentRating, group, ratingType, user, role) =>
                 {
                     studentRating.RatingType = ratingType;
                     studentRating.User = user;
@@ -118,24 +121,24 @@ namespace DevEdu.DAL.Repositories
                     studentRating.Group = group;
                     return studentRating;
                 },
-                 new { groupId },
+                new { groupId },
                 commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
 
-        public void UpdateStudentRating(StudentRatingDto studentRatingDto)
+        public async Task UpdateStudentRatingAsync(StudentRatingDto studentRatingDto)
         {
-            _connection.Execute(
-                _studentRatingUpdateProcedure,
-                new
-                {
-                    studentRatingDto.Id,
-                    studentRatingDto.Rating,
-                    studentRatingDto.ReportingPeriodNumber
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            await _connection.ExecuteAsync(
+                 _studentRatingUpdateProcedure,
+                 new
+                 {
+                     studentRatingDto.Id,
+                     studentRatingDto.Rating,
+                     studentRatingDto.ReportingPeriodNumber
+                 },
+                 commandType: CommandType.StoredProcedure
+             );
         }
     }
 }

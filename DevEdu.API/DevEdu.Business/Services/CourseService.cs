@@ -94,7 +94,7 @@ namespace DevEdu.Business.Services
             await CheckCourseAndTopicExistencesAsync(courseId, topicId);
             dto.Course = new CourseDto() { Id = courseId };
             dto.Topic = new TopicDto { Id = topicId };
-            return _topicRepository.AddTopicToCourse(dto);
+            return _topicRepository.AddTopicToCourseAsync(dto);
         }
 
         public async Task<List<int>> AddTopicsToCourseAsync(int courseId, List<CourseTopicDto> listDto)
@@ -105,13 +105,13 @@ namespace DevEdu.Business.Services
             {
                 topic.Course = new CourseDto() { Id = courseId };
             }
-            return _topicRepository.AddTopicsToCourse(listDto);
+            return _topicRepository.AddTopicsToCourseAsync(listDto);
         }
 
         public async Task DeleteTopicFromCourseAsync(int courseId, int topicId)
         {
             await CheckCourseAndTopicExistencesAsync(courseId, topicId);
-            _topicRepository.DeleteTopicFromCourse(courseId, topicId);
+            _topicRepository.DeleteTopicFromCourseAsync(courseId, topicId);
         }
 
         public async Task<List<CourseTopicDto>> SelectAllTopicsByCourseIdAsync(int courseId)

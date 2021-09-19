@@ -26,7 +26,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public MaterialDto GetMaterialByIdAndThrowIfNotFound(int materialId)
         {
-            var material = _materialRepository.GetMaterialById(materialId);
+            var material = _materialRepository.GetMaterialByIdAsync(materialId);
             if (material == default)
                 throw new EntityNotFoundException(string.
                     Format(ServiceMessages.EntityNotFoundMessage, nameof(material), materialId));
@@ -79,7 +79,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         private async Task<MaterialDto> GetMaterialIfAllowedToUserByGroupAsync(MaterialDto material, int userId)
         {
-            var groupsByMaterial = _groupRepository.GetGroupsByMaterialId(material.Id);
+            var groupsByMaterial = _groupRepository.GetGroupsByMaterialIdAsync(material.Id);
             var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
 
             var result = groupsByMaterial.FirstOrDefault(gm => groupsByUser.Any(gu => gu.Id == gm.Id));

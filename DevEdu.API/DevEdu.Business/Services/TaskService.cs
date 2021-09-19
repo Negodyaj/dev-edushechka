@@ -58,9 +58,9 @@ namespace DevEdu.Business.Services
             var task = await _taskRepository.GetTaskByIdAsync(taskId);
             if (homework != null)
             {
-                homework.Group = await _groupRepository.GetGroup(groupId);
+                homework.Group = await _groupRepository.GetGroupAsync(groupId);
                 homework.Task = task;
-                _homeworkRepository.AddHomework(homework);
+                _homeworkRepository.AddHomeworkAsync(homework);
             }
             return task;
         }
@@ -193,7 +193,7 @@ namespace DevEdu.Business.Services
         public async Task<TaskDto> GetTaskWithAnswersByIdAsync(int taskId, UserIdentityInfo userIdentityInfo)
         {
             var taskDto = await GetTaskByIdAsync(taskId, userIdentityInfo);
-            taskDto.StudentAnswers = _studentHomeworkRepository.GetAllStudentHomeworkByTask(taskId);
+            taskDto.StudentAnswers = _studentHomeworkRepository.GetAllStudentHomeworkByTaskAsync(taskId);
             return taskDto;
         }
 

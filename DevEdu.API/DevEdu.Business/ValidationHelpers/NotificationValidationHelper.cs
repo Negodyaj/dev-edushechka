@@ -17,7 +17,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public NotificationDto GetNotificationByIdAndThrowIfNotFound(int notificationId)
         {
-            var notification = _notificationRepository.GetNotification(notificationId);
+            var notification = _notificationRepository.GetNotificationAsync(notificationId);
             if (notification == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(notification), notificationId));
             return notification;

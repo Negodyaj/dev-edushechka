@@ -64,18 +64,18 @@ namespace DevEdu.Business.Services
         public List<NotificationDto> GetNotificationsByUserId(int userId)
         {
             _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-            var list = _notificationRepository.GetNotificationsByUserId(userId);
+            var list = _notificationRepository.GetNotificationsByUserIdAsync(userId);
             return list;
         }
         public List<NotificationDto> GetNotificationsByGroupId(int groupId)
         {
             _groupValidationHelper.CheckGroupExistenceAsync(groupId);
-            var list = _notificationRepository.GetNotificationsByGroupId(groupId);
+            var list = _notificationRepository.GetNotificationsByGroupIdAsync(groupId);
             return list;
         }
         public List<NotificationDto> GetNotificationsByRoleId(int RoleId)
         {
-            var list = _notificationRepository.GetNotificationsByRoleId(RoleId);
+            var list = _notificationRepository.GetNotificationsByRoleIdAsync(RoleId);
             return list;
         }
 
@@ -87,7 +87,7 @@ namespace DevEdu.Business.Services
                 _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, userInfo.UserId, Role.Teacher);
             }
             _notificationValidationHelper.CheckRoleIdUserIdGroupIdIsNotNull(dto);
-            var output = _notificationRepository.AddNotification(dto);
+            var output = _notificationRepository.AddNotificationAsync(dto);
             return GetNotification(output);
         }
 
@@ -99,7 +99,7 @@ namespace DevEdu.Business.Services
                 _notificationValidationHelper.CheckNotificationIsForGroup(checkedDto, userInfo.UserId);
                 _userValidationHelper.CheckAuthorizationUserToGroup(checkedDto.Group.Id, userInfo.UserId, Role.Teacher);
             }
-            _notificationRepository.DeleteNotification(id);
+            _notificationRepository.DeleteNotificationAsync(id);
         }
 
         public NotificationDto UpdateNotification(int id, NotificationDto dto, UserIdentityInfo userInfo)
@@ -111,8 +111,8 @@ namespace DevEdu.Business.Services
                 _notificationValidationHelper.CheckNotificationIsForGroup(checkedDto, userInfo.UserId);
                 _userValidationHelper.CheckAuthorizationUserToGroup(checkedDto.Group.Id, userInfo.UserId, Role.Teacher);
             }
-            _notificationRepository.UpdateNotification(dto);
-            return _notificationRepository.GetNotification(id);
+            _notificationRepository.UpdateNotificationAsync(dto);
+            return _notificationRepository.GetNotificationAsync(id);
         }
     }
 }

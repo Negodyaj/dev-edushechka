@@ -31,7 +31,9 @@ namespace DevEdu.DAL.Repositories
         private const string _courseSelectByTaskIdProcedure = "dbo.Course_SelectByTaskId";
         private const string _courseSelectAllByMaterialIdProcedure = "dbo.Course_SelectByMaterialId";
 
-        public CourseRepository(IOptions<DatabaseSettings> options) : base(options) { }
+        public CourseRepository(IOptions<DatabaseSettings> options) : base(options) 
+        {
+        }
 
         public async Task<int> AddCourseAsync(CourseDto courseDto)
         {
@@ -58,6 +60,7 @@ namespace DevEdu.DAL.Repositories
         public async Task<CourseDto> GetCourseAsync(int id)
         {
             CourseDto result = default;
+
             return (await _connection
                 .QueryAsync<CourseDto, TopicDto, CourseDto>(
                 _courseSelectByIdProcedure,
@@ -178,6 +181,7 @@ namespace DevEdu.DAL.Repositories
             {
                 dt.Rows.Add(topic.Course.Id, topic.Topic.Id, topic.Position);
             }
+
             await _connection.ExecuteAsync(
                 _courseTopicUpdateProcedure,
                 new { tblCourseTopic = dt.AsTableValuedParameter(_courseTopicType) },

@@ -18,7 +18,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public PaymentDto GetPaymentByIdAndThrowIfNotFound(int paymentId)
         {
-            var payment = _paymentRepository.GetPayment(paymentId);
+            var payment = _paymentRepository.GetPaymentAsync(paymentId);
             if (payment == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(payment), paymentId));
             if (payment.IsDeleted)
@@ -27,14 +27,14 @@ namespace DevEdu.Business.ValidationHelpers
         }
         public List<PaymentDto> GetPaymentsByUserIdAndThrowIfNotFound(int userId)
         {
-            var payments = _paymentRepository.GetPaymentsByUser(userId);
+            var payments = _paymentRepository.GetPaymentsByUserAsync(userId);
             if (payments == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundByUserId, nameof(payments), userId));
             return payments;
         }
         public List<PaymentDto> SelectPaymentsBySeveralIdAndThrowIfNotFound(List<int> ids)
         {
-            var payments = _paymentRepository.SelectPaymentsBySeveralId(ids);
+            var payments = _paymentRepository.SelectPaymentsBySeveralIdAsync(ids);
             CheckPaymentsExistence(payments, ids);
             if (payments == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFound));

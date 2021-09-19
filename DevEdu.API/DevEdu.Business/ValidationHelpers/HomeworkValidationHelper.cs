@@ -16,7 +16,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public HomeworkDto GetHomeworkByIdAndThrowIfNotFound(int homeworkId)
         {
-            var homework = _homeworkRepository.GetHomework(homeworkId);
+            var homework = _homeworkRepository.GetHomeworkAsync(homeworkId);
             if (homework == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), homeworkId));
             return homework;

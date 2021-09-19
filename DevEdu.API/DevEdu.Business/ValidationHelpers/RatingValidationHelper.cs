@@ -16,7 +16,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public StudentRatingDto CheckRaitingExistenceAndReturnDto(int ratingId)
         {
-            var rating = _ratingRepository.SelectStudentRatingById(ratingId);
+            var rating = _ratingRepository.SelectStudentRatingByIdAsync(ratingId);
             if (rating == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(rating), ratingId));
             return rating;

@@ -38,6 +38,7 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
                 );
+
             return taskId;
         }
 
@@ -69,6 +70,7 @@ namespace DevEdu.DAL.Repositories
         public async Task<TaskDto> GetTaskByIdAsync(int id)
         {
             TaskDto task = default;
+
             return (await _connection
                 .QueryAsync<TaskDto, TagDto, TaskDto>(
                     _taskSelectByIdProcedure,
@@ -121,6 +123,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure))
                 .Distinct()
                 .ToList();
+
             return list;
         }
 
