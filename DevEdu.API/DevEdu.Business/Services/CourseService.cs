@@ -157,9 +157,9 @@ namespace DevEdu.Business.Services
             if (topics == null || topics.Count == 0)
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(courseId);
-            _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFound(topics);
-            CheckUniquenessPositions(topics);
             CheckUniquenessTopics(topics);
+            CheckUniquenessPositions(topics);
+            _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFound(topics);
             var topicsInDatabase = await _courseRepository.SelectAllTopicsByCourseIdAsync(courseId);
             if (
                 topicsInDatabase != null &&
