@@ -2,6 +2,7 @@
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -40,7 +41,7 @@ namespace DevEdu.Business.Services
 
         public CommentDto AddCommentToStudentAnswer(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var studentAnswer = _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(studentHomeworkId);
+            var studentAnswer = Task.Run(() => _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(studentHomeworkId)).Result; ;
             var studentId = studentAnswer.User.Id;
             if (!userInfo.IsAdmin())
                 _studentAnswerValidationHelper.CheckUserInStudentHomeworkAccess(studentId, userInfo.UserId);

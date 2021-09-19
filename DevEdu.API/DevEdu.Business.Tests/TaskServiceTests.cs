@@ -548,16 +548,16 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
-            _studentAnswerRepoMock.Setup(x => x.GetAllStudentHomeworkByTask(taskId)).Returns(studentAnswersDtos);
+            _studentAnswerRepoMock.Setup(x => x.GetAllStudentHomeworkByTaskAsync(taskId)).ReturnsAsync(studentAnswersDtos);
             taskDto.StudentAnswers = studentAnswersDtos;
 
             //When
-            var dto = _sut.GetTaskWithAnswersById(taskId, userIdentityInfo);
+            var dto = _sut.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, dto);
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
-            _studentAnswerRepoMock.Verify(x => x.GetAllStudentHomeworkByTask(taskId), Times.Once);
+            _studentAnswerRepoMock.Verify(x => x.GetAllStudentHomeworkByTaskAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -573,7 +573,7 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
-                () => _sut.GetTaskWithAnswersById(taskId, userIdentityInfo));
+                () => _sut.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
@@ -598,7 +598,7 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                () => _sut.GetTaskWithAnswersById(taskId, userIdentityInfo));
+                () => _sut.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo));
 
             _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);

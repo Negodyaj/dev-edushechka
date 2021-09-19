@@ -190,10 +190,10 @@ namespace DevEdu.Business.Services
             return taskDto;
         }
 
-        public TaskDto GetTaskWithAnswersById(int taskId, UserIdentityInfo userIdentityInfo)
+        public async Task<TaskDto> GetTaskWithAnswersByIdAsync(int taskId, UserIdentityInfo userIdentityInfo)
         {
             var taskDto = GetTaskById(taskId, userIdentityInfo);
-            taskDto.StudentAnswers = _studentHomeworkRepository.GetAllStudentHomeworkByTask(taskId);
+            taskDto.StudentAnswers = await _studentHomeworkRepository.GetAllStudentHomeworkByTaskAsync(taskId);
             return taskDto;
         }
 

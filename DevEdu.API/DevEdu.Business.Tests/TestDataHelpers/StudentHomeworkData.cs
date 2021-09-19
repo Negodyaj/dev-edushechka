@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests.TestDataHelpers
 {
@@ -44,7 +45,7 @@ namespace DevEdu.Business.Tests.TestDataHelpers
 
         public static StudentHomeworkDto GetStudentAnswerOnTaskDto()
         {
-            return new StudentHomeworkDto
+            return  new StudentHomeworkDto
             {
                 Id = 1,
                 Answer = "My answer for task is vot tak vot.",

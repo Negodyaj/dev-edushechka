@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
+using TaskStatus = DevEdu.DAL.Enums.TaskStatus;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -22,9 +24,9 @@ namespace DevEdu.DAL.Repositories
 
         public StudentHomeworkRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
-        public int AddStudentHomework(StudentHomeworkDto dto)
+        public async Task<int> AddStudentHomeworkAsync(StudentHomeworkDto dto)
         {
-            return _connection.QuerySingle<int>(
+            return await (_connection.QuerySingleAsync<int>(
                 _studentHomeworkInsertProcedure,
                 new
                 {
@@ -33,21 +35,21 @@ namespace DevEdu.DAL.Repositories
                     dto.Answer
                 },
                 commandType: CommandType.StoredProcedure
-            );
+            ));
         }
 
-        public void DeleteStudentHomework(int id)
+        public async Task DeleteStudentHomeworkAsync(int id)
         {
-            _connection.Execute(
+            await _connection.ExecuteAsync(
                 _studentHomeworkDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public void UpdateStudentHomework(StudentHomeworkDto dto)
+        public async Task UpdateStudentHomeworkAsync(StudentHomeworkDto dto)
         {
-            _connection.Execute(
+            await _connection.ExecuteAsync(
                 _studentHomeworkUpdateAnswerProcedure,
                 new
                 {
@@ -58,9 +60,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int ChangeStatusOfStudentAnswerOnTask(int id, int statusId, DateTime completedDate)
+        public async Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate)
         {
-            _connection.Execute(
+           await _connection.ExecuteAsync(
                 _studentHomeworkUpdateStatusIdProcedure,
                 new
                 {
@@ -74,10 +76,10 @@ namespace DevEdu.DAL.Repositories
             return statusId;
         }
 
-        public StudentHomeworkDto GetStudentHomeworkById(int id)
+        public async Task<StudentHomeworkDto> GetStudentHomeworkByIdAsync(int id)
         {
-            var result = _connection
-                .Query<StudentHomeworkDto, HomeworkDto, UserDto, TaskDto, StudentHomeworkStatus, StudentHomeworkDto>(
+            var result = (await _connection
+                .QueryAsync<StudentHomeworkDto, HomeworkDto, UserDto, TaskDto, TaskStatus, StudentHomeworkDto>(
                     _studentHomeworkSelectByIdProcedure,
                     (studentHomework, homework, user, task, studentHomeworkStatus) =>
                     {
@@ -91,15 +93,15 @@ namespace DevEdu.DAL.Repositories
                     new { id },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .FirstOrDefault();
             return result;
         }
 
-        public List<StudentHomeworkDto> GetAllStudentHomeworkByTask(int taskId)
+        public async Task<List<StudentHomeworkDto>> GetAllStudentHomeworkByTaskAsync(int taskId)
         {
-            return _connection
-                .Query<StudentHomeworkDto, StudentHomeworkStatus, UserDto, StudentHomeworkDto>(
+            return ( await _connection
+                .QueryAsync<StudentHomeworkDto, TaskStatus, UserDto, StudentHomeworkDto>(
                 _studentHomeworkSelectAllAnswersByTaskIdProcedure,
                 (studentAnswer, studentHomeworkStatus, user) =>
                 {
@@ -114,14 +116,14 @@ namespace DevEdu.DAL.Repositories
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
 
-        public List<StudentHomeworkDto> GetAllStudentHomeworkByStudentId(int userId)
+        public async Task<List<StudentHomeworkDto>> GetAllStudentHomeworkByStudentIdAsync(int userId)
         {
-            return _connection
-                .Query<StudentHomeworkDto, StudentHomeworkStatus, HomeworkDto, TaskDto, StudentHomeworkDto>(
+            return ( await _connection
+                .QueryAsync<StudentHomeworkDto, TaskStatus, HomeworkDto, TaskDto, StudentHomeworkDto>(
                     _studentHomeworkSelectAnswersByUserIdProcedure,
                     (answerDto, studentHomeworkStatus, homework, task) =>
                     {
@@ -135,7 +137,8 @@ namespace DevEdu.DAL.Repositories
                         userId
                     },
                     splitOn: "Id",
-                    commandType: CommandType.StoredProcedure)
+                    commandType: CommandType.StoredProcedure
+                ))
                 .ToList();
         }
     }

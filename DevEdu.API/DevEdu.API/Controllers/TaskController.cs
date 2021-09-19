@@ -144,7 +144,7 @@ namespace DevEdu.API.Controllers
         public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
-            var taskDto = _taskService.GetTaskWithAnswersById(taskId, userIdentityInfo);
+            var taskDto = _taskService.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo);
             return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
         }
 
