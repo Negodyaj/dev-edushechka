@@ -567,7 +567,7 @@ namespace DevEdu.Business.Tests
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _lessonRepository.Verify(x => x.SelectLessonById(lessonId), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentity.UserId), Times.Never);
-            _lessonRepository.Verify(x => x.UpdateLesson(updatedLesson), Times.Never);
+            _lessonRepository.Verify(x => x.UpdateLessonAsync(updatedLesson), Times.Never);
         }
 
         [Test]
@@ -580,7 +580,7 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentity.UserId)).Returns(groups);
+            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentity.UserId)).ReturnsAsync(groups);
 
             //When
             var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectLessonWithCommentsAndStudentsById(userIdentity, lesson.Id));
@@ -589,7 +589,7 @@ namespace DevEdu.Business.Tests
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentity.UserId), Times.Never);
-            _lessonRepository.Verify(x => x.UpdateLesson(lesson), Times.Never);
+            _lessonRepository.Verify(x => x.UpdateLessonAsync(lesson), Times.Never);
         }
 
         [Test]
@@ -642,7 +642,7 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
 
             _lessonRepository.Setup(x => x.SelectLessonById(lesson.Id)).Returns(lesson);
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentity.UserId)).Returns(groups);
+            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentity.UserId)).ReturnsAsync(groups);
 
             //When
             var ex = Assert.Throws<AuthorizationException>(() => _sut.DeleteLesson(userIdentity, lesson.Id));
@@ -651,7 +651,7 @@ namespace DevEdu.Business.Tests
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _lessonRepository.Verify(x => x.SelectLessonById(lesson.Id), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentity.UserId), Times.Never);
-            _lessonRepository.Verify(x => x.UpdateLesson(lesson), Times.Never);
+            _lessonRepository.Verify(x => x.UpdateLessonAsync(lesson), Times.Never);
         }
         [Test]
         public void AddStudentToLesson_IntLessonIdAndUserId_AddingStudentToLesson()
@@ -666,8 +666,8 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(LessonData.GetLessonDto);
             _userRepository.Setup(x => x.GetUserById(userId)).Returns(LessonData.GetUserDto);
             _lessonRepository.Setup(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
-            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).Returns(LessonData.GetGroupsDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).Returns(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).ReturnsAsync(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
             //When
             var dto = _sut.AddStudentToLesson(lessonId, userId, userIdentityInfo);
 
@@ -694,8 +694,8 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(LessonData.GetLessonDto);
             _userRepository.Setup(x => x.GetUserById(userId)).Returns(LessonData.GetUserDto);
             _lessonRepository.Setup(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
-            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).Returns(LessonData.GetGroupsDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).Returns(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).ReturnsAsync(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
             _sut.DeleteStudentFromLesson(lessonId, userId, userIdentityInfo);
@@ -722,8 +722,8 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(LessonData.GetLessonDto);
             _userRepository.Setup(x => x.GetUserById(userId)).Returns(LessonData.GetUserDto);
-            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).Returns(LessonData.GetGroupsDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).Returns(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).ReturnsAsync(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
             var dto = _sut.UpdateStudentFeedbackForLesson(lessonId, userId, studentLessonDto, userIdentityInfo);
@@ -751,8 +751,8 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(LessonData.GetLessonDto);
             _userRepository.Setup(x => x.GetUserById(userId)).Returns(LessonData.GetUserDto);
-            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).Returns(LessonData.GetGroupsDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).Returns(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).ReturnsAsync(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
             var dto = _sut.UpdateStudentAbsenceReasonOnLesson(lessonId, userId, studentLessonDto, userIdentityInfo);
@@ -780,8 +780,8 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectAttendanceByLessonAndUserId(lessonId, userId)).Returns(studentLessonDto);
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(LessonData.GetLessonDto);
             _userRepository.Setup(x => x.GetUserById(userId)).Returns(LessonData.GetUserDto);
-            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).Returns(LessonData.GetGroupsDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).Returns(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).ReturnsAsync(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
             var dto = _sut.UpdateStudentAttendanceOnLesson(lessonId, userId, studentLessonDto, userIdentityInfo);
@@ -808,8 +808,8 @@ namespace DevEdu.Business.Tests
 
             _lessonRepository.Setup(x => x.SelectAllFeedbackByLessonId(lessonId)).Returns(listStudentLessonDto);
             _lessonRepository.Setup(x => x.SelectLessonById(lessonId)).Returns(LessonData.GetLessonDto);
-            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).Returns(LessonData.GetGroupsDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).Returns(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).ReturnsAsync(LessonData.GetGroupsDto());
+            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
             var listOfDto = _sut.SelectAllFeedbackByLessonId(lessonId, userIdentityInfo);

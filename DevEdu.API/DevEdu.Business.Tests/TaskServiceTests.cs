@@ -131,7 +131,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, coursesIds, null, userIdentityInfo);
+            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, coursesIds, null, userIdentityInfo).Result;
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
@@ -162,7 +162,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, coursesIds, tagsIds, userIdentityInfo);
+            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, coursesIds, tagsIds, userIdentityInfo).Result;
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
@@ -191,7 +191,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, null, null, userIdentityInfo);
+            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, null, null, userIdentityInfo).Result;
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
@@ -220,7 +220,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
             //When
-            var actualTaskDto = _sut.UpdateTaskAsync(taskDto, taskId, userIdentityInfo);
+            var actualTaskDto = _sut.UpdateTaskAsync(taskDto, taskId, userIdentityInfo).Result;
 
             //Then
             Assert.AreEqual(expectedTaskDto, actualTaskDto);
@@ -246,7 +246,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+            Assert.ThrowsAsync(Is.TypeOf<EntityNotFoundException>()
                     .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
                 () => _sut.UpdateTaskAsync(taskDto, taskId, userIdentityInfo));
 
@@ -270,7 +270,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
-            Assert.Throws(Is.TypeOf<AuthorizationException>()
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
                           () => _sut.UpdateTaskAsync(taskDto, taskId, userIdentityInfo));
 
@@ -291,7 +291,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
-            Assert.Throws(Is.TypeOf<AuthorizationException>()
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
                           () => _sut.UpdateTaskAsync(taskDto, taskId, userIdentityInfo));
 
@@ -319,7 +319,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.DeleteTaskAsync(taskId)).ReturnsAsync(expectedAffectedRows);
 
             //When
-            var actualAffectedRows = _sut.DeleteTaskAsync(taskId, userIdentityInfo);
+            var actualAffectedRows = _sut.DeleteTaskAsync(taskId, userIdentityInfo).Result;
 
             Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
             _taskRepoMock.Verify(x => x.DeleteTaskAsync(taskId), Times.Once);
@@ -336,7 +336,7 @@ namespace DevEdu.Business.Tests
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+            Assert.ThrowsAsync(Is.TypeOf<EntityNotFoundException>()
                     .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
                 () => _sut.DeleteTaskAsync(taskId, userIdentityInfo));
 
@@ -360,7 +360,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
-            Assert.Throws(Is.TypeOf<AuthorizationException>()
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
                           () => _sut.DeleteTaskAsync(taskId, userIdentityInfo));
 
@@ -381,7 +381,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
-            Assert.Throws(Is.TypeOf<AuthorizationException>()
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
                           () => _sut.DeleteTaskAsync(taskId, userIdentityInfo));
 
@@ -408,7 +408,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
             //When
-            var dto = _sut.GetTaskByIdAsync(taskId, userIdentityInfo);
+            var dto = _sut.GetTaskByIdAsync(taskId, userIdentityInfo).Result;
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -426,7 +426,7 @@ namespace DevEdu.Business.Tests
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+            Assert.ThrowsAsync(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
                 () => _sut.GetTaskByIdAsync(taskId, userIdentityInfo));
 
@@ -451,7 +451,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
-            Assert.Throws(Is.TypeOf<AuthorizationException>()
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
                 () => _sut.GetTaskByIdAsync(taskId, userIdentityInfo));
 
@@ -479,7 +479,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupDtos);
             //When
-            var dto = _sut.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo);
+            var dto = _sut.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo).Result;
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -498,7 +498,7 @@ namespace DevEdu.Business.Tests
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+            Assert.ThrowsAsync(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
                 () => _sut.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo));
 
@@ -523,7 +523,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
-            Assert.Throws(Is.TypeOf<AuthorizationException>()
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
                 () => _sut.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo));
 
@@ -552,7 +552,7 @@ namespace DevEdu.Business.Tests
             taskDto.StudentAnswers = studentAnswersDtos;
 
             //When
-            var dto = _sut.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo);
+            var dto = _sut.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo).Result;
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -571,7 +571,7 @@ namespace DevEdu.Business.Tests
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+            Assert.ThrowsAsync(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
                 () => _sut.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo));
 
@@ -596,7 +596,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
-            Assert.Throws(Is.TypeOf<AuthorizationException>()
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
                 () => _sut.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo));
 
@@ -623,7 +623,7 @@ namespace DevEdu.Business.Tests
             taskDto.Groups = groupDtos;
 
             //When
-            var dto = _sut.GetTaskWithGroupsByIdAsync(taskId, userIdentityInfo);
+            var dto = _sut.GetTaskWithGroupsByIdAsync(taskId, userIdentityInfo).Result;
 
             //Than
             Assert.AreEqual(taskDto, dto);
@@ -641,7 +641,7 @@ namespace DevEdu.Business.Tests
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+            Assert.ThrowsAsync(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
                 () => _sut.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo));
 
@@ -667,7 +667,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
-            Assert.Throws(Is.TypeOf<AuthorizationException>()
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
                 () => _sut.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo));
 
@@ -695,7 +695,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTasksAsync()).ReturnsAsync(taskDtos);
 
             //When
-            var dtos = _sut.GetTasksAsync(userIdentityInfo);
+            var dtos = _sut.GetTasksAsync(userIdentityInfo).Result;
 
             //Than
             Assert.AreEqual(taskDtos, dtos);

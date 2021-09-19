@@ -265,6 +265,7 @@ namespace DevEdu.Business.Services
             var task = await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             AuthorizationException exception = default;
             bool authorized = true;
+            bool tagsWasAdded = false;
 
             if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
@@ -275,7 +276,10 @@ namespace DevEdu.Business.Services
                     authorized = false;
                 }
                 else
+                {
+                    tagsWasAdded = true;
                     tagsIds.ForEach(tagId => _taskRepository.AddTagToTaskAsync(taskId, tagId));
+                }
             }
             if (userIdentityInfo.Roles.Contains(Role.Teacher) || userIdentityInfo.Roles.Contains(Role.Tutor) && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
@@ -286,13 +290,16 @@ namespace DevEdu.Business.Services
                     authorized = false;
                 }
                 else
+                {
+                    tagsWasAdded = true;
                     tagsIds.ForEach(tagId => _taskRepository.AddTagToTaskAsync(taskId, tagId));
+                }
             }
 
             if (!authorized)
                 throw exception;
-
-            tagsIds.ForEach(tagId => _taskRepository.AddTagToTaskAsync(taskId, tagId));
+            if(tagsWasAdded == false)
+                tagsIds.ForEach(tagId => _taskRepository.AddTagToTaskAsync(taskId, tagId));
         }
 
         public async Task<int> DeleteTagFromTaskAsync(int taskId, int tagId, UserIdentityInfo userIdentityInfo)
