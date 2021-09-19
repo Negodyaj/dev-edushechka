@@ -1,12 +1,13 @@
 ﻿using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
     public interface INotificationService
     {
-        public List<NotificationDto> GetAllNotificationByUser(UserIdentityInfo userInfo);
+        Task<List<NotificationDto>> GetAllNotificationByUserAsync(UserIdentityInfo userInfo);
         NotificationDto GetNotification(int id);
         List<NotificationDto> GetNotificationsByUserId(int userId);
         List<NotificationDto> GetNotificationsByGroupId(int groupId);

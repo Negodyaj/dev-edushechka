@@ -58,8 +58,8 @@ namespace DevEdu.Business.Tests
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { role } };
 
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(It.IsAny<int>())).Returns(groupsByMaterial);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(It.IsAny<int>())).Returns(groupsByUser);
-            _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(It.IsAny<int>())).Returns(coursesByMaterial);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(It.IsAny<int>())).ReturnsAsync(groupsByUser);
+            _courseRepoMock.Setup(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>())).ReturnsAsync(coursesByMaterial);
             _materialRepoMock.Setup(x => x.GetAllMaterials()).Returns(expectedMaterials);
 
             //When
@@ -69,8 +69,8 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMaterials, actualMaterials);
             _materialRepoMock.Verify(x => x.GetAllMaterials(), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Exactly(groupsByMaterial.Count));
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 3));
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Exactly(coursesByMaterial.Count));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 3));
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Exactly(coursesByMaterial.Count));
         }
 
         [TestCase(Role.Methodist)]
@@ -85,8 +85,8 @@ namespace DevEdu.Business.Tests
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { role } };
 
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(It.IsAny<int>())).Returns(groupsByMaterial);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(It.IsAny<int>())).Returns(groupsByUser);
-            _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(It.IsAny<int>())).Returns(coursesByMaterial);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(It.IsAny<int>())).ReturnsAsync(groupsByUser);
+            _courseRepoMock.Setup(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>())).ReturnsAsync(coursesByMaterial);
             _materialRepoMock.Setup(x => x.GetAllMaterials()).Returns(expectedMaterials);
 
             //When
@@ -96,8 +96,8 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMaterials, actualMaterials);
             _materialRepoMock.Verify(x => x.GetAllMaterials(), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Never);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Never);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Never);
         }
 
         [Test]
@@ -109,16 +109,16 @@ namespace DevEdu.Business.Tests
             var coursesByMaterial = CourseData.GetCoursesDtos();
 
             _materialRepoMock.Setup(x => x.GetMaterialById(expectedMaterial.Id)).Returns(expectedMaterial);
-            _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(expectedMaterial.Id)).Returns(coursesByMaterial);
+            _courseRepoMock.Setup(x => x.GetCoursesByMaterialIdAsync(expectedMaterial.Id)).ReturnsAsync(coursesByMaterial);
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(expectedMaterial.Id)).Returns(groupsByMaterialId);
 
             //When
-            var actualMaterial = _sut.GetMaterialByIdWithCoursesAndGroups(expectedMaterial.Id);
+            var actualMaterial = _sut.GetMaterialByIdWithCoursesAndGroupsAsync(expectedMaterial.Id);
 
             //Then
             Assert.AreEqual(expectedMaterial, actualMaterial);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Once);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Once);
         }
 
@@ -131,12 +131,12 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.GetMaterialByIdWithCoursesAndGroups(material.Id));
+                () => _sut.GetMaterialByIdWithCoursesAndGroupsAsync(material.Id));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Never);
         }
 
@@ -152,7 +152,7 @@ namespace DevEdu.Business.Tests
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { role } };
 
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(expectedMaterial.Id)).Returns(groupsByMaterial);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(expectedMaterial.Id)).Returns(groupsByUser);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(expectedMaterial.Id)).ReturnsAsync(groupsByUser);
             _materialRepoMock.Setup(x => x.GetMaterialById(expectedMaterial.Id)).Returns(expectedMaterial);
 
             //When
@@ -162,8 +162,8 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMaterial, actualMaterial);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Once);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Never);
         }
 
         [TestCase(Role.Teacher)]
@@ -177,8 +177,8 @@ namespace DevEdu.Business.Tests
             var coursesByMaterial = CourseData.GetCoursesDtos();
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { role } };
 
-            _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(expectedMaterial.Id)).Returns(coursesByMaterial);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(expectedMaterial.Id)).Returns(groupsByUser);
+            _courseRepoMock.Setup(x => x.GetCoursesByMaterialIdAsync(expectedMaterial.Id)).ReturnsAsync(coursesByMaterial);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(expectedMaterial.Id)).ReturnsAsync(groupsByUser);
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(expectedMaterial.Id)).Returns(new List<GroupDto>());
             _materialRepoMock.Setup(x => x.GetMaterialById(expectedMaterial.Id)).Returns(expectedMaterial);
 
@@ -189,8 +189,8 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMaterial, actualMaterial);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(2));
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Exactly(2));
         }
 
         [TestCase(Role.Methodist)]
@@ -210,8 +210,8 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMaterial, actualMaterial);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Never);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Never);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Never);
         }
 
         [Test]
@@ -230,8 +230,8 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Never);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Never);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Never);
         }
 
         [TestCase(Role.Teacher)]
@@ -244,8 +244,8 @@ namespace DevEdu.Business.Tests
             var user = new UserIdentityInfo() { UserId = It.IsAny<int>(), Roles = new List<Role>() { role } };
             var expectedMessage = string.Format(ServiceMessages.AccessToMaterialDenied, user.UserId, material.Id);
 
-            _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(material.Id)).Returns(new List<CourseDto>());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(material.Id)).Returns(new List<GroupDto>());
+            _courseRepoMock.Setup(x => x.GetCoursesByMaterialIdAsync(material.Id)).ReturnsAsync(new List<CourseDto>());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(material.Id)).ReturnsAsync(new List<GroupDto>());
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(material.Id)).Returns(new List<GroupDto>());
             _materialRepoMock.Setup(x => x.GetMaterialById(material.Id)).Returns(material);
 
@@ -257,8 +257,8 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(2));
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Exactly(2));
         }
 
         [TestCase(Role.Teacher)]
@@ -276,8 +276,8 @@ namespace DevEdu.Business.Tests
 
             _tagRepoMock.Setup(x => x.SelectTagById(tag.Id)).Returns(tag);
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(It.IsAny<int>())).Returns(groupsByMaterial);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(It.IsAny<int>())).Returns(groupsByUser);
-            _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(It.IsAny<int>())).Returns(coursesByMaterial);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(It.IsAny<int>())).ReturnsAsync(groupsByUser);
+            _courseRepoMock.Setup(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>())).ReturnsAsync(coursesByMaterial);
             _materialRepoMock.Setup(x => x.GetMaterialsByTagId(It.IsAny<int>())).Returns(expectedMaterials);
 
             //When
@@ -288,8 +288,8 @@ namespace DevEdu.Business.Tests
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Once);
             _materialRepoMock.Verify(x => x.GetMaterialsByTagId(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Exactly(groupsByMaterial.Count));
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 3));
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Exactly(coursesByMaterial.Count));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Exactly(groupsByUser.Count * 3));
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Exactly(coursesByMaterial.Count));
         }
 
         [TestCase(Role.Methodist)]
@@ -312,8 +312,8 @@ namespace DevEdu.Business.Tests
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Once);
             _materialRepoMock.Verify(x => x.GetMaterialsByTagId(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Never);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Never);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Never);
         }
 
         [Test]
@@ -334,8 +334,8 @@ namespace DevEdu.Business.Tests
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Once);
             _materialRepoMock.Verify(x => x.GetMaterialsByTagId(It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Never);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Never);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Never);
         }
 
         [TestCase(Role.Teacher)]
@@ -586,7 +586,7 @@ namespace DevEdu.Business.Tests
 
             for (int i = 0; i < courses.Count; i++)
             {
-                _courseRepoMock.Setup(x => x.GetCourse(courses[i])).Returns(courseDtos[i]);
+                _courseRepoMock.Setup(x => x.GetCourseAsync(courses[i])).ReturnsAsync(courseDtos[i]);
                 _tagRepoMock.Setup(x => x.SelectTagById(tags[i])).Returns(tagDtos[i]);
             }
             _materialRepoMock.Setup(x => x.AddMaterial(materialToAdd)).Returns(expectedId);
@@ -598,8 +598,8 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedId, actualId);
             _materialRepoMock.Verify(x => x.AddMaterial(materialToAdd), Times.Once);
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(tags.Count));
-            _courseRepoMock.Verify(x => x.AddCourseMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(courses.Count));
-            _courseRepoMock.Verify(x => x.GetCourse(It.IsAny<int>()), Times.Exactly(courses.Count));
+            _courseRepoMock.Verify(x => x.AddCourseMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(courses.Count));
+            _courseRepoMock.Verify(x => x.GetCourseAsync(It.IsAny<int>()), Times.Exactly(courses.Count));
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Exactly(tags.Count));
         }
 
@@ -615,7 +615,7 @@ namespace DevEdu.Business.Tests
 
             for (int i = 0; i < courses.Count; i++)
             {
-                _courseRepoMock.Setup(x => x.GetCourse(courses[i])).Returns(courseDtos[i]);
+                _courseRepoMock.Setup(x => x.GetCourseAsync(courses[i])).ReturnsAsync(courseDtos[i]);
             }
             _materialRepoMock.Setup(x => x.AddMaterial(materialToAdd)).Returns(expectedId);
 
@@ -625,8 +625,8 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(expectedId, actualId);
             _materialRepoMock.Verify(x => x.AddMaterial(materialToAdd), Times.Once);
-            _courseRepoMock.Verify(x => x.AddCourseMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(courses.Count));
-            _courseRepoMock.Verify(x => x.GetCourse(It.IsAny<int>()), Times.Exactly(courses.Count));
+            _courseRepoMock.Verify(x => x.AddCourseMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(courses.Count));
+            _courseRepoMock.Verify(x => x.GetCourseAsync(It.IsAny<int>()), Times.Exactly(courses.Count));
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
@@ -647,8 +647,8 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.AddMaterial(materialToAdd), Times.Never);
-            _courseRepoMock.Verify(x => x.AddCourseMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-            _courseRepoMock.Verify(x => x.GetCourse(It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.AddCourseMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCourseAsync(It.IsAny<int>()), Times.Never);
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
@@ -665,7 +665,7 @@ namespace DevEdu.Business.Tests
 
             for (int i = 0; i < courses.Count; i++)
             {
-                _courseRepoMock.Setup(x => x.GetCourse(courses[i])).Returns(courseDtos[i]);
+                _courseRepoMock.Setup(x => x.GetCourseAsync(courses[i])).ReturnsAsync(courseDtos[i]);
             }
 
             //When
@@ -675,8 +675,8 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.AddMaterial(materialToAdd), Times.Never);
-            _courseRepoMock.Verify(x => x.AddCourseMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-            _courseRepoMock.Verify(x => x.GetCourse(It.IsAny<int>()), Times.Exactly(courses.Count));
+            _courseRepoMock.Verify(x => x.AddCourseMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCourseAsync(It.IsAny<int>()), Times.Exactly(courses.Count));
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
@@ -695,7 +695,7 @@ namespace DevEdu.Business.Tests
 
             for (int i = 0; i < courses.Count; i++)
             {
-                _courseRepoMock.Setup(x => x.GetCourse(courses[i])).Returns(courseDtos[i]);
+                _courseRepoMock.Setup(x => x.GetCourseAsync(courses[i])).ReturnsAsync(courseDtos[i]);
                 _tagRepoMock.Setup(x => x.SelectTagById(tags[i])).Returns(tagDtos[i]);
             }
 
@@ -706,8 +706,8 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.AddMaterial(materialToAdd), Times.Never);
-            _courseRepoMock.Verify(x => x.AddCourseMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-            _courseRepoMock.Verify(x => x.GetCourse(It.IsAny<int>()), Times.Exactly(courses.Count));
+            _courseRepoMock.Verify(x => x.AddCourseMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCourseAsync(It.IsAny<int>()), Times.Exactly(courses.Count));
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Exactly(tags.Count));
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
@@ -725,7 +725,7 @@ namespace DevEdu.Business.Tests
 
             for (int i = 0; i < courses.Count; i++)
             {
-                _courseRepoMock.Setup(x => x.GetCourse(courses[i])).Returns(courseDtos[i]);
+                _courseRepoMock.Setup(x => x.GetCourseAsync(courses[i])).ReturnsAsync(courseDtos[i]);
             }
 
             //When
@@ -735,8 +735,8 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.AddMaterial(materialToAdd), Times.Never);
-            _courseRepoMock.Verify(x => x.AddCourseMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-            _courseRepoMock.Verify(x => x.GetCourse(It.IsAny<int>()), Times.Exactly(courses.Count));
+            _courseRepoMock.Verify(x => x.AddCourseMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCourseAsync(It.IsAny<int>()), Times.Exactly(courses.Count));
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
@@ -753,17 +753,17 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToUpdate.Id)).Returns(materialToUpdate);
             _materialRepoMock.Setup(x => x.GetMaterialById(expectedMaterial.Id)).Returns(expectedMaterial);
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(materialToUpdate.Id)).Returns(materialToUpdate.Groups);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.UserId)).Returns(groupsByUser);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(user.UserId)).ReturnsAsync(groupsByUser);
 
             //When
-            var actual = _sut.UpdateMaterial(materialToUpdate.Id, materialToUpdate, user);
+            var actual = _sut.UpdateMaterialAsync(materialToUpdate.Id, materialToUpdate, user);
 
             //Then
             Assert.AreEqual(expectedMaterial, actual);
             _materialRepoMock.Verify(x => x.UpdateMaterial(materialToUpdate), Times.Once);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Exactly(2));
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Exactly(2));
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Once);
         }
 
         [Test]
@@ -775,19 +775,19 @@ namespace DevEdu.Business.Tests
             var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { Role.Methodist } };
 
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(materialToUpdate.Id)).Returns(materialToUpdate.Groups);
-            _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(materialToUpdate.Id)).Returns(materialToUpdate.Courses);
+            _courseRepoMock.Setup(x => x.GetCoursesByMaterialIdAsync(materialToUpdate.Id)).ReturnsAsync(materialToUpdate.Courses);
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToUpdate.Id)).Returns(materialToUpdate);
             _materialRepoMock.Setup(x => x.GetMaterialById(expectedMaterial.Id)).Returns(expectedMaterial);
 
             //When
-            var actual = _sut.UpdateMaterial(materialToUpdate.Id, materialToUpdate, user);
+            var actual = _sut.UpdateMaterialAsync(materialToUpdate.Id, materialToUpdate, user);
 
             //Then
             Assert.AreEqual(expectedMaterial, actual);
             _materialRepoMock.Verify(x => x.UpdateMaterial(materialToUpdate), Times.Once);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Exactly(2));
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Once);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Once);
         }
 
         [Test]
@@ -800,14 +800,14 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.UpdateMaterial(materialToUpdate.Id, materialToUpdate, user));
+                () => _sut.UpdateMaterialAsync(materialToUpdate.Id, materialToUpdate, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.UpdateMaterial(materialToUpdate), Times.Never);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Never);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Never);
         }
 
         [Test]
@@ -820,21 +820,21 @@ namespace DevEdu.Business.Tests
                     Format(ServiceMessages.AccessToMaterialDenied, user.UserId, materialToUpdate.Id);
 
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToUpdate.Id)).Returns(materialToUpdate);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.UserId)).
-                Returns(new List<GroupDto>() { new GroupDto { Id = 7 }, new GroupDto { Id = 17 } });
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(user.UserId)).
+                ReturnsAsync(new List<GroupDto>() { new GroupDto { Id = 7 }, new GroupDto { Id = 17 } });
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(materialToUpdate.Id)).
                 Returns(new List<GroupDto>() { new GroupDto { Id = 8 }, new GroupDto { Id = 18 } });
 
             //When
             var actual = Assert.Throws<AuthorizationException>(
-                () => _sut.UpdateMaterial(materialToUpdate.Id, materialToUpdate, user));
+                () => _sut.UpdateMaterialAsync(materialToUpdate.Id, materialToUpdate, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.UpdateMaterial(materialToUpdate), Times.Never);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Exactly(2));
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Once);
         }
 
         [Test]
@@ -851,7 +851,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<AuthorizationException>(
-                () => _sut.UpdateMaterial(materialToUpdate.Id, materialToUpdate, user));
+                () => _sut.UpdateMaterialAsync(materialToUpdate.Id, materialToUpdate, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -869,17 +869,17 @@ namespace DevEdu.Business.Tests
 
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToDelete.Id)).Returns(materialToDelete);
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(materialToDelete.Id)).Returns(materialToDelete.Groups);
-            _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(materialToDelete.Id)).Returns(materialToDelete.Courses);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.UserId)).Returns(groupsByUser);
+            _courseRepoMock.Setup(x => x.GetCoursesByMaterialIdAsync(materialToDelete.Id)).ReturnsAsync(materialToDelete.Courses);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(user.UserId)).ReturnsAsync(groupsByUser);
 
             //When
-            _sut.DeleteMaterial(materialToDelete.Id, true, user);
+            _sut.DeleteMaterialAsync(materialToDelete.Id, true, user);
 
             //Then
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Exactly(2));
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Once);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Once);
             _materialRepoMock.Verify(x => x.DeleteMaterial(It.IsAny<int>(), true), Times.Once);
         }
 
@@ -892,15 +892,15 @@ namespace DevEdu.Business.Tests
 
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToDelete.Id)).Returns(materialToDelete);
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(materialToDelete.Id)).Returns(materialToDelete.Groups);
-            _courseRepoMock.Setup(x => x.GetCoursesByMaterialId(materialToDelete.Id)).Returns(materialToDelete.Courses);
+            _courseRepoMock.Setup(x => x.GetCoursesByMaterialIdAsync(materialToDelete.Id)).ReturnsAsync(materialToDelete.Courses);
 
             //When
-            _sut.DeleteMaterial(materialToDelete.Id, true, user);
+            _sut.DeleteMaterialAsync(materialToDelete.Id, true, user);
 
             //Then
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Once);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Once);
             _materialRepoMock.Verify(x => x.DeleteMaterial(It.IsAny<int>(), true), Times.Once);
         }
 
@@ -914,14 +914,14 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.DeleteMaterial(materialToDelete.Id, true, user));
+                () => _sut.DeleteMaterialAsync(materialToDelete.Id, true, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Never);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Never);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Never);
             _materialRepoMock.Verify(x => x.DeleteMaterial(It.IsAny<int>(), true), Times.Never);
         }
 
@@ -935,21 +935,21 @@ namespace DevEdu.Business.Tests
                     Format(ServiceMessages.AccessToMaterialDenied, user.UserId, materialToDelete.Id);
 
             _materialRepoMock.Setup(x => x.GetMaterialById(materialToDelete.Id)).Returns(materialToDelete);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(user.UserId)).
-                Returns(new List<GroupDto>() { new GroupDto { Id = 7 }, new GroupDto { Id = 17 } });
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(user.UserId)).
+                ReturnsAsync(new List<GroupDto>() { new GroupDto { Id = 7 }, new GroupDto { Id = 17 } });
             _groupRepoMock.Setup(x => x.GetGroupsByMaterialId(materialToDelete.Id)).
                 Returns(new List<GroupDto>() { new GroupDto { Id = 22 }, new GroupDto { Id = 45 } });
 
             //When
             var actual = Assert.Throws<AuthorizationException>(
-                () => _sut.DeleteMaterial(materialToDelete.Id, true, user));
+                () => _sut.DeleteMaterialAsync(materialToDelete.Id, true, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Exactly(2));
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Once);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Once);
             _materialRepoMock.Verify(x => x.DeleteMaterial(It.IsAny<int>(), true), Times.Never);
         }
 
@@ -966,14 +966,14 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<AuthorizationException>(
-                () => _sut.DeleteMaterial(materialToDelete.Id, true, user));
+                () => _sut.DeleteMaterialAsync(materialToDelete.Id, true, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
             _materialRepoMock.Verify(x => x.GetMaterialById(It.IsAny<int>()), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByMaterialId(It.IsAny<int>()), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(It.IsAny<int>()), Times.Never);
-            _courseRepoMock.Verify(x => x.GetCoursesByMaterialId(It.IsAny<int>()), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCoursesByMaterialIdAsync(It.IsAny<int>()), Times.Once);
             _materialRepoMock.Verify(x => x.DeleteMaterial(It.IsAny<int>(), true), Times.Never);
         }
 

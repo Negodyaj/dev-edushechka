@@ -35,11 +35,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<MaterialInfoWithGroupsOutputModel> AddMaterialWithGroups([FromBody] MaterialWithGroupsInputModel materialModel)
+        public async System.Threading.Tasks.Task<ActionResult<MaterialInfoWithGroupsOutputModel>> AddMaterialWithGroupsAsync([FromBody] MaterialWithGroupsInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             var id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
-            dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
+            dto = await _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
             var output = _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
             return Created(new Uri($"api/Material/{output.Id}/full", UriKind.Relative), output);
         }
@@ -52,11 +52,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<MaterialInfoWithCoursesOutputModel> AddMaterialWithCourses([FromBody] MaterialWithCoursesInputModel materialModel)
+        public async System.Threading.Tasks.Task<ActionResult<MaterialInfoWithCoursesOutputModel>> AddMaterialWithCoursesAsync([FromBody] MaterialWithCoursesInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             var id = _materialService.AddMaterialWithCourses(dto, materialModel.TagsIds, materialModel.CoursesIds);
-            dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
+            dto = await _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
             var output = _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
             return Created(new Uri($"api/Material/{output.Id}/full", UriKind.Relative), output);
         }
@@ -83,7 +83,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public MaterialInfoFullOutputModel GetMaterialByIdWithCoursesAndGroups(int id)
         {
-            var dto = _materialService.GetMaterialByIdWithCoursesAndGroups(id);
+            var dto = _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
             return _mapper.Map<MaterialInfoFullOutputModel>(dto);
         }
 
@@ -109,11 +109,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public MaterialInfoOutputModel UpdateMaterial(int id, [FromBody] MaterialInputModel materialModel)
+        public async System.Threading.Tasks.Task<MaterialInfoOutputModel> UpdateMaterialAsync(int id, [FromBody] MaterialInputModel materialModel)
         {
             var user = this.GetUserIdAndRoles();
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            dto = _materialService.UpdateMaterial(id, dto, user);
+            dto = await _materialService.UpdateMaterialAsync(id, dto, user);
             return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
@@ -127,7 +127,7 @@ namespace DevEdu.API.Controllers
         public ActionResult DeleteMaterial(int id, bool isDeleted)
         {
             var user = this.GetUserIdAndRoles();
-            _materialService.DeleteMaterial(id, isDeleted, user);
+            _materialService.DeleteMaterialAsync(id, isDeleted, user);
             return NoContent();
         }
 

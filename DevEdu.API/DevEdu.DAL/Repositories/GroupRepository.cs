@@ -259,20 +259,20 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public List<GroupDto> GetGroupsByCourseId(int courseId)
+        public async Task<List<GroupDto>> GetGroupsByCourseIdAsync(int courseId)
         {
-            return _connection.Query<GroupDto>(
+            return (await _connection.QueryAsync<GroupDto>(
                     _groupSelectByCourseProcedure,
                     new { courseId },
-                    commandType: CommandType.StoredProcedure)
+                    commandType: CommandType.StoredProcedure))
                 .ToList();
         }
 
-        public List<GroupDto> GetGroupsByTaskId(int taskId)
+        public async Task<List<GroupDto>> GetGroupsByTaskIdAsync(int taskId)
         {
             GroupDto result;
-            return _connection
-                .Query<GroupDto, GroupStatus, GroupDto>(
+            return (await _connection
+                .QueryAsync<GroupDto, GroupStatus, GroupDto>(
                     _groupSelectAllByTaskIdProcedure,
                     (group, groupStatus) =>
                     {
@@ -283,15 +283,15 @@ namespace DevEdu.DAL.Repositories
                     new { taskId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
 
-        public List<GroupDto> GetGroupsByLessonId(int lessonId)
+        public async Task<List<GroupDto>> GetGroupsByLessonIdAsync(int lessonId)
         {
             GroupDto result;
-            return _connection
-                .Query<GroupDto, GroupStatus, GroupDto>(
+            return (await _connection
+                .QueryAsync<GroupDto, GroupStatus, GroupDto>(
                     _groupSelectGroupsByLessonIdProcedure,
                     (group, groupStatus) =>
                     {
@@ -302,15 +302,15 @@ namespace DevEdu.DAL.Repositories
                     new { lessonId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
 
-        public List<GroupDto> GetGroupsByUserId(int userId)
+        public async Task<List<GroupDto>> GetGroupsByUserIdAsync(int userId)
         {
             GroupDto result;
-            return _connection
-                .Query<GroupDto, GroupStatus, CourseDto, GroupDto>(
+            return (await _connection
+                .QueryAsync<GroupDto, GroupStatus, CourseDto, GroupDto>(
                     _groupSelectGroupsByUserIdProcedure,
                     (group, groupStatus, course) =>
                     {
@@ -322,7 +322,7 @@ namespace DevEdu.DAL.Repositories
                     new { userId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
     }

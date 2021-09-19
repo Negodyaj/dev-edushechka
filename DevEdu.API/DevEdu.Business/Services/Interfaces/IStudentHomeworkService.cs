@@ -1,6 +1,7 @@
 ﻿using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -11,7 +12,7 @@ namespace DevEdu.Business.Services
         StudentHomeworkDto UpdateStudentHomework(int id, StudentHomeworkDto updatedDto, UserIdentityInfo userInfo);
         int UpdateStatusOfStudentHomework(int id, int statusId, UserIdentityInfo userInfo);
         StudentHomeworkDto GetStudentHomeworkById(int id, UserIdentityInfo userInfo);
-        List<StudentHomeworkDto> GetAllStudentHomeworkOnTask(int taskId);
+        Task<List<StudentHomeworkDto>> GetAllStudentHomeworkOnTaskAsync(int taskId);
         List<StudentHomeworkDto> GetAllStudentHomeworkByStudentId(int userId, UserIdentityInfo userInfo);
     }
 }

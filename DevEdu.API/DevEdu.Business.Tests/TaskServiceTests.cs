@@ -62,20 +62,20 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
-            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
+            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
+            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = await _sut.AddTaskByTeacher(taskDto, homework, expectedGroupId, null, userIdentityInfo);
+            var actualTask = await _sut.AddTaskByTeacherAsync(taskDto, homework, expectedGroupId, null, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
-            _taskRepoMock.Verify(x => x.AddTask(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.AddTaskAsync(taskDto), Times.Once);
+            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
         }
 
         [Test]
@@ -94,20 +94,20 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
-            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTask(taskId, It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
+            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
+            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(taskId, It.IsAny<int>()));
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = await _sut.AddTaskByTeacher(taskDto, homework, expectedGroupId, tagsIds, userIdentityInfo);
+            var actualTask = await _sut.AddTaskByTeacherAsync(taskDto, homework, expectedGroupId, tagsIds, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
-            _taskRepoMock.Verify(x => x.AddTask(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.AddTagToTask(taskId, It.IsAny<int>()), Times.Exactly(taskDto.Tags.Count));
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Exactly(2));
+            _taskRepoMock.Verify(x => x.AddTaskAsync(taskDto), Times.Once);
+            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(taskId, It.IsAny<int>()), Times.Exactly(taskDto.Tags.Count));
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Exactly(2));
         }
 
         [Test]
@@ -124,20 +124,20 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
-            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
+            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
+            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByMethodist(taskDto, coursesIds, null, userIdentityInfo);
+            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, coursesIds, null, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
-            _taskRepoMock.Verify(x => x.AddTask(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.AddTaskAsync(taskDto), Times.Once);
+            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
         }
 
         [Test]
@@ -155,20 +155,20 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
-            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTask(taskId, It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
+            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
+            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(taskId, It.IsAny<int>()));
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByMethodist(taskDto, coursesIds, tagsIds, userIdentityInfo);
+            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, coursesIds, tagsIds, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
-            _taskRepoMock.Verify(x => x.AddTask(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.AddTagToTask(taskId, It.IsAny<int>()), Times.Exactly(taskDto.Tags.Count));
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Exactly(2));
+            _taskRepoMock.Verify(x => x.AddTaskAsync(taskDto), Times.Once);
+            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(taskId, It.IsAny<int>()), Times.Exactly(taskDto.Tags.Count));
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Exactly(2));
         }
 
         [Test]
@@ -184,20 +184,20 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
-            _taskRepoMock.Setup(x => x.AddTask(taskDto)).Returns(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
+            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
+            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByMethodist(taskDto, null, null, userIdentityInfo);
+            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, null, null, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
-            _taskRepoMock.Verify(x => x.AddTask(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.AddTagToTask(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.AddTaskAsync(taskDto), Times.Once);
+            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
         }
 
         [Test]
@@ -214,18 +214,18 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.UpdateTask(taskDto));
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(expectedTaskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.UpdateTaskAsync(taskDto));
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(expectedTaskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
             //When
-            var actualTaskDto = _sut.UpdateTask(taskDto, taskId, userIdentityInfo);
+            var actualTaskDto = _sut.UpdateTaskAsync(taskDto, taskId, userIdentityInfo);
 
             //Then
             Assert.AreEqual(expectedTaskDto, actualTaskDto);
-            _taskRepoMock.Verify(x => x.UpdateTask(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskDto.Id), Times.Exactly(2));
+            _taskRepoMock.Verify(x => x.UpdateTaskAsync(taskDto), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskDto.Id), Times.Exactly(2));
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -241,16 +241,16 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.UpdateTask(taskDto)).Throws(
+            _taskRepoMock.Setup(x => x.UpdateTaskAsync(taskDto)).Throws(
                 new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)));
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                     .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
-                () => _sut.UpdateTask(taskDto, taskId, userIdentityInfo));
+                () => _sut.UpdateTaskAsync(taskDto, taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.UpdateTask(taskDto), Times.Never);
+            _taskRepoMock.Verify(x => x.UpdateTaskAsync(taskDto), Times.Never);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -266,16 +266,16 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                          () => _sut.UpdateTask(taskDto, taskId, userIdentityInfo));
+                          () => _sut.UpdateTaskAsync(taskDto, taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.UpdateTask(taskDto), Times.Never);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.UpdateTaskAsync(taskDto), Times.Never);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -289,14 +289,14 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                          () => _sut.UpdateTask(taskDto, taskId, userIdentityInfo));
+                          () => _sut.UpdateTaskAsync(taskDto, taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.UpdateTask(taskDto), Times.Never);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.UpdateTaskAsync(taskDto), Times.Never);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -313,16 +313,16 @@ namespace DevEdu.Business.Tests
             var expectedAffectedRows = 1;
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
-            _taskRepoMock.Setup(x => x.DeleteTask(taskId)).Returns(expectedAffectedRows);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
+            _taskRepoMock.Setup(x => x.DeleteTaskAsync(taskId)).ReturnsAsync(expectedAffectedRows);
 
             //When
-            var actualAffectedRows = _sut.DeleteTask(taskId, userIdentityInfo);
+            var actualAffectedRows = _sut.DeleteTaskAsync(taskId, userIdentityInfo);
 
             Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
-            _taskRepoMock.Verify(x => x.DeleteTask(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.DeleteTaskAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -338,9 +338,9 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                     .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
-                () => _sut.DeleteTask(taskId, userIdentityInfo));
+                () => _sut.DeleteTaskAsync(taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.DeleteTask(taskId), Times.Never);
+            _taskRepoMock.Verify(x => x.DeleteTaskAsync(taskId), Times.Never);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -356,16 +356,16 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                          () => _sut.DeleteTask(taskId, userIdentityInfo));
+                          () => _sut.DeleteTaskAsync(taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.DeleteTask(taskId), Times.Never);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.DeleteTaskAsync(taskId), Times.Never);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -378,15 +378,15 @@ namespace DevEdu.Business.Tests
             var userDto = UserData.GetUserDto();
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
 
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                          () => _sut.DeleteTask(taskId, userIdentityInfo));
+                          () => _sut.DeleteTaskAsync(taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.DeleteTask(taskId), Times.Never);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.DeleteTaskAsync(taskId), Times.Never);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -403,16 +403,16 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
             //When
-            var dto = _sut.GetTaskById(taskId, userIdentityInfo);
+            var dto = _sut.GetTaskByIdAsync(taskId, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, dto);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -428,9 +428,9 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
-                () => _sut.GetTaskById(taskId, userIdentityInfo));
+                () => _sut.GetTaskByIdAsync(taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -447,15 +447,15 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                () => _sut.GetTaskById(taskId, userIdentityInfo));
+                () => _sut.GetTaskByIdAsync(taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -473,18 +473,18 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskId(taskId)).Returns(courseDtos);
+            _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskIdAsync(taskId)).ReturnsAsync(courseDtos);
             taskDto.Courses = courseDtos;
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupDtos);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupDtos);
             //When
-            var dto = _sut.GetTaskWithCoursesById(taskId, userIdentityInfo);
+            var dto = _sut.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, dto);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
-            _courseRepoMock.Verify(x => x.GetCoursesToTaskByTaskId(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
+            _courseRepoMock.Verify(x => x.GetCoursesToTaskByTaskIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -500,9 +500,9 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
-                () => _sut.GetTaskWithCoursesById(taskId, userIdentityInfo));
+                () => _sut.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -519,15 +519,15 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                () => _sut.GetTaskWithCoursesById(taskId, userIdentityInfo));
+                () => _sut.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -545,18 +545,18 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
             _studentAnswerRepoMock.Setup(x => x.GetAllStudentHomeworkByTask(taskId)).Returns(studentAnswersDtos);
             taskDto.StudentAnswers = studentAnswersDtos;
 
             //When
-            var dto = _sut.GetTaskWithAnswersById(taskId, userIdentityInfo);
+            var dto = _sut.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, dto);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _studentAnswerRepoMock.Verify(x => x.GetAllStudentHomeworkByTask(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
@@ -573,9 +573,9 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
-                () => _sut.GetTaskWithAnswersById(taskId, userIdentityInfo));
+                () => _sut.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -592,15 +592,15 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                () => _sut.GetTaskWithAnswersById(taskId, userIdentityInfo));
+                () => _sut.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -617,17 +617,17 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
             taskDto.Groups = groupDtos;
 
             //When
-            var dto = _sut.GetTaskWithGroupsById(taskId, userIdentityInfo);
+            var dto = _sut.GetTaskWithGroupsByIdAsync(taskId, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, dto);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -643,9 +643,9 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "task", taskId)),
-                () => _sut.GetTaskWithCoursesById(taskId, userIdentityInfo));
+                () => _sut.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -663,15 +663,15 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(taskId)).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(groupsByUser);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
 
             Assert.Throws(Is.TypeOf<AuthorizationException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                () => _sut.GetTaskWithCoursesById(taskId, userIdentityInfo));
+                () => _sut.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo));
 
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
 
@@ -687,19 +687,19 @@ namespace DevEdu.Business.Tests
             var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskId(It.IsAny<int>())).Returns(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(sameGroupDtos);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskDtos[0].Id)).Returns(taskDtos[0]);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskDtos[1].Id)).Returns(taskDtos[1]);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskDtos[2].Id)).Returns(taskDtos[2]);
-            _taskRepoMock.Setup(x => x.GetTasks()).Returns(taskDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(It.IsAny<int>())).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(sameGroupDtos);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskDtos[0].Id)).ReturnsAsync(taskDtos[0]);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskDtos[1].Id)).ReturnsAsync(taskDtos[1]);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskDtos[2].Id)).ReturnsAsync(taskDtos[2]);
+            _taskRepoMock.Setup(x => x.GetTasksAsync()).ReturnsAsync(taskDtos);
 
             //When
-            var dtos = _sut.GetTasks(userIdentityInfo);
+            var dtos = _sut.GetTasksAsync(userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDtos, dtos);
-            _taskRepoMock.Verify(x => x.GetTasks(), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTasksAsync(), Times.Once);
             _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
         }
     }

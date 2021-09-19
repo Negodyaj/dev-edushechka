@@ -4,6 +4,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -20,18 +21,18 @@ namespace DevEdu.Business.ValidationHelpers
             _courseRepository = courseRepository;
         }
 
-        public TaskDto GetTaskByIdAndThrowIfNotFound(int taskId)
+        public async Task<TaskDto> GetTaskByIdAndThrowIfNotFoundAsync(int taskId)
         {
-            var task = _taskRepository.GetTaskById(taskId);
+            var task = await _taskRepository.GetTaskByIdAsync(taskId);
             if (task == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), taskId));
             return task;
         }
 
-        public AuthorizationException CheckUserAccessToTask(int taskId, int userId)
+        public async Task<AuthorizationException> CheckUserAccessToTaskAsync(int taskId, int userId)
         {
-            var groupsByTask = _groupRepository.GetGroupsByTaskId(taskId);
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var groupsByTask = await _groupRepository.GetGroupsByTaskIdAsync(taskId);
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
 
             var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
             if (result == default)
@@ -39,23 +40,23 @@ namespace DevEdu.Business.ValidationHelpers
             return default;
         }
 
-        public AuthorizationException CheckMethodistAccessToTask(TaskDto taskDto, int userId)
+        public async Task<AuthorizationException> CheckMethodistAccessToTaskAsync(TaskDto taskDto, int userId)
         {
-            taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(taskDto.Id);
+            taskDto.Courses = await _courseRepository.GetCoursesToTaskByTaskIdAsync(taskDto.Id);
             if (taskDto.Courses == null)
                 return new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskDto.Id));
             return default;
         }
 
-        public TaskDto GetTaskAllowedToUser(int taskId, int userId)
+        public async Task<TaskDto> GetTaskAllowedToUserAsync(int taskId, int userId)
         {
-            var groupsByTask = _groupRepository.GetGroupsByTaskId(taskId);
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var groupsByTask = await _groupRepository.GetGroupsByTaskIdAsync(taskId);
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
 
             var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
             if (result == default)
                 return null;
-            return _taskRepository.GetTaskById(taskId);
+            return await _taskRepository.GetTaskByIdAsync(taskId);
         }
 
         public List<TaskDto> GetTasksAllowedToMethodist(List<TaskDto> taskDtos)

@@ -21,9 +21,9 @@ namespace DevEdu.DAL.Repositories
         Task DeleteTaskFromGroup(int groupId, int taskId);
         List<GroupDto> GetGroupsByMaterialId(int id);
         Task<int> GetPresentGroupForStudentByUserId(int userId);
-        List<GroupDto> GetGroupsByTaskId(int taskId);
-        List<GroupDto> GetGroupsByLessonId(int lessonId);
-        List<GroupDto> GetGroupsByCourseId(int courseId);
-        List<GroupDto> GetGroupsByUserId(int userId);
+        Task<List<GroupDto>> GetGroupsByTaskIdAsync(int taskId);
+        Task<List<GroupDto>> GetGroupsByLessonIdAsync(int lessonId);
+        Task<List<GroupDto>> GetGroupsByCourseIdAsync(int courseId);
+        Task<List<GroupDto>> GetGroupsByUserIdAsync(int userId);
     }
 }

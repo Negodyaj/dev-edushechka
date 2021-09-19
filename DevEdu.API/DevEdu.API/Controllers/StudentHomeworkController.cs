@@ -117,7 +117,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<StudentHomeworkOutputModel> GetAllStudentHomeworkOnTask(int taskId)
         {
-            var studentAnswersDto = _studentHomeworkService.GetAllStudentHomeworkOnTask(taskId);
+            var studentAnswersDto = _studentHomeworkService.GetAllStudentHomeworkOnTaskAsync(taskId);
             return _mapper.Map<List<StudentHomeworkOutputModel>>(studentAnswersDto);
         }
 
