@@ -3,6 +3,7 @@ using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -17,19 +18,19 @@ namespace DevEdu.Business.ValidationHelpers
             _groupRepository = groupRepository;
         }
 
-        public CourseDto GetCourseByIdAndThrowIfNotFound(int courseId)
+        public async Task<CourseDto> GetCourseByIdAndThrowIfNotFoundAsync(int courseId)
         {
-            var course = _courseRepository.GetCourse(courseId);
+            var course = await _courseRepository.GetCourseAsync(courseId);
             if (course == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(course), courseId));
 
             return course;
         }
 
-        public void CourseAccessValidate(CourseDto dto, int userId)
+        public async Task CourseAccessValidateAsync(CourseDto dto, int userId)
         {
-            var groupsByCourse = _groupRepository.GetGroupsByCourseId(dto.Id);
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var groupsByCourse = await _groupRepository.GetGroupsByCourseIdAsync(dto.Id);
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
 
             var result = groupsByCourse.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
             if (result == default)

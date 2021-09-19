@@ -4,6 +4,7 @@ using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -41,11 +42,11 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new ValidationException(nameof(teacherId), string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.UserId, teacherId));
         }
 
-        public void CheckUserBelongsToLesson(UserIdentityInfo userIdentity, LessonDto lesson)
+        public async System.Threading.Tasks.Task CheckUserBelongsToLessonAsync(UserIdentityInfo userIdentity, LessonDto lesson)
         {
             if (userIdentity.IsStudent())
             {
-                var studentGroups = _groupRepository.GetGroupsByUserId(userIdentity.UserId);
+                var studentGroups = await _groupRepository.GetGroupsByUserIdAsync(userIdentity.UserId);
                 var result = studentGroups.Where(sg => (lesson.Groups).Any(lg => lg.Id == sg.Id));
                 if (!result.Any())
                 {
@@ -61,10 +62,10 @@ namespace DevEdu.Business.ValidationHelpers
             }
         }
 
-        public void CheckUserBelongsToLesson(int lessonId, int userId)
+        public async Task CheckUserBelongsToLessonAsync(int lessonId, int userId)
         {
-            var groupsByLesson = _groupRepository.GetGroupsByLessonId(lessonId);
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var groupsByLesson = await _groupRepository.GetGroupsByLessonIdAsync(lessonId);
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
             var result = groupsByUser.FirstOrDefault(gu => groupsByLesson.Any(gl => gl.Id == gu.Id));
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserDoesntBelongToLesson, userId, lessonId));

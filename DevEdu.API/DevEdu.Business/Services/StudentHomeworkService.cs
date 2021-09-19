@@ -5,6 +5,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -36,7 +37,7 @@ namespace DevEdu.Business.Services
         {
             var homeworkDto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
             if (!userInfo.IsAdmin())
-                _studentHomeworkValidationHelper.CheckUserBelongsToHomework(homeworkDto.Group.Id, userInfo.UserId);
+                _studentHomeworkValidationHelper.CheckUserBelongsToHomeworkAsync(homeworkDto.Group.Id, userInfo.UserId);
             taskAnswerDto.Homework = new HomeworkDto { Id = homeworkId };
             taskAnswerDto.User = new UserDto { Id = userInfo.UserId };
             var id = _studentHomeworkRepository.AddStudentHomework(taskAnswerDto);
@@ -65,7 +66,7 @@ namespace DevEdu.Business.Services
         {
             var dto = _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(id);
             if (!userInfo.IsAdmin())
-                _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccess(dto.User.Id, userInfo.UserId);
+                _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccessAsync(dto.User.Id, userInfo.UserId);
             DateTime completedDate = default;
             if (statusId == (int)StudentHomeworkStatus.Accepted)
                 completedDate = DateTime.Now;
@@ -77,13 +78,13 @@ namespace DevEdu.Business.Services
         {
             var dto = _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(id);
             if (!userInfo.IsAdmin())
-                _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccess(dto.User.Id, userInfo.UserId);
+                _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccessAsync(dto.User.Id, userInfo.UserId);
             return dto;
         }
 
-        public List<StudentHomeworkDto> GetAllStudentHomeworkOnTask(int taskId)
+        public async Task<List<StudentHomeworkDto>> GetAllStudentHomeworkOnTaskAsync(int taskId)
         {
-            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             return _studentHomeworkRepository.GetAllStudentHomeworkByTask(taskId);
         }
 
