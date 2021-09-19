@@ -6,6 +6,7 @@ using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -31,11 +32,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<UserFullInfoOutPutModel> Register([FromBody] UserInsertInputModel model)
+        public async Task<ActionResult<UserFullInfoOutPutModel>> RegisterAsync([FromBody] UserInsertInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);
-            dto.Password = _authService.HashPassword(dto.Password);
+            dto.Password = await _authService.HashPassword(dto.Password);
             var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUser(dto));
+
             return Created(new Uri($"api/User/{addedUser.Id}", UriKind.Relative), addedUser);
         }
 
@@ -43,10 +45,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public string SignIn(UserSignInputModel model)
+        public async Task<string> SignInAsync(UserSignInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);
-            return _authService.SignIn(dto);
+            var token = await _authService.SignIn(dto);
+
+            return token;
         }
     }
 }
