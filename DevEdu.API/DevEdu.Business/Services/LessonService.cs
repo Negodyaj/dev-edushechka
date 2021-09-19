@@ -99,7 +99,7 @@ namespace DevEdu.Business.Services
         public LessonDto SelectLessonWithCommentsAndStudentsById(UserIdentityInfo userIdentity, int id)
         {
             LessonDto result = SelectLessonWithCommentsById(userIdentity, id);
-            result.Students = _lessonRepository.SelectStudentsLessonByLessonIdAsync(id);
+            result.Students = _lessonRepository.SelectStudentsLessonByLessonIdAsync(id).Result;
             return result;
         }
 
@@ -120,7 +120,7 @@ namespace DevEdu.Business.Services
         {
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-            if (_lessonRepository.DeleteTopicFromLessonAsync(lessonId, topicId) == 0)
+            if (_lessonRepository.DeleteTopicFromLessonAsync(lessonId, topicId).Result == 0)
             {
                 throw new ValidationException(nameof(topicId), string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId));
             }
