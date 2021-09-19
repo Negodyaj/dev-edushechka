@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -35,7 +36,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async System.Threading.Tasks.Task<ActionResult<MaterialInfoWithGroupsOutputModel>> AddMaterialWithGroupsAsync([FromBody] MaterialWithGroupsInputModel materialModel)
+        public async Task<ActionResult<MaterialInfoWithGroupsOutputModel>> AddMaterialWithGroupsAsync([FromBody] MaterialWithGroupsInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             var id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
@@ -52,7 +53,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async System.Threading.Tasks.Task<ActionResult<MaterialInfoWithCoursesOutputModel>> AddMaterialWithCoursesAsync([FromBody] MaterialWithCoursesInputModel materialModel)
+        public async Task<ActionResult<MaterialInfoWithCoursesOutputModel>> AddMaterialWithCoursesAsync([FromBody] MaterialWithCoursesInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             var id = _materialService.AddMaterialWithCourses(dto, materialModel.TagsIds, materialModel.CoursesIds);
