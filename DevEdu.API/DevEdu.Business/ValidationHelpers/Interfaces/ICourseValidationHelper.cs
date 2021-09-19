@@ -1,10 +1,11 @@
 ﻿using DevEdu.DAL.Models;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
     public interface ICourseValidationHelper
     {
-        CourseDto GetCourseByIdAndThrowIfNotFound(int courseId);
-        void CourseAccessValidate(CourseDto dto, int userId);
+        Task<CourseDto> GetCourseByIdAndThrowIfNotFoundAsync(int courseId);
+        Task CourseAccessValidateAsync(CourseDto dto, int userId);
     }
 }

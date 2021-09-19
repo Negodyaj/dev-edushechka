@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -36,12 +37,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<TaskInfoOutputModel> AddTaskByTeacher([FromBody] TaskByTeacherInputModel model)
+        public async Task<ActionResult<TaskInfoOutputModel>> AddTaskByTeacherAsync([FromBody] TaskByTeacherInputModel model)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = _mapper.Map<TaskDto>(model);
             var homeworkDto = _mapper.Map<HomeworkDto>(model.Homework);
-            var task = _taskService.AddTaskByTeacher(taskDto, homeworkDto, model.GroupId, model.Tags, userIdentityInfo).GetAwaiter().GetResult();
+            var task = await _taskService.AddTaskByTeacherAsync(taskDto, homeworkDto, model.GroupId, model.Tags, userIdentityInfo);
             var output = _mapper.Map<TaskInfoOutputModel>(task);
             return Created(new Uri($"api/Task/{output.Id}", UriKind.Relative), output);
         }
@@ -53,11 +54,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<TaskInfoOutputModel> AddTaskByMethodist([FromBody] TaskByMethodistInputModel model)
+        public async Task<ActionResult<TaskInfoOutputModel>> AddTaskByMethodistAsync([FromBody] TaskByMethodistInputModel model)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = _mapper.Map<TaskDto>(model);
-            var task = _taskService.AddTaskByMethodist(taskDto, model.CourseIds, model.Tags, userIdentityInfo);
+            var task = await _taskService.AddTaskByMethodistAsync(taskDto, model.CourseIds, model.Tags, userIdentityInfo);
             var output = _mapper.Map<TaskInfoOutputModel>(task);
             return Created(new Uri($"api/Task/{output.Id}", UriKind.Relative), output);
         }
@@ -70,11 +71,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public TaskInfoOutputModel UpdateTaskByTeacher(int taskId, [FromBody] TaskInputModel model)
+        public async Task<TaskInfoOutputModel> UpdateTaskByTeacherAsync(int taskId, [FromBody] TaskInputModel model)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = _mapper.Map<TaskDto>(model);
-            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId, userIdentityInfo));
+            return _mapper.Map<TaskInfoOutputModel>(await _taskService.UpdateTaskAsync(taskDto, taskId, userIdentityInfo));
         }
 
         // api/task/{taskId}
@@ -85,11 +86,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public TaskInfoOutputModel UpdateTaskByMethodist(int taskId, [FromBody] TaskInputModel model)
+        public async Task<TaskInfoOutputModel> UpdateTaskByMethodistAsync(int taskId, [FromBody] TaskInputModel model)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = _mapper.Map<TaskDto>(model);
-            return _mapper.Map<TaskInfoOutputModel>(_taskService.UpdateTask(taskDto, taskId, userIdentityInfo));
+            return _mapper.Map<TaskInfoOutputModel>(await _taskService.UpdateTaskAsync(taskDto, taskId, userIdentityInfo));
         }
 
         // api/task/{taskId}
@@ -99,10 +100,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteTask(int taskId)
+        public async Task<ActionResult> DeleteTaskAsync(int taskId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
-            _taskService.DeleteTask(taskId, userIdentityInfo);
+            await _taskService.DeleteTaskAsync(taskId, userIdentityInfo);
             return NoContent();
         }
 
@@ -113,10 +114,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public TaskInfoOutputModel GetTaskWithTags(int id)
+        public async Task<TaskInfoOutputModel> GetTaskWithTagsAsync(int id)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
-            var taskDto = _taskService.GetTaskById(id, userIdentityInfo);
+            var taskDto = await _taskService.GetTaskByIdAsync(id, userIdentityInfo);
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
         }
 
@@ -127,10 +128,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TaskInfoWithCoursesOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public TaskInfoWithCoursesOutputModel GetTaskWithTagsAndCourses(int taskId)
+        public async Task<TaskInfoWithCoursesOutputModel> GetTaskWithTagsAndCoursesAsync(int taskId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
-            var taskDto = _taskService.GetTaskWithCoursesById(taskId, userIdentityInfo);
+            var taskDto = await _taskService.GetTaskWithCoursesByIdAsync(taskId, userIdentityInfo);
             return _mapper.Map<TaskInfoWithCoursesOutputModel>(taskDto);
         }
 
@@ -141,10 +142,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TaskInfoWithAnswersOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public TaskInfoWithAnswersOutputModel GetTaskWithTagsAndAnswers(int taskId)
+        public async Task<TaskInfoWithAnswersOutputModel> GetTaskWithTagsAndAnswersAsync(int taskId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
-            var taskDto = _taskService.GetTaskWithAnswersById(taskId, userIdentityInfo);
+            var taskDto = await _taskService.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo);
             return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
         }
 
@@ -155,10 +156,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TaskInfoWithGroupsOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public TaskInfoWithGroupsOutputModel GetTaskWithTagsAndGroups(int taskId)
+        public async Task<TaskInfoWithGroupsOutputModel> GetTaskWithTagsAndGroupsAsync(int taskId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
-            var taskDto = _taskService.GetTaskWithGroupsById(taskId, userIdentityInfo);
+            var taskDto = await _taskService.GetTaskWithGroupsByIdAsync(taskId, userIdentityInfo);
             return _mapper.Map<TaskInfoWithGroupsOutputModel>(taskDto);
         }
 
@@ -168,10 +169,10 @@ namespace DevEdu.API.Controllers
         [Description("Get all tasks with tags")]
         [ProducesResponseType(typeof(List<TaskInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        public List<TaskInfoOutputModel> GetAllTasksWithTags()
+        public async Task<List<TaskInfoOutputModel>> GetAllTasksWithTagsAsync()
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
-            var list = _taskService.GetTasks(userIdentityInfo);
+            var list = await _taskService.GetTasksAsync(userIdentityInfo);
             return _mapper.Map<List<TaskInfoOutputModel>>(list);
         }
 
@@ -182,10 +183,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult AddTagToTask(int taskId, int tagId)
+        public async Task<ActionResult> AddTagToTaskAsync(int taskId, int tagId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
-            _taskService.AddTagToTask(taskId, tagId, userIdentityInfo);
+            await _taskService.AddTagToTaskAsync(taskId, tagId, userIdentityInfo);
             return NoContent();
         }
 
@@ -196,10 +197,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteTagFromTask(int taskId, int tagId)
+        public async Task<ActionResult> DeleteTagFromTaskAsync(int taskId, int tagId)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
-            _taskService.DeleteTagFromTask(taskId, tagId, userIdentityInfo);
+            await _taskService.DeleteTagFromTaskAsync(taskId, tagId, userIdentityInfo);
             return NoContent();
         }
     }

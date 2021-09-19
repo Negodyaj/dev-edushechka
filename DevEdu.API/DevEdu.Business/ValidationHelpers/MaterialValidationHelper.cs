@@ -4,6 +4,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -45,7 +46,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             if (material.Groups == null ||
                 material.Groups.Count == 0 ||
-                GetMaterialIfAllowedToUserByGroup(material, userId) == null)
+                GetMaterialIfAllowedToUserByGroupAsync(material, userId) == null)
             {
                 throw new AuthorizationException(string.
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
@@ -54,8 +55,8 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckUserAccessToMaterialForGetById(int userId, MaterialDto material)
         {
-            if (GetMaterialIfAllowedToUserByGroup(material, userId) == null &&
-                 GetMaterialIfAllowedToUserByCourse(material, userId) == null)
+            if (GetMaterialIfAllowedToUserByGroupAsync(material, userId) == null &&
+                 GetMaterialIfAllowedToUserByCourseAsync(material, userId) == null)
             {
                 throw new AuthorizationException(string.
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
@@ -64,8 +65,8 @@ namespace DevEdu.Business.ValidationHelpers
         public List<MaterialDto> GetMaterialsAllowedToUser(List<MaterialDto> materials, int userId)
         {
             var materialDtos = new List<MaterialDto>();
-            materials.ForEach(m => materialDtos.Add(GetMaterialIfAllowedToUserByGroup(m, userId)));
-            materials.ForEach(m => materialDtos.Add(GetMaterialIfAllowedToUserByCourse(m, userId)));
+            materials.ForEach(async m => materialDtos.Add(await GetMaterialIfAllowedToUserByGroupAsync(m, userId)));
+            materials.ForEach(async m => materialDtos.Add(await GetMaterialIfAllowedToUserByCourseAsync(m, userId)));
             var result = materialDtos.Where(m => m != null).GroupBy(m => m.Id).Select(m => m.First()).ToList();
             return result;
         }
@@ -76,10 +77,10 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new ValidationException(entity, string.Format(ServiceMessages.DuplicateValuesProvided, entity));
         }
 
-        private MaterialDto GetMaterialIfAllowedToUserByGroup(MaterialDto material, int userId)
+        private async Task<MaterialDto> GetMaterialIfAllowedToUserByGroupAsync(MaterialDto material, int userId)
         {
             var groupsByMaterial = _groupRepository.GetGroupsByMaterialId(material.Id);
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
 
             var result = groupsByMaterial.FirstOrDefault(gm => groupsByUser.Any(gu => gu.Id == gm.Id));
             if (result == default)
@@ -87,10 +88,10 @@ namespace DevEdu.Business.ValidationHelpers
             return material;
         }
 
-        private MaterialDto GetMaterialIfAllowedToUserByCourse(MaterialDto material, int userId)
+        private async Task<MaterialDto> GetMaterialIfAllowedToUserByCourseAsync(MaterialDto material, int userId)
         {
-            var coursesByMaterial = _courseRepository.GetCoursesByMaterialId(material.Id);
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var coursesByMaterial = await _courseRepository.GetCoursesByMaterialIdAsync(material.Id);
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
             List<int> coursesByUser = new();
             groupsByUser.ForEach(group => coursesByUser.Add(group.Course.Id));
 

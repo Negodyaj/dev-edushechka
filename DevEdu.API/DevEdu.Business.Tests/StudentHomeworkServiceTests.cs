@@ -49,7 +49,7 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _homeworkRepoMock.Setup(x => x.GetHomework(homeworkDto.Id)).Returns(homeworkDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(GroupData.GetGroupDtos());
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(GroupData.GetGroupDto());
             _studentHomeworkRepoMock.Setup(x => x.AddStudentHomework(expectedDto)).Returns(expectedDto.Id);
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(expectedDto.Id)).Returns(expectedDto);
@@ -60,7 +60,7 @@ namespace DevEdu.Business.Tests
             // Then
             Assert.AreEqual(expectedDto, actualDto);
             _homeworkRepoMock.Verify(x => x.GetHomework(homeworkDto.Id), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
             _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(expectedDto), Times.Once);
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(expectedDto.Id), Times.Once());
@@ -75,15 +75,15 @@ namespace DevEdu.Business.Tests
             var taskDto = TaskData.GetAnotherTaskDtoWithTags();
 
             _studentHomeworkRepoMock.Setup(x => x.GetAllStudentHomeworkByTask(taskId)).Returns(studentAnswersList);
-            _taskRepoMock.Setup(x => x.GetTaskById(taskId)).Returns(taskDto);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             // When
-            var dtoList = _sut.GetAllStudentHomeworkOnTask(taskId);
+            var dtoList = _sut.GetAllStudentHomeworkOnTaskAsync(taskId);
 
             // Then
             Assert.AreEqual(studentAnswersList, dtoList);
             _studentHomeworkRepoMock.Verify(x => x.GetAllStudentHomeworkByTask(taskId), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskById(taskId), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
@@ -96,8 +96,8 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(dtoForTaskIdAndUserId.Id)).Returns(studentAnswerDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentAnswerDto.User.Id)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentAnswerDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
 
             // When
             var dto = _sut.GetStudentHomeworkById(dtoForTaskIdAndUserId.Id, userInfo);
@@ -105,7 +105,7 @@ namespace DevEdu.Business.Tests
             // Then
             Assert.AreEqual(studentAnswerDto, dto);
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(dtoForTaskIdAndUserId.Id), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(studentAnswerDto.User.Id), Times.Exactly(2));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentAnswerDto.User.Id), Times.Exactly(2));
         }
 
         [TestCase(Role.Teacher)]
@@ -120,8 +120,8 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentAnswerDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentAnswerDto.User.Id)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentAnswerDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
             _studentHomeworkRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, statusId, completedDate)).Returns(statusId);
 
             // When
@@ -130,7 +130,7 @@ namespace DevEdu.Business.Tests
             // Then
             Assert.AreEqual(statusId, actualStatusId);
             _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, statusId, completedDate), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(studentAnswerDto.User.Id), Times.Exactly(2));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentAnswerDto.User.Id), Times.Exactly(2));
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
         }
 
@@ -149,8 +149,8 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _studentHomeworkRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, acceptedStatusId, dateTime)).Returns(acceptedStatusId);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(acceptedStatusDto.User.Id)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(acceptedStatusDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(acceptedStatusDto);
 
             // When
@@ -160,7 +160,7 @@ namespace DevEdu.Business.Tests
             // Then
             Assert.AreEqual(dateTime, dto.CompletedDate);
             _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTask(homeworkId, acceptedStatusId, dateTime), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(acceptedStatusDto.User.Id), Times.Exactly(4));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(acceptedStatusDto.User.Id), Times.Exactly(4));
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Exactly(countEntry));
         }
 
@@ -244,7 +244,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.GetHomework(homeworkDto.Id)).Returns(homeworkDto);
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentHomework);
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(GroupData.GetGroupDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(groupId)).Returns(GroupData.GetAnotherListDtos());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(groupId)).ReturnsAsync(GroupData.GetAnotherListDtos());
             _studentHomeworkRepoMock.Setup(x => x.AddStudentHomework(studentHomework)).Returns(expectedStudentAnswerId);
 
             // When
@@ -274,7 +274,7 @@ namespace DevEdu.Business.Tests
 
             _homeworkRepoMock.Setup(x => x.GetHomework(homeworkDto.Id)).Returns(homeworkDto);
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(studentHomework.Id)).Returns(studentHomework);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentHomework.User.Id)).Returns(GroupData.GetAnotherListDtos());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomework.User.Id)).ReturnsAsync(GroupData.GetAnotherListDtos());
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(GroupData.GetGroupDto());
             _studentHomeworkRepoMock.Setup(x => x.AddStudentHomework(studentHomework)).Returns(expectedStudentAnswerId);
 
@@ -286,7 +286,7 @@ namespace DevEdu.Business.Tests
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
             _homeworkRepoMock.Verify(x => x.GetHomework(homeworkDto.Id), Times.Once);
             _studentHomeworkRepoMock.Verify(x => x.AddStudentHomework(studentHomework), Times.Never);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userId), Times.Once);
         }
 
         [TestCase(Role.Student)]
@@ -380,8 +380,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userInfo.UserId);
 
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(homeworkId)).Returns(studentHomework);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentHomework.User.Id)).Returns(GroupData.GetGroupDtos());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomework.User.Id)).ReturnsAsync(GroupData.GetGroupDtos());
 
             //When
             var actualException = Assert.Throws<AuthorizationException>(
@@ -390,7 +390,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(homeworkId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userInfo.UserId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
         }
 
         [TestCase(Role.Student)]
@@ -421,8 +421,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
 
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkById(studentHomework.Id)).Returns(studentHomework);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentHomework.User.Id)).Returns(GroupData.GetGroupDtos());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomework.User.Id)).ReturnsAsync(GroupData.GetGroupDtos());
 
             //When
             var actualException = Assert.Throws<AuthorizationException>(
@@ -431,7 +431,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkById(studentHomework.Id), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userInfo.UserId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
             _studentHomeworkRepoMock.Verify(x => x.UpdateStudentHomework(studentHomework), Times.Never);
         }
 
@@ -445,7 +445,7 @@ namespace DevEdu.Business.Tests
 
             // When
             var actualException = Assert.Throws<EntityNotFoundException>(
-                    () => _sut.GetAllStudentHomeworkOnTask(task));
+                    () => _sut.GetAllStudentHomeworkOnTaskAsync(task));
 
             // Then
             Assert.That(actualException.Message, Is.EqualTo(expectedException));

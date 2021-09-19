@@ -37,7 +37,7 @@ namespace DevEdu.API.Controllers
         public List<NotificationInfoOutputModel> GetAllNotificationByUser()
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _notificationService.GetAllNotificationByUser(userInfo);
+            var dto = _notificationService.GetAllNotificationByUserAsync(userInfo);
             var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
             return output;
         }

@@ -5,6 +5,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -30,7 +31,7 @@ namespace DevEdu.Business.Services
             _groupValidationHelper = groupValidationHelper;
         }
 
-        public List<NotificationDto> GetAllNotificationByUser(UserIdentityInfo userInfo)
+        public async Task<List<NotificationDto>> GetAllNotificationByUserAsync(UserIdentityInfo userInfo)
         {
             var rolesList = userInfo.Roles;
             List<NotificationDto> notifications = GetNotificationsByUserId(userInfo.UserId);
@@ -42,7 +43,7 @@ namespace DevEdu.Business.Services
             }
             if (userInfo.IsStudent())
             {
-                var groupList = _groupRepository.GetGroupsByUserId(userInfo.UserId);
+                var groupList = await _groupRepository.GetGroupsByUserIdAsync(userInfo.UserId);
                 foreach (GroupDto group in groupList)
                 {
                     var listByGroup = GetNotificationsByGroupId(group.Id);

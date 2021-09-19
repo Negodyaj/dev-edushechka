@@ -1,17 +1,18 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
     public interface ITaskRepository
     {
-        int AddTask(TaskDto task);
-        void UpdateTask(TaskDto task);
-        int DeleteTask(int id);
-        TaskDto GetTaskById(int id);
-        List<TaskDto> GetTasks();
-        int AddTagToTask(int taskId, int tagId);
-        int DeleteTagFromTask(int taskId, int tagId);
-        public List<TaskDto> GetTasksByCourseId(int courseId);
+        Task<int> AddTaskAsync(TaskDto task);
+        Task UpdateTaskAsync(TaskDto task);
+        Task<int> DeleteTaskAsync(int id);
+        Task<TaskDto> GetTaskByIdAsync(int id);
+        Task<List<TaskDto>> GetTasksAsync();
+        Task<int> AddTagToTaskAsync(int taskId, int tagId);
+        Task<int> DeleteTagFromTaskAsync(int taskId, int tagId);
+        Task<List<TaskDto>> GetTasksByCourseIdAsync(int courseId);
     }
 }
