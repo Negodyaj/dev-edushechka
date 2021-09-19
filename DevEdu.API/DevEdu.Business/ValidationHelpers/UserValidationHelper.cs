@@ -20,7 +20,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public async Task<UserDto> GetUserByIdAndThrowIfNotFound(int userId)
         {
-            var user = await _userRepository.GetUserById(userId);
+            var user = await _userRepository.GetUserByIdAsync(userId);
 
             if (user == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
@@ -30,7 +30,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public async Task CheckUserBelongToGroup(int groupId, int userId, Role role)
         {
-            var usersInGroup = await _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
+            var usersInGroup = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)role);
 
             if (usersInGroup == default ||
                 usersInGroup.FirstOrDefault(u => u.Id == userId) == default)
@@ -46,7 +46,7 @@ namespace DevEdu.Business.ValidationHelpers
 
             foreach (var role in roles)
             {
-                var usersInGroup = await _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
+                var usersInGroup = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)role);
 
                 if (usersInGroup != default &&
                     usersInGroup.FirstOrDefault(u => u.Id == userId) != default)
@@ -63,7 +63,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public async Task CheckAuthorizationUserToGroup(int groupId, int userId, Role role)
         {
-            var usersInGroup = await _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
+            var usersInGroup = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)role);
 
             if (usersInGroup == default ||
                 usersInGroup.FirstOrDefault(u => u.Id == userId) == default)

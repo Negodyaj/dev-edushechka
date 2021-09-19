@@ -356,7 +356,7 @@ namespace DevEdu.Business.Tests
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
                 _tagRepoMock.Setup(x => x.SelectTagById(tags[i])).Returns(tagDtos[i]);
             }
@@ -371,7 +371,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(tags.Count));
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
             _groupRepoMock.Verify(x => x.GetGroup(It.IsAny<int>()), Times.Exactly(groups.Count));
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Exactly(tags.Count));
 
         }
@@ -392,7 +392,7 @@ namespace DevEdu.Business.Tests
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
             _materialRepoMock.Setup(x => x.AddMaterial(materialToAdd)).Returns(expectedId);
@@ -406,7 +406,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
             _groupRepoMock.Verify(x => x.GetGroup(It.IsAny<int>()), Times.Exactly(groups.Count));
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
 
         }
@@ -430,7 +430,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroup(It.IsAny<int>()), Times.Never);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
         }
 
@@ -449,7 +449,7 @@ namespace DevEdu.Business.Tests
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
             //When
@@ -462,7 +462,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroup(It.IsAny<int>()), Times.Exactly(groups.Count));
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(2));
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(2));
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
         }
 
@@ -481,7 +481,7 @@ namespace DevEdu.Business.Tests
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
             //When
@@ -494,7 +494,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroup(It.IsAny<int>()), Times.Exactly(groups.Count));
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
         }
 
@@ -516,7 +516,7 @@ namespace DevEdu.Business.Tests
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
                 _tagRepoMock.Setup(x => x.SelectTagById(tags[i])).Returns(tagDtos[i]);
             }
@@ -531,7 +531,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroup(It.IsAny<int>()), Times.Exactly(groups.Count));
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Exactly(tags.Count));
 
         }
@@ -553,7 +553,7 @@ namespace DevEdu.Business.Tests
             for (int i = 0; i < groups.Count; i++)
             {
                 _groupRepoMock.Setup(x => x.GetGroup(groups[i])).ReturnsAsync(groupDtos[i]);
-                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groups[i], (int)role)).
+                _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role)).
                     Returns(usersInGroup[i]);
             }
 
@@ -567,7 +567,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.AddTagToMaterial(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.AddGroupMaterialReference(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroup(It.IsAny<int>()), Times.Exactly(groups.Count));
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
             _tagRepoMock.Verify(x => x.SelectTagById(It.IsAny<int>()), Times.Never);
 
         }

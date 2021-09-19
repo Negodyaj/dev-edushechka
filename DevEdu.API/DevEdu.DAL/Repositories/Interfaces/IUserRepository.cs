@@ -6,15 +6,15 @@ namespace DevEdu.DAL.Repositories
 {
     public interface IUserRepository
     {
-        Task<int> AddUser(UserDto user);
-        Task AddUserRole(int userId, int roleId);
-        Task DeleteUser(int id);
-        Task DeleteUserRole(int userId, int roleId);
-        Task<UserDto> GetUserById(int id);
-        Task<UserDto> GetUserByEmail(string email);
-        Task<List<UserDto>> GetAllUsers();
-        Task UpdateUser(UserDto user);
-        Task<List<UserDto>> GetUsersByGroupIdAndRole(int groupId, int role);
+        Task<int> AddUserAsync(UserDto user);
+        Task AddUserRoleAsync(int userId, int roleId);
+        Task DeleteUserAsync(int id);
+        Task DeleteUserRoleAsync(int userId, int roleId);
+        Task<UserDto> GetUserByIdAsync(int id);
+        Task<UserDto> GetUserByEmailAsync(string email);
+        Task<List<UserDto>> GetAllUsersAsync();
+        Task UpdateUserAsync(UserDto user);
         Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role);
+        //Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role);
     }
 }

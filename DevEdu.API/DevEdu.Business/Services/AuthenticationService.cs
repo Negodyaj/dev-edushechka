@@ -25,9 +25,9 @@ namespace DevEdu.Business.Services
             _options = authOptions;
         }
 
-        public async Task<string> SignIn(UserDto dto)
+        public async Task<string> SignInAsync(UserDto dto)
         {
-            var identity = await GetIdentity(dto.Email, dto.Password);
+            var identity = await GetIdentityAsync(dto.Email, dto.Password);
             if (identity == null)
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
 
@@ -42,16 +42,16 @@ namespace DevEdu.Business.Services
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        public Task<byte[]> GetSalt()
+        public async Task<byte[]> GetSaltAsync()
         {
             byte[] salt;
-             new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
-            return Task.FromResult(salt);
+            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+            return await Task.FromResult(salt);
         }
 
-        public async Task<string> HashPassword(string pass, byte[] salt = default)
+        public async Task<string> HashPasswordAsync(string pass, byte[] salt = default)
         {
-            salt ??= await GetSalt();
+            salt ??= await GetSaltAsync();
             var pbkdf2 = new Rfc2898DeriveBytes(pass, salt, 10000, HashAlgorithmName.SHA384);
             var hash = pbkdf2.GetBytes(20);
             var hashBytes = new byte[36];
@@ -62,27 +62,30 @@ namespace DevEdu.Business.Services
             return hashedPassword;
         }
 
-        public async Task<bool> Verify(string hashedPassword, string userPassword)
+        public async Task<bool> VerifyAsync(string hashedPassword, string userPassword)
         {
             var hashBytes = Convert.FromBase64String(hashedPassword);
             var salt = new byte[16];
             Array.Copy(hashBytes, 0, salt, 0, 16);
-            var result = await HashPassword(userPassword, salt);
+            var result = await HashPasswordAsync(userPassword, salt);
+
             return result == hashedPassword;
         }
 
-        private async Task<ClaimsIdentity> GetIdentity(string username, string password)
+        private async Task<ClaimsIdentity> GetIdentityAsync(string username, string password)
         {
-            var user = await _userRepository.GetUserByEmail(username);
+            var user = await _userRepository.GetUserByEmailAsync(username);
             if (user == null)
                 throw new AuthorizationException(ServiceMessages.EntityNotFound);
 
             var claims = new List<Claim>();
-            if (!await Verify(user.Password, password)) throw new AuthorizationException(ServiceMessages.WrongPassword);
+            if (!await VerifyAsync(user.Password, password)) throw new AuthorizationException(ServiceMessages.WrongPassword);
 
             claims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
             claims.AddRange(user.Roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role.ToString())));
-            return new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            var claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            
+            return claimsIdentity;
         }
     }
 }

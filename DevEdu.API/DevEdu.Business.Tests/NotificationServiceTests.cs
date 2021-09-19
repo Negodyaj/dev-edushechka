@@ -159,7 +159,7 @@ namespace DevEdu.Business.Tests
             const int userId = 1;
             var userDto = UserData.GetUserDto();
             _notificationRepoMock.Setup(x => x.GetNotificationsByUserId(userId)).Returns(notificationsList);
-            _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).Returns(userDto);
 
             //When
             var listOfDto = _sut.GetNotificationsByUserId(userId);
@@ -167,7 +167,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(notificationsList, listOfDto);
             _notificationRepoMock.Verify(x => x.GetNotificationsByUserId(userId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
         }
 
         [Test]

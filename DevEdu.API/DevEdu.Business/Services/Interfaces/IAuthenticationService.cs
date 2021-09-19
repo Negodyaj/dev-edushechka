@@ -5,9 +5,9 @@ namespace DevEdu.Business.Services
 {
     public interface IAuthenticationService
     {
-        Task<string> SignIn(UserDto dto);
-        Task<byte[]> GetSalt();
-        Task<string> HashPassword(string pass, byte[] salt = null);
-        Task<bool> Verify(string hashedPassword, string userPassword);
+        Task<string> SignInAsync(UserDto dto);
+        Task<byte[]> GetSaltAsync();
+        Task<string> HashPasswordAsync(string pass, byte[] salt = null);
+        Task<bool> VerifyAsync(string hashedPassword, string userPassword);
     }
 }

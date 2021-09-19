@@ -198,7 +198,7 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _studentHomeworkRepoMock.Setup(x => x.GetAllStudentHomeworkByStudentId(userId)).Returns(studentAnswersListDto);
-            _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).Returns(userDto);
 
             // When
             var dto = _sut.GetAllStudentHomeworkByStudentId(userId, userInfo);
@@ -206,7 +206,7 @@ namespace DevEdu.Business.Tests
             // Then
             Assert.AreEqual(studentAnswersListDto, dto);
             _studentHomeworkRepoMock.Verify(x => x.GetAllStudentHomeworkByStudentId(userId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
         }
 
         [TestCase(Role.Student)]

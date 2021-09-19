@@ -24,7 +24,7 @@ namespace DevEdu.DAL.Repositories
 
         public UserRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
-        public async Task<int> AddUser(UserDto user)
+        public async Task<int> AddUserAsync(UserDto user)
         {
             return await _connection.QuerySingleAsync<int>(
                 _userInsertProcedure,
@@ -46,7 +46,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<UserDto> GetUserById(int id)
+        public async Task<UserDto> GetUserByIdAsync(int id)
         {
             UserDto result = default;
 
@@ -73,7 +73,7 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
         }
 
-        public async Task<UserDto> GetUserByEmail(string email)
+        public async Task<UserDto> GetUserByEmailAsync(string email)
         {
             UserDto result = default;
 
@@ -99,7 +99,7 @@ namespace DevEdu.DAL.Repositories
                 .FirstOrDefault();
         }
 
-        public async Task<List<UserDto>> GetAllUsers()
+        public async Task<List<UserDto>> GetAllUsersAsync()
         {
             var userDictionary = new Dictionary<int, UserDto>();
 
@@ -125,7 +125,7 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public async Task UpdateUser(UserDto user)
+        public async Task UpdateUserAsync(UserDto user)
         {
             await _connection.ExecuteAsync(
                  _userUpdateProcedure,
@@ -144,7 +144,7 @@ namespace DevEdu.DAL.Repositories
                  commandType: CommandType.StoredProcedure);
         }
 
-        public async Task DeleteUser(int id)
+        public async Task DeleteUserAsync(int id)
         {
             await _connection.ExecuteAsync(
                  _userDeleteProcedure,
@@ -152,7 +152,7 @@ namespace DevEdu.DAL.Repositories
                  commandType: CommandType.StoredProcedure);
         }
 
-        public async Task AddUserRole(int userId, int roleId)
+        public async Task AddUserRoleAsync(int userId, int roleId)
         {
            await _connection.QueryFirstOrDefaultAsync<int>(
                 _userRoleInsertProcedure,
@@ -164,7 +164,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task DeleteUserRole(int userId, int roleId)
+        public async Task DeleteUserRoleAsync(int userId, int roleId)
         {
            await _connection.ExecuteAsync(
                 _userRoleDeleteProcedure,
@@ -176,20 +176,20 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<List<UserDto>> GetUsersByGroupIdAndRole(int groupId, int role)
-        {
+        //public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role)
+        //{
 
-            return (await _connection.QueryAsync<UserDto>
-            (
-                _userSelectByGroupIdAndRole,
-                new
-                {
-                    groupId,
-                    roleId = role
-                },
-                commandType: CommandType.StoredProcedure
-            )).ToList();
-        }
+        //    return (await _connection.QueryAsync<UserDto>
+        //    (
+        //        _userSelectByGroupIdAndRole,
+        //        new
+        //        {
+        //            groupId,
+        //            roleId = role
+        //        },
+        //        commandType: CommandType.StoredProcedure
+        //    )).ToList();
+        //}
 
         public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role)
         {

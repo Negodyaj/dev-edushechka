@@ -46,9 +46,9 @@ namespace DevEdu.Business.Tests
             var usersInGroup = UserData.GetListUsersDto();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
-            _userRepoMock.Setup(x => x.GetUserById(studentId)).Returns(student);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(studentId)).Returns(student);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student)).Returns(usersInGroup);
             _ratingRepoMock.Setup(x => x.AddStudentRating(expectedStudentRatingDto)).Returns(expectedStudentRatingId);
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(expectedStudentRatingId)).Returns(expectedStudentRatingDto);
 
@@ -60,9 +60,9 @@ namespace DevEdu.Business.Tests
             _ratingRepoMock.Verify(x => x.AddStudentRating(expectedStudentRatingDto), Times.Once);
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(expectedStudentRatingId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student), Times.Once);
-            _userRepoMock.Verify(x => x.GetUserById(studentId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student), Times.Once);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(studentId), Times.Once);
         }
 
         [Test]
@@ -80,9 +80,9 @@ namespace DevEdu.Business.Tests
             var usersInGroup = UserData.GetListUsersDto();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
-            _userRepoMock.Setup(x => x.GetUserById(studentId)).Returns(student);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(studentId)).Returns(student);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student)).Returns(usersInGroup);
             _ratingRepoMock.Setup(x => x.AddStudentRating(expectedStudentRatingDto)).Returns(expectedStudentRatingId);
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(expectedStudentRatingId)).Returns(expectedStudentRatingDto);
 
@@ -94,9 +94,9 @@ namespace DevEdu.Business.Tests
             _ratingRepoMock.Verify(x => x.AddStudentRating(expectedStudentRatingDto), Times.Once);
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(expectedStudentRatingId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher), Times.Never);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student), Times.Once);
-            _userRepoMock.Verify(x => x.GetUserById(studentId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student), Times.Once);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(studentId), Times.Once);
         }
 
         [Test]
@@ -119,9 +119,9 @@ namespace DevEdu.Business.Tests
             _ratingRepoMock.Verify(x => x.AddStudentRating(expectedStudentRatingDto), Times.Never);
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher), Times.Never);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student), Times.Never);
-            _userRepoMock.Verify(x => x.GetUserById(studentId), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student), Times.Never);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(studentId), Times.Never);
         }
 
         [Test]
@@ -137,7 +137,7 @@ namespace DevEdu.Business.Tests
             var usersInGroup = UserData.GetListUsersDto();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
 
             //When
             Assert.Throws<AuthorizationException>(() => _sut.AddStudentRating(expectedStudentRatingDto, authorUserInfo));
@@ -146,9 +146,9 @@ namespace DevEdu.Business.Tests
             _ratingRepoMock.Verify(x => x.AddStudentRating(expectedStudentRatingDto), Times.Never);
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student), Times.Never);
-            _userRepoMock.Verify(x => x.GetUserById(studentId), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student), Times.Never);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(studentId), Times.Never);
         }
 
         [Test]
@@ -165,8 +165,8 @@ namespace DevEdu.Business.Tests
             var usersInGroup = UserData.GetListUsersDto();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
-            _userRepoMock.Setup(x => x.GetUserById(studentId)).Returns(student);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(studentId)).Returns(student);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
 
             //When
             Assert.Throws<EntityNotFoundException>(() => _sut.AddStudentRating(expectedStudentRatingDto, authorUserInfo));
@@ -175,9 +175,9 @@ namespace DevEdu.Business.Tests
             _ratingRepoMock.Verify(x => x.AddStudentRating(expectedStudentRatingDto), Times.Never);
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Never);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student), Times.Never);
-            _userRepoMock.Verify(x => x.GetUserById(studentId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student), Times.Never);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(studentId), Times.Once);
         }
 
         [Test]
@@ -194,18 +194,18 @@ namespace DevEdu.Business.Tests
             var usersInGroup = UserData.GetListUsersDto();
 
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
-            _userRepoMock.Setup(x => x.GetUserById(studentId)).Returns(student);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(studentId)).Returns(student);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student)).Returns(usersInGroup);
 
             //When
             Assert.Throws<ValidationException>(() => _sut.AddStudentRating(expectedStudentRatingDto, authorUserInfo));
 
             //Than
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher), Times.Once);
-            _userRepoMock.Verify(x => x.GetUserById(studentId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Student), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher), Times.Once);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(studentId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student), Times.Once);
             _ratingRepoMock.Verify(x => x.AddStudentRating(expectedStudentRatingDto), Times.Never);
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Never);
         }
@@ -221,7 +221,7 @@ namespace DevEdu.Business.Tests
             var usersInGroup = UserData.GetListUsersDto();
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(studentRatingId)).Returns(expectedStudentRatingDto);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
 
             //When
             _sut.DeleteStudentRating(studentRatingId, authorUserInfo);
@@ -229,7 +229,7 @@ namespace DevEdu.Business.Tests
             //Than
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Once);
             _ratingRepoMock.Verify(x => x.DeleteStudentRating(studentRatingId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher), Times.Once);
         }
 
         [Test]
@@ -243,7 +243,7 @@ namespace DevEdu.Business.Tests
             var usersInGroup = UserData.GetListUsersDto();
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(studentRatingId)).Returns(expectedStudentRatingDto);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
 
             //When
             _sut.DeleteStudentRating(studentRatingId, authorUserInfo);
@@ -251,7 +251,7 @@ namespace DevEdu.Business.Tests
             //Than
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Once);
             _ratingRepoMock.Verify(x => x.DeleteStudentRating(studentRatingId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
@@ -265,7 +265,7 @@ namespace DevEdu.Business.Tests
             var usersInGroup = UserData.GetListUsersDto();
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(studentRatingId)).Returns(expectedStudentRatingDto);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
 
             //When
             Assert.Throws<AuthorizationException>(() => _sut.DeleteStudentRating(studentRatingId, authorUserInfo));
@@ -273,7 +273,7 @@ namespace DevEdu.Business.Tests
             //Than
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Once);
             _ratingRepoMock.Verify(x => x.DeleteStudentRating(studentRatingId), Times.Never);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher), Times.Once);
         }
 
         [Test]
@@ -292,7 +292,7 @@ namespace DevEdu.Business.Tests
             //Than
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Once);
             _ratingRepoMock.Verify(x => x.DeleteStudentRating(It.IsAny<int>()), Times.Never);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
@@ -320,7 +320,7 @@ namespace DevEdu.Business.Tests
             var studentId = student.Id;
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingByUserId(studentId)).Returns(expectedStudentRatingDtos);
-            _userRepoMock.Setup(x => x.GetUserById(studentId)).Returns(student);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(studentId)).Returns(student);
 
             //When
             var actualStudentRatingDtos = _sut.GetStudentRatingByUserId(studentId);
@@ -328,7 +328,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.AreEqual(expectedStudentRatingDtos, actualStudentRatingDtos);
             _ratingRepoMock.Verify(x => x.SelectStudentRatingByUserId(studentId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUserById(studentId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(studentId), Times.Once);
         }
 
         [Test]
@@ -339,14 +339,14 @@ namespace DevEdu.Business.Tests
             var studentId = expectedStudentRatingDtos[0].User.Id;
             UserDto student = default;
 
-            _userRepoMock.Setup(x => x.GetUserById(studentId)).Returns(student);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(studentId)).Returns(student);
 
             //When
             Assert.Throws<EntityNotFoundException>(() => _sut.GetStudentRatingByUserId(studentId));
 
             //Than
             _ratingRepoMock.Verify(x => x.SelectStudentRatingByUserId(It.IsAny<int>()), Times.Never);
-            _userRepoMock.Verify(x => x.GetUserById(studentId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(studentId), Times.Once);
         }
 
         [Test]
@@ -368,7 +368,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedStudentRatingDtos, actualStudentRatingDtos);
             _ratingRepoMock.Verify(x => x.SelectStudentRatingByGroupId(groupId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
@@ -383,7 +383,7 @@ namespace DevEdu.Business.Tests
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingByGroupId(groupId)).Returns(expectedStudentRatingDtos);
             _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(group);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(authorUserInfo.UserId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(authorUserInfo.UserId, (int)Role.Teacher)).Returns(usersInGroup);
 
             //When
             var actualStudentRatingDtos = _sut.GetStudentRatingByGroupId(groupId, authorUserInfo);
@@ -392,7 +392,7 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedStudentRatingDtos, actualStudentRatingDtos);
             _ratingRepoMock.Verify(x => x.SelectStudentRatingByGroupId(groupId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(authorUserInfo.UserId, (int)Role.Teacher), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(authorUserInfo.UserId, (int)Role.Teacher), Times.Once);
         }
 
         [Test]
@@ -424,14 +424,14 @@ namespace DevEdu.Business.Tests
             var authorUserInfo = RatingData.GetTeacherOutOfGroupIdentityInfo();
             var usersInGroup = UserData.GetListUsersDto();
 
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
 
             //When
             Assert.Throws<AuthorizationException>(() => _sut.GetStudentRatingByGroupId(groupId, authorUserInfo));
 
             //Than
             _ratingRepoMock.Verify(x => x.SelectStudentRatingByGroupId(It.IsAny<int>()), Times.Never);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroup(It.IsAny<int>()), Times.Never);
         }
 
@@ -449,7 +449,7 @@ namespace DevEdu.Business.Tests
             var usersInGroup = UserData.GetListUsersDto();
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(studentRatingId)).Returns(expectedStudentRatingDto);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
 
             //When
             var actualStudentRatingDto = _sut.UpdateStudentRating(studentRatingId, value, periodNumber, authorUserInfo);
@@ -459,7 +459,7 @@ namespace DevEdu.Business.Tests
             _ratingRepoMock.Verify(x => x.UpdateStudentRating(It.Is<StudentRatingDto>(dto =>
                 dto.Equals(studentRatingDtoForUpdate))));
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Exactly(2));
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher), Times.Once);
         }
 
         [Test]
@@ -476,7 +476,7 @@ namespace DevEdu.Business.Tests
             var usersInGroup = UserData.GetListUsersDto();
 
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(studentRatingId)).Returns(expectedStudentRatingDto);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
 
             //When
             var actualStudentRatingDto = _sut.UpdateStudentRating(studentRatingId, value, periodNumber, authorUserInfo);
@@ -486,7 +486,7 @@ namespace DevEdu.Business.Tests
             _ratingRepoMock.Verify(x => x.UpdateStudentRating(It.Is<StudentRatingDto>(dto =>
                 dto.Equals(studentRatingDtoForUpdate))));
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Exactly(2));
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
@@ -508,7 +508,7 @@ namespace DevEdu.Business.Tests
             //Than
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Once);
             _ratingRepoMock.Verify(x => x.UpdateStudentRating(It.IsAny<StudentRatingDto>()), Times.Never);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(It.IsAny<int>(), (int)Role.Teacher), Times.Never);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), (int)Role.Teacher), Times.Never);
         }
 
         [Test]
@@ -523,7 +523,7 @@ namespace DevEdu.Business.Tests
             var authorUserInfo = RatingData.GetTeacherOutOfGroupIdentityInfo();
             var usersInGroup = UserData.GetListUsersDto();
 
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher)).Returns(usersInGroup);
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).Returns(usersInGroup);
             _ratingRepoMock.Setup(x => x.SelectStudentRatingById(studentRatingId)).Returns(expectedStudentRatingDto);
 
             //When
@@ -532,7 +532,7 @@ namespace DevEdu.Business.Tests
             //Than
             _ratingRepoMock.Verify(x => x.UpdateStudentRating(It.IsAny<StudentRatingDto>()), Times.Never);
             _ratingRepoMock.Verify(x => x.SelectStudentRatingById(studentRatingId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRole(groupId, (int)Role.Teacher), Times.Once);
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher), Times.Once);
         }
     }
 }

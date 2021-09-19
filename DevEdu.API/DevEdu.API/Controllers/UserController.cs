@@ -35,10 +35,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<ActionResult<UserUpdateInfoOutPutModel>> UpdateUserById([FromBody] UserUpdateInputModel model)
+        public async Task<ActionResult<UserUpdateInfoOutPutModel>> UpdateUserByIdAsync([FromBody] UserUpdateInputModel model)
         {
             var dtoEntry = _mapper.Map<UserDto>(model);
-            var dtoResult = await _userService.UpdateUser(dtoEntry);
+            var dtoResult = await _userService.UpdateUserAsync(dtoEntry);
             var outPut = _mapper.Map<UserUpdateInfoOutPutModel>(dtoResult);
 
             return Created(new Uri($"api/User/{outPut.Id}", UriKind.Relative), outPut);
@@ -51,9 +51,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<UserFullInfoOutPutModel> GetUserById(int userId)
+        public async Task<UserFullInfoOutPutModel> GetUserByIdAsync(int userId)
         {
-            var dto = await _userService.GetUserById(userId);
+            var dto = await _userService.GetUserByIdAsync(userId);
             var outPut = _mapper.Map<UserFullInfoOutPutModel>(dto);
 
             return outPut;
@@ -65,9 +65,9 @@ namespace DevEdu.API.Controllers
         [Description("Return list users")]
         [ProducesResponseType(typeof(List<UserInfoOutPutModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        public async Task<List<UserInfoOutPutModel>> GetAllUsers()
+        public async Task<List<UserInfoOutPutModel>> GetAllUsersAsync()
         {
-            var listDto = await _userService.GetAllUsers();
+            var listDto = await _userService.GetAllUsersAsync();
             var list = _mapper.Map<List<UserInfoOutPutModel>>(listDto);
 
             return list;
@@ -82,7 +82,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteUserAsync(int userId)
         {
-            await _userService.DeleteUser(userId);
+            await _userService.DeleteUserAsync(userId);
             return NoContent();
         }
 
@@ -95,7 +95,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult> AddRoleToUserAsync(int userId, Role role)
         {
-            await _userService.AddUserRole(userId, (int)role);
+            await _userService.AddUserRoleAsync(userId, (int)role);
             return NoContent();
         }
 
@@ -108,7 +108,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteRoleFromUserAsync(int userId, Role role)
         {
-            await _userService.DeleteUserRole(userId, (int)role);
+            await _userService.DeleteUserRoleAsync(userId, (int)role);
             return NoContent();
         }
     }

@@ -61,7 +61,7 @@ namespace DevEdu.Business.Tests
             //Given
             var userId = 2;
             var paymentsInDB = PaymentData.GetPeyments();
-            _userRepositoryMock.Setup(x => x.GetUserById(userId)).Returns(new UserDto() { Id = userId });
+            _userRepositoryMock.Setup(x => x.GetUserByIdAsync(userId)).Returns(new UserDto() { Id = userId });
             _paymentRepoMock.Setup(x => x.GetPaymentsByUser(userId)).Returns(paymentsInDB);
             //When
             _sut.GetPaymentsByUserId(userId);
@@ -74,7 +74,7 @@ namespace DevEdu.Business.Tests
             //Given
             var userId = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "user", userId);
-            _userRepositoryMock.Setup(x => x.GetUserById(userId));
+            _userRepositoryMock.Setup(x => x.GetUserByIdAsync(userId));
             //When
             var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetPaymentsByUserId(userId));
             //Then
@@ -87,7 +87,7 @@ namespace DevEdu.Business.Tests
             //Given
             var userId = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundByUserId, "payments", userId);
-            _userRepositoryMock.Setup(x => x.GetUserById(userId)).Returns(new UserDto() { Id = userId });
+            _userRepositoryMock.Setup(x => x.GetUserByIdAsync(userId)).Returns(new UserDto() { Id = userId });
             _paymentRepoMock.Setup(x => x.GetPaymentsByUser(userId));
             //When
             var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetPaymentsByUserId(userId));

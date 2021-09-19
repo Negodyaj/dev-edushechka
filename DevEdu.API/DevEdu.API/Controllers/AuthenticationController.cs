@@ -35,8 +35,8 @@ namespace DevEdu.API.Controllers
         public async Task<ActionResult<UserFullInfoOutPutModel>> RegisterAsync([FromBody] UserInsertInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);
-            dto.Password = await _authService.HashPassword(dto.Password);
-            var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUser(dto));
+            dto.Password = await _authService.HashPasswordAsync(dto.Password);
+            var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUserAsync(dto));
 
             return Created(new Uri($"api/User/{addedUser.Id}", UriKind.Relative), addedUser);
         }
@@ -48,7 +48,7 @@ namespace DevEdu.API.Controllers
         public async Task<string> SignInAsync(UserSignInputModel model)
         {
             var dto = _mapper.Map<UserDto>(model);
-            var token = await _authService.SignIn(dto);
+            var token = await _authService.SignInAsync(dto);
 
             return token;
         }
