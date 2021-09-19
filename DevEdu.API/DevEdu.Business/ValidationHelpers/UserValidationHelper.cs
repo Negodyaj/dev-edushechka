@@ -5,6 +5,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -17,46 +18,55 @@ namespace DevEdu.Business.ValidationHelpers
             _userRepository = userRepository;
         }
 
-        public UserDto GetUserByIdAndThrowIfNotFound(int userId)
+        public async Task<UserDto> GetUserByIdAndThrowIfNotFound(int userId)
         {
-            var user = _userRepository.GetUserById(userId);
+            var user = await _userRepository.GetUserById(userId);
+
             if (user == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId));
 
             return user;
         }
 
-        public void CheckUserBelongToGroup(int groupId, int userId, Role role)
+        public async Task CheckUserBelongToGroup(int groupId, int userId, Role role)
         {
-            var usersInGroup = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
-            if (usersInGroup == default || usersInGroup.FirstOrDefault(u => u.Id == userId) == default)
+            var usersInGroup = await _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
+
+            if (usersInGroup == default ||
+                usersInGroup.FirstOrDefault(u => u.Id == userId) == default)
             {
-                throw new ValidationException(nameof(StudentRatingDto.User), string.Format(ServiceMessages.UserWithRoleDoesntBelongToGroup, role.ToString(), userId, groupId));
+                throw new ValidationException(nameof(StudentRatingDto.User),
+                    string.Format(ServiceMessages.UserWithRoleDoesntBelongToGroup, role.ToString(), userId, groupId));
             }
         }
 
-        public void CheckUserBelongToGroup(int groupId, int userId, List<Role> roles)
+        public async Task CheckUserBelongToGroup(int groupId, int userId, List<Role> roles)
         {
             var checkResult = false;
+
             foreach (var role in roles)
             {
-                var usersInGroup = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
+                var usersInGroup = await _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
 
-                if (usersInGroup != default && usersInGroup.FirstOrDefault(u => u.Id == userId) != default)
+                if (usersInGroup != default &&
+                    usersInGroup.FirstOrDefault(u => u.Id == userId) != default)
                 {
                     checkResult = true;
                 }
             }
+
             if (!checkResult)
             {
                 throw new ValidationException(nameof(userId), string.Format(ServiceMessages.UserDoesntBelongToGroup, userId, groupId));
             }
         }
 
-        public void CheckAuthorizationUserToGroup(int groupId, int userId, Role role)
+        public async Task CheckAuthorizationUserToGroup(int groupId, int userId, Role role)
         {
-            var usersInGroup = _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
-            if (usersInGroup == default || usersInGroup.FirstOrDefault(u => u.Id == userId) == default)
+            var usersInGroup = await _userRepository.GetUsersByGroupIdAndRole(groupId, (int)role);
+
+            if (usersInGroup == default ||
+                usersInGroup.FirstOrDefault(u => u.Id == userId) == default)
             {
                 throw new AuthorizationException(string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, userId, groupId, role.ToString()));
             }

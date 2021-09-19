@@ -71,7 +71,7 @@ namespace DevEdu.Business.Services
             if (!userIdentity.IsAdmin())
             {
                 var currentRole = userIdentity.IsTeacher() ? Role.Teacher : Role.Student;
-                _userValidationHelper.CheckAuthorizationUserToGroup(groupId, userIdentity.UserId, currentRole);
+                await _userValidationHelper.CheckAuthorizationUserToGroup(groupId, userIdentity.UserId, currentRole);
             }
             var result = await _lessonRepository.SelectAllLessonsByGroupIdAsync(groupId);
             return result;

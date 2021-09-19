@@ -132,8 +132,7 @@ namespace DevEdu.Business.Services
         public async Task AddUserToGroup(int groupId, int userId, Role roleId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            _userHelper.GetUserByIdAndThrowIfNotFound(userId);
-
+            await _userHelper.GetUserByIdAndThrowIfNotFound(userId);
 
             await _groupRepository.AddUserToGroup(groupId, userId, (int)roleId);
         }
@@ -141,7 +140,7 @@ namespace DevEdu.Business.Services
         public async Task DeleteUserFromGroup(int userId, int groupId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            _userHelper.GetUserByIdAndThrowIfNotFound(userId);
+            await _userHelper.GetUserByIdAndThrowIfNotFound(userId);
 
             await _groupRepository.DeleteUserFromGroup(userId, groupId);
         }

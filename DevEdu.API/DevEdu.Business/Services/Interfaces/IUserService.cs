@@ -1,17 +1,18 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
     public interface IUserService
     {
-        UserDto AddUser(UserDto dto);
-        void AddUserRole(int userId, int roleId);
-        void DeleteUser(int id);
-        void DeleteUserRole(int userId, int roleId);
-        UserDto GetUserById(int id);
-        public UserDto GetUserByEmail(string email);
-        List<UserDto> GetAllUsers();
-        UserDto UpdateUser(UserDto dto);
+       Task<UserDto> AddUser(UserDto dto);
+        Task AddUserRole(int userId, int roleId);
+        Task DeleteUser(int id);
+        Task DeleteUserRole(int userId, int roleId);
+        Task<UserDto> GetUserById(int id);
+        Task<UserDto> GetUserByEmail(string email);
+        Task<List<UserDto>> GetAllUsers();
+        Task<UserDto> UpdateUser(UserDto dto);
     }
 }
