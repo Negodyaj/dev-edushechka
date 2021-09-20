@@ -162,7 +162,7 @@ namespace DevEdu.Business.Tests
 
             _topicRepoMock.Setup(x => x.GetTopicAsync(expectedTopicId)).ReturnsAsync(TopicData.GetTopicDtoWithTags);
 
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+            Assert.ThrowsAsync(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "tag", expectedTagId)),
             async () => await _sut.AddTagToTopicAsync(expectedTopicId, expectedTagId));
 

@@ -40,7 +40,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student)]
-        public void AddStudentHomework_ExistingHomeworkIdAndStudentIdAndStudentHomeworkInputModelPassed_StudentHomeworkWasAdded(Enum role)
+        public async Task AddStudentHomework_ExistingHomeworkIdAndStudentIdAndStudentHomeworkInputModelPassed_StudentHomeworkWasAddedAsync(Enum role)
         {
             // Given
             var expectedDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
@@ -56,7 +56,7 @@ namespace DevEdu.Business.Tests
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(expectedDto.Id)).ReturnsAsync(expectedDto);
 
             // When
-            var actualDto = _sut.AddStudentHomeworkAsync(homeworkDto.Id, expectedDto, userInfo);
+            var actualDto = await _sut.AddStudentHomeworkAsync(homeworkDto.Id, expectedDto, userInfo);
 
             // Then
             Assert.AreEqual(expectedDto, actualDto);
@@ -68,7 +68,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetAllStudentHomework_ExistingTaskIdPassed_StudentHomeworkGotList()
+        public async Task GetAllStudentHomework_ExistingTaskIdPassed_StudentHomeworkGotListAsync()
         {
             // Given
             var studentAnswersList = StudentAnswerOnTaskData.GetListStudentAnswersOnTaskDto();
@@ -79,7 +79,7 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             // When
-            var dtoList = _sut.GetAllStudentHomeworkOnTaskAsync(taskId);
+            var dtoList = await _sut.GetAllStudentHomeworkOnTaskAsync(taskId);
 
             // Then
             Assert.AreEqual(studentAnswersList, dtoList);
@@ -89,7 +89,7 @@ namespace DevEdu.Business.Tests
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public void GetStudentHomeworkById_ExistingStudentHomeworkIdPassed_StudentAnswerGot(Enum role)
+        public async Task GetStudentHomeworkById_ExistingStudentHomeworkIdPassed_StudentAnswerGotAsync(Enum role)
         {
             // Given
             var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
@@ -101,7 +101,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
 
             // When
-            var dto = _sut.GetStudentHomeworkByIdAsync(dtoForTaskIdAndUserId.Id, userInfo);
+            var dto = await _sut.GetStudentHomeworkByIdAsync(dtoForTaskIdAndUserId.Id, userInfo);
 
             // Then
             Assert.AreEqual(studentAnswerDto, dto);
@@ -111,7 +111,7 @@ namespace DevEdu.Business.Tests
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public void ChangeStatusOfStudentHomework_ExistingStudentHomeworkIdPassed_StatusChangeded(Enum role)
+        public async Task ChangeStatusOfStudentHomework_ExistingStudentHomeworkIdPassed_StatusChangededAsync(Enum role)
         {
             // Given
             var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
@@ -126,7 +126,7 @@ namespace DevEdu.Business.Tests
             _studentHomeworkRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, statusId, completedDate)).ReturnsAsync(statusId);
 
             // When
-            var actualStatusId = _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, statusId, userInfo);
+            var actualStatusId = await _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, statusId, userInfo);
 
             // Then
             Assert.AreEqual(statusId, actualStatusId);
@@ -155,7 +155,7 @@ namespace DevEdu.Business.Tests
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(acceptedStatusDto);
 
             // When
-            var actualStatusId = _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, acceptedStatusId, userInfo);
+            var actualStatusId = await _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, acceptedStatusId, userInfo);
             var dto = await _sut.GetStudentHomeworkByIdAsync(homeworkId, userInfo);
 
             // Then
@@ -166,7 +166,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student)]
-        public void UpdateStudentHomework_ExistingTaskIdStudentIdAndTaskAnswerDtoPassed_ReturnStudentHomeworkDto(Enum role)
+        public async Task UpdateStudentHomework_ExistingTaskIdStudentIdAndTaskAnswerDtoPassed_ReturnStudentHomeworkDtoAsync(Enum role)
         {
             // Given
             var changedStudentAnswerDto = StudentAnswerOnTaskData.GetChangedStudentAnswerOnTaskDto();
@@ -178,7 +178,7 @@ namespace DevEdu.Business.Tests
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(changedStudentAnswerDto);
 
             // When
-            var actualDto = _sut.UpdateStudentHomeworkAsync(homeworkId, onlyAnswer, userInfo);
+            var actualDto = await _sut.UpdateStudentHomeworkAsync(homeworkId, onlyAnswer, userInfo);
 
             // Then
             Assert.AreEqual(changedStudentAnswerDto, actualDto);
@@ -190,7 +190,7 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
         [TestCase(Role.Methodist)]
-        public void GetAllStudentHomeworkByStudentId_ExistingUserIdPassed_ReturnListOfStudentAnswerOnTaskDto(Enum role)
+        public async Task GetAllStudentHomeworkByStudentId_ExistingUserIdPassed_ReturnListOfStudentAnswerOnTaskDtoAsync(Enum role)
         {
             // Given
             var studentAnswersListDto = StudentAnswerOnTaskData.GetAllAnswerOfStudent();
@@ -202,7 +202,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
 
             // When
-            var dto = _sut.GetAllStudentHomeworkByStudentIdAsync(userId, userInfo);
+            var dto = await _sut.GetAllStudentHomeworkByStudentIdAsync(userId, userInfo);
 
             // Then
             Assert.AreEqual(studentAnswersListDto, dto);
@@ -222,7 +222,7 @@ namespace DevEdu.Business.Tests
             _studentHomeworkRepoMock.Setup(x => x.DeleteStudentHomeworkAsync(homeworkId));
 
             // When
-           await _sut.DeleteStudentHomeworkAsync(homeworkId, userInfo);
+            await _sut.DeleteStudentHomeworkAsync(homeworkId, userInfo);
 
             // Than
             _studentHomeworkRepoMock.Verify(x => x.DeleteStudentHomeworkAsync(homeworkId), Times.Once);

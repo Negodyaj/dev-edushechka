@@ -44,7 +44,7 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void AddCommentToLesson_CommentDtoAndExistingLessonInPassed_AddCommentAndReturned(Enum role)
+        public async Task AddCommentToLesson_CommentDtoAndExistingLessonInPassed_AddCommentAndReturnedAsync(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
@@ -61,7 +61,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(CommentData.GetGroupsDto());
 
             //When
-            var actualComment = _sut.AddCommentToLessonAsync(lessonId, commentDto, userInfo);
+            var actualComment = await _sut.AddCommentToLessonAsync(lessonId, commentDto, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, actualComment);
@@ -75,7 +75,7 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void AddCommentToStudentAnswer_CommentDtoAndExistingStudentAnswerIdPassed_CommentReturned(Enum role)
+        public async Task AddCommentToStudentAnswer_CommentDtoAndExistingStudentAnswerIdPassed_CommentReturnedAsync(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
@@ -93,7 +93,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(CommentData.GetGroupsDto());
 
             //When
-            var actualComment = _sut.AddCommentToStudentAnswerAsync(taskStudentId, commentDto, userInfo);
+            var actualComment = await _sut.AddCommentToStudentAnswerAsync(taskStudentId, commentDto, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, actualComment);
@@ -106,7 +106,7 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void GetComment_ExistingCommentIdPassed_CommentReturned(Enum role)
+        public async Task GetComment_ExistingCommentIdPassed_CommentReturnedAsync(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
@@ -117,7 +117,7 @@ namespace DevEdu.Business.Tests
             _commentRepoMock.Setup(x => x.GetCommentAsync(commentId)).ReturnsAsync(commentDto);
 
             //When
-            var dto = _sut.GetCommentAsync(commentId, userInfo);
+            var dto = await _sut.GetCommentAsync(commentId, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, dto);
@@ -127,7 +127,7 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void UpdateComment_CommentDtoAndExistingCommentIdPassed_ReturnUpdatedCommentDto(Enum role)
+        public async Task UpdateComment_CommentDtoAndExistingCommentIdPassed_ReturnUpdatedCommentDtoAsync(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
@@ -139,7 +139,7 @@ namespace DevEdu.Business.Tests
             _commentRepoMock.Setup(x => x.GetCommentAsync(commentId)).ReturnsAsync(commentDto);
 
             //When
-            var dto = _sut.UpdateCommentAsync(commentId, commentDto, userInfo);
+            var dto = await _sut.UpdateCommentAsync(commentId, commentDto, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, dto);
@@ -162,7 +162,7 @@ namespace DevEdu.Business.Tests
             _commentRepoMock.Setup(x => x.DeleteCommentAsync(commentId));
 
             //When
-          await  _sut.DeleteCommentAsync(commentId, userInfo);
+            await _sut.DeleteCommentAsync(commentId, userInfo);
 
             //Than
             _commentRepoMock.Verify(x => x.GetCommentAsync(commentId), Times.Once);

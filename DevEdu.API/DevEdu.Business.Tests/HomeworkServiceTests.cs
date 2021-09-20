@@ -40,7 +40,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddHomework_HomeworkDtoAndExistingGroupIdAndTaskIdPassed_HomeworkCreated()
+        public async Task AddHomework_HomeworkDtoAndExistingGroupIdAndTaskIdPassed_HomeworkCreatedAsync()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithoutGroupAndTask();
@@ -57,7 +57,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.GetHomeworkAsync(expectedHomeworkId)).ReturnsAsync(homeworkDto);
 
             //When
-            var actualHomeworkDto = _sut.AddHomeworkAsync(groupId, taskId, homeworkDto, userInfo);
+            var actualHomeworkDto = await _sut.AddHomeworkAsync(groupId, taskId, homeworkDto, userInfo);
 
             //Than
             Assert.AreEqual(homeworkDto, actualHomeworkDto);
@@ -70,7 +70,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkById_ExistingHomeworkIdPassed_ReturnedHomeworkDto()
+        public async Task GetHomeworkById_ExistingHomeworkIdPassed_ReturnedHomeworkDtoAsync()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -81,7 +81,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
 
             //When
-            var dto = _sut.GetHomeworkAsync(homeworkId, userInfo);
+            var dto = await _sut.GetHomeworkAsync(homeworkId, userInfo);
 
             //Than
             Assert.AreEqual(homeworkDto, dto);
@@ -90,7 +90,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateHomework_HomeworkDtoAndExistingHomeworkIdPassed_ReturnUpdatedHomeworkDto()
+        public async Task UpdateHomework_HomeworkDtoAndExistingHomeworkIdPassed_ReturnUpdatedHomeworkDtoAsync()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -103,7 +103,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.UpdateHomeworkAsync(homeworkDto));
 
             //When
-            var actualHomeworkDto = _sut.UpdateHomeworkAsync(homeworkId, homeworkDto, userInfo);
+            var actualHomeworkDto = await _sut.UpdateHomeworkAsync(homeworkId, homeworkDto, userInfo);
 
             //Then
             Assert.AreEqual(homeworkDto, actualHomeworkDto);
@@ -136,7 +136,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkByGroupId_ExistingGroupIdPassed_ReturnedListOfHomeworkDtoByGroupId()
+        public async Task GetHomeworkByGroupId_ExistingGroupIdPassed_ReturnedListOfHomeworkDtoByGroupIdAsync()
         {
             //Given
             var homeworkList = HomeworkData.GetListOfHomeworkDtoWithTask();
@@ -148,7 +148,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.GetHomeworkByGroupIdAsync(groupId)).ReturnsAsync(homeworkList);
 
             //When
-            var dto = _sut.GetHomeworkByGroupIdAsync(groupId, userInfo);
+            var dto = await _sut.GetHomeworkByGroupIdAsync(groupId, userInfo);
 
             //Than
             Assert.AreEqual(homeworkList, dto);
@@ -158,7 +158,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkByTaskId_ExistingTaskIdPassed_ReturnedListOfHomeworkDtoByTaskId()
+        public async Task GetHomeworkByTaskId_ExistingTaskIdPassed_ReturnedListOfHomeworkDtoByTaskIdAsync()
         {
             //Given
             var homeworkList = HomeworkData.GetListOfHomeworkDtoWithGroup();
@@ -168,7 +168,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.GetHomeworkByTaskIdAsync(taskId)).ReturnsAsync(homeworkList);
 
             //When
-            var dto = _sut.GetHomeworkByTaskIdAsync(taskId);
+            var dto = await _sut.GetHomeworkByTaskIdAsync(taskId);
 
             //Than
             Assert.AreEqual(homeworkList, dto);
@@ -356,7 +356,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetHomeworkByGroupId_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
+        public async Task GetHomeworkByGroupId_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrownAsync()
         {
             //Given
             var homeworkList = HomeworkData.GetListOfHomeworkDtoWithTask();
@@ -368,7 +368,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.GetHomeworkByGroupIdAsync(groupId)).ReturnsAsync(homeworkList);
 
             //When
-            var dto = _sut.GetHomeworkByGroupIdAsync(groupId, userInfo);
+            var dto = await _sut.GetHomeworkByGroupIdAsync(groupId, userInfo);
 
             //Than
             Assert.AreEqual(homeworkList, dto);

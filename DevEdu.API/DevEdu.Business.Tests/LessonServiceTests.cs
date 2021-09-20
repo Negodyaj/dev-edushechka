@@ -207,7 +207,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddLesson_UserDtoAndSimpleDtoAndListOfTopicsPassed_LessonAdded()
+        public async Task AddLesson_UserDtoAndSimpleDtoAndListOfTopicsPassed_LessonAddedAsync()
         {
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
@@ -225,7 +225,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(expectedLesson);
 
             //When
-            var actualLesson = _sut.AddLessonAsync(userIdentity, expectedLesson, topicIds);
+            var actualLesson = await _sut.AddLessonAsync(userIdentity, expectedLesson, topicIds);
 
             //Then
             Assert.AreEqual(expectedLesson, actualLesson);
@@ -281,7 +281,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void SelectAllLessonsByGroupId_UserDtoAndExistingGroupIdPassed_LessonsReturned()
+        public async Task SelectAllLessonsByGroupId_UserDtoAndExistingGroupIdPassed_LessonsReturnedAsync()
         {
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
@@ -296,7 +296,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectAllLessonsByGroupIdAsync(group.Id)).ReturnsAsync(expected);
 
             //When
-            var actual = _sut.SelectAllLessonsByGroupIdAsync(userIdentity, group.Id);
+            var actual = await _sut.SelectAllLessonsByGroupIdAsync(userIdentity, group.Id);
 
             //Then
             Assert.AreEqual(expected, actual);
@@ -336,6 +336,7 @@ namespace DevEdu.Business.Tests
 
             _groupRepository.Setup(x => x.GetGroupAsync(group.Id)).ReturnsAsync(group);
             _userRepository.Setup(x => x.GetUsersByGroupIdAndRoleAsync(group.Id, It.IsAny<int>())).ReturnsAsync(lessons);
+
             //When
             var ex = Assert.ThrowsAsync<AuthorizationException>(() => _sut.SelectAllLessonsByGroupIdAsync(userIdentity, group.Id));
 
@@ -347,7 +348,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void SelectAllLessonsByTeacherId_ExistingTeacherIdPassed_LessonsReturned()
+        public async Task SelectAllLessonsByTeacherId_ExistingTeacherIdPassed_LessonsReturnedAsync()
         {
             //Given
             var expected = LessonData.GetLessons();
@@ -357,7 +358,7 @@ namespace DevEdu.Business.Tests
             _userRepository.Setup(x => x.GetUserByIdAsync(teacher.Id)).ReturnsAsync(teacher);
 
             //When
-            var actual = _sut.SelectAllLessonsByTeacherIdAsync(teacher.Id);
+            var actual = await _sut.SelectAllLessonsByTeacherIdAsync(teacher.Id);
 
             //Then
             Assert.AreEqual(expected, actual);
@@ -384,7 +385,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void SelectLessonWithCommentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsReturned()
+        public async Task SelectLessonWithCommentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsReturnedAsync()
         {
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
@@ -399,7 +400,7 @@ namespace DevEdu.Business.Tests
             _commentRepository.Setup(x => x.SelectCommentsFromLessonByLessonIdAsync(lessonId)).ReturnsAsync(comments);
 
             //When
-            var actual = _sut.SelectLessonWithCommentsByIdAsync(userIdentity, lessonId);
+            var actual = await _sut.SelectLessonWithCommentsByIdAsync(userIdentity, lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
@@ -454,7 +455,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void SelectLessonWithCommentsAndStudentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsAndAttendancesReturned()
+        public async Task SelectLessonWithCommentsAndStudentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsAndAttendancesReturnedAsync()
         {
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
@@ -473,7 +474,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectStudentsLessonByLessonIdAsync(lessonId)).ReturnsAsync(students);
 
             //When
-            var actual = _sut.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, lessonId);
+            var actual = await _sut.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, lessonId);
 
             //Then
             Assert.AreEqual(expectedLesson, actual);
@@ -528,7 +529,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateLesson_UserDtoAndSimpleDtoWithoutTeacherPassed_UpdatedLessonReturned()
+        public async Task UpdateLesson_UserDtoAndSimpleDtoWithoutTeacherPassed_UpdatedLessonReturnedAsync()
         {
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
@@ -540,7 +541,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(expected);
 
             //When
-            var actual = _sut.UpdateLessonAsync(userIdentity, updatedLesson, lessonId);
+            var actual = await _sut.UpdateLessonAsync(userIdentity, updatedLesson, lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
@@ -605,7 +606,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(lesson);
 
             //When
-          await  _sut.DeleteLessonAsync(userIdentity, lessonId);
+            await _sut.DeleteLessonAsync(userIdentity, lessonId);
 
             //Then
             _lessonRepository.Verify(x => x.SelectLessonByIdAsync(lessonId), Times.Once);
@@ -655,7 +656,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Verify(x => x.UpdateLessonAsync(lesson), Times.Never);
         }
         [Test]
-        public void AddStudentToLesson_IntLessonIdAndUserId_AddingStudentToLesson()
+        public async Task AddStudentToLesson_IntLessonIdAndUserId_AddingStudentToLessonAsync()
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
@@ -669,9 +670,9 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectAttendanceByLessonAndUserIdAsync(lessonId, userId)).ReturnsAsync(studentLessonDto);
             _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).ReturnsAsync(LessonData.GetGroupsDto());
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
-          
+
             //When
-            var dto = _sut.AddStudentToLessonAsync(lessonId, userId, userIdentityInfo);
+            var dto = await _sut.AddStudentToLessonAsync(lessonId, userId, userIdentityInfo);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
@@ -700,7 +701,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
-           await _sut.DeleteStudentFromLessonAsync(lessonId, userId, userIdentityInfo);
+            await _sut.DeleteStudentFromLessonAsync(lessonId, userId, userIdentityInfo);
 
             //Than
             _lessonRepository.Verify(x => x.DeleteStudentFromLessonAsync(lessonId, userId), Times.Once);
@@ -712,7 +713,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateFeedback_IntLessonIdUserIdAndStuentLessonDto_ReturnUpdatedStudentLessontDto()
+        public async Task UpdateFeedback_IntLessonIdUserIdAndStuentLessonDto_ReturnUpdatedStudentLessontDtoAsync()
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
@@ -728,7 +729,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
-            var dto = _sut.UpdateStudentFeedbackForLessonAsync(lessonId, userId, studentLessonDto, userIdentityInfo);
+            var dto = await _sut.UpdateStudentFeedbackForLessonAsync(lessonId, userId, studentLessonDto, userIdentityInfo);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
@@ -741,7 +742,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateAbsenceReason_IntLessonIdUserIdAndStuentLessonDto_ReturnUpdatedStudentLessontDto()
+        public async Task UpdateAbsenceReason_IntLessonIdUserIdAndStuentLessonDto_ReturnUpdatedStudentLessontDtoAsync()
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
@@ -757,7 +758,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
-            var dto = _sut.UpdateStudentAbsenceReasonOnLessonAsync(lessonId, userId, studentLessonDto, userIdentityInfo);
+            var dto = await _sut.UpdateStudentAbsenceReasonOnLessonAsync(lessonId, userId, studentLessonDto, userIdentityInfo);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
@@ -770,7 +771,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateAttendance_IntLessonIdUserIdAndStuentLessonDto_ReturnUpdatedStudentLessontDto()
+        public async Task UpdateAttendance_IntLessonIdUserIdAndStuentLessonDto_ReturnUpdatedStudentLessontDtoAsync()
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
@@ -786,7 +787,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
-            var dto = _sut.UpdateStudentAttendanceOnLessonAsync(lessonId, userId, studentLessonDto, userIdentityInfo);
+            var dto = await _sut.UpdateStudentAttendanceOnLessonAsync(lessonId, userId, studentLessonDto, userIdentityInfo);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
@@ -799,7 +800,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetAllFeedback_IntLessonId_ReturnedListStuentLessenDto()
+        public async Task GetAllFeedback_IntLessonId_ReturnedListStuentLessenDtoAsync()
         {
             //Given
             var studentLessonDto = LessonData.GetStudentLessonDto();
@@ -814,7 +815,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
-            var listOfDto = _sut.SelectAllFeedbackByLessonIdAsync(lessonId, userIdentityInfo);
+            var listOfDto = await _sut.SelectAllFeedbackByLessonIdAsync(lessonId, userIdentityInfo);
 
             //Than
             Assert.AreEqual(listStudentLessonDto, listOfDto);

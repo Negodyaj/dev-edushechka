@@ -6,6 +6,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -32,7 +33,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddStudentRating_AuthorUserIsTeacher_StudentRatingCreated()
+        public async Task AddStudentRating_AuthorUserIsTeacher_StudentRatingCreatedAsync()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
@@ -53,7 +54,7 @@ namespace DevEdu.Business.Tests
             _ratingRepoMock.Setup(x => x.SelectStudentRatingByIdAsync(expectedStudentRatingId)).ReturnsAsync(expectedStudentRatingDto);
 
             //When
-            var actualStudentRatingDto = _sut.AddStudentRatingAsync(expectedStudentRatingDto, authorUserInfo);
+            var actualStudentRatingDto = await _sut.AddStudentRatingAsync(expectedStudentRatingDto, authorUserInfo);
 
             //Than
             Assert.AreEqual(expectedStudentRatingDto, actualStudentRatingDto);
@@ -66,7 +67,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddStudentRating_AuthorUserIsAdmin_StudentRatingCreated()
+        public async Task AddStudentRating_AuthorUserIsAdmin_StudentRatingCreatedAsync()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
@@ -87,7 +88,7 @@ namespace DevEdu.Business.Tests
             _ratingRepoMock.Setup(x => x.SelectStudentRatingByIdAsync(expectedStudentRatingId)).ReturnsAsync(expectedStudentRatingDto);
 
             //When
-            var actualStudentRatingDto = _sut.AddStudentRatingAsync(expectedStudentRatingDto, authorUserInfo);
+            var actualStudentRatingDto = await _sut.AddStudentRatingAsync(expectedStudentRatingDto, authorUserInfo);
 
             //Than
             Assert.AreEqual(expectedStudentRatingDto, actualStudentRatingDto);
@@ -233,7 +234,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async System.Threading.Tasks.Task DeleteStudentRating_AuthorUserIsAdmin_StudentRatingDeletedAsync()
+        public async Task DeleteStudentRating_AuthorUserIsAdmin_StudentRatingDeletedAsync()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
@@ -246,7 +247,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).ReturnsAsync(usersInGroup);
 
             //When
-          await  _sut.DeleteStudentRatingAsync(studentRatingId, authorUserInfo);
+            await _sut.DeleteStudentRatingAsync(studentRatingId, authorUserInfo);
 
             //Than
             _ratingRepoMock.Verify(x => x.SelectStudentRatingByIdAsync(studentRatingId), Times.Once);
@@ -296,7 +297,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetAllStudentRatings_NoEntries_ListOfStudentRatingDtoReturned()
+        public async Task GetAllStudentRatings_NoEntries_ListOfStudentRatingDtoReturnedAsync()
         {
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
@@ -304,7 +305,7 @@ namespace DevEdu.Business.Tests
             _ratingRepoMock.Setup(x => x.SelectAllStudentRatingsAsync()).ReturnsAsync(expectedStudentRatingDtos);
 
             //When
-            var actualStudentRatingDtos = _sut.GetAllStudentRatingsAsync();
+            var actualStudentRatingDtos = await _sut.GetAllStudentRatingsAsync();
 
             //Than
             Assert.AreEqual(expectedStudentRatingDtos, actualStudentRatingDtos);
@@ -312,7 +313,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetStudentRatingByUserId_UserId_ListOfStudentRatingDtoReturned()
+        public async Task GetStudentRatingByUserId_UserId_ListOfStudentRatingDtoReturnedAsync()
         {
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
@@ -323,7 +324,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserByIdAsync(studentId)).ReturnsAsync(student);
 
             //When
-            var actualStudentRatingDtos = _sut.GetStudentRatingByUserIdAsync(studentId);
+            var actualStudentRatingDtos = await _sut.GetStudentRatingByUserIdAsync(studentId);
 
             //Than
             Assert.AreEqual(expectedStudentRatingDtos, actualStudentRatingDtos);
@@ -350,7 +351,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetStudentRatingByGroupId_AuthorUserIsManager_ListOfStudentRatingDtoReturned()
+        public async Task GetStudentRatingByGroupId_AuthorUserIsManager_ListOfStudentRatingDtoReturnedAsync()
         {
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
@@ -362,7 +363,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(group);
 
             //When
-            var actualStudentRatingDtos = _sut.GetStudentRatingByGroupIdAsync(groupId, authorUserInfo);
+            var actualStudentRatingDtos = await _sut.GetStudentRatingByGroupIdAsync(groupId, authorUserInfo);
 
             //Than
             Assert.AreEqual(expectedStudentRatingDtos, actualStudentRatingDtos);
@@ -372,7 +373,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetStudentRatingByGroupId_AuthorUserIsTeacher_ListOfStudentRatingDtoReturned()
+        public async Task GetStudentRatingByGroupId_AuthorUserIsTeacher_ListOfStudentRatingDtoReturnedAsync()
         {
             //Given
             var expectedStudentRatingDtos = RatingData.GetListOfStudentRatingDto();
@@ -386,7 +387,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(authorUserInfo.UserId, (int)Role.Teacher)).ReturnsAsync(usersInGroup);
 
             //When
-            var actualStudentRatingDtos = _sut.GetStudentRatingByGroupIdAsync(groupId, authorUserInfo);
+            var actualStudentRatingDtos = await _sut.GetStudentRatingByGroupIdAsync(groupId, authorUserInfo);
 
             //Than
             Assert.AreEqual(expectedStudentRatingDtos, actualStudentRatingDtos);
@@ -436,7 +437,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateStudentRating_AuthorUserIsTeacher_StudentRatingDtoReturned()
+        public async Task UpdateStudentRating_AuthorUserIsTeacher_StudentRatingDtoReturnedAsync()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
@@ -452,7 +453,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).ReturnsAsync(usersInGroup);
 
             //When
-            var actualStudentRatingDto = _sut.UpdateStudentRatingAsync(studentRatingId, value, periodNumber, authorUserInfo);
+            var actualStudentRatingDto = await _sut.UpdateStudentRatingAsync(studentRatingId, value, periodNumber, authorUserInfo);
 
             //Than
             Assert.AreEqual(expectedStudentRatingDto, actualStudentRatingDto);
@@ -463,7 +464,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateStudentRating_AuthorUserIsAdmin_StudentRatingDtoReturned()
+        public async Task UpdateStudentRating_AuthorUserIsAdmin_StudentRatingDtoReturnedAsync()
         {
             //Given
             var expectedStudentRatingDto = RatingData.GetOutputStudentRatingDto();
@@ -479,7 +480,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Teacher)).ReturnsAsync(usersInGroup);
 
             //When
-            var actualStudentRatingDto = _sut.UpdateStudentRatingAsync(studentRatingId, value, periodNumber, authorUserInfo);
+            var actualStudentRatingDto = await _sut.UpdateStudentRatingAsync(studentRatingId, value, periodNumber, authorUserInfo);
 
             //Than
             Assert.AreEqual(expectedStudentRatingDto, actualStudentRatingDto);
