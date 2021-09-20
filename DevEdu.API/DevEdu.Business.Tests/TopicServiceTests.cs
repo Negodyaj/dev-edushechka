@@ -6,6 +6,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -30,18 +31,18 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTopic_SimpleDtoWithoutTags_TopicCreated()
+        public async Task AddTopic_SimpleDtoWithoutTags_TopicCreatedAsync()
         {
             //Given
             var expectedTopicId = 77;
             var topicDto = new TopicDto { Name = "Topic1", Duration = 5 };
 
-            _topicRepoMock.Setup(x => x.AddTopicAsync(topicDto)).Returns(expectedTopicId);
+            _topicRepoMock.Setup(x => x.AddTopicAsync(topicDto)).ReturnsAsync(expectedTopicId);
             _topicRepoMock.Setup(x => x.AddTagToTopicAsync(It.IsAny<int>(), It.IsAny<int>()));
 
 
             //When
-            var actualTopicId = _sut.AddTopicAsync(topicDto);
+            var actualTopicId = await _sut.AddTopicAsync(topicDto);
 
             //Than
             Assert.AreEqual(expectedTopicId, actualTopicId);
@@ -50,20 +51,20 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTopic_DtoWithTags_TopicWithTagsCreated()
+        public async Task AddTopic_DtoWithTags_TopicWithTagsCreatedAsync()
         {
             //Given
             var expectedTopicId = 77;
             var topicDto = TopicData.GetTopicDtoWithTags();
 
-            _topicRepoMock.Setup(x => x.AddTopicAsync(topicDto)).Returns(expectedTopicId);
+            _topicRepoMock.Setup(x => x.AddTopicAsync(topicDto)).ReturnsAsync(expectedTopicId);
             _topicRepoMock.Setup(x => x.AddTagToTopicAsync(expectedTopicId, It.IsAny<int>()));
-            _topicRepoMock.Setup(x => x.GetTopicAsync(expectedTopicId)).Returns(topicDto);
-            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(It.IsAny<int>())).Returns(topicDto.Tags[0]);
+            _topicRepoMock.Setup(x => x.GetTopicAsync(expectedTopicId)).ReturnsAsync(topicDto);
+            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(It.IsAny<int>())).ReturnsAsync(topicDto.Tags[0]);
 
 
             //When
-            var actualTopicId = _sut.AddTopicAsync(topicDto);
+            var actualTopicId = await _sut.AddTopicAsync(topicDto);
 
             //Than
             Assert.AreEqual(expectedTopicId, actualTopicId);
@@ -72,33 +73,34 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void DeleteTopic_IntTopicId_DeleteTopic()
+        public async Task DeleteTopic_IntTopicId_DeleteTopicAsync()
         {
             //Given
             var topicDto = TopicData.GetTopicDtoWithoutTags();
             var expectedTopicId = 1;
 
             _topicRepoMock.Setup(x => x.DeleteTopicAsync(expectedTopicId));
-            _topicRepoMock.Setup(x => x.GetTopicAsync(expectedTopicId)).Returns(topicDto);
+            _topicRepoMock.Setup(x => x.GetTopicAsync(expectedTopicId)).ReturnsAsync(topicDto);
 
             //When
-            _sut.DeleteTopicAsync(expectedTopicId);
+            await _sut.DeleteTopicAsync(expectedTopicId);
 
             //Than
             _topicRepoMock.Verify(x => x.DeleteTopicAsync(expectedTopicId), Times.Once);
             _topicRepoMock.Verify(x => x.GetTopicAsync(expectedTopicId), Times.Once);
         }
+
         [Test]
-        public void GetTopic_IntTopicId_GetTopic()
+        public async Task GetTopic_IntTopicId_GetTopicAsync()
         {
             //Given
             var topicDto = TopicData.GetTopicDtoWithoutTags();
             var topicId = 1;
 
-            _topicRepoMock.Setup(x => x.GetTopicAsync(topicId)).Returns(topicDto);
+            _topicRepoMock.Setup(x => x.GetTopicAsync(topicId)).ReturnsAsync(topicDto);
 
             //When
-            var dto = _sut.GetTopicAsync(topicId);
+            var dto = await _sut.GetTopicAsync(topicId);
 
             //Than
             Assert.AreEqual(topicDto, dto);
@@ -106,14 +108,14 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetAllTopics_NoEntries_ReturnedAllTopics()
+        public async Task GetAllTopics_NoEntries_ReturnedAllTopicsAsync()
         {
             //Given
             var expectedList = TopicData.GetListTopicDto();
-            _topicRepoMock.Setup(x => x.GetAllTopicsAsync()).Returns(expectedList);
+            _topicRepoMock.Setup(x => x.GetAllTopicsAsync()).ReturnsAsync(expectedList);
 
             //When
-            var actualList = _sut.GetAllTopicsAsync();
+            var actualList = await _sut.GetAllTopicsAsync();
 
             //Then
             Assert.AreEqual(expectedList, actualList);
@@ -121,17 +123,17 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void UpdateTopic_TopicDto_ReturnUpdatedTopicDto()
+        public async Task UpdateTopic_TopicDto_ReturnUpdatedTopicDtoAsync()
         {
             //Given
             var topicDto = TopicData.GetTopicDtoWithoutTags();
             var topicId = 1;
 
             _topicRepoMock.Setup(x => x.UpdateTopicAsync(topicDto));
-            _topicRepoMock.Setup(x => x.GetTopicAsync(topicId)).Returns(topicDto);
+            _topicRepoMock.Setup(x => x.GetTopicAsync(topicId)).ReturnsAsync(topicDto);
 
             //When
-            var dto = _sut.UpdateTopicAsync(topicId, topicDto);
+            var dto = await _sut.UpdateTopicAsync(topicId, topicDto);
 
             //Than
             Assert.AreEqual(topicDto, dto);
@@ -145,9 +147,9 @@ namespace DevEdu.Business.Tests
             var expectedTopicId = 77;
             var expectedTagId = 55;
 
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+            Assert.ThrowsAsync(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", expectedTopicId)),
-                () => _sut.AddTagToTopicAsync(expectedTopicId, expectedTagId));
+                async () => await _sut.AddTagToTopicAsync(expectedTopicId, expectedTagId));
 
             _topicRepoMock.Verify(x => x.AddTagToTopicAsync(expectedTopicId, expectedTagId), Times.Never);
         }
@@ -158,29 +160,29 @@ namespace DevEdu.Business.Tests
             var expectedTopicId = 77;
             var expectedTagId = 55;
 
-            _topicRepoMock.Setup(x => x.GetTopicAsync(expectedTopicId)).Returns(TopicData.GetTopicDtoWithTags);
+            _topicRepoMock.Setup(x => x.GetTopicAsync(expectedTopicId)).ReturnsAsync(TopicData.GetTopicDtoWithTags);
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "tag", expectedTagId)),
-            () => _sut.AddTagToTopicAsync(expectedTopicId, expectedTagId));
+            async () => await _sut.AddTagToTopicAsync(expectedTopicId, expectedTagId));
 
             _topicRepoMock.Verify(x => x.AddTagToTopicAsync(expectedTopicId, expectedTagId), Times.Never);
         }
 
         [Test]
-        public void DeleteTagFromTopic_IntTopicIdAndTagId_DeleteTagFromTopic()
+        public async Task DeleteTagFromTopic_IntTopicIdAndTagId_DeleteTagFromTopicAsync()
         {
             //Given
             var topicId = 1;
             var tagId = 13;
             var expecectedAffectedRows = 1;
 
-            _topicRepoMock.Setup(x => x.GetTopicAsync(topicId)).Returns(TopicData.GetTopicDtoWithTags());
-            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).Returns(TagData.GetTagDto());
-            _topicRepoMock.Setup(x => x.DeleteTagFromTopicAsync(topicId, tagId)).Returns(expecectedAffectedRows);
+            _topicRepoMock.Setup(x => x.GetTopicAsync(topicId)).ReturnsAsync(TopicData.GetTopicDtoWithTags());
+            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).ReturnsAsync(TagData.GetTagDto());
+            _topicRepoMock.Setup(x => x.DeleteTagFromTopicAsync(topicId, tagId)).ReturnsAsync(expecectedAffectedRows);
 
             //When
-            var actualAffectedRows = _sut.DeleteTagFromTopicAsync(topicId, tagId);
+            var actualAffectedRows = await _sut.DeleteTagFromTopicAsync(topicId, tagId);
 
             //Than
             Assert.AreEqual(expecectedAffectedRows, actualAffectedRows);

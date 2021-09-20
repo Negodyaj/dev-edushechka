@@ -44,8 +44,8 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(Role.Admin);
             var ExpectedNotificationId = 1;
 
-            _notificationRepoMock.Setup(x => x.AddNotificationAsync(notificationDto)).Returns(ExpectedNotificationId);
-            _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).Returns(notificationDto);
+            _notificationRepoMock.Setup(x => x.AddNotificationAsync(notificationDto)).ReturnsAsync(ExpectedNotificationId);
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).ReturnsAsync(notificationDto);
 
             //When
             var actualNotificationtDto = _sut.AddNotificationAsync(notificationDto, userInfo);
@@ -63,8 +63,8 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(Role.Admin);
             var ExpectedNotificationId = 1;
 
-            _notificationRepoMock.Setup(x => x.AddNotificationAsync(notificationDto)).Returns(ExpectedNotificationId);
-            _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).Returns(notificationDto);
+            _notificationRepoMock.Setup(x => x.AddNotificationAsync(notificationDto)).ReturnsAsync(ExpectedNotificationId);
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).ReturnsAsync(notificationDto);
 
             //When
             var actualNotificationtDto = _sut.AddNotificationAsync(notificationDto, userInfo);
@@ -82,8 +82,8 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(Role.Admin);
             var ExpectedNotificationId = 1;
 
-            _notificationRepoMock.Setup(x => x.AddNotificationAsync(notificationDto)).Returns(ExpectedNotificationId);
-            _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).Returns(notificationDto);
+            _notificationRepoMock.Setup(x => x.AddNotificationAsync(notificationDto)).ReturnsAsync(ExpectedNotificationId);
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).ReturnsAsync(notificationDto);
 
             //When
             var actualNotificationtDto = _sut.AddNotificationAsync(notificationDto, userInfo);
@@ -100,7 +100,7 @@ namespace DevEdu.Business.Tests
             var notificationDto = NotificationData.GetNotificationDtoForRole();
             const int notificationId = 1;
 
-            _notificationRepoMock.Setup(x => x.GetNotificationAsync(notificationId)).Returns(notificationDto);
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(notificationId)).ReturnsAsync(notificationDto);
 
             //When
             var dto = _sut.GetNotificationAsync(notificationId);
@@ -120,7 +120,7 @@ namespace DevEdu.Business.Tests
             const int notificationId = 1;
 
             _notificationRepoMock.Setup(x => x.UpdateNotificationAsync(notificationDto));
-            _notificationRepoMock.Setup(x => x.GetNotificationAsync(notificationId)).Returns(notificationDto);
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(notificationId)).ReturnsAsync(notificationDto);
 
             //When
             var dto = _sut.UpdateNotificationAsync(notificationId, notificationDto, userInfo);
@@ -133,19 +133,18 @@ namespace DevEdu.Business.Tests
 
         [TestCase(Role.Manager)]
         [TestCase(Role.Admin)]
-        public void DeleteNotification_ExistingNotificationIdPassed_NotificationRemoved(Enum role)
+        public async System.Threading.Tasks.Task DeleteNotification_ExistingNotificationIdPassed_NotificationRemovedAsync(Enum role)
         {
             //Given
             const int notificationId = 1;
             var notificationDto = NotificationData.GetNotificationDtoForUser();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
-            _notificationRepoMock.Setup(x => x.GetNotificationAsync(notificationId)).Returns(notificationDto);
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(notificationId)).ReturnsAsync(notificationDto);
             _notificationRepoMock.Setup(x => x.DeleteNotificationAsync(notificationId));
 
-
             //When
-            _sut.DeleteNotificationAsync(notificationId, userInfo);
+           await _sut.DeleteNotificationAsync(notificationId, userInfo);
 
             //Than
             _notificationRepoMock.Verify(x => x.DeleteNotificationAsync(notificationId), Times.Once);
@@ -158,8 +157,8 @@ namespace DevEdu.Business.Tests
             var notificationsList = NotificationData.GetListNotificationByUserDto();
             const int userId = 1;
             var userDto = UserData.GetUserDto();
-            _notificationRepoMock.Setup(x => x.GetNotificationsByUserIdAsync(userId)).Returns(notificationsList);
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).Returns(userDto);
+            _notificationRepoMock.Setup(x => x.GetNotificationsByUserIdAsync(userId)).ReturnsAsync(notificationsList);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
 
             //When
             var listOfDto = _sut.GetNotificationsByUserIdAsync(userId);
@@ -178,7 +177,7 @@ namespace DevEdu.Business.Tests
             const int groupId = 1;
             // var groupDto = GroupData.GetGroupDto();
 
-            _notificationRepoMock.Setup(x => x.GetNotificationsByGroupIdAsync(groupId)).Returns(notificationsList);
+            _notificationRepoMock.Setup(x => x.GetNotificationsByGroupIdAsync(groupId)).ReturnsAsync(notificationsList);
             // _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
 
             //When
@@ -197,7 +196,7 @@ namespace DevEdu.Business.Tests
             var notificationsList = NotificationData.GetListNotificationByRoleDto();
             const int userId = 1;
 
-            _notificationRepoMock.Setup(x => x.GetNotificationsByRoleIdAsync(userId)).Returns(notificationsList);
+            _notificationRepoMock.Setup(x => x.GetNotificationsByRoleIdAsync(userId)).ReturnsAsync(notificationsList);
 
             //When
             var listOfDto = _sut.GetNotificationsByRoleIdAsync(userId);

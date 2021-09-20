@@ -25,8 +25,10 @@ namespace DevEdu.Business.Tests
             string password = "password";
             byte[] salt = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
             string expected = "AAECAwQFBgcICQoLDA0ODyT2cCjwnE2JIl0Ka2bvFeMtEwX+";
+           
             //When
             var actual = _sut.HashPasswordAsync(password, salt);
+           
             //Than
             Assert.AreEqual(expected, actual);
         }
@@ -37,7 +39,7 @@ namespace DevEdu.Business.Tests
             string password = "password";
             byte[] salt = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 
-            Assert.Throws<ArgumentException>(() => _sut.HashPasswordAsync(password, salt));
+            Assert.ThrowsAsync<ArgumentException>(() => _sut.HashPasswordAsync(password, salt));
         }
 
         [Test]
@@ -47,8 +49,10 @@ namespace DevEdu.Business.Tests
             var expected = true;
             string hashedPassword = "AAECAwQFBgcICQoLDA0ODyT2cCjwnE2JIl0Ka2bvFeMtEwX+";
             string userPassword = "password";
+            
             //When
             var actual = _sut.VerifyAsync(hashedPassword, userPassword);
+          
             //Than
             Assert.AreEqual(expected, actual);
         }
@@ -60,7 +64,7 @@ namespace DevEdu.Business.Tests
             string hashedPassword = "AAECAwQFBgcICQoLDA0ODyT2cCjwnE2JIl0Ka2bvFeMtEwX";
             string userPassword = "password";
 
-            Assert.Throws<FormatException>(() => _sut.VerifyAsync(hashedPassword, userPassword)); ;
+            Assert.ThrowsAsync<FormatException>(() => _sut.VerifyAsync(hashedPassword, userPassword)); ;
         }
     }
 }

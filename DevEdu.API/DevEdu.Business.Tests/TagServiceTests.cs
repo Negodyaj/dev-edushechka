@@ -30,7 +30,7 @@ namespace DevEdu.Business.Tests
             var expectedTagDto = TagData.GetOutputTagDto();
             var expectedTagId = expectedTagDto.Id;
 
-            _tagRepoMock.Setup(x => x.AddTagAsync(inputTagDto)).Returns(expectedTagId);
+            _tagRepoMock.Setup(x => x.AddTagAsync(inputTagDto)).ReturnsAsync(expectedTagId);
 
             var sut = new TagService(_tagRepoMock.Object, _tagValidationHelper);
 
@@ -49,7 +49,7 @@ namespace DevEdu.Business.Tests
             var tagDto = TagData.GetOutputTagDto();
             var tagId = tagDto.Id;
 
-            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).Returns(tagDto);
+            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).ReturnsAsync(tagDto);
 
             //When
             _sut.DeleteTagAsync(tagId);
@@ -66,7 +66,7 @@ namespace DevEdu.Business.Tests
             TagDto tagDto = default;
             var tagId = TagData.GetOutputTagDto().Id;
 
-            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).Returns(tagDto);
+            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).ReturnsAsync(tagDto);
 
             //When
             Assert.Throws<EntityNotFoundException>(() => _sut.DeleteTagAsync(tagId));
@@ -85,7 +85,7 @@ namespace DevEdu.Business.Tests
 
             var tagId = expectedTagDto.Id;
 
-            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).Returns(expectedTagDto);
+            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).ReturnsAsync(expectedTagDto);
 
             //When
             var actualTagDto = _sut.UpdateTagAsync(inputTagDto, tagId);
@@ -105,7 +105,7 @@ namespace DevEdu.Business.Tests
             var tagId = TagData.GetOutputTagDto().Id;
 
 
-            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).Returns(expectedTagDto);
+            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).ReturnsAsync(expectedTagDto);
 
             //When
             Assert.Throws<EntityNotFoundException>(() => _sut.UpdateTagAsync(inputTagDto, tagId));
@@ -121,7 +121,7 @@ namespace DevEdu.Business.Tests
             //Given
             var expectedTagDtos = TagData.GetListTagData();
 
-            _tagRepoMock.Setup(x => x.SelectAllTagsAsync()).Returns(expectedTagDtos);
+            _tagRepoMock.Setup(x => x.SelectAllTagsAsync()).ReturnsAsync(expectedTagDtos);
 
             //When
             var actualTagDtos = _sut.GetAllTagsAsync();
@@ -138,7 +138,7 @@ namespace DevEdu.Business.Tests
             var expectedTagDto = TagData.GetOutputTagDto();
             var tagId = expectedTagDto.Id;
 
-            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).Returns(expectedTagDto);
+            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).ReturnsAsync(expectedTagDto);
 
             //When
             var actualTagDto = _sut.GetTagByIdAsync(tagId);
@@ -155,7 +155,7 @@ namespace DevEdu.Business.Tests
             TagDto expectedTagDto = default;
             var tagId = 0;
 
-            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).Returns(expectedTagDto);
+            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).ReturnsAsync(expectedTagDto);
 
             //When
             Assert.Throws<EntityNotFoundException>(() => _sut.GetTagByIdAsync(tagId));

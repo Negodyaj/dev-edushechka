@@ -69,7 +69,7 @@ namespace DevEdu.Business.Tests
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(It.IsAny<int>())).ReturnsAsync(groupDto);
-            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, It.IsAny<int>())).Returns(UserData.GetListUsersDto());
+            _userRepoMock.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, It.IsAny<int>())).ReturnsAsync(UserData.GetListUsersDto());
 
             //When
             var actualGroupDto = await _sut.GetGroup(groupId, userInfo);
@@ -166,7 +166,7 @@ namespace DevEdu.Business.Tests
             var lessonDto = LessonData.GetSelectedLessonDto();
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
-            _lessonRepoMock.Setup(x => x.SelectLessonByIdAsync(lessonId)).Returns(lessonDto);
+            _lessonRepoMock.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(lessonDto);
             _groupRepoMock.Setup(x => x.AddGroupToLessonAsync(groupId, lessonId));
 
             //When
@@ -189,7 +189,7 @@ namespace DevEdu.Business.Tests
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
-            _lessonRepoMock.Setup(x => x.SelectLessonByIdAsync(lessonId)).Returns(lessonDto);
+            _lessonRepoMock.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(lessonDto);
             _groupRepoMock.Setup(x => x.RemoveGroupFromLessonAsync(groupId, lessonId));
 
             //When
@@ -214,7 +214,7 @@ namespace DevEdu.Business.Tests
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
-            _materialRepoMock.Setup(x => x.GetMaterialByIdAsync(materialId)).Returns(materialDto);
+            _materialRepoMock.Setup(x => x.GetMaterialByIdAsync(materialId)).ReturnsAsync(materialDto);
             _groupRepoMock.Setup(x => x.AddGroupMaterialReferenceAsync(groupId, materialId)).ReturnsAsync(expectedAffectedRows);
 
             //When
@@ -240,7 +240,7 @@ namespace DevEdu.Business.Tests
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
-            _materialRepoMock.Setup(x => x.GetMaterialByIdAsync(materialId)).Returns(materialDto);
+            _materialRepoMock.Setup(x => x.GetMaterialByIdAsync(materialId)).ReturnsAsync(materialDto);
             _groupRepoMock.Setup(x => x.RemoveGroupMaterialReferenceAsync(groupId, materialId)).ReturnsAsync(expectedAffectedRows);
 
             //When
@@ -264,7 +264,7 @@ namespace DevEdu.Business.Tests
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).Returns(userDto); ;
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto); ;
             _groupRepoMock.Setup(x => x.AddUserToGroupAsync(groupId, userId, (int)role));
 
             //When
@@ -287,7 +287,7 @@ namespace DevEdu.Business.Tests
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).Returns(userDto);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _groupRepoMock.Setup(x => x.DeleteUserFromGroupAsync(groupId, userId));
 
             //When
