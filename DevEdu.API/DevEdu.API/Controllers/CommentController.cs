@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -33,11 +34,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(CommentInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public CommentInfoOutputModel GetComment(int id)
+        public async Task<CommentInfoOutputModel> GetCommentAsync(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _commentService.GetCommentAsync(id, userInfo);
-            return _mapper.Map<CommentInfoOutputModel>(dto);
+            var dto = await _commentService.GetCommentAsync(id, userInfo);
+            var comment = _mapper.Map<CommentInfoOutputModel>(dto);
+
+            return comment;
         }
 
         //  api/comment/to-lesson/1
@@ -48,12 +51,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<CommentInfoOutputModel> AddCommentToLesson(int lessonId, [FromBody] CommentInputModel model)
+        public async Task<ActionResult<CommentInfoOutputModel>> AddCommentToLessonAsync(int lessonId, [FromBody] CommentInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var comment = _commentService.AddCommentToLessonAsync(lessonId, dto, userInfo);
+            var comment = await _commentService.AddCommentToLessonAsync(lessonId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
+
             return Created(new Uri($"api/Comment/{output.Id}", UriKind.Relative), output);
         }
 
@@ -65,12 +69,13 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<CommentInfoOutputModel> AddCommentToStudentAnswer(int studentHomeworkId, [FromBody] CommentInputModel model)
+        public async Task<ActionResult<CommentInfoOutputModel>> AddCommentToStudentAnswerAsync(int studentHomeworkId, [FromBody] CommentInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var comment = _commentService.AddCommentToStudentAnswerAsync(studentHomeworkId, dto, userInfo);
+            var comment = await _commentService.AddCommentToStudentAnswerAsync(studentHomeworkId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
+
             return Created(new Uri($"api/Comment/{output.Id}", UriKind.Relative), output);
         }
 
@@ -81,10 +86,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteComment(int id)
+        public async Task<ActionResult> DeleteCommentAsync(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            _commentService.DeleteCommentAsync(id, userInfo);
+            await _commentService.DeleteCommentAsync(id, userInfo);
+
             return NoContent();
         }
 
@@ -96,12 +102,14 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public CommentInfoOutputModel UpdateComment(int id, [FromBody] CommentInputModel model)
+        public async Task<CommentInfoOutputModel> UpdateCommentAsync(int id, [FromBody] CommentInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var updateDto = _commentService.UpdateCommentAsync(id, dto, userInfo);
-            return _mapper.Map<CommentInfoOutputModel>(updateDto);
+            var updateDto = await _commentService.UpdateCommentAsync(id, dto, userInfo);
+            var comment =  _mapper.Map<CommentInfoOutputModel>(updateDto);
+
+            return comment;
         }
     }
 }

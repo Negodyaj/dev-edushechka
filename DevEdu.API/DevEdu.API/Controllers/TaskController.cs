@@ -75,7 +75,8 @@ namespace DevEdu.API.Controllers
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = _mapper.Map<TaskDto>(model);
-            return _mapper.Map<TaskInfoOutputModel>(await _taskService.UpdateTaskAsync(taskDto, taskId, userIdentityInfo));
+            var taskUpdate = await _taskService.UpdateTaskAsync(taskDto, taskId, userIdentityInfo);
+            return _mapper.Map<TaskInfoOutputModel>(taskUpdate);
         }
 
         // api/task/{taskId}
@@ -90,7 +91,8 @@ namespace DevEdu.API.Controllers
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = _mapper.Map<TaskDto>(model);
-            return _mapper.Map<TaskInfoOutputModel>(await _taskService.UpdateTaskAsync(taskDto, taskId, userIdentityInfo));
+            var taskUpdate = await _taskService.UpdateTaskAsync(taskDto, taskId, userIdentityInfo);
+            return _mapper.Map<TaskInfoOutputModel>(taskUpdate);
         }
 
         // api/task/{taskId}

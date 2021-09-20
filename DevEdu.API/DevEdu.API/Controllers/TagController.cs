@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -35,10 +36,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<TagOutputModel> AddTag([FromBody] TagInputModel model)
+        public async Task<ActionResult<TagOutputModel>> AddTagAsync([FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
-            dto = _service.AddTagAsync(dto);
+            dto = await _service.AddTagAsync(dto);
             var output = _mapper.Map<TagOutputModel>(dto);
             return Created(new Uri($"api/Tag/{output.Id}", UriKind.Relative), output);
         }
@@ -50,9 +51,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteTag(int id)
+        public async Task<ActionResult> DeleteTagAsync(int id)
         {
-            _service.DeleteTagAsync(id);
+            await _service.DeleteTagAsync(id);
             return NoContent();
         }
 
@@ -64,10 +65,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public TagOutputModel UpdateTag(int id, [FromBody] TagInputModel model)
+        public async Task<TagOutputModel> UpdateTagAsync(int id, [FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
-            dto = _service.UpdateTagAsync(dto, id);
+            dto = await _service.UpdateTagAsync(dto, id);
             return _mapper.Map<TagOutputModel>(dto);
         }
 
@@ -76,9 +77,9 @@ namespace DevEdu.API.Controllers
         [Description("Get all tags from database")]
         [ProducesResponseType(typeof(List<TagOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        public List<TagOutputModel> GetAllTags()
+        public async Task<List<TagOutputModel>> GetAllTagsAsync()
         {
-            var queryResult = _service.GetAllTagsAsync();
+            var queryResult = await _service.GetAllTagsAsync();
             return _mapper.Map<List<TagOutputModel>>(queryResult);
         }
 
@@ -88,9 +89,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public TagOutputModel GetTagById(int id)
+        public async Task<TagOutputModel> GetTagByIdAsync(int id)
         {
-            var dto = _service.GetTagByIdAsync(id);
+            var dto = await _service.GetTagByIdAsync(id);
             return _mapper.Map<TagOutputModel>(dto);
         }
     }

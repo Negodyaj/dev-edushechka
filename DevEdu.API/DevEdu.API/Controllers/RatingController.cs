@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -36,11 +37,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<StudentRatingOutputModel> AddStudentRating([FromBody] StudentRatingInputModel model)
+        public async Task<ActionResult<StudentRatingOutputModel>> AddStudentRatingAsync([FromBody] StudentRatingInputModel model)
         {
             var dto = _mapper.Map<StudentRatingDto>(model);
             var authorUserInfo = this.GetUserIdAndRoles();
-            dto = _service.AddStudentRatingAsync(dto, authorUserInfo);
+            dto = await _service.AddStudentRatingAsync(dto, authorUserInfo);
             var output = _mapper.Map<StudentRatingOutputModel>(dto);
             return Created(new Uri($"api/Rating/by-user/{output.Id}", UriKind.Relative), output);
         }
@@ -52,10 +53,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteStudentRating(int id)
+        public async Task<ActionResult> DeleteStudentRatingAsync(int id)
         {
             var authorUserInfo = this.GetUserIdAndRoles();
-            _service.DeleteStudentRatingAsync(id, authorUserInfo);
+            await _service.DeleteStudentRatingAsync(id, authorUserInfo);
             return NoContent();
         }
 
@@ -66,10 +67,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public StudentRatingOutputModel UpdateStudentRating(int id, int value, int periodNumber)
+        public async Task<StudentRatingOutputModel> UpdateStudentRatingAsync(int id, int value, int periodNumber)
         {
             var authorUserInfo = this.GetUserIdAndRoles();
-            var dto = _service.UpdateStudentRatingAsync(id, value, periodNumber, authorUserInfo);
+            var dto = await _service.UpdateStudentRatingAsync(id, value, periodNumber, authorUserInfo);
             return _mapper.Map<StudentRatingOutputModel>(dto);
         }
 
@@ -79,9 +80,9 @@ namespace DevEdu.API.Controllers
         [Description("Get all StudentRatings from database")]
         [ProducesResponseType(typeof(List<StudentRatingOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        public List<StudentRatingOutputModel> GetAllStudentRatings()
+        public async Task<List<StudentRatingOutputModel>> GetAllStudentRatingsAsync()
         {
-            var dto = _service.GetAllStudentRatingsAsync();
+            var dto = await _service.GetAllStudentRatingsAsync();
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
 
@@ -91,10 +92,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(StudentRatingOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<StudentRatingOutputModel> GetStudentRatingByGroupId(int groupId)
+        public async Task<List<StudentRatingOutputModel>> GetStudentRatingByGroupIdAsync(int groupId)
         {
             var authorUserInfo = this.GetUserIdAndRoles();
-            var dto = _service.GetStudentRatingByGroupIdAsync(groupId, authorUserInfo);
+            var dto = await _service.GetStudentRatingByGroupIdAsync(groupId, authorUserInfo);
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
 
@@ -105,9 +106,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<StudentRatingOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<StudentRatingOutputModel> GetStudentRatingByUserId(int userid)
+        public async Task<List<StudentRatingOutputModel>> GetStudentRatingByUserIdAsync(int userid)
         {
-            var dto = _service.GetStudentRatingByUserIdAsync(userid);
+            var dto = await _service.GetStudentRatingByUserIdAsync(userid);
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
     }

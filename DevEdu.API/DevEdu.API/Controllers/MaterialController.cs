@@ -39,7 +39,7 @@ namespace DevEdu.API.Controllers
         public async Task<ActionResult<MaterialInfoWithGroupsOutputModel>> AddMaterialWithGroupsAsync([FromBody] MaterialWithGroupsInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            var id = _materialService.AddMaterialWithGroupsAsync(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
+            var id = await _materialService.AddMaterialWithGroupsAsync(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
             dto = await _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
             var output = _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
             return Created(new Uri($"api/Material/{output.Id}/full", UriKind.Relative), output);
@@ -56,7 +56,7 @@ namespace DevEdu.API.Controllers
         public async Task<ActionResult<MaterialInfoWithCoursesOutputModel>> AddMaterialWithCoursesAsync([FromBody] MaterialWithCoursesInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            var id = _materialService.AddMaterialWithCoursesAsync(dto, materialModel.TagsIds, materialModel.CoursesIds);
+            var id = await _materialService.AddMaterialWithCoursesAsync(dto, materialModel.TagsIds, materialModel.CoursesIds);
             dto = await _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
             var output = _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
             return Created(new Uri($"api/Material/{output.Id}/full", UriKind.Relative), output);
@@ -68,10 +68,10 @@ namespace DevEdu.API.Controllers
         [Description("Get all materials with tags")]
         [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        public List<MaterialInfoOutputModel> GetAllMaterials()
+        public async Task<List<MaterialInfoOutputModel>> GetAllMaterialsAsync()
         {
             var user = this.GetUserIdAndRoles();
-            var list = _materialService.GetAllMaterialsAsync(user);
+            var list = await _materialService.GetAllMaterialsAsync(user);
             return _mapper.Map<List<MaterialInfoOutputModel>>(list);
         }
 
@@ -82,9 +82,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(MaterialInfoFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public MaterialInfoFullOutputModel GetMaterialByIdWithCoursesAndGroups(int id)
+        public async Task<MaterialInfoFullOutputModel> GetMaterialByIdWithCoursesAndGroupsAsync(int id)
         {
-            var dto = _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
+            var dto = await _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
             return _mapper.Map<MaterialInfoFullOutputModel>(dto);
         }
 
@@ -95,10 +95,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public MaterialInfoOutputModel GetMaterialByIdWithTags(int id)
+        public async Task<MaterialInfoOutputModel> GetMaterialByIdWithTagsAsync(int id)
         {
             var user = this.GetUserIdAndRoles();
-            var dto = _materialService.GetMaterialByIdWithTagsAsync(id, user);
+            var dto = await _materialService.GetMaterialByIdWithTagsAsync(id, user);
             return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
@@ -110,7 +110,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async System.Threading.Tasks.Task<MaterialInfoOutputModel> UpdateMaterialAsync(int id, [FromBody] MaterialInputModel materialModel)
+        public async Task<MaterialInfoOutputModel> UpdateMaterialAsync(int id, [FromBody] MaterialInputModel materialModel)
         {
             var user = this.GetUserIdAndRoles();
             var dto = _mapper.Map<MaterialDto>(materialModel);
@@ -125,10 +125,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteMaterial(int id, bool isDeleted)
+        public async Task<ActionResult> DeleteMaterialAsync(int id, bool isDeleted)
         {
             var user = this.GetUserIdAndRoles();
-            _materialService.DeleteMaterialAsync(id, isDeleted, user);
+            await _materialService.DeleteMaterialAsync(id, isDeleted, user);
             return NoContent();
         }
 
@@ -139,9 +139,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Add tag to material")]
-        public string AddTagToMaterial(int materialId, int tagId)
+        public async Task<string> AddTagToMaterialAsync(int materialId, int tagId)
         {
-            _materialService.AddTagToMaterialAsync(materialId, tagId);
+            await _materialService.AddTagToMaterialAsync(materialId, tagId);
             return $"Tag id:{tagId} was added to material id:{materialId}";
         }
 
@@ -152,9 +152,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteTagFromMaterial(int materialId, int tagId)
+        public async Task<ActionResult> DeleteTagFromMaterialAsync(int materialId, int tagId)
         {
-            _materialService.DeleteTagFromMaterialAsync(materialId, tagId);
+            await _materialService.DeleteTagFromMaterialAsync(materialId, tagId);
             return NoContent();
         }
 
@@ -165,10 +165,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<MaterialInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<MaterialInfoOutputModel> GetMaterialsByTagId(int tagId)
+        public async Task<List<MaterialInfoOutputModel>> GetMaterialsByTagIdAsync(int tagId)
         {
             var user = this.GetUserIdAndRoles();
-            var list = _materialService.GetMaterialsByTagIdAsync(tagId, user);
+            var list = await _materialService.GetMaterialsByTagIdAsync(tagId, user);
             return _mapper.Map<List<MaterialInfoOutputModel>>(list);
         }
     }

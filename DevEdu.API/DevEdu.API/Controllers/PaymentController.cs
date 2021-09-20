@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -35,9 +36,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Get payment by id")]
-        public PaymentOutputModel GetPayment(int id)
+        public async Task<PaymentOutputModel> GetPaymentAsync(int id)
         {
-            var dto = _paymentService.GetPaymentAsync(id);
+            var dto = await _paymentService.GetPaymentAsync(id);
             return _mapper.Map<PaymentOutputModel>(dto);
         }
 
@@ -48,9 +49,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Get all payments by user id")]
-        public List<PaymentOutputModel> SelectAllPaymentsByUserId(int userId)
+        public async Task<List<PaymentOutputModel>> SelectAllPaymentsByUserIdAsync(int userId)
         {
-            var list = _paymentService.GetPaymentsByUserIdAsync(userId);
+            var list = await _paymentService.GetPaymentsByUserIdAsync(userId);
             return _mapper.Map<List<PaymentOutputModel>>(list);
         }
 
@@ -62,10 +63,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Add one payment")]
-        public ActionResult<PaymentOutputModel> AddPayment([FromBody] PaymentInputModel model)
+        public async Task<ActionResult<PaymentOutputModel>> AddPaymentAsync([FromBody] PaymentInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
-            var id = _paymentService.AddPaymentAsync(dto);
+            var id = await _paymentService.AddPaymentAsync(dto);
             dto.Id = id;
             var output = _mapper.Map<PaymentOutputModel>(dto);
             return Created(new Uri($"api/Payment/{output.Id}", UriKind.Relative), output);
@@ -78,9 +79,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [Description("Delete payment by id")]
-        public ActionResult DeletePayment(int id)
+        public async Task<ActionResult> DeletePaymentAsync(int id)
         {
-            _paymentService.DeletePaymentAsync(id);
+            await _paymentService.DeletePaymentAsync(id);
             return NoContent();
         }
 
@@ -92,11 +93,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Update payment by id")]
-        public PaymentOutputModel UpdatePayment(int id, [FromBody] PaymentUpdateInputModel model)
+        public async Task<PaymentOutputModel> UpdatePaymentAsync(int id, [FromBody] PaymentUpdateInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
-            _paymentService.UpdatePaymentAsync(id, dto);
-            dto = _paymentService.GetPaymentAsync(id);
+            await _paymentService.UpdatePaymentAsync(id, dto);
+            dto = await _paymentService.GetPaymentAsync(id);
             return _mapper.Map<PaymentOutputModel>(dto);
         }
 
@@ -108,11 +109,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Add payments")]
-        public List<PaymentOutputModel> AddPayments([FromBody] List<PaymentInputModel> models)
+        public async Task<List<PaymentOutputModel>> AddPaymentsAsync([FromBody] List<PaymentInputModel> models)
         {
             var dto = _mapper.Map<List<PaymentDto>>(models);
-            var listId = _paymentService.AddPaymentsAsync(dto);
-            dto = _paymentService.SelectPaymentsBySeveralIdAsync(listId);
+            var listId = await _paymentService.AddPaymentsAsync(dto);
+            dto = await _paymentService.SelectPaymentsBySeveralIdAsync(listId);
             return _mapper.Map<List<PaymentOutputModel>>(dto);
         }
     }
