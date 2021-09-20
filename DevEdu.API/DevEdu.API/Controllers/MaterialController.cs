@@ -26,6 +26,24 @@ namespace DevEdu.API.Controllers
             _materialService = materialService;
             _mapper = mapper;
         }
+        // api/material/
+        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist)]
+        [HttpPost()]
+        [Description("Add material")]
+        [ProducesResponseType(typeof(MaterialInfoWithGroupsOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public ActionResult<MaterialInfoOutputModel> AddMaterial([FromBody] MaterialInputModel materialModel)
+        {
+            var user = this.GetUserIdAndRoles();
+            var dto = _mapper.Map<MaterialDto>(materialModel);
+            var id = _materialService.AddMaterial(dto, null);
+            var dataInDb = _materialService.GetMaterialByIdWithTags(id, user);
+            var output = _mapper.Map<MaterialInfoOutputModel>(dataInDb);
+            return Created(new Uri($"api/Material/{output.Id}",UriKind.Relative), output); 
+
+        }
 
         // api/material/with-groups
         [AuthorizeRoles(Role.Teacher, Role.Tutor)]

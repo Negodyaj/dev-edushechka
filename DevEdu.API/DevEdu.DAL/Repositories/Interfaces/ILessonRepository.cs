@@ -11,9 +11,9 @@ namespace DevEdu.DAL.Repositories
         Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(int groupId);
         List<LessonDto> SelectAllLessonsByTeacherId(int teacherId);
         LessonDto SelectLessonById(int id);
-        List<StudentLessonDto> SelectStudentsLessonByLessonIdAsync(int lessonId);
+        Task <List<StudentLessonDto>> SelectStudentsLessonByLessonIdAsync(int lessonId);
         Task UpdateLessonAsync(LessonDto lessonDto);
-        int DeleteTopicFromLessonAsync(int lessonId, int topicId);
+        Task <int> DeleteTopicFromLessonAsync(int lessonId, int topicId);
         void AddTopicToLesson(int lessonId, int topicId);
         void AddStudentToLesson(int lessonId, int userId);
         void DeleteStudentFromLesson(int lessonId, int userId);

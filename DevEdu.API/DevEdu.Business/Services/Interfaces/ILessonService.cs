@@ -12,9 +12,9 @@ namespace DevEdu.Business.Services
         Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(UserIdentityInfo userIdentity, int id);
         List<LessonDto> SelectAllLessonsByTeacherId(int id);
         LessonDto SelectLessonWithCommentsById(UserIdentityInfo userIdentity, int id);
-        LessonDto SelectLessonWithCommentsAndStudentsById(UserIdentityInfo userIdentity, int id);
+        Task <LessonDto> SelectLessonWithCommentsAndStudentsById(UserIdentityInfo userIdentity, int id);
         LessonDto UpdateLesson(UserIdentityInfo userIdentity, LessonDto lessonDto, int id);
-        void DeleteTopicFromLesson(int lessonId, int topicId);
+        Task DeleteTopicFromLesson(int lessonId, int topicId);
         void AddTopicToLesson(int lessonId, int topicId);
         StudentLessonDto AddStudentToLesson(int lessonId, int userId, UserIdentityInfo userIdentityInfo);
         void DeleteStudentFromLesson(int lessonId, int userId, UserIdentityInfo userIdentityInfo);

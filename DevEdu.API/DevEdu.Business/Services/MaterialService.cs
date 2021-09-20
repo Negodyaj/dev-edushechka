@@ -133,7 +133,7 @@ namespace DevEdu.Business.Services
             return allMaterialsByTag;
         }
 
-        private int AddMaterial(MaterialDto dto, List<int> tags)
+        public int AddMaterial(MaterialDto dto, List<int> tags)
         {
             if (tags == null || tags.Count == 0)
                 return _materialRepository.AddMaterial(dto);

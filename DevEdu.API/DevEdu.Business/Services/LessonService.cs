@@ -96,10 +96,10 @@ namespace DevEdu.Business.Services
             return result;
         }
 
-        public LessonDto SelectLessonWithCommentsAndStudentsById(UserIdentityInfo userIdentity, int id)
+        public async Task<LessonDto> SelectLessonWithCommentsAndStudentsById(UserIdentityInfo userIdentity, int id)
         {
             LessonDto result = SelectLessonWithCommentsById(userIdentity, id);
-            result.Students = _lessonRepository.SelectStudentsLessonByLessonIdAsync(id);
+            result.Students = await _lessonRepository.SelectStudentsLessonByLessonIdAsync(id);
             return result;
         }
 
@@ -116,11 +116,11 @@ namespace DevEdu.Business.Services
             return _lessonRepository.SelectLessonById(lessonDto.Id);
         }
 
-        public void DeleteTopicFromLesson(int lessonId, int topicId)
+        public async Task DeleteTopicFromLesson(int lessonId, int topicId)
         {
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-            if (_lessonRepository.DeleteTopicFromLessonAsync(lessonId, topicId) == 0)
+            if (await _lessonRepository.DeleteTopicFromLessonAsync(lessonId, topicId) == 0)
             {
                 throw new ValidationException(nameof(topicId), string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId));
             }
@@ -202,7 +202,5 @@ namespace DevEdu.Business.Services
                 _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userIdentityInfo.UserId);
             return _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
         }
-
-
     }
 }
