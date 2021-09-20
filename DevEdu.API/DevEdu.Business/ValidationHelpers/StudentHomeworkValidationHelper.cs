@@ -30,19 +30,19 @@ namespace DevEdu.Business.ValidationHelpers
             return studentHomework;
         }
 
-        public void CheckUserBelongsToHomework(int groupId, int userId)
+        public async Task CheckUserBelongsToHomeworkAsync(int groupId, int userId)
         {
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
             var group = Task.Run(async () => await _groupRepository.GetGroup(groupId)).Result;
             var result = groupsByUser.FirstOrDefault(gu => gu.Id == @group.Id);
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserInGroupNotFoundMessage, userId, groupId));
         }
 
-        public void CheckUserInStudentHomeworkAccess(int studentId, int userId)
+        public async Task CheckUserInStudentHomeworkAccessAsync(int studentId, int userId)
         {
-            var groupsByStudent = _groupRepository.GetGroupsByUserId(studentId);
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var groupsByStudent = await _groupRepository.GetGroupsByUserIdAsync(studentId);
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
             var result = groupsByUser.FirstOrDefault(gu => groupsByStudent.Any(gs => gs.Id == gu.Id));
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));

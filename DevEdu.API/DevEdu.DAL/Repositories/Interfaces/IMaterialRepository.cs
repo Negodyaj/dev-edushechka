@@ -1,5 +1,6 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -13,6 +14,6 @@ namespace DevEdu.DAL.Repositories
         MaterialDto GetMaterialById(int id);
         int UpdateMaterial(MaterialDto material);
         List<MaterialDto> GetMaterialsByTagId(int tagId);
-        List<MaterialDto> GetMaterialsByCourseId(int courseId);
+        Task<List<MaterialDto>> GetMaterialsByCourseIdAsync(int courseId);
     }
 }

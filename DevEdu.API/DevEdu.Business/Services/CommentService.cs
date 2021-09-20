@@ -31,7 +31,7 @@ namespace DevEdu.Business.Services
         {
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             if (!userInfo.IsAdmin())
-                _lessonValidationHelper.CheckUserBelongsToLesson(lessonId, userInfo.UserId);
+                _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userInfo.UserId);
 
             dto.User = new UserDto { Id = userInfo.UserId };
             dto.Lesson = new LessonDto { Id = lessonId };
@@ -44,7 +44,7 @@ namespace DevEdu.Business.Services
             var studentAnswer = Task.Run(() => _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(studentHomeworkId)).Result; ;
             var studentId = studentAnswer.User.Id;
             if (!userInfo.IsAdmin())
-                _studentAnswerValidationHelper.CheckUserInStudentHomeworkAccess(studentId, userInfo.UserId);
+                _studentAnswerValidationHelper.CheckUserInStudentHomeworkAccessAsync(studentId, userInfo.UserId);
 
             dto.User = new UserDto { Id = userInfo.UserId };
             dto.StudentHomework = new StudentHomeworkDto { Id = studentHomeworkId };

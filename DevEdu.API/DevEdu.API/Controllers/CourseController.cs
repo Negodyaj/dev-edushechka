@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -37,9 +38,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public CourseInfoShortOutputModel GetCourseSimple(int id)
+        public async Task<CourseInfoShortOutputModel> GetCourseSimpleAsync(int id)
         {
-            var course = _courseService.GetCourse(id);
+            var course = await _courseService.GetCourseAsync(id);
             return _mapper.Map<CourseInfoShortOutputModel>(course);
         }
 
@@ -49,10 +50,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(CourseInfoFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public CourseInfoFullOutputModel GetCourseFull(int id)
+        public async Task<CourseInfoFullOutputModel> GetCourseFullAsync(int id)
         {
             var userToken = this.GetUserIdAndRoles();
-            var course = _courseService.GetFullCourseInfo(id, userToken);
+            var course = await _courseService.GetFullCourseInfoAsync(id, userToken);
             return _mapper.Map<CourseInfoFullOutputModel>(course);
         }
 
@@ -61,7 +62,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status200OK)]
         public List<CourseInfoShortOutputModel> GetAllCoursesWithGroups()
         {
-            var courses = _courseService.GetCourses();
+            var courses = _courseService.GetCoursesAsync();
             return _mapper.Map<List<CourseInfoShortOutputModel>>(courses);
         }
 
@@ -71,10 +72,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(CourseInfoShortOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<CourseInfoShortOutputModel> AddCourse([FromBody] CourseInputModel model)
+        public async Task<ActionResult<CourseInfoShortOutputModel>> AddCourseAsync([FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            var course = _courseService.AddCourse(dto);
+            var course = await _courseService.AddCourseAsync(dto);
             var output = _mapper.Map<CourseInfoShortOutputModel>(course);
             return Created(new Uri($"api/Course/{output.Id}/full", UriKind.Relative), output);
         }
@@ -85,9 +86,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteCourse(int id)
+        public async Task<ActionResult> DeleteCourseAsync(int id)
         {
-            _courseService.DeleteCourse(id);
+            await _courseService.DeleteCourseAsync(id);
             return NoContent();
         }
 
@@ -98,10 +99,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public CourseInfoShortOutputModel UpdateCourse(int id, [FromBody] CourseInputModel model)
+        public async Task<CourseInfoShortOutputModel> UpdateCourseAsync(int id, [FromBody] CourseInputModel model)
         {
             var dto = _mapper.Map<CourseDto>(model);
-            var updDto = _courseService.UpdateCourse(id, dto);
+            var updDto = await _courseService.UpdateCourseAsync(id, dto);
             return _mapper.Map<CourseInfoShortOutputModel>(updDto);
         }
 
@@ -112,9 +113,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult AddCourseMaterialReference(int courseId, int materialId)
+        public async Task<ActionResult> AddCourseMaterialReferenceAsync(int courseId, int materialId)
         {
-            _courseService.AddCourseMaterialReference(courseId, materialId);
+            await _courseService.AddCourseMaterialReferenceAsync(courseId, materialId);
             return NoContent();
         }
 
@@ -125,9 +126,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult RemoveCourseMaterialReference(int courseId, int materialId)
+        public async Task<ActionResult> RemoveCourseMaterialReferenceAsync(int courseId, int materialId)
         {
-            _courseService.RemoveCourseMaterialReference(courseId, materialId);
+            await _courseService.RemoveCourseMaterialReferenceAsync(courseId, materialId);
             return NoContent();
         }
 
@@ -137,9 +138,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult AddTaskToCourse(int courseId, int taskId)
+        public async Task<ActionResult> AddTaskToCourseAsync(int courseId, int taskId)
         {
-            _courseService.AddTaskToCourse(courseId, taskId);
+            await _courseService.AddTaskToCourseAsync(courseId, taskId);
             return NoContent();
         }
 
@@ -149,9 +150,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult RemoveTaskFromCourse(int courseId, int taskId)
+        public async Task<ActionResult> RemoveTaskFromCourseAsync(int courseId, int taskId)
         {
-            _courseService.DeleteTaskFromCourse(courseId, taskId);
+            await _courseService.DeleteTaskFromCourseAsync(courseId, taskId);
             return NoContent();
         }
 
@@ -163,10 +164,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Add topic to course")]
-        public CourseTopicOutputModel AddTopicToCourse(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
+        public async Task<CourseTopicOutputModel> AddTopicToCourseAsync(int courseId, int topicId, [FromBody] CourseTopicInputModel inputModel)
         {
             var dto = _mapper.Map<CourseTopicDto>(inputModel);
-            var id = _courseService.AddTopicToCourse(courseId, topicId, dto);
+            var id = await _courseService.AddTopicToCourseAsync(courseId, topicId, dto);
             dto = _courseService.GetCourseTopicById(id);
             return _mapper.Map<CourseTopicOutputModel>(dto);
         }
@@ -178,10 +179,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [Description("Add topics to course")]
-        public List<CourseTopicOutputModel> AddTopicsToCourse(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
+        public async Task<List<CourseTopicOutputModel>> AddTopicsToCourseAsync(int courseId, [FromBody] List<CourseTopicUpdateInputModel> inputModel)
         {
             var dto = _mapper.Map<List<CourseTopicDto>>(inputModel);
-            var id = _courseService.AddTopicsToCourse(courseId, dto);
+            var id = await _courseService.AddTopicsToCourseAsync(courseId, dto);
             dto = _courseService.GetCourseTopicBySeveralId(id);
             return _mapper.Map<List<CourseTopicOutputModel>>(dto);
         }
@@ -193,9 +194,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteTopicFromCourse(int courseId, int topicId)
+        public async Task<ActionResult> DeleteTopicFromCourseAsync(int courseId, int topicId)
         {
-            _courseService.DeleteTopicFromCourse(courseId, topicId);
+            await _courseService.DeleteTopicFromCourseAsync(courseId, topicId);
             return NoContent();
         }
 
@@ -204,9 +205,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<CourseTopicOutputModel> SelectAllTopicsByCourseId(int courseId)
+        public async Task<List<CourseTopicOutputModel>> SelectAllTopicsByCourseIdAsync(int courseId)
         {
-            var list = _courseService.SelectAllTopicsByCourseId(courseId);
+            var list = await _courseService.SelectAllTopicsByCourseIdAsync(courseId);
             return _mapper.Map<List<CourseTopicOutputModel>>(list);
         }
 
@@ -218,10 +219,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public List<CourseTopicOutputModel> UpdateCourseTopicsByCourseId(int courseId, [FromBody] List<CourseTopicUpdateInputModel> topics)
+        public async Task<List<CourseTopicOutputModel>> UpdateCourseTopicsByCourseIdAsync(int courseId, [FromBody] List<CourseTopicUpdateInputModel> topics)
         {
             var listDto = _mapper.Map<List<CourseTopicDto>>(topics);
-            var listId = _courseService.UpdateCourseTopicsByCourseId(courseId, listDto);
+            var listId = await _courseService.UpdateCourseTopicsByCourseIdAsync(courseId, listDto);
             listDto = _courseService.GetCourseTopicBySeveralId(listId);
             return _mapper.Map<List<CourseTopicOutputModel>>(listDto);
         }

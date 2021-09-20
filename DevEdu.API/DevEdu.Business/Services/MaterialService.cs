@@ -49,10 +49,10 @@ namespace DevEdu.Business.Services
             return allMaterials;
         }
 
-        public MaterialDto GetMaterialByIdWithCoursesAndGroups(int id)
+        public async Task<MaterialDto> GetMaterialByIdWithCoursesAndGroupsAsync(int id)
         {
             var dto = _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(id);
-            dto.Courses = _courseRepository.GetCoursesByMaterialId(id);
+            dto.Courses = await _courseRepository.GetCoursesByMaterialIdAsync(id);
             dto.Groups = _groupRepository.GetGroupsByMaterialId(id);
             return dto;
         }
@@ -86,16 +86,16 @@ namespace DevEdu.Business.Services
         public int AddMaterialWithCourses(MaterialDto dto, List<int> tags, List<int> courses)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(courses, nameof(courses));
-            courses.ForEach(course => _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(course));
+            courses.ForEach(course => _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(course));
 
             var materialId = AddMaterial(dto, tags);
-            courses.ForEach(course => _courseRepository.AddCourseMaterialReference(course, materialId));
+            courses.ForEach(course => _courseRepository.AddCourseMaterialReferenceAsync(course, materialId));
             return materialId;
         }
 
-        public MaterialDto UpdateMaterial(int id, MaterialDto dto, UserIdentityInfo user)
+        public async Task<MaterialDto> UpdateMaterialAsync(int id, MaterialDto dto, UserIdentityInfo user)
         {
-            var material = GetMaterialByIdWithCoursesAndGroups(id);
+            var material = await GetMaterialByIdWithCoursesAndGroupsAsync(id);
             CheckAccessToMaterialByRole(material, user);
 
             dto.Id = id;
@@ -103,9 +103,9 @@ namespace DevEdu.Business.Services
             return _materialRepository.GetMaterialById(dto.Id);
         }
 
-        public void DeleteMaterial(int id, bool isDeleted, UserIdentityInfo user)
+        public async Task DeleteMaterialAsync(int id, bool isDeleted, UserIdentityInfo user)
         {
-            var material = GetMaterialByIdWithCoursesAndGroups(id);
+            var material = await GetMaterialByIdWithCoursesAndGroupsAsync(id);
             CheckAccessToMaterialByRole(material, user);
             _materialRepository.DeleteMaterial(id, isDeleted);
         }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -166,14 +167,14 @@ namespace DevEdu.DAL.Repositories
                 .ToList();
         }
 
-        public List<MaterialDto> GetMaterialsByCourseId(int courseId)
+        public async Task<List<MaterialDto>> GetMaterialsByCourseIdAsync(int courseId)
         {
-            return _connection
-                .Query<MaterialDto>(
+            return (await _connection
+                .QueryAsync<MaterialDto>(
                     _materialSelectAllByCourseIdProcedure,
                     new { courseId },
                     commandType: CommandType.StoredProcedure
-                ).
+                )).
                 ToList();
         }
     }

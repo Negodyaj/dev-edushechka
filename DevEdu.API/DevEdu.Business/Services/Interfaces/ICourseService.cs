@@ -1,26 +1,27 @@
 ﻿using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
     public interface ICourseService
     {
-        CourseDto GetCourse(int id);
-        CourseDto GetFullCourseInfo(int id, UserIdentityInfo userToken);
-        CourseDto AddCourse(CourseDto courseDto);
-        void DeleteCourse(int id);
-        List<CourseDto> GetCourses();
-        CourseDto UpdateCourse(int id, CourseDto courseDto);
-        int AddTopicToCourse(int courseId, int topicId, CourseTopicDto dto);
-        List<int> AddTopicsToCourse(int courseId, List<CourseTopicDto> listDto);
-        List<int> UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics);
-        void DeleteTopicFromCourse(int courseId, int topicId);
-        List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId);
-        void DeleteTaskFromCourse(int courseId, int taskId);
-        public void AddTaskToCourse(int courseId, int taskId);
-        int AddCourseMaterialReference(int courseId, int materialId);
-        void RemoveCourseMaterialReference(int courseId, int materialId);
+        Task<CourseDto> GetCourseAsync(int id);
+        Task<CourseDto> GetFullCourseInfoAsync(int id, UserIdentityInfo userToken);
+        Task<CourseDto> AddCourseAsync(CourseDto courseDto);
+        Task DeleteCourseAsync(int id);
+        Task<List<CourseDto>> GetCoursesAsync();
+        Task<CourseDto> UpdateCourseAsync(int id, CourseDto courseDto);
+        Task<int> AddTopicToCourseAsync(int courseId, int topicId, CourseTopicDto dto);
+        Task<List<int>> AddTopicsToCourseAsync(int courseId, List<CourseTopicDto> listDto);
+        Task<List<int>> UpdateCourseTopicsByCourseIdAsync(int courseId, List<CourseTopicDto> topics);
+        Task DeleteTopicFromCourseAsync(int courseId, int topicId);
+        Task<List<CourseTopicDto>> SelectAllTopicsByCourseIdAsync(int courseId);
+        Task DeleteTaskFromCourseAsync(int courseId, int taskId);
+        Task AddTaskToCourseAsync(int courseId, int taskId);
+        Task<int> AddCourseMaterialReferenceAsync(int courseId, int materialId);
+        Task RemoveCourseMaterialReferenceAsync(int courseId, int materialId);
         CourseTopicDto GetCourseTopicById(int id);
         List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids);
     }

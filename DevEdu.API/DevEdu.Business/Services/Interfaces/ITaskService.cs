@@ -7,18 +7,17 @@ namespace DevEdu.Business.Services
 {
     public interface ITaskService
     {
-        TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds);
-        Task<TaskDto> AddTaskByTeacher(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds);
-
-        TaskDto UpdateTask(TaskDto taskDto, int taskId, UserIdentityInfo userIdentityInfo);
-        int DeleteTask(int taskId, UserIdentityInfo userIdentityInfo);
-        TaskDto GetTaskById(int taskId, UserIdentityInfo userIdentityInfo);
-        TaskDto GetTaskWithCoursesById(int taskId, UserIdentityInfo userIdentityInfo);
+        Task AddTagsToTaskAsync(int taskId, List<int> tagsIds, UserIdentityInfo userIdentityInfo);
+        Task<int> AddTagToTaskAsync(int taskId, int tagId, UserIdentityInfo userIdentityInfo);
+        Task<TaskDto> AddTaskByMethodistAsync(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds, UserIdentityInfo userIdentityInfo);
+        Task<TaskDto> AddTaskByTeacherAsync(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds, UserIdentityInfo userIdentityInfo);
+        Task<int> DeleteTagFromTaskAsync(int taskId, int tagId, UserIdentityInfo userIdentityInfo);
+        Task<int> DeleteTaskAsync(int taskId, UserIdentityInfo userIdentityInfo);
+        Task<TaskDto> GetTaskByIdAsync(int taskId, UserIdentityInfo userIdentityInfo);
+        Task<List<TaskDto>> GetTasksAsync(UserIdentityInfo userIdentityInfo);
         Task<TaskDto> GetTaskWithAnswersByIdAsync(int taskId, UserIdentityInfo userIdentityInfo);
-
-        TaskDto GetTaskWithGroupsById(int taskId, UserIdentityInfo userIdentityInfo);
-        List<TaskDto> GetTasks(UserIdentityInfo userIdentityInfo);
-        int AddTagToTask(int taskId, int tagId);
-        int DeleteTagFromTask(int taskId, int tagId);
+        Task<TaskDto> GetTaskWithCoursesByIdAsync(int taskId, UserIdentityInfo userIdentityInfo);
+        Task<TaskDto> GetTaskWithGroupsByIdAsync(int taskId, UserIdentityInfo userIdentityInfo);
+        Task<TaskDto> UpdateTaskAsync(TaskDto taskDto, int taskId, UserIdentityInfo userIdentityInfo);
     }
 }

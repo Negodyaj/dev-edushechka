@@ -149,7 +149,7 @@ namespace DevEdu.Business.Services
         public async Task DeleteTaskFromGroup(int groupId, int taskId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            _taskHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            _taskHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
 
             await _groupRepository.DeleteTaskFromGroup(groupId, taskId);
         }

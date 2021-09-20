@@ -39,22 +39,22 @@ namespace DevEdu.Business.Services
         {
             await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
             if (!userInfo.IsAdmin())
-                _groupValidationHelper.CheckUserInGroupExistence(groupId, userInfo.UserId);
+                _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userInfo.UserId);
             return _homeworkRepository.GetHomeworkByGroupId(groupId);
         }
 
         public List<HomeworkDto> GetHomeworkByTaskId(int taskId)
         {
-            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             return _homeworkRepository.GetHomeworkByTaskId(taskId);
         }
 
         public HomeworkDto AddHomework(int groupId, int taskId, HomeworkDto dto, UserIdentityInfo userInfo)
         {
             Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
-            _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             if (!userInfo.IsAdmin())
-                _groupValidationHelper.CheckUserInGroupExistence(groupId, userInfo.UserId);
+                _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userInfo.UserId);
             dto.Group = new GroupDto { Id = groupId };
             dto.Task = new TaskDto { Id = taskId };
             var id = _homeworkRepository.AddHomework(dto);
@@ -85,7 +85,7 @@ namespace DevEdu.Business.Services
         {
             if (userInfo.IsAdmin()) { return; }
             var groupId = dto.Group.Id;
-            _groupValidationHelper.CheckUserInGroupExistence(groupId, userInfo.UserId);
+            _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userInfo.UserId);
         }
     }
 }

@@ -56,8 +56,8 @@ namespace DevEdu.Business.Tests
             _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
             _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByLessonId(lessonId)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByLessonIdAsync(lessonId)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(CommentData.GetGroupsDto());
 
             //When
             var actualComment = _sut.AddCommentToLesson(lessonId, commentDto, userInfo);
@@ -67,8 +67,8 @@ namespace DevEdu.Business.Tests
             _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
             _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
             _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByLessonId(lessonId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByLessonIdAsync(lessonId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
@@ -88,8 +88,8 @@ namespace DevEdu.Business.Tests
             _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
             _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
             _studentAnswerRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(expectedStudentAnswerOnTaskId)).ReturnsAsync(studentAnswerOnTaskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentAnswerOnTaskDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(CommentData.GetGroupsDto());
 
             //When
             var actualComment = _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userInfo);
@@ -99,7 +99,7 @@ namespace DevEdu.Business.Tests
             _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
             _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
             _studentAnswerRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(expectedStudentAnswerOnTaskId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentAnswerOnTaskDto.User.Id), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
@@ -201,8 +201,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userId, lessonId);
 
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByLessonId(lessonId)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
+            _groupRepoMock.Setup(x => x.GetGroupsByLessonIdAsync(lessonId)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(GroupData.GetGroupDtos());
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
@@ -211,8 +211,8 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByLessonId(lessonId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByLessonIdAsync(lessonId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
@@ -248,8 +248,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
 
             _studentAnswerRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(studentAnswerOnTaskDto.Id)).ReturnsAsync(studentAnswerOnTaskDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentAnswerOnTaskDto.User.Id)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userId)).Returns(GroupData.GetGroupDtos());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentAnswerOnTaskDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(GroupData.GetGroupDtos());
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
@@ -258,7 +258,7 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _studentAnswerRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(studentAnswerOnTaskDto.Id), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
