@@ -27,7 +27,7 @@ namespace DevEdu.Business.ValidationHelpers
             var studentHomework = await _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
             if (studentHomework == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), id));
-           
+
             return studentHomework;
         }
 
@@ -49,7 +49,7 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
         }
 
-        public void CheckUserComplianceToStudentHomework(int studentId, int userId)
+        public async Task CheckUserComplianceToStudentHomeworkAsync(int studentId, int userId)
         {
             if (studentId != userId)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));

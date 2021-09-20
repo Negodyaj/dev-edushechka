@@ -3,9 +3,10 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using TaskStatus = DevEdu.DAL.Enums.StudentHomeworkStatus;
+using System;
 
 namespace DevEdu.Business.Services
 {
@@ -51,7 +52,7 @@ namespace DevEdu.Business.Services
         {
             var dto = await _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFoundAsync(id);
             if (!userInfo.IsAdmin())
-                _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(dto.User.Id, userInfo.UserId);
+                await _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomeworkAsync(dto.User.Id, userInfo.UserId);
 
             await _studentHomeworkRepository.DeleteStudentHomeworkAsync(id);
         }
@@ -60,7 +61,7 @@ namespace DevEdu.Business.Services
         {
             var dto = await _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFoundAsync(id);
             if (!userInfo.IsAdmin())
-                _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(dto.User.Id, userInfo.UserId);
+                await _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomeworkAsync(dto.User.Id, userInfo.UserId);
 
             updatedDto.Id = id;
             await _studentHomeworkRepository.UpdateStudentHomeworkAsync(updatedDto);
@@ -106,7 +107,7 @@ namespace DevEdu.Business.Services
         {
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
             if (userInfo.IsStudent())
-                _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomework(userId, userInfo.UserId);
+                await _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomeworkAsync(userId, userInfo.UserId);
 
             var listStudentHomeworkDto = await _studentHomeworkRepository.GetAllStudentHomeworkByStudentIdAsync(userId);
 

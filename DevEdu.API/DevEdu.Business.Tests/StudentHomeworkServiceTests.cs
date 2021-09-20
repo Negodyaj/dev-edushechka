@@ -9,6 +9,7 @@ using NUnit.Framework;
 using System;
 using DevEdu.Business.Tests.TestDataHelpers;
 using System.Threading.Tasks;
+using TaskStatus = DevEdu.DAL.Enums.StudentHomeworkStatus;
 
 namespace DevEdu.Business.Tests
 {
@@ -119,6 +120,7 @@ namespace DevEdu.Business.Tests
             const int statusId = (int)StudentHomeworkStatus.Returned;
             DateTime completedDate = default;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            var exactlyCount = 2;
 
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentAnswerDto);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentAnswerDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
@@ -165,6 +167,8 @@ namespace DevEdu.Business.Tests
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Exactly(countEntry));
         }
 
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
         public async Task UpdateStudentHomework_ExistingTaskIdStudentIdAndTaskAnswerDtoPassed_ReturnStudentHomeworkDtoAsync(Enum role)
         {
@@ -186,8 +190,6 @@ namespace DevEdu.Business.Tests
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Exactly(2));
         }
 
-        [TestCase(Role.Teacher)]
-        [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
         [TestCase(Role.Methodist)]
         public async Task GetAllStudentHomeworkByStudentId_ExistingUserIdPassed_ReturnListOfStudentAnswerOnTaskDtoAsync(Enum role)
@@ -229,8 +231,9 @@ namespace DevEdu.Business.Tests
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Once);
         }
 
+
         [TestCase(Role.Student)]
-        public void AddStudentHomework_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
+        public async Task AddStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             // Given
             var studentHomework = CommentData.GetStudentHomeworkDto();
@@ -260,7 +263,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student)]
-        public void AddStudentHomework_UserInGroupNotFoundMessage_AuthorizationExceptionThrown(Enum role)
+        public async Task AddStudentHomeworkAsync_UserInGroupNotFoundMessage_AuthorizationExceptionThrown(Enum role)
         {
             // Given
             var studentHomework = CommentData.GetStudentHomeworkDto();
@@ -291,7 +294,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student)]
-        public void AddStudentHomework_WhenHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public async Task AddStudentHomeworkAsync_WhenHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -311,7 +314,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student)]
-        public void DeleteStudentHomework_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public async Task DeleteStudentHomeworkAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
@@ -331,7 +334,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student, 2)]
-        public void DeleteStudentHomework_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        public async Task DeleteStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
         {
             // Given
             var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
@@ -354,7 +357,7 @@ namespace DevEdu.Business.Tests
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public void GetStudentHomeworkById_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public async Task GetStudentHomeworkByIdAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             const int homeworkId = 1;
@@ -372,7 +375,7 @@ namespace DevEdu.Business.Tests
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public void GetStudentHomeworkById_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
+        public async Task GetStudentHomeworkByIdAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             //Given
             var studentHomework = CommentData.GetStudentHomeworkDto();
@@ -395,7 +398,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student)]
-        public void UpdateStudentHomework_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public async Task UpdateStudentHomeworkAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
@@ -414,7 +417,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student, 2)]
-        public void UpdateStudentHomework_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        public async Task UpdateStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
         {
             //Given
             var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
@@ -437,7 +440,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void GetAllStudentHomeworkByTask_WhenTaskIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
+        public async Task GetAllStudentHomeworkOnTaskAsync_WhenTaskIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             // Given
             const int task = 1;
@@ -456,7 +459,7 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Methodist)]
-        public void GetAllStudentHomeworkByStudentId_WhenStudentIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public async Task GetAllStudentHomeworkByStudentIdAsync_WhenStudentIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             const int user = 0;
@@ -470,6 +473,51 @@ namespace DevEdu.Business.Tests
             // Then
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
             _studentHomeworkRepoMock.Verify(x => x.GetAllStudentHomeworkByStudentIdAsync(user), Times.Never);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public async Task UpdateStatusOfStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
+        {
+            // Given
+            var studentHomework = CommentData.GetStudentHomeworkDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            const int homeworkId = 1;
+            const int statusId = (int)TaskStatus.Returned;
+            var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userInfo.UserId);
+
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentHomework);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomework.User.Id)).ReturnsAsync(GroupData.GetGroupDtos());
+
+            //When
+            var actualException = Assert.ThrowsAsync<AuthorizationException>(
+                    () => _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, statusId, userInfo));
+
+            //Than
+            Assert.That(actualException.Message, Is.EqualTo(expectedException));
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomework.User.Id), Times.Once);
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public async Task UpdateStatusOfStudentHomeworkAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        {
+            // Given
+            var studentHomework = CommentData.GetStudentHomeworkDto();
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+            const int homeworkId = 10;
+            const int statusId = (int)TaskStatus.Returned;
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.User.Id);
+
+            // When
+            var actualException = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, statusId, userInfo));
+
+            // Than
+            Assert.That(actualException.Message, Is.EqualTo(expectedException));
         }
     }
 }

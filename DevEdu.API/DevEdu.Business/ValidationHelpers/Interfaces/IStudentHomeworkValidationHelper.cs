@@ -5,9 +5,9 @@ namespace DevEdu.Business.ValidationHelpers
 {
     public interface IStudentHomeworkValidationHelper
     {
-        Task<StudentHomeworkDto> GetStudentHomeworkByIdAndThrowIfNotFoundAsync(int id);
         Task CheckUserInStudentHomeworkAccessAsync(int studentId, int userId);
         Task CheckUserBelongsToHomeworkAsync(int groupId, int userId);
-        void CheckUserComplianceToStudentHomework(int studentId, int userId);
+        Task<StudentHomeworkDto> GetStudentHomeworkByIdAndThrowIfNotFoundAsync(int id);
+        Task CheckUserComplianceToStudentHomeworkAsync(int studentId, int userId);
     }
 }
