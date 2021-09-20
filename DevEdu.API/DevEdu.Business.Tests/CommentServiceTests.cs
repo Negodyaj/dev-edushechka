@@ -7,6 +7,7 @@ using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -74,7 +75,7 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void AddCommentToStudentAnswer_CommentDtoAndExistingStudentAnswerIdPassed_CommentReturned(Enum role)
+        public async Task AddCommentToStudentAnswer_CommentDtoAndExistingStudentAnswerIdPassed_CommentReturned(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
@@ -92,7 +93,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(CommentData.GetGroupsDto());
 
             //When
-            var actualComment = _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userInfo);
+            var actualComment = await _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, actualComment);
@@ -228,7 +229,7 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.Id);
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
                 () => _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userInfo));
 
             //Than
@@ -252,7 +253,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(GroupData.GetGroupDtos());
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
                 () => _sut.AddCommentToStudentAnswer(studentAnswerOnTaskDto.Id, commentDto, userInfo));
 
             //Than

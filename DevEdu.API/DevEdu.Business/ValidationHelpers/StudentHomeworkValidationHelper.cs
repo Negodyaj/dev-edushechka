@@ -48,7 +48,7 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
         }
 
-        public void CheckUserComplianceToStudentHomework(int studentId, int userId)
+        public async Task CheckUserComplianceToStudentHomeworkAsync(int studentId, int userId)
         {
             if (studentId != userId)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));

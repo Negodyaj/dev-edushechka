@@ -9,7 +9,7 @@ using NUnit.Framework;
 using System;
 using DevEdu.Business.Tests.TestDataHelpers;
 using System.Threading.Tasks;
-using TaskStatus = DevEdu.DAL.Enums.TaskStatus;
+using TaskStatus = DevEdu.DAL.Enums.StudentHomeworkStatus;
 
 namespace DevEdu.Business.Tests
 {
@@ -487,8 +487,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userInfo.UserId);
 
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentHomework);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(userInfo.UserId)).Returns(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserId(studentHomework.User.Id)).Returns(GroupData.GetGroupDtos());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomework.User.Id)).ReturnsAsync(GroupData.GetGroupDtos());
 
             //When
             var actualException = Assert.ThrowsAsync<AuthorizationException>(
@@ -497,8 +497,8 @@ namespace DevEdu.Business.Tests
             //Than
             Assert.That(actualException.Message, Is.EqualTo(expectedException));
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(userInfo.UserId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserId(studentHomework.User.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomework.User.Id), Times.Once);
         }
 
         [TestCase(Role.Teacher)]

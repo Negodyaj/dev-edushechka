@@ -39,12 +39,12 @@ namespace DevEdu.Business.Services
             return _commentRepository.GetComment(id);
         }
 
-        public CommentDto AddCommentToStudentAnswer(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo)
+        public async Task<CommentDto> AddCommentToStudentAnswer(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var studentAnswer = Task.Run(() => _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(studentHomeworkId)).Result; ;
+            var studentAnswer = await _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(studentHomeworkId);
             var studentId = studentAnswer.User.Id;
             if (!userInfo.IsAdmin())
-                _studentAnswerValidationHelper.CheckUserInStudentHomeworkAccessAsync(studentId, userInfo.UserId);
+                await _studentAnswerValidationHelper.CheckUserInStudentHomeworkAccessAsync(studentId, userInfo.UserId);
 
             dto.User = new UserDto { Id = userInfo.UserId };
             dto.StudentHomework = new StudentHomeworkDto { Id = studentHomeworkId };
