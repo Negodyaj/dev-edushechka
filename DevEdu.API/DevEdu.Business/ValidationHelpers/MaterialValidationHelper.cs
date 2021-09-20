@@ -48,7 +48,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             if (material.Groups == null ||
                 material.Groups.Count == 0 ||
-                GetMaterialIfAllowedToUserByGroupAsync(material, userId) == null)
+                GetMaterialIfAllowedToUserByGroupAsync(material, userId).Result == null)
             {
                 throw new AuthorizationException(string.
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
@@ -57,8 +57,8 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckUserAccessToMaterialForGetById(int userId, MaterialDto material)
         {
-            if (GetMaterialIfAllowedToUserByGroupAsync(material, userId) == null &&
-                 GetMaterialIfAllowedToUserByCourseAsync(material, userId) == null)
+            if (GetMaterialIfAllowedToUserByGroupAsync(material, userId).Result == null &&
+                 GetMaterialIfAllowedToUserByCourseAsync(material, userId).Result == null)
             {
                 throw new AuthorizationException(string.
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));

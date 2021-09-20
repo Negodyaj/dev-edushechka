@@ -4,6 +4,7 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
@@ -74,6 +75,7 @@ namespace DevEdu.Business.Services
         public async Task<int> AddMaterialWithGroupsAsync(MaterialDto dto, List<int> tags, List<int> groups, UserIdentityInfo user)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(groups, nameof(groups));
+
             groups.ForEach(async group =>
             {
                 var groupDto = await _groupValidationHelper.CheckGroupExistenceAsync(group);
