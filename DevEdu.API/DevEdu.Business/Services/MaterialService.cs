@@ -93,10 +93,10 @@ namespace DevEdu.Business.Services
         public async Task<int> AddMaterialWithCoursesAsync(MaterialDto dto, List<int> tags, List<int> courses)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(courses, nameof(courses));
-            courses.ForEach(course => _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(course));
+            courses.ForEach(async course => await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(course));
 
             var materialId = await AddMaterialAsync(dto, tags);
-            courses.ForEach(course => _courseRepository.AddCourseMaterialReferenceAsync(course, materialId));
+            courses.ForEach(async course => await _courseRepository.AddCourseMaterialReferenceAsync(course, materialId));
             return materialId;
         }
 
