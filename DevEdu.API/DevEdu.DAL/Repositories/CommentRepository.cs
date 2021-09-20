@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -19,35 +20,35 @@ namespace DevEdu.DAL.Repositories
 
         public CommentRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
-        public int AddComment(CommentDto dto)
+        public async Task<int> AddCommentAsync(CommentDto dto)
         {
-            return _connection.QuerySingle<int>(
+            return await _connection.QuerySingleAsync<int>(
                 _commentInsertProcedure,
                 new
                 {
                     userId = dto.User.Id,
-                    lessonId = dto.Lesson == null ? null : (int?)dto.Lesson.Id,
-                    studentHomeworkId = dto.StudentHomework == null ? null : (int?)dto.StudentHomework.Id,
+                    lessonId = dto.Lesson?.Id,
+                    studentHomeworkId = dto.StudentHomework?.Id,
                     dto.Text
                 },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public void DeleteComment(int id)
+        public async Task DeleteCommentAsync(int id)
         {
-            _connection.Execute(
+            await _connection.ExecuteAsync(
                 _commentDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public CommentDto GetComment(int id)
+        public async Task<CommentDto> GetCommentAsync(int id)
         {
             CommentDto result = default;
-            return _connection
-                .Query<CommentDto, UserDto, Role, LessonDto, StudentHomeworkDto, CommentDto>(
+            return (await _connection
+                .QueryAsync<CommentDto, UserDto, Role, LessonDto, StudentHomeworkDto, CommentDto>(
                     _commentSelectByIdProcedure,
                     (comment, user, role, lesson, studentHomework) =>
                     {
@@ -68,13 +69,13 @@ namespace DevEdu.DAL.Repositories
                     new { id },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .FirstOrDefault();
         }
 
-        public void UpdateComment(CommentDto dto)
+        public async Task UpdateCommentAsync(CommentDto dto)
         {
-            _connection.Execute(
+            await _connection.ExecuteAsync(
                 _commentUpdateProcedure,
                 new
                 {
@@ -85,11 +86,11 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public List<CommentDto> SelectCommentsFromLessonByLessonId(int lessonId)
+        public async Task<List<CommentDto>> SelectCommentsFromLessonByLessonIdAsync(int lessonId)
         {
             CommentDto result = default;
-            return _connection
-                .Query<CommentDto, UserDto, CommentDto>(
+            return (await _connection
+                .QueryAsync<CommentDto, UserDto, CommentDto>(
                     _commentsToLessonSelectByLessonIdProcedure,
                     (comment, user) =>
                     {
@@ -100,7 +101,7 @@ namespace DevEdu.DAL.Repositories
                     new { lessonId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .Distinct()
                 .ToList();
         }

@@ -44,7 +44,7 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void AddCommentToLesson_CommentDtoAndExistingLessonInPassed_AddCommentAndReturned(Enum role)
+        public async Task AddCommentToLesson_CommentDtoAndExistingLessonInPassed_AddCommentAndReturnedAsync(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
@@ -54,19 +54,19 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var userId = userInfo.UserId;
 
-            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
-            _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
+            _commentRepoMock.Setup(x => x.AddCommentAsync(commentDto).Result).Returns(expectedCommentId);
+            _commentRepoMock.Setup(x => x.GetCommentAsync(expectedCommentId).Result).Returns(commentDto);
             _lessonRepoMock.Setup(x => x.SelectLessonById(lessonId)).Returns(lessonDto);
             _groupRepoMock.Setup(x => x.GetGroupsByLessonIdAsync(lessonId)).ReturnsAsync(CommentData.GetGroupsDto());
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(CommentData.GetGroupsDto());
 
             //When
-            var actualComment = _sut.AddCommentToLesson(lessonId, commentDto, userInfo);
+            var actualComment = await _sut.AddCommentToLessonAsync(lessonId, commentDto, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, actualComment);
-            _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
-            _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
+            _commentRepoMock.Verify(x => x.AddCommentAsync(commentDto), Times.Once);
+            _commentRepoMock.Verify(x => x.GetCommentAsync(expectedCommentId), Times.Once);
             _lessonRepoMock.Verify(x => x.SelectLessonById(lessonId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByLessonIdAsync(lessonId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userId), Times.Once);
@@ -86,19 +86,19 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             var userId = userInfo.UserId;
 
-            _commentRepoMock.Setup(x => x.AddComment(commentDto)).Returns(expectedCommentId);
-            _commentRepoMock.Setup(x => x.GetComment(expectedCommentId)).Returns(commentDto);
+            _commentRepoMock.Setup(x => x.AddCommentAsync(commentDto).Result).Returns(expectedCommentId);
+            _commentRepoMock.Setup(x => x.GetCommentAsync(expectedCommentId).Result).Returns(commentDto);
             _studentAnswerRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(expectedStudentAnswerOnTaskId)).ReturnsAsync(studentAnswerOnTaskDto);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentAnswerOnTaskDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(CommentData.GetGroupsDto());
 
             //When
-            var actualComment = await _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userInfo);
+            var actualComment = await _sut.AddCommentToStudentHomeworkAsync(taskStudentId, commentDto, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, actualComment);
-            _commentRepoMock.Verify(x => x.AddComment(commentDto), Times.Once);
-            _commentRepoMock.Verify(x => x.GetComment(expectedCommentId), Times.Once);
+            _commentRepoMock.Verify(x => x.AddCommentAsync(commentDto), Times.Once);
+            _commentRepoMock.Verify(x => x.GetCommentAsync(expectedCommentId), Times.Once);
             _studentAnswerRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(expectedStudentAnswerOnTaskId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentAnswerOnTaskDto.User.Id), Times.Once);
         }
@@ -106,7 +106,7 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void GetComment_ExistingCommentIdPassed_CommentReturned(Enum role)
+        public async Task GetComment_ExistingCommentIdPassed_CommentReturnedAsync(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
@@ -114,20 +114,20 @@ namespace DevEdu.Business.Tests
             var userId = userInfo.UserId;
             const int commentId = 1;
 
-            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+            _commentRepoMock.Setup(x => x.GetCommentAsync(commentId).Result).Returns(commentDto);
 
             //When
-            var dto = _sut.GetComment(commentId, userInfo);
+            var dto = await _sut.GetCommentAsync(commentId, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, dto);
-            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
+            _commentRepoMock.Verify(x => x.GetCommentAsync(commentId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void UpdateComment_CommentDtoAndExistingCommentIdPassed_ReturnUpdatedCommentDto(Enum role)
+        public async Task UpdateComment_CommentDtoAndExistingCommentIdPassed_ReturnUpdatedCommentDtoAsync(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
@@ -135,22 +135,22 @@ namespace DevEdu.Business.Tests
             var userId = userInfo.UserId;
             const int commentId = 1;
 
-            _commentRepoMock.Setup(x => x.UpdateComment(commentDto));
-            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+            _commentRepoMock.Setup(x => x.UpdateCommentAsync(commentDto));
+            _commentRepoMock.Setup(x => x.GetCommentAsync(commentId).Result).Returns(commentDto);
 
             //When
-            var dto = _sut.UpdateComment(commentId, commentDto, userInfo);
+            var dto = await _sut.UpdateCommentAsync(commentId, commentDto, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, dto);
-            _commentRepoMock.Verify(x => x.UpdateComment(commentDto), Times.Once);
-            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Exactly(2));
+            _commentRepoMock.Verify(x => x.UpdateCommentAsync(commentDto), Times.Once);
+            _commentRepoMock.Verify(x => x.GetCommentAsync(commentId), Times.Exactly(2));
         }
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public void DeleteComment_ExistingCommentIdPassed_CommentRemoved(Enum role)
+        public async Task DeleteComment_ExistingCommentIdPassed_CommentRemovedAsync(Enum role)
         {
             //Given
             var commentDto = CommentData.GetCommentDto();
@@ -158,15 +158,15 @@ namespace DevEdu.Business.Tests
             var userId = userInfo.UserId;
             const int commentId = 1;
 
-            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
-            _commentRepoMock.Setup(x => x.DeleteComment(commentId));
+            _commentRepoMock.Setup(x => x.GetCommentAsync(commentId).Result).Returns(commentDto);
+            _commentRepoMock.Setup(x => x.DeleteCommentAsync(commentId));
 
             //When
-            _sut.DeleteComment(commentId, userInfo);
+            await _sut.DeleteCommentAsync(commentId, userInfo);
 
             //Than
-            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
-            _commentRepoMock.Verify(x => x.DeleteComment(commentId), Times.Once);
+            _commentRepoMock.Verify(x => x.GetCommentAsync(commentId), Times.Once);
+            _commentRepoMock.Verify(x => x.DeleteCommentAsync(commentId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
@@ -181,8 +181,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(lesson), lesson.Id);
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddCommentToLesson(lesson.Id, commentDto, userInfo));
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.AddCommentToLessonAsync(lesson.Id, commentDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -206,8 +206,8 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(GroupData.GetGroupDtos());
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.AddCommentToLesson(lessonId, commentDto, userInfo));
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
+                () => _sut.AddCommentToLessonAsync(lessonId, commentDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -230,7 +230,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.ThrowsAsync<EntityNotFoundException>(
-                () => _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userInfo));
+                () => _sut.AddCommentToStudentHomeworkAsync(taskStudentId, commentDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -254,7 +254,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.ThrowsAsync<AuthorizationException>(
-                () => _sut.AddCommentToStudentAnswer(studentAnswerOnTaskDto.Id, commentDto, userInfo));
+                () => _sut.AddCommentToStudentHomeworkAsync(studentAnswerOnTaskDto.Id, commentDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -273,8 +273,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), comment.Id);
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.GetComment(comment.Id, userInfo));
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.GetCommentAsync(comment.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -291,15 +291,15 @@ namespace DevEdu.Business.Tests
             const int commentId = 1;
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
 
-            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+            _commentRepoMock.Setup(x => x.GetCommentAsync(commentId).Result).Returns(commentDto);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(
-                    () => _sut.GetComment(commentId, userInfo));
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
+                    () => _sut.GetCommentAsync(commentId, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
+            _commentRepoMock.Verify(x => x.GetCommentAsync(commentId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
@@ -313,8 +313,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), comment.Id);
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.UpdateComment(comment.Id, comment, userInfo));
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.UpdateCommentAsync(comment.Id, comment, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -331,15 +331,15 @@ namespace DevEdu.Business.Tests
             const int commentId = 1;
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
 
-            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+            _commentRepoMock.Setup(x => x.GetCommentAsync(commentId).Result).Returns(commentDto);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(
-                    () => _sut.UpdateComment(commentId, commentDto, userInfo));
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
+                    () => _sut.UpdateCommentAsync(commentId, commentDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
+            _commentRepoMock.Verify(x => x.GetCommentAsync(commentId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
@@ -353,8 +353,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), comment.Id);
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.DeleteComment(comment.Id, userInfo));
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.DeleteCommentAsync(comment.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -371,15 +371,15 @@ namespace DevEdu.Business.Tests
             const int commentId = 1;
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userId);
 
-            _commentRepoMock.Setup(x => x.GetComment(commentId)).Returns(commentDto);
+            _commentRepoMock.Setup(x => x.GetCommentAsync(commentId).Result).Returns(commentDto);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(
-                    () => _sut.DeleteComment(commentId, userInfo));
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
+                    () => _sut.DeleteCommentAsync(commentId, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _commentRepoMock.Verify(x => x.GetComment(commentId), Times.Once);
+            _commentRepoMock.Verify(x => x.GetCommentAsync(commentId), Times.Once);
         }
     }
 }

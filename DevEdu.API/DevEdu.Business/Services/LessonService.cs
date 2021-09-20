@@ -92,7 +92,7 @@ namespace DevEdu.Business.Services
             }
 
             LessonDto result = _lessonRepository.SelectLessonById(id);
-            result.Comments = _commentRepository.SelectCommentsFromLessonByLessonId(id);
+            result.Comments = _commentRepository.SelectCommentsFromLessonByLessonIdAsync(id).Result;
             return result;
         }
 

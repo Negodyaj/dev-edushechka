@@ -27,19 +27,19 @@ namespace DevEdu.Business.Services
             _studentAnswerValidationHelper = studentAnswerValidationHelper;
         }
 
-        public CommentDto AddCommentToLesson(int lessonId, CommentDto dto, UserIdentityInfo userInfo)
+        public async Task<CommentDto> AddCommentToLessonAsync(int lessonId, CommentDto dto, UserIdentityInfo userInfo)
         {
             _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
             if (!userInfo.IsAdmin())
-                _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userInfo.UserId);
+                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userInfo.UserId);
 
             dto.User = new UserDto { Id = userInfo.UserId };
             dto.Lesson = new LessonDto { Id = lessonId };
-            var id = _commentRepository.AddComment(dto);
-            return _commentRepository.GetComment(id);
+            var id = _commentRepository.AddCommentAsync(dto).Result;
+            return await _commentRepository.GetCommentAsync(id);
         }
 
-        public async Task<CommentDto> AddCommentToStudentAnswer(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo)
+        public async Task<CommentDto> AddCommentToStudentHomeworkAsync(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo)
         {
             var studentAnswer = await _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(studentHomeworkId);
             var studentId = studentAnswer.User.Id;
@@ -48,34 +48,34 @@ namespace DevEdu.Business.Services
 
             dto.User = new UserDto { Id = userInfo.UserId };
             dto.StudentHomework = new StudentHomeworkDto { Id = studentHomeworkId };
-            var id = _commentRepository.AddComment(dto);
-            return _commentRepository.GetComment(id);
+            var id = _commentRepository.AddCommentAsync(dto).Result;
+            return await _commentRepository.GetCommentAsync(id);
         }
 
-        public CommentDto GetComment(int commentId, UserIdentityInfo userInfo)
+        public async Task<CommentDto> GetCommentAsync(int commentId, UserIdentityInfo userInfo)
         {
-            var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
-            CheckUserAccessToCommentByUserId(userInfo, checkedDto);
+            var checkedDto = await _commentValidationHelper.GetCommentByIdAndThrowIfNotFoundAsync(commentId);
+            await CheckUserAccessToCommentByUserId(userInfo, checkedDto);
             return checkedDto;
         }
 
-        public void DeleteComment(int commentId, UserIdentityInfo userInfo)
+        public async Task DeleteCommentAsync(int commentId, UserIdentityInfo userInfo)
         {
-            var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
-            CheckUserAccessToCommentByUserId(userInfo, checkedDto);
-            _commentRepository.DeleteComment(commentId);
+            var checkedDto = await _commentValidationHelper.GetCommentByIdAndThrowIfNotFoundAsync(commentId);
+            await CheckUserAccessToCommentByUserId(userInfo, checkedDto);
+            await _commentRepository.DeleteCommentAsync(commentId);
         }
 
-        public CommentDto UpdateComment(int commentId, CommentDto dto, UserIdentityInfo userInfo)
+        public async Task<CommentDto> UpdateCommentAsync(int commentId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
-            CheckUserAccessToCommentByUserId(userInfo, checkedDto);
+            var checkedDto = await _commentValidationHelper.GetCommentByIdAndThrowIfNotFoundAsync(commentId);
+            await CheckUserAccessToCommentByUserId(userInfo, checkedDto);
             dto.Id = commentId;
-            _commentRepository.UpdateComment(dto);
-            return _commentRepository.GetComment(commentId);
+            await _commentRepository.UpdateCommentAsync(dto);
+            return await _commentRepository.GetCommentAsync(commentId);
         }
 
-        private void CheckUserAccessToCommentByUserId(UserIdentityInfo userInfo, CommentDto dto)
+        private async Task CheckUserAccessToCommentByUserId(UserIdentityInfo userInfo, CommentDto dto)
         {
             var userId = userInfo.UserId;
 
@@ -83,7 +83,7 @@ namespace DevEdu.Business.Services
             {
                 return;
             }
-            _commentValidationHelper.UserComplianceCheck(dto, userId);
+            await _commentValidationHelper.UserComplianceCheckAsync(dto, userId);
         }
     }
 }
