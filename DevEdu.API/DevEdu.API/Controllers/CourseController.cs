@@ -168,7 +168,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<CourseTopicDto>(inputModel);
             var id = await _courseService.AddTopicToCourseAsync(courseId, topicId, dto);
-            dto = _courseService.GetCourseTopicById(id);
+            dto = _courseService.GetCourseTopicByIdAsync(id);
             return _mapper.Map<CourseTopicOutputModel>(dto);
         }
 
@@ -183,7 +183,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<List<CourseTopicDto>>(inputModel);
             var id = await _courseService.AddTopicsToCourseAsync(courseId, dto);
-            dto = _courseService.GetCourseTopicBySeveralId(id);
+            dto = _courseService.GetCourseTopicBySeveralIdAsync(id);
             return _mapper.Map<List<CourseTopicOutputModel>>(dto);
         }
 
@@ -223,7 +223,7 @@ namespace DevEdu.API.Controllers
         {
             var listDto = _mapper.Map<List<CourseTopicDto>>(topics);
             var listId = await _courseService.UpdateCourseTopicsByCourseIdAsync(courseId, listDto);
-            listDto = _courseService.GetCourseTopicBySeveralId(listId);
+            listDto = _courseService.GetCourseTopicBySeveralIdAsync(listId);
             return _mapper.Map<List<CourseTopicOutputModel>>(listDto);
         }
     }

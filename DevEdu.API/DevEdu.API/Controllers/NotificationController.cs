@@ -50,7 +50,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<NotificationInfoOutputModel> GetAllNotificationsByGroupId(int groupId)
         {
-            var dto = _notificationService.GetNotificationsByGroupId(groupId);
+            var dto = _notificationService.GetNotificationsByGroupIdAsync(groupId);
             var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
             return output;
         }
@@ -63,7 +63,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<NotificationInfoOutputModel> GetAllNotificationsByRoleId(int roleId)
         {
-            var dto = _notificationService.GetNotificationsByRoleId(roleId);
+            var dto = _notificationService.GetNotificationsByRoleIdAsync(roleId);
             var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
             return output;
         }
@@ -80,7 +80,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<NotificationDto>(inputModel);
-            var outputDto = _notificationService.AddNotification(dto, userInfo);
+            var outputDto = _notificationService.AddNotificationAsync(dto, userInfo);
             var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);
             return Created(new Uri($"api/Notification/{result.Id}", UriKind.Relative), result);
         }
@@ -95,7 +95,7 @@ namespace DevEdu.API.Controllers
         public ActionResult DeleteNotification(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            _notificationService.DeleteNotification(id, userInfo);
+            _notificationService.DeleteNotificationAsync(id, userInfo);
             return NoContent();
         }
 
@@ -111,7 +111,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<NotificationDto>(inputModel);
-            var output = _notificationService.UpdateNotification(id, dto, userInfo);
+            var output = _notificationService.UpdateNotificationAsync(id, dto, userInfo);
             var model = _mapper.Map<NotificationInfoOutputModel>(output);
             return model;
         }

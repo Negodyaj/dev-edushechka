@@ -7,11 +7,11 @@ namespace DevEdu.Business.Services
 {
     public interface IHomeworkService
     {
-        HomeworkDto GetHomework(int homeworkId, UserIdentityInfo userInfo);
+        Task<HomeworkDto> GetHomeworkAsync(int homeworkId, UserIdentityInfo userInfo);
         Task<List<HomeworkDto>> GetHomeworkByGroupIdAsync(int groupId, UserIdentityInfo userInfo);
-        List<HomeworkDto> GetHomeworkByTaskId(int taskId);
-        HomeworkDto AddHomework(int groupId, int taskId, HomeworkDto dto, UserIdentityInfo userInfo);
-        void DeleteHomework(int homeworkId, UserIdentityInfo userInfo);
-        HomeworkDto UpdateHomework(int homeworkId, HomeworkDto dto, UserIdentityInfo userInfo);
+        Task<List<HomeworkDto>> GetHomeworkByTaskIdAsync(int taskId);
+        Task<HomeworkDto> AddHomeworkAsync(int groupId, int taskId, HomeworkDto dto, UserIdentityInfo userInfo);
+        Task DeleteHomeworkAsync(int homeworkId, UserIdentityInfo userInfo);
+        Task<HomeworkDto> UpdateHomeworkAsync(int homeworkId, HomeworkDto dto, UserIdentityInfo userInfo);
     }
 }

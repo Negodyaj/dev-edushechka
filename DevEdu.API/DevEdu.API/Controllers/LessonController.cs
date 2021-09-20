@@ -44,7 +44,7 @@ namespace DevEdu.API.Controllers
         {
             var lessonDto = _mapper.Map<LessonDto>(inputModel);
             var userIdentity = this.GetUserIdAndRoles();
-            var addedLesson = _lessonService.AddLesson(userIdentity, lessonDto, inputModel.TopicIds);
+            var addedLesson = _lessonService.AddLessonAsync(userIdentity, lessonDto, inputModel.TopicIds);
             var output = _mapper.Map<LessonInfoOutputModel>(addedLesson);
             return Created(new Uri($"api/Lesson/{output.Id}", UriKind.Relative), output);
         }
@@ -59,7 +59,7 @@ namespace DevEdu.API.Controllers
         public ActionResult DeleteLesson(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            _lessonService.DeleteLesson(userIdentity, id);
+            _lessonService.DeleteLessonAsync(userIdentity, id);
             return NoContent();
         }
 
@@ -75,7 +75,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<LessonDto>(updateModel);
             var userIdentity = this.GetUserIdAndRoles();
-            var output = _lessonService.UpdateLesson(userIdentity, dto, id);
+            var output = _lessonService.UpdateLessonAsync(userIdentity, dto, id);
             return _mapper.Map<LessonInfoOutputModel>(output);
         }
 
@@ -102,7 +102,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<LessonInfoWithCourseOutputModel> GetAllLessonsByTeacherId(int id)
         {
-            var dto = _lessonService.SelectAllLessonsByTeacherId(id);
+            var dto = _lessonService.SelectAllLessonsByTeacherIdAsync(id);
             return _mapper.Map<List<LessonInfoWithCourseOutputModel>>(dto);
         }
 
@@ -116,7 +116,7 @@ namespace DevEdu.API.Controllers
         public LessonInfoWithCommentsOutputModel GetLessonWithComments(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            var dto = _lessonService.SelectLessonWithCommentsById(userIdentity, id);
+            var dto = _lessonService.SelectLessonWithCommentsByIdAsync(userIdentity, id);
             return _mapper.Map<LessonInfoWithCommentsOutputModel>(dto);
         }
 
@@ -130,7 +130,7 @@ namespace DevEdu.API.Controllers
         public LessonInfoWithStudentsAndCommentsOutputModel GetLessonWithStudentsAndComments(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(userIdentity, id);
+            var dto = _lessonService.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, id);
             return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel>(dto);
         }
 
@@ -143,7 +143,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteTopicFromLesson(int lessonId, int topicId)
         {
-            _lessonService.DeleteTopicFromLesson(lessonId, topicId);
+            _lessonService.DeleteTopicFromLessonAsync(lessonId, topicId);
             return NoContent();
         }
 
@@ -156,7 +156,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult AddTopicToLesson(int lessonId, int topicId)
         {
-            _lessonService.AddTopicToLesson(lessonId, topicId);
+            _lessonService.AddTopicToLessonAsync(lessonId, topicId);
             return StatusCode(StatusCodes.Status204NoContent);
         }
 
@@ -170,7 +170,7 @@ namespace DevEdu.API.Controllers
         public ActionResult<StudentLessonOutputModel> AddStudentToLesson(int lessonId, int studentId)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _lessonService.AddStudentToLesson(lessonId, studentId, userInfo);
+            var dto = _lessonService.AddStudentToLessonAsync(lessonId, studentId, userInfo);
             var output = _mapper.Map<StudentLessonOutputModel>(dto);
             return Created(new Uri($"api/Lesson/{output.Id}/full-info", UriKind.Relative), output);
         }
@@ -185,7 +185,7 @@ namespace DevEdu.API.Controllers
         public ActionResult DeleteStudentFromLesson(int lessonId, int studentId)
         {
             var userInfo = this.GetUserIdAndRoles();
-            _lessonService.DeleteStudentFromLesson(lessonId, studentId, userInfo);
+            _lessonService.DeleteStudentFromLessonAsync(lessonId, studentId, userInfo);
             return NoContent();
         }
 
@@ -201,7 +201,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<StudentLessonDto>(model);
-            var output = _lessonService.UpdateStudentFeedbackForLesson(lessonId, studentId, dto, userInfo);
+            var output = _lessonService.UpdateStudentFeedbackForLessonAsync(lessonId, studentId, dto, userInfo);
             return _mapper.Map<StudentLessonOutputModel>(output);
         }
 
@@ -217,7 +217,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<StudentLessonDto>(model);
-            var output = _lessonService.UpdateStudentAbsenceReasonOnLesson(lessonId, studentId, dto, userInfo);
+            var output = _lessonService.UpdateStudentAbsenceReasonOnLessonAsync(lessonId, studentId, dto, userInfo);
             return _mapper.Map<StudentLessonOutputModel>(output);
         }
 
@@ -230,7 +230,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<StudentLessonDto>(model);
-            var output = _lessonService.UpdateStudentAttendanceOnLesson(lessonId, studentId, dto, userInfo);
+            var output = _lessonService.UpdateStudentAttendanceOnLessonAsync(lessonId, studentId, dto, userInfo);
             return _mapper.Map<StudentLessonOutputModel>(output);
         }
 
@@ -244,7 +244,7 @@ namespace DevEdu.API.Controllers
         public List<FeedbackOutputModel> GetAllFeedbackByLessonId(int lessonId)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _lessonService.SelectAllFeedbackByLessonId(lessonId, userInfo);
+            var dto = _lessonService.SelectAllFeedbackByLessonIdAsync(lessonId, userInfo);
             return _mapper.Map<List<FeedbackOutputModel>>(dto);
         }
     }

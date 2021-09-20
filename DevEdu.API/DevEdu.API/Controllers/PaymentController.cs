@@ -37,7 +37,7 @@ namespace DevEdu.API.Controllers
         [Description("Get payment by id")]
         public PaymentOutputModel GetPayment(int id)
         {
-            var dto = _paymentService.GetPayment(id);
+            var dto = _paymentService.GetPaymentAsync(id);
             return _mapper.Map<PaymentOutputModel>(dto);
         }
 
@@ -50,7 +50,7 @@ namespace DevEdu.API.Controllers
         [Description("Get all payments by user id")]
         public List<PaymentOutputModel> SelectAllPaymentsByUserId(int userId)
         {
-            var list = _paymentService.GetPaymentsByUserId(userId);
+            var list = _paymentService.GetPaymentsByUserIdAsync(userId);
             return _mapper.Map<List<PaymentOutputModel>>(list);
         }
 
@@ -65,7 +65,7 @@ namespace DevEdu.API.Controllers
         public ActionResult<PaymentOutputModel> AddPayment([FromBody] PaymentInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
-            var id = _paymentService.AddPayment(dto);
+            var id = _paymentService.AddPaymentAsync(dto);
             dto.Id = id;
             var output = _mapper.Map<PaymentOutputModel>(dto);
             return Created(new Uri($"api/Payment/{output.Id}", UriKind.Relative), output);
@@ -80,7 +80,7 @@ namespace DevEdu.API.Controllers
         [Description("Delete payment by id")]
         public ActionResult DeletePayment(int id)
         {
-            _paymentService.DeletePayment(id);
+            _paymentService.DeletePaymentAsync(id);
             return NoContent();
         }
 
@@ -95,8 +95,8 @@ namespace DevEdu.API.Controllers
         public PaymentOutputModel UpdatePayment(int id, [FromBody] PaymentUpdateInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
-            _paymentService.UpdatePayment(id, dto);
-            dto = _paymentService.GetPayment(id);
+            _paymentService.UpdatePaymentAsync(id, dto);
+            dto = _paymentService.GetPaymentAsync(id);
             return _mapper.Map<PaymentOutputModel>(dto);
         }
 
@@ -111,8 +111,8 @@ namespace DevEdu.API.Controllers
         public List<PaymentOutputModel> AddPayments([FromBody] List<PaymentInputModel> models)
         {
             var dto = _mapper.Map<List<PaymentDto>>(models);
-            var listId = _paymentService.AddPayments(dto);
-            dto = _paymentService.SelectPaymentsBySeveralId(listId);
+            var listId = _paymentService.AddPaymentsAsync(dto);
+            dto = _paymentService.SelectPaymentsBySeveralIdAsync(listId);
             return _mapper.Map<List<PaymentOutputModel>>(dto);
         }
     }

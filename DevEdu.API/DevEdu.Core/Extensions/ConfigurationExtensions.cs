@@ -17,6 +17,7 @@ namespace DevEdu.Core
                 }
             }
         }
+
         private static string RemoveCurlyBrackets(string str)
         {
             return str.Replace("{{", "").Replace("}}", "");

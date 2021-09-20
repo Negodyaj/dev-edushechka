@@ -43,7 +43,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<StudentHomeworkDto>(inputModel);
-            var returnedDto = _studentHomeworkService.AddStudentHomework(homeworkId, dto, userInfo);
+            var returnedDto = _studentHomeworkService.AddStudentHomeworkAsync(homeworkId, dto, userInfo);
             var output = _mapper.Map<StudentHomeworkWithHomeworkOutputModel>(returnedDto);
             return Created(new Uri($"api/StudentHomework/by-user/{output.Id}", UriKind.Relative), output);
         }
@@ -59,7 +59,7 @@ namespace DevEdu.API.Controllers
         public ActionResult DeleteStudentHomework(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            _studentHomeworkService.DeleteStudentHomework(id, userInfo);
+            _studentHomeworkService.DeleteStudentHomeworkAsync(id, userInfo);
             return NoContent();
         }
 
@@ -75,7 +75,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var taskAnswerDto = _mapper.Map<StudentHomeworkDto>(inputModel);
-            var studentHomeworkDto = _studentHomeworkService.UpdateStudentHomework(id, taskAnswerDto, userInfo);
+            var studentHomeworkDto = _studentHomeworkService.UpdateStudentHomeworkAsync(id, taskAnswerDto, userInfo);
             return _mapper.Map<StudentHomeworkWithHomeworkOutputModel>(studentHomeworkDto);
         }
 
@@ -89,8 +89,8 @@ namespace DevEdu.API.Controllers
         public StudentHomeworkWithHomeworkOutputModel UpdateStatusOfStudentHomework(int id, int statusId)
         {
             var userInfo = this.GetUserIdAndRoles();
-            _studentHomeworkService.UpdateStatusOfStudentHomework(id, statusId, userInfo);
-            var dto = _studentHomeworkService.GetStudentHomeworkById(id, userInfo);
+            _studentHomeworkService.UpdateStatusOfStudentHomeworkAsync(id, statusId, userInfo);
+            var dto = _studentHomeworkService.GetStudentHomeworkByIdAsync(id, userInfo);
             return _mapper.Map<StudentHomeworkWithHomeworkOutputModel>(dto);
         }
 
@@ -104,7 +104,7 @@ namespace DevEdu.API.Controllers
         public StudentHomeworkWithHomeworkOutputModel GetStudentHomeworkById(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var studentAnswerDto = _studentHomeworkService.GetStudentHomeworkById(id, userInfo);
+            var studentAnswerDto = _studentHomeworkService.GetStudentHomeworkByIdAsync(id, userInfo);
             return _mapper.Map<StudentHomeworkWithHomeworkOutputModel>(studentAnswerDto);
         }
 
@@ -131,7 +131,7 @@ namespace DevEdu.API.Controllers
         public List<StudentHomeworkWithTaskOutputModel> GetAllStudentHomeworkByStudentId(int userId)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var answersDto = _studentHomeworkService.GetAllStudentHomeworkByStudentId(userId, userInfo);
+            var answersDto = _studentHomeworkService.GetAllStudentHomeworkByStudentIdAsync(userId, userInfo);
             return _mapper.Map<List<StudentHomeworkWithTaskOutputModel>>(answersDto);
         }
     }

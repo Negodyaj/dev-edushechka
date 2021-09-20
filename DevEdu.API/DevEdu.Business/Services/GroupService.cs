@@ -56,7 +56,7 @@ namespace DevEdu.Business.Services
             await _groupHelper.CheckGroupExistenceAsync(groupId);
 
             var dto = await _groupRepository.GetGroupAsync(groupId);
-            var isAccess = _groupHelper.CheckAccessGetGroupMembers(groupId, userInfo);
+            var isAccess =  _groupHelper.CheckAccessGetGroupMembers(groupId, userInfo);
             if (!isAccess || dto == null) return dto;
             dto.Students = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student);
             dto.Tutors = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Tutor);
@@ -69,7 +69,7 @@ namespace DevEdu.Business.Services
         public async Task<int> AddGroupLesson(int groupId, int lessonId)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            _lessonHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            await _lessonHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
 
             return await _groupRepository.AddGroupToLessonAsync(groupId, lessonId);
         }
@@ -77,7 +77,7 @@ namespace DevEdu.Business.Services
         public async Task RemoveGroupLesson(int groupId, int lessonId)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            _lessonHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            await _lessonHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
 
             await _groupRepository.RemoveGroupFromLessonAsync(groupId, lessonId);
         }
@@ -100,7 +100,7 @@ namespace DevEdu.Business.Services
         public async Task<int> AddGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            _materialHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
+            await _materialHelper.GetMaterialByIdAndThrowIfNotFoundAsync(materialId);
 
             return await _groupRepository.AddGroupMaterialReferenceAsync(groupId, materialId);
         }
@@ -108,7 +108,7 @@ namespace DevEdu.Business.Services
         public async Task<int> RemoveGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            _materialHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
+            await _materialHelper.GetMaterialByIdAndThrowIfNotFoundAsync(materialId);
 
             return await _groupRepository.RemoveGroupMaterialReferenceAsync(groupId, materialId);
         }
@@ -116,7 +116,7 @@ namespace DevEdu.Business.Services
         public async Task<int> AddGroupToLesson(int groupId, int lessonId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            _lessonHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            await _lessonHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
 
             return await _groupRepository.AddGroupToLessonAsync(groupId, lessonId);
         }
@@ -124,7 +124,7 @@ namespace DevEdu.Business.Services
         public async Task RemoveGroupFromLesson(int groupId, int lessonId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            _lessonHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            await _lessonHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
 
             await _groupRepository.RemoveGroupFromLessonAsync(groupId, lessonId);
         }
@@ -132,7 +132,7 @@ namespace DevEdu.Business.Services
         public async Task AddUserToGroup(int groupId, int userId, Role roleId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            await _userHelper.GetUserByIdAndThrowIfNotFound(userId);
+            await _userHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
 
             await _groupRepository.AddUserToGroupAsync(groupId, userId, (int)roleId);
         }
@@ -140,7 +140,7 @@ namespace DevEdu.Business.Services
         public async Task DeleteUserFromGroup(int userId, int groupId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            await _userHelper.GetUserByIdAndThrowIfNotFound(userId);
+            await _userHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
 
             await _groupRepository.DeleteUserFromGroupAsync(userId, groupId);
         }
@@ -148,7 +148,7 @@ namespace DevEdu.Business.Services
         public async Task DeleteTaskFromGroup(int groupId, int taskId, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(groupId);
-            _taskHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
+            await _taskHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
 
             await _groupRepository.DeleteTaskFromGroupAsync(groupId, taskId);
         }

@@ -60,7 +60,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(CommentData.GetGroupsDto());
 
             //When
-            var actualComment = _sut.AddCommentToLesson(lessonId, commentDto, userInfo);
+            var actualComment = _sut.AddCommentToLessonAsync(lessonId, commentDto, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, actualComment);
@@ -92,7 +92,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(CommentData.GetGroupsDto());
 
             //When
-            var actualComment = _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userInfo);
+            var actualComment = _sut.AddCommentToStudentAnswerAsync(taskStudentId, commentDto, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, actualComment);
@@ -116,7 +116,7 @@ namespace DevEdu.Business.Tests
             _commentRepoMock.Setup(x => x.GetCommentAsync(commentId)).Returns(commentDto);
 
             //When
-            var dto = _sut.GetComment(commentId, userInfo);
+            var dto = _sut.GetCommentAsync(commentId, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, dto);
@@ -138,7 +138,7 @@ namespace DevEdu.Business.Tests
             _commentRepoMock.Setup(x => x.GetCommentAsync(commentId)).Returns(commentDto);
 
             //When
-            var dto = _sut.UpdateComment(commentId, commentDto, userInfo);
+            var dto = _sut.UpdateCommentAsync(commentId, commentDto, userInfo);
 
             //Than
             Assert.AreEqual(commentDto, dto);
@@ -161,7 +161,7 @@ namespace DevEdu.Business.Tests
             _commentRepoMock.Setup(x => x.DeleteCommentAsync(commentId));
 
             //When
-            _sut.DeleteComment(commentId, userInfo);
+            _sut.DeleteCommentAsync(commentId, userInfo);
 
             //Than
             _commentRepoMock.Verify(x => x.GetCommentAsync(commentId), Times.Once);
@@ -181,7 +181,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddCommentToLesson(lesson.Id, commentDto, userInfo));
+                () => _sut.AddCommentToLessonAsync(lesson.Id, commentDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -206,7 +206,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.AddCommentToLesson(lessonId, commentDto, userInfo));
+                () => _sut.AddCommentToLessonAsync(lessonId, commentDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -229,7 +229,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddCommentToStudentAnswer(taskStudentId, commentDto, userInfo));
+                () => _sut.AddCommentToStudentAnswerAsync(taskStudentId, commentDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -253,7 +253,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.AddCommentToStudentAnswer(studentAnswerOnTaskDto.Id, commentDto, userInfo));
+                () => _sut.AddCommentToStudentAnswerAsync(studentAnswerOnTaskDto.Id, commentDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -273,7 +273,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.GetComment(comment.Id, userInfo));
+                () => _sut.GetCommentAsync(comment.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -294,7 +294,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                    () => _sut.GetComment(commentId, userInfo));
+                    () => _sut.GetCommentAsync(commentId, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -313,7 +313,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.UpdateComment(comment.Id, comment, userInfo));
+                () => _sut.UpdateCommentAsync(comment.Id, comment, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -334,7 +334,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                    () => _sut.UpdateComment(commentId, commentDto, userInfo));
+                    () => _sut.UpdateCommentAsync(commentId, commentDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -353,7 +353,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.DeleteComment(comment.Id, userInfo));
+                () => _sut.DeleteCommentAsync(comment.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -374,7 +374,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                    () => _sut.DeleteComment(commentId, userInfo));
+                    () => _sut.DeleteCommentAsync(commentId, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));

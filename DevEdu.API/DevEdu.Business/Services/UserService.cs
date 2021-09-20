@@ -39,7 +39,7 @@ namespace DevEdu.Business.Services
 
         public async Task<UserDto> GetUserByIdAsync(int id)
         {
-            var user = await _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
+            var user = await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(id);
 
             return user;
         }
@@ -62,7 +62,7 @@ namespace DevEdu.Business.Services
 
         public async Task<UserDto> UpdateUserAsync(UserDto dto)
         {
-            await _userValidationHelper.GetUserByIdAndThrowIfNotFound(dto.Id);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(dto.Id);
             await _userRepository.UpdateUserAsync(dto);
 
             var user = await _userRepository.GetUserByIdAsync(dto.Id);
@@ -72,19 +72,19 @@ namespace DevEdu.Business.Services
 
         public async Task DeleteUserAsync(int id)
         {
-            await _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(id);
             await _userRepository.DeleteUserAsync(id);
         }
 
         public async Task AddUserRoleAsync(int userId, int roleId)
         {
-            await _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
             await _userRepository.AddUserRoleAsync(userId, roleId);
         }
 
         public async Task DeleteUserRoleAsync(int userId, int roleId)
         {
-            await _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
             await _userRepository.DeleteUserRoleAsync(userId, roleId);
         }
     }

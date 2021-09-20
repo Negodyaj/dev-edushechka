@@ -37,7 +37,7 @@ namespace DevEdu.API.Controllers
         public HomeworkInfoFullOutputModel GetHomework(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _homeworkService.GetHomework(id, userInfo);
+            var dto = _homeworkService.GetHomeworkAsync(id, userInfo);
             var output = _mapper.Map<HomeworkInfoFullOutputModel>(dto);
             return output;
         }
@@ -66,7 +66,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<HomeworkInfoWithGroupOutputModel> GetHomeworksByTaskId(int taskId)
         {
-            var list = _homeworkService.GetHomeworkByTaskId(taskId);
+            var list = _homeworkService.GetHomeworkByTaskIdAsync(taskId);
             return _mapper.Map<List<HomeworkInfoWithGroupOutputModel>>(list);
         }
 
@@ -82,7 +82,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<HomeworkDto>(model);
-            var hw = _homeworkService.AddHomework(groupId, taskId, dto, userInfo);
+            var hw = _homeworkService.AddHomeworkAsync(groupId, taskId, dto, userInfo);
             var output = _mapper.Map<HomeworkInfoOutputModel>(hw);
             return Created(new Uri($"api/Homework/{output.Id}", UriKind.Relative), output);
         }
@@ -97,7 +97,7 @@ namespace DevEdu.API.Controllers
         public ActionResult DeleteHomework(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            _homeworkService.DeleteHomework(id, userInfo);
+            _homeworkService.DeleteHomeworkAsync(id, userInfo);
             return NoContent();
         }
 
@@ -113,7 +113,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<HomeworkDto>(model);
-            var output = _homeworkService.UpdateHomework(id, dto, userInfo);
+            var output = _homeworkService.UpdateHomeworkAsync(id, dto, userInfo);
             return _mapper.Map<HomeworkInfoOutputModel>(output);
         }
     }

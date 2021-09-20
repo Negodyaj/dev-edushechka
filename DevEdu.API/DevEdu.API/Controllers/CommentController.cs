@@ -36,7 +36,7 @@ namespace DevEdu.API.Controllers
         public CommentInfoOutputModel GetComment(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _commentService.GetComment(id, userInfo);
+            var dto = _commentService.GetCommentAsync(id, userInfo);
             return _mapper.Map<CommentInfoOutputModel>(dto);
         }
 
@@ -52,7 +52,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var comment = _commentService.AddCommentToLesson(lessonId, dto, userInfo);
+            var comment = _commentService.AddCommentToLessonAsync(lessonId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
             return Created(new Uri($"api/Comment/{output.Id}", UriKind.Relative), output);
         }
@@ -69,7 +69,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var comment = _commentService.AddCommentToStudentAnswer(studentHomeworkId, dto, userInfo);
+            var comment = _commentService.AddCommentToStudentAnswerAsync(studentHomeworkId, dto, userInfo);
             var output = _mapper.Map<CommentInfoOutputModel>(comment);
             return Created(new Uri($"api/Comment/{output.Id}", UriKind.Relative), output);
         }
@@ -84,7 +84,7 @@ namespace DevEdu.API.Controllers
         public ActionResult DeleteComment(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            _commentService.DeleteComment(id, userInfo);
+            _commentService.DeleteCommentAsync(id, userInfo);
             return NoContent();
         }
 
@@ -100,7 +100,7 @@ namespace DevEdu.API.Controllers
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<CommentDto>(model);
-            var updateDto = _commentService.UpdateComment(id, dto, userInfo);
+            var updateDto = _commentService.UpdateCommentAsync(id, dto, userInfo);
             return _mapper.Map<CommentInfoOutputModel>(updateDto);
         }
     }

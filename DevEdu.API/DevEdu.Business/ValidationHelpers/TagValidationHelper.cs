@@ -2,6 +2,7 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -14,11 +15,12 @@ namespace DevEdu.Business.ValidationHelpers
             _tagRepository = tagRepository;
         }
 
-        public TagDto GetTagByIdAndThrowIfNotFound(int tagId)
+        public async Task<TagDto> GetTagByIdAndThrowIfNotFoundAsync(int tagId)
         {
-            var tag = _tagRepository.SelectTagByIdAsync(tagId);
+            var tag = await _tagRepository.SelectTagByIdAsync(tagId);
             if (tag == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(tag), tagId));
+            
             return tag;
         }
     }

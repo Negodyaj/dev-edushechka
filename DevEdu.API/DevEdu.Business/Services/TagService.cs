@@ -2,6 +2,7 @@
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -16,28 +17,28 @@ namespace DevEdu.Business.Services
             _tagValidationHelper = tagValidationHelper;
         }
 
-        public TagDto AddTag(TagDto dto)
+        public async Task<TagDto> AddTagAsync(TagDto dto)
         {
-            dto.Id = _repository.AddTagAsync(dto);
+            dto.Id =await _repository.AddTagAsync(dto);
             return dto;
         }
 
-        public void DeleteTag(int id)
+        public async Task DeleteTagAsync(int id)
         {
-            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(id);
-            _repository.DeleteTagAsync(id);
+            await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(id);
+            await _repository.DeleteTagAsync(id);
         }
 
-        public TagDto UpdateTag(TagDto dto, int id)
+        public async Task<TagDto> UpdateTagAsync(TagDto dto, int id)
         {
-            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(id);
+            await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(id);
             dto.Id = id;
-            _repository.UpdateTagAsync(dto);
-            return _repository.SelectTagByIdAsync(id);
+            await _repository.UpdateTagAsync(dto);
+            return await _repository.SelectTagByIdAsync(id);
         }
 
-        public List<TagDto> GetAllTags() => _repository.SelectAllTagsAsync();
+        public async Task<List<TagDto>> GetAllTagsAsync() => await _repository.SelectAllTagsAsync();
 
-        public TagDto GetTagById(int id) => _tagValidationHelper.GetTagByIdAndThrowIfNotFound(id);
+        public async Task<TagDto> GetTagByIdAsync(int id) => await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(id);
     }
 }

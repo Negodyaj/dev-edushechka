@@ -18,7 +18,7 @@ namespace DevEdu.Business.ValidationHelpers
             _userRepository = userRepository;
         }
 
-        public async Task<UserDto> GetUserByIdAndThrowIfNotFound(int userId)
+        public async Task<UserDto> GetUserByIdAndThrowIfNotFoundAsync(int userId)
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
 
@@ -28,7 +28,7 @@ namespace DevEdu.Business.ValidationHelpers
             return user;
         }
 
-        public async Task CheckUserBelongToGroup(int groupId, int userId, Role role)
+        public async Task CheckUserBelongToGroupAsync(int groupId, int userId, Role role)
         {
             var usersInGroup = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)role);
 
@@ -40,7 +40,7 @@ namespace DevEdu.Business.ValidationHelpers
             }
         }
 
-        public async Task CheckUserBelongToGroup(int groupId, int userId, List<Role> roles)
+        public async Task CheckUserBelongToGroupAsync(int groupId, int userId, List<Role> roles)
         {
             var checkResult = false;
 
@@ -61,7 +61,7 @@ namespace DevEdu.Business.ValidationHelpers
             }
         }
 
-        public async Task CheckAuthorizationUserToGroup(int groupId, int userId, Role role)
+        public async Task CheckAuthorizationUserToGroupAsync(int groupId, int userId, Role role)
         {
             var usersInGroup = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)role);
 

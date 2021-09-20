@@ -48,7 +48,7 @@ namespace DevEdu.Business.Tests
             _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).Returns(notificationDto);
 
             //When
-            var actualNotificationtDto = _sut.AddNotification(notificationDto, userInfo);
+            var actualNotificationtDto = _sut.AddNotificationAsync(notificationDto, userInfo);
 
             //Than
             Assert.AreEqual(notificationDto, actualNotificationtDto);
@@ -67,7 +67,7 @@ namespace DevEdu.Business.Tests
             _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).Returns(notificationDto);
 
             //When
-            var actualNotificationtDto = _sut.AddNotification(notificationDto, userInfo);
+            var actualNotificationtDto = _sut.AddNotificationAsync(notificationDto, userInfo);
 
             //Than
             Assert.AreEqual(notificationDto, actualNotificationtDto);
@@ -86,7 +86,7 @@ namespace DevEdu.Business.Tests
             _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).Returns(notificationDto);
 
             //When
-            var actualNotificationtDto = _sut.AddNotification(notificationDto, userInfo);
+            var actualNotificationtDto = _sut.AddNotificationAsync(notificationDto, userInfo);
 
             //Than
             Assert.AreEqual(notificationDto, actualNotificationtDto);
@@ -103,7 +103,7 @@ namespace DevEdu.Business.Tests
             _notificationRepoMock.Setup(x => x.GetNotificationAsync(notificationId)).Returns(notificationDto);
 
             //When
-            var dto = _sut.GetNotification(notificationId);
+            var dto = _sut.GetNotificationAsync(notificationId);
 
             //Than
             Assert.AreEqual(notificationDto, dto);
@@ -123,7 +123,7 @@ namespace DevEdu.Business.Tests
             _notificationRepoMock.Setup(x => x.GetNotificationAsync(notificationId)).Returns(notificationDto);
 
             //When
-            var dto = _sut.UpdateNotification(notificationId, notificationDto, userInfo);
+            var dto = _sut.UpdateNotificationAsync(notificationId, notificationDto, userInfo);
 
             //Than
             Assert.AreEqual(notificationDto, dto);
@@ -145,7 +145,7 @@ namespace DevEdu.Business.Tests
 
 
             //When
-            _sut.DeleteNotification(notificationId, userInfo);
+            _sut.DeleteNotificationAsync(notificationId, userInfo);
 
             //Than
             _notificationRepoMock.Verify(x => x.DeleteNotificationAsync(notificationId), Times.Once);
@@ -162,7 +162,7 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).Returns(userDto);
 
             //When
-            var listOfDto = _sut.GetNotificationsByUserId(userId);
+            var listOfDto = _sut.GetNotificationsByUserIdAsync(userId);
 
             //Than
             Assert.AreEqual(notificationsList, listOfDto);
@@ -182,7 +182,7 @@ namespace DevEdu.Business.Tests
             // _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
 
             //When
-            var listOfDto = _sut.GetNotificationsByGroupId(groupId);
+            var listOfDto = _sut.GetNotificationsByGroupIdAsync(groupId);
 
             //Than
             Assert.AreEqual(notificationsList, listOfDto);
@@ -200,7 +200,7 @@ namespace DevEdu.Business.Tests
             _notificationRepoMock.Setup(x => x.GetNotificationsByRoleIdAsync(userId)).Returns(notificationsList);
 
             //When
-            var listOfDto = _sut.GetNotificationsByRoleId(userId);
+            var listOfDto = _sut.GetNotificationsByRoleIdAsync(userId);
 
             //Than
             Assert.AreEqual(notificationsList, listOfDto);

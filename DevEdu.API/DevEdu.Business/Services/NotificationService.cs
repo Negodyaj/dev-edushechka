@@ -34,85 +34,89 @@ namespace DevEdu.Business.Services
         public async Task<List<NotificationDto>> GetAllNotificationByUserAsync(UserIdentityInfo userInfo)
         {
             var rolesList = userInfo.Roles;
-            List<NotificationDto> notifications = GetNotificationsByUserId(userInfo.UserId);
+            var notifications = await GetNotificationsByUserIdAsync(userInfo.UserId);
 
             foreach (Role role in rolesList)
             {
-                var listByRole = GetNotificationsByRoleId((int)role);
+                var listByRole = await GetNotificationsByRoleIdAsync((int)role);
                 notifications.AddRange(listByRole);
             }
+
             if (userInfo.IsStudent())
             {
                 var groupList = await _groupRepository.GetGroupsByUserIdAsync(userInfo.UserId);
                 foreach (GroupDto group in groupList)
                 {
-                    var listByGroup = GetNotificationsByGroupId(group.Id);
+                    var listByGroup = await GetNotificationsByGroupIdAsync(group.Id);
                     notifications.AddRange(listByGroup);
                 }
 
             }
             notifications = notifications.OrderByDescending(o => o.Date).ToList();
+
             return notifications;
         }
 
-        public NotificationDto GetNotification(int id)
+        public async Task<NotificationDto> GetNotificationAsync(int id)
         {
-            var dto = _notificationValidationHelper.GetNotificationByIdAndThrowIfNotFound(id);
+            var dto = await _notificationValidationHelper.GetNotificationByIdAndThrowIfNotFoundAsync(id);
             return dto;
         }
 
-        public List<NotificationDto> GetNotificationsByUserId(int userId)
+        public async Task<List<NotificationDto>> GetNotificationsByUserIdAsync(int userId)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-            var list = _notificationRepository.GetNotificationsByUserIdAsync(userId);
-            return list;
-        }
-        public List<NotificationDto> GetNotificationsByGroupId(int groupId)
-        {
-            _groupValidationHelper.CheckGroupExistenceAsync(groupId);
-            var list = _notificationRepository.GetNotificationsByGroupIdAsync(groupId);
-            return list;
-        }
-        public List<NotificationDto> GetNotificationsByRoleId(int RoleId)
-        {
-            var list = _notificationRepository.GetNotificationsByRoleIdAsync(RoleId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
+            var list = await _notificationRepository.GetNotificationsByUserIdAsync(userId);
             return list;
         }
 
-        public NotificationDto AddNotification(NotificationDto dto, UserIdentityInfo userInfo)
+        public async Task<List<NotificationDto>> GetNotificationsByGroupIdAsync(int groupId)
+        {
+            await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
+            var list = await _notificationRepository.GetNotificationsByGroupIdAsync(groupId);
+            return list;
+        }
+
+        public async Task<List<NotificationDto>> GetNotificationsByRoleIdAsync(int RoleId)
+        {
+            var list = await _notificationRepository.GetNotificationsByRoleIdAsync(RoleId);
+            return list;
+        }
+
+        public async Task<NotificationDto> AddNotificationAsync(NotificationDto dto, UserIdentityInfo userInfo)
         {
             if (userInfo.IsTeacher())
             {
                 _notificationValidationHelper.CheckNotificationIsForGroup(dto, userInfo.UserId);
-                _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, userInfo.UserId, Role.Teacher);
+                await _userValidationHelper.CheckAuthorizationUserToGroupAsync(dto.Group.Id, userInfo.UserId, Role.Teacher);
             }
             _notificationValidationHelper.CheckRoleIdUserIdGroupIdIsNotNull(dto);
-            var output = _notificationRepository.AddNotificationAsync(dto);
-            return GetNotification(output);
+            var output = await _notificationRepository.AddNotificationAsync(dto);
+            return await GetNotificationAsync(output);
         }
 
-        public void DeleteNotification(int id, UserIdentityInfo userInfo)
+        public async Task DeleteNotificationAsync(int id, UserIdentityInfo userInfo)
         {
-            var checkedDto = _notificationValidationHelper.GetNotificationByIdAndThrowIfNotFound(id);
+            var checkedDto = await _notificationValidationHelper.GetNotificationByIdAndThrowIfNotFoundAsync(id);
             if (userInfo.IsTeacher())
             {
                 _notificationValidationHelper.CheckNotificationIsForGroup(checkedDto, userInfo.UserId);
-                _userValidationHelper.CheckAuthorizationUserToGroup(checkedDto.Group.Id, userInfo.UserId, Role.Teacher);
+                await _userValidationHelper.CheckAuthorizationUserToGroupAsync(checkedDto.Group.Id, userInfo.UserId, Role.Teacher);
             }
-            _notificationRepository.DeleteNotificationAsync(id);
+            await _notificationRepository.DeleteNotificationAsync(id);
         }
 
-        public NotificationDto UpdateNotification(int id, NotificationDto dto, UserIdentityInfo userInfo)
+        public async Task<NotificationDto> UpdateNotificationAsync(int id, NotificationDto dto, UserIdentityInfo userInfo)
         {
-            var checkedDto = _notificationValidationHelper.GetNotificationByIdAndThrowIfNotFound(id);
+            var checkedDto = await _notificationValidationHelper.GetNotificationByIdAndThrowIfNotFoundAsync(id);
             dto.Id = id;
             if (userInfo.IsTeacher())
             {
                 _notificationValidationHelper.CheckNotificationIsForGroup(checkedDto, userInfo.UserId);
-                _userValidationHelper.CheckAuthorizationUserToGroup(checkedDto.Group.Id, userInfo.UserId, Role.Teacher);
+                await _userValidationHelper.CheckAuthorizationUserToGroupAsync(checkedDto.Group.Id, userInfo.UserId, Role.Teacher);
             }
-            _notificationRepository.UpdateNotificationAsync(dto);
-            return _notificationRepository.GetNotificationAsync(id);
+            await _notificationRepository.UpdateNotificationAsync(dto);
+            return await _notificationRepository.GetNotificationAsync(id);
         }
     }
 }

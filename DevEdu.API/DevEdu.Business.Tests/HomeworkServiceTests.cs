@@ -56,7 +56,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.GetHomeworkAsync(expectedHomeworkId)).Returns(homeworkDto);
 
             //When
-            var actualHomeworkDto = _sut.AddHomework(groupId, taskId, homeworkDto, userInfo);
+            var actualHomeworkDto = _sut.AddHomeworkAsync(groupId, taskId, homeworkDto, userInfo);
 
             //Than
             Assert.AreEqual(homeworkDto, actualHomeworkDto);
@@ -80,7 +80,7 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
 
             //When
-            var dto = _sut.GetHomework(homeworkId, userInfo);
+            var dto = _sut.GetHomeworkAsync(homeworkId, userInfo);
 
             //Than
             Assert.AreEqual(homeworkDto, dto);
@@ -102,7 +102,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.UpdateHomeworkAsync(homeworkDto));
 
             //When
-            var actualHomeworkDto = _sut.UpdateHomework(homeworkId, homeworkDto, userInfo);
+            var actualHomeworkDto = _sut.UpdateHomeworkAsync(homeworkId, homeworkDto, userInfo);
 
             //Then
             Assert.AreEqual(homeworkDto, actualHomeworkDto);
@@ -126,7 +126,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.DeleteHomeworkAsync(homeworkId));
 
             //When
-            _sut.DeleteHomework(homeworkId, userInfo);
+            _sut.DeleteHomeworkAsync(homeworkId, userInfo);
 
             //Then
             _homeworkRepoMock.Verify(x => x.GetHomeworkAsync(homeworkId), Times.Once);
@@ -168,7 +168,7 @@ namespace DevEdu.Business.Tests
             _homeworkRepoMock.Setup(x => x.GetHomeworkByTaskIdAsync(taskId)).Returns(homeworkList);
 
             //When
-            var dto = _sut.GetHomeworkByTaskId(taskId);
+            var dto = _sut.GetHomeworkByTaskIdAsync(taskId);
 
             //Than
             Assert.AreEqual(homeworkList, dto);
@@ -189,7 +189,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddHomework(group.Id, task.Id, homeworkDto, userInfo));
+                () => _sut.AddHomeworkAsync(group.Id, task.Id, homeworkDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -209,7 +209,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddHomework(group.Id, task.Id, homeworkDto, userInfo));
+                () => _sut.AddHomeworkAsync(group.Id, task.Id, homeworkDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -232,7 +232,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.AddHomework(group.Id, task.Id, homeworkDto, userInfo));
+                () => _sut.AddHomeworkAsync(group.Id, task.Id, homeworkDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -251,7 +251,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.GetHomework(homework.Id, userInfo));
+                () => _sut.GetHomeworkAsync(homework.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -271,7 +271,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.GetHomework(homework.Id, userInfo));
+                () => _sut.GetHomeworkAsync(homework.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -289,7 +289,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.UpdateHomework(homework.Id, homework, userInfo));
+                () => _sut.UpdateHomeworkAsync(homework.Id, homework, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -309,7 +309,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.UpdateHomework(homework.Id, homework, userInfo));
+                () => _sut.UpdateHomeworkAsync(homework.Id, homework, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -327,7 +327,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.DeleteHomework(homework.Id, userInfo));
+                () => _sut.DeleteHomeworkAsync(homework.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -347,7 +347,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.DeleteHomework(homework.Id, userInfo));
+                () => _sut.DeleteHomeworkAsync(homework.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -408,7 +408,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.GetHomeworkByTaskId(task.Id));
+                () => _sut.GetHomeworkByTaskIdAsync(task.Id));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));

@@ -39,56 +39,61 @@ namespace DevEdu.Business.Services
             _userValidationHelper = useraValidationHelper;
         }
 
-        public List<MaterialDto> GetAllMaterials(UserIdentityInfo user)
+        public async Task<List<MaterialDto>> GetAllMaterialsAsync(UserIdentityInfo user)
         {
-            var allMaterials = _materialRepository.GetAllMaterialsAsync();
-            if (!(user.IsAdmin() || user.IsMethodist()))
+            var allMaterials = await _materialRepository.GetAllMaterialsAsync();
+            if (!(user.IsAdmin() ||
+                user.IsMethodist()))
             {
                 return _materilaValidationHelper.GetMaterialsAllowedToUser(allMaterials, user.UserId);
             }
+
             return allMaterials;
         }
 
         public async Task<MaterialDto> GetMaterialByIdWithCoursesAndGroupsAsync(int id)
         {
-            var dto = _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(id);
+            var dto = await _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFoundAsync(id);
             dto.Courses = await _courseRepository.GetCoursesByMaterialIdAsync(id);
-            dto.Groups = _groupRepository.GetGroupsByMaterialIdAsync(id);
+            dto.Groups = await _groupRepository.GetGroupsByMaterialIdAsync(id);
+
             return dto;
         }
 
-        public MaterialDto GetMaterialByIdWithTags(int id, UserIdentityInfo user)
+        public async Task<MaterialDto> GetMaterialByIdWithTagsAsync(int id, UserIdentityInfo user)
         {
-            var dto = _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(id);
+            var dto = await _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFoundAsync(id);
             if (!(user.IsAdmin() || user.IsMethodist()))
             {
                 _materilaValidationHelper.CheckUserAccessToMaterialForGetById(user.UserId, dto);
             }
+
             return dto;
         }
 
-        public int AddMaterialWithGroups(MaterialDto dto, List<int> tags, List<int> groups, UserIdentityInfo user)
+        public async Task<int> AddMaterialWithGroupsAsync(MaterialDto dto, List<int> tags, List<int> groups, UserIdentityInfo user)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(groups, nameof(groups));
-            groups.ForEach(group =>
+            groups.ForEach(async group =>
             {
-                var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(group)).GetAwaiter().GetResult();
+                var groupDto = await _groupValidationHelper.CheckGroupExistenceAsync(group);
                 if (user.IsAdmin())
                     return;
+
                 var currentRole = user.IsTeacher() ? Role.Teacher : Role.Tutor;
-                _userValidationHelper.CheckAuthorizationUserToGroup(group, user.UserId, currentRole);
+                await _userValidationHelper.CheckAuthorizationUserToGroupAsync(group, user.UserId, currentRole);
             });
-            var materialId = AddMaterial(dto, tags);
+            var materialId = await AddMaterialAsync(dto, tags);
             groups.ForEach(group => _groupRepository.AddGroupMaterialReferenceAsync(group, materialId));
             return materialId;
         }
 
-        public int AddMaterialWithCourses(MaterialDto dto, List<int> tags, List<int> courses)
+        public async Task<int> AddMaterialWithCoursesAsync(MaterialDto dto, List<int> tags, List<int> courses)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(courses, nameof(courses));
             courses.ForEach(course => _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(course));
 
-            var materialId = AddMaterial(dto, tags);
+            var materialId = await AddMaterialAsync(dto, tags);
             courses.ForEach(course => _courseRepository.AddCourseMaterialReferenceAsync(course, materialId));
             return materialId;
         }
@@ -99,50 +104,53 @@ namespace DevEdu.Business.Services
             CheckAccessToMaterialByRole(material, user);
 
             dto.Id = id;
-            _materialRepository.UpdateMaterialAsync(dto);
-            return _materialRepository.GetMaterialByIdAsync(dto.Id);
+            await _materialRepository.UpdateMaterialAsync(dto);
+            return await _materialRepository.GetMaterialByIdAsync(dto.Id);
         }
 
         public async Task DeleteMaterialAsync(int id, bool isDeleted, UserIdentityInfo user)
         {
             var material = await GetMaterialByIdWithCoursesAndGroupsAsync(id);
             CheckAccessToMaterialByRole(material, user);
-            _materialRepository.DeleteMaterialAsync(id, isDeleted);
+            await _materialRepository.DeleteMaterialAsync(id, isDeleted);
         }
 
-        public void AddTagToMaterial(int materialId, int tagId)
+        public async Task AddTagToMaterialAsync(int materialId, int tagId)
         {
-            CheckMaterialAndTagExistence(materialId, tagId);
-            _materialRepository.AddTagToMaterialAsync(materialId, tagId);
-        }
-        public void DeleteTagFromMaterial(int materialId, int tagId)
-        {
-            CheckMaterialAndTagExistence(materialId, tagId);
-            _materialRepository.DeleteTagFromMaterialAsync(materialId, tagId);
+            await CheckMaterialAndTagExistenceAsync(materialId, tagId);
+            await _materialRepository.AddTagToMaterialAsync(materialId, tagId);
         }
 
-        public List<MaterialDto> GetMaterialsByTagId(int tagId, UserIdentityInfo user)
+        public async Task DeleteTagFromMaterialAsync(int materialId, int tagId)
         {
-            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tagId);
+            await CheckMaterialAndTagExistenceAsync(materialId, tagId);
+            await _materialRepository.DeleteTagFromMaterialAsync(materialId, tagId);
+        }
 
-            var allMaterialsByTag = _materialRepository.GetMaterialsByTagIdAsync(tagId);
+        public async Task<List<MaterialDto>> GetMaterialsByTagIdAsync(int tagId, UserIdentityInfo user)
+        {
+            await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(tagId);
+
+            var allMaterialsByTag = await _materialRepository.GetMaterialsByTagIdAsync(tagId);
             if (!(user.IsAdmin() || user.IsMethodist()))
             {
                 return _materilaValidationHelper.GetMaterialsAllowedToUser(allMaterialsByTag, user.UserId);
             }
+
             return allMaterialsByTag;
         }
 
-        private int AddMaterial(MaterialDto dto, List<int> tags)
+        private async Task<int> AddMaterialAsync(MaterialDto dto, List<int> tags)
         {
             if (tags == null || tags.Count == 0)
-                return _materialRepository.AddMaterialAsync(dto);
+                return await _materialRepository.AddMaterialAsync(dto);
 
             _materilaValidationHelper.CheckPassedValuesAreUnique(tags, nameof(tags));
-            tags.ForEach(tag => _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tag));
+            tags.ForEach(async tag => await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(tag));
 
-            var materialId = _materialRepository.AddMaterialAsync(dto);
-            tags.ForEach(tag => _materialRepository.AddTagToMaterialAsync(materialId, tag));
+            var materialId = await _materialRepository.AddMaterialAsync(dto);
+            tags.ForEach(async tag => await _materialRepository.AddTagToMaterialAsync(materialId, tag));
+
             return materialId;
         }
 
@@ -161,10 +169,10 @@ namespace DevEdu.Business.Services
             }
         }
 
-        private void CheckMaterialAndTagExistence(int materialId, int tagId)
+        private async Task CheckMaterialAndTagExistenceAsync(int materialId, int tagId)
         {
-            _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
-            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tagId);
+            await _materilaValidationHelper.GetMaterialByIdAndThrowIfNotFoundAsync(materialId);
+            await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(tagId);
         }
     }
 }

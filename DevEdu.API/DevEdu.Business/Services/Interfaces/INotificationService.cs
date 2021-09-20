@@ -8,12 +8,12 @@ namespace DevEdu.Business.Services
     public interface INotificationService
     {
         Task<List<NotificationDto>> GetAllNotificationByUserAsync(UserIdentityInfo userInfo);
-        NotificationDto GetNotification(int id);
-        List<NotificationDto> GetNotificationsByUserId(int userId);
-        List<NotificationDto> GetNotificationsByGroupId(int groupId);
-        List<NotificationDto> GetNotificationsByRoleId(int RoleId);
-        NotificationDto AddNotification(NotificationDto dto, UserIdentityInfo userInfo);
-        void DeleteNotification(int id, UserIdentityInfo userInfo);
-        NotificationDto UpdateNotification(int id, NotificationDto dto, UserIdentityInfo userInfo);
+        Task<NotificationDto> GetNotificationAsync(int id);
+        Task<List<NotificationDto>> GetNotificationsByUserIdAsync(int userId);
+        Task<List<NotificationDto>> GetNotificationsByGroupIdAsync(int groupId);
+        Task<List<NotificationDto>> GetNotificationsByRoleIdAsync(int RoleId);
+        Task<NotificationDto> AddNotificationAsync(NotificationDto dto, UserIdentityInfo userInfo);
+        Task DeleteNotificationAsync(int id, UserIdentityInfo userInfo);
+        Task<NotificationDto> UpdateNotificationAsync(int id, NotificationDto dto, UserIdentityInfo userInfo);
     }
 }

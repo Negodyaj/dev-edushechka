@@ -2,6 +2,7 @@
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -26,52 +27,52 @@ namespace DevEdu.Business.Services
             _studentAnswerValidationHelper = studentAnswerValidationHelper;
         }
 
-        public CommentDto AddCommentToLesson(int lessonId, CommentDto dto, UserIdentityInfo userInfo)
+        public async Task<CommentDto> AddCommentToLessonAsync(int lessonId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
             if (!userInfo.IsAdmin())
-                _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userInfo.UserId);
+                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userInfo.UserId);
 
             dto.User = new UserDto { Id = userInfo.UserId };
             dto.Lesson = new LessonDto { Id = lessonId };
-            var id = _commentRepository.AddCommentAsync(dto);
-            return _commentRepository.GetCommentAsync(id);
+            var id = await _commentRepository.AddCommentAsync(dto);
+            return await _commentRepository.GetCommentAsync(id);
         }
 
-        public CommentDto AddCommentToStudentAnswer(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo)
+        public async Task<CommentDto> AddCommentToStudentAnswerAsync(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var studentAnswer = _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFound(studentHomeworkId);
+            var studentAnswer = await _studentAnswerValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFoundAsync(studentHomeworkId);
             var studentId = studentAnswer.User.Id;
             if (!userInfo.IsAdmin())
-                _studentAnswerValidationHelper.CheckUserInStudentHomeworkAccessAsync(studentId, userInfo.UserId);
+                await _studentAnswerValidationHelper.CheckUserInStudentHomeworkAccessAsync(studentId, userInfo.UserId);
 
             dto.User = new UserDto { Id = userInfo.UserId };
             dto.StudentHomework = new StudentHomeworkDto { Id = studentHomeworkId };
-            var id = _commentRepository.AddCommentAsync(dto);
-            return _commentRepository.GetCommentAsync(id);
+            var id = await _commentRepository.AddCommentAsync(dto);
+            return await _commentRepository.GetCommentAsync(id);
         }
 
-        public CommentDto GetComment(int commentId, UserIdentityInfo userInfo)
+        public async Task<CommentDto> GetCommentAsync(int commentId, UserIdentityInfo userInfo)
         {
-            var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
+            var checkedDto = await _commentValidationHelper.GetCommentByIdAndThrowIfNotFoundAsync(commentId);
             CheckUserAccessToCommentByUserId(userInfo, checkedDto);
             return checkedDto;
         }
 
-        public void DeleteComment(int commentId, UserIdentityInfo userInfo)
+        public async Task DeleteCommentAsync(int commentId, UserIdentityInfo userInfo)
         {
-            var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
+            var checkedDto = await _commentValidationHelper.GetCommentByIdAndThrowIfNotFoundAsync(commentId);
             CheckUserAccessToCommentByUserId(userInfo, checkedDto);
-            _commentRepository.DeleteCommentAsync(commentId);
+            await _commentRepository.DeleteCommentAsync(commentId);
         }
 
-        public CommentDto UpdateComment(int commentId, CommentDto dto, UserIdentityInfo userInfo)
+        public async Task<CommentDto> UpdateCommentAsync(int commentId, CommentDto dto, UserIdentityInfo userInfo)
         {
-            var checkedDto = _commentValidationHelper.GetCommentByIdAndThrowIfNotFound(commentId);
+            var checkedDto = await _commentValidationHelper.GetCommentByIdAndThrowIfNotFoundAsync(commentId);
             CheckUserAccessToCommentByUserId(userInfo, checkedDto);
             dto.Id = commentId;
-            _commentRepository.UpdateCommentAsync(dto);
-            return _commentRepository.GetCommentAsync(commentId);
+            await _commentRepository.UpdateCommentAsync(dto);
+            return await _commentRepository.GetCommentAsync(commentId);
         }
 
         private void CheckUserAccessToCommentByUserId(UserIdentityInfo userInfo, CommentDto dto)

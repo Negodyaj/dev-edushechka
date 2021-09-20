@@ -24,65 +24,69 @@ namespace DevEdu.Business.Services
             _userValidationHelper = userValidationHelper;
         }
 
-        public StudentRatingDto AddStudentRating(StudentRatingDto studentRatingDto, UserIdentityInfo authorUserInfo)
+        public async Task<StudentRatingDto> AddStudentRatingAsync(StudentRatingDto studentRatingDto, UserIdentityInfo authorUserInfo)
         {
-            var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(studentRatingDto.Group.Id)).GetAwaiter().GetResult();
+            await _groupValidationHelper.CheckGroupExistenceAsync(studentRatingDto.Group.Id);
             if (!authorUserInfo.IsAdmin())
             {
-                _userValidationHelper.CheckAuthorizationUserToGroup(studentRatingDto.Group.Id, authorUserInfo.UserId, Role.Teacher);
+                await _userValidationHelper.CheckAuthorizationUserToGroupAsync(studentRatingDto.Group.Id, authorUserInfo.UserId, Role.Teacher);
             }
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentRatingDto.User.Id);
-            _userValidationHelper.CheckUserBelongToGroup(studentRatingDto.Group.Id, studentRatingDto.User.Id, Role.Student);
-            var id = _repository.AddStudentRatingAsync(studentRatingDto);
-            return _repository.SelectStudentRatingByIdAsync(id);
+
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(studentRatingDto.User.Id);
+            await _userValidationHelper.CheckUserBelongToGroupAsync(studentRatingDto.Group.Id, studentRatingDto.User.Id, Role.Student);
+            var id = await _repository.AddStudentRatingAsync(studentRatingDto);
+            return await _repository.SelectStudentRatingByIdAsync(id);
         }
 
-        public void DeleteStudentRating(int id, UserIdentityInfo authorUserInfo)
+        public async Task DeleteStudentRatingAsync(int id, UserIdentityInfo authorUserInfo)
         {
-            var dto = _ratingValidationHelper.CheckRaitingExistenceAndReturnDto(id);
+            var dto = await _ratingValidationHelper.CheckRaitingExistenceAndReturnDtoAsync(id);
             if (!authorUserInfo.IsAdmin())
             {
-                _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, authorUserInfo.UserId, Role.Teacher);
+                await _userValidationHelper.CheckAuthorizationUserToGroupAsync(dto.Group.Id, authorUserInfo.UserId, Role.Teacher);
             }
-            _repository.DeleteStudentRatingAsync(id);
+            await _repository.DeleteStudentRatingAsync(id);
         }
 
-        public List<StudentRatingDto> GetAllStudentRatings()
+        public async Task<List<StudentRatingDto>> GetAllStudentRatingsAsync()
         {
-            return _repository.SelectAllStudentRatingsAsync();
+            return await _repository.SelectAllStudentRatingsAsync();
         }
 
-        public List<StudentRatingDto> GetStudentRatingByUserId(int userId)
+        public async Task<List<StudentRatingDto>> GetStudentRatingByUserIdAsync(int userId)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-            return _repository.SelectStudentRatingByUserIdAsync(userId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
+            return await _repository.SelectStudentRatingByUserIdAsync(userId);
         }
 
-        public List<StudentRatingDto> GetStudentRatingByGroupId(int groupId, UserIdentityInfo authorUserInfo)
+        public async Task<List<StudentRatingDto>> GetStudentRatingByGroupIdAsync(int groupId, UserIdentityInfo authorUserInfo)
         {
             if (!authorUserInfo.IsAdmin() && !authorUserInfo.IsManager())
             {
-                _userValidationHelper.CheckAuthorizationUserToGroup(groupId, authorUserInfo.UserId, Role.Teacher);
+                await _userValidationHelper.CheckAuthorizationUserToGroupAsync(groupId, authorUserInfo.UserId, Role.Teacher);
             }
-            var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
-            return _repository.SelectStudentRatingByGroupIdAsync(groupId);
+            await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
+
+            return await _repository.SelectStudentRatingByGroupIdAsync(groupId);
         }
 
-        public StudentRatingDto UpdateStudentRating(int id, int value, int periodNumber, UserIdentityInfo authorUserInfo)
+        public async Task<StudentRatingDto> UpdateStudentRatingAsync(int id, int value, int periodNumber, UserIdentityInfo authorUserInfo)
         {
-            var dto = _ratingValidationHelper.CheckRaitingExistenceAndReturnDto(id);
+            var dto = await _ratingValidationHelper.CheckRaitingExistenceAndReturnDtoAsync(id);
             if (!authorUserInfo.IsAdmin())
             {
-                _userValidationHelper.CheckAuthorizationUserToGroup(dto.Group.Id, authorUserInfo.UserId, Role.Teacher);
+                await _userValidationHelper.CheckAuthorizationUserToGroupAsync(dto.Group.Id, authorUserInfo.UserId, Role.Teacher);
             }
+
             dto = new StudentRatingDto
             {
                 Id = id,
                 Rating = value,
                 ReportingPeriodNumber = periodNumber
             };
-            _repository.UpdateStudentRatingAsync(dto);
-            return _repository.SelectStudentRatingByIdAsync(id);
+
+            await _repository.UpdateStudentRatingAsync(dto);
+            return await _repository.SelectStudentRatingByIdAsync(id);
         }
     }
 }

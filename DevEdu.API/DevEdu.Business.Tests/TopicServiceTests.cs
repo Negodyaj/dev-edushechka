@@ -41,7 +41,7 @@ namespace DevEdu.Business.Tests
 
 
             //When
-            var actualTopicId = _sut.AddTopic(topicDto);
+            var actualTopicId = _sut.AddTopicAsync(topicDto);
 
             //Than
             Assert.AreEqual(expectedTopicId, actualTopicId);
@@ -63,7 +63,7 @@ namespace DevEdu.Business.Tests
 
 
             //When
-            var actualTopicId = _sut.AddTopic(topicDto);
+            var actualTopicId = _sut.AddTopicAsync(topicDto);
 
             //Than
             Assert.AreEqual(expectedTopicId, actualTopicId);
@@ -82,7 +82,7 @@ namespace DevEdu.Business.Tests
             _topicRepoMock.Setup(x => x.GetTopicAsync(expectedTopicId)).Returns(topicDto);
 
             //When
-            _sut.DeleteTopic(expectedTopicId);
+            _sut.DeleteTopicAsync(expectedTopicId);
 
             //Than
             _topicRepoMock.Verify(x => x.DeleteTopicAsync(expectedTopicId), Times.Once);
@@ -98,7 +98,7 @@ namespace DevEdu.Business.Tests
             _topicRepoMock.Setup(x => x.GetTopicAsync(topicId)).Returns(topicDto);
 
             //When
-            var dto = _sut.GetTopic(topicId);
+            var dto = _sut.GetTopicAsync(topicId);
 
             //Than
             Assert.AreEqual(topicDto, dto);
@@ -113,7 +113,7 @@ namespace DevEdu.Business.Tests
             _topicRepoMock.Setup(x => x.GetAllTopicsAsync()).Returns(expectedList);
 
             //When
-            var actualList = _sut.GetAllTopics();
+            var actualList = _sut.GetAllTopicsAsync();
 
             //Then
             Assert.AreEqual(expectedList, actualList);
@@ -131,7 +131,7 @@ namespace DevEdu.Business.Tests
             _topicRepoMock.Setup(x => x.GetTopicAsync(topicId)).Returns(topicDto);
 
             //When
-            var dto = _sut.UpdateTopic(topicId, topicDto);
+            var dto = _sut.UpdateTopicAsync(topicId, topicDto);
 
             //Than
             Assert.AreEqual(topicDto, dto);
@@ -147,7 +147,7 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", expectedTopicId)),
-                () => _sut.AddTagToTopic(expectedTopicId, expectedTagId));
+                () => _sut.AddTagToTopicAsync(expectedTopicId, expectedTagId));
 
             _topicRepoMock.Verify(x => x.AddTagToTopicAsync(expectedTopicId, expectedTagId), Times.Never);
         }
@@ -162,7 +162,7 @@ namespace DevEdu.Business.Tests
 
             Assert.Throws(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "tag", expectedTagId)),
-            () => _sut.AddTagToTopic(expectedTopicId, expectedTagId));
+            () => _sut.AddTagToTopicAsync(expectedTopicId, expectedTagId));
 
             _topicRepoMock.Verify(x => x.AddTagToTopicAsync(expectedTopicId, expectedTagId), Times.Never);
         }
@@ -180,7 +180,7 @@ namespace DevEdu.Business.Tests
             _topicRepoMock.Setup(x => x.DeleteTagFromTopicAsync(topicId, tagId)).Returns(expecectedAffectedRows);
 
             //When
-            var actualAffectedRows = _sut.DeleteTagFromTopic(topicId, tagId);
+            var actualAffectedRows = _sut.DeleteTagFromTopicAsync(topicId, tagId);
 
             //Than
             Assert.AreEqual(expecectedAffectedRows, actualAffectedRows);

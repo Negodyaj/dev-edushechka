@@ -35,7 +35,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public TopicOutputModel GetTopicById(int id)
         {
-            var output = _topicService.GetTopic(id);
+            var output = _topicService.GetTopicAsync(id);
             return _mapper.Map<TopicOutputModel>(output);
         }
 
@@ -46,7 +46,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public List<TopicOutputModel> GetAllTopics()
         {
-            var output = _topicService.GetAllTopics();
+            var output = _topicService.GetAllTopicsAsync();
             return _mapper.Map<List<TopicOutputModel>>(output);
         }
 
@@ -60,7 +60,7 @@ namespace DevEdu.API.Controllers
         public ActionResult<TopicOutputModel> AddTopic([FromBody] TopicInputModel model)
         {
             var dto = _mapper.Map<TopicDto>(model);
-            var topicId = _topicService.AddTopic(dto);
+            var topicId = _topicService.AddTopicAsync(dto);
             var output = GetTopicById(topicId);
             return Created(new Uri($"api/Topic/{output.Id}", UriKind.Relative), output);
         }
@@ -74,7 +74,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteTopic(int id)
         {
-            _topicService.DeleteTopic(id);
+            _topicService.DeleteTopicAsync(id);
             return NoContent();
         }
 
@@ -89,7 +89,7 @@ namespace DevEdu.API.Controllers
         public TopicOutputModel UpdateTopic(int id, [FromBody] TopicInputModel model)
         {
             var dto = _mapper.Map<TopicDto>(model);
-            var output = _topicService.UpdateTopic(id, dto);
+            var output = _topicService.UpdateTopicAsync(id, dto);
             return _mapper.Map<TopicOutputModel>(output);
         }
 
@@ -102,7 +102,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult AddTagToTopic(int topicId, int tagId)
         {
-            _topicService.AddTagToTopic(topicId, tagId);
+            _topicService.AddTagToTopicAsync(topicId, tagId);
             return NoContent();
         }
 
@@ -115,7 +115,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteTagFromTopic(int topicId, int tagId)
         {
-            _topicService.DeleteTagFromTopic(topicId, tagId);
+            _topicService.DeleteTagFromTopicAsync(topicId, tagId);
             return NoContent();
         }
     }

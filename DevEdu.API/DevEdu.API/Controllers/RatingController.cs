@@ -40,7 +40,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<StudentRatingDto>(model);
             var authorUserInfo = this.GetUserIdAndRoles();
-            dto = _service.AddStudentRating(dto, authorUserInfo);
+            dto = _service.AddStudentRatingAsync(dto, authorUserInfo);
             var output = _mapper.Map<StudentRatingOutputModel>(dto);
             return Created(new Uri($"api/Rating/by-user/{output.Id}", UriKind.Relative), output);
         }
@@ -55,7 +55,7 @@ namespace DevEdu.API.Controllers
         public ActionResult DeleteStudentRating(int id)
         {
             var authorUserInfo = this.GetUserIdAndRoles();
-            _service.DeleteStudentRating(id, authorUserInfo);
+            _service.DeleteStudentRatingAsync(id, authorUserInfo);
             return NoContent();
         }
 
@@ -69,7 +69,7 @@ namespace DevEdu.API.Controllers
         public StudentRatingOutputModel UpdateStudentRating(int id, int value, int periodNumber)
         {
             var authorUserInfo = this.GetUserIdAndRoles();
-            var dto = _service.UpdateStudentRating(id, value, periodNumber, authorUserInfo);
+            var dto = _service.UpdateStudentRatingAsync(id, value, periodNumber, authorUserInfo);
             return _mapper.Map<StudentRatingOutputModel>(dto);
         }
 
@@ -81,7 +81,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public List<StudentRatingOutputModel> GetAllStudentRatings()
         {
-            var dto = _service.GetAllStudentRatings();
+            var dto = _service.GetAllStudentRatingsAsync();
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
 
@@ -94,7 +94,7 @@ namespace DevEdu.API.Controllers
         public List<StudentRatingOutputModel> GetStudentRatingByGroupId(int groupId)
         {
             var authorUserInfo = this.GetUserIdAndRoles();
-            var dto = _service.GetStudentRatingByGroupId(groupId, authorUserInfo);
+            var dto = _service.GetStudentRatingByGroupIdAsync(groupId, authorUserInfo);
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
 
@@ -107,7 +107,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public List<StudentRatingOutputModel> GetStudentRatingByUserId(int userid)
         {
-            var dto = _service.GetStudentRatingByUserId(userid);
+            var dto = _service.GetStudentRatingByUserIdAsync(userid);
             return _mapper.Map<List<StudentRatingOutputModel>>(dto);
         }
     }

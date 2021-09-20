@@ -26,6 +26,7 @@ namespace DevEdu.Business.ValidationHelpers
             var task = await _taskRepository.GetTaskByIdAsync(taskId);
             if (task == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), taskId));
+            
             return task;
         }
 
@@ -37,6 +38,7 @@ namespace DevEdu.Business.ValidationHelpers
             var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
             if (result == default)
                 return new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId));
+            
             return default;
         }
 
@@ -45,6 +47,7 @@ namespace DevEdu.Business.ValidationHelpers
             taskDto.Courses = await _courseRepository.GetCoursesToTaskByTaskIdAsync(taskDto.Id);
             if (taskDto.Courses == null)
                 return new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskDto.Id));
+            
             return default;
         }
 
@@ -56,12 +59,13 @@ namespace DevEdu.Business.ValidationHelpers
             var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
             if (result == default)
                 return null;
+
             return await _taskRepository.GetTaskByIdAsync(taskId);
         }
 
         public List<TaskDto> GetTasksAllowedToMethodist(List<TaskDto> taskDtos)
         {
-            return (List<TaskDto>)taskDtos.Where(t => t.Courses != null);
+            return taskDtos.Where(t => t.Courses != null).ToList();
         }
     }
 }

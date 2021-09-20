@@ -28,10 +28,10 @@ namespace DevEdu.Business.Services
             _taskValidationHelper = taskValidationHelper;
         }
 
-        public HomeworkDto GetHomework(int homeworkId, UserIdentityInfo userInfo)
+        public async Task<HomeworkDto> GetHomeworkAsync(int homeworkId, UserIdentityInfo userInfo)
         {
-            var dto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            CheckAccessAndExistenceAndThrowIfNotFound(userInfo, dto);
+            var dto = await _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFoundAsync(homeworkId);
+            await CheckAccessAndExistenceAndThrowIfNotFoundAsync(userInfo, dto);
             return dto;
         }
 
@@ -39,53 +39,55 @@ namespace DevEdu.Business.Services
         {
             await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
             if (!userInfo.IsAdmin())
-                _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userInfo.UserId);
-            return _homeworkRepository.GetHomeworkByGroupIdAsync(groupId);
+                await _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userInfo.UserId);
+
+            return await _homeworkRepository.GetHomeworkByGroupIdAsync(groupId);
         }
 
-        public List<HomeworkDto> GetHomeworkByTaskId(int taskId)
+        public async Task<List<HomeworkDto>> GetHomeworkByTaskIdAsync(int taskId)
         {
-            _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
-            return _homeworkRepository.GetHomeworkByTaskIdAsync(taskId);
+            await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
+            return await _homeworkRepository.GetHomeworkByTaskIdAsync(taskId);
         }
 
-        public HomeworkDto AddHomework(int groupId, int taskId, HomeworkDto dto, UserIdentityInfo userInfo)
+        public async Task<HomeworkDto> AddHomeworkAsync(int groupId, int taskId, HomeworkDto dto, UserIdentityInfo userInfo)
         {
-            Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
-            _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
+            await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
+            await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             if (!userInfo.IsAdmin())
-                _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userInfo.UserId);
+                await _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userInfo.UserId);
+
             dto.Group = new GroupDto { Id = groupId };
             dto.Task = new TaskDto { Id = taskId };
-            var id = _homeworkRepository.AddHomeworkAsync(dto);
-            return _homeworkRepository.GetHomeworkAsync(id);
+            var id = await _homeworkRepository.AddHomeworkAsync(dto);
+            return await _homeworkRepository.GetHomeworkAsync(id);
         }
 
-        public void DeleteHomework(int homeworkId, UserIdentityInfo userInfo)
+        public async Task DeleteHomeworkAsync(int homeworkId, UserIdentityInfo userInfo)
         {
-            var dto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            CheckAccessAndExistenceAndThrowIfNotFound(userInfo, dto);
+            var dto = await _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFoundAsync(homeworkId);
+            await CheckAccessAndExistenceAndThrowIfNotFoundAsync(userInfo, dto);
 
-            _homeworkRepository.DeleteHomeworkAsync(homeworkId);
+            await _homeworkRepository.DeleteHomeworkAsync(homeworkId);
         }
 
-        public HomeworkDto UpdateHomework(int homeworkId, HomeworkDto dto, UserIdentityInfo userInfo)
+        public async Task<HomeworkDto> UpdateHomeworkAsync(int homeworkId, HomeworkDto dto, UserIdentityInfo userInfo)
         {
-            var homeworkDto = _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFound(homeworkId);
-            CheckAccessAndExistenceAndThrowIfNotFound(userInfo, homeworkDto);
+            var homeworkDto = await _homeworkValidationHelper.GetHomeworkByIdAndThrowIfNotFoundAsync(homeworkId);
+            await CheckAccessAndExistenceAndThrowIfNotFoundAsync(userInfo, homeworkDto);
 
             homeworkDto.Id = homeworkId;
             homeworkDto.StartDate = dto.StartDate;
             homeworkDto.EndDate = dto.EndDate;
-            _homeworkRepository.UpdateHomeworkAsync(homeworkDto);
-            return _homeworkRepository.GetHomeworkAsync(homeworkId);
+            await _homeworkRepository.UpdateHomeworkAsync(homeworkDto);
+            return await _homeworkRepository.GetHomeworkAsync(homeworkId);
         }
 
-        private void CheckAccessAndExistenceAndThrowIfNotFound(UserIdentityInfo userInfo, HomeworkDto dto)
+        private async Task CheckAccessAndExistenceAndThrowIfNotFoundAsync(UserIdentityInfo userInfo, HomeworkDto dto)
         {
             if (userInfo.IsAdmin()) { return; }
             var groupId = dto.Group.Id;
-            _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userInfo.UserId);
+            await _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userInfo.UserId);
         }
     }
 }

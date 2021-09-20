@@ -24,18 +24,20 @@ namespace DevEdu.Business.ValidationHelpers
             _courseRepository = courseRepository;
         }
 
-        public MaterialDto GetMaterialByIdAndThrowIfNotFound(int materialId)
+        public async Task<MaterialDto> GetMaterialByIdAndThrowIfNotFoundAsync(int materialId)
         {
-            var material = _materialRepository.GetMaterialByIdAsync(materialId);
+            var material = await _materialRepository.GetMaterialByIdAsync(materialId);
             if (material == default)
                 throw new EntityNotFoundException(string.
                     Format(ServiceMessages.EntityNotFoundMessage, nameof(material), materialId));
+
             return material;
         }
 
         public void CheckMethodistAccessToMaterialForDeleteAndUpdate(int userId, MaterialDto material)
         {
-            if (material.Courses == null || material.Courses.Count == 0)
+            if (material.Courses == null ||
+                material.Courses.Count == 0)
             {
                 throw new AuthorizationException(string.
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
@@ -62,12 +64,14 @@ namespace DevEdu.Business.ValidationHelpers
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
             }
         }
+
         public List<MaterialDto> GetMaterialsAllowedToUser(List<MaterialDto> materials, int userId)
         {
             var materialDtos = new List<MaterialDto>();
             materials.ForEach(async m => materialDtos.Add(await GetMaterialIfAllowedToUserByGroupAsync(m, userId)));
             materials.ForEach(async m => materialDtos.Add(await GetMaterialIfAllowedToUserByCourseAsync(m, userId)));
             var result = materialDtos.Where(m => m != null).GroupBy(m => m.Id).Select(m => m.First()).ToList();
+
             return result;
         }
 
@@ -79,12 +83,13 @@ namespace DevEdu.Business.ValidationHelpers
 
         private async Task<MaterialDto> GetMaterialIfAllowedToUserByGroupAsync(MaterialDto material, int userId)
         {
-            var groupsByMaterial = _groupRepository.GetGroupsByMaterialIdAsync(material.Id);
+            var groupsByMaterial = await _groupRepository.GetGroupsByMaterialIdAsync(material.Id);
             var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
 
             var result = groupsByMaterial.FirstOrDefault(gm => groupsByUser.Any(gu => gu.Id == gm.Id));
             if (result == default)
                 material = default;
+            
             return material;
         }
 
@@ -98,6 +103,7 @@ namespace DevEdu.Business.ValidationHelpers
             var result = coursesByMaterial.FirstOrDefault(сm => coursesByUser.Any(сu => сu == сm.Id));
             if (result == default)
                 material = default;
+            
             return material;
         }
     }

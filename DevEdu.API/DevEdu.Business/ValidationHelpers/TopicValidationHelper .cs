@@ -4,6 +4,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -16,16 +17,17 @@ namespace DevEdu.Business.ValidationHelpers
             _topicRepository = topicRepository;
         }
 
-        public TopicDto GetTopicByIdAndThrowIfNotFound(int topicId)
+        public async Task<TopicDto> GetTopicByIdAndThrowIfNotFoundAsync(int topicId)
         {
-            var topic = _topicRepository.GetTopicAsync(topicId);
+            var topic = await _topicRepository.GetTopicAsync(topicId);
             if (topic == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(topic), topicId));
             return topic;
         }
-        public void GetTopicByListDtoAndThrowIfNotFound(List<CourseTopicDto> topics)
+
+        public async Task GetTopicByListDtoAndThrowIfNotFoundAsync(List<CourseTopicDto> topics)
         {
-            var topicsFromBd = _topicRepository.GetAllTopicsAsync();
+            var topicsFromBd = await _topicRepository.GetAllTopicsAsync();
             var topicsIdsFromBd = topicsFromBd.Select(t => t.Id).ToList();
             var topicIdsFromParametrs = topics.Select(t => t.Topic.Id).ToList();
 
@@ -36,21 +38,26 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             }
         }
-        public CourseTopicDto GetCourseTopicByIdAndThrowIfNotFound(int id)
+
+        public async Task<CourseTopicDto> GetCourseTopicByIdAndThrowIfNotFoundAsync(int id)
         {
-            var courseTopic = _topicRepository.GetCourseTopicByIdAsync(id);
+            var courseTopic = await _topicRepository.GetCourseTopicByIdAsync(id);
             if (courseTopic == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(courseTopic), id));
+            
             return courseTopic;
         }
-        public List<CourseTopicDto> GetCourseTopicBySeveralIdAndThrowIfNotFound(List<int> ids)
+
+        public async Task<List<CourseTopicDto>> GetCourseTopicBySeveralIdAndThrowIfNotFoundAsync(List<int> ids)
         {
-            var courseTopic = _topicRepository.GetCourseTopicBySeveralIdAsync(ids);
+            var courseTopic = await _topicRepository.GetCourseTopicBySeveralIdAsync(ids);
             var areCourseTopicsInDataBase = ids.All(d => courseTopic.Any(t => t.Id == d));
+            
             if (!areCourseTopicsInDataBase)
             {
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             }
+
             return courseTopic;
         }
     }

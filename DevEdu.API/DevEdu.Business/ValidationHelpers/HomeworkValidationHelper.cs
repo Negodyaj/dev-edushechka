@@ -2,6 +2,7 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -14,11 +15,12 @@ namespace DevEdu.Business.ValidationHelpers
             _homeworkRepository = homeworkRepository;
         }
 
-        public HomeworkDto GetHomeworkByIdAndThrowIfNotFound(int homeworkId)
+        public async Task<HomeworkDto> GetHomeworkByIdAndThrowIfNotFoundAsync(int homeworkId)
         {
-            var homework = _homeworkRepository.GetHomeworkAsync(homeworkId);
+            var homework = await _homeworkRepository.GetHomeworkAsync(homeworkId);
             if (homework == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), homeworkId));
+            
             return homework;
         }
     }

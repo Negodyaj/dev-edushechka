@@ -54,7 +54,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.AddTopicToLessonAsync(lesson.Id, topic.Id));
 
             //When
-            _sut.AddTopicToLesson(lesson.Id, topic.Id);
+            _sut.AddTopicToLessonAsync(lesson.Id, topic.Id);
 
             //Then
             _lessonRepository.Verify(x => x.SelectLessonByIdAsync((lesson.Id)), Times.Once);
@@ -72,7 +72,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(() =>
-                _sut.AddTopicToLesson(lessonId, topicId));
+                _sut.AddTopicToLessonAsync(lessonId, topicId));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -93,7 +93,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(() =>
-                            _sut.AddTopicToLesson(lesson.Id, topicId));
+                            _sut.AddTopicToLessonAsync(lesson.Id, topicId));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -114,7 +114,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<ValidationException>(() =>
-                            _sut.AddTopicToLesson(lesson.Id, topic.Id));
+                            _sut.AddTopicToLessonAsync(lesson.Id, topic.Id));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -135,7 +135,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.DeleteTopicFromLessonAsync(lesson.Id, topic.Id)).ReturnsAsync(1);
 
             //When
-            _sut.DeleteTopicFromLesson(lesson.Id, topic.Id);
+            _sut.DeleteTopicFromLessonAsync(lesson.Id, topic.Id);
 
             //Then
             _lessonRepository.Verify(x => x.SelectLessonByIdAsync((lesson.Id)), Times.Once);
@@ -153,7 +153,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(() =>
-                _sut.DeleteTopicFromLesson(lessonId, topicId));
+                _sut.DeleteTopicFromLessonAsync(lessonId, topicId));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -174,7 +174,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(() =>
-                            _sut.DeleteTopicFromLesson(lesson.Id, topicId));
+                            _sut.DeleteTopicFromLessonAsync(lesson.Id, topicId));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -196,7 +196,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<ValidationException>(() =>
-                            _sut.DeleteTopicFromLesson(lesson.Id, topic.Id));
+                            _sut.DeleteTopicFromLessonAsync(lesson.Id, topic.Id));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -224,7 +224,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).Returns(expectedLesson);
 
             //When
-            var actualLesson = _sut.AddLesson(userIdentity, expectedLesson, topicIds);
+            var actualLesson = _sut.AddLessonAsync(userIdentity, expectedLesson, topicIds);
 
             //Then
             Assert.AreEqual(expectedLesson, actualLesson);
@@ -246,7 +246,7 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.UserAndTeacherAreNotSame, userIdentity.UserId, addedLesson.Teacher.Id);
 
             //When
-            var ex = Assert.Throws<ValidationException>(() => _sut.AddLesson(userIdentity, addedLesson, null));
+            var ex = Assert.Throws<ValidationException>(() => _sut.AddLessonAsync(userIdentity, addedLesson, null));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -269,7 +269,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.AddLessonAsync(addedLesson)).Returns(It.IsAny<int>());
             _topicRepository.Setup(x => x.GetTopicAsync(topicIds.First())).Returns(It.IsAny<TopicDto>());
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.AddLesson(userIdentity, addedLesson, topicIds));
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.AddLessonAsync(userIdentity, addedLesson, topicIds));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -356,7 +356,7 @@ namespace DevEdu.Business.Tests
             _userRepository.Setup(x => x.GetUserByIdAsync(teacher.Id)).Returns(teacher);
 
             //When
-            var actual = _sut.SelectAllLessonsByTeacherId(teacher.Id);
+            var actual = _sut.SelectAllLessonsByTeacherIdAsync(teacher.Id);
 
             //Then
             Assert.AreEqual(expected, actual);
@@ -374,7 +374,7 @@ namespace DevEdu.Business.Tests
             _userRepository.Setup(x => x.GetUserByIdAsync(teacherId)).Returns(It.IsAny<UserDto>());
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectAllLessonsByTeacherId(teacherId));
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectAllLessonsByTeacherIdAsync(teacherId));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -398,7 +398,7 @@ namespace DevEdu.Business.Tests
             _commentRepository.Setup(x => x.SelectCommentsFromLessonByLessonIdAsync(lessonId)).Returns(comments);
 
             //When
-            var actual = _sut.SelectLessonWithCommentsById(userIdentity, lessonId);
+            var actual = _sut.SelectLessonWithCommentsByIdAsync(userIdentity, lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
@@ -419,7 +419,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).Returns(It.IsAny<LessonDto>());
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectLessonWithCommentsById(userIdentity, lessonId));
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectLessonWithCommentsByIdAsync(userIdentity, lessonId));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -442,7 +442,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentity.UserId)).ReturnsAsync(groups);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectLessonWithCommentsById(userIdentity, lesson.Id));
+            var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectLessonWithCommentsByIdAsync(userIdentity, lesson.Id));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -472,7 +472,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectStudentsLessonByLessonIdAsync(lessonId)).ReturnsAsync(students);
 
             //When
-            var actual = _sut.SelectLessonWithCommentsAndStudentsById(userIdentity, lessonId);
+            var actual = _sut.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, lessonId);
 
             //Then
             Assert.AreEqual(expectedLesson, actual);
@@ -493,7 +493,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).Returns(It.IsAny<LessonDto>());
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectLessonWithCommentsAndStudentsById(userIdentity, lessonId));
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, lessonId));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -516,7 +516,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentity.UserId)).ReturnsAsync(groups);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectLessonWithCommentsAndStudentsById(userIdentity, lesson.Id));
+            var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, lesson.Id));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -539,7 +539,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).Returns(expected);
 
             //When
-            var actual = _sut.UpdateLesson(userIdentity, updatedLesson, lessonId);
+            var actual = _sut.UpdateLessonAsync(userIdentity, updatedLesson, lessonId);
 
             //Then
             Assert.AreEqual(expected, actual);
@@ -561,7 +561,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).Returns(It.IsAny<LessonDto>());
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.UpdateLesson(userIdentity, updatedLesson, lessonId));
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.UpdateLessonAsync(userIdentity, updatedLesson, lessonId));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -583,7 +583,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentity.UserId)).ReturnsAsync(groups);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectLessonWithCommentsAndStudentsById(userIdentity, lesson.Id));
+            var ex = Assert.Throws<AuthorizationException>(() => _sut.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, lesson.Id));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -604,7 +604,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).Returns(lesson);
 
             //When
-            _sut.DeleteLesson(userIdentity, lessonId);
+            _sut.DeleteLessonAsync(userIdentity, lessonId);
 
             //Then
             _lessonRepository.Verify(x => x.SelectLessonByIdAsync(lessonId), Times.Once);
@@ -623,7 +623,7 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).Returns(It.IsAny<LessonDto>());
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.DeleteLesson(userIdentity, lessonId));
+            var ex = Assert.Throws<EntityNotFoundException>(() => _sut.DeleteLessonAsync(userIdentity, lessonId));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -645,7 +645,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentity.UserId)).ReturnsAsync(groups);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(() => _sut.DeleteLesson(userIdentity, lesson.Id));
+            var ex = Assert.Throws<AuthorizationException>(() => _sut.DeleteLessonAsync(userIdentity, lesson.Id));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -669,7 +669,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id)).ReturnsAsync(LessonData.GetGroupsDto());
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
             //When
-            var dto = _sut.AddStudentToLesson(lessonId, userId, userIdentityInfo);
+            var dto = _sut.AddStudentToLessonAsync(lessonId, userId, userIdentityInfo);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
@@ -698,7 +698,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
-            _sut.DeleteStudentFromLesson(lessonId, userId, userIdentityInfo);
+            _sut.DeleteStudentFromLessonAsync(lessonId, userId, userIdentityInfo);
 
             //Than
             _lessonRepository.Verify(x => x.DeleteStudentFromLessonAsync(lessonId, userId), Times.Once);
@@ -726,7 +726,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
-            var dto = _sut.UpdateStudentFeedbackForLesson(lessonId, userId, studentLessonDto, userIdentityInfo);
+            var dto = _sut.UpdateStudentFeedbackForLessonAsync(lessonId, userId, studentLessonDto, userIdentityInfo);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
@@ -755,7 +755,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
-            var dto = _sut.UpdateStudentAbsenceReasonOnLesson(lessonId, userId, studentLessonDto, userIdentityInfo);
+            var dto = _sut.UpdateStudentAbsenceReasonOnLessonAsync(lessonId, userId, studentLessonDto, userIdentityInfo);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
@@ -784,7 +784,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
-            var dto = _sut.UpdateStudentAttendanceOnLesson(lessonId, userId, studentLessonDto, userIdentityInfo);
+            var dto = _sut.UpdateStudentAttendanceOnLessonAsync(lessonId, userId, studentLessonDto, userIdentityInfo);
 
             //Than
             Assert.AreEqual(studentLessonDto, dto);
@@ -812,7 +812,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
 
             //When
-            var listOfDto = _sut.SelectAllFeedbackByLessonId(lessonId, userIdentityInfo);
+            var listOfDto = _sut.SelectAllFeedbackByLessonIdAsync(lessonId, userIdentityInfo);
 
             //Than
             Assert.AreEqual(listStudentLessonDto, listOfDto);

@@ -2,6 +2,7 @@
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -23,53 +24,60 @@ namespace DevEdu.Business.Services
             _tagValidationHelper = tagValidationHelper;
         }
 
-        public int AddTopic(TopicDto topicDto)
+        public async Task<int> AddTopicAsync(TopicDto topicDto)
         {
-            var topicId = _topicRepository.AddTopicAsync(topicDto);
-            if (topicDto.Tags == null || topicDto.Tags.Count == 0)
+            var topicId = await _topicRepository.AddTopicAsync(topicDto);
+            if (topicDto.Tags == null ||
+                topicDto.Tags.Count == 0)
                 return topicId;
 
-            topicDto.Tags.ForEach(tag => AddTagToTopic(topicId, tag.Id));
+            topicDto.Tags.ForEach(
+                 async tag => await AddTagToTopicAsync(topicId, tag.Id));
+
             return topicId;
         }
 
-        public void DeleteTopic(int id)
+        public async Task DeleteTopicAsync(int id)
         {
-            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(id);
-            _topicRepository.DeleteTopicAsync(id);
+            await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(id);
+            await _topicRepository.DeleteTopicAsync(id);
         }
 
-        public TopicDto GetTopic(int id)
+        public async Task<TopicDto> GetTopicAsync(int id)
         {
-            var topicDto = _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(id);
+            var topicDto = await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(id);
             return topicDto;
         }
 
-        public List<TopicDto> GetAllTopics()
+        public async Task<List<TopicDto>> GetAllTopicsAsync()
         {
-            return _topicRepository.GetAllTopicsAsync();
+            return await _topicRepository.GetAllTopicsAsync();
         }
 
-        public TopicDto UpdateTopic(int id, TopicDto topicDto)
+        public async Task<TopicDto> UpdateTopicAsync(int id, TopicDto topicDto)
         {
-            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(id);
+            await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(id);
             topicDto.Id = id;
-            _topicRepository.UpdateTopicAsync(topicDto);
-            return _topicRepository.GetTopicAsync(id);
+            await _topicRepository.UpdateTopicAsync(topicDto);
+            var result = await _topicRepository.GetTopicAsync(id);
+
+            return result;
         }
 
-        public int AddTagToTopic(int topicId, int tagId)
+        public async Task<int> AddTagToTopicAsync(int topicId, int tagId)
         {
-            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tagId);
-            return _topicRepository.AddTagToTopicAsync(topicId, tagId);
+            await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(topicId);
+            await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(tagId);
+            var resilt = await _topicRepository.AddTagToTopicAsync(topicId, tagId);
+            return resilt;
         }
 
-        public int DeleteTagFromTopic(int topicId, int tagId)
+        public async Task<int> DeleteTagFromTopicAsync(int topicId, int tagId)
         {
-            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-            _tagValidationHelper.GetTagByIdAndThrowIfNotFound(tagId);
-            return _topicRepository.DeleteTagFromTopicAsync(topicId, tagId);
+            await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(topicId);
+            await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(tagId);
+            var result = await _topicRepository.DeleteTagFromTopicAsync(topicId, tagId);
+            return result;
         }
     }
 }

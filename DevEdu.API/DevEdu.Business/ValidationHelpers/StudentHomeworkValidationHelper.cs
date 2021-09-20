@@ -22,11 +22,12 @@ namespace DevEdu.Business.ValidationHelpers
             _groupRepository = groupRepository;
         }
 
-        public StudentHomeworkDto GetStudentHomeworkByIdAndThrowIfNotFound(int id)
+        public async Task<StudentHomeworkDto> GetStudentHomeworkByIdAndThrowIfNotFoundAsync(int id)
         {
-            var studentHomework = _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
+            var studentHomework = await _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
             if (studentHomework == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), id));
+           
             return studentHomework;
         }
 

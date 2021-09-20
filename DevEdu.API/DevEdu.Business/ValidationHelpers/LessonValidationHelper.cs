@@ -22,11 +22,12 @@ namespace DevEdu.Business.ValidationHelpers
             _groupRepository = groupRepository;
         }
 
-        public LessonDto GetLessonByIdAndThrowIfNotFound(int lessonId)
+        public async Task<LessonDto> GetLessonByIdAndThrowIfNotFoundAsync(int lessonId)
         {
-            var lesson = _lessonRepository.SelectLessonByIdAsync(lessonId);
+            var lesson = await _lessonRepository.SelectLessonByIdAsync(lessonId);
             if (lesson == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(lesson), lessonId));
+
             return lesson;
         }
 

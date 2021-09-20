@@ -38,7 +38,7 @@ namespace DevEdu.API.Controllers
         public ActionResult<TagOutputModel> AddTag([FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
-            dto = _service.AddTag(dto);
+            dto = _service.AddTagAsync(dto);
             var output = _mapper.Map<TagOutputModel>(dto);
             return Created(new Uri($"api/Tag/{output.Id}", UriKind.Relative), output);
         }
@@ -52,7 +52,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteTag(int id)
         {
-            _service.DeleteTag(id);
+            _service.DeleteTagAsync(id);
             return NoContent();
         }
 
@@ -67,7 +67,7 @@ namespace DevEdu.API.Controllers
         public TagOutputModel UpdateTag(int id, [FromBody] TagInputModel model)
         {
             var dto = _mapper.Map<TagDto>(model);
-            dto = _service.UpdateTag(dto, id);
+            dto = _service.UpdateTagAsync(dto, id);
             return _mapper.Map<TagOutputModel>(dto);
         }
 
@@ -78,7 +78,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public List<TagOutputModel> GetAllTags()
         {
-            var queryResult = _service.GetAllTags();
+            var queryResult = _service.GetAllTagsAsync();
             return _mapper.Map<List<TagOutputModel>>(queryResult);
         }
 
@@ -90,7 +90,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public TagOutputModel GetTagById(int id)
         {
-            var dto = _service.GetTagById(id);
+            var dto = _service.GetTagByIdAsync(id);
             return _mapper.Map<TagOutputModel>(dto);
         }
     }

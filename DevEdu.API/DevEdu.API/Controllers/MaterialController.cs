@@ -39,7 +39,7 @@ namespace DevEdu.API.Controllers
         public async Task<ActionResult<MaterialInfoWithGroupsOutputModel>> AddMaterialWithGroupsAsync([FromBody] MaterialWithGroupsInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            var id = _materialService.AddMaterialWithGroups(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
+            var id = _materialService.AddMaterialWithGroupsAsync(dto, materialModel.TagsIds, materialModel.GroupsIds, this.GetUserIdAndRoles());
             dto = await _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
             var output = _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
             return Created(new Uri($"api/Material/{output.Id}/full", UriKind.Relative), output);
@@ -56,7 +56,7 @@ namespace DevEdu.API.Controllers
         public async Task<ActionResult<MaterialInfoWithCoursesOutputModel>> AddMaterialWithCoursesAsync([FromBody] MaterialWithCoursesInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            var id = _materialService.AddMaterialWithCourses(dto, materialModel.TagsIds, materialModel.CoursesIds);
+            var id = _materialService.AddMaterialWithCoursesAsync(dto, materialModel.TagsIds, materialModel.CoursesIds);
             dto = await _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
             var output = _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
             return Created(new Uri($"api/Material/{output.Id}/full", UriKind.Relative), output);
@@ -71,7 +71,7 @@ namespace DevEdu.API.Controllers
         public List<MaterialInfoOutputModel> GetAllMaterials()
         {
             var user = this.GetUserIdAndRoles();
-            var list = _materialService.GetAllMaterials(user);
+            var list = _materialService.GetAllMaterialsAsync(user);
             return _mapper.Map<List<MaterialInfoOutputModel>>(list);
         }
 
@@ -98,7 +98,7 @@ namespace DevEdu.API.Controllers
         public MaterialInfoOutputModel GetMaterialByIdWithTags(int id)
         {
             var user = this.GetUserIdAndRoles();
-            var dto = _materialService.GetMaterialByIdWithTags(id, user);
+            var dto = _materialService.GetMaterialByIdWithTagsAsync(id, user);
             return _mapper.Map<MaterialInfoOutputModel>(dto);
         }
 
@@ -141,7 +141,7 @@ namespace DevEdu.API.Controllers
         [Description("Add tag to material")]
         public string AddTagToMaterial(int materialId, int tagId)
         {
-            _materialService.AddTagToMaterial(materialId, tagId);
+            _materialService.AddTagToMaterialAsync(materialId, tagId);
             return $"Tag id:{tagId} was added to material id:{materialId}";
         }
 
@@ -154,7 +154,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public ActionResult DeleteTagFromMaterial(int materialId, int tagId)
         {
-            _materialService.DeleteTagFromMaterial(materialId, tagId);
+            _materialService.DeleteTagFromMaterialAsync(materialId, tagId);
             return NoContent();
         }
 
@@ -168,7 +168,7 @@ namespace DevEdu.API.Controllers
         public List<MaterialInfoOutputModel> GetMaterialsByTagId(int tagId)
         {
             var user = this.GetUserIdAndRoles();
-            var list = _materialService.GetMaterialsByTagId(tagId, user);
+            var list = _materialService.GetMaterialsByTagIdAsync(tagId, user);
             return _mapper.Map<List<MaterialInfoOutputModel>>(list);
         }
     }

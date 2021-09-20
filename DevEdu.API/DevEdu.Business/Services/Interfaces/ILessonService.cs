@@ -7,20 +7,20 @@ namespace DevEdu.Business.Services
 {
     public interface ILessonService
     {
-        LessonDto AddLesson(UserIdentityInfo userIdentity, LessonDto lessonDto, List<int> topicIds);
-        void DeleteLesson(UserIdentityInfo userIdentity, int id);
+        Task<LessonDto> AddLessonAsync(UserIdentityInfo userIdentity, LessonDto lessonDto, List<int> topicIds);
+        Task DeleteLessonAsync(UserIdentityInfo userIdentity, int id);
         Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(UserIdentityInfo userIdentity, int id);
-        List<LessonDto> SelectAllLessonsByTeacherId(int id);
-        LessonDto SelectLessonWithCommentsById(UserIdentityInfo userIdentity, int id);
-        LessonDto SelectLessonWithCommentsAndStudentsById(UserIdentityInfo userIdentity, int id);
-        LessonDto UpdateLesson(UserIdentityInfo userIdentity, LessonDto lessonDto, int id);
-        void DeleteTopicFromLesson(int lessonId, int topicId);
-        void AddTopicToLesson(int lessonId, int topicId);
-        StudentLessonDto AddStudentToLesson(int lessonId, int userId, UserIdentityInfo userIdentityInfo);
-        void DeleteStudentFromLesson(int lessonId, int userId, UserIdentityInfo userIdentityInfo);
-        StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo);
-        StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo);
-        StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo);
-        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId, UserIdentityInfo userIdentityInfo);
+        Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int id);
+        Task<LessonDto> SelectLessonWithCommentsByIdAsync(UserIdentityInfo userIdentity, int id);
+        Task<LessonDto> SelectLessonWithCommentsAndStudentsByIdAsync(UserIdentityInfo userIdentity, int id);
+        Task<LessonDto> UpdateLessonAsync(UserIdentityInfo userIdentity, LessonDto lessonDto, int id);
+        Task DeleteTopicFromLessonAsync(int lessonId, int topicId);
+        Task AddTopicToLessonAsync(int lessonId, int topicId);
+        Task<StudentLessonDto> AddStudentToLessonAsync(int lessonId, int userId, UserIdentityInfo userIdentityInfo);
+        Task DeleteStudentFromLessonAsync(int lessonId, int userId, UserIdentityInfo userIdentityInfo);
+        Task<StudentLessonDto> UpdateStudentAbsenceReasonOnLessonAsync(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo);
+        Task<StudentLessonDto> UpdateStudentAttendanceOnLessonAsync(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo);
+        Task<StudentLessonDto> UpdateStudentFeedbackForLessonAsync(int lessonId, int userId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo);
+        Task<List<StudentLessonDto>> SelectAllFeedbackByLessonIdAsync(int lessonId, UserIdentityInfo userIdentityInfo);
     }
 }

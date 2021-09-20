@@ -63,7 +63,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.GetAllMaterialsAsync()).Returns(expectedMaterials);
 
             //When
-            var actualMaterials = _sut.GetAllMaterials(user);
+            var actualMaterials = _sut.GetAllMaterialsAsync(user);
 
             //Then
             Assert.AreEqual(expectedMaterials, actualMaterials);
@@ -90,7 +90,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.GetAllMaterialsAsync()).Returns(expectedMaterials);
 
             //When
-            var actualMaterials = _sut.GetAllMaterials(user);
+            var actualMaterials = _sut.GetAllMaterialsAsync(user);
 
             //Then
             Assert.AreEqual(expectedMaterials, actualMaterials);
@@ -156,7 +156,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.GetMaterialByIdAsync(expectedMaterial.Id)).Returns(expectedMaterial);
 
             //When
-            var actualMaterial = _sut.GetMaterialByIdWithTags(expectedMaterial.Id, user);
+            var actualMaterial = _sut.GetMaterialByIdWithTagsAsync(expectedMaterial.Id, user);
 
             //Then
             Assert.AreEqual(expectedMaterial, actualMaterial);
@@ -183,7 +183,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.GetMaterialByIdAsync(expectedMaterial.Id)).Returns(expectedMaterial);
 
             //When
-            var actualMaterial = _sut.GetMaterialByIdWithTags(expectedMaterial.Id, user);
+            var actualMaterial = _sut.GetMaterialByIdWithTagsAsync(expectedMaterial.Id, user);
 
             //Then
             Assert.AreEqual(expectedMaterial, actualMaterial);
@@ -204,7 +204,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.GetMaterialByIdAsync(It.IsAny<int>())).Returns(expectedMaterial);
 
             //When
-            var actualMaterial = _sut.GetMaterialByIdWithTags(expectedMaterial.Id, user);
+            var actualMaterial = _sut.GetMaterialByIdWithTagsAsync(expectedMaterial.Id, user);
 
             //Then
             Assert.AreEqual(expectedMaterial, actualMaterial);
@@ -224,7 +224,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.GetMaterialByIdWithTags(material.Id, user));
+                () => _sut.GetMaterialByIdWithTagsAsync(material.Id, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -251,7 +251,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<AuthorizationException>(
-                () => _sut.GetMaterialByIdWithTags(material.Id, user));
+                () => _sut.GetMaterialByIdWithTagsAsync(material.Id, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -281,7 +281,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.GetMaterialsByTagIdAsync(It.IsAny<int>())).Returns(expectedMaterials);
 
             //When
-            var actualMaterials = _sut.GetMaterialsByTagId(tag.Id, user);
+            var actualMaterials = _sut.GetMaterialsByTagIdAsync(tag.Id, user);
 
             //Then
             Assert.AreEqual(expectedMaterials, actualMaterials);
@@ -305,7 +305,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.GetMaterialsByTagIdAsync(tag.Id)).Returns(expectedMaterials);
 
             //When
-            var actualMaterials = _sut.GetMaterialsByTagId(tag.Id, user);
+            var actualMaterials = _sut.GetMaterialsByTagIdAsync(tag.Id, user);
 
             //Then
             Assert.AreEqual(expectedMaterials, actualMaterials);
@@ -327,7 +327,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.GetMaterialsByTagId(tag.Id, user));
+                () => _sut.GetMaterialsByTagIdAsync(tag.Id, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -363,7 +363,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.AddMaterialAsync(materialToAdd)).Returns(expectedId);
 
             //When
-            int actualId = _sut.AddMaterialWithGroups(materialToAdd, tags, groups, user);
+            int actualId = _sut.AddMaterialWithGroupsAsync(materialToAdd, tags, groups, user);
 
             //Then
             Assert.AreEqual(expectedId, actualId);
@@ -398,7 +398,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.AddMaterialAsync(materialToAdd)).Returns(expectedId);
 
             //When
-            int actualId = _sut.AddMaterialWithGroups(materialToAdd, null, groups, user);
+            int actualId = _sut.AddMaterialWithGroupsAsync(materialToAdd, null, groups, user);
 
             //Then
             Assert.AreEqual(expectedId, actualId);
@@ -422,7 +422,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<ValidationException>(
-                () => _sut.AddMaterialWithGroups(materialToAdd, null, groups, user));
+                () => _sut.AddMaterialWithGroupsAsync(materialToAdd, null, groups, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -454,7 +454,7 @@ namespace DevEdu.Business.Tests
             }
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddMaterialWithGroups(materialToAdd, null, groups, user));
+                () => _sut.AddMaterialWithGroupsAsync(materialToAdd, null, groups, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -486,7 +486,7 @@ namespace DevEdu.Business.Tests
             }
             //When
             var actual = Assert.Throws<AuthorizationException>(
-                () => _sut.AddMaterialWithGroups(materialToAdd, null, groups, user));
+                () => _sut.AddMaterialWithGroupsAsync(materialToAdd, null, groups, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -523,7 +523,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddMaterialWithGroups(materialToAdd, tags, groups, user));
+                () => _sut.AddMaterialWithGroupsAsync(materialToAdd, tags, groups, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -559,7 +559,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<ValidationException>(
-                () => _sut.AddMaterialWithGroups(materialToAdd, tags, groups, user));
+                () => _sut.AddMaterialWithGroupsAsync(materialToAdd, tags, groups, user));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -592,7 +592,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.AddMaterialAsync(materialToAdd)).Returns(expectedId);
 
             //When
-            int actualId = _sut.AddMaterialWithCourses(materialToAdd, tags, courses);
+            int actualId = _sut.AddMaterialWithCoursesAsync(materialToAdd, tags, courses);
 
             //Then
             Assert.AreEqual(expectedId, actualId);
@@ -620,7 +620,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.AddMaterialAsync(materialToAdd)).Returns(expectedId);
 
             //When
-            int actualId = _sut.AddMaterialWithCourses(materialToAdd, null, courses);
+            int actualId = _sut.AddMaterialWithCoursesAsync(materialToAdd, null, courses);
 
             //Then
             Assert.AreEqual(expectedId, actualId);
@@ -642,7 +642,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<ValidationException>(
-                () => _sut.AddMaterialWithCourses(materialToAdd, null, courses));
+                () => _sut.AddMaterialWithCoursesAsync(materialToAdd, null, courses));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -670,7 +670,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddMaterialWithCourses(materialToAdd, null, courses));
+                () => _sut.AddMaterialWithCoursesAsync(materialToAdd, null, courses));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -701,7 +701,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddMaterialWithCourses(materialToAdd, tags, courses));
+                () => _sut.AddMaterialWithCoursesAsync(materialToAdd, tags, courses));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -730,7 +730,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var actual = Assert.Throws<ValidationException>(
-                () => _sut.AddMaterialWithCourses(materialToAdd, tags, courses));
+                () => _sut.AddMaterialWithCoursesAsync(materialToAdd, tags, courses));
 
             //Then
             Assert.AreEqual(expectedMessage, actual.Message);
@@ -987,7 +987,7 @@ namespace DevEdu.Business.Tests
             _tagRepoMock.Setup(x => x.SelectTagByIdAsync(givenTagId)).Returns(new TagDto { Id = givenTagId });
             _materialRepoMock.Setup(x => x.GetMaterialByIdAsync(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
             //When
-            _sut.AddTagToMaterial(givenMaterialId, givenTagId);
+            _sut.AddTagToMaterialAsync(givenMaterialId, givenTagId);
             //Then
             _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(givenMaterialId, givenTagId), Times.Once);
         }
@@ -1003,7 +1003,7 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Setup(x => x.GetMaterialByIdAsync(givenMaterialId)).Returns(new MaterialDto { Id = givenMaterialId });
             _materialRepoMock.Setup(x => x.DeleteTagFromMaterialAsync(givenMaterialId, givenTagId));
             //When
-            _sut.DeleteTagFromMaterial(givenMaterialId, givenTagId);
+            _sut.DeleteTagFromMaterialAsync(givenMaterialId, givenTagId);
             //Then
             _materialRepoMock.Verify(x => x.DeleteTagFromMaterialAsync(givenMaterialId, givenTagId), Times.Once);
         }
@@ -1021,7 +1021,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var result = Assert.Throws<EntityNotFoundException>(() =>
-            _sut.AddTagToMaterial(givenMaterialId, givenTagId));
+            _sut.AddTagToMaterialAsync(givenMaterialId, givenTagId));
             //Then
             _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(givenMaterialId, givenTagId), Times.Never);
             Assert.That(result.Message, Is.EqualTo(exp));
@@ -1039,7 +1039,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var result = Assert.Throws<EntityNotFoundException>(() =>
-            _sut.AddTagToMaterial(givenMaterialId, givenTagId));
+            _sut.AddTagToMaterialAsync(givenMaterialId, givenTagId));
             //Then
             _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(givenMaterialId, givenTagId), Times.Never);
             Assert.That(result.Message, Is.EqualTo(exp));
@@ -1058,7 +1058,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var result = Assert.Throws<EntityNotFoundException>(() =>
-            _sut.DeleteTagFromMaterial(givenMaterialId, givenTagId));
+            _sut.DeleteTagFromMaterialAsync(givenMaterialId, givenTagId));
             //Then
             _materialRepoMock.Verify(x => x.DeleteTagFromMaterialAsync(givenMaterialId, givenTagId), Times.Never); ;
             Assert.That(result.Message, Is.EqualTo(exp));
@@ -1076,7 +1076,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var result = Assert.Throws<EntityNotFoundException>(() =>
-            _sut.DeleteTagFromMaterial(givenMaterialId, givenTagId));
+            _sut.DeleteTagFromMaterialAsync(givenMaterialId, givenTagId));
             //Then
             _materialRepoMock.Verify(x => x.DeleteTagFromMaterialAsync(givenMaterialId, givenTagId), Times.Never);
             Assert.That(result.Message, Is.EqualTo(exp));

@@ -896,7 +896,7 @@ namespace DevEdu.Business.Tests
             _topicRepositoryMock.Setup(x => x.GetCourseTopicByIdAsync(id)).Returns(new CourseTopicDto() { Id = id });
 
             //When
-            _sut.GetCourseTopicById(id);
+            _sut.GetCourseTopicByIdAsync(id);
 
             //Then
             _topicRepositoryMock.Verify(x => x.GetCourseTopicByIdAsync(id), Times.Once);
@@ -912,7 +912,7 @@ namespace DevEdu.Business.Tests
             _topicRepositoryMock.Setup(x => x.GetCourseTopicByIdAsync(id));
 
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetCourseTopicById(id));
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetCourseTopicByIdAsync(id));
 
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
@@ -929,7 +929,7 @@ namespace DevEdu.Business.Tests
             _topicRepositoryMock.Setup(x => x.GetCourseTopicBySeveralIdAsync(ids)).Returns(courseTopicsInBd);
 
             //When
-            _sut.GetCourseTopicBySeveralId(ids);
+            _sut.GetCourseTopicBySeveralIdAsync(ids);
 
             //Then
             _topicRepositoryMock.Verify(x => x.GetCourseTopicBySeveralIdAsync(ids), Times.Once);
@@ -945,7 +945,7 @@ namespace DevEdu.Business.Tests
             _topicRepositoryMock.Setup(x => x.GetCourseTopicBySeveralIdAsync(ids)).Returns(courseTopicsInBd);
 
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetCourseTopicBySeveralId(ids));
+            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetCourseTopicBySeveralIdAsync(ids));
 
             //Then
             Assert.That(result.Message, Is.EqualTo(ServiceMessages.EntityNotFound));
