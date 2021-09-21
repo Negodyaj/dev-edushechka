@@ -218,6 +218,7 @@ namespace DevEdu.Business.Services
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userIdentityInfo.UserId);
             var tasks = await _taskRepository.GetTasksAsync();
             var allowedTaskDtos = new List<TaskDto>();
+
             if (userIdentityInfo.Roles.Contains(Role.Admin))
                 return tasks;
 
@@ -227,7 +228,9 @@ namespace DevEdu.Business.Services
             }
             foreach (var task in tasks)
             {
-                allowedTaskDtos.Add(_taskValidationHelper.GetTaskAllowedToUserAsync(task.Id, userIdentityInfo.UserId).Result);
+                var allowedTask = _taskValidationHelper.GetTaskAllowedToUserAsync(task.Id, userIdentityInfo.UserId).Result;
+                if (allowedTask != null)
+                    allowedTaskDtos.Add(allowedTask);
             }
 
             return allowedTaskDtos;

@@ -55,8 +55,9 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var groupsByTask = await _groupRepository.GetGroupsByTaskIdAsync(taskId);
             var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
-
-            var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
+            GroupDto result = default;
+            if (groupsByTask != default && groupsByUser != default)
+                result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
             if (result == default)
                 return null;
 
