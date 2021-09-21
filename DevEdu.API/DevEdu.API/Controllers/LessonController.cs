@@ -40,11 +40,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<LessonInfoOutputModel> AddLesson([FromBody] LessonInputModel inputModel)
+        public async Task<ActionResult<LessonInfoOutputModel>> AddLessonAsync([FromBody] LessonInputModel inputModel)
         {
             var lessonDto = _mapper.Map<LessonDto>(inputModel);
             var userIdentity = this.GetUserIdAndRoles();
-            var addedLesson = _lessonService.AddLesson(userIdentity, lessonDto, inputModel.TopicIds);
+            var addedLesson = await _lessonService.AddLessonAsync(userIdentity, lessonDto, inputModel.TopicIds);
             var output = _mapper.Map<LessonInfoOutputModel>(addedLesson);
             return Created(new Uri($"api/Lesson/{output.Id}", UriKind.Relative), output);
         }
@@ -56,10 +56,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteLesson(int id)
+        public async Task<ActionResult> DeleteLessonAsync(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            _lessonService.DeleteLesson(userIdentity, id);
+            await _lessonService.DeleteLessonAsync(userIdentity, id);
             return NoContent();
         }
 
@@ -71,11 +71,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public LessonInfoOutputModel UpdateLesson(int id, [FromBody] LessonUpdateInputModel updateModel)
+        public async Task<LessonInfoOutputModel> UpdateLessonAsync(int id, [FromBody] LessonUpdateInputModel updateModel)
         {
             var dto = _mapper.Map<LessonDto>(updateModel);
             var userIdentity = this.GetUserIdAndRoles();
-            var output = _lessonService.UpdateLesson(userIdentity, dto, id);
+            var output = await _lessonService.UpdateLessonAsync(userIdentity, dto, id);
             return _mapper.Map<LessonInfoOutputModel>(output);
         }
 
@@ -100,9 +100,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<LessonInfoWithCourseOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<LessonInfoWithCourseOutputModel> GetAllLessonsByTeacherId(int id)
+        public async Task<List<LessonInfoWithCourseOutputModel>> GetAllLessonsByTeacherIdAsync(int id)
         {
-            var dto = _lessonService.SelectAllLessonsByTeacherId(id);
+            var dto = await _lessonService.SelectAllLessonsByTeacherIdAsync(id);
             return _mapper.Map<List<LessonInfoWithCourseOutputModel>>(dto);
         }
 
@@ -113,10 +113,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public LessonInfoWithCommentsOutputModel GetLessonWithComments(int id)
+        public async Task<LessonInfoWithCommentsOutputModel> GetLessonWithCommentsAsync(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            var dto = _lessonService.SelectLessonWithCommentsById(userIdentity, id);
+            var dto = await _lessonService.SelectLessonWithCommentsByIdAsync(userIdentity, id);
             return _mapper.Map<LessonInfoWithCommentsOutputModel>(dto);
         }
 
@@ -127,10 +127,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public LessonInfoWithStudentsAndCommentsOutputModel GetLessonWithStudentsAndComments(int id)
+        public async Task<LessonInfoWithStudentsAndCommentsOutputModel> GetLessonWithStudentsAndCommentsAsync(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            var dto = _lessonService.SelectLessonWithCommentsAndStudentsById(userIdentity, id);
+            var dto = await _lessonService.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, id);
             return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel>(dto);
         }
 
@@ -141,9 +141,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteTopicFromLesson(int lessonId, int topicId)
+        public async Task<ActionResult> DeleteTopicFromLessonAsync(int lessonId, int topicId)
         {
-            _lessonService.DeleteTopicFromLesson(lessonId, topicId);
+            await _lessonService.DeleteTopicFromLessonAsync(lessonId, topicId);
             return NoContent();
         }
 
@@ -154,9 +154,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult AddTopicToLesson(int lessonId, int topicId)
+        public async Task<ActionResult> AddTopicToLessonAsync(int lessonId, int topicId)
         {
-            _lessonService.AddTopicToLesson(lessonId, topicId);
+            await _lessonService.AddTopicToLessonAsync(lessonId, topicId);
             return StatusCode(StatusCodes.Status204NoContent);
         }
 
@@ -167,10 +167,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult<StudentLessonOutputModel> AddStudentToLesson(int lessonId, int studentId)
+        public async Task<ActionResult<StudentLessonOutputModel>> AddStudentToLessonAsync(int lessonId, int studentId)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _lessonService.AddStudentToLesson(lessonId, studentId, userInfo);
+            var dto = await _lessonService.AddStudentToLessonAsync(lessonId, studentId, userInfo);
             var output = _mapper.Map<StudentLessonOutputModel>(dto);
             return Created(new Uri($"api/Lesson/{output.Id}/full-info", UriKind.Relative), output);
         }
@@ -182,10 +182,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteStudentFromLesson(int lessonId, int studentId)
+        public async Task<ActionResult> DeleteStudentFromLessonAsync(int lessonId, int studentId)
         {
             var userInfo = this.GetUserIdAndRoles();
-            _lessonService.DeleteStudentFromLesson(lessonId, studentId, userInfo);
+            await _lessonService.DeleteStudentFromLessonAsync(lessonId, studentId, userInfo);
             return NoContent();
         }
 
@@ -197,11 +197,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status200OK)]
-        public StudentLessonOutputModel UpdateStudentFeedbackForLesson(int lessonId, int studentId, [FromBody] FeedbackInputModel model)
+        public async Task<StudentLessonOutputModel> UpdateStudentFeedbackForLessonAsync(int lessonId, int studentId, [FromBody] FeedbackInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<StudentLessonDto>(model);
-            var output = _lessonService.UpdateStudentFeedbackForLesson(lessonId, studentId, dto, userInfo);
+            var output = await _lessonService.UpdateStudentFeedbackForLessonAsync(lessonId, studentId, dto, userInfo);
             return _mapper.Map<StudentLessonOutputModel>(output);
         }
 
@@ -213,11 +213,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status200OK)]
-        public StudentLessonOutputModel UpdateStudentAbsenceReasonOnLesson(int lessonId, int studentId, [FromBody] AbsenceReasonInputModel model)
+        public async Task<StudentLessonOutputModel> UpdateStudentAbsenceReasonOnLessonAsync(int lessonId, int studentId, [FromBody] AbsenceReasonInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<StudentLessonDto>(model);
-            var output = _lessonService.UpdateStudentAbsenceReasonOnLesson(lessonId, studentId, dto, userInfo);
+            var output = await _lessonService.UpdateStudentAbsenceReasonOnLessonAsync(lessonId, studentId, dto, userInfo);
             return _mapper.Map<StudentLessonOutputModel>(output);
         }
 
@@ -226,11 +226,11 @@ namespace DevEdu.API.Controllers
         [HttpPut("{lessonId}/student/{studentId}/attendance")]
         [Description("Update Attendance for lesson")]
         [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status200OK)]
-        public StudentLessonOutputModel UpdateStudentAttendanceOnLesson(int lessonId, int studentId, [FromBody] AttendanceInputModel model)
+        public async Task<StudentLessonOutputModel> UpdateStudentAttendanceOnLessonAsync(int lessonId, int studentId, [FromBody] AttendanceInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<StudentLessonDto>(model);
-            var output = _lessonService.UpdateStudentAttendanceOnLesson(lessonId, studentId, dto, userInfo);
+            var output = await _lessonService.UpdateStudentAttendanceOnLessonAsync(lessonId, studentId, dto, userInfo);
             return _mapper.Map<StudentLessonOutputModel>(output);
         }
 
@@ -241,10 +241,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<FeedbackOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<FeedbackOutputModel> GetAllFeedbackByLessonId(int lessonId)
+        public async Task<List<FeedbackOutputModel>> GetAllFeedbackByLessonIdAsync(int lessonId)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _lessonService.SelectAllFeedbackByLessonId(lessonId, userInfo);
+            var dto = await _lessonService.SelectAllFeedbackByLessonIdAsync(lessonId, userInfo);
             return _mapper.Map<List<FeedbackOutputModel>>(dto);
         }
     }

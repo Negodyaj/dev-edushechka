@@ -4,6 +4,7 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -22,42 +23,44 @@ namespace DevEdu.Business.Services
             _userValidationHelper = userValidationHelper;
         }
 
-        public PaymentDto GetPayment(int id) => _paymentValidationHelper.GetPaymentByIdAndThrowIfNotFound(id);
+        public async Task<PaymentDto> GetPaymentAsync(int id) => await _paymentValidationHelper.GetPaymentByIdAndThrowIfNotFoundAsync(id);
 
-        public List<PaymentDto> GetPaymentsByUserId(int userId)
+        public async Task<List<PaymentDto>> GetPaymentsByUserIdAsync(int userId)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-            return _paymentValidationHelper.GetPaymentsByUserIdAndThrowIfNotFound(userId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
+            return await _paymentValidationHelper.GetPaymentsByUserIdAndThrowIfNotFoundAsync(userId);
         }
 
-        public int AddPayment(PaymentDto dto) => _paymentRepository.AddPayment(dto);
+        public async Task<int> AddPaymentAsync(PaymentDto dto) => await _paymentRepository.AddPaymentAsync(dto);
 
-        public void DeletePayment(int id)
+        public async Task DeletePaymentAsync(int id)
         {
-            _paymentValidationHelper.GetPaymentByIdAndThrowIfNotFound(id);
-            _paymentRepository.DeletePayment(id);
+            await _paymentValidationHelper.GetPaymentByIdAndThrowIfNotFoundAsync(id);
+            await _paymentRepository.DeletePaymentAsync(id);
         }
 
-        public void UpdatePayment(int id, PaymentDto dto)
+        public async Task UpdatePaymentAsync(int id, PaymentDto dto)
         {
-            var paymentInDb = _paymentValidationHelper.GetPaymentByIdAndThrowIfNotFound(id);
+            var paymentInDb = await _paymentValidationHelper.GetPaymentByIdAndThrowIfNotFoundAsync(id);
             if (dto == null)
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
+
             if (paymentInDb.IsDeleted)
                 throw new EntityNotFoundException(ServiceMessages.PaymentDeleted);
+
             dto.User = new UserDto { Id = paymentInDb.User.Id };
             dto.Id = id;
-            _paymentRepository.UpdatePayment(dto);
+            await _paymentRepository.UpdatePaymentAsync(dto);
         }
 
-        public List<int> AddPayments(List<PaymentDto> payments)
+        public async Task<List<int>> AddPaymentsAsync(List<PaymentDto> payments)
         {
-            return _paymentRepository.AddPayments(payments);
+            return await _paymentRepository.AddPaymentsAsync(payments);
         }
 
-        public List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids)
+        public async Task<List<PaymentDto>> SelectPaymentsBySeveralIdAsync(List<int> ids)
         {
-            var list = _paymentValidationHelper.SelectPaymentsBySeveralIdAndThrowIfNotFound(ids);
+            var list = await _paymentValidationHelper.SelectPaymentsBySeveralIdAndThrowIfNotFoundAsync(ids);
             return list;
         }
     }

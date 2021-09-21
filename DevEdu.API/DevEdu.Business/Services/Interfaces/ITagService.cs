@@ -1,14 +1,15 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
     public interface ITagService
     {
-        TagDto AddTag(TagDto dto);
-        void DeleteTag(int id);
-        List<TagDto> GetAllTags();
-        TagDto GetTagById(int id);
-        TagDto UpdateTag(TagDto dto, int id);
+        Task<TagDto> AddTagAsync(TagDto dto);
+        Task DeleteTagAsync(int id);
+        Task<List<TagDto>> GetAllTagsAsync();
+        Task<TagDto> GetTagByIdAsync(int id);
+        Task<TagDto> UpdateTagAsync(TagDto dto, int id);
     }
 }

@@ -7,7 +7,7 @@ namespace DevEdu.Business.ValidationHelpers
     {
         Task CheckUserInStudentHomeworkAccessAsync(int studentId, int userId);
         Task CheckUserBelongsToHomeworkAsync(int groupId, int userId);
-        Task<StudentHomeworkDto> GetStudentHomeworkByIdAndThrowIfNotFound(int id);
+        Task<StudentHomeworkDto> GetStudentHomeworkByIdAndThrowIfNotFoundAsync(int id);
         Task CheckUserComplianceToStudentHomeworkAsync(int studentId, int userId);
     }
 }

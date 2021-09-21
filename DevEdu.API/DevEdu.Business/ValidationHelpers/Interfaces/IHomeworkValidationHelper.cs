@@ -1,9 +1,10 @@
 ﻿using DevEdu.DAL.Models;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
     public interface IHomeworkValidationHelper
     {
-        HomeworkDto GetHomeworkByIdAndThrowIfNotFound(int homeworkId);
+        Task<HomeworkDto> GetHomeworkByIdAndThrowIfNotFoundAsync(int homeworkId);
     }
 }

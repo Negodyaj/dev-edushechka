@@ -36,171 +36,177 @@ namespace DevEdu.Business.Services
             _groupValidationHelper = groupValidationHelper;
         }
 
-        public LessonDto AddLesson(UserIdentityInfo userIdentity, LessonDto lessonDto, List<int> topicIds)
+        public async Task<LessonDto> AddLessonAsync(UserIdentityInfo userIdentity, LessonDto lessonDto, List<int> topicIds)
         {
             if (!userIdentity.IsAdmin())
             {
                 _lessonValidationHelper.CheckUserAndTeacherAreSame(userIdentity, lessonDto.Teacher.Id);
             }
-            int lessonId = _lessonRepository.AddLesson(lessonDto);
+            int lessonId = await _lessonRepository.AddLessonAsync(lessonDto);
 
             if (topicIds != null)
             {
                 foreach (int topicId in topicIds)
                 {
-                    _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-                    _lessonRepository.AddTopicToLesson(lessonId, topicId);
+                    await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(topicId);
+                    await _lessonRepository.AddTopicToLessonAsync(lessonId, topicId);
                 }
             }
-            return _lessonRepository.SelectLessonById(lessonId);
+            return await _lessonRepository.SelectLessonByIdAsync(lessonId);
         }
 
-        public void DeleteLesson(UserIdentityInfo userIdentity, int id)
+        public async Task DeleteLessonAsync(UserIdentityInfo userIdentity, int id)
         {
-            var lesson = _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(id);
+            var lesson = await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(id);
             if (!userIdentity.IsAdmin())
             {
-                _lessonValidationHelper.CheckUserBelongsToLessonAsync(userIdentity, lesson);
+                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(userIdentity, lesson);
             }
-            _lessonRepository.DeleteLesson(id);
+            await _lessonRepository.DeleteLessonAsync(id);
         }
 
         public async Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(UserIdentityInfo userIdentity, int groupId)
         {
-            var groupDto = Task.Run(() => _groupValidationHelper.CheckGroupExistenceAsync(groupId)).GetAwaiter().GetResult();
+            await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
             if (!userIdentity.IsAdmin())
             {
                 var currentRole = userIdentity.IsTeacher() ? Role.Teacher : Role.Student;
-                _userValidationHelper.CheckAuthorizationUserToGroup(groupId, userIdentity.UserId, currentRole);
+                await _userValidationHelper.CheckAuthorizationUserToGroupAsync(groupId, userIdentity.UserId, currentRole);
             }
+
             var result = await _lessonRepository.SelectAllLessonsByGroupIdAsync(groupId);
+
             return result;
         }
 
-        public List<LessonDto> SelectAllLessonsByTeacherId(int teacherId)
+        public async Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(teacherId);
-            return _lessonRepository.SelectAllLessonsByTeacherId(teacherId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(teacherId);
+            return await _lessonRepository.SelectAllLessonsByTeacherIdAsync(teacherId);
         }
 
-        public LessonDto SelectLessonWithCommentsById(UserIdentityInfo userIdentity, int id)
+        public async Task<LessonDto> SelectLessonWithCommentsByIdAsync(UserIdentityInfo userIdentity, int id)
         {
-            var lesson = _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(id);
+            var lesson = await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(id);
             if (!userIdentity.IsAdmin())
             {
-                _lessonValidationHelper.CheckUserBelongsToLessonAsync(userIdentity, lesson);
+                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(userIdentity, lesson);
             }
 
-            LessonDto result = _lessonRepository.SelectLessonById(id);
-            result.Comments = _commentRepository.SelectCommentsFromLessonByLessonId(id);
+            LessonDto result = await _lessonRepository.SelectLessonByIdAsync(id);
+            result.Comments = await _commentRepository.SelectCommentsFromLessonByLessonIdAsync(id);
             return result;
         }
 
-        public LessonDto SelectLessonWithCommentsAndStudentsById(UserIdentityInfo userIdentity, int id)
+        public async Task<LessonDto> SelectLessonWithCommentsAndStudentsByIdAsync(UserIdentityInfo userIdentity, int id)
         {
-            LessonDto result = SelectLessonWithCommentsById(userIdentity, id);
-            result.Students = _lessonRepository.SelectStudentsLessonByLessonIdAsync(id).Result;
+            LessonDto result = await SelectLessonWithCommentsByIdAsync(userIdentity, id);
+            result.Students = await _lessonRepository.SelectStudentsLessonByLessonIdAsync(id);//.Result;
             return result;
         }
 
-        public LessonDto UpdateLesson(UserIdentityInfo userIdentity, LessonDto lessonDto, int lessonId)
+        public async Task<LessonDto> UpdateLessonAsync(UserIdentityInfo userIdentity, LessonDto lessonDto, int lessonId)
         {
-            var lesson = _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            var lesson = await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
             if (!userIdentity.IsAdmin())
             {
-                _lessonValidationHelper.CheckUserBelongsToLessonAsync(userIdentity, lesson);
+                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(userIdentity, lesson);
             }
 
             lessonDto.Id = lessonId;
-            _lessonRepository.UpdateLessonAsync(lessonDto);
-            return _lessonRepository.SelectLessonById(lessonDto.Id);
+            await _lessonRepository.UpdateLessonAsync(lessonDto);
+            return await _lessonRepository.SelectLessonByIdAsync(lessonDto.Id);
         }
 
-        public void DeleteTopicFromLesson(int lessonId, int topicId)
+        public async Task DeleteTopicFromLessonAsync(int lessonId, int topicId)
         {
-            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
-            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
-            if (_lessonRepository.DeleteTopicFromLessonAsync(lessonId, topicId).Result == 0)
+            await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
+            await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(topicId);
+            if (await _lessonRepository.DeleteTopicFromLessonAsync(lessonId, topicId) == 0)
             {
                 throw new ValidationException(nameof(topicId), string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, topicId));
             }
         }
 
-        public void AddTopicToLesson(int lessonId, int topicId)
+        public async Task AddTopicToLessonAsync(int lessonId, int topicId)
         {
-            var lesson = _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
-            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
+            var lesson = await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
+            await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(topicId);
             _lessonValidationHelper.CheckTopicLessonReferenceIsUnique(lesson, topicId);
-            _lessonRepository.AddTopicToLesson(lessonId, topicId);
+            await _lessonRepository.AddTopicToLessonAsync(lessonId, topicId);
         }
 
-        public StudentLessonDto AddStudentToLesson(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
+        public async Task<StudentLessonDto> AddStudentToLessonAsync(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
-            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(studentId);
+            await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
             if (!userIdentityInfo.IsAdmin())
-                _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
+                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
 
-            _lessonRepository.AddStudentToLesson(lessonId, studentId);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
+            await _lessonRepository.AddStudentToLessonAsync(lessonId, studentId);
+            return await _lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, studentId);
         }
 
-        public void DeleteStudentFromLesson(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
+        public async Task DeleteStudentFromLessonAsync(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
         {
-
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
-            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(studentId);
+            await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             if (!userIdentityInfo.IsAdmin())
-                _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
-            _lessonRepository.DeleteStudentFromLesson(lessonId, studentId);
+                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
+
+            await _lessonRepository.DeleteStudentFromLessonAsync(lessonId, studentId);
         }
 
-        public StudentLessonDto UpdateStudentFeedbackForLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
+        public async Task<StudentLessonDto> UpdateStudentFeedbackForLessonAsync(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
-            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(studentId);
+            await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             if (!userIdentityInfo.IsAdmin())
-                _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
+                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
+
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.Student = new UserDto { Id = studentId };
-            _lessonRepository.UpdateStudentFeedbackForLesson(studentLessonDto);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
+            await _lessonRepository.UpdateStudentFeedbackForLessonAsync(studentLessonDto);
+            return await _lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, studentId);
         }
 
-        public StudentLessonDto UpdateStudentAbsenceReasonOnLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
+        public async Task<StudentLessonDto> UpdateStudentAbsenceReasonOnLessonAsync(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
         {
-            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
+            await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
+            await  _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(studentId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             if (!userIdentityInfo.IsAdmin())
-                _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
+                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
+            
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.Student = new UserDto { Id = studentId };
-            _lessonRepository.UpdateStudentAbsenceReasonOnLesson(studentLessonDto);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
+            await _lessonRepository.UpdateStudentAbsenceReasonOnLessonAsync(studentLessonDto);
+            return await _lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, studentId);
         }
 
-        public StudentLessonDto UpdateStudentAttendanceOnLesson(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
+        public async Task<StudentLessonDto> UpdateStudentAttendanceOnLessonAsync(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
         {
             if (!userIdentityInfo.IsAdmin())
-                _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(studentId);
-            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
+
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(studentId);
+            await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.Student = new UserDto { Id = studentId };
-            _lessonRepository.UpdateStudentAttendanceOnLesson(studentLessonDto);
-            return _lessonRepository.SelectAttendanceByLessonAndUserId(lessonId, studentId);
+            await _lessonRepository.UpdateStudentAttendanceOnLessonAsync(studentLessonDto);
+            return await _lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, studentId);
         }
 
-        public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId, UserIdentityInfo userIdentityInfo)
+        public async Task<List<StudentLessonDto>> SelectAllFeedbackByLessonIdAsync(int lessonId, UserIdentityInfo userIdentityInfo)
         {
-            _lessonValidationHelper.GetLessonByIdAndThrowIfNotFound(lessonId);
+            await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
             if (userIdentityInfo.IsStudent() || userIdentityInfo.IsTeacher())
-                _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
-            return _lessonRepository.SelectAllFeedbackByLessonId(lessonId);
+                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
+          
+            return await _lessonRepository.SelectAllFeedbackByLessonIdAsync(lessonId);
         }
 
 

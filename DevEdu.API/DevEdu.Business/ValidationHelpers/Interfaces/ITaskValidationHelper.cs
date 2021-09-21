@@ -11,6 +11,6 @@ namespace DevEdu.Business.ValidationHelpers
         Task<AuthorizationException> CheckUserAccessToTaskAsync(int taskId, int userId);
         Task<AuthorizationException> CheckMethodistAccessToTaskAsync(TaskDto taskDto, int userId);
         Task<TaskDto> GetTaskAllowedToUserAsync(int taskId, int userId);
-        public List<TaskDto> GetTasksAllowedToMethodist(List<TaskDto> taskDtos);
+        List<TaskDto> GetTasksAllowedToMethodist(List<TaskDto> taskDtos);
     }
 }

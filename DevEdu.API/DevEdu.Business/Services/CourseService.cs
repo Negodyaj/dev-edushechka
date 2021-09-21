@@ -94,24 +94,24 @@ namespace DevEdu.Business.Services
             await CheckCourseAndTopicExistencesAsync(courseId, topicId);
             dto.Course = new CourseDto() { Id = courseId };
             dto.Topic = new TopicDto { Id = topicId };
-            return _topicRepository.AddTopicToCourse(dto);
+            return await _topicRepository.AddTopicToCourseAsync(dto);
         }
 
         public async Task<List<int>> AddTopicsToCourseAsync(int courseId, List<CourseTopicDto> listDto)
         {
             await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(courseId);
-            _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFound(listDto);
+            await _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFoundAsync(listDto);
             foreach (var topic in listDto)
             {
                 topic.Course = new CourseDto() { Id = courseId };
             }
-            return _topicRepository.AddTopicsToCourse(listDto);
+            return await _topicRepository.AddTopicsToCourseAsync(listDto);
         }
 
         public async Task DeleteTopicFromCourseAsync(int courseId, int topicId)
         {
             await CheckCourseAndTopicExistencesAsync(courseId, topicId);
-            _topicRepository.DeleteTopicFromCourse(courseId, topicId);
+            await _topicRepository.DeleteTopicFromCourseAsync(courseId, topicId);
         }
 
         public async Task<List<CourseTopicDto>> SelectAllTopicsByCourseIdAsync(int courseId)
@@ -128,7 +128,6 @@ namespace DevEdu.Business.Services
             await _courseRepository.DeleteTaskFromCourseAsync(courseId, taskId);
         }
 
-
         public async Task AddTaskToCourseAsync(int courseId, int taskId)
         {
             await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(courseId);
@@ -136,18 +135,17 @@ namespace DevEdu.Business.Services
             await _courseRepository.AddTaskToCourseAsync(courseId, taskId);
         }
 
-
         public async Task<int> AddCourseMaterialReferenceAsync(int courseId, int materialId)
         {
             await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(courseId);
-            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
+            await _materialValidationHelper.GetMaterialByIdAndThrowIfNotFoundAsync(materialId);
             return await _courseRepository.AddCourseMaterialReferenceAsync(courseId, materialId);
         }
 
         public async Task RemoveCourseMaterialReferenceAsync(int courseId, int materialId)
         {
             await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(courseId);
-            _materialValidationHelper.GetMaterialByIdAndThrowIfNotFound(materialId);
+            await _materialValidationHelper.GetMaterialByIdAndThrowIfNotFoundAsync(materialId);
             await _courseRepository.RemoveCourseMaterialReferenceAsync(courseId, materialId);
         }
 
@@ -159,7 +157,7 @@ namespace DevEdu.Business.Services
             await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(courseId);
             CheckUniquenessTopics(topics);
             CheckUniquenessPositions(topics);
-            _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFound(topics);
+            await _topicValidationHelper.GetTopicByListDtoAndThrowIfNotFoundAsync(topics);
             var topicsInDatabase = await _courseRepository.SelectAllTopicsByCourseIdAsync(courseId);
             if (
                 topicsInDatabase != null &&
@@ -187,14 +185,15 @@ namespace DevEdu.Business.Services
             }
             return response;
         }
-        public CourseTopicDto GetCourseTopicById(int id)
+
+        public async Task<CourseTopicDto> GetCourseTopicByIdAsync(int id)
         {
-            return _topicValidationHelper.GetCourseTopicByIdAndThrowIfNotFound(id);
+            return await _topicValidationHelper.GetCourseTopicByIdAndThrowIfNotFoundAsync(id);
         }
 
-        public List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids)
+        public async Task<List<CourseTopicDto>> GetCourseTopicBySeveralIdAsync(List<int> ids)
         {
-            return _topicValidationHelper.GetCourseTopicBySeveralIdAndThrowIfNotFound(ids);
+            return await _topicValidationHelper.GetCourseTopicBySeveralIdAndThrowIfNotFoundAsync(ids);
         }
 
         public async Task DeleteAllTopicsByCourseIdAsync(int courseId)
@@ -222,7 +221,7 @@ namespace DevEdu.Business.Services
         private async Task CheckCourseAndTopicExistencesAsync(int courseId, int topicId)
         {
             await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(courseId);
-            _topicValidationHelper.GetTopicByIdAndThrowIfNotFound(topicId);
+            await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(topicId);
         }
     }
 }

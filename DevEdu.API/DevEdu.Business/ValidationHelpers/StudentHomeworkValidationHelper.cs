@@ -22,18 +22,19 @@ namespace DevEdu.Business.ValidationHelpers
             _groupRepository = groupRepository;
         }
 
-        public async Task<StudentHomeworkDto> GetStudentHomeworkByIdAndThrowIfNotFound(int id)
+        public async Task<StudentHomeworkDto> GetStudentHomeworkByIdAndThrowIfNotFoundAsync(int id)
         {
             var studentHomework = await _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
             if (studentHomework == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), id));
+
             return studentHomework;
         }
 
         public async Task CheckUserBelongsToHomeworkAsync(int groupId, int userId)
         {
             var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
-            var group = Task.Run(async () => await _groupRepository.GetGroup(groupId)).Result;
+            var group = Task.Run(async () => await _groupRepository.GetGroupAsync(groupId)).Result;
             var result = groupsByUser.FirstOrDefault(gu => gu.Id == @group.Id);
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserInGroupNotFoundMessage, userId, groupId));

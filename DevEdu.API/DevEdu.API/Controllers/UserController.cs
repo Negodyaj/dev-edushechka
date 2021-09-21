@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -34,11 +35,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<UserUpdateInfoOutPutModel> UpdateUserById([FromBody] UserUpdateInputModel model)
+        public async Task<ActionResult<UserUpdateInfoOutPutModel>> UpdateUserByIdAsync([FromBody] UserUpdateInputModel model)
         {
             var dtoEntry = _mapper.Map<UserDto>(model);
-            var dtoResult = _userService.UpdateUser(dtoEntry);
+            var dtoResult = await _userService.UpdateUserAsync(dtoEntry);
             var outPut = _mapper.Map<UserUpdateInfoOutPutModel>(dtoResult);
+
             return Created(new Uri($"api/User/{outPut.Id}", UriKind.Relative), outPut);
         }
 
@@ -49,10 +51,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public UserFullInfoOutPutModel GetUserById(int userId)
+        public async Task<UserFullInfoOutPutModel> GetUserByIdAsync(int userId)
         {
-            var dto = _userService.GetUserById(userId);
-            return _mapper.Map<UserFullInfoOutPutModel>(dto);
+            var dto = await _userService.GetUserByIdAsync(userId);
+            var outPut = _mapper.Map<UserFullInfoOutPutModel>(dto);
+
+            return outPut;
         }
 
         // api/user
@@ -61,10 +65,12 @@ namespace DevEdu.API.Controllers
         [Description("Return list users")]
         [ProducesResponseType(typeof(List<UserInfoOutPutModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        public List<UserInfoOutPutModel> GetAllUsers()
+        public async Task<List<UserInfoOutPutModel>> GetAllUsersAsync()
         {
-            var listDto = _userService.GetAllUsers();
-            return _mapper.Map<List<UserInfoOutPutModel>>(listDto);
+            var listDto = await _userService.GetAllUsersAsync();
+            var list = _mapper.Map<List<UserInfoOutPutModel>>(listDto);
+
+            return list;
         }
 
         // api/user/{userId}
@@ -74,9 +80,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteUser(int userId)
+        public async Task<ActionResult> DeleteUserAsync(int userId)
         {
-            _userService.DeleteUser(userId);
+            await _userService.DeleteUserAsync(userId);
             return NoContent();
         }
 
@@ -87,10 +93,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult AddRoleToUser(int userId, Role role)
+        public async Task<ActionResult> AddRoleToUserAsync(int userId, Role role)
         {
-            _userService.AddUserRole(userId, (int)role);
-            return StatusCode(StatusCodes.Status204NoContent);
+            await _userService.AddUserRoleAsync(userId, (int)role);
+            return NoContent();
         }
 
         // api/user/{userId}/role/{roleId}
@@ -100,9 +106,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteRoleFromUser(int userId, Role role)
+        public async Task<ActionResult> DeleteRoleFromUserAsync(int userId, Role role)
         {
-            _userService.DeleteUserRole(userId, (int)role);
+            await _userService.DeleteUserRoleAsync(userId, (int)role);
             return NoContent();
         }
     }

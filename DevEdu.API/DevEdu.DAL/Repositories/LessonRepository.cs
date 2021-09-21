@@ -21,6 +21,7 @@ namespace DevEdu.DAL.Repositories
         private const string _lessonTopicInsertProcedure = "dbo.Lesson_Topic_Insert";
         private const string _lessonTopicDeleteProcedure = "dbo.Lesson_Topic_Delete";
 
+        private const string _studentLessonSelectByLessonIdProcedure = "dbo.Student_Lesson_SelectByLessonId";
         private const string _studentLessonInsertProcedure = "dbo.Student_Lesson_Insert";
         private const string _studentLessonDeleteProcedure = "dbo.Student_Lesson_Delete";
         private const string _studentLessonUpdateFeedbackProcedure = "dbo.Student_Lesson_UpdateFeedback";
@@ -29,11 +30,13 @@ namespace DevEdu.DAL.Repositories
         private const string _studentLessonSelectAllFeedbackByLessonIdProcedure = "dbo.Student_Lesson_SelectAllFeedbackByLessonId";
         private const string _studentLessonSelectByLessonAndUserIdProcedure = "dbo.Student_Lesson_SelectByLessonAndUserId";
 
-        public LessonRepository(IOptions<DatabaseSettings> options) : base(options) { }
-
-        public int AddLesson(LessonDto lessonDto)
+        public LessonRepository(IOptions<DatabaseSettings> options) : base(options)
         {
-            return _connection.QueryFirst<int>(
+        }
+
+        public async Task<int> AddLessonAsync(LessonDto lessonDto)
+        {
+            return await _connection.QueryFirstAsync<int>(
                 _lessonInsertProcedure,
                 new
                 {
@@ -46,13 +49,13 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteLesson(int id)
+        public async Task DeleteLessonAsync(int id)
         {
-            _connection.Execute(
-                _lessonDeleteProcedure,
-                new { id },
-                commandType: CommandType.StoredProcedure
-            );
+            await _connection.ExecuteAsync(
+                 _lessonDeleteProcedure,
+                 new { id },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
         public async Task<int> DeleteTopicFromLessonAsync(int lessonId, int topicId)
@@ -68,42 +71,41 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddTopicToLesson(int lessonId, int topicId)
+        public async Task AddTopicToLessonAsync(int lessonId, int topicId)
         {
-            _connection.Execute(
-                _lessonTopicInsertProcedure,
-                new
-                {
-                    lessonId,
-                    topicId
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            await _connection.ExecuteAsync(
+                  _lessonTopicInsertProcedure,
+                  new
+                  {
+                      lessonId,
+                      topicId
+                  },
+                  commandType: CommandType.StoredProcedure
+              );
         }
 
         public async Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(int groupId)
         {
             var lessonDictionary = new Dictionary<int, LessonDto>();
 
-            var list = (await _connection
-                .QueryAsync<LessonDto, UserDto, TopicDto, LessonDto>(
-                    _lessonSelectAllByGroupIdProcedure,
-                    (lesson, teacher, topic) =>
+            var list = (await _connection.QueryAsync<LessonDto, UserDto, TopicDto, LessonDto>(
+                _lessonSelectAllByGroupIdProcedure,
+                (lesson, teacher, topic) =>
+                {
+                    if (!lessonDictionary.TryGetValue(lesson.Id, out var lessonEntry))
                     {
-                        if (!lessonDictionary.TryGetValue(lesson.Id, out var lessonEntry))
-                        {
-                            lessonEntry = lesson;
-                            lessonEntry.Teacher = teacher;
-                            lessonEntry.Topics = new List<TopicDto>();
-                            lessonDictionary.Add(lessonEntry.Id, lessonEntry);
-                        }
+                        lessonEntry = lesson;
+                        lessonEntry.Teacher = teacher;
+                        lessonEntry.Topics = new List<TopicDto>();
+                        lessonDictionary.Add(lessonEntry.Id, lessonEntry);
+                    }
 
-                        lessonEntry.Topics.Add(topic);
-                        return lessonEntry;
-                    },
-                    new { groupId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
+                    lessonEntry.Topics.Add(topic);
+                    return lessonEntry;
+                },
+                new { groupId },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
                 ))
                 .Distinct()
                 .ToList();
@@ -111,68 +113,67 @@ namespace DevEdu.DAL.Repositories
             return list;
         }
 
-        public List<LessonDto> SelectAllLessonsByTeacherId(int teacherId)
+        public async Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId)
         {
             var lessonDictionary = new Dictionary<int, LessonDto>();
 
-            var list = _connection
-               .Query<LessonDto, UserDto, TopicDto, CourseDto, LessonDto>(
-                   _lessonSelectAllByTeacherIdProcedure,
-                   (lesson, teacher, topic, course) =>
-                   {
-                       if (!lessonDictionary.TryGetValue(lesson.Id, out var lessonEntry))
-                       {
-                           lessonEntry = lesson;
-                           lessonEntry.Teacher = teacher;
-                           lessonEntry.Topics = new List<TopicDto>();
-                           lessonEntry.Course = course;
-                           lessonDictionary.Add(lessonEntry.Id, lessonEntry);
-                       }
+            var list = (await _connection.QueryAsync<LessonDto, UserDto, TopicDto, CourseDto, LessonDto>(
+                _lessonSelectAllByTeacherIdProcedure,
+                (lesson, teacher, topic, course) =>
+                {
+                    if (!lessonDictionary.TryGetValue(lesson.Id, out var lessonEntry))
+                    {
+                        lessonEntry = lesson;
+                        lessonEntry.Teacher = teacher;
+                        lessonEntry.Topics = new List<TopicDto>();
+                        lessonEntry.Course = course;
+                        lessonDictionary.Add(lessonEntry.Id, lessonEntry);
+                    }
 
-                       lessonEntry.Topics.Add(topic);
-                       return lessonEntry;
-                   },
-                   new { teacherId },
-                   splitOn: "Id",
-                   commandType: CommandType.StoredProcedure
-               )
+                    lessonEntry.Topics.Add(topic);
+                    return lessonEntry;
+                },
+                new { teacherId },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+               ))
                .Distinct()
                .ToList();
 
             return list;
         }
 
-        public LessonDto SelectLessonById(int id)
+        public async Task<LessonDto> SelectLessonByIdAsync(int id)
         {
             LessonDto result = default;
-            _connection
-                .Query<LessonDto, UserDto, TopicDto, LessonDto>(
-                    _lessonSelectByIdProcedure,
-                    (lesson, teacher, topic) =>
-                    {
-                        if (result == null)
-                        {
-                            result = lesson;
-                            result.Teacher = teacher;
-                            result.Topics = new List<TopicDto>();
-                        }
-                        if (topic != null)
-                            result.Topics.Add(topic);
 
-                        return lesson;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
+            await _connection.QueryAsync<LessonDto, UserDto, TopicDto, LessonDto>(
+                _lessonSelectByIdProcedure,
+                (lesson, teacher, topic) =>
+                {
+                    if (result == null)
+                    {
+                        result = lesson;
+                        result.Teacher = teacher;
+                        result.Topics = new List<TopicDto>();
+                    }
+                    if (topic != null)
+                        result.Topics.Add(topic);
+
+                    return lesson;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
                 );
+
             return result;
         }
 
         public async Task<List<StudentLessonDto>> SelectStudentsLessonByLessonIdAsync(int lessonId)
         {
-            return (await _connection
-                .QueryAsync<StudentLessonDto, UserDto, StudentLessonDto>(
-                    "[dbo].[Student_Lesson_SelectByLessonId]",
+            return (await _connection.QueryAsync<StudentLessonDto, UserDto, StudentLessonDto>(
+                    _studentLessonSelectByLessonIdProcedure,
                     (studentLesson, user) =>
                     {
                         studentLesson.Student = user;
@@ -200,79 +201,80 @@ namespace DevEdu.DAL.Repositories
            );
         }
 
-        public void AddStudentToLesson(int lessonId, int studentId)
+        public async Task AddStudentToLessonAsync(int lessonId, int studentId)
         {
-            _connection.Execute(
-                _studentLessonInsertProcedure,
-                 new
-                 {
-                     lessonId,
-                     studentId
-                 },
-                 commandType: CommandType.StoredProcedure
-             );
+            await _connection.ExecuteAsync(
+                 _studentLessonInsertProcedure,
+                  new
+                  {
+                      lessonId,
+                      studentId
+                  },
+                  commandType: CommandType.StoredProcedure
+              );
 
         }
 
-        public void DeleteStudentFromLesson(int lessonId, int studentId)
+        public async Task DeleteStudentFromLessonAsync(int lessonId, int studentId)
         {
-            _connection.Execute(
-                _studentLessonDeleteProcedure,
-                 new
-                 {
-                     lessonId,
-                     studentId
-                 },
-                 commandType: CommandType.StoredProcedure
-             );
+            await _connection.ExecuteAsync(
+                  _studentLessonDeleteProcedure,
+                   new
+                   {
+                       lessonId,
+                       studentId
+                   },
+                   commandType: CommandType.StoredProcedure
+               );
         }
 
-        public void UpdateStudentFeedbackForLesson(StudentLessonDto studentLessonDto)
+        public async Task UpdateStudentFeedbackForLessonAsync(StudentLessonDto studentLessonDto)
         {
-            _connection.Execute(
-                _studentLessonUpdateFeedbackProcedure,
-                 new
-                 {
-                     studentLessonDto.Feedback,
-                     LessonId = studentLessonDto.Lesson.Id,
-                     StudentId = studentLessonDto.Student.Id
-                 },
-                 commandType: CommandType.StoredProcedure
-             );
+            await _connection.ExecuteAsync(
+                 _studentLessonUpdateFeedbackProcedure,
+                  new
+                  {
+                      studentLessonDto.Feedback,
+                      LessonId = studentLessonDto.Lesson.Id,
+                      StudentId = studentLessonDto.Student.Id
+                  },
+                  commandType: CommandType.StoredProcedure
+              );
         }
 
-        public void UpdateStudentAbsenceReasonOnLesson(StudentLessonDto studentLessonDto)
+        public async Task UpdateStudentAbsenceReasonOnLessonAsync(StudentLessonDto studentLessonDto)
         {
-            _connection.Execute(
-                _studentLessonUpdateAbsenceReasonProcedure,
-                 new
-                 {
-                     studentLessonDto.AbsenceReason,
-                     LessonId = studentLessonDto.Lesson.Id,
-                     StudentId = studentLessonDto.Student.Id
-                 },
-                 commandType: CommandType.StoredProcedure
-             );
+            await _connection.ExecuteAsync(
+                  _studentLessonUpdateAbsenceReasonProcedure,
+                   new
+                   {
+                       studentLessonDto.AbsenceReason,
+                       LessonId = studentLessonDto.Lesson.Id,
+                       StudentId = studentLessonDto.Student.Id
+                   },
+                   commandType: CommandType.StoredProcedure
+               );
         }
 
-        public void UpdateStudentAttendanceOnLesson(StudentLessonDto studentLessonDto)
+        public async Task UpdateStudentAttendanceOnLessonAsync(StudentLessonDto studentLessonDto)
         {
-            _connection.Execute(
-                _studentLessonUpdateIsPresentProcedure,
-                 new
-                 {
-                     studentLessonDto.IsPresent,
-                     LessonId = studentLessonDto.Lesson.Id,
-                     StudentId = studentLessonDto.Student.Id
-                 },
-                 commandType: CommandType.StoredProcedure
-             );
+            await _connection.ExecuteAsync(
+                 _studentLessonUpdateIsPresentProcedure,
+                  new
+                  {
+                      studentLessonDto.IsPresent,
+                      LessonId = studentLessonDto.Lesson.Id,
+                      StudentId = studentLessonDto.Student.Id
+                  },
+                  commandType: CommandType.StoredProcedure
+              );
         }
 
-        public List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId)
+        public async Task<List<StudentLessonDto>> SelectAllFeedbackByLessonIdAsync(int lessonId)
         {
             StudentLessonDto result;
-            var list = _connection.Query<StudentLessonDto, UserDto, StudentLessonDto>(
+
+            var list = (await _connection.QueryAsync<StudentLessonDto, UserDto, StudentLessonDto>(
                 _studentLessonSelectAllFeedbackByLessonIdProcedure,
                 (studentLesson, user) =>
                 {
@@ -285,15 +287,15 @@ namespace DevEdu.DAL.Repositories
                   new { lessonId },
                   splitOn: "Id",
                   commandType: CommandType.StoredProcedure
-                  )
+                  ))
                   .ToList();
+
             return list;
         }
 
-
-        public StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int studentId)
+        public async Task<StudentLessonDto> SelectAttendanceByLessonAndUserIdAsync(int lessonId, int studentId)
         {
-            return _connection.Query<StudentLessonDto, LessonDto, UserDto, StudentLessonDto>(
+            return (await _connection.QueryAsync<StudentLessonDto, LessonDto, UserDto, StudentLessonDto>(
                 _studentLessonSelectByLessonAndUserIdProcedure,
                 (studentLesson, lesson, user) =>
                 {
@@ -309,8 +311,7 @@ namespace DevEdu.DAL.Repositories
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
-            ).First();
-
+            )).FirstOrDefault();
         }
     }
 }

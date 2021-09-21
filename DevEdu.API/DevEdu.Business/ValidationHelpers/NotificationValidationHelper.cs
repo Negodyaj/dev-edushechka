@@ -3,6 +3,7 @@ using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -15,11 +16,12 @@ namespace DevEdu.Business.ValidationHelpers
             _notificationRepository = notificationRepository;
         }
 
-        public NotificationDto GetNotificationByIdAndThrowIfNotFound(int notificationId)
+        public async Task<NotificationDto> GetNotificationByIdAndThrowIfNotFoundAsync(int notificationId)
         {
-            var notification = _notificationRepository.GetNotification(notificationId);
+            var notification = await _notificationRepository.GetNotificationAsync(notificationId);
             if (notification == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(notification), notificationId));
+            
             return notification;
         }
 

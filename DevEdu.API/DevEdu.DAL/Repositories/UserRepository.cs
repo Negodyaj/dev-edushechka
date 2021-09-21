@@ -24,9 +24,9 @@ namespace DevEdu.DAL.Repositories
 
         public UserRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
-        public int AddUser(UserDto user)
+        public async Task<int> AddUserAsync(UserDto user)
         {
-            return _connection.QuerySingle<int>(
+            return await _connection.QuerySingleAsync<int>(
                 _userInsertProcedure,
                 new
                 {
@@ -46,11 +46,12 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public UserDto GetUserById(int id)
+        public async Task<UserDto> GetUserByIdAsync(int id)
         {
             UserDto result = default;
-            return _connection
-                .Query<UserDto, City, Role, UserDto>(
+
+            return (await _connection
+                .QueryAsync<UserDto, City, Role, UserDto>(
                 _userSelectByIdProcedure,
                 (user, city, role) =>
                 {
@@ -68,15 +69,16 @@ namespace DevEdu.DAL.Repositories
                 },
                 new { id },
                 splitOn: "id",
-                commandType: CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure))
                 .FirstOrDefault();
         }
 
-        public UserDto GetUserByEmail(string email)
+        public async Task<UserDto> GetUserByEmailAsync(string email)
         {
             UserDto result = default;
-            return _connection
-                .Query<UserDto, City, Role, UserDto>(
+
+            return (await _connection
+                .QueryAsync<UserDto, City, Role, UserDto>(
                     _userSelectByEmailProcedure,
                     (user, city, role) =>
                     {
@@ -93,15 +95,16 @@ namespace DevEdu.DAL.Repositories
                     },
                     new { email },
                     splitOn: "id",
-                    commandType: CommandType.StoredProcedure)
+                    commandType: CommandType.StoredProcedure))
                 .FirstOrDefault();
         }
 
-        public List<UserDto> GetAllUsers()
+        public async Task<List<UserDto>> GetAllUsersAsync()
         {
             var userDictionary = new Dictionary<int, UserDto>();
-            return _connection
-                .Query<UserDto, City, Role, UserDto>(
+
+            return (await _connection
+                .QueryAsync<UserDto, City, Role, UserDto>(
                 _userSelectAllProcedure,
                 (user, city, role) =>
                 {
@@ -117,41 +120,41 @@ namespace DevEdu.DAL.Repositories
                     return userEntry;
                 },
                 splitOn: "Id",
-                commandType: CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure))
                 .Distinct()
                 .ToList();
         }
 
-        public void UpdateUser(UserDto user)
+        public async Task UpdateUserAsync(UserDto user)
         {
-            _connection.Execute(
-                _userUpdateProcedure,
-                new
-                {
-                    user.Id,
-                    user.FirstName,
-                    user.LastName,
-                    user.Patronymic,
-                    user.Username,
-                    CityId = (int)user.City,
-                    user.GitHubAccount,
-                    user.Photo,
-                    user.PhoneNumber
-                },
-                commandType: CommandType.StoredProcedure);
+            await _connection.ExecuteAsync(
+                 _userUpdateProcedure,
+                 new
+                 {
+                     user.Id,
+                     user.FirstName,
+                     user.LastName,
+                     user.Patronymic,
+                     user.Username,
+                     CityId = (int)user.City,
+                     user.GitHubAccount,
+                     user.Photo,
+                     user.PhoneNumber
+                 },
+                 commandType: CommandType.StoredProcedure);
         }
 
-        public void DeleteUser(int id)
+        public async Task DeleteUserAsync(int id)
         {
-            _connection.Execute(
-                _userDeleteProcedure,
-                new { id },
-                commandType: CommandType.StoredProcedure);
+            await _connection.ExecuteAsync(
+                 _userDeleteProcedure,
+                 new { id },
+                 commandType: CommandType.StoredProcedure);
         }
 
-        public void AddUserRole(int userId, int roleId)
+        public async Task AddUserRoleAsync(int userId, int roleId)
         {
-            _connection.QuerySingleOrDefault<int>(
+           await _connection.QueryFirstOrDefaultAsync<int>(
                 _userRoleInsertProcedure,
                 new
                 {
@@ -161,9 +164,9 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void DeleteUserRole(int userId, int roleId)
+        public async Task DeleteUserRoleAsync(int userId, int roleId)
         {
-            _connection.Execute(
+           await _connection.ExecuteAsync(
                 _userRoleDeleteProcedure,
                 new
                 {
@@ -173,31 +176,33 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public List<UserDto> GetUsersByGroupIdAndRole(int groupId, int role)
-        {
-            var www = _connection.Query<UserDto>
-            (
-                _userSelectByGroupIdAndRole,
-                new
-                {
-                    groupId, roleId = role
-                },
-                commandType: CommandType.StoredProcedure
-            ).ToList();
-            return www;
-        }
+        //public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role)
+        //{
+
+        //    return (await _connection.QueryAsync<UserDto>
+        //    (
+        //        _userSelectByGroupIdAndRole,
+        //        new
+        //        {
+        //            groupId,
+        //            roleId = role
+        //        },
+        //        commandType: CommandType.StoredProcedure
+        //    )).ToList();
+        //}
 
         public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role)
         {
-            return (List<UserDto>)await _connection.QueryAsync<UserDto>
+            return (await _connection.QueryAsync<UserDto>
             (
                 _userSelectByGroupIdAndRole,
                 new
                 {
-                    groupId, roleId = role
+                    groupId,
+                    roleId = role
                 },
                 commandType: CommandType.StoredProcedure
-            );
+            )).ToList();
         }
     }
 }

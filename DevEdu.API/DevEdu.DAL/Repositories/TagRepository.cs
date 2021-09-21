@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -19,45 +20,46 @@ namespace DevEdu.DAL.Repositories
         public TagRepository(IOptions<DatabaseSettings> options) : base(options)
         {
         }
-        public int AddTag(TagDto tagDto)
+
+        public async Task<int> AddTagAsync(TagDto tagDto)
         {
-            return _connection.QuerySingleOrDefault<int>(
+            return await _connection.QuerySingleOrDefaultAsync<int>(
                 _tagInsertProcedure,
                 new { tagDto.Name },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public int DeleteTag(int id)
+        public async Task<int> DeleteTagAsync(int id)
         {
-            return _connection.Execute(
+            return await _connection.ExecuteAsync(
                 _tagDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public List<TagDto> SelectAllTags()
+        public async Task<List<TagDto>> SelectAllTagsAsync()
         {
-            return _connection.Query<TagDto>(
+            return (await _connection.QueryAsync<TagDto>(
                 _tagSelectAllProcedure,
                 commandType: CommandType.StoredProcedure
-            )
+            ))
             .ToList();
         }
 
-        public TagDto SelectTagById(int id)
+        public async Task<TagDto> SelectTagByIdAsync(int id)
         {
-            return _connection.QuerySingleOrDefault<TagDto>(
+            return await _connection.QuerySingleOrDefaultAsync<TagDto>(
                 _tagSelectByIdProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public int UpdateTag(TagDto tagDto)
+        public async Task<int> UpdateTagAsync(TagDto tagDto)
         {
-            return _connection.Execute(
+            return await _connection.ExecuteAsync(
                 _tagUpdateProcedure,
                 new
                 {

@@ -1,10 +1,11 @@
 ﻿using DevEdu.DAL.Models;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
     public interface ICommentValidationHelper
     {
-        CommentDto GetCommentByIdAndThrowIfNotFound(int commentId);
+        Task<CommentDto> GetCommentByIdAndThrowIfNotFoundAsync(int commentId);
         void UserComplianceCheck(CommentDto dto, int userId);
     }
 }

@@ -22,7 +22,7 @@ namespace DevEdu.Business.Services
         Task AddTaskToCourseAsync(int courseId, int taskId);
         Task<int> AddCourseMaterialReferenceAsync(int courseId, int materialId);
         Task RemoveCourseMaterialReferenceAsync(int courseId, int materialId);
-        CourseTopicDto GetCourseTopicById(int id);
-        List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids);
+        Task<CourseTopicDto> GetCourseTopicByIdAsync(int id);
+        Task<List<CourseTopicDto>> GetCourseTopicBySeveralIdAsync(List<int> ids);
     }
 }

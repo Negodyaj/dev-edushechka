@@ -5,6 +5,7 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -19,68 +20,72 @@ namespace DevEdu.Business.Services
             _userValidationHelper = helper;
         }
 
-        public UserDto AddUser(UserDto dto)
+        public async Task<UserDto> AddUserAsync(UserDto dto)
         {
             if (dto.Roles == null || dto.Roles.Count == 0)
                 dto.Roles = new List<Role> { Role.Student };
 
-            var addedUserId = _userRepository.AddUser(dto);
+            var addedUserId = await _userRepository.AddUserAsync(dto);
 
             foreach (var role in dto.Roles)
             {
-                _userRepository.AddUserRole(addedUserId, (int)role);
+                await _userRepository.AddUserRoleAsync(addedUserId, (int)role);
             }
 
-            var response = _userRepository.GetUserById(addedUserId);
+            var response = await _userRepository.GetUserByIdAsync(addedUserId);
+
             return response;
         }
 
-        public UserDto GetUserById(int id)
+        public async Task<UserDto> GetUserByIdAsync(int id)
         {
-            var user = _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
+            var user = await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(id);
+
             return user;
         }
 
-        public UserDto GetUserByEmail(string email)
+        public async Task<UserDto> GetUserByEmailAsync(string email)
         {
-            var user = _userRepository.GetUserByEmail(email);
+            var user = await _userRepository.GetUserByEmailAsync(email);
+
             if (user == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityWithEmailNotFoundMessage, nameof(user), email));
 
             return user;
         }
 
-        public List<UserDto> GetAllUsers()
+        public async Task<List<UserDto>> GetAllUsersAsync()
         {
-            var list = _userRepository.GetAllUsers();
+            var list = await _userRepository.GetAllUsersAsync();
             return list;
         }
 
-        public UserDto UpdateUser(UserDto dto)
+        public async Task<UserDto> UpdateUserAsync(UserDto dto)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(dto.Id);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(dto.Id);
+            await _userRepository.UpdateUserAsync(dto);
 
-            _userRepository.UpdateUser(dto);
-            var user = _userRepository.GetUserById(dto.Id);
+            var user = await _userRepository.GetUserByIdAsync(dto.Id);
+
             return user;
         }
 
-        public void DeleteUser(int id)
+        public async Task DeleteUserAsync(int id)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(id);
-            _userRepository.DeleteUser(id);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(id);
+            await _userRepository.DeleteUserAsync(id);
         }
 
-        public void AddUserRole(int userId, int roleId)
+        public async Task AddUserRoleAsync(int userId, int roleId)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-            _userRepository.AddUserRole(userId, roleId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
+            await _userRepository.AddUserRoleAsync(userId, roleId);
         }
 
-        public void DeleteUserRole(int userId, int roleId)
+        public async Task DeleteUserRoleAsync(int userId, int roleId)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userId);
-            _userRepository.DeleteUserRole(userId, roleId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
+            await _userRepository.DeleteUserRoleAsync(userId, roleId);
         }
     }
 }

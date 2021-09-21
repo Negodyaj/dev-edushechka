@@ -20,9 +20,10 @@ namespace DevEdu.Business.ValidationHelpers
 
         public async Task<GroupDto> CheckGroupExistenceAsync(int groupId)
         {
-            var group = await _groupRepository.GetGroup(groupId);
+            var group = await _groupRepository.GetGroupAsync(groupId);
             if (group == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), groupId));
+            
             return group;
         }
 

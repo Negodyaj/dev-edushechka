@@ -6,21 +6,21 @@ namespace DevEdu.DAL.Repositories
 {
     public interface ILessonRepository
     {
-        int AddLesson(LessonDto lessonDto);
-        void DeleteLesson(int id);
+        Task<int> AddLessonAsync(LessonDto lessonDto);
+        Task DeleteLessonAsync(int id);
         Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(int groupId);
-        List<LessonDto> SelectAllLessonsByTeacherId(int teacherId);
-        LessonDto SelectLessonById(int id);
+        Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId);
+        Task<LessonDto> SelectLessonByIdAsync(int id);
         Task<List<StudentLessonDto>> SelectStudentsLessonByLessonIdAsync(int lessonId);
         Task UpdateLessonAsync(LessonDto lessonDto);
         Task<int> DeleteTopicFromLessonAsync(int lessonId, int topicId);
-        void AddTopicToLesson(int lessonId, int topicId);
-        void AddStudentToLesson(int lessonId, int userId);
-        void DeleteStudentFromLesson(int lessonId, int userId);
-        void UpdateStudentAbsenceReasonOnLesson(StudentLessonDto studentLessonDto);
-        void UpdateStudentAttendanceOnLesson(StudentLessonDto studentLessonDto);
-        void UpdateStudentFeedbackForLesson(StudentLessonDto studentLessonDto);
-        List<StudentLessonDto> SelectAllFeedbackByLessonId(int lessonId);
-        StudentLessonDto SelectAttendanceByLessonAndUserId(int lessonId, int userId);
+        Task AddTopicToLessonAsync(int lessonId, int topicId);
+        Task AddStudentToLessonAsync(int lessonId, int userId);
+        Task DeleteStudentFromLessonAsync(int lessonId, int userId);
+        Task UpdateStudentAbsenceReasonOnLessonAsync(StudentLessonDto studentLessonDto);
+        Task UpdateStudentAttendanceOnLessonAsync(StudentLessonDto studentLessonDto);
+        Task UpdateStudentFeedbackForLessonAsync(StudentLessonDto studentLessonDto);
+        Task<List<StudentLessonDto>> SelectAllFeedbackByLessonIdAsync(int lessonId);
+        Task<StudentLessonDto> SelectAttendanceByLessonAndUserIdAsync(int lessonId, int userId);
     }
 }

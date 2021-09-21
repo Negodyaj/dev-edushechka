@@ -6,6 +6,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -30,113 +31,114 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddTopic_SimpleDtoWithoutTags_TopicCreated()
+        public async Task AddTopic_SimpleDtoWithoutTags_TopicCreatedAsync()
         {
             //Given
             var expectedTopicId = 77;
             var topicDto = new TopicDto { Name = "Topic1", Duration = 5 };
 
-            _topicRepoMock.Setup(x => x.AddTopic(topicDto)).Returns(expectedTopicId);
-            _topicRepoMock.Setup(x => x.AddTagToTopic(It.IsAny<int>(), It.IsAny<int>()));
+            _topicRepoMock.Setup(x => x.AddTopicAsync(topicDto)).ReturnsAsync(expectedTopicId);
+            _topicRepoMock.Setup(x => x.AddTagToTopicAsync(It.IsAny<int>(), It.IsAny<int>()));
 
 
             //When
-            var actualTopicId = _sut.AddTopic(topicDto);
+            var actualTopicId = await _sut.AddTopicAsync(topicDto);
 
             //Than
             Assert.AreEqual(expectedTopicId, actualTopicId);
-            _topicRepoMock.Verify(x => x.AddTopic(topicDto), Times.Once);
-            _topicRepoMock.Verify(x => x.AddTagToTopic(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _topicRepoMock.Verify(x => x.AddTopicAsync(topicDto), Times.Once);
+            _topicRepoMock.Verify(x => x.AddTagToTopicAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
-        public void AddTopic_DtoWithTags_TopicWithTagsCreated()
+        public async Task AddTopic_DtoWithTags_TopicWithTagsCreatedAsync()
         {
             //Given
             var expectedTopicId = 77;
             var topicDto = TopicData.GetTopicDtoWithTags();
 
-            _topicRepoMock.Setup(x => x.AddTopic(topicDto)).Returns(expectedTopicId);
-            _topicRepoMock.Setup(x => x.AddTagToTopic(expectedTopicId, It.IsAny<int>()));
-            _topicRepoMock.Setup(x => x.GetTopic(expectedTopicId)).Returns(topicDto);
-            _tagRepoMock.Setup(x => x.SelectTagById(It.IsAny<int>())).Returns(topicDto.Tags[0]);
+            _topicRepoMock.Setup(x => x.AddTopicAsync(topicDto)).ReturnsAsync(expectedTopicId);
+            _topicRepoMock.Setup(x => x.AddTagToTopicAsync(expectedTopicId, It.IsAny<int>()));
+            _topicRepoMock.Setup(x => x.GetTopicAsync(expectedTopicId)).ReturnsAsync(topicDto);
+            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(It.IsAny<int>())).ReturnsAsync(topicDto.Tags[0]);
 
 
             //When
-            var actualTopicId = _sut.AddTopic(topicDto);
+            var actualTopicId = await _sut.AddTopicAsync(topicDto);
 
             //Than
             Assert.AreEqual(expectedTopicId, actualTopicId);
-            _topicRepoMock.Verify(x => x.AddTopic(topicDto), Times.Once);
-            _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, It.IsAny<int>()), Times.Exactly(topicDto.Tags.Count));
+            _topicRepoMock.Verify(x => x.AddTopicAsync(topicDto), Times.Once);
+            _topicRepoMock.Verify(x => x.AddTagToTopicAsync(expectedTopicId, It.IsAny<int>()), Times.Exactly(topicDto.Tags.Count));
         }
 
         [Test]
-        public void DeleteTopic_IntTopicId_DeleteTopic()
+        public async Task DeleteTopic_IntTopicId_DeleteTopicAsync()
         {
             //Given
             var topicDto = TopicData.GetTopicDtoWithoutTags();
             var expectedTopicId = 1;
 
-            _topicRepoMock.Setup(x => x.DeleteTopic(expectedTopicId));
-            _topicRepoMock.Setup(x => x.GetTopic(expectedTopicId)).Returns(topicDto);
+            _topicRepoMock.Setup(x => x.DeleteTopicAsync(expectedTopicId));
+            _topicRepoMock.Setup(x => x.GetTopicAsync(expectedTopicId)).ReturnsAsync(topicDto);
 
             //When
-            _sut.DeleteTopic(expectedTopicId);
+            await _sut.DeleteTopicAsync(expectedTopicId);
 
             //Than
-            _topicRepoMock.Verify(x => x.DeleteTopic(expectedTopicId), Times.Once);
-            _topicRepoMock.Verify(x => x.GetTopic(expectedTopicId), Times.Once);
+            _topicRepoMock.Verify(x => x.DeleteTopicAsync(expectedTopicId), Times.Once);
+            _topicRepoMock.Verify(x => x.GetTopicAsync(expectedTopicId), Times.Once);
         }
+
         [Test]
-        public void GetTopic_IntTopicId_GetTopic()
+        public async Task GetTopic_IntTopicId_GetTopicAsync()
         {
             //Given
             var topicDto = TopicData.GetTopicDtoWithoutTags();
             var topicId = 1;
 
-            _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(topicDto);
+            _topicRepoMock.Setup(x => x.GetTopicAsync(topicId)).ReturnsAsync(topicDto);
 
             //When
-            var dto = _sut.GetTopic(topicId);
+            var dto = await _sut.GetTopicAsync(topicId);
 
             //Than
             Assert.AreEqual(topicDto, dto);
-            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Once);
+            _topicRepoMock.Verify(x => x.GetTopicAsync(topicId), Times.Once);
         }
 
         [Test]
-        public void GetAllTopics_NoEntries_ReturnedAllTopics()
+        public async Task GetAllTopics_NoEntries_ReturnedAllTopicsAsync()
         {
             //Given
             var expectedList = TopicData.GetListTopicDto();
-            _topicRepoMock.Setup(x => x.GetAllTopics()).Returns(expectedList);
+            _topicRepoMock.Setup(x => x.GetAllTopicsAsync()).ReturnsAsync(expectedList);
 
             //When
-            var actualList = _sut.GetAllTopics();
+            var actualList = await _sut.GetAllTopicsAsync();
 
             //Then
             Assert.AreEqual(expectedList, actualList);
-            _topicRepoMock.Verify(x => x.GetAllTopics(), Times.Once);
+            _topicRepoMock.Verify(x => x.GetAllTopicsAsync(), Times.Once);
         }
 
         [Test]
-        public void UpdateTopic_TopicDto_ReturnUpdatedTopicDto()
+        public async Task UpdateTopic_TopicDto_ReturnUpdatedTopicDtoAsync()
         {
             //Given
             var topicDto = TopicData.GetTopicDtoWithoutTags();
             var topicId = 1;
 
-            _topicRepoMock.Setup(x => x.UpdateTopic(topicDto));
-            _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(topicDto);
+            _topicRepoMock.Setup(x => x.UpdateTopicAsync(topicDto));
+            _topicRepoMock.Setup(x => x.GetTopicAsync(topicId)).ReturnsAsync(topicDto);
 
             //When
-            var dto = _sut.UpdateTopic(topicId, topicDto);
+            var dto = await _sut.UpdateTopicAsync(topicId, topicDto);
 
             //Than
             Assert.AreEqual(topicDto, dto);
-            _topicRepoMock.Verify(x => x.UpdateTopic(topicDto), Times.Once);
-            _topicRepoMock.Verify(x => x.GetTopic(topicId), Times.Exactly(2));
+            _topicRepoMock.Verify(x => x.UpdateTopicAsync(topicDto), Times.Once);
+            _topicRepoMock.Verify(x => x.GetTopicAsync(topicId), Times.Exactly(2));
         }
 
         [Test]
@@ -145,11 +147,11 @@ namespace DevEdu.Business.Tests
             var expectedTopicId = 77;
             var expectedTagId = 55;
 
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+            Assert.ThrowsAsync(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "topic", expectedTopicId)),
-                () => _sut.AddTagToTopic(expectedTopicId, expectedTagId));
+                async () => await _sut.AddTagToTopicAsync(expectedTopicId, expectedTagId));
 
-            _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, expectedTagId), Times.Never);
+            _topicRepoMock.Verify(x => x.AddTagToTopicAsync(expectedTopicId, expectedTagId), Times.Never);
         }
 
         [Test]
@@ -158,33 +160,33 @@ namespace DevEdu.Business.Tests
             var expectedTopicId = 77;
             var expectedTagId = 55;
 
-            _topicRepoMock.Setup(x => x.GetTopic(expectedTopicId)).Returns(TopicData.GetTopicDtoWithTags);
+            _topicRepoMock.Setup(x => x.GetTopicAsync(expectedTopicId)).ReturnsAsync(TopicData.GetTopicDtoWithTags);
 
-            Assert.Throws(Is.TypeOf<EntityNotFoundException>()
+            Assert.ThrowsAsync(Is.TypeOf<EntityNotFoundException>()
                 .And.Message.EqualTo(string.Format(ServiceMessages.EntityNotFoundMessage, "tag", expectedTagId)),
-            () => _sut.AddTagToTopic(expectedTopicId, expectedTagId));
+            async () => await _sut.AddTagToTopicAsync(expectedTopicId, expectedTagId));
 
-            _topicRepoMock.Verify(x => x.AddTagToTopic(expectedTopicId, expectedTagId), Times.Never);
+            _topicRepoMock.Verify(x => x.AddTagToTopicAsync(expectedTopicId, expectedTagId), Times.Never);
         }
 
         [Test]
-        public void DeleteTagFromTopic_IntTopicIdAndTagId_DeleteTagFromTopic()
+        public async Task DeleteTagFromTopic_IntTopicIdAndTagId_DeleteTagFromTopicAsync()
         {
             //Given
             var topicId = 1;
             var tagId = 13;
             var expecectedAffectedRows = 1;
 
-            _topicRepoMock.Setup(x => x.GetTopic(topicId)).Returns(TopicData.GetTopicDtoWithTags());
-            _tagRepoMock.Setup(x => x.SelectTagById(tagId)).Returns(TagData.GetTagDto());
-            _topicRepoMock.Setup(x => x.DeleteTagFromTopic(topicId, tagId)).Returns(expecectedAffectedRows);
+            _topicRepoMock.Setup(x => x.GetTopicAsync(topicId)).ReturnsAsync(TopicData.GetTopicDtoWithTags());
+            _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tagId)).ReturnsAsync(TagData.GetTagDto());
+            _topicRepoMock.Setup(x => x.DeleteTagFromTopicAsync(topicId, tagId)).ReturnsAsync(expecectedAffectedRows);
 
             //When
-            var actualAffectedRows = _sut.DeleteTagFromTopic(topicId, tagId);
+            var actualAffectedRows = await _sut.DeleteTagFromTopicAsync(topicId, tagId);
 
             //Than
             Assert.AreEqual(expecectedAffectedRows, actualAffectedRows);
-            _topicRepoMock.Verify(x => x.DeleteTagFromTopic(topicId, tagId), Times.Once);
+            _topicRepoMock.Verify(x => x.DeleteTagFromTopicAsync(topicId, tagId), Times.Once);
         }
     }
 }

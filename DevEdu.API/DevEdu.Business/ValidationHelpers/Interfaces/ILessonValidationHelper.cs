@@ -6,7 +6,7 @@ namespace DevEdu.Business.ValidationHelpers
 {
     public interface ILessonValidationHelper
     {
-        LessonDto GetLessonByIdAndThrowIfNotFound(int lessonId);
+        Task<LessonDto> GetLessonByIdAndThrowIfNotFoundAsync(int lessonId);
         public void CheckTopicLessonReferenceIsUnique(LessonDto lesson, int topicId);
         void CheckUserAndTeacherAreSame(UserIdentityInfo userIdentity, int teacherId);
         Task CheckUserBelongsToLessonAsync(UserIdentityInfo userIdentity, LessonDto lesson);

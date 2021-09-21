@@ -7,11 +7,11 @@ namespace DevEdu.DAL.Repositories
 {
     public interface IStudentHomeworkRepository
     {
-        Task<int> AddStudentHomeworkAsync(StudentHomeworkDto dto);
+        Task<int> AddStudentHomeworkAsync(StudentHomeworkDto taskAnswerDto);
         Task DeleteStudentHomeworkAsync(int id);
-        Task UpdateStudentHomeworkAsync(StudentHomeworkDto dto);
         Task<List<StudentHomeworkDto>> GetAllStudentHomeworkByTaskAsync(int taskId);
         Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate);
+        Task UpdateStudentHomeworkAsync(StudentHomeworkDto dto);
         Task<List<StudentHomeworkDto>> GetAllStudentHomeworkByStudentIdAsync(int userId);
         Task<StudentHomeworkDto> GetStudentHomeworkByIdAsync(int id);
     }

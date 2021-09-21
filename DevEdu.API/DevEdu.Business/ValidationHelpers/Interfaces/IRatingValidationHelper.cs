@@ -1,9 +1,10 @@
 ﻿using DevEdu.DAL.Models;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
     public interface IRatingValidationHelper
     {
-        public StudentRatingDto CheckRaitingExistenceAndReturnDto(int ratingId);
+        Task<StudentRatingDto> CheckRaitingExistenceAndReturnDtoAsync(int ratingId);
     }
 }

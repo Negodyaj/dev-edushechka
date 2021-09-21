@@ -5,6 +5,7 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -39,7 +40,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public void AddHomework_HomeworkDtoAndExistingGroupIdAndTaskIdPassed_HomeworkCreated()
+        public async Task AddHomework_HomeworkDtoAndExistingGroupIdAndTaskIdPassed_HomeworkCreatedAsync()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithoutGroupAndTask();
@@ -49,94 +50,93 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
 
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(GroupData.GetGroupDto());
+            _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(GroupData.GetGroupDto());
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(TaskData.GetTaskDtoWithoutTags());
 
-            _homeworkRepoMock.Setup(x => x.AddHomework(homeworkDto)).Returns(expectedHomeworkId);
-            _homeworkRepoMock.Setup(x => x.GetHomework(expectedHomeworkId)).Returns(homeworkDto);
+            _homeworkRepoMock.Setup(x => x.AddHomeworkAsync(homeworkDto)).ReturnsAsync(expectedHomeworkId);
+            _homeworkRepoMock.Setup(x => x.GetHomeworkAsync(expectedHomeworkId)).ReturnsAsync(homeworkDto);
 
             //When
-            var actualHomeworkDto = _sut.AddHomework(groupId, taskId, homeworkDto, userInfo);
+            var actualHomeworkDto = await _sut.AddHomeworkAsync(groupId, taskId, homeworkDto, userInfo);
 
             //Than
             Assert.AreEqual(homeworkDto, actualHomeworkDto);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupAsync(groupId), Times.Once);
             _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
 
-            _homeworkRepoMock.Verify(x => x.AddHomework(homeworkDto), Times.Once);
-            _homeworkRepoMock.Verify(x => x.GetHomework(expectedHomeworkId), Times.Once);
+            _homeworkRepoMock.Verify(x => x.AddHomeworkAsync(homeworkDto), Times.Once);
+            _homeworkRepoMock.Verify(x => x.GetHomeworkAsync(expectedHomeworkId), Times.Once);
         }
 
         [Test]
-        public void GetHomeworkById_ExistingHomeworkIdPassed_ReturnedHomeworkDto()
+        public async Task GetHomeworkById_ExistingHomeworkIdPassed_ReturnedHomeworkDtoAsync()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             const int homeworkId = 1;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
 
-            _homeworkRepoMock.Setup(x => x.GetHomework(homeworkId)).Returns(homeworkDto);
+            _homeworkRepoMock.Setup(x => x.GetHomeworkAsync(homeworkId)).ReturnsAsync(homeworkDto);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
 
             //When
-            var dto = _sut.GetHomework(homeworkId, userInfo);
+            var dto = await _sut.GetHomeworkAsync(homeworkId, userInfo);
 
             //Than
             Assert.AreEqual(homeworkDto, dto);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
-            _homeworkRepoMock.Verify(x => x.GetHomework(homeworkId), Times.Once);
+            _homeworkRepoMock.Verify(x => x.GetHomeworkAsync(homeworkId), Times.Once);
         }
 
         [Test]
-        public void UpdateHomework_HomeworkDtoAndExistingHomeworkIdPassed_ReturnUpdatedHomeworkDto()
+        public async Task UpdateHomework_HomeworkDtoAndExistingHomeworkIdPassed_ReturnUpdatedHomeworkDtoAsync()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             const int homeworkId = 1;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
 
-            _homeworkRepoMock.Setup(x => x.GetHomework(homeworkId)).Returns(homeworkDto);
+            _homeworkRepoMock.Setup(x => x.GetHomeworkAsync(homeworkId)).ReturnsAsync(homeworkDto);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
 
-            _homeworkRepoMock.Setup(x => x.UpdateHomework(homeworkDto));
+            _homeworkRepoMock.Setup(x => x.UpdateHomeworkAsync(homeworkDto));
 
             //When
-            var actualHomeworkDto = _sut.UpdateHomework(homeworkId, homeworkDto, userInfo);
+            var actualHomeworkDto = await _sut.UpdateHomeworkAsync(homeworkId, homeworkDto, userInfo);
 
             //Then
             Assert.AreEqual(homeworkDto, actualHomeworkDto);
-            _homeworkRepoMock.Verify(x => x.GetHomework(homeworkId), Times.Exactly(2));
+            _homeworkRepoMock.Verify(x => x.GetHomeworkAsync(homeworkId), Times.Exactly(2));
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
 
-            _homeworkRepoMock.Verify(x => x.UpdateHomework(homeworkDto), Times.Once);
+            _homeworkRepoMock.Verify(x => x.UpdateHomeworkAsync(homeworkDto), Times.Once);
         }
 
         [Test]
-        public void DeleteHomework_ExistingHomeworkIdPassed_HomeworkRemoved()
+        public async Task DeleteHomework_ExistingHomeworkIdPassed_HomeworkRemovedAsync()
         {
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             const int homeworkId = 1;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
 
-            _homeworkRepoMock.Setup(x => x.GetHomework(homeworkId)).Returns(homeworkDto);
+            _homeworkRepoMock.Setup(x => x.GetHomeworkAsync(homeworkId)).ReturnsAsync(homeworkDto);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
-
-            _homeworkRepoMock.Setup(x => x.DeleteHomework(homeworkId));
+            _homeworkRepoMock.Setup(x => x.DeleteHomeworkAsync(homeworkId));
 
             //When
-            _sut.DeleteHomework(homeworkId, userInfo);
+            await _sut.DeleteHomeworkAsync(homeworkId, userInfo);
 
             //Then
-            _homeworkRepoMock.Verify(x => x.GetHomework(homeworkId), Times.Once);
+            _homeworkRepoMock.Verify(x => x.GetHomeworkAsync(homeworkId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
 
-            _homeworkRepoMock.Verify(x => x.DeleteHomework(homeworkId), Times.Once);
+            _homeworkRepoMock.Verify(x => x.DeleteHomeworkAsync(homeworkId), Times.Once);
         }
 
         [Test]
-        public void GetHomeworkByGroupId_ExistingGroupIdPassed_ReturnedListOfHomeworkDtoByGroupId()
+        public async Task GetHomeworkByGroupId_ExistingGroupIdPassed_ReturnedListOfHomeworkDtoByGroupIdAsync()
         {
             //Given
             var homeworkList = HomeworkData.GetListOfHomeworkDtoWithTask();
@@ -144,36 +144,36 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
 
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(GroupData.GetGroupDto());
-            _homeworkRepoMock.Setup(x => x.GetHomeworkByGroupId(groupId)).Returns(homeworkList);
+            _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(GroupData.GetGroupDto());
+            _homeworkRepoMock.Setup(x => x.GetHomeworkByGroupIdAsync(groupId)).ReturnsAsync(homeworkList);
 
             //When
-            var dto = _sut.GetHomeworkByGroupIdAsync(groupId, userInfo);
+            var dto = await _sut.GetHomeworkByGroupIdAsync(groupId, userInfo);
 
             //Than
             Assert.AreEqual(homeworkList, dto);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _homeworkRepoMock.Verify(x => x.GetHomeworkByGroupId(groupId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupAsync(groupId), Times.Once);
+            _homeworkRepoMock.Verify(x => x.GetHomeworkByGroupIdAsync(groupId), Times.Once);
         }
 
         [Test]
-        public void GetHomeworkByTaskId_ExistingTaskIdPassed_ReturnedListOfHomeworkDtoByTaskId()
+        public async Task GetHomeworkByTaskId_ExistingTaskIdPassed_ReturnedListOfHomeworkDtoByTaskIdAsync()
         {
             //Given
             var homeworkList = HomeworkData.GetListOfHomeworkDtoWithGroup();
             const int taskId = 1;
 
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(TaskData.GetTaskDtoWithoutTags());
-            _homeworkRepoMock.Setup(x => x.GetHomeworkByTaskId(taskId)).Returns(homeworkList);
+            _homeworkRepoMock.Setup(x => x.GetHomeworkByTaskIdAsync(taskId)).ReturnsAsync(homeworkList);
 
             //When
-            var dto = _sut.GetHomeworkByTaskId(taskId);
+            var dto = await _sut.GetHomeworkByTaskIdAsync(taskId);
 
             //Than
             Assert.AreEqual(homeworkList, dto);
             _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-            _homeworkRepoMock.Verify(x => x.GetHomeworkByTaskId(taskId), Times.Once);
+            _homeworkRepoMock.Verify(x => x.GetHomeworkByTaskIdAsync(taskId), Times.Once);
         }
 
         [Test]
@@ -188,8 +188,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), group.Id);
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddHomework(group.Id, task.Id, homeworkDto, userInfo));
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.AddHomeworkAsync(group.Id, task.Id, homeworkDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -205,15 +205,15 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), task.Id);
 
-            _groupRepoMock.Setup(x => x.GetGroup(group.Id)).ReturnsAsync(GroupData.GetGroupDto());
+            _groupRepoMock.Setup(x => x.GetGroupAsync(group.Id)).ReturnsAsync(GroupData.GetGroupDto());
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.AddHomework(group.Id, task.Id, homeworkDto, userInfo));
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.AddHomeworkAsync(group.Id, task.Id, homeworkDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupAsync(group.Id), Times.Once);
         }
 
         [Test]
@@ -226,17 +226,17 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
             var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, userInfo.UserId, group.Id);
 
-            _groupRepoMock.Setup(x => x.GetGroup(group.Id)).ReturnsAsync(GroupData.GetAnotherGroupDto());
+            _groupRepoMock.Setup(x => x.GetGroupAsync(group.Id)).ReturnsAsync(GroupData.GetAnotherGroupDto());
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(task.Id)).ReturnsAsync(TaskData.GetTaskDtoWithoutTags());
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.AddHomework(group.Id, task.Id, homeworkDto, userInfo));
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
+                () => _sut.AddHomeworkAsync(group.Id, task.Id, homeworkDto, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupAsync(group.Id), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
             _taskRepoMock.Verify(x => x.GetTaskByIdAsync(task.Id), Times.Once);
         }
@@ -250,8 +250,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), homework.Id);
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.GetHomework(homework.Id, userInfo));
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.GetHomeworkAsync(homework.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -266,16 +266,16 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
             var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, userInfo.UserId, group.Id);
 
-            _homeworkRepoMock.Setup(x => x.GetHomework(homework.Id)).Returns(homework);
+            _homeworkRepoMock.Setup(x => x.GetHomeworkAsync(homework.Id)).ReturnsAsync(homework);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.GetHomework(homework.Id, userInfo));
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
+                () => _sut.GetHomeworkAsync(homework.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _homeworkRepoMock.Verify(x => x.GetHomework(homework.Id), Times.Once);
+            _homeworkRepoMock.Verify(x => x.GetHomeworkAsync(homework.Id), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
         }
 
@@ -288,8 +288,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), homework.Id);
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.UpdateHomework(homework.Id, homework, userInfo));
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.UpdateHomeworkAsync(homework.Id, homework, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -304,16 +304,16 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
             var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, userInfo.UserId, group.Id);
 
-            _homeworkRepoMock.Setup(x => x.GetHomework(homework.Id)).Returns(homework);
+            _homeworkRepoMock.Setup(x => x.GetHomeworkAsync(homework.Id)).ReturnsAsync(homework);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.UpdateHomework(homework.Id, homework, userInfo));
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
+                () => _sut.UpdateHomeworkAsync(homework.Id, homework, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _homeworkRepoMock.Verify(x => x.GetHomework(homework.Id), Times.Once);
+            _homeworkRepoMock.Verify(x => x.GetHomeworkAsync(homework.Id), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
         }
 
@@ -326,8 +326,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(homework), homework.Id);
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.DeleteHomework(homework.Id, userInfo));
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.DeleteHomeworkAsync(homework.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
@@ -342,21 +342,21 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
             var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, userInfo.UserId, group.Id);
 
-            _homeworkRepoMock.Setup(x => x.GetHomework(homework.Id)).Returns(homework);
+            _homeworkRepoMock.Setup(x => x.GetHomeworkAsync(homework.Id)).ReturnsAsync(homework);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(
-                () => _sut.DeleteHomework(homework.Id, userInfo));
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
+                () => _sut.DeleteHomeworkAsync(homework.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _homeworkRepoMock.Verify(x => x.GetHomework(homework.Id), Times.Once);
+            _homeworkRepoMock.Verify(x => x.GetHomeworkAsync(homework.Id), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
         }
 
         [Test]
-        public void GetHomeworkByGroupId_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
+        public async Task GetHomeworkByGroupId_WhenGroupIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrownAsync()
         {
             //Given
             var homeworkList = HomeworkData.GetListOfHomeworkDtoWithTask();
@@ -364,17 +364,17 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
 
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
-            _groupRepoMock.Setup(x => x.GetGroup(groupId)).ReturnsAsync(GroupData.GetGroupDto());
-            _homeworkRepoMock.Setup(x => x.GetHomeworkByGroupId(groupId)).Returns(homeworkList);
+            _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(GroupData.GetGroupDto());
+            _homeworkRepoMock.Setup(x => x.GetHomeworkByGroupIdAsync(groupId)).ReturnsAsync(homeworkList);
 
             //When
-            var dto = _sut.GetHomeworkByGroupIdAsync(groupId, userInfo);
+            var dto = await _sut.GetHomeworkByGroupIdAsync(groupId, userInfo);
 
             //Than
             Assert.AreEqual(homeworkList, dto);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
-            _homeworkRepoMock.Verify(x => x.GetHomeworkByGroupId(groupId), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupAsync(groupId), Times.Once);
+            _homeworkRepoMock.Verify(x => x.GetHomeworkByGroupIdAsync(groupId), Times.Once);
         }
 
         [Test]
@@ -385,16 +385,16 @@ namespace DevEdu.Business.Tests
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
             var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, userInfo.UserId, group.Id);
 
-            _groupRepoMock.Setup(x => x.GetGroup(group.Id)).ReturnsAsync(GroupData.GetAnotherGroupDto());
+            _groupRepoMock.Setup(x => x.GetGroupAsync(group.Id)).ReturnsAsync(GroupData.GetAnotherGroupDto());
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
 
             //When
-            var ex = Assert.Throws<AuthorizationException>(
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
                 () => _sut.GetHomeworkByGroupIdAsync(group.Id, userInfo));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _groupRepoMock.Verify(x => x.GetGroup(group.Id), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupAsync(group.Id), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
         }
 
@@ -407,8 +407,8 @@ namespace DevEdu.Business.Tests
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), task.Id);
 
             //When
-            var ex = Assert.Throws<EntityNotFoundException>(
-                () => _sut.GetHomeworkByTaskId(task.Id));
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.GetHomeworkByTaskIdAsync(task.Id));
 
             //Than
             Assert.That(ex.Message, Is.EqualTo(expectedException));

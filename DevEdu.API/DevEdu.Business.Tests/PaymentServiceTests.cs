@@ -9,6 +9,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -31,15 +32,17 @@ namespace DevEdu.Business.Tests
 
         }
         [Test]
-        public void GetPayment_ById_ValidPaymentRequestId_GotPayment()
+        public async Task GetPayment_ById_ValidPaymentRequestId_GotPaymentAsync()
         {
             //Given
             var paymentId = 2;
-            _paymentRepoMock.Setup(x => x.GetPayment(paymentId)).Returns(new PaymentDto() { Id = paymentId });
+            _paymentRepoMock.Setup(x => x.GetPaymentAsync(paymentId)).ReturnsAsync(new PaymentDto() { Id = paymentId });
+
             //When
-            _sut.GetPayment(paymentId);
+            await _sut.GetPaymentAsync(paymentId);
+
             //Then
-            _paymentRepoMock.Verify(x => x.GetPayment(paymentId), Times.Once);
+            _paymentRepoMock.Verify(x => x.GetPaymentAsync(paymentId), Times.Once);
         }
         [Test]
         public void GetPayment_ById_NotValidPaymentRequestId_EntityNotFoundExceptionThrown()
@@ -47,26 +50,30 @@ namespace DevEdu.Business.Tests
             //Given
             var paymentId = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "payment", paymentId);
-            _paymentRepoMock.Setup(x => x.GetPayment(paymentId));
-            _paymentValidationHelperMock.Setup(x => x.GetPaymentByIdAndThrowIfNotFound(paymentId));
+            _paymentRepoMock.Setup(x => x.GetPaymentAsync(paymentId));
+            _paymentValidationHelperMock.Setup(x => x.GetPaymentByIdAndThrowIfNotFoundAsync(paymentId));
+
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetPayment(paymentId));
+            var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.GetPaymentAsync(paymentId));
+
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
-            _paymentRepoMock.Verify(x => x.GetPayment(paymentId), Times.Once);
+            _paymentRepoMock.Verify(x => x.GetPaymentAsync(paymentId), Times.Once);
         }
         [Test]
-        public void GetPaymentsByUserId_ValidUserId_PaymentsGotten()
+        public async Task GetPaymentsByUserId_ValidUserId_PaymentsGottenAsync()
         {
             //Given
             var userId = 2;
             var paymentsInDB = PaymentData.GetPeyments();
-            _userRepositoryMock.Setup(x => x.GetUserById(userId)).Returns(new UserDto() { Id = userId });
-            _paymentRepoMock.Setup(x => x.GetPaymentsByUser(userId)).Returns(paymentsInDB);
+            _userRepositoryMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(new UserDto() { Id = userId });
+            _paymentRepoMock.Setup(x => x.GetPaymentsByUserAsync(userId)).ReturnsAsync(paymentsInDB);
+
             //When
-            _sut.GetPaymentsByUserId(userId);
+            await _sut.GetPaymentsByUserIdAsync(userId);
+
             //Then
-            _paymentRepoMock.Verify(x => x.GetPaymentsByUser(userId), Times.Once);
+            _paymentRepoMock.Verify(x => x.GetPaymentsByUserAsync(userId), Times.Once);
         }
         [Test]
         public void GetPaymentsByUserId_NotValidUserId_EntityNotFoundExceptionThrown()
@@ -74,12 +81,14 @@ namespace DevEdu.Business.Tests
             //Given
             var userId = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "user", userId);
-            _userRepositoryMock.Setup(x => x.GetUserById(userId));
+            _userRepositoryMock.Setup(x => x.GetUserByIdAsync(userId));
+
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetPaymentsByUserId(userId));
+            var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.GetPaymentsByUserIdAsync(userId));
+
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
-            _paymentRepoMock.Verify(x => x.GetPaymentsByUser(userId), Times.Never);
+            _paymentRepoMock.Verify(x => x.GetPaymentsByUserAsync(userId), Times.Never);
         }
         [Test]
         public void GetPaymentsByUserId_ValidUserIdEntityInDataBaseIsAbssent_EntityNotFoundExceptionThrown()
@@ -87,34 +96,40 @@ namespace DevEdu.Business.Tests
             //Given
             var userId = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundByUserId, "payments", userId);
-            _userRepositoryMock.Setup(x => x.GetUserById(userId)).Returns(new UserDto() { Id = userId });
-            _paymentRepoMock.Setup(x => x.GetPaymentsByUser(userId));
+            _userRepositoryMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(new UserDto() { Id = userId });
+            _paymentRepoMock.Setup(x => x.GetPaymentsByUserAsync(userId));
+
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => _sut.GetPaymentsByUserId(userId));
+            var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.GetPaymentsByUserIdAsync(userId));
+
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
-            _paymentRepoMock.Verify(x => x.GetPaymentsByUser(userId), Times.Once);
+            _paymentRepoMock.Verify(x => x.GetPaymentsByUserAsync(userId), Times.Once);
         }
         [Test]
-        public void AddPayment_WithSimpleDto_PaymentWasAdded()
+        public async Task AddPayment_WithSimpleDto_PaymentWasAddedAsync()
         {
             //Given
             var payment = PaymentData.GetPayment();
+
             //When
-            _sut.AddPayment(payment);
+            await _sut.AddPaymentAsync(payment);
+
             //Then
-            _paymentRepoMock.Verify(x => x.AddPayment(payment), Times.Once);
+            _paymentRepoMock.Verify(x => x.AddPaymentAsync(payment), Times.Once);
         }
         [Test]
-        public void DeletePayment_ValidPaymentId_PaymentDeleted()
+        public async Task DeletePayment_ValidPaymentId_PaymentDeletedAsync()
         {
             //Given
             var id = 2;
-            _paymentRepoMock.Setup(x => x.GetPayment(id)).Returns(new PaymentDto() { Id = id });
+            _paymentRepoMock.Setup(x => x.GetPaymentAsync(id)).ReturnsAsync(new PaymentDto() { Id = id });
+
             //When
-            _sut.DeletePayment(id);
+            await _sut.DeletePaymentAsync(id);
+
             //Then
-            _paymentRepoMock.Verify(x => x.DeletePayment(id), Times.Once);
+            _paymentRepoMock.Verify(x => x.DeletePaymentAsync(id), Times.Once);
         }
         [Test]
         public void DeletePayment_NotValidPaymentId_PaymentDeleted()
@@ -122,24 +137,28 @@ namespace DevEdu.Business.Tests
             //Given
             var id = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "payment", id);
-            _paymentRepoMock.Setup(x => x.GetPayment(id));
+            _paymentRepoMock.Setup(x => x.GetPaymentAsync(id));
+
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => _sut.DeletePayment(id));
+            var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.DeletePaymentAsync(id));
+
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
-            _paymentRepoMock.Verify(x => x.DeletePayment(id), Times.Never);
+            _paymentRepoMock.Verify(x => x.DeletePaymentAsync(id), Times.Never);
         }
         [Test]
-        public void UpdatePayment_ValidPaymentId_PaymentWasUpdated()
+        public async Task UpdatePayment_ValidPaymentId_PaymentWasUpdatedAsync()
         {
             //Given
             var id = 2;
             var payment = PaymentData.GetPayment();
-            _paymentRepoMock.Setup(x => x.GetPayment(id)).Returns(payment);
+            _paymentRepoMock.Setup(x => x.GetPaymentAsync(id)).ReturnsAsync(payment);
+
             //When
-            _sut.UpdatePayment(id, payment);
+            await _sut.UpdatePaymentAsync(id, payment);
+
             //Then
-            _paymentRepoMock.Verify(x => x.UpdatePayment(payment), Times.Once);
+            _paymentRepoMock.Verify(x => x.UpdatePaymentAsync(payment), Times.Once);
         }
         [Test]
         public void UpdatePayment_NotValidPaymentId_EntityNotFoundExceptionThrown()
@@ -148,12 +167,12 @@ namespace DevEdu.Business.Tests
             var id = 2;
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "payment", id);
             var payment = PaymentData.GetPayment();
-            _paymentRepoMock.Setup(x => x.GetPayment(id));
+            _paymentRepoMock.Setup(x => x.GetPaymentAsync(id));
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => _sut.UpdatePayment(id, payment));
+            var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.UpdatePaymentAsync(id, payment));
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
-            _paymentRepoMock.Verify(x => x.UpdatePayment(payment), Times.Never);
+            _paymentRepoMock.Verify(x => x.UpdatePaymentAsync(payment), Times.Never);
         }
         [Test]
         public void UpdatePayment_WithEmptyDto_EntityNotFoundExceptionThrown()
@@ -163,35 +182,41 @@ namespace DevEdu.Business.Tests
             var paymentInDb = PaymentData.GetPayment();
             var exp = ServiceMessages.EntityNotFound;
             PaymentDto payment = default;
-            _paymentRepoMock.Setup(x => x.GetPayment(id)).Returns(paymentInDb);
+            _paymentRepoMock.Setup(x => x.GetPaymentAsync(id)).ReturnsAsync(paymentInDb);
+
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => _sut.UpdatePayment(id, payment));
+            var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.UpdatePaymentAsync(id, payment));
+
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
-            _paymentRepoMock.Verify(x => x.UpdatePayment(payment), Times.Never);
+            _paymentRepoMock.Verify(x => x.UpdatePaymentAsync(payment), Times.Never);
         }
         [Test]
-        public void AddPayments_WithListPaymentDto_PaymentsWereAdded()
+        public async Task AddPayments_WithListPaymentDto_PaymentsWereAddedAsync()
         {
             //Given
             var payments = PaymentData.GetPeyments();
+
             //When
-            _sut.AddPayments(payments);
+            await _sut.AddPaymentsAsync(payments);
+
             //Then
-            _paymentRepoMock.Verify(x => x.AddPayments(payments), Times.Once);
+            _paymentRepoMock.Verify(x => x.AddPaymentsAsync(payments), Times.Once);
         }
         [Test]
-        public void SelectPaymentsBySeveralId_WithListId_PaymentsGotten()
+        public async Task SelectPaymentsBySeveralId_WithListId_PaymentsGottenAsync()
         {
             //Given
             var payments = PaymentData.GetPeyments();
             var ids = new List<int>() { 1, 2, 3 };
 
-            _paymentRepoMock.Setup(x => x.SelectPaymentsBySeveralId(ids)).Returns(payments);
+            _paymentRepoMock.Setup(x => x.SelectPaymentsBySeveralIdAsync(ids)).ReturnsAsync(payments);
+
             //When
-            _sut.SelectPaymentsBySeveralId(ids);
+            await _sut.SelectPaymentsBySeveralIdAsync(ids);
+
             //Then
-            _paymentRepoMock.Verify(x => x.SelectPaymentsBySeveralId(ids), Times.Once);
+            _paymentRepoMock.Verify(x => x.SelectPaymentsBySeveralIdAsync(ids), Times.Once);
         }
         [Test]
         public void SelectPaymentsBySeveralId_WithListId_SomeIdAreAbsentInDb_EntityNotFoundExceptionThrown()
@@ -199,12 +224,12 @@ namespace DevEdu.Business.Tests
             //Given
             var payments = PaymentData.GetPeyments();
             var ids = new List<int>() { 1, 4, 3 };
-            _paymentRepoMock.Setup(x => x.SelectPaymentsBySeveralId(ids)).Returns(payments);
+            _paymentRepoMock.Setup(x => x.SelectPaymentsBySeveralIdAsync(ids)).ReturnsAsync(payments);
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => _sut.SelectPaymentsBySeveralId(ids));
+            var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.SelectPaymentsBySeveralIdAsync(ids));
             //Then
             Assert.That(result.Message, Is.EqualTo(ServiceMessages.EntityNotFound));
-            _paymentRepoMock.Verify(x => x.SelectPaymentsBySeveralId(ids), Times.Once);
+            _paymentRepoMock.Verify(x => x.SelectPaymentsBySeveralIdAsync(ids), Times.Once);
         }
         [Test]
         public void UpdatePayment_PaymentIsDeleted_EntityNotFoundExceptionThrown()
@@ -220,12 +245,12 @@ namespace DevEdu.Business.Tests
             };
             var exp = ServiceMessages.PaymentDeleted;
             PaymentDto payment = PaymentData.GetPayment();
-            _paymentRepoMock.Setup(x => x.GetPayment(id)).Returns(paymentInDb);
+            _paymentRepoMock.Setup(x => x.GetPaymentAsync(id)).ReturnsAsync(paymentInDb);
             //When
-            var result = Assert.Throws<EntityNotFoundException>(() => _sut.UpdatePayment(id, payment));
+            var result = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.UpdatePaymentAsync(id, payment));
             //Then
             Assert.That(result.Message, Is.EqualTo(exp));
-            _paymentRepoMock.Verify(x => x.UpdatePayment(payment), Times.Never);
+            _paymentRepoMock.Verify(x => x.UpdatePaymentAsync(payment), Times.Never);
         }
     }
 }

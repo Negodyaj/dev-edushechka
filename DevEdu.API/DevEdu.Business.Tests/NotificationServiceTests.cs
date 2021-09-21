@@ -5,6 +5,7 @@ using DevEdu.DAL.Repositories;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
 {
@@ -37,174 +38,173 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Admin)]
-        public void AddNotificationByRole_NotificationDto_NotificationCreated(Enum role)
+        public async Task AddNotificationByRole_NotificationDto_NotificationCreatedAsync(Enum role)
         {
             //Given
             var notificationDto = NotificationData.GetNotificationDtoForRole();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(Role.Admin);
             var ExpectedNotificationId = 1;
 
-            _notificationRepoMock.Setup(x => x.AddNotification(notificationDto)).Returns(ExpectedNotificationId);
-            _notificationRepoMock.Setup(x => x.GetNotification(ExpectedNotificationId)).Returns(notificationDto);
+            _notificationRepoMock.Setup(x => x.AddNotificationAsync(notificationDto)).ReturnsAsync(ExpectedNotificationId);
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).ReturnsAsync(notificationDto);
 
             //When
-            var actualNotificationtDto = _sut.AddNotification(notificationDto, userInfo);
+            var actualNotificationtDto = await _sut.AddNotificationAsync(notificationDto, userInfo);
 
             //Than
             Assert.AreEqual(notificationDto, actualNotificationtDto);
-            _notificationRepoMock.Verify(x => x.AddNotification(notificationDto), Times.Once);
+            _notificationRepoMock.Verify(x => x.AddNotificationAsync(notificationDto), Times.Once);
         }
 
         [TestCase(Role.Admin)]
-        public void AddNotificationByUser_NotificationDto_NotificationCreated(Enum role)
+        public async Task AddNotificationByUser_NotificationDto_NotificationCreatedAsync(Enum role)
         {
             //Given
             var notificationDto = NotificationData.GetNotificationDtoForUser();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(Role.Admin);
             var ExpectedNotificationId = 1;
 
-            _notificationRepoMock.Setup(x => x.AddNotification(notificationDto)).Returns(ExpectedNotificationId);
-            _notificationRepoMock.Setup(x => x.GetNotification(ExpectedNotificationId)).Returns(notificationDto);
+            _notificationRepoMock.Setup(x => x.AddNotificationAsync(notificationDto)).ReturnsAsync(ExpectedNotificationId);
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).ReturnsAsync(notificationDto);
 
             //When
-            var actualNotificationtDto = _sut.AddNotification(notificationDto, userInfo);
+            var actualNotificationtDto = await _sut.AddNotificationAsync(notificationDto, userInfo);
 
             //Than
             Assert.AreEqual(notificationDto, actualNotificationtDto);
-            _notificationRepoMock.Verify(x => x.AddNotification(notificationDto), Times.Once);
+            _notificationRepoMock.Verify(x => x.AddNotificationAsync(notificationDto), Times.Once);
         }
 
         [TestCase(Role.Admin)]
-        public void AddNotificationByGroup_NotificationDto_NotificationCreated(Enum role)
+        public async Task AddNotificationByGroup_NotificationDto_NotificationCreatedAsync(Enum role)
         {
             //Given
             var notificationDto = NotificationData.GetNotificationForGroupDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(Role.Admin);
             var ExpectedNotificationId = 1;
 
-            _notificationRepoMock.Setup(x => x.AddNotification(notificationDto)).Returns(ExpectedNotificationId);
-            _notificationRepoMock.Setup(x => x.GetNotification(ExpectedNotificationId)).Returns(notificationDto);
+            _notificationRepoMock.Setup(x => x.AddNotificationAsync(notificationDto)).ReturnsAsync(ExpectedNotificationId);
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(ExpectedNotificationId)).ReturnsAsync(notificationDto);
 
             //When
-            var actualNotificationtDto = _sut.AddNotification(notificationDto, userInfo);
+            var actualNotificationtDto = await _sut.AddNotificationAsync(notificationDto, userInfo);
 
             //Than
             Assert.AreEqual(notificationDto, actualNotificationtDto);
-            _notificationRepoMock.Verify(x => x.AddNotification(notificationDto), Times.Once);
+            _notificationRepoMock.Verify(x => x.AddNotificationAsync(notificationDto), Times.Once);
         }
 
         [TestCase(Role.Admin)]
-        public void GetNotification_ExistingNotificationIdPassed_NotificationReturned(Enum role)
+        public async Task GetNotification_ExistingNotificationIdPassed_NotificationReturnedAsync(Enum role)
         {
             //Given
             var notificationDto = NotificationData.GetNotificationDtoForRole();
             const int notificationId = 1;
 
-            _notificationRepoMock.Setup(x => x.GetNotification(notificationId)).Returns(notificationDto);
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(notificationId)).ReturnsAsync(notificationDto);
 
             //When
-            var dto = _sut.GetNotification(notificationId);
+            var dto = await _sut.GetNotificationAsync(notificationId);
 
             //Than
             Assert.AreEqual(notificationDto, dto);
-            _notificationRepoMock.Verify(x => x.GetNotification(notificationId), Times.Once);
+            _notificationRepoMock.Verify(x => x.GetNotificationAsync(notificationId), Times.Once);
         }
 
         [TestCase(Role.Manager)]
         [TestCase(Role.Admin)]
-        public void UpdateNotification_NotificationDto_ReturnUpdatedNotificationDto(Enum role)
+        public async Task UpdateNotification_NotificationDto_ReturnUpdatedNotificationDtoAsync(Enum role)
         {
             //Given
             var notificationDto = NotificationData.GetNotificationDtoForRole();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             const int notificationId = 1;
 
-            _notificationRepoMock.Setup(x => x.UpdateNotification(notificationDto));
-            _notificationRepoMock.Setup(x => x.GetNotification(notificationId)).Returns(notificationDto);
+            _notificationRepoMock.Setup(x => x.UpdateNotificationAsync(notificationDto));
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(notificationId)).ReturnsAsync(notificationDto);
 
             //When
-            var dto = _sut.UpdateNotification(notificationId, notificationDto, userInfo);
+            var dto = await _sut.UpdateNotificationAsync(notificationId, notificationDto, userInfo);
 
             //Than
             Assert.AreEqual(notificationDto, dto);
-            _notificationRepoMock.Verify(x => x.UpdateNotification(notificationDto), Times.Once);
-            _notificationRepoMock.Verify(x => x.GetNotification(notificationId), Times.AtLeastOnce);
+            _notificationRepoMock.Verify(x => x.UpdateNotificationAsync(notificationDto), Times.Once);
+            _notificationRepoMock.Verify(x => x.GetNotificationAsync(notificationId), Times.AtLeastOnce);
         }
 
         [TestCase(Role.Manager)]
         [TestCase(Role.Admin)]
-        public void DeleteNotification_ExistingNotificationIdPassed_NotificationRemoved(Enum role)
+        public async System.Threading.Tasks.Task DeleteNotification_ExistingNotificationIdPassed_NotificationRemovedAsync(Enum role)
         {
             //Given
             const int notificationId = 1;
             var notificationDto = NotificationData.GetNotificationDtoForUser();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
-            _notificationRepoMock.Setup(x => x.GetNotification(notificationId)).Returns(notificationDto);
-            _notificationRepoMock.Setup(x => x.DeleteNotification(notificationId));
-
+            _notificationRepoMock.Setup(x => x.GetNotificationAsync(notificationId)).ReturnsAsync(notificationDto);
+            _notificationRepoMock.Setup(x => x.DeleteNotificationAsync(notificationId));
 
             //When
-            _sut.DeleteNotification(notificationId, userInfo);
+            await _sut.DeleteNotificationAsync(notificationId, userInfo);
 
             //Than
-            _notificationRepoMock.Verify(x => x.DeleteNotification(notificationId), Times.Once);
+            _notificationRepoMock.Verify(x => x.DeleteNotificationAsync(notificationId), Times.Once);
         }
 
         [Test]
-        public void GetNotificationByUserId_IntUserId_ReturnedListOfUserNotifications()
+        public async Task GetNotificationByUserId_IntUserId_ReturnedListOfUserNotificationsAsync()
         {
             //Given
             var notificationsList = NotificationData.GetListNotificationByUserDto();
             const int userId = 1;
             var userDto = UserData.GetUserDto();
-            _notificationRepoMock.Setup(x => x.GetNotificationsByUserId(userId)).Returns(notificationsList);
-            _userRepoMock.Setup(x => x.GetUserById(userId)).Returns(userDto);
+            _notificationRepoMock.Setup(x => x.GetNotificationsByUserIdAsync(userId)).ReturnsAsync(notificationsList);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
 
             //When
-            var listOfDto = _sut.GetNotificationsByUserId(userId);
+            var listOfDto = await _sut.GetNotificationsByUserIdAsync(userId);
 
             //Than
             Assert.AreEqual(notificationsList, listOfDto);
-            _notificationRepoMock.Verify(x => x.GetNotificationsByUserId(userId), Times.Once);
-            _userRepoMock.Verify(x => x.GetUserById(userId), Times.Once);
+            _notificationRepoMock.Verify(x => x.GetNotificationsByUserIdAsync(userId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
         }
 
         [Test]
-        public void GetNotificationByGroupId_IntUserId_ReturnedListOfGroupNotifications()
+        public async Task GetNotificationByGroupId_IntUserId_ReturnedListOfGroupNotificationsAsync()
         {
             //Given
             var notificationsList = NotificationData.GetListNotificationByGroupDto();
             const int groupId = 1;
-            // var groupDto = GroupData.GetGroupDto();
+             var groupDto = GroupData.GetGroupDto();
 
-            _notificationRepoMock.Setup(x => x.GetNotificationsByGroupId(groupId)).Returns(notificationsList);
-            // _groupRepoMock.Setup(x => x.GetGroup(groupId)).Returns(groupDto);
+            _notificationRepoMock.Setup(x => x.GetNotificationsByGroupIdAsync(groupId)).ReturnsAsync(notificationsList);
+             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
 
             //When
-            var listOfDto = _sut.GetNotificationsByGroupId(groupId);
+            var listOfDto = await _sut.GetNotificationsByGroupIdAsync(groupId);
 
             //Than
             Assert.AreEqual(notificationsList, listOfDto);
-            _notificationRepoMock.Verify(x => x.GetNotificationsByGroupId(groupId), Times.Once);
-            //  _groupRepoMock.Verify(x => x.GetGroup(groupId), Times.Once);
+            _notificationRepoMock.Verify(x => x.GetNotificationsByGroupIdAsync(groupId), Times.Once);
+              _groupRepoMock.Verify(x => x.GetGroupAsync(groupId), Times.Once);
         }
 
         [Test]
-        public void GetNotificationByRoleId_IntUserId_ReturnedListOfRoleNotifications()
+        public async Task GetNotificationByRoleId_IntUserId_ReturnedListOfRoleNotificationsAsync()
         {
             //Given
             var notificationsList = NotificationData.GetListNotificationByRoleDto();
             const int userId = 1;
 
-            _notificationRepoMock.Setup(x => x.GetNotificationsByRoleId(userId)).Returns(notificationsList);
+            _notificationRepoMock.Setup(x => x.GetNotificationsByRoleIdAsync(userId)).ReturnsAsync(notificationsList);
 
             //When
-            var listOfDto = _sut.GetNotificationsByRoleId(userId);
+            var listOfDto = await _sut.GetNotificationsByRoleIdAsync(userId);
 
             //Than
             Assert.AreEqual(notificationsList, listOfDto);
-            _notificationRepoMock.Verify(x => x.GetNotificationsByRoleId(userId), Times.Once);
+            _notificationRepoMock.Verify(x => x.GetNotificationsByRoleIdAsync(userId), Times.Once);
         }
     }
 }

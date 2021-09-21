@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -34,10 +35,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<NotificationInfoOutputModel> GetAllNotificationByUser()
+        public async Task<List<NotificationInfoOutputModel>> GetAllNotificationByUserAsync()
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _notificationService.GetAllNotificationByUserAsync(userInfo);
+            var dto = await _notificationService.GetAllNotificationByUserAsync(userInfo);
             var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
             return output;
         }
@@ -48,9 +49,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<NotificationInfoOutputModel> GetAllNotificationsByGroupId(int groupId)
+        public async Task<List<NotificationInfoOutputModel>> GetAllNotificationsByGroupIdAsync(int groupId)
         {
-            var dto = _notificationService.GetNotificationsByGroupId(groupId);
+            var dto = await _notificationService.GetNotificationsByGroupIdAsync(groupId);
             var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
             return output;
         }
@@ -61,9 +62,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<NotificationInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<NotificationInfoOutputModel> GetAllNotificationsByRoleId(int roleId)
+        public async Task<List<NotificationInfoOutputModel>> GetAllNotificationsByRoleIdAsync(int roleId)
         {
-            var dto = _notificationService.GetNotificationsByRoleId(roleId);
+            var dto = await _notificationService.GetNotificationsByRoleIdAsync(roleId);
             var output = _mapper.Map<List<NotificationInfoOutputModel>>(dto);
             return output;
         }
@@ -76,11 +77,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<NotificationInfoOutputModel> AddNotification([FromBody] NotificationAddInputModel inputModel)
+        public async Task<ActionResult<NotificationInfoOutputModel>> AddNotificationAsync([FromBody] NotificationAddInputModel inputModel)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<NotificationDto>(inputModel);
-            var outputDto = _notificationService.AddNotification(dto, userInfo);
+            var outputDto = await _notificationService.AddNotificationAsync(dto, userInfo);
             var result = _mapper.Map<NotificationInfoOutputModel>(outputDto);
             return Created(new Uri($"api/Notification/{result.Id}", UriKind.Relative), result);
         }
@@ -92,10 +93,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteNotification(int id)
+        public async Task<ActionResult> DeleteNotificationAsync(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            _notificationService.DeleteNotification(id, userInfo);
+            await _notificationService.DeleteNotificationAsync(id, userInfo);
             return NoContent();
         }
 
@@ -107,11 +108,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public NotificationInfoOutputModel UpdateNotification(int id, [FromBody] NotificationUpdateInputModel inputModel)
+        public async Task<NotificationInfoOutputModel> UpdateNotificationAsync(int id, [FromBody] NotificationUpdateInputModel inputModel)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<NotificationDto>(inputModel);
-            var output = _notificationService.UpdateNotification(id, dto, userInfo);
+            var output = await _notificationService.UpdateNotificationAsync(id, dto, userInfo);
             var model = _mapper.Map<NotificationInfoOutputModel>(output);
             return model;
         }
