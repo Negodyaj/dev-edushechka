@@ -11,6 +11,6 @@ Begin
 	@tblCourseTopic src
   Where 
 	dbo.Course_Topic.CourseId = src.CourseId
-	--and
-	--dbo.Course_Topic.TopicId = src.TopicId
+	and
+	dbo.Course_Topic.TopicId = src.TopicId
 End
