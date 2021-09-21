@@ -152,7 +152,7 @@ namespace DevEdu.Business.Services
 
         public List<int> UpdateCourseTopicsByCourseId(int courseId, List<CourseTopicDto> topics)
         {
-            List<int> response;
+            List<int> response = new List<int>(); 
             if (topics == null || topics.Count == 0)
                 throw new EntityNotFoundException(ServiceMessages.EntityNotFound);
             _courseValidationHelper.GetCourseByIdAndThrowIfNotFound(courseId);
@@ -162,8 +162,7 @@ namespace DevEdu.Business.Services
             var topicsInDatabase = _courseRepository.SelectAllTopicsByCourseId(courseId);
             if (
                 topicsInDatabase != null &&
-                topicsInDatabase.Count != 0 &&
-                topics.Count != topicsInDatabase.Count
+                topicsInDatabase.Count != 0
             )
             {
                 DeleteAllTopicsByCourseId(courseId);
@@ -172,17 +171,6 @@ namespace DevEdu.Business.Services
             else if (topicsInDatabase == null || topicsInDatabase.Count == 0)
             {
                 response = AddTopicsToCourse(courseId, topics);
-            }
-            else
-            {
-                response = new List<int>();
-                foreach (var topic in topics)
-                {
-                    topic.Course = new CourseDto() { Id = courseId };
-                    response.Add(topic.Id);
-                }
-                _courseRepository.UpdateCourseTopicsByCourseId(topics);
-
             }
             return response;
         }
