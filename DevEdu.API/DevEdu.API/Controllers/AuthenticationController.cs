@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using DevEdu.API.Common;
 using DevEdu.API.Extensions;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.API.Controllers
 {
@@ -29,6 +31,7 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
         }
 
+        [AuthorizeRoles(Role.Manager)]
         [HttpPost("/register")]
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
