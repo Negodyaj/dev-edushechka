@@ -32,13 +32,14 @@ namespace DevEdu.Business.Tests
             //Given
             var user = UserData.GetUserDto();
             var expectedUserId = UserData.ExpectedUserId;
+            var identity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
 
             _repoMock.Setup(x => x.AddUserAsync(user)).ReturnsAsync(UserData.ExpectedUserId);
             _repoMock.Setup(x => x.AddUserRoleAsync(UserData.ExpectedUserId, It.IsAny<int>()));
             _repoMock.Setup(x => x.GetUserByIdAsync(expectedUserId)).ReturnsAsync(new UserDto { Id = expectedUserId });
 
             //When
-            var actualDto = await _sut.AddUserAsync(user);
+            var actualDto = await _sut.AddUserAsync(user, identity);
 
             //Then
             Assert.AreEqual(UserData.ExpectedUserId, actualDto.Id);
@@ -116,13 +117,14 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var expectedUser = UserData.GetAnotherUserDto();
+            var identity = UserIdentityInfoData.GetUserIdentityWithManagerRole();
 
             _repoMock.Setup(x => x.AddUserAsync(expectedUser)).ReturnsAsync(UserData.ExpectedUserId);
             _repoMock.Setup(x => x.AddUserRoleAsync(UserData.ExpectedUserId, It.IsAny<int>()));
             _repoMock.Setup(x => x.GetUserByIdAsync(UserData.ExpectedUserId)).ReturnsAsync(expectedUser);
 
             //When
-            var actualUser = await _sut.AddUserAsync(expectedUser);
+            var actualUser = await _sut.AddUserAsync(expectedUser, identity);
 
             //Then
             Assert.AreEqual(expectedUser, actualUser);
@@ -202,52 +204,52 @@ namespace DevEdu.Business.Tests
         public async Task AddUserRole_WhenDoNotHaveMatchesUserIdInDataBase_EntityNotFoundException(int userId)
         {
             //Given
-            var roleId = (int)Role.Student;
+            var role = Role.Student;
             var user = UserData.GetUserDto();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId);
 
             //When
             var ex = Assert.ThrowsAsync<EntityNotFoundException>(
-                () => _sut.AddUserRoleAsync(userId, roleId));
+                () => _sut.AddUserRoleAsync(userId, role));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _repoMock.Verify(x => x.AddUserRoleAsync(userId, roleId), Times.Never);
+            _repoMock.Verify(x => x.AddUserRoleAsync(userId, (int)role), Times.Never);
         }
 
         [TestCase(100)]
         public async Task DeleteUserRole_WhenDoNotHaveMatchesUserIdInDataBase_EntityNotFoundException(int userId)
         {
             //Given
-            var roleId = (int)Role.Student;
+            var role = Role.Student;
             var user = UserData.GetUserDto();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(user), userId);
 
             //When
             var ex = Assert.ThrowsAsync<EntityNotFoundException>(
-                () => _sut.DeleteUserRoleAsync(userId, roleId));
+                () => _sut.DeleteUserRoleAsync(userId, role));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _repoMock.Verify(x => x.DeleteUserRoleAsync(userId, roleId), Times.Never);
+            _repoMock.Verify(x => x.DeleteUserRoleAsync(userId, (int)role), Times.Never);
         }
 
         [Test]
         public async Task AddUserRole_UserIdAndRoleId_UserRoleWasCreated()
         {
             //Given
-            var roleId = (int)Role.Student;
+            var role = Role.Student;
             var user = UserData.GetUserDto();
             var userId = user.Id;
 
-            _repoMock.Setup(x => x.AddUserRoleAsync(userId, roleId));
+            _repoMock.Setup(x => x.AddUserRoleAsync(userId, (int)role));
             _repoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(user);
 
             //When
-            await _sut.AddUserRoleAsync(userId, roleId);
+            await _sut.AddUserRoleAsync(userId, role);
 
             //Then
-            _repoMock.Verify(x => x.AddUserRoleAsync(userId, roleId), Times.Once);
+            _repoMock.Verify(x => x.AddUserRoleAsync(userId, (int)role), Times.Once);
             _repoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
         }
 
@@ -255,18 +257,18 @@ namespace DevEdu.Business.Tests
         public async Task DeleteUserRole_UserIdAndRoleId_UserRoleWasDeleted()
         {
             //Given
-            var roleId = (int)Role.Student;
+            var role = Role.Student;
             var user = UserData.GetUserDto();
             var userId = user.Id;
 
-            _repoMock.Setup(x => x.DeleteUserRoleAsync(userId, roleId));
+            _repoMock.Setup(x => x.DeleteUserRoleAsync(userId, (int)role));
             _repoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(user);
 
             //When
-            await _sut.DeleteUserRoleAsync(userId, roleId);
+            await _sut.DeleteUserRoleAsync(userId, role);
 
             //Then
-            _repoMock.Verify(x => x.DeleteUserRoleAsync(userId, roleId), Times.Once);
+            _repoMock.Verify(x => x.DeleteUserRoleAsync(userId, (int)role), Times.Once);
             _repoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
         }
 

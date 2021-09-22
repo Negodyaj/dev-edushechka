@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using DevEdu.API.Extensions;
 
 namespace DevEdu.API.Controllers
 {
@@ -34,9 +35,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<UserFullInfoOutPutModel>> RegisterAsync([FromBody] UserInsertInputModel model)
         {
+            var userIdentity = this.GetUserIdAndRoles();
             var dto = _mapper.Map<UserDto>(model);
             dto.Password = await _authService.HashPasswordAsync(dto.Password);
-            var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUserAsync(dto));
+            var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUserAsync(dto, userIdentity));
 
             return Created(new Uri($"api/User/{addedUser.Id}", UriKind.Relative), addedUser);
         }

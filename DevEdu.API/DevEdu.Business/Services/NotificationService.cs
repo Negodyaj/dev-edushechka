@@ -35,8 +35,7 @@ namespace DevEdu.Business.Services
         {
             var rolesList = userInfo.Roles;
             var notifications = await GetNotificationsByUserIdAsync(userInfo.UserId);
-
-            foreach (Role role in rolesList)
+            foreach (var role in rolesList)
             {
                 var listByRole = await GetNotificationsByRoleIdAsync((int)role);
                 notifications.AddRange(listByRole);
@@ -45,7 +44,7 @@ namespace DevEdu.Business.Services
             if (userInfo.IsStudent())
             {
                 var groupList = await _groupRepository.GetGroupsByUserIdAsync(userInfo.UserId);
-                foreach (GroupDto group in groupList)
+                foreach (var group in groupList)
                 {
                     var listByGroup = await GetNotificationsByGroupIdAsync(group.Id);
                     notifications.AddRange(listByGroup);

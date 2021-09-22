@@ -159,7 +159,7 @@ namespace DevEdu.Business.Services
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userIdentityInfo.UserId);
             var task = await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             AuthorizationException exception = default;
-            bool authorized = true;
+            var authorized = true;
 
             if (userIdentityInfo.Roles.Contains(Role.Methodist) &&
                 !userIdentityInfo.Roles.Contains(Role.Admin))

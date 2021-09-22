@@ -6,6 +6,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Services
 {
@@ -20,16 +21,23 @@ namespace DevEdu.Business.Services
             _userValidationHelper = helper;
         }
 
-        public async Task<UserDto> AddUserAsync(UserDto dto)
+        public async Task<UserDto> AddUserAsync(UserDto dto, UserIdentityInfo userIdentity)
         {
             if (dto.Roles == null || dto.Roles.Count == 0)
                 dto.Roles = new List<Role> { Role.Student };
 
             var addedUserId = await _userRepository.AddUserAsync(dto);
 
-            foreach (var role in dto.Roles)
+            if (userIdentity.IsAdmin())
             {
-                await _userRepository.AddUserRoleAsync(addedUserId, (int)role);
+                foreach (var role in dto.Roles)
+                {
+                    await _userRepository.AddUserRoleAsync(addedUserId, (int)role);
+                }
+            }
+            else
+            {
+                await _userRepository.AddUserRoleAsync(addedUserId, (int)Role.Student);
             }
 
             var response = await _userRepository.GetUserByIdAsync(addedUserId);
@@ -76,16 +84,16 @@ namespace DevEdu.Business.Services
             await _userRepository.DeleteUserAsync(id);
         }
 
-        public async Task AddUserRoleAsync(int userId, int roleId)
+        public async Task AddUserRoleAsync(int userId, Role roleId)
         {
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
-            await _userRepository.AddUserRoleAsync(userId, roleId);
+            await _userRepository.AddUserRoleAsync(userId, (int)roleId);
         }
 
-        public async Task DeleteUserRoleAsync(int userId, int roleId)
+        public async Task DeleteUserRoleAsync(int userId, Role roleId)
         {
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
-            await _userRepository.DeleteUserRoleAsync(userId, roleId);
+            await _userRepository.DeleteUserRoleAsync(userId, (int)roleId);
         }
     }
 }

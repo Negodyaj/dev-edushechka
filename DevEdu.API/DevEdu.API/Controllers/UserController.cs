@@ -95,7 +95,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult> AddRoleToUserAsync(int userId, Role role)
         {
-            await _userService.AddUserRoleAsync(userId, (int)role);
+            await _userService.AddUserRoleAsync(userId, role);
             return NoContent();
         }
 
@@ -108,7 +108,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteRoleFromUserAsync(int userId, Role role)
         {
-            await _userService.DeleteUserRoleAsync(userId, (int)role);
+            await _userService.DeleteUserRoleAsync(userId, role);
             return NoContent();
         }
     }
