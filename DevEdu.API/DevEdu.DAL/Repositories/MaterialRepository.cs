@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -22,75 +23,79 @@ namespace DevEdu.DAL.Repositories
 
         public MaterialRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
-        public int AddMaterial(MaterialDto material)
+        public async Task<int> AddMaterialAsync(MaterialDto material)
         {
-            return _connection.QuerySingle<int>(
+            return await _connection
+                .QuerySingleAsync<int>(
                 _materialInsertProcedure,
                 new { material.Content },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public List<MaterialDto> GetAllMaterials()
+        public async Task<List<MaterialDto>> GetAllMaterialsAsync()
         {
             var materialDictionary = new Dictionary<int, MaterialDto>();
-            return _connection
-                .Query<MaterialDto, TagDto, MaterialDto>(
-                    _materialSelectAllProcedure,
-                    (material, tag) =>
+
+            return (await _connection
+                .QueryAsync<MaterialDto, TagDto, MaterialDto>(
+                _materialSelectAllProcedure,
+                (material, tag) =>
+                {
+                    if (!materialDictionary.TryGetValue(material.Id, out var materialEntry))
                     {
-                        if (!materialDictionary.TryGetValue(material.Id, out var materialEntry))
-                        {
-                            materialEntry = material;
-                            materialEntry.Tags = new List<TagDto>();
-                            materialDictionary.Add(material.Id, materialEntry);
-                        }
-                        if (tag != null && tag.Name != null)
-                        {
-                            materialEntry.Tags.Add(tag);
-                        }
-                        return materialEntry;
-                    },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+                        materialEntry = material;
+                        materialEntry.Tags = new List<TagDto>();
+                        materialDictionary.Add(material.Id, materialEntry);
+                    }
+                    if (tag != null && tag.Name != null)
+                    {
+                        materialEntry.Tags.Add(tag);
+                    }
+
+                    return materialEntry;
+                },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+                ))
                 .Distinct()
                 .ToList();
         }
 
-        public MaterialDto GetMaterialById(int id)
+        public async Task<MaterialDto> GetMaterialByIdAsync(int id)
         {
             MaterialDto result = default;
-            return _connection
-                .Query<MaterialDto, TagDto, MaterialDto>(
-                    _materialSelectByIdProcedure,
-                    (material, tag) =>
-                    {
-                        if (result == null)
-                        {
-                            result = material;
-                            result.Tags = new List<TagDto> { tag };
-                        }
-                        else
-                        {
-                            if (tag != null && tag.Name != null)
-                            {
-                                result.Tags.Add(tag);
-                            }
-                        }
 
-                        return material;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+            return (await _connection
+                .QueryAsync<MaterialDto, TagDto, MaterialDto>(
+                _materialSelectByIdProcedure,
+                (material, tag) =>
+                {
+                    if (result == null)
+                    {
+                        result = material;
+                        result.Tags = new List<TagDto> { tag };
+                    }
+                    else
+                    {
+                        if (tag != null && tag.Name != null)
+                        {
+                            result.Tags.Add(tag);
+                        }
+                    }
+
+                    return material;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+                ))
                 .FirstOrDefault();
         }
 
-        public int UpdateMaterial(MaterialDto material)
+        public async Task<int> UpdateMaterialAsync(MaterialDto material)
         {
-            return _connection.Execute(
+            return await _connection.ExecuteAsync(
                 _materialUpdateProcedure,
                 new
                 {
@@ -101,9 +106,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int DeleteMaterial(int id, bool isDeleted)
+        public async Task<int> DeleteMaterialAsync(int id, bool isDeleted)
         {
-            return _connection.Execute(
+            return await _connection.ExecuteAsync(
                 _materialDeleteProcedure,
                 new
                 {
@@ -114,22 +119,22 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void AddTagToMaterial(int materialId, int tagId)
+        public async Task AddTagToMaterialAsync(int materialId, int tagId)
         {
-            _connection.Execute(
-                _materialTagInsertProcedure,
-                new
-                {
-                    materialId,
-                    tagId
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            await _connection.ExecuteAsync(
+                  _materialTagInsertProcedure,
+                  new
+                  {
+                      materialId,
+                      tagId
+                  },
+                  commandType: CommandType.StoredProcedure
+              );
         }
 
-        public int DeleteTagFromMaterial(int materialId, int tagId)
+        public async Task<int> DeleteTagFromMaterialAsync(int materialId, int tagId)
         {
-            return _connection.Execute(
+            return await _connection.ExecuteAsync(
                 _materialTagDeleteProcedure,
                 new
                 {
@@ -140,40 +145,41 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public List<MaterialDto> GetMaterialsByTagId(int tagId)
+        public async Task<List<MaterialDto>> GetMaterialsByTagIdAsync(int tagId)
         {
             var materialDictionary = new Dictionary<int, MaterialDto>();
-            return _connection
-                .Query<MaterialDto, TagDto, MaterialDto>(
-                    _materialSelectAllByTagIdProcedure,
-                    (material, tag) =>
-                    {
-                        if (!materialDictionary.TryGetValue(material.Id, out var materialEntry))
-                        {
-                            materialEntry = material;
-                            materialEntry.Tags = new List<TagDto>();
-                            materialDictionary.Add(material.Id, materialEntry);
-                        }
-                        materialEntry.Tags.Add(tag);
 
-                        return materialEntry;
-                    },
-                    new { tagId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+            return (await _connection
+                .QueryAsync<MaterialDto, TagDto, MaterialDto>(
+                _materialSelectAllByTagIdProcedure,
+                (material, tag) =>
+                {
+                    if (!materialDictionary.TryGetValue(material.Id, out var materialEntry))
+                    {
+                        materialEntry = material;
+                        materialEntry.Tags = new List<TagDto>();
+                        materialDictionary.Add(material.Id, materialEntry);
+                    }
+                    materialEntry.Tags.Add(tag);
+                    
+                    return materialEntry;
+                },
+                new { tagId },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+                ))
                 .Distinct()
                 .ToList();
         }
 
-        public List<MaterialDto> GetMaterialsByCourseId(int courseId)
+        public async Task<List<MaterialDto>> GetMaterialsByCourseIdAsync(int courseId)
         {
-            return _connection
-                .Query<MaterialDto>(
+            return (await _connection
+                .QueryAsync<MaterialDto>(
                     _materialSelectAllByCourseIdProcedure,
                     new { courseId },
                     commandType: CommandType.StoredProcedure
-                ).
+                )).
                 ToList();
         }
     }

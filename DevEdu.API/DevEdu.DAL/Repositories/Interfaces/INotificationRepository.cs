@@ -1,16 +1,17 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
     public interface INotificationRepository
     {
-        public int AddNotification(NotificationDto notificationDto);
-        public void DeleteNotification(int id);
-        public NotificationDto GetNotification(int id);
-        public List<NotificationDto> GetNotificationsByUserId(int userId);
-        public List<NotificationDto> GetNotificationsByGroupId(int groupId);
-        public List<NotificationDto> GetNotificationsByRoleId(int roleId);
-        public void UpdateNotification(NotificationDto notificationDto);
+        Task<int> AddNotificationAsync(NotificationDto notificationDto);
+        Task DeleteNotificationAsync(int id);
+        Task<NotificationDto> GetNotificationAsync(int id);
+        Task<List<NotificationDto>> GetNotificationsByUserIdAsync(int userId);
+        Task<List<NotificationDto>> GetNotificationsByGroupIdAsync(int groupId);
+        Task<List<NotificationDto>> GetNotificationsByRoleIdAsync(int roleId);
+        Task UpdateNotificationAsync(NotificationDto notificationDto);
     }
 }

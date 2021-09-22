@@ -2,6 +2,7 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -14,11 +15,12 @@ namespace DevEdu.Business.ValidationHelpers
             _commentRepository = commentRepository;
         }
 
-        public CommentDto GetCommentByIdAndThrowIfNotFound(int commentId)
+        public async Task<CommentDto> GetCommentByIdAndThrowIfNotFoundAsync(int commentId)
         {
-            var comment = _commentRepository.GetComment(commentId);
+            var comment = await _commentRepository.GetCommentAsync(commentId);
             if (comment == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(comment), commentId));
+           
             return comment;
         }
 

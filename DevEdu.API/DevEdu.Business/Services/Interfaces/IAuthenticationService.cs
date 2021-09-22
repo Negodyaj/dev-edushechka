@@ -1,12 +1,13 @@
 ﻿using DevEdu.DAL.Models;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
     public interface IAuthenticationService
     {
-        string SignIn(UserDto dto);
-        byte[] GetSalt();
-        string HashPassword(string pass, byte[] salt = null);
-        bool Verify(string hashedPassword, string userPassword);
+        Task<string> SignInAsync(UserDto dto);
+        Task<byte[]> GetSaltAsync();
+        Task<string> HashPasswordAsync(string pass, byte[] salt = null);
+        Task<bool> VerifyAsync(string hashedPassword, string userPassword);
     }
 }

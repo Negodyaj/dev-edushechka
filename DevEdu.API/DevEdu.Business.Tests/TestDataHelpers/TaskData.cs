@@ -12,6 +12,11 @@ namespace DevEdu.Business.Tests
             return new TaskDto { Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true };
         }
 
+        public static TaskDto GetTaskDtoWithCourse()
+        {
+            return new TaskDto { Id = 1, Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true, Courses = new List<CourseDto>() { new CourseDto { Id = 1 } } };
+        }
+
         public static TaskDto GetTaskDtoWithTags()
         {
             return new TaskDto
@@ -190,6 +195,100 @@ namespace DevEdu.Business.Tests
                             Name = "Tag"
                         }
                     }
+                }
+            };
+        }
+
+        public static List<TaskDto> GetListOfTasksWithCourses()
+        {
+            return new List<TaskDto>
+            {
+                new TaskDto
+                {
+                    Id = 1,
+                    Name = "Task1",
+                    Description = "Description1",
+                    Links = "noLinks",
+                    IsRequired = true,
+                    Tags = new List<TagDto>
+                    {
+                        new TagDto
+                        {
+                            Id = 13,
+                            Name = "Tag",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 15,
+                            Name = "DevEdu",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 14,
+                            Name = "Tag"
+                        }
+                    },
+                    Courses = new List<CourseDto>(){new CourseDto() { Id = 1} }
+                },
+                new TaskDto
+                {
+                     Id = 2,
+                    Name = "Task2",
+                    Description = "Description2",
+                    Links = "noLinks",
+                    IsRequired = true,
+                    Tags = new List<TagDto>
+                    {
+                        new TagDto
+                        {
+                            Id = 18,
+                            Name = "Tag",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 19,
+                            Name = "DevEdu",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 20,
+                            Name = "Tag"
+                        }
+                    },
+                    Courses = new List<CourseDto>(){new CourseDto() { Id = 2} }
+                },
+                new TaskDto
+                {
+                    Id = 3,
+                    Name = "Task3",
+                    Description = "Description3",
+                    Links = "noLinks",
+                    IsRequired = true,
+                    Tags = new List<TagDto>
+                    {
+                        new TagDto
+                        {
+                            Id = 21,
+                            Name = "Tag",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 22,
+                            Name = "DevEdu",
+                            IsDeleted = false
+                        },
+                        new TagDto
+                        {
+                            Id = 23,
+                            Name = "Tag"
+                        }
+                    },
+                    Courses = new List<CourseDto>(){new CourseDto() { Id = 3} }
                 }
             };
         }

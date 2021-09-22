@@ -4,6 +4,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -23,18 +24,20 @@ namespace DevEdu.Business.ValidationHelpers
             _courseRepository = courseRepository;
         }
 
-        public MaterialDto GetMaterialByIdAndThrowIfNotFound(int materialId)
+        public async Task<MaterialDto> GetMaterialByIdAndThrowIfNotFoundAsync(int materialId)
         {
-            var material = _materialRepository.GetMaterialById(materialId);
+            var material = await _materialRepository.GetMaterialByIdAsync(materialId);
             if (material == default)
                 throw new EntityNotFoundException(string.
                     Format(ServiceMessages.EntityNotFoundMessage, nameof(material), materialId));
+
             return material;
         }
 
         public void CheckMethodistAccessToMaterialForDeleteAndUpdate(int userId, MaterialDto material)
         {
-            if (material.Courses == null || material.Courses.Count == 0)
+            if (material.Courses == null ||
+                material.Courses.Count == 0)
             {
                 throw new AuthorizationException(string.
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
@@ -45,7 +48,7 @@ namespace DevEdu.Business.ValidationHelpers
         {
             if (material.Groups == null ||
                 material.Groups.Count == 0 ||
-                GetMaterialIfAllowedToUserByGroup(material, userId) == null)
+                GetMaterialIfAllowedToUserByGroupAsync(material, userId).Result == null)
             {
                 throw new AuthorizationException(string.
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
@@ -54,19 +57,21 @@ namespace DevEdu.Business.ValidationHelpers
 
         public void CheckUserAccessToMaterialForGetById(int userId, MaterialDto material)
         {
-            if (GetMaterialIfAllowedToUserByGroup(material, userId) == null &&
-                 GetMaterialIfAllowedToUserByCourse(material, userId) == null)
+            if (GetMaterialIfAllowedToUserByGroupAsync(material, userId).Result == null &&
+                 GetMaterialIfAllowedToUserByCourseAsync(material, userId).Result == null)
             {
                 throw new AuthorizationException(string.
                     Format(ServiceMessages.AccessToMaterialDenied, userId, material.Id));
             }
         }
+
         public List<MaterialDto> GetMaterialsAllowedToUser(List<MaterialDto> materials, int userId)
         {
             var materialDtos = new List<MaterialDto>();
-            materials.ForEach(m => materialDtos.Add(GetMaterialIfAllowedToUserByGroup(m, userId)));
-            materials.ForEach(m => materialDtos.Add(GetMaterialIfAllowedToUserByCourse(m, userId)));
+            materials.ForEach(async m => materialDtos.Add(await GetMaterialIfAllowedToUserByGroupAsync(m, userId)));
+            materials.ForEach(async m => materialDtos.Add(await GetMaterialIfAllowedToUserByCourseAsync(m, userId)));
             var result = materialDtos.Where(m => m != null).GroupBy(m => m.Id).Select(m => m.First()).ToList();
+
             return result;
         }
 
@@ -76,27 +81,29 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new ValidationException(entity, string.Format(ServiceMessages.DuplicateValuesProvided, entity));
         }
 
-        private MaterialDto GetMaterialIfAllowedToUserByGroup(MaterialDto material, int userId)
+        private async Task<MaterialDto> GetMaterialIfAllowedToUserByGroupAsync(MaterialDto material, int userId)
         {
-            var groupsByMaterial = _groupRepository.GetGroupsByMaterialId(material.Id);
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var groupsByMaterial = await _groupRepository.GetGroupsByMaterialIdAsync(material.Id);
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
 
             var result = groupsByMaterial.FirstOrDefault(gm => groupsByUser.Any(gu => gu.Id == gm.Id));
             if (result == default)
                 material = default;
+            
             return material;
         }
 
-        private MaterialDto GetMaterialIfAllowedToUserByCourse(MaterialDto material, int userId)
+        private async Task<MaterialDto> GetMaterialIfAllowedToUserByCourseAsync(MaterialDto material, int userId)
         {
-            var coursesByMaterial = _courseRepository.GetCoursesByMaterialId(material.Id);
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var coursesByMaterial = await _courseRepository.GetCoursesByMaterialIdAsync(material.Id);
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
             List<int> coursesByUser = new();
             groupsByUser.ForEach(group => coursesByUser.Add(group.Course.Id));
 
             var result = coursesByMaterial.FirstOrDefault(сm => coursesByUser.Any(сu => сu == сm.Id));
             if (result == default)
                 material = default;
+            
             return material;
         }
     }

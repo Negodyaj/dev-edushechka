@@ -22,33 +22,34 @@ namespace DevEdu.Business.ValidationHelpers
             _groupRepository = groupRepository;
         }
 
-        public StudentHomeworkDto GetStudentHomeworkByIdAndThrowIfNotFound(int id)
+        public async Task<StudentHomeworkDto> GetStudentHomeworkByIdAndThrowIfNotFoundAsync(int id)
         {
-            var studentHomework = _studentHomeworkRepository.GetStudentHomeworkById(id);
+            var studentHomework = await _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
             if (studentHomework == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), id));
+
             return studentHomework;
         }
 
-        public void CheckUserBelongsToHomework(int groupId, int userId)
+        public async Task CheckUserBelongsToHomeworkAsync(int groupId, int userId)
         {
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
-            var group = Task.Run(async () => await _groupRepository.GetGroup(groupId)).Result;
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
+            var group = Task.Run(async () => await _groupRepository.GetGroupAsync(groupId)).Result;
             var result = groupsByUser.FirstOrDefault(gu => gu.Id == @group.Id);
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserInGroupNotFoundMessage, userId, groupId));
         }
 
-        public void CheckUserInStudentHomeworkAccess(int studentId, int userId)
+        public async Task CheckUserInStudentHomeworkAccessAsync(int studentId, int userId)
         {
-            var groupsByStudent = _groupRepository.GetGroupsByUserId(studentId);
-            var groupsByUser = _groupRepository.GetGroupsByUserId(userId);
+            var groupsByStudent = await _groupRepository.GetGroupsByUserIdAsync(studentId);
+            var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
             var result = groupsByUser.FirstOrDefault(gu => groupsByStudent.Any(gs => gs.Id == gu.Id));
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
         }
 
-        public void CheckUserComplianceToStudentHomework(int studentId, int userId)
+        public async Task CheckUserComplianceToStudentHomeworkAsync(int studentId, int userId)
         {
             if (studentId != userId)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));

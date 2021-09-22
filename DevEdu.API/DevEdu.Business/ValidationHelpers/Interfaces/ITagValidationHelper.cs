@@ -1,9 +1,10 @@
 ﻿using DevEdu.DAL.Models;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
     public interface ITagValidationHelper
     {
-        TagDto GetTagByIdAndThrowIfNotFound(int tagId);
+        Task<TagDto> GetTagByIdAndThrowIfNotFoundAsync(int tagId);
     }
 }

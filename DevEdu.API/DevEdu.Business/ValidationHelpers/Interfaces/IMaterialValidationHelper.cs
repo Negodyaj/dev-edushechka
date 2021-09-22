@@ -1,11 +1,12 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
     public interface IMaterialValidationHelper
     {
-        MaterialDto GetMaterialByIdAndThrowIfNotFound(int materialId);
+        Task<MaterialDto> GetMaterialByIdAndThrowIfNotFoundAsync(int materialId);
         void CheckMethodistAccessToMaterialForDeleteAndUpdate(int userId, MaterialDto material);
         void CheckTeacherAccessToMaterialForDeleteAndUpdate(int userId, MaterialDto material);
         void CheckUserAccessToMaterialForGetById(int userId, MaterialDto material);

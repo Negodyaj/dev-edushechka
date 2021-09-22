@@ -1,15 +1,16 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
     public interface IHomeworkRepository
     {
-        int AddHomework(HomeworkDto homeworkDto);
-        void DeleteHomework(int Id);
-        void UpdateHomework(HomeworkDto homeworkDto);
-        HomeworkDto GetHomework(int id);
-        List<HomeworkDto> GetHomeworkByGroupId(int groupId);
-        List<HomeworkDto> GetHomeworkByTaskId(int taskId);
+        Task<int> AddHomeworkAsync(HomeworkDto homeworkDto);
+        Task DeleteHomeworkAsync(int Id);
+        Task UpdateHomeworkAsync(HomeworkDto homeworkDto);
+        Task<HomeworkDto> GetHomeworkAsync(int id);
+        Task<List<HomeworkDto>> GetHomeworkByGroupIdAsync(int groupId);
+        Task<List<HomeworkDto>> GetHomeworkByTaskIdAsync(int taskId);
     }
 }

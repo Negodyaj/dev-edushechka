@@ -38,43 +38,47 @@ namespace DevEdu.Business.Services
             _userValidationHelper = userValidationHelper;
         }
 
-        public TaskDto AddTaskByMethodist(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds, UserIdentityInfo userIdentityInfo)
+        public async Task<TaskDto> AddTaskByMethodistAsync(TaskDto taskDto, List<int> coursesIds, List<int> tagsIds, UserIdentityInfo userIdentityInfo)
         {
-            var taskId = _taskRepository.AddTask(taskDto);
+            var taskId = await _taskRepository.AddTaskAsync(taskDto);
             if (tagsIds != null && tagsIds.Count != 0)
-                AddTagsToTask(taskId, tagsIds, userIdentityInfo);
-            var task = _taskRepository.GetTaskById(taskId);
+                await AddTagsToTaskAsync(taskId, tagsIds, userIdentityInfo);
+
+            var task = await _taskRepository.GetTaskByIdAsync(taskId);
             if (coursesIds != null && coursesIds.Count != 0)
-                coursesIds.ForEach(courseId => _courseRepository.AddTaskToCourse(courseId, taskId));
+                coursesIds.ForEach(courseId => _courseRepository.AddTaskToCourseAsync(courseId, taskId));
 
             return task;
         }
 
-        public async Task<TaskDto> AddTaskByTeacher(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds, UserIdentityInfo userIdentityInfo)
+        public async Task<TaskDto> AddTaskByTeacherAsync(TaskDto taskDto, HomeworkDto homework, int groupId, List<int> tagsIds, UserIdentityInfo userIdentityInfo)
         {
-            var taskId = _taskRepository.AddTask(taskDto);
+            var taskId = await _taskRepository.AddTaskAsync(taskDto);
             if (tagsIds != null && tagsIds.Count != 0)
-                AddTagsToTask(taskId, tagsIds, userIdentityInfo);
-            var task = _taskRepository.GetTaskById(taskId);
+                await AddTagsToTaskAsync(taskId, tagsIds, userIdentityInfo);
+
+            var task = await _taskRepository.GetTaskByIdAsync(taskId);
             if (homework != null)
             {
-                homework.Group = await _groupRepository.GetGroup(groupId);
+                homework.Group = await _groupRepository.GetGroupAsync(groupId);
                 homework.Task = task;
-                _homeworkRepository.AddHomework(homework);
+                await _homeworkRepository.AddHomeworkAsync(homework);
             }
+
             return task;
         }
 
-        public TaskDto UpdateTask(TaskDto taskDto, int taskId, UserIdentityInfo userIdentityInfo)
+        public async Task<TaskDto> UpdateTaskAsync(TaskDto taskDto, int taskId, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
-            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userIdentityInfo.UserId);
+            var task = await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             AuthorizationException exception = default;
             bool authorized = true;
 
-            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Methodist) &&
+                !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var mException = _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
+                var mException = await _taskValidationHelper.CheckMethodistAccessToTaskAsync(task, userIdentityInfo.UserId);
                 if (mException != default)
                 {
                     exception = mException;
@@ -83,13 +87,14 @@ namespace DevEdu.Business.Services
                 else
                 {
                     taskDto.Id = taskId;
-                    _taskRepository.UpdateTask(taskDto);
-                    return _taskRepository.GetTaskById(taskId);
-                } 
+                    await _taskRepository.UpdateTaskAsync(taskDto);
+                    return await _taskRepository.GetTaskByIdAsync(taskId);
+                }
             }
-            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) &&
+                !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var uException = _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+                var uException = await _taskValidationHelper.CheckUserAccessToTaskAsync(taskId, userIdentityInfo.UserId);
                 if (uException != default)
                 {
                     exception = uException;
@@ -98,8 +103,8 @@ namespace DevEdu.Business.Services
                 else
                 {
                     taskDto.Id = taskId;
-                    _taskRepository.UpdateTask(taskDto);
-                    return _taskRepository.GetTaskById(taskId);
+                    await _taskRepository.UpdateTaskAsync(taskDto);
+                    return await _taskRepository.GetTaskByIdAsync(taskId);
                 }
             }
 
@@ -107,56 +112,59 @@ namespace DevEdu.Business.Services
                 throw exception;
 
             taskDto.Id = taskId;
-            _taskRepository.UpdateTask(taskDto);
-            return _taskRepository.GetTaskById(taskId);
+            await _taskRepository.UpdateTaskAsync(taskDto);
+            return await _taskRepository.GetTaskByIdAsync(taskId);
         }
 
-        public int DeleteTask(int taskId, UserIdentityInfo userIdentityInfo)
+        public async Task<int> DeleteTaskAsync(int taskId, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
-            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userIdentityInfo.UserId);
+            var task = await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             AuthorizationException exception = default;
             bool authorized = true;
 
-            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Methodist) &&
+                !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var mException = _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
+                var mException = await _taskValidationHelper.CheckMethodistAccessToTaskAsync(task, userIdentityInfo.UserId);
                 if (mException != default)
                 {
                     exception = mException;
                     authorized = false;
                 }
                 else
-                    return _taskRepository.DeleteTask(taskId);
+                    return await _taskRepository.DeleteTaskAsync(taskId);
             }
-            if (userIdentityInfo.Roles.Contains(Role.Teacher) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) &&
+                !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var uException = _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+                var uException = await _taskValidationHelper.CheckUserAccessToTaskAsync(taskId, userIdentityInfo.UserId);
                 if (uException != default)
                 {
                     exception = uException;
                     authorized = false;
                 }
                 else
-                    return _taskRepository.DeleteTask(taskId);
+                    return await _taskRepository.DeleteTaskAsync(taskId);
             }
 
             if (!authorized)
                 throw exception;
 
-            return _taskRepository.DeleteTask(taskId);
+            return await _taskRepository.DeleteTaskAsync(taskId);
         }
 
-        public TaskDto GetTaskById(int taskId, UserIdentityInfo userIdentityInfo)
+        public async Task<TaskDto> GetTaskByIdAsync(int taskId, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
-            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userIdentityInfo.UserId);
+            var task = await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             AuthorizationException exception = default;
             bool authorized = true;
-           
-            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
+
+            if (userIdentityInfo.Roles.Contains(Role.Methodist) &&
+                !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var mException = _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
+                var mException = await _taskValidationHelper.CheckMethodistAccessToTaskAsync(task, userIdentityInfo.UserId);
                 if (mException != default)
                 {
                     exception = mException;
@@ -165,9 +173,10 @@ namespace DevEdu.Business.Services
                 else
                     return task;
             }
-            if (!userIdentityInfo.Roles.Contains(Role.Admin) && !userIdentityInfo.Roles.Contains(Role.Methodist))
+            if (!userIdentityInfo.Roles.Contains(Role.Admin) &&
+                !userIdentityInfo.Roles.Contains(Role.Methodist))
             {
-                var uException = _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+                var uException = await _taskValidationHelper.CheckUserAccessToTaskAsync(taskId, userIdentityInfo.UserId);
                 if (uException != default)
                 {
                     exception = uException;
@@ -183,153 +192,177 @@ namespace DevEdu.Business.Services
             return task;
         }
 
-        public TaskDto GetTaskWithCoursesById(int taskId, UserIdentityInfo userIdentityInfo)
+        public async Task<TaskDto> GetTaskWithCoursesByIdAsync(int taskId, UserIdentityInfo userIdentityInfo)
         {
-            var taskDto = GetTaskById(taskId, userIdentityInfo);
-            taskDto.Courses = _courseRepository.GetCoursesToTaskByTaskId(taskId);
+            var taskDto = await GetTaskByIdAsync(taskId, userIdentityInfo);
+            taskDto.Courses = await _courseRepository.GetCoursesToTaskByTaskIdAsync(taskId);
             return taskDto;
         }
 
-        public TaskDto GetTaskWithAnswersById(int taskId, UserIdentityInfo userIdentityInfo)
+        public async Task<TaskDto> GetTaskWithAnswersByIdAsync(int taskId, UserIdentityInfo userIdentityInfo)
         {
-            var taskDto = GetTaskById(taskId, userIdentityInfo);
-            taskDto.StudentAnswers = _studentHomeworkRepository.GetAllStudentHomeworkByTask(taskId);
+            var taskDto = await GetTaskByIdAsync(taskId, userIdentityInfo);
+            taskDto.StudentAnswers = await _studentHomeworkRepository.GetAllStudentHomeworkByTaskAsync(taskId);
             return taskDto;
         }
 
-        public TaskDto GetTaskWithGroupsById(int taskId, UserIdentityInfo userIdentityInfo)
+        public async Task<TaskDto> GetTaskWithGroupsByIdAsync(int taskId, UserIdentityInfo userIdentityInfo)
         {
-            var taskDto = GetTaskById(taskId, userIdentityInfo);
-            taskDto.Groups = _groupRepository.GetGroupsByTaskId(taskId);
+            var taskDto = await GetTaskByIdAsync(taskId, userIdentityInfo);
+            taskDto.Groups = await _groupRepository.GetGroupsByTaskIdAsync(taskId);
             return taskDto;
         }
 
-        public List<TaskDto> GetTasks(UserIdentityInfo userIdentityInfo)
+        public async Task<List<TaskDto>> GetTasksAsync(UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
-            var tasks = _taskRepository.GetTasks();
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userIdentityInfo.UserId);
+            var tasks = await _taskRepository.GetTasksAsync();
             var allowedTaskDtos = new List<TaskDto>();
+
             if (userIdentityInfo.Roles.Contains(Role.Admin))
                 return tasks;
+
             if (userIdentityInfo.Roles.Contains(Role.Methodist))
             {
                 allowedTaskDtos.AddRange(_taskValidationHelper.GetTasksAllowedToMethodist(tasks));
             }
             foreach (var task in tasks)
             {
-                allowedTaskDtos.Add(_taskValidationHelper.GetTaskAllowedToUser(task.Id, userIdentityInfo.UserId));
+                var allowedTask = _taskValidationHelper.GetTaskAllowedToUserAsync(task.Id, userIdentityInfo.UserId).Result;
+                if (allowedTask != null)
+                    allowedTaskDtos.Add(allowedTask);
             }
+
             return allowedTaskDtos;
         }
 
-        public int AddTagToTask(int taskId, int tagId, UserIdentityInfo userIdentityInfo)
+        public async Task<int> AddTagToTaskAsync(int taskId, int tagId, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
-            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userIdentityInfo.UserId);
+            var task = await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             AuthorizationException exception = default;
             bool authorized = true;
 
-            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Methodist) &&
+                !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var mException = _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
+                var mException = await _taskValidationHelper.CheckMethodistAccessToTaskAsync(task, userIdentityInfo.UserId);
                 if (mException != default)
                 {
                     exception = mException;
                     authorized = false;
                 }
                 else
-                    return _taskRepository.AddTagToTask(taskId, tagId);
+                    return await _taskRepository.AddTagToTaskAsync(taskId, tagId);
             }
-            if (userIdentityInfo.Roles.Contains(Role.Teacher) || userIdentityInfo.Roles.Contains(Role.Tutor) && !userIdentityInfo.Roles.Contains(Role.Admin))
-                _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) ||
+                userIdentityInfo.Roles.Contains(Role.Tutor) &&
+                !userIdentityInfo.Roles.Contains(Role.Admin))
+            // await _taskValidationHelper.CheckUserAccessToTaskAsync(taskId, userIdentityInfo.UserId);
             {
-                var uException = _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+                var uException = await _taskValidationHelper.CheckUserAccessToTaskAsync(taskId, userIdentityInfo.UserId);
                 if (uException != default)
                 {
                     exception = uException;
                     authorized = false;
                 }
                 else
-                    return _taskRepository.AddTagToTask(taskId, tagId);
+                    return await _taskRepository.AddTagToTaskAsync(taskId, tagId);
             }
 
             if (!authorized)
                 throw exception;
 
-            return _taskRepository.AddTagToTask(taskId, tagId);
+            return await _taskRepository.AddTagToTaskAsync(taskId, tagId);
         }
 
-        public void AddTagsToTask(int taskId, List<int> tagsIds, UserIdentityInfo userIdentityInfo)
+        public async Task AddTagsToTaskAsync(int taskId, List<int> tagsIds, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
-            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userIdentityInfo.UserId);
+            var task = await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             AuthorizationException exception = default;
             bool authorized = true;
+            bool tagsWasAdded = false;
 
-            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Methodist) &&
+                !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var mException = _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
+                var mException = await _taskValidationHelper.CheckMethodistAccessToTaskAsync(task, userIdentityInfo.UserId);
                 if (mException != default)
                 {
                     exception = mException;
                     authorized = false;
                 }
                 else
-                    tagsIds.ForEach(tagId => _taskRepository.AddTagToTask(taskId, tagId));
+                {
+                    tagsWasAdded = true;
+                    tagsIds.ForEach(
+                        async tagId => await _taskRepository.AddTagToTaskAsync(taskId, tagId));
+                }
             }
-            if (userIdentityInfo.Roles.Contains(Role.Teacher) || userIdentityInfo.Roles.Contains(Role.Tutor) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Teacher)
+                || userIdentityInfo.Roles.Contains(Role.Tutor) &&
+                !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var uException = _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+                var uException = await _taskValidationHelper.CheckUserAccessToTaskAsync(taskId, userIdentityInfo.UserId);
                 if (uException != default)
                 {
                     exception = uException;
                     authorized = false;
                 }
                 else
-                    tagsIds.ForEach(tagId => _taskRepository.AddTagToTask(taskId, tagId));
+                {
+                    tagsWasAdded = true;
+                    tagsIds.ForEach(
+                        async tagId => await _taskRepository.AddTagToTaskAsync(taskId, tagId));
+                }
             }
 
             if (!authorized)
                 throw exception;
 
-            tagsIds.ForEach(tagId => _taskRepository.AddTagToTask(taskId, tagId));
+            if (tagsWasAdded == false)
+                tagsIds.ForEach(async tagId => await _taskRepository.AddTagToTaskAsync(taskId, tagId));
         }
 
-        public int DeleteTagFromTask(int taskId, int tagId, UserIdentityInfo userIdentityInfo)
+        public async Task<int> DeleteTagFromTaskAsync(int taskId, int tagId, UserIdentityInfo userIdentityInfo)
         {
-            _userValidationHelper.GetUserByIdAndThrowIfNotFound(userIdentityInfo.UserId);
-            var task = _taskValidationHelper.GetTaskByIdAndThrowIfNotFound(taskId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userIdentityInfo.UserId);
+            var task = await _taskValidationHelper.GetTaskByIdAndThrowIfNotFoundAsync(taskId);
             AuthorizationException exception = default;
             bool authorized = true;
 
-            if (userIdentityInfo.Roles.Contains(Role.Methodist) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Methodist)
+                && !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var mException = _taskValidationHelper.CheckMethodistAccessToTask(task, userIdentityInfo.UserId);
+                var mException = await _taskValidationHelper.CheckMethodistAccessToTaskAsync(task, userIdentityInfo.UserId);
                 if (mException != default)
                 {
                     exception = mException;
                     authorized = false;
                 }
                 else
-                    return _taskRepository.DeleteTagFromTask(taskId, tagId);
+                    return await _taskRepository.DeleteTagFromTaskAsync(taskId, tagId);
             }
-            if (userIdentityInfo.Roles.Contains(Role.Teacher) || userIdentityInfo.Roles.Contains(Role.Tutor) && !userIdentityInfo.Roles.Contains(Role.Admin))
+            if (userIdentityInfo.Roles.Contains(Role.Teacher)
+                || userIdentityInfo.Roles.Contains(Role.Tutor) &&
+                !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var uException = _taskValidationHelper.CheckUserAccessToTask(taskId, userIdentityInfo.UserId);
+                var uException = await _taskValidationHelper.CheckUserAccessToTaskAsync(taskId, userIdentityInfo.UserId);
                 if (uException != default)
                 {
                     exception = uException;
                     authorized = false;
                 }
                 else
-                    return _taskRepository.DeleteTagFromTask(taskId, tagId);
+                    return await _taskRepository.DeleteTagFromTaskAsync(taskId, tagId);
             }
 
             if (!authorized)
                 throw exception;
 
-            return _taskRepository.DeleteTagFromTask(taskId, tagId);
+            return await _taskRepository.DeleteTagFromTaskAsync(taskId, tagId);
         }
-        
+
     }
 }

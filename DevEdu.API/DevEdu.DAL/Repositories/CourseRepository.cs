@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -30,11 +31,13 @@ namespace DevEdu.DAL.Repositories
         private const string _courseSelectByTaskIdProcedure = "dbo.Course_SelectByTaskId";
         private const string _courseSelectAllByMaterialIdProcedure = "dbo.Course_SelectByMaterialId";
 
-        public CourseRepository(IOptions<DatabaseSettings> options) : base(options) { }
-
-        public int AddCourse(CourseDto courseDto)
+        public CourseRepository(IOptions<DatabaseSettings> options) : base(options) 
         {
-            return _connection.QuerySingle<int>(
+        }
+
+        public async Task<int> AddCourseAsync(CourseDto courseDto)
+        {
+            return await _connection.QuerySingleAsync<int>(
                 _courseAddProcedure,
                 new
                 {
@@ -45,20 +48,21 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteCourse(int id)
+        public async Task DeleteCourseAsync(int id)
         {
-            _connection.Execute(
+            await _connection.ExecuteAsync(
                 _courseDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
             );
         }
 
-        public CourseDto GetCourse(int id)
+        public async Task<CourseDto> GetCourseAsync(int id)
         {
             CourseDto result = default;
-            return _connection
-                .Query<CourseDto, TopicDto, CourseDto>(
+
+            return (await _connection
+                .QueryAsync<CourseDto, TopicDto, CourseDto>(
                 _courseSelectByIdProcedure,
                 (course, topic) =>
                 {
@@ -76,15 +80,15 @@ namespace DevEdu.DAL.Repositories
                 new { id },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
-                )
+                ))
                 .FirstOrDefault();
         }
 
-        public List<CourseDto> GetCourses()
+        public async Task<List<CourseDto>> GetCoursesAsync()
         {
             var courseDictionary = new Dictionary<int, CourseDto>();
-            return _connection
-                .Query<CourseDto, TopicDto, CourseDto>(
+            return (await _connection
+                .QueryAsync<CourseDto, TopicDto, CourseDto>(
                     _courseSelectAllProcedure,
                     (course, topic) =>
                     {
@@ -103,14 +107,14 @@ namespace DevEdu.DAL.Repositories
                     },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .Distinct()
                 .ToList();
         }
 
-        public void UpdateCourse(CourseDto courseDto)
+        public async Task UpdateCourseAsync(CourseDto courseDto)
         {
-            _connection.Execute(
+            await _connection.ExecuteAsync(
                _courseUpdateProcedure,
                new
                {
@@ -122,9 +126,9 @@ namespace DevEdu.DAL.Repositories
            );
         }
 
-        public void AddTaskToCourse(int courseId, int taskId)
+        public async Task AddTaskToCourseAsync(int courseId, int taskId)
         {
-            _connection.Execute(
+            await _connection.ExecuteAsync(
                 _сourseTaskInsertProcedure,
                 new
                 {
@@ -135,9 +139,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteTaskFromCourse(int courseId, int taskId)
+        public async Task DeleteTaskFromCourseAsync(int courseId, int taskId)
         {
-            _connection.Execute(
+            await _connection.ExecuteAsync(
                 _сourseTaskDeleteProcedure,
                 new
                 {
@@ -148,10 +152,10 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public List<CourseTopicDto> SelectAllTopicsByCourseId(int courseId)
+        public async Task<List<CourseTopicDto>> SelectAllTopicsByCourseIdAsync(int courseId)
         {
-            return _connection
-                .Query<CourseTopicDto, TopicDto, CourseTopicDto>(
+            return (await _connection
+                .QueryAsync<CourseTopicDto, TopicDto, CourseTopicDto>(
                     _courseTopicSelectAllByCourseIdProcedure,
                     (courseTopicDto, topicDto) =>
                     {
@@ -162,11 +166,11 @@ namespace DevEdu.DAL.Repositories
                     new { courseId },
                     splitOn: "id",
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
 
-        public void UpdateCourseTopicsByCourseId(List<CourseTopicDto> topics)
+        public async Task UpdateCourseTopicsByCourseId(List<CourseTopicDto> topics)
         {
             var dt = new DataTable();
             dt.Columns.Add("CourseId");
@@ -177,45 +181,46 @@ namespace DevEdu.DAL.Repositories
             {
                 dt.Rows.Add(topic.Course.Id, topic.Topic.Id, topic.Position);
             }
-            _connection.Execute(
+
+            await _connection.ExecuteAsync(
                 _courseTopicUpdateProcedure,
                 new { tblCourseTopic = dt.AsTableValuedParameter(_courseTopicType) },
                 commandType: CommandType.StoredProcedure
                 );
         }
 
-        public void DeleteAllTopicsByCourseId(int courseId)
+        public async Task DeleteAllTopicsByCourseIdAsync(int courseId)
         {
-            _connection.Execute(
+            await _connection.ExecuteAsync(
                 _courseTopicDeleteAllTopicsByCourseIdProcedure,
                 new { courseId },
                 commandType: CommandType.StoredProcedure
                 );
         }
 
-        public List<CourseDto> GetCoursesToTaskByTaskId(int id)
+        public async Task<List<CourseDto>> GetCoursesToTaskByTaskIdAsync(int id)
         {
-            return _connection.Query<CourseDto>(
+            return (await _connection.QueryAsync<CourseDto>(
                     _courseSelectByTaskIdProcedure,
                     new { id },
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
 
-        public List<CourseDto> GetCoursesByMaterialId(int id)
+        public async Task<List<CourseDto>> GetCoursesByMaterialIdAsync(int id)
         {
-            return _connection.Query<CourseDto>(
+            return (await _connection.QueryAsync<CourseDto>(
                     _courseSelectAllByMaterialIdProcedure,
                     new { id },
                     commandType: CommandType.StoredProcedure
-                )
+                ))
                 .ToList();
         }
 
-        public int AddCourseMaterialReference(int courseId, int materialId)
+        public async Task<int> AddCourseMaterialReferenceAsync(int courseId, int materialId)
         {
-            return _connection.Execute(
+            return await _connection.ExecuteAsync(
                 _courseMaterialInsertProcedure,
                 new
                 {
@@ -226,9 +231,9 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void RemoveCourseMaterialReference(int courseId, int materialId)
+        public async Task RemoveCourseMaterialReferenceAsync(int courseId, int materialId)
         {
-            _connection.Execute(
+            await _connection.ExecuteAsync(
                _courseMaterialDeleteProcedure,
                new
                {

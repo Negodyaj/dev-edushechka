@@ -1,16 +1,17 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
     public interface IRatingRepository
     {
-        int AddStudentRating(StudentRatingDto studentRatingDto);
-        void DeleteStudentRating(int id);
-        List<StudentRatingDto> SelectAllStudentRatings();
-        StudentRatingDto SelectStudentRatingById(int id);
-        List<StudentRatingDto> SelectStudentRatingByUserId(int userId);
-        public List<StudentRatingDto> SelectStudentRatingByGroupId(int groupId);
-        void UpdateStudentRating(StudentRatingDto studentRatingDto);
+        Task<int> AddStudentRatingAsync(StudentRatingDto studentRatingDto);
+        Task DeleteStudentRatingAsync(int id);
+        Task<List<StudentRatingDto>> SelectAllStudentRatingsAsync();
+        Task<StudentRatingDto> SelectStudentRatingByIdAsync(int id);
+        Task<List<StudentRatingDto>> SelectStudentRatingByUserIdAsync(int userId);
+        Task<List<StudentRatingDto>> SelectStudentRatingByGroupIdAsync(int groupId);
+        Task UpdateStudentRatingAsync(StudentRatingDto studentRatingDto);
     }
 }

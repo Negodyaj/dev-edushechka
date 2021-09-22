@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
 {
@@ -34,10 +35,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(HomeworkInfoFullOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public HomeworkInfoFullOutputModel GetHomework(int id)
+        public async Task<HomeworkInfoFullOutputModel> GetHomeworkAsync(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _homeworkService.GetHomework(id, userInfo);
+            var dto = await _homeworkService.GetHomeworkAsync(id, userInfo);
             var output = _mapper.Map<HomeworkInfoFullOutputModel>(dto);
             return output;
         }
@@ -49,10 +50,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<HomeworkInfoWithTaskOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<HomeworkInfoWithTaskOutputModel> GetHomeworksByGroupId(int groupId)
+        public async Task<List<HomeworkInfoWithTaskOutputModel>> GetHomeworksByGroupIdAsync(int groupId)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = _homeworkService.GetHomeworkByGroupIdAsync(groupId, userInfo);
+            var dto = await _homeworkService.GetHomeworkByGroupIdAsync(groupId, userInfo);
             var output = _mapper.Map<List<HomeworkInfoWithTaskOutputModel>>(dto);
             return output;
         }
@@ -64,9 +65,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(List<HomeworkInfoWithGroupOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public List<HomeworkInfoWithGroupOutputModel> GetHomeworksByTaskId(int taskId)
+        public async Task<List<HomeworkInfoWithGroupOutputModel>> GetHomeworksByTaskIdAsync(int taskId)
         {
-            var list = _homeworkService.GetHomeworkByTaskId(taskId);
+            var list = await _homeworkService.GetHomeworkByTaskIdAsync(taskId);
             return _mapper.Map<List<HomeworkInfoWithGroupOutputModel>>(list);
         }
 
@@ -78,11 +79,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<HomeworkInfoOutputModel> AddHomework(int groupId, int taskId, [FromBody] HomeworkInputModel model)
+        public async Task<ActionResult<HomeworkInfoOutputModel>> AddHomeworkAsync(int groupId, int taskId, [FromBody] HomeworkInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<HomeworkDto>(model);
-            var hw = _homeworkService.AddHomework(groupId, taskId, dto, userInfo);
+            var hw = await _homeworkService.AddHomeworkAsync(groupId, taskId, dto, userInfo);
             var output = _mapper.Map<HomeworkInfoOutputModel>(hw);
             return Created(new Uri($"api/Homework/{output.Id}", UriKind.Relative), output);
         }
@@ -94,10 +95,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteHomework(int id)
+        public async Task<ActionResult> DeleteHomeworkAsync(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            _homeworkService.DeleteHomework(id, userInfo);
+            await _homeworkService.DeleteHomeworkAsync(id, userInfo);
             return NoContent();
         }
 
@@ -109,11 +110,11 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public HomeworkInfoOutputModel UpdateHomework(int id, [FromBody] HomeworkInputModel model)
+        public async Task<HomeworkInfoOutputModel> UpdateHomeworkAsync(int id, [FromBody] HomeworkInputModel model)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = _mapper.Map<HomeworkDto>(model);
-            var output = _homeworkService.UpdateHomework(id, dto, userInfo);
+            var output = await _homeworkService.UpdateHomeworkAsync(id, dto, userInfo);
             return _mapper.Map<HomeworkInfoOutputModel>(output);
         }
     }

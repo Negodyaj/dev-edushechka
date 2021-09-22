@@ -3,5 +3,4 @@
 	[Sum] decimal(6, 2) not null,
 	UserId [int] not null,
 	IsPaid [bit] not null
-	
 )

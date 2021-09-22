@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -19,11 +20,13 @@ namespace DevEdu.DAL.Repositories
         private const string _notificationSelectAllByRoleIdProcedure = "dbo.Notification_SelectAllByRoleId";
         private const string _notificationUpdateProcedure = "dbo.Notification_Update";
 
-        public NotificationRepository(IOptions<DatabaseSettings> options) : base(options) { }
-
-        public int AddNotification(NotificationDto notificationDto)
+        public NotificationRepository(IOptions<DatabaseSettings> options) : base(options)
         {
-            return _connection.QuerySingle<int>(
+        }
+
+        public async Task<int> AddNotificationAsync(NotificationDto notificationDto)
+        {
+            return await _connection.QuerySingleAsync<int>(
                 _notificationInsertProcedure,
                 new
                 {
@@ -36,106 +39,103 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeleteNotification(int id)
+        public async Task DeleteNotificationAsync(int id)
         {
-            _connection.Execute(
-                _notificationDeleteProcedure,
-                new { id },
-                commandType: CommandType.StoredProcedure
-            );
+            await _connection.ExecuteAsync(
+                 _notificationDeleteProcedure,
+                 new { id },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
-        public NotificationDto GetNotification(int id)
+        public async Task<NotificationDto> GetNotificationAsync(int id)
         {
             NotificationDto result = default;
-            return _connection
-                .Query<NotificationDto, Role?, UserDto, GroupDto, NotificationDto>(
-                    _notificationSelectByIdProcedure,
-                    (notification, role, user, group) =>
-                    {
-                        result = notification;
-                        result.Role = (role == null) ? default : role;
-                        result.User = user;
-                        result.Group = group;
 
-                        return result;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+            return (await _connection
+                .QueryAsync<NotificationDto, Role?, UserDto, GroupDto, NotificationDto>(
+                _notificationSelectByIdProcedure,
+                (notification, role, user, group) =>
+                {
+                    result = notification;
+                    result.Role = (role == null) ? default : role;
+                    result.User = user;
+                    result.Group = group;
+
+                    return result;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+                ))
                 .FirstOrDefault();
         }
 
-        public List<NotificationDto> GetNotificationsByUserId(int userId)
+        public async Task<List<NotificationDto>> GetNotificationsByUserIdAsync(int userId)
         {
-
-            return _connection
-                .Query<NotificationDto, UserDto, NotificationDto>(
-                    _notificationSelectAllByUserIdProcedure,
-                    (notification, user) =>
+            return (await _connection
+                .QueryAsync<NotificationDto, UserDto, NotificationDto>(
+                _notificationSelectAllByUserIdProcedure,
+                (notification, user) =>
+                {
+                    NotificationDto result;
                     {
-                        NotificationDto result;
-                        {
-                            result = notification;
-                            result.User = user;
-                        }
-                        return result;
-                    },
-                    new { userId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+                        result = notification;
+                        result.User = user;
+                    }
+                    return result;
+                },
+                new { userId },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+                ))
                 .ToList();
         }
 
-        public List<NotificationDto> GetNotificationsByGroupId(int groupId)
+        public async Task<List<NotificationDto>> GetNotificationsByGroupIdAsync(int groupId)
         {
-
-            return _connection
-                .Query<NotificationDto, GroupDto, NotificationDto>(
-                    _notificationSelectAllByGroupIdProcedure,
-                    (notification, group) =>
+            return (await _connection
+                .QueryAsync<NotificationDto, GroupDto, NotificationDto>(
+                _notificationSelectAllByGroupIdProcedure,
+                (notification, group) =>
+                {
+                    NotificationDto result;
                     {
-                        NotificationDto result;
-                        {
-                            result = notification;
-                            result.Group = group;
-                        }
-                        return result;
-                    },
-                    new { groupId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+                        result = notification;
+                        result.Group = group;
+                    }
+                    return result;
+                },
+                new { groupId },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+                ))
                 .ToList();
         }
 
-        public List<NotificationDto> GetNotificationsByRoleId(int roleId)
+        public async Task<List<NotificationDto>> GetNotificationsByRoleIdAsync(int roleId)
         {
-
-            return _connection
-                .Query<NotificationDto, Role, NotificationDto>(
-                    _notificationSelectAllByRoleIdProcedure,
-                    (notification, role) =>
+            return (await _connection
+                .QueryAsync<NotificationDto, Role, NotificationDto>(
+                _notificationSelectAllByRoleIdProcedure, (notification, role) =>
+                {
+                    NotificationDto result;
                     {
-                        NotificationDto result;
-                        {
-                            result = notification;
-                            result.Role = role;
-                        }
-                        return result;
-                    },
-                    new { roleId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+                        result = notification;
+                        result.Role = role;
+                    }
+                    return result;
+                },
+                new { roleId },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+                ))
                 .ToList();
         }
 
-        public void UpdateNotification(NotificationDto notificationDto)
+        public async Task UpdateNotificationAsync(NotificationDto notificationDto)
         {
-            _connection.Execute(
+           await _connection.ExecuteAsync(
                 _notificationUpdateProcedure,
                 new
                 {

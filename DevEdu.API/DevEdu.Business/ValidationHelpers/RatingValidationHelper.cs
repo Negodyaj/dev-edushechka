@@ -2,6 +2,7 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.ValidationHelpers
 {
@@ -14,11 +15,12 @@ namespace DevEdu.Business.ValidationHelpers
             _ratingRepository = ratingRepository;
         }
 
-        public StudentRatingDto CheckRaitingExistenceAndReturnDto(int ratingId)
+        public async Task<StudentRatingDto> CheckRaitingExistenceAndReturnDtoAsync(int ratingId)
         {
-            var rating = _ratingRepository.SelectStudentRatingById(ratingId);
+            var rating = await _ratingRepository.SelectStudentRatingByIdAsync(ratingId);
             if (rating == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(rating), ratingId));
+            
             return rating;
         }
     }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -20,11 +21,13 @@ namespace DevEdu.DAL.Repositories
         private const string _paymentType = "dbo.PaymentType";
         private const string _idType = "dbo.IdType";
 
-        public PaymentRepository(IOptions<DatabaseSettings> options) : base(options) { }
-
-        public int AddPayment(PaymentDto paymentDto)
+        public PaymentRepository(IOptions<DatabaseSettings> options) : base(options)
         {
-            return _connection.QuerySingle<int>(
+        }
+
+        public async Task<int> AddPaymentAsync(PaymentDto paymentDto)
+        {
+            return await _connection.QuerySingleAsync<int>(
                 _paymentInsertProcedure,
                 new
                 {
@@ -37,20 +40,21 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public void DeletePayment(int id)
+        public async Task DeletePaymentAsync(int id)
         {
-            _connection.Execute(
-                _paymentDeleteProcedure,
-                new { id },
-                commandType: CommandType.StoredProcedure
-            );
+            await _connection.ExecuteAsync(
+                 _paymentDeleteProcedure,
+                 new { id },
+                 commandType: CommandType.StoredProcedure
+             );
         }
 
-        public PaymentDto GetPayment(int id)
+        public async Task<PaymentDto> GetPaymentAsync(int id)
         {
             PaymentDto result = default;
-            return _connection
-                .Query<PaymentDto, UserDto, PaymentDto>(
+
+            return (await _connection
+                .QueryAsync<PaymentDto, UserDto, PaymentDto>(
                 _paymentSelectByIdProcedure,
                 (payment, user) =>
                 {
@@ -64,14 +68,14 @@ namespace DevEdu.DAL.Repositories
                 new { id },
                 splitOn: "Id",
                     commandType: CommandType.StoredProcedure
-            )
+            ))
             .FirstOrDefault();
         }
 
-        public List<PaymentDto> GetPaymentsByUser(int userId)
+        public async Task<List<PaymentDto>> GetPaymentsByUserAsync(int userId)
         {
-            return _connection
-                .Query<PaymentDto, UserDto, PaymentDto>(
+            return (await _connection
+                .QueryAsync<PaymentDto, UserDto, PaymentDto>(
                     _paymentSelectAllByUserIdProcedure,
                     (payment, user) =>
                     {
@@ -80,27 +84,26 @@ namespace DevEdu.DAL.Repositories
                     },
                     new { userId },
                     splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+                    commandType: CommandType.StoredProcedure))
                 .ToList();
         }
 
-        public void UpdatePayment(PaymentDto paymentDto)
+        public async Task UpdatePaymentAsync(PaymentDto paymentDto)
         {
-            _connection.Execute(
-                _paymentUpdateProcedure,
-                new
-                {
-                    paymentDto.Id,
-                    paymentDto.Date,
-                    paymentDto.Sum,
-                    paymentDto.IsPaid
-                },
-                commandType: CommandType.StoredProcedure
-            );
+            await _connection.ExecuteAsync(
+                  _paymentUpdateProcedure,
+                  new
+                  {
+                      paymentDto.Id,
+                      paymentDto.Date,
+                      paymentDto.Sum,
+                      paymentDto.IsPaid
+                  },
+                  commandType: CommandType.StoredProcedure
+              );
         }
 
-        public List<int> AddPayments(List<PaymentDto> payments)
+        public async Task<List<int>> AddPaymentsAsync(List<PaymentDto> payments)
         {
             var table = new DataTable();
             table.Columns.Add("Date");
@@ -112,23 +115,28 @@ namespace DevEdu.DAL.Repositories
             {
                 table.Rows.Add(bill.Date, bill.Sum, bill.User.Id, bill.IsPaid);
             }
-            var response = _connection.Query<int>(
+            var response = (await _connection
+                .QueryAsync<int>(
                _paymentsBulkInsertProcedure,
                new { tblPayment = table.AsTableValuedParameter(_paymentType) },
                commandType: CommandType.StoredProcedure
-               ).ToList();
+               ))
+               .ToList();
+
             return response;
         }
 
-        public List<PaymentDto> SelectPaymentsBySeveralId(List<int> ids)
+        public async Task<List<PaymentDto>> SelectPaymentsBySeveralIdAsync(List<int> ids)
         {
             var table = new DataTable();
             table.Columns.Add("Id");
+
             foreach (var i in ids)
             {
                 table.Rows.Add(i);
             }
-            var response = _connection.Query<PaymentDto, UserDto, PaymentDto>(
+            var response = (await _connection
+                .QueryAsync<PaymentDto, UserDto, PaymentDto>(
               _paymentsSelectBySeveralIdProcedure,
                (paymentDto, userDto) =>
                {
@@ -137,8 +145,8 @@ namespace DevEdu.DAL.Repositories
                },
                new { @tblIds = table.AsTableValuedParameter(_idType) },
                splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                )
+               commandType: CommandType.StoredProcedure
+                ))
                 .ToList();
 
             return response;

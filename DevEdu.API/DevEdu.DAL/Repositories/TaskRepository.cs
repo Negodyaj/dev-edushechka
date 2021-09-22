@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -24,9 +25,9 @@ namespace DevEdu.DAL.Repositories
         {
         }
 
-        public int AddTask(TaskDto taskDto)
+        public async Task<int> AddTaskAsync(TaskDto taskDto)
         {
-            int taskId = _connection.QuerySingle<int>(
+            int taskId = await _connection.QuerySingleAsync<int>(
                 _taskInsertProcedure,
                 new
                 {
@@ -37,12 +38,13 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
                 );
+
             return taskId;
         }
 
-        public void UpdateTask(TaskDto taskDto)
+        public async Task UpdateTaskAsync(TaskDto taskDto)
         {
-            _connection.Execute(
+            await _connection.ExecuteAsync(
                 _taskUpdateProcedure,
                 new
                 {
@@ -56,20 +58,21 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public int DeleteTask(int id)
+        public async Task<int> DeleteTaskAsync(int id)
         {
-            return _connection.Execute(
+            return await _connection.ExecuteAsync(
                 _taskDeleteProcedure,
                 new { id },
                 commandType: CommandType.StoredProcedure
                 );
         }
 
-        public TaskDto GetTaskById(int id)
+        public async Task<TaskDto> GetTaskByIdAsync(int id)
         {
             TaskDto task = default;
-            return _connection
-                .Query<TaskDto, TagDto, TaskDto>(
+
+            return (await _connection
+                .QueryAsync<TaskDto, TagDto, TaskDto>(
                     _taskSelectByIdProcedure,
                     (taskDto, tagDto) =>
                     {
@@ -85,24 +88,24 @@ namespace DevEdu.DAL.Repositories
                     },
                 new { id },
                 splitOn: "Id",
-                commandType: CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure))
                 .FirstOrDefault();
         }
 
-        public List<TaskDto> GetTasksByCourseId(int courseId)
+        public async Task<List<TaskDto>> GetTasksByCourseIdAsync(int courseId)
         {
-            return _connection.Query<TaskDto>(
+            return (await _connection.QueryAsync<TaskDto>(
                     _taskSelectByCourseIdProcedure,
                     new { courseId },
-                    commandType: CommandType.StoredProcedure)
+                    commandType: CommandType.StoredProcedure))
                 .ToList();
         }
 
-        public List<TaskDto> GetTasks()
+        public async Task<List<TaskDto>> GetTasksAsync()
         {
             var taskDictionary = new Dictionary<int, TaskDto>();
 
-            var list = _connection.Query<TaskDto, TagDto, TaskDto>(
+            var list = (await _connection.QueryAsync<TaskDto, TagDto, TaskDto>(
                     _taskSelectAllProcedure,
                 (taskDto, tagDto) =>
                 {
@@ -117,25 +120,26 @@ namespace DevEdu.DAL.Repositories
                     return taskDtoEntry;
                 },
                 splitOn: "Id",
-                commandType: CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure))
                 .Distinct()
                 .ToList();
+
             return list;
         }
 
-        public int AddTagToTask(int taskId, int tagId)
+        public async Task<int> AddTagToTaskAsync(int taskId, int tagId)
         {
-            return _connection
-                .Execute(_tagTaskInsertProcedure,
+            return await _connection
+                .ExecuteAsync(_tagTaskInsertProcedure,
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure
                 );
         }
 
-        public int DeleteTagFromTask(int taskId, int tagId)
+        public async Task<int> DeleteTagFromTaskAsync(int taskId, int tagId)
         {
-            return _connection
-                .Execute(_tagTaskDeleteProcedure,
+            return await _connection
+                .ExecuteAsync(_tagTaskDeleteProcedure,
                 new { tagId, taskId },
                 commandType: CommandType.StoredProcedure
                 );

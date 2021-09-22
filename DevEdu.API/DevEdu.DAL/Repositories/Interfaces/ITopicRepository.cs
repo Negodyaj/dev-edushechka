@@ -1,22 +1,23 @@
 ﻿using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.DAL.Repositories
 {
     public interface ITopicRepository
     {
-        int AddTopic(TopicDto topicDto);
-        void DeleteTopic(int id);
-        List<TopicDto> GetAllTopics();
-        TopicDto GetTopic(int id);
-        int UpdateTopic(TopicDto topicDto);
-        int AddTopicToCourse(CourseTopicDto dto);
-        List<int> AddTopicsToCourse(List<CourseTopicDto> dto);
-        void DeleteTopicFromCourse(int courseId, int topicId);
-        List<TopicDto> GetTopicsByCourseId(int courseId);
-        int AddTagToTopic(int topicId, int tagId);
-        int DeleteTagFromTopic(int topicId, int tagId);
-        CourseTopicDto GetCourseTopicById(int id);
-        List<CourseTopicDto> GetCourseTopicBySeveralId(List<int> ids);
+        Task<int> AddTopicAsync(TopicDto topicDto);
+        Task DeleteTopicAsync(int id);
+        Task<List<TopicDto>> GetAllTopicsAsync();
+        Task<TopicDto> GetTopicAsync(int id);
+        Task<int> UpdateTopicAsync(TopicDto topicDto);
+        Task<int> AddTopicToCourseAsync(CourseTopicDto dto);
+        Task<List<int>> AddTopicsToCourseAsync(List<CourseTopicDto> dto);
+        Task DeleteTopicFromCourseAsync(int courseId, int topicId);
+        Task<List<TopicDto>> GetTopicsByCourseIdAsync(int courseId);
+        Task<int> AddTagToTopicAsync(int topicId, int tagId);
+        Task<int> DeleteTagFromTopicAsync(int topicId, int tagId);
+        Task<CourseTopicDto> GetCourseTopicByIdAsync(int id);
+        Task<List<CourseTopicDto>> GetCourseTopicBySeveralIdAsync(List<int> ids);
     }
 }
