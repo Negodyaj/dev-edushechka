@@ -1,5 +1,4 @@
 ﻿using DevEdu.Business.IdentityInfo;
-using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
@@ -143,7 +142,7 @@ namespace DevEdu.Business.Services
             return allMaterialsByTag;
         }
 
-        public async Task<int> AddMaterialAsync(MaterialDto dto, List<int> tags)
+        private async Task<int> AddMaterialAsync(MaterialDto dto, List<int> tags)
         {
             if (tags == null || tags.Count == 0)
                 return await _materialRepository.AddMaterialAsync(dto);

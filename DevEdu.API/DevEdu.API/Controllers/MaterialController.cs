@@ -35,12 +35,12 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<MaterialInfoOutputModel> AddMaterial([FromBody] MaterialInputModel materialModel)
+        public async Task<ActionResult<MaterialInfoOutputModel>> AddMaterial([FromBody] MaterialInputModel materialModel)
         {
             var user = this.GetUserIdAndRoles();
             var dto = _mapper.Map<MaterialDto>(materialModel);
             var id = _materialService.AddMaterial(dto, null);
-            var dataInDb = _materialService.GetMaterialByIdWithTags(id, user);
+            var dataInDb = await _materialService.GetMaterialByIdWithTagsAsync(id.Result, user);
             var output = _mapper.Map<MaterialInfoOutputModel>(dataInDb);
             return Created(new Uri($"api/Material/{output.Id}",UriKind.Relative), output); 
 
