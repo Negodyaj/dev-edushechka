@@ -48,6 +48,28 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
+        public async Task AddUser_DtoWithoutRoles_UserDtoWithRolesCreated()
+        {
+            //Given
+            var user = UserData.GetUserDto();
+            user.Roles = null;
+            var expectedUserId = UserData.ExpectedUserId;
+            var identity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
+
+            _repoMock.Setup(x => x.AddUserAsync(user)).ReturnsAsync(UserData.ExpectedUserId);
+            _repoMock.Setup(x => x.AddUserRoleAsync(UserData.ExpectedUserId, It.IsAny<int>()));
+            _repoMock.Setup(x => x.GetUserByIdAsync(expectedUserId)).ReturnsAsync(new UserDto { Id = expectedUserId });
+
+            //When
+            var actualDto = await _sut.AddUserAsync(user, identity);
+
+            //Then
+            Assert.AreEqual(UserData.ExpectedUserId, actualDto.Id);
+            _repoMock.Verify(x => x.AddUserAsync(user), Times.Once);
+            _repoMock.Verify(x => x.AddUserRoleAsync(actualDto.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+        }
+
+        [Test]
         public async Task SelectById_IntUserId_ReturnUserDto()
         {
             //Given
