@@ -102,7 +102,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/Group/{groupId}/change-status/{statusId}
-        [HttpPut("{groupId}/change-status/{statusId}")]
+        [HttpPut("{groupId}/change-status")]
         [Description("Change group status by id")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(GroupOutputBaseModel), StatusCodes.Status200OK)]
@@ -202,21 +202,6 @@ namespace DevEdu.API.Controllers
             var userInfo = this.GetUserIdAndRoles();
 
             await _groupService.DeleteUserFromGroup(userId, groupId, userInfo);
-            return NoContent();
-        }
-
-        //  api/group/1/task/1
-        [HttpDelete("{groupId}/task/{taskId}")]
-        [Description("Delete task from group")]
-        [AuthorizeRoles(Role.Teacher)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteTaskFromGroup(int groupId, int taskId)
-        {
-            var userInfo = this.GetUserIdAndRoles();
-
-            await _groupService.DeleteTaskFromGroup(groupId, taskId, userInfo);
             return NoContent();
         }
     }
