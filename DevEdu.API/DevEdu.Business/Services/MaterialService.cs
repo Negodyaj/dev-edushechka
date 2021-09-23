@@ -3,6 +3,7 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,15 +77,16 @@ namespace DevEdu.Business.Services
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(groups, nameof(groups));
 
-            groups.ForEach(async group =>
+            foreach (var group in groups)
             {
                 var groupDto = await _groupValidationHelper.CheckGroupExistenceAsync(group);
                 if (user.IsAdmin())
-                    return;
+                    break;
 
                 var currentRole = user.IsTeacher() ? Role.Teacher : Role.Tutor;
                 await _userValidationHelper.CheckAuthorizationUserToGroupAsync(group, user.UserId, currentRole);
-            });
+            }
+
             var materialId = await AddMaterialAsync(dto, tags);
             groups.ForEach(group => _groupRepository.AddGroupMaterialReferenceAsync(group, materialId));
             return materialId;
@@ -93,7 +95,10 @@ namespace DevEdu.Business.Services
         public async Task<int> AddMaterialWithCoursesAsync(MaterialDto dto, List<int> tags, List<int> courses)
         {
             _materilaValidationHelper.CheckPassedValuesAreUnique(courses, nameof(courses));
-            courses.ForEach(async course => await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(course));
+            foreach(var course in courses)
+            {
+                await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(course);
+            }
 
             var materialId = await AddMaterialAsync(dto, tags);
             courses.ForEach(async course => await _courseRepository.AddCourseMaterialReferenceAsync(course, materialId));
@@ -148,7 +153,11 @@ namespace DevEdu.Business.Services
                 return await _materialRepository.AddMaterialAsync(dto);
 
             _materilaValidationHelper.CheckPassedValuesAreUnique(tags, nameof(tags));
-            tags.ForEach(async tag => await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(tag));
+
+            foreach(var tag in tags)
+            {
+                await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(tag);
+            }
 
             var materialId = await _materialRepository.AddMaterialAsync(dto);
             tags.ForEach(async tag => await _materialRepository.AddTagToMaterialAsync(materialId, tag));
