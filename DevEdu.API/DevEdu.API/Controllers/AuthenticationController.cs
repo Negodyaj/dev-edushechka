@@ -36,7 +36,8 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<UserDto>(model);
             dto.Password = await _authService.HashPasswordAsync(dto.Password);
-            var addedUser = _mapper.Map<UserFullInfoOutPutModel>(_userService.AddUserAsync(dto));
+
+            var addedUser = _mapper.Map<UserFullInfoOutPutModel>(await _userService.AddUserAsync(dto));
 
             return Created(new Uri($"api/User/{addedUser.Id}", UriKind.Relative), addedUser);
         }

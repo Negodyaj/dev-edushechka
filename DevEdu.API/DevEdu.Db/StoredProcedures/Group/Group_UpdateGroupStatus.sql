@@ -6,4 +6,6 @@ BEGIN
 	UPDATE dbo.[Group]
 	SET [GroupStatusId] = @StatusId
 	WHERE Id = @GroupId
-END
+		   INSERTED.[GroupStatusId] as GroupStatus
+	WHERE Id = @GroupId
+END                 
