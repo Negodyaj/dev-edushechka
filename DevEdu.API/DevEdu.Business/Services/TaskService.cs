@@ -300,8 +300,6 @@ namespace DevEdu.Business.Services
                     {
                         await _taskRepository.AddTagToTaskAsync(taskId, tagId);
                     }
-                    //tagsIds.ForEach(
-                    //    async tagId => await _taskRepository.AddTagToTaskAsync(taskId, tagId));
                 }
             }
             if (userIdentityInfo.Roles.Contains(Role.Teacher)
@@ -326,11 +324,12 @@ namespace DevEdu.Business.Services
                 throw exception;
 
             if (tagsWasAdded == false)
+            {
                 foreach (var tagId in tagsIds)
                 {
                     await _taskRepository.AddTagToTaskAsync(taskId, tagId);
                 }
-            //tagsIds.ForEach(async tagId => await _taskRepository.AddTagToTaskAsync(taskId, tagId));
+            }
         }
 
         public async Task<int> DeleteTagFromTaskAsync(int taskId, int tagId, UserIdentityInfo userIdentityInfo)
