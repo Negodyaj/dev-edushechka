@@ -578,8 +578,31 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
         }
 
+
         [Test]
-        public void GetTaskById_WhenUserNotRelatedToTask_ThrownAuthorizationException()
+        public void GetTaskByIdByMethodist_WhenUserNotRelatedToTask_ThrownAuthorizationException()
+        {
+            //Given
+            var taskDto = TaskData.GetTaskDtoWithCourse();
+            var taskId = 1;
+            var userId = 10;
+            var userDto = UserData.GetUserDto();
+            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
+
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+
+            //When
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                () => _sut.GetTaskByIdAsync(taskId, userIdentityInfo));
+
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
+            _userRepoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
+        }
+
+        [Test]
+        public void GetTaskByIdByTeacher_WhenUserNotRelatedToTask_ThrownAuthorizationException()
         {
             //Given
             var taskDto = TaskData.GetTaskDtoWithoutTags();
@@ -602,7 +625,6 @@ namespace DevEdu.Business.Tests
             _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
             _userRepoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
         }
-
 
         [Test]
         public void GetTaskWithCoursesById_IntTaskId_ReturnedTaskDtoWithCourses()
@@ -909,7 +931,6 @@ namespace DevEdu.Business.Tests
             var tagId = 1;
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
             _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
@@ -937,7 +958,6 @@ namespace DevEdu.Business.Tests
 
             _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskIdAsync(taskId)).ReturnsAsync(courseDtos);
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
             _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
@@ -967,7 +987,6 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
-            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
             _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
@@ -981,7 +1000,53 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task AddTagToTaskByTeacher_TaskIdTagIds_TagAdded()
+        public async Task AddTagToTaskByMethodist_WhenUserNotRelatedToTask_ThrownAuthorizationException()
+        {
+            //Given
+            var taskDto = TaskData.GetTaskDtoWithoutCourse();
+            var taskId = 1;
+            var userId = 1;
+            var userDto = UserData.GetUserDto();
+            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
+            var tagId = 1;
+
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
+            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                () => _sut.AddTagToTaskAsync(taskId, tagId, userIdentityInfo));
+
+            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
+        }
+
+        [Test]
+        public async Task AddTagToTaskByTeacher_WhenUserNotRelatedToTask_ThrownAuthorizationException()
+        {
+            //Given
+            var taskDto = TaskData.GetTaskDtoWithoutCourse();
+            var taskId = 1;
+            var userId = 1;
+            var userDto = UserData.GetUserDto();
+            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
+            var tagId = 1;
+
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
+            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                () => _sut.AddTagToTaskAsync(taskId, tagId, userIdentityInfo));
+
+            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
+        }
+
+        [Test]
+        public async Task AddTagsToTaskByAdmin_TaskIdTagIds_TagAdded()
         {
             //Given
             var taskDto = TaskData.GetTaskDtoWithoutTags();
@@ -992,7 +1057,6 @@ namespace DevEdu.Business.Tests
             var tagIds = new List<int>() { 1 };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
             _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
@@ -1031,7 +1095,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task AddTagToTaskByTeacher_TaskIdTagIds_TagsAdded()
+        public async Task AddTagsToTaskByTeacher_TaskIdTagIds_TagsAdded()
         {
             //Given
             var taskDto = TaskData.GetTaskDtoWithoutTags();
@@ -1125,6 +1189,58 @@ namespace DevEdu.Business.Tests
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+
+            //When
+            var actualAffectedRows = _sut.DeleteTagFromTaskAsync(taskId, tagId, userIdentityInfo).Result;
+
+            //Than
+            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
+            _taskRepoMock.Verify(x => x.DeleteTagFromTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
+        }
+
+        [Test]
+        public async Task DeleteTagFromTaskByMethodist_WhenUserNotRelatedToTask_ThrownAuthorizationException()
+        {
+            //Given
+            var taskDto = TaskData.GetTaskDtoWithCourse();
+            var taskId = 1;
+            var userId = 10;
+            var userDto = UserData.GetUserDto();
+            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
+            var tagId = 1;
+ 
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+
+            //When
+            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
+                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
+                () => _sut.DeleteTagFromTaskAsync(taskId, tagId, userIdentityInfo));
+
+            //Than
+            _taskRepoMock.Verify(x => x.DeleteTagFromTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
+        }
+
+        [Test]
+        public async Task DeleteTagFromTaskByTeacher_WhenUserNotRelatedToTask_ThrownAuthorizationException()
+        {
+            //Given
+            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskId = 1;
+            var userId = 10;
+            var userDto = UserData.GetUserDto();
+            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var expectedAffectedRows = 0;
+            var tagId = 13;
+            var groupDtos = TaskData.GetListOfGroups();
+            var groupsByUser = TaskData.GetListOfSameGroups();
+
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
