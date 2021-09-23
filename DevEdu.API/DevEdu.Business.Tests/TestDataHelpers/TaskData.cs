@@ -17,6 +17,11 @@ namespace DevEdu.Business.Tests
             return new TaskDto { Id = 1, Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true, Courses = new List<CourseDto>() { new CourseDto { Id = 1 } } };
         }
 
+        public static TaskDto GetTaskDtoWithoutCourse()
+        {
+            return new TaskDto { Id = 1, Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true };
+        }
+
         public static TaskDto GetTaskDtoWithTags()
         {
             return new TaskDto
