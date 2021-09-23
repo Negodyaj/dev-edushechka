@@ -437,109 +437,109 @@ namespace DevEdu.Business.Tests
             _tagRepoMock.Verify(x => x.SelectTagByIdAsync(It.IsAny<int>()), Times.Never);
         }
 
-        //[TestCase(Role.Teacher)]
-        //[TestCase(Role.Tutor)]
-        //public void AddMaterialWithGroups_ListOfGroupsWithNotExistingGroup_EntityNotFoundExceptionThrown(Role role)
-        //{
-        //    //Given
-        //    var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
-        //    var groups = new List<int>() { 1, 2, 3 };
-        //    var groupDtos = new List<GroupDto> { new GroupDto { Id = 1 }, new GroupDto { Id = 2 }, null };
-        //    var usersInGroup = UserData.GetListsOfUsersInGroup();
-        //    var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "group", groups[2]);
-        //    var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void AddMaterialWithGroups_ListOfGroupsWithNotExistingGroup_EntityNotFoundExceptionThrown(Role role)
+        {
+            //Given
+            var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
+            var groups = new List<int>() { 1, 2, 3 };
+            var groupDtos = new List<GroupDto> { new GroupDto { Id = 1 }, new GroupDto { Id = 2 }, null };
+            var usersInGroup = UserData.GetListsOfUsersInGroup();
+            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "group", groups[2]);
+            var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
-        //    for (int i = 0; i < groups.Count; i++)
-        //    {
-        //        _groupRepoMock.Setup(x => x.GetGroupAsync(groups[i])).ReturnsAsync(groupDtos[i]);
-        //        _userRepoMock
-        //            .Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role))
-        //            .ReturnsAsync(usersInGroup[i]);
-        //    }
-        //    //When
-        //    var actual = Assert.ThrowsAsync<EntityNotFoundException>(
-        //        () => _sut.AddMaterialWithGroupsAsync(materialToAdd, null, groups, user));
+            for (int i = 0; i < groups.Count; i++)
+            {
+                _groupRepoMock.Setup(x => x.GetGroupAsync(groups[i])).ReturnsAsync(groupDtos[i]);
+                _userRepoMock
+                    .Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role))
+                    .ReturnsAsync(usersInGroup[i]);
+            }
+            //When
+            var actual = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.AddMaterialWithGroupsAsync(materialToAdd, null, groups, user));
 
-        //    //Then
-        //    Assert.AreEqual(expectedMessage, actual.Message);
-        //    _materialRepoMock.Verify(x => x.AddMaterialAsync(materialToAdd), Times.Never);
-        //    _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-        //    _groupRepoMock.Verify(x => x.AddGroupMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-        //    _groupRepoMock.Verify(x => x.GetGroupAsync(It.IsAny<int>()), Times.Exactly(groups.Count));
-        //    _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(2));
-        //    _tagRepoMock.Verify(x => x.SelectTagByIdAsync(It.IsAny<int>()), Times.Never);
-        //}
+            //Then
+            Assert.AreEqual(expectedMessage, actual.Message);
+            _materialRepoMock.Verify(x => x.AddMaterialAsync(materialToAdd), Times.Never);
+            _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.AddGroupMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupAsync(It.IsAny<int>()), Times.Exactly(groups.Count));
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(2));
+            _tagRepoMock.Verify(x => x.SelectTagByIdAsync(It.IsAny<int>()), Times.Never);
+        }
 
-        //[TestCase(Role.Teacher)]
-        //[TestCase(Role.Tutor)]
-        //public void AddMaterialWithGroups_UserDoesNotBelongToGroup_AuthorizationExceptionThrown(Role role)
-        //{
-        //    //Given
-        //    var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
-        //    var groups = new List<int>() { 1, 2, 3 };
-        //    var groupDtos = GroupData.GetGroupDtos();
-        //    var usersInGroup = UserData.GetAnotherListsOfUsersInGroup();
-        //    var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
-        //    var expectedMessage = string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, user.UserId, groups[2], role.ToString());
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void AddMaterialWithGroups_UserDoesNotBelongToGroup_AuthorizationExceptionThrown(Role role)
+        {
+            //Given
+            var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
+            var groups = new List<int>() { 1, 2, 3 };
+            var groupDtos = GroupData.GetGroupDtos();
+            var usersInGroup = UserData.GetAnotherListsOfUsersInGroup();
+            var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
+            var expectedMessage = string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, user.UserId, groups[2], role.ToString());
 
-        //    for (int i = 0; i < groups.Count; i++)
-        //    {
-        //        _groupRepoMock.Setup(x => x.GetGroupAsync(groups[i])).ReturnsAsync(groupDtos[i]);
-        //        _userRepoMock
-        //            .Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role))
-        //            .ReturnsAsync(usersInGroup[i]);
-        //    }
-        //    //When
-        //    var actual = Assert.ThrowsAsync<AuthorizationException>(
-        //        () => _sut.AddMaterialWithGroupsAsync(materialToAdd, null, groups, user));
+            for (int i = 0; i < groups.Count; i++)
+            {
+                _groupRepoMock.Setup(x => x.GetGroupAsync(groups[i])).ReturnsAsync(groupDtos[i]);
+                _userRepoMock
+                    .Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role))
+                    .ReturnsAsync(usersInGroup[i]);
+            }
+            //When
+            var actual = Assert.ThrowsAsync<AuthorizationException>(
+                () => _sut.AddMaterialWithGroupsAsync(materialToAdd, null, groups, user));
 
-        //    //Then
-        //    Assert.AreEqual(expectedMessage, actual.Message);
-        //    _materialRepoMock.Verify(x => x.AddMaterialAsync(materialToAdd), Times.Never);
-        //    _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-        //    _groupRepoMock.Verify(x => x.AddGroupMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-        //    _groupRepoMock.Verify(x => x.GetGroupAsync(It.IsAny<int>()), Times.Exactly(groups.Count));
-        //    _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
-        //    _tagRepoMock.Verify(x => x.SelectTagByIdAsync(It.IsAny<int>()), Times.Never);
-        //}
+            //Then
+            Assert.AreEqual(expectedMessage, actual.Message);
+            _materialRepoMock.Verify(x => x.AddMaterialAsync(materialToAdd), Times.Never);
+            _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.AddGroupMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupAsync(It.IsAny<int>()), Times.Exactly(groups.Count));
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
+            _tagRepoMock.Verify(x => x.SelectTagByIdAsync(It.IsAny<int>()), Times.Never);
+        }
 
-        //[TestCase(Role.Teacher)]
-        //[TestCase(Role.Tutor)]
-        //public void AddMaterialWithGroups_ListOfTagsWithNotExistingTag_EntityNotFoundExceptionThrown(Role role)
-        //{
-        //    //Given
-        //    var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
-        //    var groups = new List<int>() { 1, 2, 3 };
-        //    var tags = new List<int>() { 1, 2, 3 };
-        //    var tagDtos = new List<TagDto> { new TagDto { Id = 1 }, new TagDto { Id = 2 }, null };
-        //    var groupDtos = GroupData.GetGroupDtos();
-        //    var usersInGroup = UserData.GetListsOfUsersInGroup();
-        //    var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", tags[2]);
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public void AddMaterialWithGroups_ListOfTagsWithNotExistingTag_EntityNotFoundExceptionThrown(Role role)
+        {
+            //Given
+            var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
+            var groups = new List<int>() { 1, 2, 3 };
+            var tags = new List<int>() { 1, 2, 3 };
+            var tagDtos = new List<TagDto> { new TagDto { Id = 1 }, new TagDto { Id = 2 }, null };
+            var groupDtos = GroupData.GetGroupDtos();
+            var usersInGroup = UserData.GetListsOfUsersInGroup();
+            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", tags[2]);
 
-        //    var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
+            var user = new UserIdentityInfo() { UserId = 2, Roles = new List<Role>() { role } };
 
-        //    for (int i = 0; i < groups.Count; i++)
-        //    {
-        //        _groupRepoMock.Setup(x => x.GetGroupAsync(groups[i])).ReturnsAsync(groupDtos[i]);
-        //        _userRepoMock
-        //            .Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role))
-        //            .ReturnsAsync(usersInGroup[i]);
-        //        _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tags[i])).ReturnsAsync(tagDtos[i]);
-        //    }
+            for (int i = 0; i < groups.Count; i++)
+            {
+                _groupRepoMock.Setup(x => x.GetGroupAsync(groups[i])).ReturnsAsync(groupDtos[i]);
+                _userRepoMock
+                    .Setup(x => x.GetUsersByGroupIdAndRoleAsync(groups[i], (int)role))
+                    .ReturnsAsync(usersInGroup[i]);
+                _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tags[i])).ReturnsAsync(tagDtos[i]);
+            }
 
-        //    //When
-        //    var actual = Assert.ThrowsAsync<EntityNotFoundException>(
-        //        () => _sut.AddMaterialWithGroupsAsync(materialToAdd, tags, groups, user));
+            //When
+            var actual = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.AddMaterialWithGroupsAsync(materialToAdd, tags, groups, user));
 
-        //    //Then
-        //    Assert.AreEqual(expectedMessage, actual.Message);
-        //    _materialRepoMock.Verify(x => x.AddMaterialAsync(materialToAdd), Times.Never);
-        //    _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-        //    _groupRepoMock.Verify(x => x.AddGroupMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-        //    _groupRepoMock.Verify(x => x.GetGroupAsync(It.IsAny<int>()), Times.Exactly(groups.Count));
-        //    _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
-        //    _tagRepoMock.Verify(x => x.SelectTagByIdAsync(It.IsAny<int>()), Times.Exactly(tags.Count));
-        //}
+            //Then
+            Assert.AreEqual(expectedMessage, actual.Message);
+            _materialRepoMock.Verify(x => x.AddMaterialAsync(materialToAdd), Times.Never);
+            _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.AddGroupMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupAsync(It.IsAny<int>()), Times.Exactly(groups.Count));
+            _userRepoMock.Verify(x => x.GetUsersByGroupIdAndRoleAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Exactly(groups.Count));
+            _tagRepoMock.Verify(x => x.SelectTagByIdAsync(It.IsAny<int>()), Times.Exactly(tags.Count));
+        }
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
@@ -658,64 +658,64 @@ namespace DevEdu.Business.Tests
             _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
-        //[Test]
-        //public void AddMaterialWithCourses_ListOfCoursesWithNotExistingCourse_EntityNotFoundExceptionThrown()
-        //{
-        //    //Given
-        //    var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
-        //    var courses = new List<int>() { 1, 2, 3 };
-        //    var courseDtos = new List<CourseDto> { new CourseDto { Id = 1 }, new CourseDto { Id = 2 }, null };
-        //    var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "course", courses[2]);
-        //    var user = new UserIdentityInfo() { UserId = 2 };
+        [Test]
+        public void AddMaterialWithCourses_ListOfCoursesWithNotExistingCourse_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
+            var courses = new List<int>() { 1, 2, 3 };
+            var courseDtos = new List<CourseDto> { new CourseDto { Id = 1 }, new CourseDto { Id = 2 }, null };
+            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "course", courses[2]);
+            var user = new UserIdentityInfo() { UserId = 2 };
 
-        //    for (int i = 0; i < courses.Count; i++)
-        //    {
-        //        _courseRepoMock.Setup(x => x.GetCourseAsync(courses[i])).ReturnsAsync(courseDtos[i]);
-        //    }
+            for (int i = 0; i < courses.Count; i++)
+            {
+                _courseRepoMock.Setup(x => x.GetCourseAsync(courses[i])).ReturnsAsync(courseDtos[i]);
+            }
 
-        //    //When
-        //    var actual = Assert.ThrowsAsync<EntityNotFoundException>(
-        //       async () => await _sut.AddMaterialWithCoursesAsync(materialToAdd, null, courses));
+            //When
+            var actual = Assert.ThrowsAsync<EntityNotFoundException>(
+               async () => await _sut.AddMaterialWithCoursesAsync(materialToAdd, null, courses));
 
-        //    //Then
-        //    Assert.AreEqual(expectedMessage, actual.Message);
-        //    _materialRepoMock.Verify(x => x.AddMaterialAsync(materialToAdd), Times.Never);
-        //    _courseRepoMock.Verify(x => x.AddCourseMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-        //    _courseRepoMock.Verify(x => x.GetCourseAsync(It.IsAny<int>()), Times.Exactly(courses.Count));
-        //    _tagRepoMock.Verify(x => x.SelectTagByIdAsync(It.IsAny<int>()), Times.Never);
-        //    _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-        //}
+            //Then
+            Assert.AreEqual(expectedMessage, actual.Message);
+            _materialRepoMock.Verify(x => x.AddMaterialAsync(materialToAdd), Times.Never);
+            _courseRepoMock.Verify(x => x.AddCourseMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCourseAsync(It.IsAny<int>()), Times.Exactly(courses.Count));
+            _tagRepoMock.Verify(x => x.SelectTagByIdAsync(It.IsAny<int>()), Times.Never);
+            _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        }
 
-        //[Test]
-        //public void AddMaterialWithCourses_ListOfTagsWithNotExistingTag_EntityNotFoundExceptionThrown()
-        //{
-        //    //Given
-        //    var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
-        //    var courses = new List<int>() { 1, 2, 3 };
-        //    var courseDtos = CourseData.GetCoursesDtos();
-        //    var tags = new List<int>() { 1, 2, 3 };
-        //    var tagDtos = new List<TagDto> { new TagDto { Id = 1 }, new TagDto { Id = 2 }, null };
-        //    var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", tags[2]);
-        //    var user = new UserIdentityInfo() { UserId = 2 };
+        [Test]
+        public void AddMaterialWithCourses_ListOfTagsWithNotExistingTag_EntityNotFoundExceptionThrown()
+        {
+            //Given
+            var materialToAdd = MaterialData.GetMaterialDtoWithoutTags();
+            var courses = new List<int>() { 1, 2, 3 };
+            var courseDtos = CourseData.GetCoursesDtos();
+            var tags = new List<int>() { 1, 2, 3 };
+            var tagDtos = new List<TagDto> { new TagDto { Id = 1 }, new TagDto { Id = 2 }, null };
+            var expectedMessage = string.Format(ServiceMessages.EntityNotFoundMessage, "tag", tags[2]);
+            var user = new UserIdentityInfo() { UserId = 2 };
 
-        //    for (int i = 0; i < courses.Count; i++)
-        //    {
-        //        _courseRepoMock.Setup(x => x.GetCourseAsync(courses[i])).ReturnsAsync(courseDtos[i]);
-        //        _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tags[i])).ReturnsAsync(tagDtos[i]);
-        //    }
+            for (int i = 0; i < courses.Count; i++)
+            {
+                _courseRepoMock.Setup(x => x.GetCourseAsync(courses[i])).ReturnsAsync(courseDtos[i]);
+                _tagRepoMock.Setup(x => x.SelectTagByIdAsync(tags[i])).ReturnsAsync(tagDtos[i]);
+            }
 
-        //    //When
-        //    var actual = Assert.ThrowsAsync<EntityNotFoundException>(
-        //        () => _sut.AddMaterialWithCoursesAsync(materialToAdd, tags, courses));
+            //When
+            var actual = Assert.ThrowsAsync<EntityNotFoundException>(
+                () => _sut.AddMaterialWithCoursesAsync(materialToAdd, tags, courses));
 
-        //    //Then
-        //    Assert.AreEqual(expectedMessage, actual.Message);
-        //    _materialRepoMock.Verify(x => x.AddMaterialAsync(materialToAdd), Times.Never);
-        //    _courseRepoMock.Verify(x => x.AddCourseMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-        //    _courseRepoMock.Verify(x => x.GetCourseAsync(It.IsAny<int>()), Times.Exactly(courses.Count));
-        //    _tagRepoMock.Verify(x => x.SelectTagByIdAsync(It.IsAny<int>()), Times.Exactly(tags.Count));
-        //    _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-        //}
+            //Then
+            Assert.AreEqual(expectedMessage, actual.Message);
+            _materialRepoMock.Verify(x => x.AddMaterialAsync(materialToAdd), Times.Never);
+            _courseRepoMock.Verify(x => x.AddCourseMaterialReferenceAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            _courseRepoMock.Verify(x => x.GetCourseAsync(It.IsAny<int>()), Times.Exactly(courses.Count));
+            _tagRepoMock.Verify(x => x.SelectTagByIdAsync(It.IsAny<int>()), Times.Exactly(tags.Count));
+            _materialRepoMock.Verify(x => x.AddTagToMaterialAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        }
 
         [Test]
         public void AddMaterialWithCourses_ListOfTagsWithDuplicateValues_ValidationExceptionThrown()
