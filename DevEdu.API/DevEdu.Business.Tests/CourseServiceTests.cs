@@ -276,29 +276,6 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task UpdateCourseTopicsByCourseId_WhenCountOfTopicsNotChanged_ThenUpdateMethodCalledAsync()
-        {
-            //Given
-            var givenCourseId = 7;
-            var givenTopicsToUpdate = CourseData.GetListCourseTopicDto();
-            var courseTopicsFromDb = CourseData.GetListCourseTopicDtoFromDataBase();
-            var topicsInDb = CourseData.GetTopics();
-           
-            _courseRepositoryMock.Setup(x => x.SelectAllTopicsByCourseIdAsync(givenCourseId)).ReturnsAsync(courseTopicsFromDb);
-            _courseRepositoryMock.Setup(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate));
-            _topicRepositoryMock.Setup(x => x.GetAllTopicsAsync()).ReturnsAsync(topicsInDb);
-            _courseRepositoryMock.Setup(x => x.GetCourseAsync(givenCourseId)).ReturnsAsync(new CourseDto() { Id = givenCourseId });
-
-            //When
-          await  _sut.UpdateCourseTopicsByCourseIdAsync(givenCourseId, givenTopicsToUpdate);
-            
-            //Then
-            _courseRepositoryMock.Verify(x => x.DeleteAllTopicsByCourseIdAsync(givenCourseId), Times.Never);
-            _courseRepositoryMock.Verify(x => x.UpdateCourseTopicsByCourseId(givenTopicsToUpdate), Times.Once);
-
-        }
-
-        [Test]
         public async Task UpdateCourseTopicsByCourseId_WhenCountOfTopicsIsChanged_ThenDeleteAndInsertMethodsCalledAsync()
         {
             //Given

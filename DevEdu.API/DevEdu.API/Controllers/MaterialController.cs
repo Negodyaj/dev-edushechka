@@ -39,7 +39,7 @@ namespace DevEdu.API.Controllers
         {
             var user = this.GetUserIdAndRoles();
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            var id = _materialService.AddMaterial(dto, null);
+            var id = _materialService.AddMaterialAsync(dto, null);
             var dataInDb = await _materialService.GetMaterialByIdWithTagsAsync(id.Result, user);
             var output = _mapper.Map<MaterialInfoOutputModel>(dataInDb);
             return Created(new Uri($"api/Material/{output.Id}",UriKind.Relative), output); 

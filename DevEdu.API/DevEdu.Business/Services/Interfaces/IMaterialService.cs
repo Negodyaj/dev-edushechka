@@ -17,6 +17,6 @@ namespace DevEdu.Business.Services
         Task AddTagToMaterialAsync(int materialId, int tagId);
         Task DeleteTagFromMaterialAsync(int materialId, int tagId);
         Task<List<MaterialDto>> GetMaterialsByTagIdAsync(int tagId, UserIdentityInfo user);
-        Task <int> AddMaterial(MaterialDto dto, List<int> tags);
+        Task <int> AddMaterialAsync(MaterialDto dto, List<int> tags);
     }
 }
