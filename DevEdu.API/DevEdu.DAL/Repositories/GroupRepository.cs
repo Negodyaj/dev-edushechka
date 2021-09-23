@@ -130,16 +130,16 @@ namespace DevEdu.DAL.Repositories
         public async Task<GroupDto> ChangeGroupStatusAsync(int groupId, int statusId)
         {
             return await _connection
-            .QuerySingleAsync<GroupDto>
-            (
-                _groupUpdateGroupStatusProcedure,
-                new
-                {
-                    groupId,
-                    statusId
-                },
-                commandType: CommandType.StoredProcedure
-            );
+                .QuerySingleAsync<GroupDto>
+                (
+                    _groupUpdateGroupStatusProcedure,                    
+                    new
+                    {
+                        GroupId = groupId,
+                        StatusId = statusId
+                    },
+                    commandType: CommandType.StoredProcedure
+                );
         }
 
         public async Task<int> AddGroupToLessonAsync(int groupId, int lessonId)

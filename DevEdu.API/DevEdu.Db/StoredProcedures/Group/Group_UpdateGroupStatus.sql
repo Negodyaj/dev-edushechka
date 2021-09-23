@@ -1,9 +1,11 @@
 ﻿CREATE PROCEDURE dbo.Group_UpdateGroupStatus
-	@Id int,
-	@CourseId int
+	@GroupId int,
+	@StatusId int
 AS
 BEGIN
 	UPDATE dbo.[Group]
-	SET [CourseId] = @CourseId
-	WHERE Id = @Id
-END
+	SET [GroupStatusId] = @StatusId
+	OUTPUT INSERTED.[id],
+		   INSERTED.[GroupStatusId] as GroupStatus
+	WHERE Id = @GroupId
+END                 
