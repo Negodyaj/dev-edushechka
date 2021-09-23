@@ -45,20 +45,20 @@ namespace DevEdu.API.Extensions
         }
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped<IMaterialRepository, MaterialRepository>();
-            services.AddScoped<ITaskRepository, TaskRepository>();
-            services.AddScoped<IStudentHomeworkRepository, StudentHomeworkRepository>();
-            services.AddScoped<ICourseRepository, CourseRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<INotificationRepository, NotificationRepository>();
-            services.AddScoped<ICommentRepository, CommentRepository>();
-            services.AddScoped<IGroupRepository, GroupRepository>();
-            services.AddScoped<IPaymentRepository, PaymentRepository>();
-            services.AddScoped<ILessonRepository, LessonRepository>();
-            services.AddScoped<ITagRepository, TagRepository>();
-            services.AddScoped<ITopicRepository, TopicRepository>();
-            services.AddScoped<IRatingRepository, RatingRepository>();
-            services.AddScoped<IHomeworkRepository, HomeworkRepository>();
+            services.AddTransient<IMaterialRepository, MaterialRepository>();
+            services.AddTransient<ITaskRepository, TaskRepository>();
+            services.AddTransient<IStudentHomeworkRepository, StudentHomeworkRepository>();
+            services.AddTransient<ICourseRepository, CourseRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<INotificationRepository, NotificationRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
+            services.AddTransient<IGroupRepository, GroupRepository>();
+            services.AddTransient<IPaymentRepository, PaymentRepository>();
+            services.AddTransient<ILessonRepository, LessonRepository>();
+            services.AddTransient<ITagRepository, TagRepository>();
+            services.AddTransient<ITopicRepository, TopicRepository>();
+            services.AddTransient<IRatingRepository, RatingRepository>();
+            services.AddTransient<IHomeworkRepository, HomeworkRepository>();
 
             return services;
         }
