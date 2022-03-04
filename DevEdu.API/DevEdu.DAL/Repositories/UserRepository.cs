@@ -139,7 +139,8 @@ namespace DevEdu.DAL.Repositories
                      CityId = (int)user.City,
                      user.GitHubAccount,
                      user.Photo,
-                     user.PhoneNumber
+                     user.PhoneNumber,
+                     user.ContractNumber
                  },
                  commandType: CommandType.StoredProcedure);
         }

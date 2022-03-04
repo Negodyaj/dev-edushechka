@@ -7,7 +7,7 @@
 	Username			nvarchar(50)	NOT NULL,
 	Password			nvarchar(200)	NOT NULL,
 	RegistrationDate	datetime		NOT NULL,
-	ContractNumber		nvarchar(50)	NOT NULL UNIQUE,
+	ContractNumber		nvarchar(50)	NULL,
 	CityId				int				NOT NULL,
 	BirthDate			date			NOT NULL,
 	GitHubAccount		nvarchar(50),
