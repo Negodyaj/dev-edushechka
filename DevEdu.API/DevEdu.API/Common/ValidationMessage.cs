@@ -15,6 +15,7 @@
         public const string DescriptionRequired = "Description must be provided";
         public const string IsRequiredErrorMessage = "IsRequired must be Provided";
         public const string UsernameRequired = "Username must be provided";
+        public const string OldPasswordRequired = "Old password must be provided";
         public const string PasswordRequired = "Password must be provided";
         public const string WrongFormatPassword = "Password must contain at least 8 characters";
         public const string ContractNumberRequired = "ContractNumber must be provided";

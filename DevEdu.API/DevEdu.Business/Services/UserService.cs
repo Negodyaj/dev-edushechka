@@ -70,6 +70,11 @@ namespace DevEdu.Business.Services
             return user;
         }
 
+        public async Task ChangePasswordUserAsync(UserDto dto)
+        {
+            await _userRepository.UpdateUserPasswordAsync(dto);
+        }
+
         public async Task DeleteUserAsync(int id)
         {
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(id);

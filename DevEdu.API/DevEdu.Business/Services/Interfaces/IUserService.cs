@@ -14,5 +14,6 @@ namespace DevEdu.Business.Services
         Task<UserDto> GetUserByEmailAsync(string email);
         Task<List<UserDto>> GetAllUsersAsync();
         Task<UserDto> UpdateUserAsync(UserDto dto);
+        Task ChangePasswordUserAsync(UserDto dto);
     }
 }
