@@ -28,10 +28,6 @@ namespace DevEdu.API.Models
         [Required(ErrorMessage = GitHubAccountRequired)]
         public string GitHubAccount { get; set; }
 
-        [Required(ErrorMessage = PhotoRequired)]
-        [Url]
-        public string Photo { get; set; }
-
         [Required(ErrorMessage = PhoneNumberRequired)]
         public string PhoneNumber { get; set; }
     }

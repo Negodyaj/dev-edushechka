@@ -38,9 +38,6 @@ namespace DevEdu.API.Models
 
         public string GitHubAccount { get; set; }
 
-        [Url(ErrorMessage = WrongFormatPhoto)]
-        public string Photo { get; set; }
-
         [Required(ErrorMessage = PhoneNumberRequired)]
         public string PhoneNumber { get; set; }
     }
