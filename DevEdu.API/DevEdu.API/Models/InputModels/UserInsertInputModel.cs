@@ -43,6 +43,5 @@ namespace DevEdu.API.Models
 
         [Required(ErrorMessage = PhoneNumberRequired)]
         public string PhoneNumber { get; set; }
-        public List<Role> Roles { get; set; }
     }
 }
