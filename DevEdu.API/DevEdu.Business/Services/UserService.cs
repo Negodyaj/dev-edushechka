@@ -75,6 +75,11 @@ namespace DevEdu.Business.Services
             await _userRepository.UpdateUserPasswordAsync(dto);
         }
 
+        public async Task ChangeUserPhotoAsync(int userId, string photo)
+        {
+            await _userRepository.UpdateUserPhotoAsync(userId,photo);
+        }
+
         public async Task DeleteUserAsync(int id)
         {
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(id);
