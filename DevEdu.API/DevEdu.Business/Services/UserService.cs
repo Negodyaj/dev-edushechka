@@ -22,15 +22,15 @@ namespace DevEdu.Business.Services
 
         public async Task<UserDto> AddUserAsync(UserDto dto)
         {
-            if (dto.Roles == null || dto.Roles.Count == 0)
-                dto.Roles = new List<Role> { Role.Student };
+            var userInDb = await _userRepository.GetUserByEmailAsync(dto.Email);
+            if (userInDb != null)
+            {
+                throw new NotUniqueException(nameof(UserDto.Email));
+            }
 
             var addedUserId = await _userRepository.AddUserAsync(dto);
 
-            foreach (var role in dto.Roles)
-            {
-                await _userRepository.AddUserRoleAsync(addedUserId, (int)role);
-            }
+            await _userRepository.AddUserRoleAsync(addedUserId, (int)Role.Student);
 
             var response = await _userRepository.GetUserByIdAsync(addedUserId);
 

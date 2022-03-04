@@ -37,7 +37,6 @@ namespace DevEdu.DAL.Repositories
                     user.Email,
                     user.Username,
                     user.Password,
-                    user.ContractNumber,
                     CityId = (int)user.City,
                     user.BirthDate,
                     user.GitHubAccount,

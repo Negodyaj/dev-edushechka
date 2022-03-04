@@ -11,7 +11,6 @@ BEGIN
 		u.Username,
 		u.IsDeleted,
 		u.RegistrationDate,
-		u.ContractNumber,
 		u.BirthDate,
 		u.GitHubAccount,
 		u.Password,
