@@ -258,6 +258,7 @@
     <Build Include="StoredProcedures\Student_Homework\Student_Homework_SelectAllAnswersByUserId.sql" />
     <Build Include="StoredProcedures\Student_Homework\Student_Homework_SelectById.sql" />
     <Build Include="StoredProcedures\User\User_UpdatePassword.sql" />
+    <Build Include="StoredProcedures\User\User_UpdatePhoto.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />

@@ -16,6 +16,7 @@ namespace DevEdu.DAL.Repositories
         Task UpdateUserAsync(UserDto user);
         Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role);
         Task UpdateUserPasswordAsync(UserDto user);
+        Task UpdateUserPhotoAsync(int id, string photo);
 
         //Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role);
     }
