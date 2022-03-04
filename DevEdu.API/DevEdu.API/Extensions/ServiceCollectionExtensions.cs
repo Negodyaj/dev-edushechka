@@ -21,6 +21,9 @@ namespace DevEdu.API.Extensions
             services.AddOptions<AuthSettings>()
                 .Bind(configuration.GetSection(nameof(AuthSettings)))
                 .ValidateDataAnnotations();
+            services.AddOptions<FilesSettings>()
+                .Bind(configuration.GetSection(nameof(FilesSettings)))
+                .ValidateDataAnnotations();
         }
         public static void AddBearerAuthentication(this IServiceCollection services)
         {
