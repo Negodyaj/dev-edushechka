@@ -5,14 +5,18 @@ using DevEdu.API.Extensions;
 using DevEdu.API.Models;
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
+using DevEdu.Core;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
@@ -24,12 +28,18 @@ namespace DevEdu.API.Controllers
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IOptions<FilesSettings> _fileSettings;
+        private readonly List<string> _acceptableFileExtensions;
+        private const string _folderUserPhotoPath = "/media/userPhoto/";
 
-        public UserController(IMapper mapper, IUserService userService, IAuthenticationService authenticationService)
+        public UserController(IMapper mapper, IUserService userService,
+            IAuthenticationService authenticationService, IOptions<FilesSettings> fileSettings)
         {
             _mapper = mapper;
             _userService = userService;
             _authenticationService = authenticationService;
+            _fileSettings = fileSettings;
+            _acceptableFileExtensions = new List<string> { ".jpg", ".jpeg", ".png" };
         }
 
         // api/user/userId
@@ -90,14 +100,61 @@ namespace DevEdu.API.Controllers
         {
             var userId = this.GetUserId();
             var user = await _userService.GetUserByIdAsync(userId);
-            
+
             if (!await _authenticationService.VerifyAsync(user.Password, changePasswordInputModel.OldPassword))
                 throw new AuthorizationException("Entered old password is wrong");
-            
+
             user.Password = await _authenticationService.HashPasswordAsync(changePasswordInputModel.NewPassword);
             await _userService.ChangePasswordUserAsync(user);
 
             return NoContent();
+        }
+
+        [Authorize]
+        [HttpPost("photo")]
+        [Description("Upload photo for current user (jpg,png)")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public async Task<ActionResult> UpdatePhoto(IFormFile photo)
+        {
+            if (photo == null)
+            {
+                throw new ValidationException(nameof(photo), ValidationMessage.PhotoRequired);
+            }
+            var extension = Path.GetExtension(photo.FileName);
+            if (!_acceptableFileExtensions.Contains(extension))
+            {
+                throw new ValidationException(nameof(photo), ValidationMessage.PhotoWrongExtension);
+            }
+
+            var userId = this.GetUserId();
+            var user = await _userService.GetUserByIdAsync(userId);
+
+            var staticFolderPath = _fileSettings.Value.PathToStaticFolder;
+            if (!string.IsNullOrWhiteSpace(staticFolderPath))
+                staticFolderPath = staticFolderPath.TrimEnd('/');
+            else
+                staticFolderPath = string.Empty;
+
+            var timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+            var pathToSavePhoto = staticFolderPath
+                + _folderUserPhotoPath
+                + ComputeFileHash(photo)
+                + timestamp
+                + Path.GetExtension(photo.FileName);
+
+            await CreateFile(pathToSavePhoto, photo);
+
+            TryDeleteFile(user.Photo);
+
+            await _userService.ChangeUserPhotoAsync(userId, pathToSavePhoto);
+
+            var pathToReturn = pathToSavePhoto.TrimStart('.');
+
+            return StatusCode(StatusCodes.Status201Created, pathToReturn);
         }
 
         // api/user/{userId}
@@ -137,6 +194,41 @@ namespace DevEdu.API.Controllers
         {
             await _userService.DeleteUserRoleAsync(userId, (int)role);
             return NoContent();
+        }
+
+        private string ComputeFileHash(IFormFile package)
+        {
+            var hash = "";
+            using (var md5 = MD5.Create())
+            {
+                using (var streamReader = new StreamReader(package.OpenReadStream()))
+                {
+                    hash = BitConverter.ToString(md5.ComputeHash(streamReader.BaseStream)).Replace("-", "");
+                }
+            }
+            return hash;
+        }
+
+        private async Task CreateFile(string path, IFormFile file)
+        {
+            var directoryPath = Path.GetDirectoryName(path);
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+
+            using var fileStream = new FileStream(path, FileMode.Create);
+            await file.CopyToAsync(fileStream);
+        }
+
+        private void TryDeleteFile(string path)
+        {
+            if (System.IO.File.Exists(path))
+            {
+                try
+                {
+                    System.IO.File.Delete(path);
+                }
+                catch { }
+            }
         }
     }
 }

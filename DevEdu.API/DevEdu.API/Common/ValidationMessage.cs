@@ -23,6 +23,7 @@
         public const string BirthDateRequired = "BirthDate must be provided";
         public const string GitHubAccountRequired = "GitHubAccount must be provided";
         public const string PhotoRequired = "Photo must be provided";
+        public const string PhotoWrongExtension = "Photo need to be .jpg or .png extension";
         public const string WrongFormatPhoto = "Photo must be Url";
         public const string PhoneNumberRequired = "PhoneNumber must be provided";
         public const string DurationRequired = "Duration must be provided";
