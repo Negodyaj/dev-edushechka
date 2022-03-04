@@ -13,6 +13,7 @@ BEGIN
 		u.RegistrationDate,
 		u.BirthDate,
 		u.GitHubAccount,
+		u.Password,
 		u.Photo,
 		u.PhoneNumber,
 		u.ExileDate,
