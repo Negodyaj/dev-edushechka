@@ -43,7 +43,7 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(UserData.ExpectedUserId, actualDto.Id);
             _repoMock.Verify(x => x.AddUserAsync(user), Times.Once);
-            _repoMock.Verify(x => x.AddUserRoleAsync(actualDto.Id, It.IsAny<int>()), Times.Exactly(user.Roles.Count));
+            _repoMock.Verify(x => x.AddUserRoleAsync(actualDto.Id, It.IsAny<int>()), Times.Once);
         }
 
         [Test]

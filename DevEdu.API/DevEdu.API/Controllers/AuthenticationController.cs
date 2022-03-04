@@ -30,6 +30,7 @@ namespace DevEdu.API.Controllers
 
         [HttpPost("/register")]
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<UserFullInfoOutPutModel>> RegisterAsync([FromBody] UserInsertInputModel model)
