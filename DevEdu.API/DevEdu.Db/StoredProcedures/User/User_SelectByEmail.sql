@@ -3,10 +3,16 @@
 AS
 BEGIN
 	SELECT 
-		U.Password,
-		U.Id,
-		UR.RoleId as id
-	FROM dbo.[User] U WITH (NOLOCK)
-	INNER JOIN dbo.User_Role ur WITH (NOLOCK) ON UR.UserId = U.Id
+		u.Id,
+		u.FirstName,
+		u.LastName,
+		u.Email,
+		u.Photo,
+		u.IsDeleted,
+		u.Password,
+		u.CityId as Id,
+		ur.RoleId as Id
+	FROM dbo.[User] u
+	inner join dbo.User_Role ur on ur.UserId = u.Id
 	WHERE U.Email = @Email
 END
