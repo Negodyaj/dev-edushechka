@@ -59,7 +59,6 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 ValidationMessage.UsernameRequired => 1013,
                 ValidationMessage.PasswordRequired => 1014,
                 ValidationMessage.WrongFormatPassword => 1015,
-                ValidationMessage.ContractNumberRequired => 1016,
                 ValidationMessage.CityRequired => 1017,
                 ValidationMessage.WrongFormatCityId => 1018,
                 ValidationMessage.BirthDateRequired => 1019,

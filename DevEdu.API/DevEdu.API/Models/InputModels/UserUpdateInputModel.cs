@@ -25,9 +25,6 @@ namespace DevEdu.API.Models
         [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatCityId)]
         public int? City { get; set; }
 
-        [Required(ErrorMessage = ContractNumberRequired)]
-        public string ContractNumber { get; set; }
-
         [Required(ErrorMessage = GitHubAccountRequired)]
         public string GitHubAccount { get; set; }
 

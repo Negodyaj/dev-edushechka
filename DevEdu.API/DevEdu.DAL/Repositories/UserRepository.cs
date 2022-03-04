@@ -36,7 +36,6 @@ namespace DevEdu.DAL.Repositories
                     user.Email,
                     user.Username,
                     user.Password,
-                    user.ContractNumber,
                     CityId = (int)user.City,
                     user.BirthDate,
                     user.GitHubAccount,
@@ -139,8 +138,7 @@ namespace DevEdu.DAL.Repositories
                      CityId = (int)user.City,
                      user.GitHubAccount,
                      user.Photo,
-                     user.PhoneNumber,
-                     user.ContractNumber
+                     user.PhoneNumber
                  },
                  commandType: CommandType.StoredProcedure);
         }
