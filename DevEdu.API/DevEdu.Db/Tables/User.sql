@@ -10,7 +10,7 @@
 	CityId				int				NOT NULL,
 	BirthDate			date			NOT NULL,
 	GitHubAccount		nvarchar(50),
-	Photo				nvarchar(150),
+	Photo				nvarchar(300),
 	PhoneNumber			nvarchar(12)	NOT NULL,
 	IsDeleted			bit				NOT NULL DEFAULT '0',
 	ExileDate			date,
