@@ -7,7 +7,8 @@
 	@CityId			int				NULL,
 	@GitHubAccount	nvarchar(50)	NULL,
 	@Photo			nvarchar(150)	NULL,
-	@PhoneNumber	nvarchar(12)	NULL
+	@PhoneNumber	nvarchar(12)	NULL,
+	@ContractNumber	nvarchar(12)	NULL
 AS
 BEGIN
 	UPDATE dbo.[User]
@@ -19,6 +20,7 @@ BEGIN
 		CityId			= @CityId,
 		GitHubAccount	= @GitHubAccount,
 		Photo			= @Photo,
-		PhoneNumber		= @PhoneNumber
+		PhoneNumber		= @PhoneNumber,
+		ContractNumber		= @ContractNumber
     WHERE Id = @Id
 END
