@@ -18,51 +18,51 @@ namespace DevEdu.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class PaymentController : Controller
+    public class PaymentsController : Controller
     {
         private readonly IMapper _mapper;
         private readonly IPaymentService _paymentService;
 
-        public PaymentController(IMapper mapper, IPaymentService paymentService)
+        public PaymentsController(IMapper mapper, IPaymentService paymentService)
         {
             _mapper = mapper;
             _paymentService = paymentService;
         }
 
-        //  api/payment/{id}
+        //  api/payments/{id}
         [HttpGet("{id}")]
+        [Description("Get payment by id")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [Description("Get payment by id")]
         public async Task<PaymentOutputModel> GetPaymentAsync(int id)
         {
             var dto = await _paymentService.GetPaymentAsync(id);
             return _mapper.Map<PaymentOutputModel>(dto);
         }
 
-        //  api/payment/user/1
-        [AuthorizeRoles(Role.Manager, Role.Student)]
+        //  api/payments/user/1
         [HttpGet("user/{userId}")]
+        [Description("Get all payments by user id")]
+        [AuthorizeRoles(Role.Manager, Role.Student)]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [Description("Get all payments by user id")]
         public async Task<List<PaymentOutputModel>> SelectAllPaymentsByUserIdAsync(int userId)
         {
             var list = await _paymentService.GetPaymentsByUserIdAsync(userId);
             return _mapper.Map<List<PaymentOutputModel>>(list);
         }
 
-        //  api/payment
+        //  api/payments
         [HttpPost]
+        [Description("Add one payment")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        [Description("Add one payment")]
         public async Task<ActionResult<PaymentOutputModel>> AddPaymentAsync([FromBody] PaymentInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
@@ -72,27 +72,27 @@ namespace DevEdu.API.Controllers
             return Created(new Uri($"api/Payment/{output.Id}", UriKind.Relative), output);
         }
 
-        //  api/payment/5
+        //  api/payments/5
         [HttpDelete("{id}")]
+        [Description("Delete payment by id")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [Description("Delete payment by id")]
         public async Task<ActionResult> DeletePaymentAsync(int id)
         {
             await _paymentService.DeletePaymentAsync(id);
             return NoContent();
         }
 
-        //  api/payment/5
+        //  api/payments/5
         [HttpPut("{id}")]
+        [Description("Update payment by id")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        [Description("Update payment by id")]
         public async Task<PaymentOutputModel> UpdatePaymentAsync(int id, [FromBody] PaymentUpdateInputModel model)
         {
             var dto = _mapper.Map<PaymentDto>(model);
@@ -101,14 +101,14 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<PaymentOutputModel>(dto);
         }
 
-        //  api/payment/bulk
+        //  api/payments/bulk
         [HttpPost("bulk")]
+        [Description("Add payments")]
         [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        [Description("Add payments")]
         public async Task<List<PaymentOutputModel>> AddPaymentsAsync([FromBody] List<PaymentInputModel> models)
         {
             var dto = _mapper.Map<List<PaymentDto>>(models);
