@@ -25,6 +25,12 @@ namespace DevEdu.Business.Services
             if (dto.Roles == null || dto.Roles.Count == 0)
                 dto.Roles = new List<Role> { Role.Student };
 
+            var userInDb = await _userRepository.GetUserByEmailAsync(dto.Email);
+            if(userInDb != null)
+            {
+                throw new NotUniqueException(nameof(UserDto.Email));
+            }    
+
             var addedUserId = await _userRepository.AddUserAsync(dto);
 
             foreach (var role in dto.Roles)

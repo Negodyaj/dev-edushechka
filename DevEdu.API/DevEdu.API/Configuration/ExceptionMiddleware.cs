@@ -43,6 +43,10 @@ namespace DevEdu.API.Configuration
             {
                 await HandleValidationExceptionMessageAsync(context, ex, _messageValidation);
             }
+            catch (NotUniqueException ex)
+            {
+                await HandleExceptionMessageAsync(context, ex, HttpStatusCode.BadRequest);
+            }
             catch (Exception ex)
             {
                 await HandleExceptionMessageAsync(context, ex);
