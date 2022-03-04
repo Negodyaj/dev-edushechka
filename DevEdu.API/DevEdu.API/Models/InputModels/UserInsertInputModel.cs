@@ -9,8 +9,6 @@ namespace DevEdu.API.Models
 {
     public class UserInsertInputModel
     {
-        [DefaultValue(false)]
-        public bool IsDeleted { get; set; }
         [Required(ErrorMessage = FirstNameRequired)]
         public string FirstName { get; set; }
 
@@ -31,12 +29,8 @@ namespace DevEdu.API.Models
         [MinLength(8, ErrorMessage = WrongFormatPassword)]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = ContractNumberRequired)]
-        public string ContractNumber { get; set; }
-
-        [Required(ErrorMessage = CityIdRequired)]
-        [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatCityId)]
-        public int City { get; set; }
+        [Required(ErrorMessage = CityRequired)]
+        public City City { get; set; }
 
         [Required(ErrorMessage = BirthDateRequired)]
         [CustomDateFormatAttribute(ErrorMessage = WrongFormatBirthDate)]
@@ -49,6 +43,5 @@ namespace DevEdu.API.Models
 
         [Required(ErrorMessage = PhoneNumberRequired)]
         public string PhoneNumber { get; set; }
-        public List<Role> Roles { get; set; }
     }
 }
