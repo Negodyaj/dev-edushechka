@@ -6,6 +6,7 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
@@ -113,6 +114,19 @@ namespace DevEdu.Business.Services
                 await _lessonValidationHelper.CheckUserBelongsToLessonAsync(userIdentity, lesson);
             }
 
+            //проверка существования Topics введённых в lessonDto
+            foreach (var topic in lessonDto.Topics)
+                await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(topic.Id);
+
+            //удаление неиспользуемых
+            foreach (var idTopicToDelete in lesson.Topics.Select(t => t.Id).Except(lessonDto.Topics.Select(t => t.Id)))
+                if (await _lessonRepository.DeleteTopicFromLessonAsync(lessonId, idTopicToDelete) == 0)
+                    throw new ValidationException(nameof(idTopicToDelete), string.Format(ServiceMessages.LessonTopicReferenceNotFound, lessonId, idTopicToDelete));
+
+            //добавление недостающих
+            foreach (var idTopicToAdd in lessonDto.Topics.Select(t => t.Id).Except(lesson.Topics.Select(t => t.Id)))
+                await _lessonRepository.AddTopicToLessonAsync(lessonId, idTopicToAdd);
+
             lessonDto.Id = lessonId;
             await _lessonRepository.UpdateLessonAsync(lessonDto);
             return await _lessonRepository.SelectLessonByIdAsync(lessonDto.Id);
@@ -179,7 +193,7 @@ namespace DevEdu.Business.Services
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             if (!userIdentityInfo.IsAdmin())
                 await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
-            
+
             studentLessonDto.Lesson = new LessonDto { Id = lessonId };
             studentLessonDto.Student = new UserDto { Id = studentId };
             await _lessonRepository.UpdateStudentAbsenceReasonOnLessonAsync(studentLessonDto);
@@ -205,7 +219,7 @@ namespace DevEdu.Business.Services
             await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
             if (userIdentityInfo.IsStudent() || userIdentityInfo.IsTeacher())
                 await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);
-          
+
             return await _lessonRepository.SelectAllFeedbackByLessonIdAsync(lessonId);
         }
     }

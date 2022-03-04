@@ -539,6 +539,7 @@ namespace DevEdu.Business.Tests
 
             _lessonRepository.Setup(x => x.UpdateLessonAsync(updatedLesson));
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(expected);
+            _topicRepository.Setup(x => x.GetTopicAsync(It.IsAny<int>())).ReturnsAsync(new TopicDto());
 
             //When
             var actual = await _sut.UpdateLessonAsync(userIdentity, updatedLesson, lessonId);

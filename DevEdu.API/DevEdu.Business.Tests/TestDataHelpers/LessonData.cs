@@ -30,6 +30,12 @@ namespace DevEdu.Business.Tests
             return new LessonDto
             {
                 Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
+                Topics = new List<TopicDto>
+                {
+                    new() { Id = 4 },                    
+                    new() { Id = 2 },
+                    new() { Id = 3 }
+                },
                 TeacherComment = "Good",
                 LinkToRecord = "http://link.com"
             };
