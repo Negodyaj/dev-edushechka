@@ -18,7 +18,7 @@
         public const string PasswordRequired = "Password must be provided";
         public const string WrongFormatPassword = "Password must contain at least 8 characters";
         public const string ContractNumberRequired = "ContractNumber must be provided";
-        public const string CityIdRequired = "CityId must be provided";
+        public const string CityRequired = "City must be provided";
         public const string WrongFormatCityId = "CityId must be integer from 1 to int.MaxValue";
         public const string BirthDateRequired = "BirthDate must be provided";
         public const string GitHubAccountRequired = "GitHubAccount must be provided";

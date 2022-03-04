@@ -60,7 +60,7 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 ValidationMessage.PasswordRequired => 1014,
                 ValidationMessage.WrongFormatPassword => 1015,
                 ValidationMessage.ContractNumberRequired => 1016,
-                ValidationMessage.CityIdRequired => 1017,
+                ValidationMessage.CityRequired => 1017,
                 ValidationMessage.WrongFormatCityId => 1018,
                 ValidationMessage.BirthDateRequired => 1019,
                 ValidationMessage.GitHubAccountRequired => 1020,
