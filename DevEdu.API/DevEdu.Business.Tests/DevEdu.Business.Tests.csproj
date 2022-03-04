@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DevEdu.API\DevEdu.API.csproj" />
     <ProjectReference Include="..\DevEdu.Business\DevEdu.Business.csproj" />
   </ItemGroup>
 
