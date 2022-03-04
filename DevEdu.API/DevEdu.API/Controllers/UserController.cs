@@ -78,9 +78,9 @@ namespace DevEdu.API.Controllers
             return list;
         }
 
-        // api/user/change-password
+        // api/user/password
         [Authorize]
-        [HttpPut("change-password")]
+        [HttpPut("password")]
         [Description("Change user password")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
