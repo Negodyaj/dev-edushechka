@@ -31,9 +31,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/groups
+        [AuthorizeRoles(Role.Manager)]
         [HttpPost]
         [Description("Add new Group")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
@@ -60,9 +60,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/groups
+        [AuthorizeRoles(Role.Manager)]
         [HttpGet]
         [Description("Get all Groups")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public async Task<List<GroupOutputModel>> GetAllGroups()
@@ -72,9 +72,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/groups
+        [AuthorizeRoles(Role.Manager)]
         [HttpDelete("{id}")]
         [Description("Delete Group by Id")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -85,9 +85,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/groups/{Id}
+        [AuthorizeRoles(Role.Manager)]
         [HttpPut("{id}")]
         [Description("Update Group by id")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(GroupInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -102,9 +102,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/groups/{groupId}/change-status/{statusId}
+        [AuthorizeRoles(Role.Manager)]
         [HttpPut("{groupId}/change-status")]
         [Description("Change group status by id")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(GroupOutputBaseModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -116,9 +116,9 @@ namespace DevEdu.API.Controllers
 
         //add group_lesson relation
         // api/groups/{groupId}/lesson/{lessonId}
+        [AuthorizeRoles(Role.Teacher)]
         [HttpPost("{groupId}/lesson/{lessonId}")]
         [Description("Add group lesson reference")]
-        [AuthorizeRoles(Role.Teacher)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -131,9 +131,9 @@ namespace DevEdu.API.Controllers
         }
 
         // api/groups/{groupId}/lesson/{lessonId}
+        [AuthorizeRoles(Role.Teacher)]
         [HttpDelete("{groupId}/lesson/{lessonId}")]
         [Description("Delete lesson from groupId")]
-        [AuthorizeRoles(Role.Teacher)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -146,9 +146,9 @@ namespace DevEdu.API.Controllers
         }
 
         // api/groups/{groupId}/material/{materialId}
+        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
         [HttpPost("{groupId}/material/{materialId}")]
         [Description("Add material to group")]
-        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -161,9 +161,9 @@ namespace DevEdu.API.Controllers
         }
 
         // api/groups/{groupId}/material/{materialId}
+        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
         [HttpDelete("{groupId}/material/{materialId}")]
         [Description("Remove material from group")]
-        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -176,9 +176,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/groups/1/user/2/role/1
+        [AuthorizeRoles(Role.Manager)]
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]
         [Description("Add user to group")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -191,9 +191,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/groups/1/user/2
+        [AuthorizeRoles(Role.Manager)]
         [HttpDelete("{groupId}/user/{userId}")]
         [Description("Delete user from group")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]

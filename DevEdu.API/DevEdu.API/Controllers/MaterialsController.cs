@@ -153,10 +153,10 @@ namespace DevEdu.API.Controllers
         // api/materials/{materialId}/tag/{tagId}
         [AuthorizeRoles(Role.Manager, Role.Methodist, Role.Teacher)]
         [HttpPost("{materialId}/tag/{tagId}")]
+        [Description("Add tag to material")]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [Description("Add tag to material")]
         public async Task<string> AddTagToMaterialAsync(int materialId, int tagId)
         {
             await _materialService.AddTagToMaterialAsync(materialId, tagId);

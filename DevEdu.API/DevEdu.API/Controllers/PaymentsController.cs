@@ -30,9 +30,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/payments/{id}
+        [AuthorizeRoles(Role.Manager)]
         [HttpGet("{id}")]
         [Description("Get payment by id")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -43,9 +43,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/payments/user/1
+        [AuthorizeRoles(Role.Manager, Role.Student)]
         [HttpGet("user/{userId}")]
         [Description("Get all payments by user id")]
-        [AuthorizeRoles(Role.Manager, Role.Student)]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -56,9 +56,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/payments
+        [AuthorizeRoles(Role.Manager)]
         [HttpPost]
         [Description("Add one payment")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -73,9 +73,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/payments/5
+        [AuthorizeRoles(Role.Manager)]
         [HttpDelete("{id}")]
         [Description("Delete payment by id")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -86,9 +86,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/payments/5
+        [AuthorizeRoles(Role.Manager)]
         [HttpPut("{id}")]
         [Description("Update payment by id")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -102,9 +102,9 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/payments/bulk
+        [AuthorizeRoles(Role.Manager)]
         [HttpPost("bulk")]
         [Description("Add payments")]
-        [AuthorizeRoles(Role.Manager)]
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
