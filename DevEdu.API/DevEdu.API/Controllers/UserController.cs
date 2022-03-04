@@ -80,7 +80,7 @@ namespace DevEdu.API.Controllers
 
         // api/user/change-password
         [Authorize]
-        [HttpPost("change-password")]
+        [HttpPut("change-password")]
         [Description("Change user password")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
