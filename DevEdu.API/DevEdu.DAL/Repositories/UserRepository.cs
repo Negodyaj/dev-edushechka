@@ -78,9 +78,9 @@ namespace DevEdu.DAL.Repositories
             UserDto result = default;
 
             return (await _connection
-                .QueryAsync<UserDto, City, Role, UserDto>(
+                .QueryAsync<UserDto, Role, UserDto>(
                     _userSelectByEmailProcedure,
-                    (user, city, role) =>
+                    (user, role) =>
                     {
                         if (result == null)
                         {
