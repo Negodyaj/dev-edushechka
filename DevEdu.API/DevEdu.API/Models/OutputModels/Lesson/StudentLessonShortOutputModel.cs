@@ -6,7 +6,7 @@ namespace DevEdu.API.Models
     {
         public int Id { get; set; }
         public string Feedback { get; set; }
-        public IsPresent IsPresent { get; set; }
+        public AttendanceType AttendanceType { get; set; }
         public string AbsenceReason { get; set; }
 
     }

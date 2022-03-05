@@ -1,8 +1,8 @@
 ﻿namespace DevEdu.DAL.Enums
 {
-    public enum IsPresent
+    public enum AttendanceType
     {
-        Absent,
+        Absent = 1,
         Attend,
         PartiallyAttended
     }

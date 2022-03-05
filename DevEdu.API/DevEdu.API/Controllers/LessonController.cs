@@ -221,15 +221,15 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<StudentLessonOutputModel>(output);
         }
 
-        // api/lesson/{lessonId}/student/{studentId}/attendance/{isPresent}
+        // api/lesson/{lessonId}/student/{studentId}/attendance/{attendanceType}
         [AuthorizeRoles(Role.Teacher)]
-        [HttpPut("{lessonId}/student/{studentId}/attendance/{isPresent}")]
+        [HttpPut("{lessonId}/student/{studentId}/attendance/{attendanceType}")]
         [Description("Update Attendance for lesson")]
         [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status200OK)]
-        public async Task<StudentLessonOutputModel> UpdateStudentAttendanceOnLessonAsync(int lessonId, int studentId, IsPresent isPresent)
+        public async Task<StudentLessonOutputModel> UpdateStudentAttendanceOnLessonAsync(int lessonId, int studentId, AttendanceType attendanceType)
         {
             var userInfo = this.GetUserIdAndRoles();
-            var dto = new StudentLessonDto { IsPresent = isPresent };
+            var dto = new StudentLessonDto { AttendanceType = attendanceType };
             var output = await _lessonService.UpdateStudentAttendanceOnLessonAsync(lessonId, studentId, dto, userInfo);
             return _mapper.Map<StudentLessonOutputModel>(output);
         }

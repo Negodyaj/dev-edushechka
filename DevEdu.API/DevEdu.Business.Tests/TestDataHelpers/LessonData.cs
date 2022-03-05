@@ -103,7 +103,7 @@ namespace DevEdu.Business.Tests
                     Id = 46,
                     Lesson = new LessonDto { Id = LessonId },
                     Feedback = "ok",
-                    IsPresent = (IsPresent)1,
+                    AttendanceType = (AttendanceType)1,
                     AbsenceReason = null,
                     Student = new UserDto
                     {
@@ -119,7 +119,7 @@ namespace DevEdu.Business.Tests
                     Id = 50,
                     Lesson = new LessonDto { Id = LessonId },
                     Feedback = "ok",
-                    IsPresent = 0,
+                    AttendanceType = (AttendanceType)2,
                     AbsenceReason = "ill",
                     Student = new UserDto
                     {
@@ -143,7 +143,7 @@ namespace DevEdu.Business.Tests
                 Student = new UserDto { Id = 42 },
                 Lesson = new LessonDto { Id = 30 },
                 Feedback = "feedback",
-                IsPresent = (IsPresent)1,
+                AttendanceType = (AttendanceType)2,
                 AbsenceReason = ""
             };
         }
@@ -156,21 +156,21 @@ namespace DevEdu.Business.Tests
                 {
                     Id = 42,
                     Feedback = "feedback",
-                    IsPresent = (IsPresent)1,
+                    AttendanceType = (AttendanceType)2,
                     AbsenceReason = ""
                 },
                  new StudentLessonDto
                 {
                     Id = 42,
                     Feedback = "feedback2",
-                    IsPresent = (IsPresent)1,
+                    AttendanceType = (AttendanceType)2,
                     AbsenceReason = ""
                 },
                   new StudentLessonDto
                 {
                     Id = 42,
                     Feedback = "feedback3",
-                    IsPresent = (IsPresent)2,
+                    AttendanceType = (AttendanceType)3,
                     AbsenceReason = "Slept"
                 },
             };

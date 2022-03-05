@@ -262,7 +262,7 @@ namespace DevEdu.DAL.Repositories
                  _studentLessonUpdateIsPresentProcedure,
                   new
                   {
-                      studentLessonDto.IsPresent,
+                      AttendanceType = studentLessonDto.AttendanceType,
                       LessonId = studentLessonDto.Lesson.Id,
                       UserId = studentLessonDto.Student.Id
                   },
