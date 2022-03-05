@@ -1,4 +1,5 @@
 ﻿using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,6 +16,6 @@ namespace DevEdu.Business.Services
         Task<List<UserDto>> GetAllUsersAsync();
         Task<UserDto> UpdateUserAsync(UserDto dto);
         Task ChangePasswordUserAsync(UserDto dto);
-        Task ChangeUserPhotoAsync(int userId, string photo);
+        Task<string> ChangeUserPhotoAsync(int userId, IFormFile photo);
     }
 }
