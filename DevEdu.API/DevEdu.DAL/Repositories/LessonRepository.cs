@@ -236,7 +236,7 @@ namespace DevEdu.DAL.Repositories
                   {
                       studentLessonDto.Feedback,
                       LessonId = studentLessonDto.Lesson.Id,
-                      StudentId = studentLessonDto.Student.Id
+                      UserId = studentLessonDto.Student.Id
                   },
                   commandType: CommandType.StoredProcedure
               );
@@ -250,7 +250,7 @@ namespace DevEdu.DAL.Repositories
                    {
                        studentLessonDto.AbsenceReason,
                        LessonId = studentLessonDto.Lesson.Id,
-                       StudentId = studentLessonDto.Student.Id
+                       UserId = studentLessonDto.Student.Id
                    },
                    commandType: CommandType.StoredProcedure
                );
@@ -262,9 +262,9 @@ namespace DevEdu.DAL.Repositories
                  _studentLessonUpdateIsPresentProcedure,
                   new
                   {
-                      studentLessonDto.IsPresent,
+                      AttendanceType = studentLessonDto.AttendanceType,
                       LessonId = studentLessonDto.Lesson.Id,
-                      StudentId = studentLessonDto.Student.Id
+                      UserId = studentLessonDto.Student.Id
                   },
                   commandType: CommandType.StoredProcedure
               );
@@ -307,7 +307,7 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     LessonId = lessonId,
-                    StudentId = studentId
+                    UserId = studentId
                 },
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure

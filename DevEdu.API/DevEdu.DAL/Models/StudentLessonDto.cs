@@ -1,3 +1,5 @@
+using DevEdu.DAL.Enums;
+
 namespace DevEdu.DAL.Models
 {
     public class StudentLessonDto
@@ -6,7 +8,7 @@ namespace DevEdu.DAL.Models
         public UserDto Student { get; set; }
         public LessonDto Lesson { get; set; }
         public string Feedback { get; set; }
-        public bool IsPresent { get; set; }
+        public AttendanceType AttendanceType { get; set; }
         public string AbsenceReason { get; set; }
     }
 }

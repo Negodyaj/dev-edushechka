@@ -4,10 +4,10 @@
 AS
 BEGIN
 	SELECT 
-		sl.Id,		
-		IsPresent,
-		Feedback,
-		AbsenceReason,
+		sl.Id,
+        sl.AttendanceType,
+        sl.Feedback,
+        sl.AbsenceReason,
 		l.Id,
 		u.Id,
 		u.FirstName,

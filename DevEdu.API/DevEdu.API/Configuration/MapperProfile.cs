@@ -20,7 +20,6 @@ namespace DevEdu.API.Configuration
         private void CreateMappingToDto()
         {
             CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
-            CreateMap<AttendanceInputModel, StudentLessonDto>();
             CreateMap<CourseInputModel, CourseDto>();
             CreateMap<CourseTopicInputModel, CourseTopicDto>();
             CreateMap<CommentInputModel, CommentDto>();
@@ -60,7 +59,6 @@ namespace DevEdu.API.Configuration
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
             CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
-            CreateMap<AttendanceInputModel, StudentLessonDto>();
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<PaymentInputModel, PaymentDto>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }))

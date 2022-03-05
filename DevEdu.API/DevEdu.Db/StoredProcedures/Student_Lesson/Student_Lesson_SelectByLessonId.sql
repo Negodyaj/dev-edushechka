@@ -4,7 +4,7 @@ AS
 BEGIN
 	SELECT 
 		sl.Id,
-		sl.IsPresent,
+		sl.AttendanceType,
 		sl.Feedback,
 		sl.AbsenceReason,
 		u.Id,
