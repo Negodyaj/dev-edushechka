@@ -113,8 +113,8 @@ namespace DevEdu.API.Controllers
             return NoContent();
         }
 
-        // api/user/{userId}/role/{roleId}
-        [AuthorizeRoles()]
+        // api/user/{userId}/role/{role}
+        [AuthorizeRoles(Role.Manager)]
         [HttpPost("{userId}/role/{role}")]
         [Description("Add new role to user")]
         [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
