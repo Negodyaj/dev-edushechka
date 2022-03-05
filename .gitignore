@@ -350,4 +350,7 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
+# Rider
+.idea/
+
 /DevEdu.API/DevEdu.API/Properties/launchSettings.json

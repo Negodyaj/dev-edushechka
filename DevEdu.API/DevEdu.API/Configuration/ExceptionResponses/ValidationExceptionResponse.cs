@@ -95,6 +95,7 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 ValidationMessage.WrongFormatGroupStatusId => 1051,
                 ValidationMessage.WrongFormatStartDate => 1052,
                 ValidationMessage.WrongValueOfRating => 1053,
+                ValidationMessage.OldPasswordRequired => 1054,
                 _ => 1500
             };
         }

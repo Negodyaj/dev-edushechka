@@ -18,6 +18,7 @@ namespace DevEdu.DAL.Repositories
         private const string _userSelectAllProcedure = "dbo.User_SelectAll";
         private const string _userSelectByGroupIdAndRole = "dbo.User_SelectByGroupIdAndRole";
         private const string _userUpdateProcedure = "dbo.User_Update";
+        private const string _userUpdatePasswordProcedure = "dbo.User_UpdatePassword";
         private const string _userDeleteProcedure = "dbo.User_Delete";
         private const string _userRoleInsertProcedure = "dbo.User_Role_Insert";
         private const string _userRoleDeleteProcedure = "dbo.User_Role_Delete";
@@ -93,7 +94,7 @@ namespace DevEdu.DAL.Repositories
                         return result;
                     },
                     new { email },
-                    splitOn: "id",
+                    splitOn: "Id",
                     commandType: CommandType.StoredProcedure))
                 .FirstOrDefault();
         }
@@ -139,6 +140,18 @@ namespace DevEdu.DAL.Repositories
                      user.GitHubAccount,
                      user.Photo,
                      user.PhoneNumber
+                 },
+                 commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task UpdateUserPasswordAsync(UserDto user)
+        {
+            await _connection.ExecuteAsync(
+                 _userUpdatePasswordProcedure,
+                 new
+                 {
+                     user.Id,
+                     user.Password
                  },
                  commandType: CommandType.StoredProcedure);
         }
