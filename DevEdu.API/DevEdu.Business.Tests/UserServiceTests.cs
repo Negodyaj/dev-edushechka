@@ -103,7 +103,7 @@ namespace DevEdu.Business.Tests
             _repoMock.Setup(x => x.GetUserByIdAsync(expectedAnotherDto.Id)).ReturnsAsync(expectedDto);
 
             //When
-            var actualDto = await _sut.UpdateUserAsync(expectedAnotherDto);
+            var actualDto = await _sut.UpdateUserAsync(expectedAnotherDto, default);
 
             //Then
             Assert.AreEqual(expectedDto, actualDto);
@@ -174,7 +174,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.ThrowsAsync<EntityNotFoundException>(
-                () => _sut.UpdateUserAsync(user));
+                () => _sut.UpdateUserAsync(user, default));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
