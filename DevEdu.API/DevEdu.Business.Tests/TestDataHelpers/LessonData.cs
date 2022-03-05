@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Tests
 {
@@ -102,7 +103,7 @@ namespace DevEdu.Business.Tests
                     Id = 46,
                     Lesson = new LessonDto { Id = LessonId },
                     Feedback = "ok",
-                    IsPresent = true,
+                    IsPresent = (IsPresent)1,
                     AbsenceReason = null,
                     Student = new UserDto
                     {
@@ -118,7 +119,7 @@ namespace DevEdu.Business.Tests
                     Id = 50,
                     Lesson = new LessonDto { Id = LessonId },
                     Feedback = "ok",
-                    IsPresent = false,
+                    IsPresent = 0,
                     AbsenceReason = "ill",
                     Student = new UserDto
                     {
@@ -142,7 +143,7 @@ namespace DevEdu.Business.Tests
                 Student = new UserDto { Id = 42 },
                 Lesson = new LessonDto { Id = 30 },
                 Feedback = "feedback",
-                IsPresent = true,
+                IsPresent = (IsPresent)1,
                 AbsenceReason = ""
             };
         }
@@ -155,21 +156,21 @@ namespace DevEdu.Business.Tests
                 {
                     Id = 42,
                     Feedback = "feedback",
-                    IsPresent = true,
+                    IsPresent = (IsPresent)1,
                     AbsenceReason = ""
                 },
                  new StudentLessonDto
                 {
                     Id = 42,
                     Feedback = "feedback2",
-                    IsPresent = true,
+                    IsPresent = (IsPresent)1,
                     AbsenceReason = ""
                 },
                   new StudentLessonDto
                 {
                     Id = 42,
                     Feedback = "feedback3",
-                    IsPresent = false,
+                    IsPresent = (IsPresent)2,
                     AbsenceReason = "Slept"
                 },
             };

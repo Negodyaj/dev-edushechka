@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE dbo.Student_Lesson_UpdateIsPresent
 	@UserId int,
 	@LessonId int,
-	@IsPresent bit
+	@IsPresent int
 	
 AS
 BEGIN

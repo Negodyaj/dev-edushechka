@@ -3,7 +3,7 @@
 	UserId int NOT NULL,
 	LessonId int NOT NULL,
 	Feedback nvarchar(500),
-	IsPresent bit NOT NULL DEFAULT '0',
+	IsPresent int NOT NULL DEFAULT '1',
 	AbsenceReason nvarchar(500),
   CONSTRAINT [PK_STUDENT_LESSON] PRIMARY KEY CLUSTERED
   (
