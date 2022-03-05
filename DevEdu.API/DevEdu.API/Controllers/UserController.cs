@@ -126,8 +126,8 @@ namespace DevEdu.API.Controllers
             return NoContent();
         }
 
-        // api/user/{userId}/role/{roleId}
-        [AuthorizeRoles()]
+        // api/user/{userId}/role/{role}
+        [AuthorizeRoles(Role.Manager)]
         [HttpDelete("{userId}/role/{role}")]
         [Description("Delete role from user")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
