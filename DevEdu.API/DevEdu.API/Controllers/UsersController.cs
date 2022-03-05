@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.API.Configuration.ExceptionResponses;
+using DevEdu.API.Extensions;
 using DevEdu.API.Models;
+using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,11 +23,13 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
+        private readonly IAuthenticationService _authenticationService;
 
-        public UsersController(IMapper mapper, IUserService userService)
+        public UsersController(IMapper mapper, IUserService userService, IAuthenticationService authenticationService)
         {
             _mapper = mapper;
             _userService = userService;
+            _authenticationService = authenticationService;
         }
 
         // api/users/5
@@ -71,6 +76,28 @@ namespace DevEdu.API.Controllers
             var list = _mapper.Map<List<UserInfoOutPutModel>>(listDto);
 
             return list;
+        }
+
+        // api/users/password 
+        [Authorize]
+        [HttpPut("password")]
+        [Description("Change user password")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> ChangeUserPasswordAsync([FromBody] UserChangePasswordInputModel changePasswordInputModel)
+        {
+            var userId = this.GetUserId();
+            var user = await _userService.GetUserByIdAsync(userId);
+
+            if (!await _authenticationService.VerifyAsync(user.Password, changePasswordInputModel.OldPassword))
+                throw new AuthorizationException("Entered old password is wrong");
+
+            user.Password = await _authenticationService.HashPasswordAsync(changePasswordInputModel.NewPassword);
+            await _userService.ChangePasswordUserAsync(user);
+
+            return NoContent();
         }
 
         // api/users/5
