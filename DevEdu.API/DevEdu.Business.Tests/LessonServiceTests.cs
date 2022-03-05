@@ -10,6 +10,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DevEdu.Business.IdentityInfo;
 
 namespace DevEdu.Business.Tests
 {
@@ -528,16 +529,10 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lesson.Id), Times.Never);
         }
 
-        [Test]
-        public async Task UpdateLesson_UserDtoAndSimpleDtoWithoutTeacherPassed_UpdatedLessonReturnedAsync()
+        [TestCaseSource(typeof(LessonServiceTestCaseSources), nameof(LessonServiceTestCaseSources.GetTestCaseDataForUpdateLessonAsyncTest))]
+        public async Task UpdateLessonAsyncTest(UserIdentityInfo userIdentity, int lessonId, LessonDto updatedLesson, LessonDto expected, int variant)
         {
             //Given
-            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
-            var lessonId = LessonData.LessonId;
-            var updatedLesson = LessonData.GetUpdatedLessonDto();
-            var expected = LessonData.GetSelectedLessonDto();
-            expected.Topics[0].Id = 45;
-
             _lessonRepository.Setup(x => x.UpdateLessonAsync(updatedLesson));
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(expected);
             _lessonRepository.Setup(x => x.DeleteTopicFromLessonAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(2);
@@ -550,11 +545,7 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(expected, actual);
 
-            _lessonRepository.Verify(x => x.SelectLessonByIdAsync(lessonId), Times.Exactly(2));
-            _lessonRepository.Verify(x => x.DeleteTopicFromLessonAsync(lessonId, 45), Times.Once);
-            _lessonRepository.Verify(x => x.AddTopicToLessonAsync(lessonId, 4), Times.Once);
-            _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentity.UserId), Times.Never);
-            _lessonRepository.Verify(x => x.UpdateLessonAsync(updatedLesson), Times.Once);
+            _lessonRepository.CheckVerifyForUpdateLessonAsyncTestByVariantsAndUpdatedLesson(variant, updatedLesson);
         }
         
         [Test]
@@ -579,7 +570,6 @@ namespace DevEdu.Business.Tests
             //Then
             _lessonRepository.Verify(x => x.SelectLessonByIdAsync(lessonId), Times.Once);
             _lessonRepository.Verify(x => x.DeleteTopicFromLessonAsync(lessonId, 45), Times.Once);
-            _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentity.UserId), Times.Never);
         }
 
         [Test]
