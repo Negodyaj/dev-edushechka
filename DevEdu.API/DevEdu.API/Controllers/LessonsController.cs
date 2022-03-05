@@ -34,7 +34,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lessons
-        [AuthorizeRolesAttribute(Role.Teacher)]
+        [AuthorizeRoles(Role.Teacher)]
         [HttpPost]
         [Description("Add a lesson")]
         [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status201Created)]
@@ -50,7 +50,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lessons/{id}
-        [AuthorizeRolesAttribute(Role.Teacher)]
+        [AuthorizeRoles(Role.Teacher)]
         [HttpDelete("{id}")]
         [Description("Delete the lesson by id.")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -64,7 +64,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lessons/{id}
-        [AuthorizeRolesAttribute(Role.Teacher)]
+        [AuthorizeRoles(Role.Teacher)]
         [HttpPut("{id}")]
         [Description("Update the lesson's teacher comment and link to record.")]
         [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status200OK)]
@@ -107,7 +107,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/lessons/{id}/with-comments
-        [AuthorizeRolesAttribute(Role.Student)]
+        [AuthorizeRoles(Role.Student)]
         [HttpGet("{id}/with-comments")]
         [Description("Get the lesson with comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
@@ -191,7 +191,7 @@ namespace DevEdu.API.Controllers
 
         // api/lessons/{lessonId}/student/{studentId}/feedback
         [AuthorizeRoles(Role.Student)]
-        [HttpPut("{lessonId}/student/{studentId}/feedback")]
+        [HttpPatch("{lessonId}/student/{studentId}/feedback")]
         [Description("Update Feedback for lesson")]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
@@ -207,7 +207,7 @@ namespace DevEdu.API.Controllers
 
         // api/lessons/{lessonId}/student/{studentId}/absenceReason
         [AuthorizeRoles(Role.Student)]
-        [HttpPut("{lessonId}/student/{studentId}/absenceReason")]
+        [HttpPatch("{lessonId}/student/{studentId}/absenceReason")]
         [Description("Update AbsenceReason for lesson")]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
@@ -223,7 +223,7 @@ namespace DevEdu.API.Controllers
 
         // api/lessons/{lessonId}/student/{studentId}/attendance
         [AuthorizeRoles(Role.Teacher)]
-        [HttpPut("{lessonId}/student/{studentId}/attendance")]
+        [HttpPatch("{lessonId}/student/{studentId}/attendance")]
         [Description("Update Attendance for lesson")]
         [ProducesResponseType(typeof(StudentLessonOutputModel), StatusCodes.Status200OK)]
         public async Task<StudentLessonOutputModel> UpdateStudentAttendanceOnLessonAsync(int lessonId, int studentId, [FromBody] AttendanceInputModel model)

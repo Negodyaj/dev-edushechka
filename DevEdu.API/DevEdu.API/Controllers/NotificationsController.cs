@@ -29,7 +29,7 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
         }
 
-        //  api/notifications/5
+        //  api/notifications
         [HttpGet]
         [Description("Return notification by userInfo")]
         [ProducesResponseType(typeof(NotificationInfoOutputModel), StatusCodes.Status200OK)]

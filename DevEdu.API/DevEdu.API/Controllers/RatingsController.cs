@@ -60,7 +60,7 @@ namespace DevEdu.API.Controllers
             return NoContent();
         }
 
-        // api/ratings/1/{periodNumber}/value/50
+        // api/ratings/1/period/{periodNumber}/value/50
         [AuthorizeRoles(Role.Teacher)]
         [HttpPut("{id}/period/{periodNumber}/value/{value}")]
         [Description("Update StudentRating in database and return updated StudentRating")]

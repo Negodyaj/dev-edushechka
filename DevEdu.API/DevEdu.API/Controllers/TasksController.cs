@@ -66,7 +66,7 @@ namespace DevEdu.API.Controllers
         // api/tasks/{taskId}
         [AuthorizeRoles(Role.Teacher)]
         [HttpPut("teacher/{taskId}")]
-        [Description("Update task")]
+        [Description("Update task for Teacher")]
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -82,7 +82,7 @@ namespace DevEdu.API.Controllers
         // api/tasks/{taskId}
         [AuthorizeRoles(Role.Methodist)]
         [HttpPut("methodist/{taskId}")]
-        [Description("Update task")]
+        [Description("Update task for Methodist")]
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]

@@ -180,9 +180,9 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<CourseTopicOutputModel>(dto);
         }
 
-        // api/courses/{courseId}/add-topics
+        // api/courses/{courseId}/topics
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
-        [HttpPost("{courseId}/add-topics")]
+        [HttpPost("{courseId}/topics")]
         [Description("Add topics to course")]
         [ProducesResponseType(typeof(List<CourseTopicOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]

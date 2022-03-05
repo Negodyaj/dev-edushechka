@@ -18,7 +18,7 @@ namespace DevEdu.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/student-homeworks")]
     public class StudentHomeworksController : Controller
     {
         private readonly IMapper _mapper;
@@ -32,7 +32,7 @@ namespace DevEdu.API.Controllers
             _studentHomeworkService = studentHomeworkService;
         }
 
-        // api/studenthomeworks/task/{taskId} 
+        // api/student-homeworks/task/{taskId} 
         [HttpPost("{homeworkId}")]
         [Description("Add student homework")]
         [AuthorizeRoles(Role.Student)]
@@ -49,7 +49,7 @@ namespace DevEdu.API.Controllers
             return Created(new Uri($"api/StudentHomework/by-user/{output.Id}", UriKind.Relative), output);
         }
 
-        // api/studenthomeworks/{id} 
+        // api/student-homeworks/{id} 
         [HttpDelete("{id}")]
         [Description("Delete student homework")]
         [AuthorizeRoles(Role.Student)]
@@ -64,7 +64,7 @@ namespace DevEdu.API.Controllers
             return NoContent();
         }
 
-        // api/studenthomeworks/{id} 
+        // api/student-homeworks/{id} 
         [HttpPut("{id}")]
         [Description("Update student answer")]
         [AuthorizeRoles(Role.Student)]
@@ -80,8 +80,8 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<StudentHomeworkWithHomeworkOutputModel>(studentHomeworkDto);
         }
 
-        // api/studenthomeworks/{id}/change-status/{statusId} 
-        [HttpPut("{id}/change-status/{statusId}")]
+        // api/student-homeworks/{id}/change-status/{statusId} 
+        [HttpPatch("{id}/change-status/{statusId}")]
         [Description("Update homework status")]
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [ProducesResponseType(typeof(StudentHomeworkWithHomeworkOutputModel), StatusCodes.Status200OK)]
@@ -95,7 +95,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<StudentHomeworkWithHomeworkOutputModel>(dto);
         }
 
-        // api/studenthomeworks/{id}
+        // api/student-homeworks/{id}
         [HttpGet("{id}")]
         [Description("Get student homework by id")]
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
@@ -109,7 +109,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<StudentHomeworkWithHomeworkOutputModel>(studentAnswerDto);
         }
 
-        // api/studenthomeworks/task/{taskId}/answers 
+        // api/student-homeworks/task/{taskId}/answers 
         [HttpGet("task/{taskId}/answers")]
         [Description("Get all students homework on task by task")]
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist)]
@@ -122,7 +122,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<StudentHomeworkOutputModel>>(studentAnswersDto);
         }
 
-        // api/studenthomeworks/answer/by-user/42 
+        // api/student-homeworks/answer/by-user/42 
         [HttpGet("by-user/{userId}")]
         [Description("Get all answers of student")]
         [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]

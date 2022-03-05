@@ -101,9 +101,9 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<GroupInfoOutputModel>(output);
         }
 
-        //  api/groups/{groupId}/change-status/{statusId}
+        //  api/groups/{groupId}/status/{statusId}
         [AuthorizeRoles(Role.Manager)]
-        [HttpPut("{groupId}/change-status")]
+        [HttpPatch("{groupId}/status/{statusId}")]
         [Description("Change group status by id")]
         [ProducesResponseType(typeof(GroupOutputBaseModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]

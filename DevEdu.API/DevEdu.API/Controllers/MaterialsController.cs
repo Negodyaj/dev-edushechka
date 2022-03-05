@@ -29,7 +29,7 @@ namespace DevEdu.API.Controllers
         }
         // api/materials/
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist)]
-        [HttpPost()]
+        [HttpPost]
         [Description("Add material")]
         [ProducesResponseType(typeof(MaterialInfoWithGroupsOutputModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
