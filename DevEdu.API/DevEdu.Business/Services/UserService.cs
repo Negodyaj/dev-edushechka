@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
@@ -94,14 +95,13 @@ namespace DevEdu.Business.Services
             else
                 staticFolderPath = string.Empty;
 
-            var timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
-            var extension = Path.GetExtension(photo.FileName);
-
-            var pathToSavePhoto = staticFolderPath
-                + _folderUserPhotoPath
-                + ComputeFileHash(photo)
-                + timestamp
-                + Path.GetExtension(photo.FileName);
+            var sbPathToSavePhoto = new StringBuilder();
+            sbPathToSavePhoto.Append(staticFolderPath);
+            sbPathToSavePhoto.Append(_folderUserPhotoPath);
+            sbPathToSavePhoto.Append(ComputeFileHash(photo));
+            sbPathToSavePhoto.Append(DateTime.Now.ToString("yyyyMMddhhmmss"));
+            sbPathToSavePhoto.Append(Path.GetExtension(photo.FileName));
+            var pathToSavePhoto = sbPathToSavePhoto.ToString();
 
             await CreateFile(pathToSavePhoto, photo);
 
