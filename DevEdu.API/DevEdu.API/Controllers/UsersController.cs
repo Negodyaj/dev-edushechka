@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DevEdu.API.Common;
 using DevEdu.API.Configuration.ExceptionResponses;
 using DevEdu.API.Extensions;
@@ -113,8 +113,8 @@ namespace DevEdu.API.Controllers
             return NoContent();
         }
 
-        // api/users/5/role/5
-        [AuthorizeRoles()]
+        // api/user/{userId}/role/{role}
+        [AuthorizeRoles(Role.Manager)]
         [HttpPost("{userId}/role/{role}")]
         [Description("Add new role to user")]
         [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
@@ -126,8 +126,8 @@ namespace DevEdu.API.Controllers
             return NoContent();
         }
 
-        // api/users/5/role/5
-        [AuthorizeRoles()]
+        // api/user/{userId}/role/{role}
+        [AuthorizeRoles(Role.Manager)]
         [HttpDelete("{userId}/role/{role}")]
         [Description("Delete role from user")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
