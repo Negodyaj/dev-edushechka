@@ -2,9 +2,11 @@
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.Core;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
@@ -15,6 +17,7 @@ namespace DevEdu.Business.Tests
     {
 
         private Mock<IUserRepository> _repoMock;
+        private Mock<IOptions<FilesSettings>> _fileSettingsMock;
         private UserValidationHelper _validationHelper;
         private UserService _sut;
 
@@ -22,8 +25,9 @@ namespace DevEdu.Business.Tests
         public void Setup()
         {
             _repoMock = new Mock<IUserRepository>();
+            _fileSettingsMock = new Mock<IOptions<FilesSettings>>();
             _validationHelper = new UserValidationHelper(_repoMock.Object);
-            _sut = new UserService(_repoMock.Object, _validationHelper);
+            _sut = new UserService(_repoMock.Object, _validationHelper, _fileSettingsMock.Object);
         }
 
         [Test]
