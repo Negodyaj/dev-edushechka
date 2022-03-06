@@ -5,7 +5,7 @@ BEGIN
 SELECT 
 		s.Id,
 		s.Feedback,
-		s.IsPresent,
+		s.AttendanceType,
 		s.AbsenceReason,
 		u.Id,
 		u.FirstName,
