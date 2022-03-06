@@ -14,7 +14,7 @@ namespace DevEdu.Business.Services
         Task DeleteUserRoleAsync(int userId, int roleId);
         Task<List<UserDto>> GetAllUsersAsync();
         Task<UserDto> GetUserByEmailAsync(string email);
-        Task<UserDto> GetUserByIdAsync(int id, UserIdentityInfo userInfo);
+        Task<UserDto> GetUserByIdAsync(int id, UserIdentityInfo userInfo=null);
         Task<UserDto> UpdateUserAsync(UserDto dto, UserIdentityInfo userInfo);
     }
 }

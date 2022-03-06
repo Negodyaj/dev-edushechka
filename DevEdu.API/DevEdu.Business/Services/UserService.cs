@@ -38,10 +38,10 @@ namespace DevEdu.Business.Services
             return response;
         }
 
-        public async Task<UserDto> GetUserByIdAsync(int getInfoUserid, UserIdentityInfo userInfo=null)
+        public async Task<UserDto> GetUserByIdAsync(int getInfoUserid, UserIdentityInfo leadInfo = null)
         {
-            if (userInfo != null)
-                _userValidationHelper.CheckAccessChangeDataForUserAsync(getInfoUserid, userInfo.UserId, userInfo.Roles);
+            if (leadInfo != null)
+               await _userValidationHelper.CheckAccessChangeDataForUserAsync(getInfoUserid, leadInfo.UserId, leadInfo.Roles);
 
             var user = await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(getInfoUserid);
 
@@ -64,10 +64,10 @@ namespace DevEdu.Business.Services
             return list;
         }
 
-        public async Task<UserDto> UpdateUserAsync(UserDto dto, UserIdentityInfo userInfo=null)
+        public async Task<UserDto> UpdateUserAsync(UserDto dto, UserIdentityInfo leadInfo = null)
         {
-            if (userInfo != null)
-                _userValidationHelper.CheckAccessChangeDataForUserAsync(dto.Id, userInfo.UserId, userInfo.Roles);
+            if (leadInfo != null)
+               await _userValidationHelper.CheckAccessChangeDataForUserAsync(dto.Id, leadInfo.UserId, leadInfo.Roles);
 
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(dto.Id);
             await _userRepository.UpdateUserAsync(dto);

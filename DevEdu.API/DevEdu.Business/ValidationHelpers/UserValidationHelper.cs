@@ -74,10 +74,11 @@ namespace DevEdu.Business.ValidationHelpers
 
         public async Task CheckAccessChangeDataForUserAsync(int getInfoUserId, int leadId, List<Role> roles)
         {
-            bool isManager = roles.Contains(Role.Manager);
-            if (!isManager)
-            if (getInfoUserId != leadId) 
-                throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, getInfoUserId));
+            bool isAccess = roles.Where(r => r==Role.Admin || r==Role.Manager).Any();
+
+            if (getInfoUserId != leadId && !isAccess)
+                throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessGetInfoMessage, getInfoUserId));
+
         }
     }
 }

@@ -42,9 +42,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<UserUpdateInfoOutPutModel>> UpdateUserByIdAsync([FromBody] UserUpdateInputModel model)
         {
-            var userInfo = this.GetUserIdAndRoles();
+            var leadInfo = this.GetUserIdAndRoles();
             var dtoEntry = _mapper.Map<UserDto>(model);
-            var dtoResult = await _userService.UpdateUserAsync(dtoEntry, userInfo);
+            var dtoResult = await _userService.UpdateUserAsync(dtoEntry, leadInfo);
             var outPut = _mapper.Map<UserUpdateInfoOutPutModel>(dtoResult);
 
             return Created(new Uri($"api/User/{outPut.Id}", UriKind.Relative), outPut);
@@ -59,8 +59,8 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<UserFullInfoOutPutModel> GetUserByIdAsync(int userId)
         {
-            var userInfo = this.GetUserIdAndRoles();
-            var dto = await _userService.GetUserByIdAsync(userId, userInfo);
+            var leadInfo = this.GetUserIdAndRoles();
+            var dto = await _userService.GetUserByIdAsync(userId, leadInfo);
                 var outPut = _mapper.Map<UserFullInfoOutPutModel>(dto);
             
             return outPut;
@@ -91,7 +91,7 @@ namespace DevEdu.API.Controllers
         public async Task<ActionResult> ChangeUserPasswordAsync([FromBody] UserChangePasswordInputModel changePasswordInputModel)
         {
             var userId = this.GetUserId();
-            var user = await _userService.GetUserByIdAsync(userId, default);
+            var user = await _userService.GetUserByIdAsync(userId);
 
             if (!await _authenticationService.VerifyAsync(user.Password, changePasswordInputModel.OldPassword))
                 throw new AuthorizationException("Entered old password is wrong");

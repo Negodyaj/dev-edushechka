@@ -46,19 +46,22 @@ namespace DevEdu.Business.Tests
             _repoMock.Verify(x => x.AddUserRoleAsync(actualDto.Id, It.IsAny<int>()), Times.Once);
         }
 
-        [Test]
-        public async Task SelectById_IntUserId_ReturnUserDto()
+        [TestCase (UserData.ExpectedUserId, Role.Manager)]
+        [TestCase (UserData.ExpectedUserId, Role.Admin)]
+        [TestCase (1, Role.Student)]
+        public async Task SelectById_IntUserId_ReturnUserDto(int userId,Role role)
         {
             //Given
             var expectedDto = UserData.GetUserDto();
-            _repoMock.Setup(x => x.GetUserByIdAsync(UserData.ExpectedUserId)).ReturnsAsync(expectedDto);
+            var userInfo= UserIdentityInfoData.GetUserIdentityWithRole(role, expectedDto.Id);
+            _repoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(expectedDto);
 
             //When
-            var actualDto = await _sut.GetUserByIdAsync(UserData.ExpectedUserId);
+            var actualDto = await _sut.GetUserByIdAsync(userId, userInfo);
 
             //Then
             Assert.AreEqual(expectedDto, actualDto);
-            _repoMock.Verify(x => x.GetUserByIdAsync(UserData.ExpectedUserId), Times.Once);
+            _repoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
         }
 
         [Test]
@@ -103,7 +106,7 @@ namespace DevEdu.Business.Tests
             _repoMock.Setup(x => x.GetUserByIdAsync(expectedAnotherDto.Id)).ReturnsAsync(expectedDto);
 
             //When
-            var actualDto = await _sut.UpdateUserAsync(expectedAnotherDto, default);
+            var actualDto = await _sut.UpdateUserAsync(expectedAnotherDto);
 
             //Then
             Assert.AreEqual(expectedDto, actualDto);
@@ -148,6 +151,23 @@ namespace DevEdu.Business.Tests
             _repoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
         }
 
+        [TestCase( Role.Student)]
+        [TestCase( Role.Methodist)]
+        public async Task SelectUserById_WhenDoNotAccessPremission_AuthorizationException( Role role)
+        {
+            //Given
+            var lead = UserData.GetAnotherUserDto();
+            var leadInfo = UserIdentityInfoData.GetUserIdentityWithRole(role, lead.Id);
+            var expectedException = string.Format(ServiceMessages.UserHasNoAccessGetInfoMessage, UserData.ExpectedUserId);
+
+            //When
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
+                async () => await _sut.GetUserByIdAsync(UserData.ExpectedUserId, leadInfo));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException)); 
+        }
+
         [Test]
         public async Task SelectUserByEmail_WhenDoNotHaveMatchesInDataBase_EntityNotFoundException()
         {
@@ -165,6 +185,25 @@ namespace DevEdu.Business.Tests
             _repoMock.Verify(x => x.GetUserByEmailAsync(user.Email), Times.Once);
         }
 
+        [TestCase(5, Role.Student)]
+        [TestCase(5, Role.Methodist)]
+        public async Task UpdateUser_WhenDoNotAccessPremission_AuthorizationException(int leadId, Role role)
+        {
+            //Given
+            var user = UserData.GetAnotherUserDto();
+            var leadInfo = UserIdentityInfoData.GetUserIdentityWithRole(role, leadId);
+            var expectedException = string.Format(ServiceMessages.UserHasNoAccessGetInfoMessage, user.Id);
+
+            //When
+            var ex = Assert.ThrowsAsync<AuthorizationException>(
+                async () => await _sut.UpdateUserAsync(user, leadInfo));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+
+            
+        }
+
         [Test]
         public async Task UpdateUser_WhenDoNotHaveMatchesInDataBase_EntityNotFoundException()
         {
@@ -174,7 +213,7 @@ namespace DevEdu.Business.Tests
 
             //When
             var ex = Assert.ThrowsAsync<EntityNotFoundException>(
-                () => _sut.UpdateUserAsync(user, default));
+                () => _sut.UpdateUserAsync(user));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
