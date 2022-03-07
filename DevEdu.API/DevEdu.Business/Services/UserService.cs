@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.Helpers;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.Core;
 using DevEdu.DAL.Enums;
@@ -21,13 +22,17 @@ namespace DevEdu.Business.Services
         private readonly IUserRepository _userRepository;
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly IOptions<FilesSettings> _fileSettings;
+        private readonly IWorkWithFiles _workWithFiles;
         private const string _folderUserPhotoPath = "/media/userPhoto/";
 
-        public UserService(IUserRepository userRepository, IUserValidationHelper helper, IOptions<FilesSettings> fileSettings)
+        public UserService(IUserRepository userRepository, IUserValidationHelper helper,
+            IOptions<FilesSettings> fileSettings,
+            IWorkWithFiles workWithFiles)
         {
             _userRepository = userRepository;
             _userValidationHelper = helper;
             _fileSettings = fileSettings;
+            _workWithFiles = workWithFiles;
         }
 
         public async Task<UserDto> AddUserAsync(UserDto dto)
@@ -98,16 +103,16 @@ namespace DevEdu.Business.Services
             var sbPathToSavePhoto = new StringBuilder();
             sbPathToSavePhoto.Append(staticFolderPath);
             sbPathToSavePhoto.Append(_folderUserPhotoPath);
-            sbPathToSavePhoto.Append(ComputeFileHash(photo));
+            sbPathToSavePhoto.Append(_workWithFiles.ComputeFileHash(photo));
             sbPathToSavePhoto.Append(DateTime.Now.ToString("yyyyMMddhhmmss"));
             sbPathToSavePhoto.Append(Path.GetExtension(photo.FileName));
             var pathToSavePhoto = sbPathToSavePhoto.ToString();
 
-            await CreateFile(pathToSavePhoto, photo);
+            await _workWithFiles.CreateFile(pathToSavePhoto, photo);
 
             await _userRepository.UpdateUserPhotoAsync(userId, pathToSavePhoto);
 
-            TryDeleteFile(user.Photo);
+            _workWithFiles.TryDeleteFile(user.Photo);
 
             var pathToReturn = pathToSavePhoto.TrimStart('.');
             return pathToReturn;
@@ -129,41 +134,6 @@ namespace DevEdu.Business.Services
         {
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
             await _userRepository.DeleteUserRoleAsync(userId, roleId);
-        }
-
-        private string ComputeFileHash(IFormFile package)
-        {
-            var hash = "";
-            using (var md5 = MD5.Create())
-            {
-                using (var streamReader = new StreamReader(package.OpenReadStream()))
-                {
-                    hash = BitConverter.ToString(md5.ComputeHash(streamReader.BaseStream)).Replace("-", "");
-                }
-            }
-            return hash;
-        }
-
-        private async Task CreateFile(string path, IFormFile file)
-        {
-            var directoryPath = Path.GetDirectoryName(path);
-            if (!Directory.Exists(directoryPath))
-                Directory.CreateDirectory(directoryPath);
-
-            using var fileStream = new FileStream(path, FileMode.Create);
-            await file.CopyToAsync(fileStream);
-        }
-
-        private void TryDeleteFile(string path)
-        {
-            if (File.Exists(path))
-            {
-                try
-                {
-                    File.Delete(path);
-                }
-                catch { }
-            }
         }
     }
 }

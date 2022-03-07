@@ -1,4 +1,5 @@
 ﻿using DevEdu.Business.Configuration;
+using DevEdu.Business.Helpers;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.Core;
@@ -83,6 +84,7 @@ namespace DevEdu.API.Extensions
             services.AddScoped<IStudentHomeworkService, StudentHomeworkService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IHomeworkService, HomeworkService>();
+            services.AddScoped<IWorkWithFiles, WorkWithFiles>();
 
             return services;
         }
