@@ -13,6 +13,7 @@ namespace DevEdu.Business.Services
 {
     public class LessonService : ILessonService
     {
+        private readonly IUserRepository _userRepository;
         private readonly ILessonRepository _lessonRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IUserValidationHelper _userValidationHelper;
@@ -21,6 +22,7 @@ namespace DevEdu.Business.Services
         private readonly IGroupValidationHelper _groupValidationHelper;
 
         public LessonService(
+            IUserRepository userRepository,
             ILessonRepository lessonRepository,
             ICommentRepository commentRepository,
             IUserValidationHelper userValidationHelper,
@@ -29,6 +31,7 @@ namespace DevEdu.Business.Services
             IGroupValidationHelper groupValidationHelper
         )
         {
+            _userRepository = userRepository;
             _lessonRepository = lessonRepository;
             _commentRepository = commentRepository;
             _userValidationHelper = userValidationHelper;
@@ -150,6 +153,24 @@ namespace DevEdu.Business.Services
             await _lessonRepository.AddTopicToLessonAsync(lessonId, topicId);
         }
 
+        public async Task<List<StudentLessonDto>> AddVisitsStudentsAtGroupToLessonAsync(UserIdentityInfo userIdentity, int lessonId, int groupId)
+        {
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userIdentity.UserId);
+            await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
+            await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
+            await _lessonValidationHelper.CheckAccessAddStudentsAtGroupToLessonAsync(groupId, userIdentity.UserId, userIdentity.Roles);
+
+            List<UserDto> studentsToLesson = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student);
+
+            foreach (UserDto student in studentsToLesson)
+            {
+                if (_lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, student.Id) == default)
+                    await _lessonRepository.AddStudentToLessonAsync(lessonId, student.Id);
+            }
+
+            return await _lessonRepository.SelectStudentsLessonByLessonIdAsync(lessonId);
+        }
+
         public async Task<StudentLessonDto> AddStudentToLessonAsync(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)
         {
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(studentId);
@@ -189,7 +210,7 @@ namespace DevEdu.Business.Services
         public async Task<StudentLessonDto> UpdateStudentAbsenceReasonOnLessonAsync(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
         {
             await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
-            await  _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(studentId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(studentId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             if (!userIdentityInfo.IsAdmin())
                 await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);

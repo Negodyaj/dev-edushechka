@@ -1,8 +1,10 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
 using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -77,6 +79,18 @@ namespace DevEdu.Business.ValidationHelpers
             var attendance = _lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, userId);
             if (attendance == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(attendance), lessonId));
+        }
+
+        public async Task CheckAccessAddStudentsAtGroupToLessonAsync(int groupId, int leadId, List<Role> roles)
+        {
+            var groupDto = await _groupRepository.GetGroupAsync(groupId);
+
+            bool isAccess = roles.Where(r => r == Role.Admin || r == Role.Manager).Any();
+            bool isTeacherAtGroup = groupDto.Teachers.Where(t => t.Id == leadId).Any();
+
+            if (!isTeacherAtGroup && !isAccess)
+                throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessAddAttendanceExistence, leadId));
+
         }
     }
 }
