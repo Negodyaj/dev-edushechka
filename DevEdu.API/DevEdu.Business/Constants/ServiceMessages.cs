@@ -23,7 +23,7 @@
         public const string UserDoesntBelongToLesson = "User with id {0} doesn`t belong to lesson with id {1}";
         public const string AccessToNotificationDenied = "User with id = {0} doesn't have access to this notification ";
         public const string MoreOnePropertyHaveAValueMessage = "Only one property ({0}, {1} or {2}) should have a value";
-        public const string UserHasNoAccessAddAttendanceExistence = "The user with id = { 0 } does not have access add attendance existence";
+        public const string UserHasNoAccessAddAttendanceExistence = "The user with id = {0} does not have access add attendance existence";
         public const string WrongPassword = "WrongPassword";
     }
 }

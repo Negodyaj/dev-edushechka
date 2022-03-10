@@ -59,7 +59,7 @@ namespace DevEdu.Business.Tests
         {
             return new UserIdentityInfo
             {
-                UserId = 1,
+                UserId = 2,
                 Roles = new List<Role>
                 {
                     Role.Teacher

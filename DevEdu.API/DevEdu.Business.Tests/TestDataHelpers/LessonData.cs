@@ -1,8 +1,8 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Tests
 {
@@ -33,7 +33,7 @@ namespace DevEdu.Business.Tests
                 Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                 Topics = new List<TopicDto>
                 {
-                    new() { Id = 4 },                    
+                    new() { Id = 4 },
                     new() { Id = 2 },
                     new() { Id = 3 }
                 },
@@ -154,6 +154,14 @@ namespace DevEdu.Business.Tests
             };
         }
 
+        public static StudentLessonDto GetDefaultStudentLessonDto()
+        {
+            return new StudentLessonDto
+            {
+                
+            };
+        }
+
         public static List<StudentLessonDto> GetListStudentDto()
         {
             return new List<StudentLessonDto>
@@ -190,6 +198,32 @@ namespace DevEdu.Business.Tests
                 Id = 42
             };
         }
+
+        public static List<UserDto> GetUsersDto()
+        {
+            return new List<UserDto>
+                {
+                    new UserDto
+                    {
+                    Id = 42
+                    },
+                    new UserDto
+                    {
+                    Id = 43
+                    },
+                    new UserDto
+                    {
+                    Id = 44
+                    },
+                    new UserDto
+                    {
+                    Id = 45
+                    }
+                };
+        }
+
+       
+
         public static List<GroupDto> GetGroupsDto()
         {
             return new List<GroupDto>
@@ -203,6 +237,22 @@ namespace DevEdu.Business.Tests
                 {
                     Id = 20
                 }
+            };
+        }
+
+        public static GroupDto GetGroupDto()
+        {
+            return new GroupDto
+            {
+                Id = 10,
+                Teachers = new List<UserDto>
+                {
+                    new UserDto
+                    {
+                        Id=1
+                    }
+                }
+
             };
         }
     }

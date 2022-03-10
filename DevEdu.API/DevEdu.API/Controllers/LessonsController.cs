@@ -179,15 +179,15 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Teacher, Role.Admin, Role.Manager)]
         [HttpPost("{lessonId}/group/{groupId}")]
         [Description("Add students at group to lesson")]
-        [ProducesResponseType(typeof(List<StudentLessonOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<List<StudentLessonOutputModel>>> AddVisitsStudentsAtGroupToLesson(int lessonId, int groupId)
+        public async Task<ActionResult> AddVisitsStudentsAtGroupToLesson(int lessonId, int groupId)
         {
             var userInfo = this.GetUserIdAndRoles();
             var dto = await _lessonService.AddVisitsStudentsAtGroupToLessonAsync(userInfo, lessonId, groupId);
             var output = _mapper.Map<List<StudentLessonOutputModel>>(dto);
-            return  Ok(output);
+            return  Ok(output.Count);
         }
 
         // api/lessons/{lessonId}/student/{studentId}
