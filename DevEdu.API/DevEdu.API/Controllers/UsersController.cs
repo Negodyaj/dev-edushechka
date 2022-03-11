@@ -33,7 +33,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/users/5
-        [AuthorizeRoles(Role.Manager)]
+        [Authorize]
         [HttpPut("{userId}")]
         [Description("Update user")]
         [ProducesResponseType(typeof(UserUpdateInfoOutPutModel), StatusCodes.Status201Created)]
@@ -42,15 +42,16 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<UserUpdateInfoOutPutModel>> UpdateUserByIdAsync([FromBody] UserUpdateInputModel model)
         {
+            var leadInfo = this.GetUserIdAndRoles();
             var dtoEntry = _mapper.Map<UserDto>(model);
-            var dtoResult = await _userService.UpdateUserAsync(dtoEntry);
+            var dtoResult = await _userService.UpdateUserAsync(dtoEntry, leadInfo);
             var outPut = _mapper.Map<UserUpdateInfoOutPutModel>(dtoResult);
 
             return Created(new Uri($"api/User/{outPut.Id}", UriKind.Relative), outPut);
         }
 
         // api/users/5
-        [AuthorizeRoles(Role.Manager)]
+        [Authorize]
         [HttpGet("{userId}")]
         [Description("Return user by id")]
         [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
@@ -58,9 +59,10 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<UserFullInfoOutPutModel> GetUserByIdAsync(int userId)
         {
-            var dto = await _userService.GetUserByIdAsync(userId);
-            var outPut = _mapper.Map<UserFullInfoOutPutModel>(dto);
-
+            var leadInfo = this.GetUserIdAndRoles();
+            var dto = await _userService.GetUserByIdAsync(userId, leadInfo);
+                var outPut = _mapper.Map<UserFullInfoOutPutModel>(dto);
+            
             return outPut;
         }
 
