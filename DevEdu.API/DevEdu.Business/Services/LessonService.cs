@@ -13,6 +13,7 @@ namespace DevEdu.Business.Services
 {
     public class LessonService : ILessonService
     {
+        private readonly IUserRepository _userRepository;
         private readonly ILessonRepository _lessonRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IUserValidationHelper _userValidationHelper;
@@ -21,6 +22,7 @@ namespace DevEdu.Business.Services
         private readonly IGroupValidationHelper _groupValidationHelper;
 
         public LessonService(
+            IUserRepository userRepository,
             ILessonRepository lessonRepository,
             ICommentRepository commentRepository,
             IUserValidationHelper userValidationHelper,
@@ -29,6 +31,7 @@ namespace DevEdu.Business.Services
             IGroupValidationHelper groupValidationHelper
         )
         {
+            _userRepository = userRepository;
             _lessonRepository = lessonRepository;
             _commentRepository = commentRepository;
             _userValidationHelper = userValidationHelper;
@@ -43,7 +46,18 @@ namespace DevEdu.Business.Services
             {
                 _lessonValidationHelper.CheckUserAndTeacherAreSame(userIdentity, lessonDto.Teacher.Id);
             }
+
             int lessonId = await _lessonRepository.AddLessonAsync(lessonDto);
+
+            foreach (GroupDto group in lessonDto.Groups)
+            {
+                await _groupValidationHelper.CheckGroupExistenceAsync(group.Id);
+                foreach (UserDto user in group.Students)
+                {
+                    await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(user.Id);
+                    await _lessonRepository.AddStudentToLessonAsync(lessonId, user.Id);
+                }
+            }
 
             if (topicIds != null)
             {
@@ -189,7 +203,7 @@ namespace DevEdu.Business.Services
         public async Task<StudentLessonDto> UpdateStudentAbsenceReasonOnLessonAsync(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo)
         {
             await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
-            await  _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(studentId);
+            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(studentId);
             _lessonValidationHelper.CheckAttendanceExistence(lessonId, studentId);
             if (!userIdentityInfo.IsAdmin())
                 await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userIdentityInfo.UserId);

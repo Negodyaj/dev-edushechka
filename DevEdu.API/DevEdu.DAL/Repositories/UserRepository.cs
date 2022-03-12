@@ -188,21 +188,6 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        //public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role)
-        //{
-
-        //    return (await _connection.QueryAsync<UserDto>
-        //    (
-        //        _userSelectByGroupIdAndRole,
-        //        new
-        //        {
-        //            groupId,
-        //            roleId = role
-        //        },
-        //        commandType: CommandType.StoredProcedure
-        //    )).ToList();
-        //}
-
         public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role)
         {
             return (await _connection.QueryAsync<UserDto>

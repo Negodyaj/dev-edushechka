@@ -32,7 +32,7 @@ namespace DevEdu.Business.Tests
             _groupRepository = new Mock<IGroupRepository>();
             _topicRepository = new Mock<ITopicRepository>();
 
-            _sut = new LessonService(
+            _sut = new LessonService(_userRepository.Object,
                 _lessonRepository.Object,
                 _commentRepository.Object,
                 new UserValidationHelper(_userRepository.Object),
@@ -216,6 +216,8 @@ namespace DevEdu.Business.Tests
             var expectedLesson = LessonData.GetSelectedLessonDto();
             var topicIds = TopicData.GetListTopicId();
             var topics = TopicData.GetListTopicDto();
+            var group=GroupData.GetGroupDto();
+            var user=UserData.GetUserDto();
 
             _lessonRepository.Setup(x => x.AddLessonAsync(expectedLesson)).ReturnsAsync(lessonId);
             for (int i = 0; i < topics.Count; i++)
@@ -224,6 +226,8 @@ namespace DevEdu.Business.Tests
                 _lessonRepository.Setup(x => x.AddTopicToLessonAsync(lessonId, topicIds[i]));
             }
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(expectedLesson);
+            _groupRepository.Setup(x => x.GetGroupAsync(It.IsAny<int>())).ReturnsAsync(group);
+            _userRepository.Setup(x => x.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(user);
 
             //When
             var actualLesson = await _sut.AddLessonAsync(userIdentity, expectedLesson, topicIds);
@@ -259,15 +263,54 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
+        public void AddLesson_UserAndTeacherAreNotSame_GroupEntityNotFoundExceptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Admin, 3);
+            var addedLesson = LessonData.GetLessonDto();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage,"group", 1);
+            var topicIds = TopicData.GetListTopicId();
+            
+            //When
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.AddLessonAsync(userIdentity, addedLesson, topicIds));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [Test]
+        public void AddLesson_UserAndTeacherAreNotSame_UserEntityNotFoundExceptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Admin, 3);
+            var addedLesson = LessonData.GetLessonDtoWithoutStudentsToGroup();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "user", 42);
+            var group = GroupData.GetGroupDto();
+            var topicIds = TopicData.GetListTopicId();
+            _groupRepository.Setup(x => x.GetGroupAsync(addedLesson.Groups[0].Id)).ReturnsAsync(group);
+
+            //When
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.AddLessonAsync(userIdentity, addedLesson, topicIds));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [Test]
         public void AddLesson_TopicDoesntExist_EntityNotFoundExceptionReturned()
         {
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var addedLesson = LessonData.GetSelectedLessonDto();
             var topicIds = new List<int> { 1 };
+            var group = GroupData.GetGroupDto();
+            var user=UserData.GetUserDto();
 
+            
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicIds.First());
 
+            _groupRepository.Setup(x => x.GetGroupAsync(It.IsAny<int>())).ReturnsAsync(group);
+            _userRepository.Setup(x => x.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(user);
             _lessonRepository.Setup(x => x.AddLessonAsync(addedLesson)).ReturnsAsync(It.IsAny<int>());
             _topicRepository.Setup(x => x.GetTopicAsync(topicIds.First())).ReturnsAsync(It.IsAny<TopicDto>());
             //When
