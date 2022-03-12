@@ -55,7 +55,6 @@ namespace DevEdu.API.Extensions
             services.AddTransient<IGroupRepository, GroupRepository>();
             services.AddTransient<IPaymentRepository, PaymentRepository>();
             services.AddTransient<ILessonRepository, LessonRepository>();
-            services.AddTransient<ITagRepository, TagRepository>();
             services.AddTransient<ITopicRepository, TopicRepository>();
             services.AddTransient<IRatingRepository, RatingRepository>();
             services.AddTransient<IHomeworkRepository, HomeworkRepository>();
@@ -67,7 +66,6 @@ namespace DevEdu.API.Extensions
         {
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ICommentService, CommentService>();
-            services.AddScoped<ITagService, TagService>();
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IMaterialService, MaterialService>();
             services.AddScoped<ITaskService, TaskService>();
@@ -95,7 +93,6 @@ namespace DevEdu.API.Extensions
             services.AddScoped<IPaymentValidationHelper, PaymentValidationHelper>();
             services.AddScoped<IRatingValidationHelper, RatingValidationHelper>();
             services.AddScoped<IStudentHomeworkValidationHelper, StudentHomeworkValidationHelper>();
-            services.AddScoped<ITagValidationHelper, TagValidationHelper>();
             services.AddScoped<ITaskValidationHelper, TaskValidationHelper>();
             services.AddScoped<ITopicValidationHelper, TopicValidationHelper>();
             services.AddScoped<IUserValidationHelper, UserValidationHelper>();

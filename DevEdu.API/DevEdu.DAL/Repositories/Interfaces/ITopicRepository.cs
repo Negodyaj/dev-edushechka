@@ -15,8 +15,6 @@ namespace DevEdu.DAL.Repositories
         Task<List<int>> AddTopicsToCourseAsync(List<CourseTopicDto> dto);
         Task DeleteTopicFromCourseAsync(int courseId, int topicId);
         Task<List<TopicDto>> GetTopicsByCourseIdAsync(int courseId);
-        Task<int> AddTagToTopicAsync(int topicId, int tagId);
-        Task<int> DeleteTagFromTopicAsync(int topicId, int tagId);
         Task<CourseTopicDto> GetCourseTopicByIdAsync(int id);
         Task<List<CourseTopicDto>> GetCourseTopicBySeveralIdAsync(List<int> ids);
     }

@@ -1,5 +1,5 @@
-using DevEdu.DAL.Models;
 using System.Collections.Generic;
+using DevEdu.DAL.Models;
 
 namespace DevEdu.Business.Tests
 {
@@ -8,22 +8,16 @@ namespace DevEdu.Business.Tests
         public const int expectedTaskId = 55;
         public const int expectedTaskId2 = 42;
 
-        public static TaskDto GetTaskDtoWithoutTags()
-        {
-            return new TaskDto { Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true };
-        }
-
         public static TaskDto GetTaskDtoWithCourse()
         {
-            return new TaskDto { Id = 1, Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true, Courses = new List<CourseDto>() { new CourseDto { Id = 1 } } };
+            return new TaskDto
+            {
+                Id = 1, Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true,
+                Courses = new List<CourseDto> { new() { Id = 1 } }
+            };
         }
 
         public static TaskDto GetTaskDtoWithoutCourse()
-        {
-            return new TaskDto { Id = 1, Name = "Task1", Description = "Description1", Links = "noLinks", IsRequired = true };
-        }
-
-        public static TaskDto GetTaskDtoWithTags()
         {
             return new TaskDto
             {
@@ -31,31 +25,23 @@ namespace DevEdu.Business.Tests
                 Name = "Task1",
                 Description = "Description1",
                 Links = "noLinks",
-                IsRequired = true,
-                Tags = new List<TagDto>
-                {
-                    new TagDto
-                    {
-                        Id = 13,
-                        Name = "Tag",
-                        IsDeleted = false
-                    },
-                    new TagDto
-                    {
-                        Id = 15,
-                        Name = "DevEdu",
-                        IsDeleted = false
-                    },
-                    new TagDto
-                    {
-                        Id = 14,
-                        Name = "Tag"
-                    }
-                }
+                IsRequired = true
             };
         }
 
-        public static TaskDto GetAnotherTaskDtoWithTags()
+        public static TaskDto GetTaskDto()
+        {
+            return new TaskDto
+            {
+                Id = 1,
+                Name = "Task1",
+                Description = "Description1",
+                Links = "noLinks",
+                IsRequired = true
+            };
+        }
+
+        public static TaskDto GetAnotherTaskDto()
         {
             return new TaskDto
             {
@@ -63,13 +49,7 @@ namespace DevEdu.Business.Tests
                 Name = "Task2",
                 Description = "Description2",
                 Links = "noLinks",
-                IsRequired = true,
-                Tags = new List<TagDto>
-                {
-                    new TagDto {Id = 3},
-                    new TagDto {Id = 4},
-                    new TagDto {Id = 2}
-                }
+                IsRequired = true
             };
         }
 
@@ -78,9 +58,9 @@ namespace DevEdu.Business.Tests
         {
             return new List<CourseDto>
             {
-                new CourseDto {Id = 1},
-                new CourseDto {Id = 2},
-                new CourseDto {Id = 3}
+                new() { Id = 1 },
+                new() { Id = 2 },
+                new() { Id = 3 }
             };
         }
 
@@ -88,9 +68,9 @@ namespace DevEdu.Business.Tests
         {
             return new List<StudentHomeworkDto>
             {
-                new StudentHomeworkDto {Id = 1},
-                new StudentHomeworkDto {Id = 2},
-                new StudentHomeworkDto {Id = 3}
+                new() { Id = 1 },
+                new() { Id = 2 },
+                new() { Id = 3 }
             };
         }
 
@@ -98,9 +78,9 @@ namespace DevEdu.Business.Tests
         {
             return new List<GroupDto>
             {
-                new GroupDto {Id = 1},
-                new GroupDto {Id = 2},
-                new GroupDto {Id = 3}
+                new() { Id = 1 },
+                new() { Id = 2 },
+                new() { Id = 3 }
             };
         }
 
@@ -108,9 +88,9 @@ namespace DevEdu.Business.Tests
         {
             return new List<GroupDto>
             {
-                new GroupDto {Id = 1},
-                new GroupDto {Id = 2},
-                new GroupDto {Id = 3}
+                new() { Id = 1 },
+                new() { Id = 2 },
+                new() { Id = 3 }
             };
         }
 
@@ -118,89 +98,29 @@ namespace DevEdu.Business.Tests
         {
             return new List<TaskDto>
             {
-                new TaskDto
+                new()
                 {
                     Id = 1,
                     Name = "Task1",
                     Description = "Description1",
                     Links = "noLinks",
-                    IsRequired = true,
-                    Tags = new List<TagDto>
-                    {
-                        new TagDto
-                        {
-                            Id = 13,
-                            Name = "Tag",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 15,
-                            Name = "DevEdu",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 14,
-                            Name = "Tag"
-                        }
-                    }
+                    IsRequired = true
                 },
-                new TaskDto
+                new()
                 {
-                     Id = 2,
+                    Id = 2,
                     Name = "Task2",
                     Description = "Description2",
                     Links = "noLinks",
-                    IsRequired = true,
-                    Tags = new List<TagDto>
-                    {
-                        new TagDto
-                        {
-                            Id = 18,
-                            Name = "Tag",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 19,
-                            Name = "DevEdu",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 20,
-                            Name = "Tag"
-                        }
-                    }
+                    IsRequired = true
                 },
-                new TaskDto
+                new()
                 {
                     Id = 3,
                     Name = "Task3",
                     Description = "Description3",
                     Links = "noLinks",
-                    IsRequired = true,
-                    Tags = new List<TagDto>
-                    {
-                        new TagDto
-                        {
-                            Id = 21,
-                            Name = "Tag",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 22,
-                            Name = "DevEdu",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 23,
-                            Name = "Tag"
-                        }
-                    }
+                    IsRequired = true
                 }
             };
         }
@@ -209,92 +129,32 @@ namespace DevEdu.Business.Tests
         {
             return new List<TaskDto>
             {
-                new TaskDto
+                new()
                 {
                     Id = 1,
                     Name = "Task1",
                     Description = "Description1",
                     Links = "noLinks",
                     IsRequired = true,
-                    Tags = new List<TagDto>
-                    {
-                        new TagDto
-                        {
-                            Id = 13,
-                            Name = "Tag",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 15,
-                            Name = "DevEdu",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 14,
-                            Name = "Tag"
-                        }
-                    },
-                    Courses = new List<CourseDto>(){new CourseDto() { Id = 1} }
+                    Courses = new List<CourseDto> { new() { Id = 1 } }
                 },
-                new TaskDto
+                new()
                 {
-                     Id = 2,
+                    Id = 2,
                     Name = "Task2",
                     Description = "Description2",
                     Links = "noLinks",
                     IsRequired = true,
-                    Tags = new List<TagDto>
-                    {
-                        new TagDto
-                        {
-                            Id = 18,
-                            Name = "Tag",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 19,
-                            Name = "DevEdu",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 20,
-                            Name = "Tag"
-                        }
-                    },
-                    Courses = new List<CourseDto>(){new CourseDto() { Id = 2} }
+                    Courses = new List<CourseDto> { new() { Id = 2 } }
                 },
-                new TaskDto
+                new()
                 {
                     Id = 3,
                     Name = "Task3",
                     Description = "Description3",
                     Links = "noLinks",
                     IsRequired = true,
-                    Tags = new List<TagDto>
-                    {
-                        new TagDto
-                        {
-                            Id = 21,
-                            Name = "Tag",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 22,
-                            Name = "DevEdu",
-                            IsDeleted = false
-                        },
-                        new TagDto
-                        {
-                            Id = 23,
-                            Name = "Tag"
-                        }
-                    },
-                    Courses = new List<CourseDto>(){new CourseDto() { Id = 3} }
+                    Courses = new List<CourseDto> { new() { Id = 3 } }
                 }
             };
         }

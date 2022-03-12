@@ -18,9 +18,6 @@ namespace DevEdu.DAL.Repositories
         private const string _taskSelectAllProcedure = "dbo.Task_SelectAll";
         private const string _taskUpdateProcedure = "dbo.Task_Update";
 
-        private const string _tagTaskInsertProcedure = "dbo.Tag_Task_Insert";
-        private const string _tagTaskDeleteProcedure = "dbo.Tag_Task_Delete";
-
         public TaskRepository(IOptions<DatabaseSettings> options) : base(options)
         {
         }
@@ -69,27 +66,11 @@ namespace DevEdu.DAL.Repositories
 
         public async Task<TaskDto> GetTaskByIdAsync(int id)
         {
-            TaskDto task = default;
-
             return (await _connection
-                .QueryAsync<TaskDto, TagDto, TaskDto>(
+                .QueryFirstOrDefaultAsync<TaskDto>(
                     _taskSelectByIdProcedure,
-                    (taskDto, tagDto) =>
-                    {
-                        if (task == default)
-                        {
-                            task = taskDto;
-                            task.Tags = new List<TagDto>();
-
-                        }
-                        if (tagDto != null)
-                            task.Tags.Add(tagDto);
-                        return task;
-                    },
-                new { id },
-                splitOn: "Id",
-                commandType: CommandType.StoredProcedure))
-                .FirstOrDefault();
+                    new { id },
+                    commandType: CommandType.StoredProcedure));
         }
 
         public async Task<List<TaskDto>> GetTasksByCourseIdAsync(int courseId)
@@ -103,46 +84,10 @@ namespace DevEdu.DAL.Repositories
 
         public async Task<List<TaskDto>> GetTasksAsync()
         {
-            var taskDictionary = new Dictionary<int, TaskDto>();
-
-            var list = (await _connection.QueryAsync<TaskDto, TagDto, TaskDto>(
+            return (await _connection.QueryAsync<TaskDto>(
                     _taskSelectAllProcedure,
-                (taskDto, tagDto) =>
-                {
-                    if (!taskDictionary.TryGetValue(taskDto.Id, out var taskDtoEntry))
-                    {
-                        taskDtoEntry = taskDto;
-                        taskDtoEntry.Tags = new List<TagDto>();
-                        taskDictionary.Add(taskDtoEntry.Id, taskDtoEntry);
-                    }
-                    taskDtoEntry.Tags.Add(tagDto);
-
-                    return taskDtoEntry;
-                },
-                splitOn: "Id",
-                commandType: CommandType.StoredProcedure))
-                .Distinct()
+                    commandType: CommandType.StoredProcedure))
                 .ToList();
-
-            return list;
-        }
-
-        public async Task<int> AddTagToTaskAsync(int taskId, int tagId)
-        {
-            return await _connection
-                .ExecuteAsync(_tagTaskInsertProcedure,
-                new { tagId, taskId },
-                commandType: CommandType.StoredProcedure
-                );
-        }
-
-        public async Task<int> DeleteTagFromTaskAsync(int taskId, int tagId)
-        {
-            return await _connection
-                .ExecuteAsync(_tagTaskDeleteProcedure,
-                new { tagId, taskId },
-                commandType: CommandType.StoredProcedure
-                );
         }
     }
 }

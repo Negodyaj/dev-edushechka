@@ -94,31 +94,5 @@ namespace DevEdu.API.Controllers
             var output = await _topicService.UpdateTopicAsync(id, dto);
             return _mapper.Map<TopicOutputModel>(output);
         }
-
-        //  api/topics/{topicId}/tag/{tagId}
-        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
-        [HttpPost("{topicId}/tag/{tagId}")]
-        [Description("Add tag to topic")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> AddTagToTopicAsync(int topicId, int tagId)
-        {
-            await _topicService.AddTagToTopicAsync(topicId, tagId);
-            return NoContent();
-        }
-
-        //  api/topics/{topicId}/tag/{tagId}
-        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
-        [HttpDelete("{topicId}/tag/{tagId}")]
-        [Description("Delete tag from topic")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteTagFromTopicAsync(int topicId, int tagId)
-        {
-            await _topicService.DeleteTagFromTopicAsync(topicId, tagId);
-            return NoContent();
-        }
     }
 }

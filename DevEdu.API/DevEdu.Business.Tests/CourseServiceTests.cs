@@ -415,7 +415,7 @@ namespace DevEdu.Business.Tests
         {
             var courseId = 2;
             var materialId = 4;
-            var materialDto = MaterialData.GetMaterialDtoWithoutTags();
+            var materialDto = MaterialData.GetMaterialDto();
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId)).ReturnsAsync(new CourseDto() { Id = courseId });
             _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).ReturnsAsync(materialDto);
@@ -432,7 +432,7 @@ namespace DevEdu.Business.Tests
         {
             var courseId = 2;
             var materialId = 4;
-            var materialDto = MaterialData.GetMaterialDtoWithoutTags();
+            var materialDto = MaterialData.GetMaterialDto();
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "course", courseId);
            
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId));
@@ -469,7 +469,7 @@ namespace DevEdu.Business.Tests
             //Given
             var courseId = 2;
             var materialId = 4;
-            var materialDto = MaterialData.GetMaterialDtoWithoutTags();
+            var materialDto = MaterialData.GetMaterialDto();
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId)).ReturnsAsync(new CourseDto() { Id = courseId });
             _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).ReturnsAsync(materialDto);
             
@@ -486,7 +486,7 @@ namespace DevEdu.Business.Tests
             //Given
             var courseId = 2;
             var materialId = 4;
-            var materialDto = MaterialData.GetMaterialDtoWithoutTags();
+            var materialDto = MaterialData.GetMaterialDto();
             var exp = string.Format(ServiceMessages.EntityNotFoundMessage, "course", courseId);
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId));
@@ -565,7 +565,7 @@ namespace DevEdu.Business.Tests
             var courseId = 3;
             var taskId = 8;
             var courseDto = CourseData.GetCourseDto();
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             
             _courseRepositoryMock.Setup(x => x.DeleteTaskFromCourseAsync(courseId, taskId));
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId)).ReturnsAsync(courseDto);
@@ -768,7 +768,7 @@ namespace DevEdu.Business.Tests
             const int materialId = 1;
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId)).ReturnsAsync(CourseData.GetCourseDto());
-            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).ReturnsAsync(MaterialData.GetMaterialDtoWithoutTags);
+            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).ReturnsAsync(MaterialData.GetMaterialDto);
             _courseRepositoryMock.Setup(x => x.AddCourseMaterialReferenceAsync(courseId, materialId));
 
             //When
@@ -788,7 +788,7 @@ namespace DevEdu.Business.Tests
             const int materialId = 1;
 
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(courseId)).ReturnsAsync(CourseData.GetCourseDto());
-            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).ReturnsAsync(MaterialData.GetMaterialDtoWithoutTags);
+            _materialRepositoryMock.Setup(x => x.GetMaterialByIdAsync(materialId)).ReturnsAsync(MaterialData.GetMaterialDto);
             _courseRepositoryMock.Setup(x => x.RemoveCourseMaterialReferenceAsync(courseId, materialId));
 
             //When
@@ -805,7 +805,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var course = CourseData.GetCourseDto();
-            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var material = MaterialData.GetMaterialDto();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(course), course.Id);
 
             //When
@@ -821,7 +821,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var course = CourseData.GetCourseDto();
-            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var material = MaterialData.GetMaterialDto();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(course.Id)).ReturnsAsync(CourseData.GetCourseDto());
 
@@ -839,7 +839,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var course = CourseData.GetCourseDto();
-            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var material = MaterialData.GetMaterialDto();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(course), course.Id);
 
             //When
@@ -855,7 +855,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var course = CourseData.GetCourseDto();
-            var material = MaterialData.GetMaterialDtoWithoutTags();
+            var material = MaterialData.GetMaterialDto();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(material), material.Id);
             _courseRepositoryMock.Setup(x => x.GetCourseAsync(course.Id)).ReturnsAsync(CourseData.GetCourseDto());
 
