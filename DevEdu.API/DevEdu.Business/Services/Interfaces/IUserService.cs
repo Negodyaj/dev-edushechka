@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Models;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace DevEdu.Business.Services
         Task<UserDto> AddUserAsync(UserDto dto);
         Task AddUserRoleAsync(int userId, int roleId);
         Task ChangePasswordUserAsync(UserDto dto);
+        Task<string> ChangeUserPhotoAsync(int userId, IFormFile photo);
         Task DeleteUserAsync(int id);
         Task DeleteUserRoleAsync(int userId, int roleId);
         Task<List<UserDto>> GetAllUsersAsync();

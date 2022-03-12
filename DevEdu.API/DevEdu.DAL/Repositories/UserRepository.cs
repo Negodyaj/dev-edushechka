@@ -19,6 +19,7 @@ namespace DevEdu.DAL.Repositories
         private const string _userSelectByGroupIdAndRole = "dbo.User_SelectByGroupIdAndRole";
         private const string _userUpdateProcedure = "dbo.User_Update";
         private const string _userUpdatePasswordProcedure = "dbo.User_UpdatePassword";
+        private const string _userUpdatePhotoProcedure = "dbo.User_UpdatePhoto";
         private const string _userDeleteProcedure = "dbo.User_Delete";
         private const string _userRoleInsertProcedure = "dbo.User_Role_Insert";
         private const string _userRoleDeleteProcedure = "dbo.User_Role_Delete";
@@ -40,7 +41,6 @@ namespace DevEdu.DAL.Repositories
                     CityId = (int)user.City,
                     user.BirthDate,
                     user.GitHubAccount,
-                    user.Photo,
                     user.PhoneNumber
                 },
                 commandType: CommandType.StoredProcedure);
@@ -138,7 +138,6 @@ namespace DevEdu.DAL.Repositories
                      user.Username,
                      CityId = (int)user.City,
                      user.GitHubAccount,
-                     user.Photo,
                      user.PhoneNumber
                  },
                  commandType: CommandType.StoredProcedure);
@@ -152,6 +151,18 @@ namespace DevEdu.DAL.Repositories
                  {
                      user.Id,
                      user.Password
+                 },
+                 commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task UpdateUserPhotoAsync(int id, string photo)
+        {
+            await _connection.ExecuteAsync(
+                 _userUpdatePhotoProcedure,
+                 new
+                 {
+                     Id = id,
+                     Photo = photo
                  },
                  commandType: CommandType.StoredProcedure);
         }

@@ -354,3 +354,5 @@ MigrationBackup/
 .idea/
 
 /DevEdu.API/DevEdu.API/Properties/launchSettings.json
+
+DevEdu.API/DevEdu.API/static/media/userPhoto/
