@@ -216,6 +216,8 @@ namespace DevEdu.Business.Tests
             var expectedLesson = LessonData.GetSelectedLessonDto();
             var topicIds = TopicData.GetListTopicId();
             var topics = TopicData.GetListTopicDto();
+            var group=GroupData.GetGroupDto();
+            var user=UserData.GetUserDto();
 
             _lessonRepository.Setup(x => x.AddLessonAsync(expectedLesson)).ReturnsAsync(lessonId);
             for (int i = 0; i < topics.Count; i++)
@@ -224,6 +226,8 @@ namespace DevEdu.Business.Tests
                 _lessonRepository.Setup(x => x.AddTopicToLessonAsync(lessonId, topicIds[i]));
             }
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(expectedLesson);
+            _groupRepository.Setup(x => x.GetGroupAsync(It.IsAny<int>())).ReturnsAsync(group);
+            _userRepository.Setup(x => x.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(user);
 
             //When
             var actualLesson = await _sut.AddLessonAsync(userIdentity, expectedLesson, topicIds);
@@ -299,9 +303,14 @@ namespace DevEdu.Business.Tests
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
             var addedLesson = LessonData.GetSelectedLessonDto();
             var topicIds = new List<int> { 1 };
+            var group = GroupData.GetGroupDto();
+            var user=UserData.GetUserDto();
 
+            
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "topic", topicIds.First());
 
+            _groupRepository.Setup(x => x.GetGroupAsync(It.IsAny<int>())).ReturnsAsync(group);
+            _userRepository.Setup(x => x.GetUserByIdAsync(It.IsAny<int>())).ReturnsAsync(user);
             _lessonRepository.Setup(x => x.AddLessonAsync(addedLesson)).ReturnsAsync(It.IsAny<int>());
             _topicRepository.Setup(x => x.GetTopicAsync(topicIds.First())).ReturnsAsync(It.IsAny<TopicDto>());
             //When
