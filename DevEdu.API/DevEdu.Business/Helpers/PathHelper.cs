@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DevEdu.Business.Helpers
 {
-    public static class StringHelper
+    public static class PathHelper
     {
         private const string _folderUserPhotoPath = "/media/userPhoto/";
 
