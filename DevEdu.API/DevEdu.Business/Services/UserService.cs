@@ -8,11 +8,7 @@ using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
@@ -22,8 +18,7 @@ namespace DevEdu.Business.Services
         private readonly IUserRepository _userRepository;
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly IOptions<FilesSettings> _fileSettings;
-        private readonly IFileHelper _workWithFiles;
-        private const string _folderUserPhotoPath = "/media/userPhoto/";
+        private readonly IFileHelper _fileHelper;
 
         public UserService(IUserRepository userRepository, IUserValidationHelper helper,
             IOptions<FilesSettings> fileSettings,
@@ -32,7 +27,7 @@ namespace DevEdu.Business.Services
             _userRepository = userRepository;
             _userValidationHelper = helper;
             _fileSettings = fileSettings;
-            _workWithFiles = workWithFiles;
+            _fileHelper = workWithFiles;
         }
 
         public async Task<UserDto> AddUserAsync(UserDto dto)
@@ -100,19 +95,13 @@ namespace DevEdu.Business.Services
             else
                 staticFolderPath = string.Empty;
 
-            var sbPathToSavePhoto = new StringBuilder();
-            sbPathToSavePhoto.Append(staticFolderPath);
-            sbPathToSavePhoto.Append(_folderUserPhotoPath);
-            sbPathToSavePhoto.Append(_workWithFiles.ComputeFileHash(photo));
-            sbPathToSavePhoto.Append(DateTime.Now.ToString("yyyyMMddhhmmss"));
-            sbPathToSavePhoto.Append(Path.GetExtension(photo.FileName));
-            var pathToSavePhoto = sbPathToSavePhoto.ToString();
+            var pathToSavePhoto = PathHelper.GetPathToSavePhoto(staticFolderPath, _fileHelper, photo);
 
-            await _workWithFiles.CreateFile(pathToSavePhoto, photo);
+            await _fileHelper.CreateFile(pathToSavePhoto, photo);
 
             await _userRepository.UpdateUserPhotoAsync(userId, pathToSavePhoto);
 
-            _workWithFiles.TryDeleteFile(user.Photo);
+            _fileHelper.TryDeleteFile(user.Photo);
 
             var pathToReturn = pathToSavePhoto.TrimStart('.');
             return pathToReturn;
