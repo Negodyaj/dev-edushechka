@@ -259,6 +259,40 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
+        public void AddLesson_UserAndTeacherAreNotSame_GroupEntityNotFoundExceptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Admin, 3);
+            var addedLesson = LessonData.GetLessonDto();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage,"group", 1);
+            var topicIds = TopicData.GetListTopicId();
+            
+            //When
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.AddLessonAsync(userIdentity, addedLesson, topicIds));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [Test]
+        public void AddLesson_UserAndTeacherAreNotSame_UserEntityNotFoundExceptionReturned()
+        {
+            //Given
+            var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Admin, 3);
+            var addedLesson = LessonData.GetLessonDtoWithoutStudentsToGroup();
+            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "user", 42);
+            var group = GroupData.GetGroupDto();
+            var topicIds = TopicData.GetListTopicId();
+            _groupRepository.Setup(x => x.GetGroupAsync(addedLesson.Groups[0].Id)).ReturnsAsync(group);
+
+            //When
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.AddLessonAsync(userIdentity, addedLesson, topicIds));
+
+            //Then
+            Assert.That(ex.Message, Is.EqualTo(expectedException));
+        }
+
+        [Test]
         public void AddLesson_TopicDoesntExist_EntityNotFoundExceptionReturned()
         {
             //Given
@@ -703,83 +737,6 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Verify(x => x.SelectAttendanceByLessonAndUserIdAsync(lessonId, userId), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByLessonIdAsync(studentLessonDto.Lesson.Id), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId), Times.Once);
-        }
-
-        [Test]
-        public async Task AddVisitsStudentsAtGroupToLesson_IntLessonIdAndGroupId_AddingStudentToLessonAsync()
-        {
-            //Given
-            var studentLessonDto = 4;
-            var userIdentityInfo = UserIdentityInfoData.GetUserIdentityWithManagerRole();
-            var lessonId = 30;
-            var userId = 1;
-            var groupId = 10;
-
-            _lessonRepository.Setup(x => x.AddStudentToLessonAsync(lessonId, userId));
-            _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(LessonData.GetLessonDto);
-            _userRepository.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(LessonData.GetUserDto);
-            _userRepository.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId,(int)Role.Student)).ReturnsAsync(LessonData.GetUsersDto());
-            _groupRepository.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(LessonData.GetGroupDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
-
-
-            //When
-            var dto = await _sut.AddVisitsStudentsAtGroupToLessonAsync(userIdentityInfo, lessonId, groupId );
-
-            //Than
-            Assert.AreEqual(studentLessonDto, dto);
-        }
-
-
-        [Test]
-        public async Task AddVisitsStudentsAtGroupToLesson_IntLessonIdAndGroupId_AuthorizationExceptionReturned()
-        {
-            //Given
-            var userIdentityInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
-            var lessonId = 30;
-            var userId = 2;
-            var groupId = 10;
-            var expectedException = string.Format(ServiceMessages.UserHasNoAccessAddAttendanceExistence, userIdentityInfo.UserId);
-
-            _lessonRepository.Setup(x => x.AddStudentToLessonAsync(lessonId, userId));
-            _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(LessonData.GetLessonDto);
-            _userRepository.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(LessonData.GetUserDto);
-            _userRepository.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student)).ReturnsAsync(LessonData.GetUsersDto());
-            _groupRepository.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(LessonData.GetGroupDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
-
-
-            //When
-            var ex = Assert.ThrowsAsync<AuthorizationException>(async () => await _sut.AddVisitsStudentsAtGroupToLessonAsync(userIdentityInfo, lessonId, groupId));
-
-            //Then
-            Assert.That(ex.Message, Is.EqualTo(expectedException));
-
-        }
-
-        [Test]
-        public async Task AddVisitsStudentsAtGroupToLesson_IntLessonIdAndGroupId_EntityNotFoundException()
-        {
-            //Given
-            var userIdentityInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
-            var lessonId = 30;
-            var userId = 2;
-            var groupId = 10;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
-
-            _lessonRepository.Setup(x => x.AddStudentToLessonAsync(lessonId, userId));
-            _userRepository.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(LessonData.GetUserDto);
-            _userRepository.Setup(x => x.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student)).ReturnsAsync(LessonData.GetUsersDto());
-            _groupRepository.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(LessonData.GetGroupDto());
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentityInfo.UserId)).ReturnsAsync(LessonData.GetGroupsDto());
-
-
-            //When
-            var ex = Assert.ThrowsAsync<EntityNotFoundException>(async () => await _sut.AddVisitsStudentsAtGroupToLessonAsync(userIdentityInfo, lessonId, groupId));
-
-            //Then
-            Assert.That(ex.Message, Is.EqualTo(expectedException));
-
         }
 
         [Test]

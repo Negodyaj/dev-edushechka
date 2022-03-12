@@ -175,21 +175,6 @@ namespace DevEdu.API.Controllers
             return Created(new Uri($"api/Lesson/{output.Id}/full-info", UriKind.Relative), output);
         }
 
-        // api/lessons/{lessonId}/group/{groupId}
-        [AuthorizeRoles(Role.Teacher, Role.Admin, Role.Manager)]
-        [HttpPost("{lessonId}/group/{groupId}")]
-        [Description("Add students at group to lesson")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> AddVisitsStudentsAtGroupToLesson(int lessonId, int groupId)
-        {
-            var userInfo = this.GetUserIdAndRoles();
-            var dto = await _lessonService.AddVisitsStudentsAtGroupToLessonAsync(userInfo, lessonId, groupId);
-            var output = _mapper.Map<List<StudentLessonOutputModel>>(dto);
-            return  Ok(output.Count);
-        }
-
         // api/lessons/{lessonId}/student/{studentId}
         [AuthorizeRoles(Role.Teacher)]
         [HttpDelete("{lessonId}/student/{studentId}")]

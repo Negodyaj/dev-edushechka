@@ -8,7 +8,6 @@ namespace DevEdu.Business.ValidationHelpers
 {
     public interface ILessonValidationHelper
     {
-        Task CheckAccessAddStudentsAtGroupToLessonAsync(int groupId, int leadId, List<Role> roles);
         void CheckAttendanceExistence(int lessonId, int userId);
         void CheckTopicLessonReferenceIsUnique(LessonDto lesson, int topicId);
         void CheckUserAndTeacherAreSame(UserIdentityInfo userIdentity, int teacherId);

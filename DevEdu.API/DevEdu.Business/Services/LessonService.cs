@@ -46,7 +46,18 @@ namespace DevEdu.Business.Services
             {
                 _lessonValidationHelper.CheckUserAndTeacherAreSame(userIdentity, lessonDto.Teacher.Id);
             }
+
             int lessonId = await _lessonRepository.AddLessonAsync(lessonDto);
+
+            foreach (GroupDto group in lessonDto.Groups)
+            {
+                await _groupValidationHelper.CheckGroupExistenceAsync(group.Id);
+                foreach (UserDto user in group.Students)
+                {
+                    await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(user.Id);
+                    await _lessonRepository.AddStudentToLessonAsync(lessonId, user.Id);
+                }
+            }
 
             if (topicIds != null)
             {
@@ -151,29 +162,6 @@ namespace DevEdu.Business.Services
             await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(topicId);
             _lessonValidationHelper.CheckTopicLessonReferenceIsUnique(lesson, topicId);
             await _lessonRepository.AddTopicToLessonAsync(lessonId, topicId);
-        }
-
-        public async Task<int> AddVisitsStudentsAtGroupToLessonAsync(UserIdentityInfo userIdentity, int lessonId, int groupId)
-        {
-            await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userIdentity.UserId);
-            await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
-            await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
-            await _lessonValidationHelper.CheckAccessAddStudentsAtGroupToLessonAsync(groupId, userIdentity.UserId, userIdentity.Roles);
-
-            List<UserDto> studentsToLesson = await _userRepository.GetUsersByGroupIdAndRoleAsync(groupId, (int)Role.Student);
-            
-            int AddUserCount = 0;
-            foreach (UserDto student in studentsToLesson)
-            {
-                var checkUserToLesson = _lessonRepository.SelectAttendanceByLessonAndUserIdAsync(lessonId, student.Id);
-                if (checkUserToLesson.Result == null)
-                {
-                    await _lessonRepository.AddStudentToLessonAsync(lessonId, student.Id);
-                    AddUserCount++;
-                }
-                    
-            }
-            return AddUserCount;
         }
 
         public async Task<StudentLessonDto> AddStudentToLessonAsync(int lessonId, int studentId, UserIdentityInfo userIdentityInfo)

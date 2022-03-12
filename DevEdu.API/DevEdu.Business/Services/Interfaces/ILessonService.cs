@@ -10,7 +10,6 @@ namespace DevEdu.Business.Services
         Task<LessonDto> AddLessonAsync(UserIdentityInfo userIdentity, LessonDto lessonDto, List<int> topicIds);
         Task<StudentLessonDto> AddStudentToLessonAsync(int lessonId, int studentId, UserIdentityInfo userIdentityInfo);
         Task AddTopicToLessonAsync(int lessonId, int topicId);
-        Task<int> AddVisitsStudentsAtGroupToLessonAsync(UserIdentityInfo userIdentity, int lessonId, int groupId);
         Task DeleteLessonAsync(UserIdentityInfo userIdentity, int id);
         Task DeleteStudentFromLessonAsync(int lessonId, int studentId, UserIdentityInfo userIdentityInfo);
         Task DeleteTopicFromLessonAsync(int lessonId, int topicId);

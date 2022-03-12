@@ -80,17 +80,5 @@ namespace DevEdu.Business.ValidationHelpers
             if (attendance == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(attendance), lessonId));
         }
-
-        public async Task CheckAccessAddStudentsAtGroupToLessonAsync(int groupId, int leadId, List<Role> roles)
-        {
-            var groupDto = await _groupRepository.GetGroupAsync(groupId);
-
-            bool isAccess = roles.Where(r => r == Role.Admin || r == Role.Manager).Any();
-            bool isTeacherAtGroup = groupDto.Teachers.Where(t => t.Id == leadId).Any();
-
-            if (!isTeacherAtGroup && !isAccess)
-                throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessAddAttendanceExistence, leadId));
-
-        }
     }
 }

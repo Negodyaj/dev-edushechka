@@ -22,6 +22,42 @@ namespace DevEdu.Business.Tests
                 Teacher = new UserDto
                 {
                     Id = 10
+                },
+                Groups = new List<GroupDto>
+                {
+                    new GroupDto
+                    {
+                        Id = 1
+                    }
+                }
+            };
+        }
+
+        public static LessonDto GetLessonDtoWithoutStudentsToGroup()
+        {
+            return new LessonDto
+            {
+                Id = 6,
+                Date = DateTime.ParseExact("01.01.2021", _dateFormat, CultureInfo.InvariantCulture),
+                TeacherComment = "Comment",
+                Teacher = new UserDto
+                {
+                    Id = 10
+                },
+                Groups = new List<GroupDto>
+                {
+                    new GroupDto
+                    {
+                        Id = 1,
+                        Students=new List<UserDto>
+                        {
+                            new UserDto
+                            {
+                                Id = 42
+                            }
+                        }
+
+                    }
                 }
             };
         }
@@ -59,6 +95,33 @@ namespace DevEdu.Business.Tests
                     new TopicDto {Id = 4},
                     new TopicDto {Id = 2},
                     new TopicDto {Id = 3},
+                },
+                Groups = new List<GroupDto>
+                {
+                    new GroupDto
+                    {
+                        Id = 4,
+                        Students=new List<UserDto>
+                        {
+                            new UserDto
+                            {
+                                Id = 42
+                            },
+                            new UserDto
+                            {
+                                Id = 43
+                            },
+                            new UserDto
+                            {
+                                Id = 44
+                             },
+                            new UserDto
+                             {
+                                Id = 45
+                             }
+                        }
+
+                    },
                 }
             };
         }
@@ -158,7 +221,7 @@ namespace DevEdu.Business.Tests
         {
             return new StudentLessonDto
             {
-                
+
             };
         }
 
@@ -222,7 +285,7 @@ namespace DevEdu.Business.Tests
                 };
         }
 
-       
+
 
         public static List<GroupDto> GetGroupsDto()
         {
