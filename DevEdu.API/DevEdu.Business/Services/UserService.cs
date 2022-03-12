@@ -1,5 +1,6 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.Helpers;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.Core;
@@ -47,9 +48,12 @@ namespace DevEdu.Business.Services
             return response;
         }
 
-        public async Task<UserDto> GetUserByIdAsync(int id)
+        public async Task<UserDto> GetUserByIdAsync(int getInfoUserid, UserIdentityInfo leadInfo = null)
         {
-            var user = await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(id);
+            if (leadInfo != null)
+               await _userValidationHelper.CheckAccessChangeDataForUserAsync(getInfoUserid, leadInfo.UserId, leadInfo.Roles);
+
+            var user = await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(getInfoUserid);
 
             return user;
         }
@@ -70,8 +74,11 @@ namespace DevEdu.Business.Services
             return list;
         }
 
-        public async Task<UserDto> UpdateUserAsync(UserDto dto)
+        public async Task<UserDto> UpdateUserAsync(UserDto dto, UserIdentityInfo leadInfo = null)
         {
+            if (leadInfo != null)
+               await _userValidationHelper.CheckAccessChangeDataForUserAsync(dto.Id, leadInfo.UserId, leadInfo.Roles);
+
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(dto.Id);
             await _userRepository.UpdateUserAsync(dto);
 

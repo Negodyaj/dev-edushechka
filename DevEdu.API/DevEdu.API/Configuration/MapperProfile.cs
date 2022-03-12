@@ -20,7 +20,6 @@ namespace DevEdu.API.Configuration
         private void CreateMappingToDto()
         {
             CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
-            CreateMap<AttendanceInputModel, StudentLessonDto>();
             CreateMap<CourseInputModel, CourseDto>();
             CreateMap<CourseTopicInputModel, CourseTopicDto>();
             CreateMap<CommentInputModel, CommentDto>();
@@ -46,7 +45,8 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => new UserDto { Id = src.TeacherId }))
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<LessonUpdateInputModel, LessonDto>()
-                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)));
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)))
+                .ForMember(dest => dest.Topics, opt => opt.MapFrom(src => new List<TopicDto>(src.TopicIds.Select(id => new TopicDto { Id = id }))));
             CreateMap<TagInputModel, TagDto>();
             CreateMap<TaskInputModel, TaskDto>()
                 .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(tagId => new TagDto { Id = tagId })));
@@ -60,7 +60,6 @@ namespace DevEdu.API.Configuration
             CreateMap<UserInsertInputModel, UserDto>();
             CreateMap<UserUpdateInputModel, UserDto>();
             CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
-            CreateMap<AttendanceInputModel, StudentLessonDto>();
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<PaymentInputModel, PaymentDto>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => new UserDto { Id = src.UserId }))

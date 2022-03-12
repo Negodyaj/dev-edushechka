@@ -71,5 +71,14 @@ namespace DevEdu.Business.ValidationHelpers
                 throw new AuthorizationException(string.Format(ServiceMessages.UserWithRoleDoesntAuthorizeToGroup, userId, groupId, role.ToString()));
             }
         }
+
+        public async Task CheckAccessChangeDataForUserAsync(int getInfoUserId, int leadId, List<Role> roles)
+        {
+            bool isAccess = roles.Where(r => r==Role.Admin || r==Role.Manager).Any();
+
+            if (getInfoUserId != leadId && !isAccess)
+                throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessGetInfoMessage, getInfoUserId));
+
+        }
     }
 }
