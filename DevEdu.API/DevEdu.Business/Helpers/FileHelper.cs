@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DevEdu.Business.Helpers
 {
-    public class WorkWithFiles : IWorkWithFiles
+    public class FileHelper : IFileHelper
     {
         public string ComputeFileHash(IFormFile package)
         {

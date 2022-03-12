@@ -84,7 +84,7 @@ namespace DevEdu.API.Extensions
             services.AddScoped<IStudentHomeworkService, StudentHomeworkService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IHomeworkService, HomeworkService>();
-            services.AddScoped<IWorkWithFiles, WorkWithFiles>();
+            services.AddScoped<IFileHelper, FileHelper>();
 
             return services;
         }

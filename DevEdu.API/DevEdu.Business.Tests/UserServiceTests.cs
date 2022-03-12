@@ -25,7 +25,7 @@ namespace DevEdu.Business.Tests
         private Mock<IOptions<FilesSettings>> _fileSettingsMock;
         private UserValidationHelper _validationHelper;
         private UserService _sut;
-        private Mock<IWorkWithFiles> _workWithFilesMock;
+        private Mock<IFileHelper> _workWithFilesMock;
         private const string _folderUserPhotoPath = "/media/userPhoto/";
 
         [SetUp]
@@ -34,7 +34,7 @@ namespace DevEdu.Business.Tests
             _repoMock = new Mock<IUserRepository>();
             _fileSettingsMock = new Mock<IOptions<FilesSettings>>();
             _validationHelper = new UserValidationHelper(_repoMock.Object);
-            _workWithFilesMock = new Mock<IWorkWithFiles>();
+            _workWithFilesMock = new Mock<IFileHelper>();
             _sut = new UserService(_repoMock.Object, _validationHelper, _fileSettingsMock.Object, _workWithFilesMock.Object);
         }
 

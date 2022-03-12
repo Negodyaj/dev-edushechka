@@ -22,12 +22,12 @@ namespace DevEdu.Business.Services
         private readonly IUserRepository _userRepository;
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly IOptions<FilesSettings> _fileSettings;
-        private readonly IWorkWithFiles _workWithFiles;
+        private readonly IFileHelper _workWithFiles;
         private const string _folderUserPhotoPath = "/media/userPhoto/";
 
         public UserService(IUserRepository userRepository, IUserValidationHelper helper,
             IOptions<FilesSettings> fileSettings,
-            IWorkWithFiles workWithFiles)
+            IFileHelper workWithFiles)
         {
             _userRepository = userRepository;
             _userValidationHelper = helper;
