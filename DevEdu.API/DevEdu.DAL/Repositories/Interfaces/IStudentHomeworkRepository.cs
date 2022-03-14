@@ -10,7 +10,7 @@ namespace DevEdu.DAL.Repositories
         Task<int> AddStudentHomeworkAsync(StudentHomeworkDto taskAnswerDto);
         Task DeleteStudentHomeworkAsync(int id);
         Task<List<StudentHomeworkDto>> GetAllStudentHomeworkByTaskAsync(int taskId);
-        Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate);
+        Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate, DateTime? answerDate = null);
         Task UpdateStudentHomeworkAsync(StudentHomeworkDto dto);
         Task<List<StudentHomeworkDto>> GetAllStudentHomeworkByStudentIdAsync(int userId);
         Task<StudentHomeworkDto> GetStudentHomeworkByIdAsync(int id);

@@ -5,6 +5,7 @@ AS
 BEGIN
 	UPDATE Student_Homework
 	SET 
-		Answer = @Answer
+		Answer = @Answer,
+		AnswerDate = getdate()
 	WHERE Id = @Id AND IsDeleted = 0
 END

@@ -62,7 +62,8 @@ namespace DevEdu.DAL.Repositories
              );
         }
 
-        public async Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate)
+        public async Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate, 
+                                                                      DateTime? answerDate = null)
         {
             await _connection.ExecuteAsync(
                   _studentHomeworkUpdateStatusIdProcedure,
@@ -70,7 +71,8 @@ namespace DevEdu.DAL.Repositories
                   {
                       id,
                       StatusId = statusId,
-                      CompletedDate = completedDate
+                      CompletedDate = completedDate,
+                      AnswerDate = answerDate
                   },
                   commandType: CommandType.StoredProcedure
               );

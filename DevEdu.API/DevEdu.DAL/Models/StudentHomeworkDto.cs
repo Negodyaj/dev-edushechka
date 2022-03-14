@@ -11,7 +11,7 @@ namespace DevEdu.DAL.Models
         public StudentHomeworkStatus StudentHomeworkStatus { get; set; }
         public string Answer { get; set; }
         public DateTime? CompletedDate { get; set; }
+        public DateTime? AnswerDate { get; set; }
         public bool IsDeleted { get; set; }
-        public StudentHomeworkStatus TaskStatus { get; set; }
     }
 }

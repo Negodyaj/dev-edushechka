@@ -5,7 +5,7 @@
 AS
 BEGIN
 	DECLARE @Status_ToReview int = 1
-	INSERT INTO dbo.Student_Homework (HomeworkId, StudentId, StatusId, Answer)
-	VALUES (@HomeworkId, @StudentId, @Status_ToReview, @Answer)
+	INSERT INTO dbo.Student_Homework (HomeworkId, StudentId, StatusId, Answer, AnswerDate)
+	VALUES (@HomeworkId, @StudentId, @Status_ToReview, @Answer, GETDATE())
 	SELECT @@IDENTITY
 END
