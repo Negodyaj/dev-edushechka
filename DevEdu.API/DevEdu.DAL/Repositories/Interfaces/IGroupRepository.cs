@@ -16,10 +16,7 @@ namespace DevEdu.DAL.Repositories
         Task<int> AddGroupToLessonAsync(int groupId, int lessonId);
         Task RemoveGroupFromLessonAsync(int groupId, int lessonId);
         Task<GroupDto> ChangeGroupStatusAsync(int groupId, int statusId);
-        Task<int> AddGroupMaterialReferenceAsync(int groupId, int materialId);
-        Task<int> RemoveGroupMaterialReferenceAsync(int groupId, int materialId);
         Task DeleteTaskFromGroupAsync(int groupId, int taskId);
-        Task<List<GroupDto>> GetGroupsByMaterialIdAsync(int id);
         Task<int> GetPresentGroupForStudentByUserIdAsync(int userId);
         Task<List<GroupDto>> GetGroupsByTaskIdAsync(int taskId);
         Task<List<GroupDto>> GetGroupsByLessonIdAsync(int lessonId);

@@ -28,7 +28,7 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
         }
 
-        // api/materials/
+        /*// api/materials/
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist)]
         [HttpPost]
         [Description("Add material")]
@@ -45,25 +45,7 @@ namespace DevEdu.API.Controllers
             var output = _mapper.Map<MaterialInfoOutputModel>(dataInDb);
 
             return Created(new Uri($"api/Material/{output.Id}", UriKind.Relative), output);
-        }
-
-        // api/materials/with-groups
-        [AuthorizeRoles(Role.Teacher, Role.Tutor)]
-        [HttpPost("with-groups")]
-        [Description("Add material with groups")]
-        [ProducesResponseType(typeof(MaterialInfoWithGroupsOutputModel), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<ActionResult<MaterialInfoWithGroupsOutputModel>> AddMaterialWithGroupsAsync([FromBody] MaterialWithGroupsInputModel materialModel)
-        {
-            var dto = _mapper.Map<MaterialDto>(materialModel);
-            var id = await _materialService.AddMaterialWithGroupsAsync(dto, materialModel.GroupsIds, this.GetUserIdAndRoles());
-            dto = await _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
-            var output = _mapper.Map<MaterialInfoWithGroupsOutputModel>(dto);
-
-            return Created(new Uri($"api/Material/{output.Id}/full", UriKind.Relative), output);
-        }
+        }*/
 
         // api/materials/with-courses
         [AuthorizeRoles(Role.Methodist)]
@@ -77,7 +59,7 @@ namespace DevEdu.API.Controllers
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
             var id = await _materialService.AddMaterialWithCoursesAsync(dto, materialModel.CoursesIds);
-            dto = await _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
+            dto = await _materialService.GetMaterialByIdWithCoursesAsync(id);
             var output = _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
 
             return Created(new Uri($"api/Material/{output.Id}/full", UriKind.Relative), output);
@@ -106,7 +88,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<MaterialInfoFullOutputModel> GetMaterialByIdWithCoursesAndGroupsAsync(int id)
         {
-            var dto = await _materialService.GetMaterialByIdWithCoursesAndGroupsAsync(id);
+            var dto = await _materialService.GetMaterialByIdWithCoursesAsync(id);
 
             return _mapper.Map<MaterialInfoFullOutputModel>(dto);
         }

@@ -14,7 +14,6 @@ namespace DevEdu.Business.Services
         private readonly IUserRepository _userRepository;
         private readonly IGroupValidationHelper _groupHelper;
         private readonly ILessonValidationHelper _lessonHelper;
-        private readonly IMaterialValidationHelper _materialHelper;
         private readonly IUserValidationHelper _userHelper;
         private readonly ITaskValidationHelper _taskHelper;
 
@@ -25,7 +24,6 @@ namespace DevEdu.Business.Services
             IUserRepository userRepository,
             IUserValidationHelper userHelper,
             ILessonValidationHelper lessonHelper,
-            IMaterialValidationHelper materialHelper,
             ITaskValidationHelper taskHelper
         )
         {
@@ -33,7 +31,6 @@ namespace DevEdu.Business.Services
             _userRepository = userRepository;
             _groupHelper = groupHelper;
             _lessonHelper = lessonHelper;
-            _materialHelper = materialHelper;
             _userHelper = userHelper;
             _taskHelper = taskHelper;
         }
@@ -95,22 +92,6 @@ namespace DevEdu.Business.Services
             await _groupHelper.CheckGroupExistenceAsync(groupId);
 
             return await _groupRepository.ChangeGroupStatusAsync(groupId, (int)statusId);
-        }
-
-        public async Task<int> AddGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
-        {
-            await _groupHelper.CheckGroupExistenceAsync(groupId);
-            await _materialHelper.GetMaterialByIdAndThrowIfNotFoundAsync(materialId);
-
-            return await _groupRepository.AddGroupMaterialReferenceAsync(groupId, materialId);
-        }
-
-        public async Task<int> RemoveGroupMaterialReference(int groupId, int materialId, UserIdentityInfo userInfo)
-        {
-            await _groupHelper.CheckGroupExistenceAsync(groupId);
-            await _materialHelper.GetMaterialByIdAndThrowIfNotFoundAsync(materialId);
-
-            return await _groupRepository.RemoveGroupMaterialReferenceAsync(groupId, materialId);
         }
 
         public async Task<int> AddGroupToLesson(int groupId, int lessonId, UserIdentityInfo userInfo)

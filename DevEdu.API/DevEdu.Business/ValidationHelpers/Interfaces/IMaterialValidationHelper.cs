@@ -8,7 +8,6 @@ namespace DevEdu.Business.ValidationHelpers
     {
         Task<MaterialDto> GetMaterialByIdAndThrowIfNotFoundAsync(int materialId);
         void CheckMethodistAccessToMaterialForDeleteAndUpdate(int userId, MaterialDto material);
-        void CheckTeacherAccessToMaterialForDeleteAndUpdate(int userId, MaterialDto material);
         void CheckUserAccessToMaterialForGetById(int userId, MaterialDto material);
         List<MaterialDto> GetMaterialsAllowedToUser(List<MaterialDto> materials, int userId);
         void CheckPassedValuesAreUnique(List<int> values, string entity);
