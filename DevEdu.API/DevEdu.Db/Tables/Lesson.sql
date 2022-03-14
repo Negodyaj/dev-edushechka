@@ -1,13 +1,15 @@
-﻿CREATE TABLE [Lesson] (
-	Id int NOT NULL IDENTITY(1,1),
-	Date datetime NOT NULL,
-	TeacherId int NOT NULL,
-	LinkToRecord nvarchar(150),
-	IsDeleted bit NOT NULL DEFAULT '0',
-  CONSTRAINT [PK_LESSON] PRIMARY KEY CLUSTERED
-  (
-  [Id] ASC
-  ) WITH (IGNORE_DUP_KEY = OFF)
+﻿CREATE TABLE [Lesson]
+(
+    Id                  int      NOT NULL IDENTITY (1,1),
+    Date                datetime NOT NULL,
+    AdditionalMaterials nvarchar(500),
+    TeacherId           int      NOT NULL,
+    LinkToRecord        nvarchar(150),
+    IsDeleted           bit      NOT NULL DEFAULT '0',
+    CONSTRAINT [PK_LESSON] PRIMARY KEY CLUSTERED
+        (
+         [Id] ASC
+            ) WITH (IGNORE_DUP_KEY = OFF)
 
 )
 go

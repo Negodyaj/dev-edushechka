@@ -6,6 +6,9 @@ namespace DevEdu.API.Models
 {
     public class LessonUpdateInputModel
     {
+        [Required(ErrorMessage = AdditionalMaterialsRequired)]
+        public string AdditionalMaterials { get; set; }
+
         [Required(ErrorMessage = LinkToRecordIdRequired)]
         [Url]
         public string LinkToRecord { get; set; }
