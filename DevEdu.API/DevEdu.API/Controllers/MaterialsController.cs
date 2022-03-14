@@ -8,7 +8,6 @@ using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -28,43 +27,6 @@ namespace DevEdu.API.Controllers
             _mapper = mapper;
         }
 
-        /*// api/materials/
-        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Methodist)]
-        [HttpPost]
-        [Description("Add material")]
-        [ProducesResponseType(typeof(MaterialInfoWithGroupsOutputModel), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<ActionResult<MaterialInfoOutputModel>> AddMaterial([FromBody] MaterialInputModel materialModel)
-        {
-            var user = this.GetUserIdAndRoles();
-            var dto = _mapper.Map<MaterialDto>(materialModel);
-            var id = _materialService.AddMaterialAsync(dto);
-            var dataInDb = await _materialService.GetMaterialByIdAsync(id.Result, user);
-            var output = _mapper.Map<MaterialInfoOutputModel>(dataInDb);
-
-            return Created(new Uri($"api/Material/{output.Id}", UriKind.Relative), output);
-        }*/
-
-        // api/materials/with-courses
-        [AuthorizeRoles(Role.Methodist)]
-        [HttpPost("with-courses")]
-        [Description("Add material with courses")]
-        [ProducesResponseType(typeof(MaterialInfoWithCoursesOutputModel), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<ActionResult<MaterialInfoWithCoursesOutputModel>> AddMaterialWithCoursesAsync([FromBody] MaterialWithCoursesInputModel materialModel)
-        {
-            var dto = _mapper.Map<MaterialDto>(materialModel);
-            var id = await _materialService.AddMaterialWithCoursesAsync(dto, materialModel.CoursesIds);
-            dto = await _materialService.GetMaterialByIdWithCoursesAsync(id);
-            var output = _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
-
-            return Created(new Uri($"api/Material/{output.Id}/full", UriKind.Relative), output);
-        }
-
         // api/materials
         [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
         [HttpGet]
@@ -79,7 +41,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<MaterialInfoOutputModel>>(list);
         }
 
-        // api/materials/{id}/full
+        // api/materials/5/full
         [AuthorizeRoles(Role.Methodist)]
         [HttpGet("{id}/full")]
         [Description("Get material by id with courses")]

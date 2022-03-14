@@ -21,16 +21,18 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class CoursesController : Controller
     {
-        private readonly IMapper _mapper;
         private readonly ICourseService _courseService;
+        private readonly IMapper _mapper;
+        private readonly IMaterialService _materialService;
 
         public CoursesController(
             IMapper mapper,
-            ICourseService courseService)
+            ICourseService courseService,
+            IMaterialService materialService)
         {
             _mapper = mapper;
             _courseService = courseService;
-            _mapper = mapper;
+            _materialService = materialService;
         }
 
         //  api/courses/5/simple
@@ -112,15 +114,17 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<CourseInfoShortOutputModel>(updDto);
         }
 
-        //  api/courses/{courseId}/material/{materialId}
+        //  api/courses/5/material
         [AuthorizeRoles(Role.Methodist)]
-        [HttpPost("{courseId}/material/{materialId}")]
+        [HttpPost("{courseId}/material")]
         [Description("Add material to course")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> AddCourseMaterialReferenceAsync(int courseId, int materialId)
+        public async Task<ActionResult> AddCourseMaterialReferenceAsync(int courseId, [FromBody] MaterialInputModel materialModel)
         {
+            var dto = _mapper.Map<MaterialDto>(materialModel);
+            var materialId = _materialService.AddMaterialAsync(dto).Result;
             await _courseService.AddCourseMaterialReferenceAsync(courseId, materialId);
             return NoContent();
         }
