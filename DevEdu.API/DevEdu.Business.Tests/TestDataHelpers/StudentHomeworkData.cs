@@ -25,7 +25,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                 {
                     Id = 1
                 },
-                TaskStatus = StudentHomeworkStatus.Unchecked,
                 CompletedDate = default,
                 IsDeleted = false
             };
@@ -64,7 +63,7 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                     Email = "petr@mail.com",
                     Photo = "peter.jpeg"
                 },
-                TaskStatus = StudentHomeworkStatus.Unchecked,
+                StudentHomeworkStatus = StudentHomeworkStatus.OnCheck,
                 CompletedDate = DateTime.Parse("01.01.2021"),
                 IsDeleted = false
             };
@@ -91,7 +90,7 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                     Email = "petr@mail.com",
                     Photo = "peter.jpeg"
                 },
-                TaskStatus = StudentHomeworkStatus.Accepted,
+                StudentHomeworkStatus = StudentHomeworkStatus.OnCheck,
                 CompletedDate = new DateTime(_timeNow.Year, _timeNow.Month, _timeNow.Day, _timeNow.Hour, _timeNow.Minute, _timeNow.Second),
                 IsDeleted = false
             };
@@ -118,7 +117,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                     Email = "petr@mail.com",
                     Photo = "peter.jpeg"
                 },
-                TaskStatus = StudentHomeworkStatus.Unchecked,
                 CompletedDate = DateTime.Parse("01.01.2021"),
                 IsDeleted = false
             };
@@ -147,7 +145,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -171,7 +168,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "hubeker@uandex.ru",
                         Photo = "beker.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -195,7 +191,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "linkeshot@mail.ru",
                         Photo = "shot.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -225,7 +220,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -249,7 +243,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("02.01.2021"),
                     IsDeleted = false
                 },
@@ -273,7 +266,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("03.01.2021"),
                     IsDeleted = false
                 },
