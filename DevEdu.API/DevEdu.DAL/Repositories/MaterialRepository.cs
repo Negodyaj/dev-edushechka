@@ -18,25 +18,29 @@ namespace DevEdu.DAL.Repositories
         private const string _materialDeleteProcedure = "dbo.Material_Delete";
         private const string _materialSelectAllByCourseIdProcedure = "dbo.Material_SelectByCourseId";
 
-        public MaterialRepository(IOptions<DatabaseSettings> options) : base(options) { }
+        public MaterialRepository(IOptions<DatabaseSettings> options) : base(options) {}
 
         public async Task<int> AddMaterialAsync(MaterialDto material)
         {
             return await _connection
                 .QuerySingleAsync<int>(
-                _materialInsertProcedure,
-                new { material.Content },
-                commandType: CommandType.StoredProcedure
-            );
+                    _materialInsertProcedure,
+                    new
+                    {
+                        material.Content,
+                        material.Link
+                    },
+                    commandType: CommandType.StoredProcedure
+                );
         }
 
         public async Task<List<MaterialDto>> GetAllMaterialsAsync()
         {
             return (await _connection
-                .QueryAsync<MaterialDto>(
-                _materialSelectAllProcedure,
-                commandType: CommandType.StoredProcedure
-                ))
+                    .QueryAsync<MaterialDto>(
+                        _materialSelectAllProcedure,
+                        commandType: CommandType.StoredProcedure
+                    ))
                 .ToList();
         }
 
@@ -57,7 +61,8 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     material.Id,
-                    material.Content
+                    material.Content,
+                    material.Link
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -83,8 +88,7 @@ namespace DevEdu.DAL.Repositories
                     _materialSelectAllByCourseIdProcedure,
                     new { courseId },
                     commandType: CommandType.StoredProcedure
-                )).
-                ToList();
+                )).ToList();
         }
     }
 }

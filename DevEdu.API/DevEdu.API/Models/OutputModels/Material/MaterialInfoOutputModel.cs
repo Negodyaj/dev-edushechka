@@ -7,6 +7,8 @@ namespace DevEdu.API.Models
     {
         public int Id { get; set; }
         public string Content { get; set; }
+        public string Link { get; set; }
+
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
     }

@@ -7,9 +7,6 @@ namespace DevEdu.API.Configuration.ExceptionResponses
 {
     public class ValidationExceptionResponse
     {
-        public int Code { get; set; }
-        public string Message { get; set; }
-        public List<ValidationError> Errors { get; set; }
 
         private const int ValidationCode = 1000;
         private const string MessageValidation = "Validation exception";
@@ -18,7 +15,7 @@ namespace DevEdu.API.Configuration.ExceptionResponses
         {
             Errors = new List<ValidationError>
             {
-                new() {Code = ValidationCode, Field = exception.Field, Message = exception.Message}
+                new() { Code = ValidationCode, Field = exception.Field, Message = exception.Message }
             };
         }
 
@@ -39,6 +36,9 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 });
             }
         }
+        public int Code { get; set; }
+        public string Message { get; set; }
+        public List<ValidationError> Errors { get; set; }
 
         private static int GetValidationCode(string exception)
         {
@@ -87,6 +87,7 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 ValidationMessage.WrongFormatBirthDate => 1042,
                 ValidationMessage.WrongFormatDate => 1043,
                 ValidationMessage.StudentAnswerRequired => 1044,
+                ValidationMessage.LinkRequired => 1045,
                 ValidationMessage.GroupsRequired => 1046,
                 ValidationMessage.CoursesRequired => 1047,
                 ValidationMessage.GroupStatusIdRequired => 1048,

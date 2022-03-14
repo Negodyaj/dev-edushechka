@@ -19,8 +19,8 @@ namespace DevEdu.API.Controllers
     [Route("api/[controller]")]
     public class MaterialsController : Controller
     {
-        private readonly IMaterialService _materialService;
         private readonly IMapper _mapper;
+        private readonly IMaterialService _materialService;
 
         public MaterialsController(IMapper mapper, IMaterialService materialService)
         {
@@ -82,15 +82,15 @@ namespace DevEdu.API.Controllers
         // api/materials/{id}/full
         [AuthorizeRoles(Role.Methodist)]
         [HttpGet("{id}/full")]
-        [Description("Get material by id with courses and groups")]
-        [ProducesResponseType(typeof(MaterialInfoFullOutputModel), StatusCodes.Status200OK)]
+        [Description("Get material by id with courses")]
+        [ProducesResponseType(typeof(MaterialInfoWithCoursesOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<MaterialInfoFullOutputModel> GetMaterialByIdWithCoursesAndGroupsAsync(int id)
+        public async Task<MaterialInfoWithCoursesOutputModel> GetMaterialByIdWithCoursesAndGroupsAsync(int id)
         {
             var dto = await _materialService.GetMaterialByIdWithCoursesAsync(id);
 
-            return _mapper.Map<MaterialInfoFullOutputModel>(dto);
+            return _mapper.Map<MaterialInfoWithCoursesOutputModel>(dto);
         }
 
         // api/materials/5/
@@ -109,7 +109,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/materials/5
-        [AuthorizeRoles(Role.Teacher, Role.Methodist)]
+        [AuthorizeRoles(Role.Methodist)]
         [HttpPut("{id}")]
         [Description("Update material by id")]
         [ProducesResponseType(typeof(MaterialInfoOutputModel), StatusCodes.Status200OK)]
@@ -126,13 +126,13 @@ namespace DevEdu.API.Controllers
         }
 
         // api/materials/5/isDeleted/True
-        [AuthorizeRoles(Role.Teacher, Role.Methodist)]
+        [AuthorizeRoles(Role.Methodist)]
         [HttpDelete("{id}/isDeleted/{isDeleted}")]
-        [Description("Delete material")]
+        [Description("Delete/Restore material")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteMaterialAsync(int id, bool isDeleted)
+        public async Task<ActionResult> DeleteAndRestoreMaterialAsync(int id, bool isDeleted)
         {
             var user = this.GetUserIdAndRoles();
             await _materialService.DeleteMaterialAsync(id, isDeleted, user);

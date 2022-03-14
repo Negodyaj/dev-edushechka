@@ -10,9 +10,9 @@ namespace DevEdu.Business.ValidationHelpers
 {
     public class MaterialValidationHelper : IMaterialValidationHelper
     {
-        private readonly IMaterialRepository _materialRepository;
-        private readonly IGroupRepository _groupRepository;
         private readonly ICourseRepository _courseRepository;
+        private readonly IGroupRepository _groupRepository;
+        private readonly IMaterialRepository _materialRepository;
 
         public MaterialValidationHelper(
             IMaterialRepository materialRepository,
@@ -72,10 +72,8 @@ namespace DevEdu.Business.ValidationHelpers
         {
             var coursesByMaterial = await _courseRepository.GetCoursesByMaterialIdAsync(material.Id);
             var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
-            List<int> coursesByUser = new();
-            groupsByUser.ForEach(group => coursesByUser.Add(group.Course.Id));
 
-            var result = coursesByMaterial.FirstOrDefault(сm => coursesByUser.Any(сu => сu == сm.Id));
+            var result = coursesByMaterial.FirstOrDefault(сm => groupsByUser.Select(t=> t.Course.Id).Any(сu => сu == сm.Id));
             if (result == default)
                 material = default;
             

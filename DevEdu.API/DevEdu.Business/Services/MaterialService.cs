@@ -1,20 +1,17 @@
 ﻿using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
-using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
     public class MaterialService : IMaterialService
     {
-        private readonly IMaterialRepository _materialRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly ICourseValidationHelper _courseValidationHelper;
+        private readonly IMaterialRepository _materialRepository;
         private readonly IMaterialValidationHelper _materilaValidationHelper;
 
         public MaterialService(
@@ -32,8 +29,7 @@ namespace DevEdu.Business.Services
         public async Task<List<MaterialDto>> GetAllMaterialsAsync(UserIdentityInfo user)
         {
             var allMaterials = await _materialRepository.GetAllMaterialsAsync();
-            if (!(user.IsAdmin() ||
-                    user.IsMethodist()))
+            if (!(user.IsAdmin() || user.IsMethodist()))
             {
                 return _materilaValidationHelper.GetMaterialsAllowedToUser(allMaterials, user.UserId);
             }
@@ -99,7 +95,6 @@ namespace DevEdu.Business.Services
         {
             if (!user.IsAdmin() && user.IsMethodist())
                 _materilaValidationHelper.CheckMethodistAccessToMaterialForDeleteAndUpdate(user.UserId, material);
-
         }
     }
 }

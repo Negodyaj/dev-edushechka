@@ -31,6 +31,7 @@
         public const string AttendanceRequired = "Attendance must be provided";
         public const string PositionRequired = "Position must be provided";
         public const string ContentRequired = "Content must be provided";
+        public const string LinkRequired = "Link must be provided and shorter than 200 characters";
         public const string TextRequired = "Comment cannot be empty";
         public const string UserIdRequired = "UserId cannot be empty";
         public const string GroupIdRequired = "GroupId must be provided";
