@@ -35,6 +35,10 @@ namespace DevEdu.API.Configuration
             {
                 await HandleExceptionMessageAsync(context, ex, HttpStatusCode.Forbidden);
             }
+            catch (ConflictExpection ex)
+            {
+                await HandleExceptionMessageAsync(context, ex, HttpStatusCode.Conflict);
+            }
             catch (EntityNotFoundException ex)
             {
                 await HandleExceptionMessageAsync(context, ex, HttpStatusCode.NotFound);
