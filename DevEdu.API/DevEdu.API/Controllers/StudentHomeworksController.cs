@@ -81,16 +81,17 @@ namespace DevEdu.API.Controllers
         }
 
         // api/student-homeworks/{id}/change-status/{statusId} 
-        [HttpPatch("{id}/change-status/{statusId}")]
+        [HttpPatch("{id}/change-status/{status}")]
         [Description("Update homework status")]
         [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
         [ProducesResponseType(typeof(StudentHomeworkWithHomeworkOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<StudentHomeworkWithHomeworkOutputModel> UpdateStatusOfStudentHomeworkAsync(int id, int statusId)
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status409Conflict)]
+        public async Task<StudentHomeworkWithHomeworkOutputModel> UpdateStatusOfStudentHomeworkAsync(int id, StudentHomeworkStatusInputModel status)
         {
             var userInfo = this.GetUserIdAndRoles();
-            await _studentHomeworkService.UpdateStatusOfStudentHomeworkAsync(id, statusId, userInfo);
+            await _studentHomeworkService.UpdateStatusOfStudentHomeworkAsync(id, (StudentHomeworkStatus)status, userInfo);
             var dto = await _studentHomeworkService.GetStudentHomeworkByIdAsync(id, userInfo);
             return _mapper.Map<StudentHomeworkWithHomeworkOutputModel>(dto);
         }
