@@ -6,6 +6,7 @@ BEGIN
            l.Date,
            l.AdditionalMaterials,
            l.LinkToRecord,
+           l.IsPublished,
            l.IsDeleted,
            u.Id,
            u.FirstName,

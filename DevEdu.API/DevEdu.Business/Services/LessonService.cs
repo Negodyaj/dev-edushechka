@@ -13,7 +13,6 @@ namespace DevEdu.Business.Services
 {
     public class LessonService : ILessonService
     {
-        private readonly IUserRepository _userRepository;
         private readonly ILessonRepository _lessonRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IUserValidationHelper _userValidationHelper;
@@ -22,7 +21,6 @@ namespace DevEdu.Business.Services
         private readonly IGroupValidationHelper _groupValidationHelper;
 
         public LessonService(
-            IUserRepository userRepository,
             ILessonRepository lessonRepository,
             ICommentRepository commentRepository,
             IUserValidationHelper userValidationHelper,
@@ -31,7 +29,6 @@ namespace DevEdu.Business.Services
             IGroupValidationHelper groupValidationHelper
         )
         {
-            _userRepository = userRepository;
             _lessonRepository = lessonRepository;
             _commentRepository = commentRepository;
             _userValidationHelper = userValidationHelper;
@@ -80,7 +77,7 @@ namespace DevEdu.Business.Services
             await _lessonRepository.DeleteLessonAsync(id);
         }
 
-        public async Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(UserIdentityInfo userIdentity, int groupId)
+        public async Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(UserIdentityInfo userIdentity, int groupId, bool isPublished = true)
         {
             await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
             if (!userIdentity.IsAdmin())
@@ -89,15 +86,15 @@ namespace DevEdu.Business.Services
                 await _userValidationHelper.CheckAuthorizationUserToGroupAsync(groupId, userIdentity.UserId, currentRole);
             }
 
-            var result = await _lessonRepository.SelectAllLessonsByGroupIdAsync(groupId);
+            var result = await _lessonRepository.SelectAllLessonsByGroupIdAsync(groupId, isPublished);
 
             return result;
         }
 
-        public async Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId)
+        public async Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId, bool isPublished = true)
         {
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(teacherId);
-            return await _lessonRepository.SelectAllLessonsByTeacherIdAsync(teacherId);
+            return await _lessonRepository.SelectAllLessonsByTeacherIdAsync(teacherId, isPublished);
         }
 
         public async Task<LessonDto> SelectLessonWithCommentsByIdAsync(UserIdentityInfo userIdentity, int id)

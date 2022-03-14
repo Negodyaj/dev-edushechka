@@ -32,7 +32,7 @@ namespace DevEdu.Business.Tests
             _groupRepository = new Mock<IGroupRepository>();
             _topicRepository = new Mock<ITopicRepository>();
 
-            _sut = new LessonService(_userRepository.Object,
+            _sut = new LessonService(
                 _lessonRepository.Object,
                 _commentRepository.Object,
                 new UserValidationHelper(_userRepository.Object),
@@ -324,8 +324,9 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Verify(x => x.SelectLessonByIdAsync(It.IsAny<int>()), Times.Never);
         }
 
-        [Test]
-        public async Task SelectAllLessonsByGroupId_UserDtoAndExistingGroupIdPassed_LessonsReturnedAsync()
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task SelectAllLessonsByGroupId_UserDtoAndExistingGroupIdPassed_LessonsReturnedAsync(bool isPublished)
         {
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithRole(Role.Teacher, 3);
@@ -337,16 +338,16 @@ namespace DevEdu.Business.Tests
             _userRepository
                 .Setup(x => x.GetUsersByGroupIdAndRoleAsync(group.Id, It.IsAny<int>()))
                 .ReturnsAsync(new List<UserDto> { userDto });
-            _lessonRepository.Setup(x => x.SelectAllLessonsByGroupIdAsync(group.Id)).ReturnsAsync(expected);
+            _lessonRepository.Setup(x => x.SelectAllLessonsByGroupIdAsync(group.Id, isPublished)).ReturnsAsync(expected);
 
             //When
-            var actual = await _sut.SelectAllLessonsByGroupIdAsync(userIdentity, group.Id);
+            var actual = await _sut.SelectAllLessonsByGroupIdAsync(userIdentity, group.Id, isPublished);
 
             //Then
             Assert.AreEqual(expected, actual);
             _groupRepository.Verify(x => x.GetGroupAsync(group.Id), Times.Once);
             _userRepository.Verify(x => x.GetUsersByGroupIdAndRoleAsync(group.Id, It.IsAny<int>()), Times.Once);
-            _lessonRepository.Verify(x => x.SelectAllLessonsByGroupIdAsync(group.Id), Times.Once);
+            _lessonRepository.Verify(x => x.SelectAllLessonsByGroupIdAsync(group.Id, It.IsAny<bool>()), Times.Once);
         }
 
         [Test]
@@ -366,7 +367,7 @@ namespace DevEdu.Business.Tests
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _groupRepository.Verify(x => x.GetGroupAsync(groupId), Times.Once);
             _userRepository.Verify(x => x.GetUsersByGroupIdAndRoleAsync(groupId, It.IsAny<int>()), Times.Never);
-            _lessonRepository.Verify(x => x.SelectAllLessonsByGroupIdAsync(groupId), Times.Never);
+            _lessonRepository.Verify(x => x.SelectAllLessonsByGroupIdAsync(It.IsAny<int>(), It.IsAny<bool>()), Times.Never);
         }
 
         [Test]
@@ -388,25 +389,26 @@ namespace DevEdu.Business.Tests
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _groupRepository.Verify(x => x.GetGroupAsync(group.Id), Times.Once);
             _userRepository.Verify(x => x.GetUsersByGroupIdAndRoleAsync(group.Id, It.IsAny<int>()), Times.Once);
-            _lessonRepository.Verify(x => x.SelectAllLessonsByGroupIdAsync(group.Id), Times.Never);
+            _lessonRepository.Verify(x => x.SelectAllLessonsByGroupIdAsync(It.IsAny<int>(), It.IsAny<bool>()), Times.Never);
         }
 
-        [Test]
-        public async Task SelectAllLessonsByTeacherId_ExistingTeacherIdPassed_LessonsReturnedAsync()
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task SelectAllLessonsByTeacherId_ExistingTeacherIdPassed_LessonsReturnedAsync(bool isPublished)
         {
             //Given
             var expected = LessonData.GetLessons();
             var teacher = UserData.GetTeacherDto();
 
-            _lessonRepository.Setup(x => x.SelectAllLessonsByTeacherIdAsync(teacher.Id)).ReturnsAsync(expected);
+            _lessonRepository.Setup(x => x.SelectAllLessonsByTeacherIdAsync(teacher.Id, isPublished)).ReturnsAsync(expected);
             _userRepository.Setup(x => x.GetUserByIdAsync(teacher.Id)).ReturnsAsync(teacher);
 
             //When
-            var actual = await _sut.SelectAllLessonsByTeacherIdAsync(teacher.Id);
+            var actual = await _sut.SelectAllLessonsByTeacherIdAsync(teacher.Id, isPublished);
 
             //Then
             Assert.AreEqual(expected, actual);
-            _lessonRepository.Verify(x => x.SelectAllLessonsByTeacherIdAsync(teacher.Id), Times.Once);
+            _lessonRepository.Verify(x => x.SelectAllLessonsByTeacherIdAsync(It.IsAny<int>(), It.IsAny<bool>()), Times.Once);
             _userRepository.Verify(x => x.GetUserByIdAsync(teacher.Id), Times.Once);
         }
 
@@ -425,7 +427,7 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _userRepository.Verify(x => x.GetUserByIdAsync(teacherId), Times.Once);
-            _lessonRepository.Verify(x => x.SelectAllLessonsByTeacherIdAsync(teacherId), Times.Never);
+            _lessonRepository.Verify(x => x.SelectAllLessonsByTeacherIdAsync(It.IsAny<int>(), It.IsAny<bool>()), Times.Never);
         }
 
         [Test]

@@ -1,10 +1,12 @@
 ﻿CREATE PROCEDURE [dbo].[Lesson_SelectAllByTeacherId]
-	@TeacherId int
+	@TeacherId int,
+    @IsPublished int
 AS
 BEGIN
     SELECT l.Id,
            l.Date,
            l.AdditionalMaterials,
+           l.IsPublished,
            u.Id,
            u.FirstName,
            u.LastName,
@@ -25,5 +27,5 @@ BEGIN
 		inner join dbo.[Group] g on g.Id = gl.GroupId
 		inner join dbo.Course c on g.CourseId = c.Id
 
-    WHERE l.TeacherId = @TeacherId and l.IsDeleted = 0
+    WHERE l.TeacherId = @TeacherId and l.IsDeleted = 0 and l.IsPublished = @IsPublished
 END

@@ -14,8 +14,8 @@ namespace DevEdu.Business.Services
         Task DeleteStudentFromLessonAsync(int lessonId, int studentId, UserIdentityInfo userIdentityInfo);
         Task DeleteTopicFromLessonAsync(int lessonId, int topicId);
         Task<List<StudentLessonDto>> SelectAllFeedbackByLessonIdAsync(int lessonId, UserIdentityInfo userIdentityInfo);
-        Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(UserIdentityInfo userIdentity, int groupId);
-        Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId);
+        Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(UserIdentityInfo userIdentity, int groupId, bool isPublished = true);
+        Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId, bool isPublished = true);
         Task<LessonDto> SelectLessonWithCommentsAndStudentsByIdAsync(UserIdentityInfo userIdentity, int id);
         Task<LessonDto> SelectLessonWithCommentsByIdAsync(UserIdentityInfo userIdentity, int id);
         Task<LessonDto> UpdateLessonAsync(UserIdentityInfo userIdentity, LessonDto lessonDto, int lessonId);

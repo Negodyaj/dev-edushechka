@@ -14,5 +14,6 @@ namespace DevEdu.DAL.Models
         public List<GroupDto> Groups { get; set; }
         public List<StudentLessonDto> Students { get; set; }
         public CourseDto Course { get; set; }
+        public bool IsPublished { get; set; }
     }
 }
