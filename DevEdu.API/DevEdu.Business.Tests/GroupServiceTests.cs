@@ -11,10 +11,9 @@ namespace DevEdu.Business.Tests
     public class GroupServiceTests
     {
         private Mock<IGroupRepository> _groupRepoMock;
-        private Mock<IUserRepository> _userRepoMock;
-        private Mock<IMaterialRepository> _materialRepoMock;
         private Mock<ILessonRepository> _lessonRepoMock;
         private GroupService _sut;
+        private Mock<IUserRepository> _userRepoMock;
 
         [SetUp]
         public void Setup()
@@ -22,13 +21,11 @@ namespace DevEdu.Business.Tests
             _groupRepoMock = new Mock<IGroupRepository>();
             _userRepoMock = new Mock<IUserRepository>();
             _lessonRepoMock = new Mock<ILessonRepository>();
-            _materialRepoMock = new Mock<IMaterialRepository>();
             var courseRepoMock = new Mock<ICourseRepository>();
             var taskRepoMock = new Mock<ITaskRepository>();
             var groupHelper = new GroupValidationHelper(_groupRepoMock.Object);
             var userHelper = new UserValidationHelper(_userRepoMock.Object);
             var lessonHelper = new LessonValidationHelper(_lessonRepoMock.Object, _groupRepoMock.Object);
-            var materialHelper = new MaterialValidationHelper(_materialRepoMock.Object, _groupRepoMock.Object, courseRepoMock.Object);
             var taskHelper = new TaskValidationHelper(taskRepoMock.Object, _groupRepoMock.Object, courseRepoMock.Object);
             _sut = new
             (
@@ -37,7 +34,6 @@ namespace DevEdu.Business.Tests
                 _userRepoMock.Object,
                 userHelper,
                 lessonHelper,
-                materialHelper,
                 taskHelper
             );
         }
@@ -199,58 +195,6 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroupAsync(groupId), Times.Once);
             _lessonRepoMock.Verify(x => x.SelectLessonByIdAsync(lessonId), Times.Once);
             _groupRepoMock.Verify(x => x.RemoveGroupFromLessonAsync(groupId, lessonId), Times.Once);
-        }
-
-
-        [Test]
-        public async Task AddMaterialToGroup_GroupIdAndMaterialId_GroupMaterialReferenceCreated()
-        {
-            //Given
-            var groupId = 2;
-            var materialId = 2;
-            var expectedAffectedRows = 3;
-            var groupDto = GroupData.GetGroupDto();
-            var materialDto = MaterialData.GetMaterialDto();
-            var userInfo = GroupData.GetUserInfo();
-
-            _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
-            _materialRepoMock.Setup(x => x.GetMaterialByIdAsync(materialId)).ReturnsAsync(materialDto);
-            _groupRepoMock.Setup(x => x.AddGroupMaterialReferenceAsync(groupId, materialId)).ReturnsAsync(expectedAffectedRows);
-
-            //When
-            var actualAffectedRows = await _sut.AddGroupMaterialReference(groupId, materialId, userInfo);
-
-            //Than
-            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
-
-            _groupRepoMock.Verify(x => x.GetGroupAsync(groupId), Times.Once);
-            _materialRepoMock.Verify(x => x.GetMaterialByIdAsync(materialId), Times.Once);
-            _groupRepoMock.Verify(x => x.AddGroupMaterialReferenceAsync(groupId, materialId), Times.Once);
-        }
-
-        [Test]
-        public async Task DeleteMaterialFromGroup_GroupIdAndMaterialId_GroupMaterialReferenceDeleted()
-        {
-            //Given
-            var groupId = 2;
-            var materialId = 2;
-            var expectedAffectedRows = 3;
-            var groupDto = GroupData.GetGroupDto();
-            var materialDto = MaterialData.GetMaterialDto();
-            var userInfo = GroupData.GetUserInfo();
-
-            _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
-            _materialRepoMock.Setup(x => x.GetMaterialByIdAsync(materialId)).ReturnsAsync(materialDto);
-            _groupRepoMock.Setup(x => x.RemoveGroupMaterialReferenceAsync(groupId, materialId)).ReturnsAsync(expectedAffectedRows);
-
-            //When
-            var actualAffectedRows = await _sut.RemoveGroupMaterialReference(groupId, materialId, userInfo);
-
-            //Than
-            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
-            _groupRepoMock.Verify(x => x.GetGroupAsync(groupId), Times.Once);
-            _materialRepoMock.Verify(x => x.GetMaterialByIdAsync(materialId), Times.Once);
-            _groupRepoMock.Verify(x => x.RemoveGroupMaterialReferenceAsync(groupId, materialId), Times.Once);
         }
 
         [TestCase(Role.Student)]
