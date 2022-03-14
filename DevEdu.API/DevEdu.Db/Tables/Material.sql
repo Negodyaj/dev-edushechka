@@ -2,7 +2,7 @@
 (
     Id        int           NOT NULL IDENTITY (1,1),
     Content   nvarchar(max) NOT NULL,
-    Link      nvarchar(200) NOT NULL,
+    Link      nvarchar(200),
     IsDeleted bit           NOT NULL DEFAULT '0',
     CONSTRAINT [PK_MATERIAL] PRIMARY KEY CLUSTERED
         ([Id] ASC) WITH (IGNORE_DUP_KEY = OFF)
