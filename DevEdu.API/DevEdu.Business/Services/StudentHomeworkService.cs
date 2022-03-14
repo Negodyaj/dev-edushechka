@@ -3,10 +3,9 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using TaskStatus = DevEdu.DAL.Enums.StudentHomeworkStatus;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -70,20 +69,35 @@ namespace DevEdu.Business.Services
             return studentHomeworkDto;
         }
 
-        public async Task<int> UpdateStatusOfStudentHomeworkAsync(int id, int statusId, UserIdentityInfo userInfo)
+        public async Task<StudentHomeworkStatus> UpdateStatusOfStudentHomeworkAsync(int id, StudentHomeworkStatus status, UserIdentityInfo userInfo)
         {
-            var dto = await _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFoundAsync(id);
+            var studentHomeworkDto = await _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFoundAsync(id);
             if (!userInfo.IsAdmin())
-                await _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccessAsync(dto.User.Id, userInfo.UserId);
+                await _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccessAsync(studentHomeworkDto.User.Id, userInfo.UserId);
+
+            _studentHomeworkValidationHelper.CheckUserCanChangeStatus(userInfo, studentHomeworkDto, status);
 
             DateTime completedDate = default;
-            if (statusId == (int)StudentHomeworkStatus.Accepted)
+            DateTime answerDate = default;
+
+            if (status == StudentHomeworkStatus.Done)
+            {
                 completedDate = DateTime.Now;
+                if (studentHomeworkDto.Homework.EndDate < studentHomeworkDto.AnswerDate)
+                    status = StudentHomeworkStatus.DoneWithLate;
+            }
 
-            completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day, completedDate.Hour, completedDate.Minute, completedDate.Second);
-            var result = await _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, statusId, completedDate);
+            if (status == StudentHomeworkStatus.OnCheck || status == StudentHomeworkStatus.OnCheckRepeat)
+                answerDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                    DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
-            return result;
+
+            completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day,
+                completedDate.Hour, completedDate.Minute, completedDate.Second);
+
+            var result = await _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, (int)status, completedDate, answerDate);
+
+            return (StudentHomeworkStatus)result;
         }
 
         public async Task<StudentHomeworkDto> GetStudentHomeworkByIdAsync(int id, UserIdentityInfo userInfo)
