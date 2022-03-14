@@ -41,7 +41,6 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     lessonDto.Date,
-                    lessonDto.TeacherComment,
                     TeacherId = lessonDto.Teacher.Id,
                     lessonDto.LinkToRecord
                 },
@@ -193,7 +192,6 @@ namespace DevEdu.DAL.Repositories
                new
                {
                    lessonDto.Id,
-                   lessonDto.TeacherComment,
                    lessonDto.LinkToRecord,
                    lessonDto.Date
                },

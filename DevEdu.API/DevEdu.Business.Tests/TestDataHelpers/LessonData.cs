@@ -18,7 +18,6 @@ namespace DevEdu.Business.Tests
             {
                 Id = 6,
                 Date = DateTime.ParseExact("01.01.2021", _dateFormat, CultureInfo.InvariantCulture),
-                TeacherComment = "Comment",
                 Teacher = new UserDto
                 {
                     Id = 10
@@ -39,7 +38,6 @@ namespace DevEdu.Business.Tests
             {
                 Id = 6,
                 Date = DateTime.ParseExact("01.01.2021", _dateFormat, CultureInfo.InvariantCulture),
-                TeacherComment = "Comment",
                 Teacher = new UserDto
                 {
                     Id = 10
@@ -73,7 +71,6 @@ namespace DevEdu.Business.Tests
                     new() { Id = 2 },
                     new() { Id = 3 }
                 },
-                TeacherComment = "Good",
                 LinkToRecord = "http://link.com"
             };
         }
@@ -84,7 +81,6 @@ namespace DevEdu.Business.Tests
             {
                 Id = LessonId,
                 Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
-                TeacherComment = "Good",
                 Teacher = new UserDto
                 {
                     Id = 3
@@ -133,7 +129,6 @@ namespace DevEdu.Business.Tests
                 {
                     Id = 2,
                     Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
-                    TeacherComment = "Good",
                     Teacher = UserData.GetTeacherDto(),
                     Topics = new List<TopicDto>()
                     {
@@ -147,7 +142,6 @@ namespace DevEdu.Business.Tests
                 {
                     Id = 5,
                     Date = DateTime.ParseExact("12.07.2021", _dateFormat, CultureInfo.InvariantCulture),
-                    TeacherComment = "Good",
                     Teacher = UserData.GetTeacherDto(),
                     Topics = new List<TopicDto>()
                     {

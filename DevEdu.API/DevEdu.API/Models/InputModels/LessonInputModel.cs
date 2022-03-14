@@ -9,9 +9,6 @@ namespace DevEdu.API.Models
         [Required(ErrorMessage = DateRequired)]
         public string Date { get; set; }
 
-        [Required(ErrorMessage = TeacherCommentRequired)]
-        public string TeacherComment { get; set; }
-
         [Required(ErrorMessage = TeacherIdRequired)]
         public int TeacherId { get; set; }
 

@@ -5,7 +5,6 @@ BEGIN
 		SELECT 
 		l.Id, 
 		l.Date, 
-		l.TeacherComment, 
 		u.Id,
 		u.FirstName,
 		u.LastName,

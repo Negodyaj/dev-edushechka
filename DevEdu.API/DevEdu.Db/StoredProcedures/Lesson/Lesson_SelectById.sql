@@ -5,7 +5,6 @@ BEGIN
 	SELECT 
 		l.Id, 
 		l.Date, 
-		l.TeacherComment,
 		l.LinkToRecord,
 		l.IsDeleted,
 		u.Id,

@@ -6,9 +6,6 @@ namespace DevEdu.API.Models
 {
     public class LessonUpdateInputModel
     {
-        [Required(ErrorMessage = TeacherCommentRequired)]
-        public string TeacherComment { get; set; }
-
         [Required(ErrorMessage = LinkToRecordIdRequired)]
         [Url]
         public string LinkToRecord { get; set; }

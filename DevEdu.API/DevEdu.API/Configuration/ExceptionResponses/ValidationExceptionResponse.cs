@@ -79,7 +79,6 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 ValidationMessage.RatingRequired => 1034,
                 ValidationMessage.ReportingPeriodNumberRequired => 1035,
                 ValidationMessage.DateRequired => 1036,
-                ValidationMessage.TeacherCommentRequired => 1037,
                 ValidationMessage.TeacherIdRequired => 1038,
                 ValidationMessage.LinkToRecordIdRequired => 1039,
                 ValidationMessage.SumRequired => 1040,

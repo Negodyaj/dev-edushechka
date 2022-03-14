@@ -44,37 +44,6 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Student)]
-        public async Task AddCommentToLesson_CommentDtoAndExistingLessonInPassed_AddCommentAndReturnedAsync(Enum role)
-        {
-            //Given
-            var commentDto = CommentData.GetCommentDto();
-            const int lessonId = 1;
-            const int expectedCommentId = 1;
-            var lessonDto = CommentData.GetLessonDto();
-            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var userId = userInfo.UserId;
-
-            _commentRepoMock.Setup(x => x.AddCommentAsync(commentDto)).ReturnsAsync(expectedCommentId);
-            _commentRepoMock.Setup(x => x.GetCommentAsync(expectedCommentId)).ReturnsAsync(commentDto);
-            _lessonRepoMock.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(lessonDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByLessonIdAsync(lessonId)).ReturnsAsync(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(CommentData.GetGroupsDto());
-
-            //When
-            var actualComment = await _sut.AddCommentToLessonAsync(lessonId, commentDto, userInfo);
-
-            //Than
-            Assert.AreEqual(commentDto, actualComment);
-            _commentRepoMock.Verify(x => x.AddCommentAsync(commentDto), Times.Once);
-            _commentRepoMock.Verify(x => x.GetCommentAsync(expectedCommentId), Times.Once);
-            _lessonRepoMock.Verify(x => x.SelectLessonByIdAsync(lessonId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByLessonIdAsync(lessonId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userId), Times.Once);
-        }
-
-        [TestCase(Role.Teacher)]
-        [TestCase(Role.Tutor)]
-        [TestCase(Role.Student)]
         public async Task AddCommentToStudentAnswer_CommentDtoAndExistingStudentAnswerIdPassed_CommentReturnedAsync(Enum role)
         {
             //Given
@@ -167,53 +136,6 @@ namespace DevEdu.Business.Tests
             //Than
             _commentRepoMock.Verify(x => x.GetCommentAsync(commentId), Times.Once);
             _commentRepoMock.Verify(x => x.DeleteCommentAsync(commentId), Times.Once);
-        }
-
-        [TestCase(Role.Teacher)]
-        [TestCase(Role.Tutor)]
-        [TestCase(Role.Student)]
-        public void AddCommentToLesson_WhenLessonIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
-        {
-            //Given
-            var commentDto = CommentData.GetCommentDto();
-            var lesson = CommentData.GetLessonDto();
-            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(lesson), lesson.Id);
-
-            //When
-            var ex = Assert.ThrowsAsync<EntityNotFoundException>(
-                () => _sut.AddCommentToLessonAsync(lesson.Id, commentDto, userInfo));
-
-            //Than
-            Assert.That(ex.Message, Is.EqualTo(expectedException));
-        }
-
-        [TestCase(Role.Teacher)]
-        [TestCase(Role.Tutor)]
-        [TestCase(Role.Student)]
-        public void AddCommentToLesson_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
-        {
-            //Given
-            var commentDto = CommentData.GetCommentDto();
-            const int lessonId = 1;
-            var lessonDto = CommentData.GetLessonDto();
-            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var userId = userInfo.UserId;
-            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userId, lessonId);
-
-            _lessonRepoMock.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(lessonDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByLessonIdAsync(lessonId)).ReturnsAsync(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(GroupData.GetGroupDtos());
-
-            //When
-            var ex = Assert.ThrowsAsync<AuthorizationException>(
-                () => _sut.AddCommentToLessonAsync(lessonId, commentDto, userInfo));
-
-            //Than
-            Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _lessonRepoMock.Verify(x => x.SelectLessonByIdAsync(lessonId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByLessonIdAsync(lessonId), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
