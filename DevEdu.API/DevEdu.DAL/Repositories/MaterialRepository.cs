@@ -12,21 +12,21 @@ namespace DevEdu.DAL.Repositories
     public class MaterialRepository : BaseRepository, IMaterialRepository
     {
         private const string _materialInsertProcedure = "dbo.Material_Insert";
-        private const string _materialSelectAllProcedure = "dbo.Material_SelectAll";
         private const string _materialSelectByIdProcedure = "dbo.Material_SelectById";
         private const string _materialUpdateProcedure = "dbo.Material_Update";
-        private const string _materialDeleteProcedure = "dbo.Material_Delete";
+        private const string _materialDeleteOrRestoreProcedure = "dbo.Material_DeleteOrRestore";
         private const string _materialSelectAllByCourseIdProcedure = "dbo.Material_SelectByCourseId";
 
         public MaterialRepository(IOptions<DatabaseSettings> options) : base(options) {}
 
-        public async Task<int> AddMaterialAsync(MaterialDto material)
+        public async Task<int> AddMaterialAsync(MaterialDto material, int courseId)
         {
             return await _connection
                 .QuerySingleAsync<int>(
                     _materialInsertProcedure,
                     new
                     {
+                        courseId,
                         material.Content,
                         material.Link
                     },
@@ -34,20 +34,10 @@ namespace DevEdu.DAL.Repositories
                 );
         }
 
-        public async Task<List<MaterialDto>> GetAllMaterialsAsync()
-        {
-            return (await _connection
-                    .QueryAsync<MaterialDto>(
-                        _materialSelectAllProcedure,
-                        commandType: CommandType.StoredProcedure
-                    ))
-                .ToList();
-        }
-
-        public async Task<MaterialDto> GetMaterialByIdAsync(int id)
+        public async Task<MaterialDtoWithCourseId> GetMaterialByIdAsync(int id)
         {
             return await _connection
-                .QuerySingleOrDefaultAsync<MaterialDto>(
+                .QuerySingleOrDefaultAsync<MaterialDtoWithCourseId>(
                     _materialSelectByIdProcedure,
                     new { id },
                     commandType: CommandType.StoredProcedure
@@ -68,10 +58,10 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public async Task<int> DeleteMaterialAsync(int id, bool isDeleted)
+        public async Task<int> DeleteOrRestoreMaterialAsync(int id, bool isDeleted)
         {
             return await _connection.ExecuteAsync(
-                _materialDeleteProcedure,
+                _materialDeleteOrRestoreProcedure,
                 new
                 {
                     id,

@@ -86,8 +86,7 @@ namespace DevEdu.API.Configuration
             CreateMap<CourseDto, CourseInfoFullOutputModel>();
             CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<CourseDto, CourseInfoBaseOutputModel>();
-            CreateMap<MaterialDto, MaterialInfoOutputModel>();
-            CreateMap<MaterialDto, MaterialInfoWithCoursesOutputModel>();
+            CreateMap<MaterialDto, MaterialOutputModel>();
             CreateMap<UserDto, UserInfoOutPutModel>();
             CreateMap<UserDto, UserFullInfoOutPutModel>()
                 .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src => src.RegistrationDate.ToString(_dateFormat)))

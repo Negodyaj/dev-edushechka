@@ -3,6 +3,7 @@
 AS
 BEGIN
     SELECT m.Id,
+           m.CourseId,
            m.Content,
            m.Link
     FROM dbo.Material m

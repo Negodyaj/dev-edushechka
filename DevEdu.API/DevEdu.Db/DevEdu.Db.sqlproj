@@ -75,7 +75,6 @@
     <Folder Include="StoredProcedures\Task" />
     <Folder Include="StoredProcedures\Notification" />
     <Folder Include="StoredProcedures\Payment" />
-    <Folder Include="StoredProcedures\Course_Material" />
     <Folder Include="StoredProcedures\Course_Task" />
     <Folder Include="StoredProcedures\User_Role" />
     <Folder Include="StoredProcedures\Group" />
@@ -95,7 +94,6 @@
     <Build Include="Tables\Task.sql" />
     <Build Include="Tables\Course_Task.sql" />
     <Build Include="Tables\Material.sql" />
-    <Build Include="Tables\Course_Material.sql" />
     <Build Include="Tables\GroupStatus.sql" />
     <Build Include="Tables\Group.sql" />
     <Build Include="Tables\User_Group.sql" />
@@ -134,11 +132,10 @@
     <Build Include="StoredProcedures\User_Group\User_Group_Delete.sql" />
     <Build Include="StoredProcedures\Lesson_Topic\Lesson_Topic_Insert.sql" />
     <Build Include="StoredProcedures\Lesson_Topic\Lesson_Topic_Delete.sql" />
-    <Build Include="StoredProcedures\Material\Material_SelectAll.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectById.sql" />
     <Build Include="StoredProcedures\Material\Material_Insert.sql" />
     <Build Include="StoredProcedures\Material\Material_Update.sql" />
-    <Build Include="StoredProcedures\Material\Material_Delete.sql" />
+    <Build Include="StoredProcedures\Material\Material_DeleteOrRestore.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_Delete.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_Insert.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectById.sql" />
@@ -181,7 +178,6 @@
     <Build Include="StoredProcedures\Homework\Homework_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\Homework_SelectAllByTaskId.sql" />
     <Build Include="StoredProcedures\Course\Course_SelectByTaskId.sql" />
-    <Build Include="StoredProcedures\Course\Course_SelectByMaterialId.sql" />
     <Build Include="StoredProcedures\User\User_SelectByEmail.sql" />
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_DeleteAllTopicsByCourseId.sql" />
     <Build Include="StoredProcedures\Course_Topic\Course_Topic_AddMultiple.sql" />
@@ -235,8 +231,6 @@
     <Build Include="StoredProcedures\User\User_UpdatePassword.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />
-    <None Include="StoredProcedures\Course_Material\Course_Material_Insert.sql" />
     <None Include="StoredProcedures\Course_Task\Course_Task_Delete.sql" />
     <None Include="StoredProcedures\Course_Task\Course_Task_Insert.sql" />
     <None Include="DevEdu.Db.publish.xml" />

@@ -124,21 +124,7 @@ namespace DevEdu.API.Controllers
         public async Task<ActionResult> AddCourseMaterialReferenceAsync(int courseId, [FromBody] MaterialInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            var materialId = _materialService.AddMaterialAsync(dto).Result;
-            await _courseService.AddCourseMaterialReferenceAsync(courseId, materialId);
-            return NoContent();
-        }
-
-        //  api/courses/{courseId}/material/{materialId}
-        [AuthorizeRoles(Role.Methodist)]
-        [HttpDelete("{courseId}/material/{materialId}")]
-        [Description("Remove material from course")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> RemoveCourseMaterialReferenceAsync(int courseId, int materialId)
-        {
-            await _courseService.RemoveCourseMaterialReferenceAsync(courseId, materialId);
+            await _materialService.AddMaterialAsync(dto, courseId);
             return NoContent();
         }
 

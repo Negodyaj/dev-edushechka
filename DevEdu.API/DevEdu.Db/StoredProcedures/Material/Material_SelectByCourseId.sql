@@ -2,10 +2,10 @@
     @CourseId int
 AS
 BEGIN
-    SELECT M.Id,
-           M.Content,
-           M.Link
-    FROM dbo.Material M WITH (NOLOCK)
-             LEFT JOIN dbo.Course_Material C WITH (NOLOCK) ON M.Id = C.MaterialId
-    WHERE (C.CourseId = @CourseId AND M.IsDeleted = 0)
+    SELECT m.Id,
+           m.Content,
+           m.Link
+    FROM dbo.Material m WITH (NOLOCK)
+             LEFT JOIN dbo.Course c WITH (NOLOCK) ON m.CourseId = c.Id
+    WHERE (c.Id = @CourseId AND m.IsDeleted = 0)
 END

@@ -22,14 +22,10 @@ namespace DevEdu.DAL.Repositories
         private const string _courseTopicDeleteAllTopicsByCourseIdProcedure = "dbo.Course_Topic_DeleteAllTopicsByCourseId";
         private const string _courseTopicType = "dbo.Course_TopicType";
 
-        private const string _courseMaterialInsertProcedure = "dbo.Course_Material_Insert";
-        private const string _courseMaterialDeleteProcedure = "dbo.Course_Material_Delete";
-
         private const string _сourseTaskInsertProcedure = "dbo.Course_Task_Insert";
         private const string _сourseTaskDeleteProcedure = "dbo.Course_Task_Delete";
 
         private const string _courseSelectByTaskIdProcedure = "dbo.Course_SelectByTaskId";
-        private const string _courseSelectAllByMaterialIdProcedure = "dbo.Course_SelectByMaterialId";
 
         public CourseRepository(IOptions<DatabaseSettings> options) : base(options) 
         {
@@ -206,42 +202,6 @@ namespace DevEdu.DAL.Repositories
                     commandType: CommandType.StoredProcedure
                 ))
                 .ToList();
-        }
-
-        public async Task<List<CourseDto>> GetCoursesByMaterialIdAsync(int id)
-        {
-            return (await _connection.QueryAsync<CourseDto>(
-                    _courseSelectAllByMaterialIdProcedure,
-                    new { id },
-                    commandType: CommandType.StoredProcedure
-                ))
-                .ToList();
-        }
-
-        public async Task<int> AddCourseMaterialReferenceAsync(int courseId, int materialId)
-        {
-            return await _connection.ExecuteAsync(
-                _courseMaterialInsertProcedure,
-                new
-                {
-                    courseId,
-                    materialId
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
-
-        public async Task RemoveCourseMaterialReferenceAsync(int courseId, int materialId)
-        {
-            await _connection.ExecuteAsync(
-               _courseMaterialDeleteProcedure,
-               new
-               {
-                   courseId,
-                   materialId
-               },
-               commandType: CommandType.StoredProcedure
-           );
         }
     }
 }

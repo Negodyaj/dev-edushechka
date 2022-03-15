@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.Material_Delete
+﻿CREATE PROCEDURE dbo.Material_DeleteOrRestore
 	@Id int,
 	@IsDeleted bit
 AS
