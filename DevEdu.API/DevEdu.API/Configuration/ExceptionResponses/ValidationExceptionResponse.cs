@@ -79,7 +79,7 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 ValidationMessage.RatingRequired => 1034,
                 ValidationMessage.ReportingPeriodNumberRequired => 1035,
                 ValidationMessage.DateRequired => 1036,
-                ValidationMessage.TeacherCommentRequired => 1037,
+                ValidationMessage.AdditionalMaterialsRequired => 1037,
                 ValidationMessage.TeacherIdRequired => 1038,
                 ValidationMessage.LinkToRecordIdRequired => 1039,
                 ValidationMessage.SumRequired => 1040,
@@ -97,6 +97,7 @@ namespace DevEdu.API.Configuration.ExceptionResponses
                 ValidationMessage.WrongFormatStartDate => 1052,
                 ValidationMessage.WrongValueOfRating => 1053,
                 ValidationMessage.OldPasswordRequired => 1054,
+                ValidationMessage.PhotoWrongExtension => 1055,
                 _ => 1500
             };
         }

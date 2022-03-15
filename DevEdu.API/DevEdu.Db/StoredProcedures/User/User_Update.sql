@@ -6,7 +6,6 @@
 	@Username		nvarchar(50)	NULL,
 	@CityId			int				NULL,
 	@GitHubAccount	nvarchar(50)	NULL,
-	@Photo			nvarchar(150)	NULL,
 	@PhoneNumber	nvarchar(12)	NULL
 AS
 BEGIN
@@ -18,7 +17,6 @@ BEGIN
 		Username		= @Username,
 		CityId			= @CityId,
 		GitHubAccount	= @GitHubAccount,
-		Photo			= @Photo,
 		PhoneNumber		= @PhoneNumber
     WHERE Id = @Id
 END

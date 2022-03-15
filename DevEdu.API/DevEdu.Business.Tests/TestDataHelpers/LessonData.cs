@@ -1,8 +1,8 @@
-﻿using DevEdu.DAL.Models;
+﻿using DevEdu.DAL.Enums;
+using DevEdu.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using DevEdu.DAL.Enums;
 
 namespace DevEdu.Business.Tests
 {
@@ -18,10 +18,45 @@ namespace DevEdu.Business.Tests
             {
                 Id = 6,
                 Date = DateTime.ParseExact("01.01.2021", _dateFormat, CultureInfo.InvariantCulture),
-                TeacherComment = "Comment",
+                AdditionalMaterials = "Comment",
                 Teacher = new UserDto
                 {
                     Id = 10
+                },
+                Groups = new List<GroupDto>
+                {
+                    new GroupDto
+                    {
+                        Id = 1
+                    }
+                }
+            };
+        }
+
+        public static LessonDto GetLessonDtoWithoutStudentsToGroup()
+        {
+            return new LessonDto
+            {
+                Id = 6,
+                Date = DateTime.ParseExact("01.01.2021", _dateFormat, CultureInfo.InvariantCulture),
+                AdditionalMaterials = "Comment",
+                Teacher = new UserDto
+                {
+                    Id = 10
+                },
+                Groups = new List<GroupDto>
+                {
+                    new GroupDto
+                    {
+                        Id = 1,
+                        Students = new List<UserDto>
+                        {
+                            new UserDto
+                            {
+                                Id = 42
+                            }
+                        }
+                    }
                 }
             };
         }
@@ -33,11 +68,11 @@ namespace DevEdu.Business.Tests
                 Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
                 Topics = new List<TopicDto>
                 {
-                    new() { Id = 4 },                    
+                    new() { Id = 4 },
                     new() { Id = 2 },
                     new() { Id = 3 }
                 },
-                TeacherComment = "Good",
+                AdditionalMaterials = "Good",
                 LinkToRecord = "http://link.com"
             };
         }
@@ -48,7 +83,7 @@ namespace DevEdu.Business.Tests
             {
                 Id = LessonId,
                 Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
-                TeacherComment = "Good",
+                AdditionalMaterials = "Good",
                 Teacher = new UserDto
                 {
                     Id = 3
@@ -56,25 +91,53 @@ namespace DevEdu.Business.Tests
                 LinkToRecord = "http://link.com",
                 Topics = new List<TopicDto>
                 {
-                    new TopicDto {Id = 4},
-                    new TopicDto {Id = 2},
-                    new TopicDto {Id = 3},
+                    new TopicDto { Id = 4 },
+                    new TopicDto { Id = 2 },
+                    new TopicDto { Id = 3 },
+                },
+                Groups = new List<GroupDto>
+                {
+                    new GroupDto
+                    {
+                        Id = 4,
+                        Students = new List<UserDto>
+                        {
+                            new UserDto
+                            {
+                                Id = 42
+                            },
+                            new UserDto
+                            {
+                                Id = 43
+                            },
+                            new UserDto
+                            {
+                                Id = 44
+                            },
+                            new UserDto
+                            {
+                                Id = 45
+                            }
+                        }
+                    },
                 }
             };
         }
 
         public static List<LessonDto> GetLessons()
         {
-            return new List<LessonDto>{
+            return new List<LessonDto>
+            {
                 new LessonDto
                 {
                     Id = 2,
                     Date = DateTime.ParseExact("06.07.2021", _dateFormat, CultureInfo.InvariantCulture),
-                    TeacherComment = "Good",
+                    AdditionalMaterials = "Good",
                     Teacher = UserData.GetTeacherDto(),
                     Topics = new List<TopicDto>()
                     {
-                        new TopicDto{
+                        new TopicDto
+                        {
                             Id = 4,
                             Name = "oop"
                         }
@@ -84,15 +147,17 @@ namespace DevEdu.Business.Tests
                 {
                     Id = 5,
                     Date = DateTime.ParseExact("12.07.2021", _dateFormat, CultureInfo.InvariantCulture),
-                    TeacherComment = "Good",
+                    AdditionalMaterials = "Good",
                     Teacher = UserData.GetTeacherDto(),
                     Topics = new List<TopicDto>()
                     {
-                        new TopicDto{
+                        new TopicDto
+                        {
                             Id = 6,
                             Name = "service"
                         },
-                        new TopicDto{
+                        new TopicDto
+                        {
                             Id = 7,
                             Name = "tests"
                         }
@@ -103,7 +168,8 @@ namespace DevEdu.Business.Tests
 
         public static List<StudentLessonDto> GetAttendances()
         {
-            return new List<StudentLessonDto> {
+            return new List<StudentLessonDto>
+            {
                 new StudentLessonDto
                 {
                     Id = 46,
@@ -154,6 +220,13 @@ namespace DevEdu.Business.Tests
             };
         }
 
+        public static StudentLessonDto GetDefaultStudentLessonDto()
+        {
+            return new StudentLessonDto
+            {
+            };
+        }
+
         public static List<StudentLessonDto> GetListStudentDto()
         {
             return new List<StudentLessonDto>
@@ -165,14 +238,14 @@ namespace DevEdu.Business.Tests
                     AttendanceType = (AttendanceType)2,
                     AbsenceReason = ""
                 },
-                 new StudentLessonDto
+                new StudentLessonDto
                 {
                     Id = 42,
                     Feedback = "feedback2",
                     AttendanceType = (AttendanceType)2,
                     AbsenceReason = ""
                 },
-                  new StudentLessonDto
+                new StudentLessonDto
                 {
                     Id = 42,
                     Feedback = "feedback3",
@@ -180,7 +253,6 @@ namespace DevEdu.Business.Tests
                     AbsenceReason = "Slept"
                 },
             };
-
         }
 
         public static UserDto GetUserDto()
@@ -190,6 +262,31 @@ namespace DevEdu.Business.Tests
                 Id = 42
             };
         }
+
+        public static List<UserDto> GetUsersDto()
+        {
+            return new List<UserDto>
+            {
+                new UserDto
+                {
+                    Id = 42
+                },
+                new UserDto
+                {
+                    Id = 43
+                },
+                new UserDto
+                {
+                    Id = 44
+                },
+                new UserDto
+                {
+                    Id = 45
+                }
+            };
+        }
+
+
         public static List<GroupDto> GetGroupsDto()
         {
             return new List<GroupDto>
@@ -202,6 +299,21 @@ namespace DevEdu.Business.Tests
                 new GroupDto
                 {
                     Id = 20
+                }
+            };
+        }
+
+        public static GroupDto GetGroupDto()
+        {
+            return new GroupDto
+            {
+                Id = 10,
+                Teachers = new List<UserDto>
+                {
+                    new UserDto
+                    {
+                        Id = 1
+                    }
                 }
             };
         }

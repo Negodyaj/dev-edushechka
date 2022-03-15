@@ -1,12 +1,19 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.Helpers;
 using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
+using DevEdu.Core;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DevEdu.Business.Tests
@@ -15,15 +22,20 @@ namespace DevEdu.Business.Tests
     {
 
         private Mock<IUserRepository> _repoMock;
+        private Mock<IOptions<FilesSettings>> _fileSettingsMock;
         private UserValidationHelper _validationHelper;
         private UserService _sut;
+        private Mock<IFileHelper> _workWithFilesMock;
+        private const string _folderUserPhotoPath = "/media/userPhoto/";
 
         [SetUp]
         public void Setup()
         {
             _repoMock = new Mock<IUserRepository>();
+            _fileSettingsMock = new Mock<IOptions<FilesSettings>>();
             _validationHelper = new UserValidationHelper(_repoMock.Object);
-            _sut = new UserService(_repoMock.Object, _validationHelper);
+            _workWithFilesMock = new Mock<IFileHelper>();
+            _sut = new UserService(_repoMock.Object, _validationHelper, _fileSettingsMock.Object, _workWithFilesMock.Object);
         }
 
         [Test]
@@ -325,6 +337,75 @@ namespace DevEdu.Business.Tests
             //Than
             _repoMock.Verify(x => x.DeleteUserAsync(userId), Times.Once);
             _repoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
+        }
+
+        [TestCase("test.jpg", "/staticFolder/")]
+        [TestCase("test.jpeg", "/staticFolder/")]
+        [TestCase("test.png", "/staticFolder/")]
+        [TestCase("test.png", "/staticFolder")]
+        [TestCase("test.png", "/")]
+        [TestCase("test.png", "")]
+        public async Task ChangeUserPhoto_UserIdAndIFormFile_FileCreatedAndUpdatedInDBTryDeletedOld(string fileName,
+            string staticFolderPath)
+        {
+
+            //given
+            var user = UserData.GetUserDto();
+            var userId = user.Id;
+            var md5Hash = "sdsdsasd";
+
+            var fileMock = new Mock<IFormFile>();
+            var content = "Hello World from a Fake File";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write(content);
+            writer.Flush();
+
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.FileName).Returns(fileName);
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+
+            _fileSettingsMock.Setup(x => x.Value).Returns(new FilesSettings() { PathToStaticFolder = staticFolderPath });
+            _repoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(user);
+            _workWithFilesMock.Setup(x => x.ComputeFileHash(It.IsAny<IFormFile>())).Returns(md5Hash);
+
+            var sbPathToSavePhoto = new StringBuilder();
+            sbPathToSavePhoto.Append(staticFolderPath.TrimEnd('/'));
+            sbPathToSavePhoto.Append(_folderUserPhotoPath);
+            sbPathToSavePhoto.Append(md5Hash);
+            sbPathToSavePhoto.Append(DateTime.Now.ToString("yyyyMMddhhmmss"));
+            sbPathToSavePhoto.Append(Path.GetExtension(fileName));
+            var expected = sbPathToSavePhoto.ToString().TrimStart('.');
+
+            //when
+
+            var actual = await _sut.ChangeUserPhotoAsync(userId, fileMock.Object);
+
+            //then 
+            Assert.AreEqual(expected, actual);
+            _repoMock.Verify(x => x.GetUserByIdAsync(It.IsAny<int>()), Times.Once());
+            _workWithFilesMock.Verify(x => x.ComputeFileHash(It.IsAny<IFormFile>()), Times.Once());
+            _workWithFilesMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<IFormFile>()), Times.Once());
+            _workWithFilesMock.Verify(x => x.TryDeleteFile(It.IsAny<string>()), Times.Once());
+        }
+
+
+        [Test]
+        public async Task ChangeUserPhoto_WhenUserIsNotFound_EntityNotFoundException()
+        {
+            //given
+            var userId = 42;
+            _repoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync((UserDto?)null);
+            var fileMock = new Mock<IFormFile>();
+
+            //when then
+
+            Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.ChangeUserPhotoAsync(userId, fileMock.Object));
+            _repoMock.Verify(x => x.GetUserByIdAsync(It.IsAny<int>()), Times.Once());
+            _workWithFilesMock.Verify(x => x.ComputeFileHash(It.IsAny<IFormFile>()), Times.Never());
+            _workWithFilesMock.Verify(x => x.CreateFile(It.IsAny<string>(), It.IsAny<IFormFile>()), Times.Never());
+            _workWithFilesMock.Verify(x => x.TryDeleteFile(It.IsAny<string>()), Times.Never());
         }
     }
 }

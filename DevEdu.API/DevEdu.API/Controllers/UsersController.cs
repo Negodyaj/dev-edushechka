@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace DevEdu.API.Controllers
@@ -24,12 +25,14 @@ namespace DevEdu.API.Controllers
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IAuthenticationService _authenticationService;
+        private readonly List<string> _acceptableFileExtensions;
 
         public UsersController(IMapper mapper, IUserService userService, IAuthenticationService authenticationService)
         {
             _mapper = mapper;
             _userService = userService;
             _authenticationService = authenticationService;
+            _acceptableFileExtensions = new List<string> { ".jpg", ".jpeg", ".png" };
         }
 
         // api/users/5
@@ -101,6 +104,33 @@ namespace DevEdu.API.Controllers
 
             return NoContent();
         }
+
+        [Authorize]
+        [HttpPost("photo")]
+        [Description("Upload photo for current user (jpg,png)")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public async Task<ActionResult> UpdatePhoto(IFormFile photo)
+        {
+            if (photo == null)
+            {
+                throw new ValidationException(nameof(photo), ValidationMessage.PhotoRequired);
+            }
+            var extension = Path.GetExtension(photo.FileName);
+            if (!_acceptableFileExtensions.Contains(extension))
+            {
+                throw new ValidationException(nameof(photo), ValidationMessage.PhotoWrongExtension);
+            }
+
+            var userId = this.GetUserId();
+
+            var pathToReturn = await _userService.ChangeUserPhotoAsync(userId, photo);
+
+            return StatusCode(StatusCodes.Status201Created, pathToReturn);
+        }
+
 
         // api/users/5
         [AuthorizeRoles(Role.Manager)]
