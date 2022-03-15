@@ -210,7 +210,7 @@ namespace DevEdu.Business.Tests
             var materialId = 2;
             var expectedAffectedRows = 3;
             var groupDto = GroupData.GetGroupDto();
-            var materialDto = MaterialData.GetMaterialDtoWithTags();
+            var materialDto = MaterialData.GetMaterialDto();
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
@@ -236,7 +236,7 @@ namespace DevEdu.Business.Tests
             var materialId = 2;
             var expectedAffectedRows = 3;
             var groupDto = GroupData.GetGroupDto();
-            var materialDto = MaterialData.GetMaterialDtoWithTags();
+            var materialDto = MaterialData.GetMaterialDto();
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
