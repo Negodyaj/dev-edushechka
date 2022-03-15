@@ -5,7 +5,8 @@ BEGIN
 	SELECT
 		g.Id,
 		g.Name,
-		g.StartDate
+		g.StartDate,
+		g.EndDate
 	FROM dbo.Group_Material gm
 		left join dbo.[Group] g on g.Id = gm.GroupId
 	WHERE 
