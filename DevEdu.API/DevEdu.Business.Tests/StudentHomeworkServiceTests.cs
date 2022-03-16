@@ -9,6 +9,7 @@ using NUnit.Framework;
 using System;
 using DevEdu.Business.Tests.TestDataHelpers;
 using System.Threading.Tasks;
+using DevEdu.Business.Tests.TestCaseSources;
 
 namespace DevEdu.Business.Tests
 {
@@ -160,12 +161,14 @@ namespace DevEdu.Business.Tests
             DateTime dateTime = DateTime.Now;
             dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
 
-            int countEntry = 2;
+            var groupsDto = CommentData.GetGroupsDto();
+            int countGetGroupIsInvokedByMethod = 2;
+            int countMethodsIsInvoked = 2;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _studentHomeworkRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)acceptedStatus, dateTime, null)).ReturnsAsync((int)acceptedStatus);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id)).ReturnsAsync(groupsDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(groupsDto);
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentHomeworkDto);
 
             // When
@@ -175,8 +178,8 @@ namespace DevEdu.Business.Tests
             // Then
             Assert.AreEqual(dateTime, dto.CompletedDate);
             _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)acceptedStatus, dateTime, It.IsAny<DateTime>()), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id), Times.Exactly(4));
-            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Exactly(countEntry));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id), Times.Exactly(countGetGroupIsInvokedByMethod * countMethodsIsInvoked));
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Exactly(countMethodsIsInvoked));
         }
 
         [TestCase(Role.Teacher)]
@@ -185,6 +188,7 @@ namespace DevEdu.Business.Tests
         {
             // Given
             var studentHomeworkDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskWithAcceptedTaskStatusDto();
+            var groupsDto = CommentData.GetGroupsDto();
             studentHomeworkDto.Homework.EndDate = DateTime.Now.AddDays(-1);
             const int homeworkId = 1;
             var acceptedStatus = StudentHomeworkStatus.DoneWithLate;
@@ -193,14 +197,15 @@ namespace DevEdu.Business.Tests
             dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
             studentHomeworkDto.AnswerDate = dateTime;
 
-            int countEntry = 2;
+            int countGetGroupIsInvokedByMethod = 2;
+            int countMethodsIsInvoked = 2;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
             _studentHomeworkRepoMock
                 .Setup(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)acceptedStatus, It.IsAny<DateTime>(), null))
                 .ReturnsAsync((int)acceptedStatus);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id)).ReturnsAsync(groupsDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(groupsDto);
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentHomeworkDto);
 
             // When
@@ -210,8 +215,8 @@ namespace DevEdu.Business.Tests
             // Then
             Assert.AreEqual(dateTime, dto.CompletedDate);
             _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)acceptedStatus, It.IsAny<DateTime>(), It.IsAny<DateTime>()), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id), Times.Exactly(4));
-            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Exactly(countEntry));
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id), Times.Exactly(countGetGroupIsInvokedByMethod * countMethodsIsInvoked));
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Exactly(countMethodsIsInvoked));
         }
 
         [TestCase(Role.Teacher)]
@@ -570,34 +575,8 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(expectedException, actualException.Message);
         }
 
-        [TestCase(StudentHomeworkStatus.NotDone, StudentHomeworkStatus.NotDone, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.NotDone, StudentHomeworkStatus.ToFix, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.NotDone, StudentHomeworkStatus.OnCheckRepeat, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.NotDone, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.NotDone, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.OnCheck, StudentHomeworkStatus.OnCheck, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.OnCheck, StudentHomeworkStatus.NotDone, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.OnCheck, StudentHomeworkStatus.OnCheckRepeat, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.ToFix, StudentHomeworkStatus.ToFix, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.ToFix, StudentHomeworkStatus.NotDone, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.ToFix, StudentHomeworkStatus.OnCheck, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.ToFix, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.ToFix, StudentHomeworkStatus.DoneWithLate, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.OnCheckRepeat, StudentHomeworkStatus.OnCheckRepeat, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.OnCheckRepeat, StudentHomeworkStatus.NotDone, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.OnCheckRepeat, StudentHomeworkStatus.OnCheck, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus)]
-        [TestCase(StudentHomeworkStatus.Done, StudentHomeworkStatus.NotDone, ServiceMessages.HomeworkStatusCantBeChanged)]
-        [TestCase(StudentHomeworkStatus.Done, StudentHomeworkStatus.OnCheck, ServiceMessages.HomeworkStatusCantBeChanged)]
-        [TestCase(StudentHomeworkStatus.Done, StudentHomeworkStatus.ToFix, ServiceMessages.HomeworkStatusCantBeChanged)]
-        [TestCase(StudentHomeworkStatus.Done, StudentHomeworkStatus.OnCheckRepeat, ServiceMessages.HomeworkStatusCantBeChanged)]
-        [TestCase(StudentHomeworkStatus.Done, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChanged)]
-        [TestCase(StudentHomeworkStatus.Done, StudentHomeworkStatus.DoneWithLate, ServiceMessages.HomeworkStatusCantBeChanged)]
-        [TestCase(StudentHomeworkStatus.DoneWithLate, StudentHomeworkStatus.NotDone, ServiceMessages.HomeworkStatusCantBeChanged)]
-        [TestCase(StudentHomeworkStatus.DoneWithLate, StudentHomeworkStatus.OnCheck, ServiceMessages.HomeworkStatusCantBeChanged)]
-        [TestCase(StudentHomeworkStatus.DoneWithLate, StudentHomeworkStatus.ToFix, ServiceMessages.HomeworkStatusCantBeChanged)]
-        [TestCase(StudentHomeworkStatus.DoneWithLate, StudentHomeworkStatus.OnCheckRepeat, ServiceMessages.HomeworkStatusCantBeChanged)]
-        [TestCase(StudentHomeworkStatus.DoneWithLate, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChanged)]
-        [TestCase(StudentHomeworkStatus.DoneWithLate, StudentHomeworkStatus.DoneWithLate, ServiceMessages.HomeworkStatusCantBeChanged)]
+        [TestCaseSource(typeof(StudentHomewokServiceTestCaseSources),
+            nameof(StudentHomewokServiceTestCaseSources.GetTestCaseDataForWrongStatusPassedConflictException))]
         public void ChangeStatusOfStudentHomework_WrongStatusPassed_ConflictExceptionThrows(        
             StudentHomeworkStatus currentStatus, StudentHomeworkStatus statusToChange, string expectedErrorMessage)
         {
@@ -626,19 +605,8 @@ namespace DevEdu.Business.Tests
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Once);
         }
         
-        //First two test cases is for roles who doesn't have right on any chaning status
-        [TestCase(Role.Methodist ,StudentHomeworkStatus.NotDone, StudentHomeworkStatus.OnCheck, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
-        [TestCase(Role.Manager, StudentHomeworkStatus.NotDone, StudentHomeworkStatus.OnCheck, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
-        [TestCase(Role.Tutor, StudentHomeworkStatus.NotDone, StudentHomeworkStatus.OnCheck, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
-        [TestCase(Role.Teacher, StudentHomeworkStatus.NotDone, StudentHomeworkStatus.OnCheck, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
-        [TestCase(Role.Student, StudentHomeworkStatus.OnCheck, StudentHomeworkStatus.ToFix, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
-        [TestCase(Role.Student, StudentHomeworkStatus.OnCheck, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
-        [TestCase(Role.Student, StudentHomeworkStatus.OnCheck, StudentHomeworkStatus.DoneWithLate, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
-        [TestCase(Role.Tutor, StudentHomeworkStatus.ToFix, StudentHomeworkStatus.OnCheckRepeat, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
-        [TestCase(Role.Teacher, StudentHomeworkStatus.ToFix, StudentHomeworkStatus.OnCheckRepeat, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
-        [TestCase(Role.Student, StudentHomeworkStatus.OnCheckRepeat, StudentHomeworkStatus.ToFix, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
-        [TestCase(Role.Student, StudentHomeworkStatus.OnCheckRepeat, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
-        [TestCase(Role.Student, StudentHomeworkStatus.OnCheckRepeat, StudentHomeworkStatus.DoneWithLate, ServiceMessages.HomeworkStatusCantBeChangedByThisUser)]
+        [TestCaseSource(typeof(StudentHomewokServiceTestCaseSources),
+            nameof(StudentHomewokServiceTestCaseSources.GetTestCaseDataForWrongStatusPassedAuthorizationException))]
         public void ChangeStatusOfStudentHomework_WrongStatusPassed_AuthorizationExceptionThrows(Role role,
             StudentHomeworkStatus currentStatus, StudentHomeworkStatus statusToChange, string expectedErrorMessage)
         {
