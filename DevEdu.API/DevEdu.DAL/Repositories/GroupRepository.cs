@@ -45,6 +45,7 @@ namespace DevEdu.DAL.Repositories
                     groupDto.Name,
                     CourseId = groupDto.Course.Id,
                     groupDto.StartDate,
+                    groupDto.EndDate,
                     groupDto.Timetable,
                     groupDto.PaymentPerMonth,
                 },
@@ -116,6 +117,7 @@ namespace DevEdu.DAL.Repositories
                     CourseId = groupDto.Course.Id,
                     GroupStatusId = (int)groupDto.GroupStatus,
                     groupDto.StartDate,
+                    groupDto.EndDate,
                     groupDto.Timetable,
                     groupDto.PaymentPerMonth
                 },
