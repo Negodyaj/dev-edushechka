@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[Lesson_SelectAllByGroupId]
 	@GroupId int,
-    @IsPublished int
+    @IsPublished bit
 AS
 BEGIN
     SELECT l.Id,
