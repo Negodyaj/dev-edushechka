@@ -74,7 +74,7 @@ namespace DevEdu.Business.Tests
             // Given
             var studentAnswersList = StudentAnswerOnTaskData.GetListStudentAnswersOnTaskDto();
             const int taskId = 1;
-            var taskDto = TaskData.GetAnotherTaskDtoWithTags();
+            var taskDto = TaskData.GetAnotherTaskDto();
 
             _studentHomeworkRepoMock.Setup(x => x.GetAllStudentHomeworkByTaskAsync(taskId)).ReturnsAsync(studentAnswersList);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);

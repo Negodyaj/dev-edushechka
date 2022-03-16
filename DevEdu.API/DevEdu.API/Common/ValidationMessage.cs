@@ -39,7 +39,7 @@
         public const string RatingRequired = "Rating must be provided";
         public const string ReportingPeriodNumberRequired = "ReportingPeriodNumber must be provided";
         public const string DateRequired = "Date must be provided";
-        public const string TeacherCommentRequired = "TeacherComment must be provided";
+        public const string AdditionalMaterialsRequired = "AdditionalMaterials must be provided";
         public const string TeacherIdRequired = "TeacherId must be provided";
         public const string LinkToRecordIdRequired = "LinkToRecord must be provided";
         public const string SumRequired = "Sum must be provided";

@@ -40,6 +40,8 @@ namespace DevEdu.Business.Services
 
         public async Task<GroupDto> AddGroup(GroupDto groupDto)
         {
+            await _groupHelper.CompareStartEndDateAsync(groupDto.StartDate, groupDto.EndDate);
+
             groupDto.Id = await _groupRepository.AddGroupAsync(groupDto);
             return groupDto;
         }
@@ -85,7 +87,7 @@ namespace DevEdu.Business.Services
         public async Task<GroupDto> UpdateGroup(int id, GroupDto groupDto, UserIdentityInfo userInfo)
         {
             await _groupHelper.CheckGroupExistenceAsync(id);
-
+            await _groupHelper.CompareStartEndDateAsync(groupDto.StartDate, groupDto.EndDate);
             groupDto.Id = id;
             return await _groupRepository.UpdateGroupAsync(groupDto);
         }

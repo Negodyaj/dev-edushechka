@@ -32,26 +32,23 @@ namespace DevEdu.Business.Tests
             _groupRepoMock = new Mock<IGroupRepository>();
             _userRepoMock = new Mock<IUserRepository>();
             _homeworkRepoMock = new Mock<IHomeworkRepository>();
-            _sut = new TaskService(
-                _taskRepoMock.Object,
-                _courseRepoMock.Object,
-                _studentAnswerRepoMock.Object,
-                _groupRepoMock.Object,
-                _homeworkRepoMock.Object,
-                new TaskValidationHelper(
+            _sut =
+                new TaskService(
                     _taskRepoMock.Object,
-                    _groupRepoMock.Object, _courseRepoMock.Object),
-                new UserValidationHelper(
-                    _userRepoMock.Object
-                )
-            );
+                    _courseRepoMock.Object,
+                    _studentAnswerRepoMock.Object,
+                    _groupRepoMock.Object,
+                    _homeworkRepoMock.Object,
+                    new TaskValidationHelper(_taskRepoMock.Object, _groupRepoMock.Object, _courseRepoMock.Object),
+                    new UserValidationHelper(_userRepoMock.Object)
+                );
         }
 
         [Test]
-        public async Task AddTaskByTeacher_WithoutTags_TaskCreated()
+        public async Task AddTaskByTeacher_TaskCreated()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
             var expectedGroupId = 10;
@@ -59,144 +56,132 @@ namespace DevEdu.Business.Tests
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
             _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = await _sut.AddTaskByTeacherAsync(taskDto, homework, expectedGroupId, null, userIdentityInfo);
+            var actualTask = await _sut.AddTaskByTeacherAsync(taskDto, homework, expectedGroupId, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
             _taskRepoMock.Verify(x => x.AddTaskAsync(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
         }
 
         [Test]
-        public async Task AddTaskByTeacher_WithTags_TaskWithTagsCreated()
+        public async Task AddTaskByTeacher_TaskWithCreated()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var expectedGroupId = 10;
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
-            var tagsIds = new List<int> { 13, 15, 14 };
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
             _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(taskId, It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = await _sut.AddTaskByTeacherAsync(taskDto, homework, expectedGroupId, tagsIds, userIdentityInfo);
+            var actualTask = await _sut.AddTaskByTeacherAsync(taskDto, homework, expectedGroupId, userIdentityInfo);
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
             _taskRepoMock.Verify(x => x.AddTaskAsync(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(taskId, It.IsAny<int>()), Times.Exactly(taskDto.Tags.Count));
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Exactly(2));
-        }
-
-        [Test]
-        public void AddTaskByMethodist_WithoutTags_TaskCreated()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
-            var taskId = 1;
-            var coursesIds = new List<int> { 1 };
-            var userId = 10;
-            var groupDtos = TaskData.GetListOfGroups();
-            var groupsByUser = TaskData.GetListOfSameGroups();
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
-
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
-            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, coursesIds, null, userIdentityInfo).Result;
-
-            //Than
-            Assert.AreEqual(taskDto, actualTask);
-            _taskRepoMock.Verify(x => x.AddTaskAsync(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
         }
 
         [Test]
-        public void AddTaskByMethodist_WithTags_TaskWithTagsCreated()
+        public void AddTaskByMethodist_TaskCreated()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var coursesIds = new List<int> { 1 };
-            var tagsIds = new List<int> { 13, 15, 14 };
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
             _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(taskId, It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, coursesIds, tagsIds, userIdentityInfo).Result;
+            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, coursesIds, userIdentityInfo).Result;
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
             _taskRepoMock.Verify(x => x.AddTaskAsync(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(taskId, It.IsAny<int>()), Times.Exactly(taskDto.Tags.Count));
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Exactly(2));
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
+        }
+
+        [Test]
+        public void AddTaskByMethodist_TaskWithCreated()
+        {
+            //Given
+            var taskDto = TaskData.GetTaskDto();
+            var taskId = 1;
+            var coursesIds = new List<int> { 1 };
+            var userId = 10;
+            var groupDtos = TaskData.GetListOfGroups();
+            var groupsByUser = TaskData.GetListOfSameGroups();
+            var userDto = UserData.GetUserDto();
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
+
+            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
+            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
+
+            //When
+            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, coursesIds, userIdentityInfo).Result;
+
+            //Than
+            Assert.AreEqual(taskDto, actualTask);
+            _taskRepoMock.Verify(x => x.AddTaskAsync(taskDto), Times.Once);
+            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
         }
 
         [Test]
         public void AddTaskByMethodist_WithoutCourses_TaskCreated()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
             _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
 
             //When
-            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, null, null, userIdentityInfo).Result;
+            var actualTask = _sut.AddTaskByMethodistAsync(taskDto, null, userIdentityInfo).Result;
 
             //Than
             Assert.AreEqual(taskDto, actualTask);
             _taskRepoMock.Verify(x => x.AddTaskAsync(taskDto), Times.Once);
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
             _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
         }
 
@@ -204,12 +189,12 @@ namespace DevEdu.Business.Tests
         public void UpdateTask_TaskDtoByAdmin_ReturnUpdatedTaskDto()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
-            var expectedTaskDto = TaskData.GetAnotherTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
+            var expectedTaskDto = TaskData.GetAnotherTaskDto();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Admin } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Admin } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.UpdateTaskAsync(taskDto));
@@ -229,13 +214,13 @@ namespace DevEdu.Business.Tests
         public void UpdateTask_TaskDtoByMethodist_ReturnUpdatedTaskDto()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
-            var expectedTaskDto = TaskData.GetAnotherTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
+            var expectedTaskDto = TaskData.GetAnotherTaskDto();
             var taskId = 1;
             var userId = 10;
             var courseDtos = CourseData.GetListCourses();
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Methodist } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.UpdateTaskAsync(taskDto));
@@ -256,14 +241,14 @@ namespace DevEdu.Business.Tests
         public void UpdateTask_TaskDtoByTeacher_ReturnUpdatedTaskDto()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
-            var expectedTaskDto = TaskData.GetAnotherTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
+            var expectedTaskDto = TaskData.GetAnotherTaskDto();
             var taskId = 1;
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.UpdateTaskAsync(taskDto));
@@ -284,13 +269,13 @@ namespace DevEdu.Business.Tests
         [Test]
         public void UpdateTask_WhenTaskDoesNotExist_ThrownEntityNotFoundException()
         {
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.UpdateTaskAsync(taskDto)).Throws(
@@ -309,13 +294,13 @@ namespace DevEdu.Business.Tests
         [Test]
         public void UpdateTask_WhenTeacherNotRelatedToTask_ThrownAuthorizationException()
         {
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
-            var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
+            var groupsByUser = new List<GroupDto> { new() { Id = 876 } };
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -334,11 +319,11 @@ namespace DevEdu.Business.Tests
         [Test]
         public void UpdateTask_WhenMethodistNotRelatedToTask_ThrownAuthorizationException()
         {
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Methodist } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -355,11 +340,11 @@ namespace DevEdu.Business.Tests
         [Test]
         public void DeleteTask_TaskIdByAdmin_DeleteTask()
         {
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Admin } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Admin } };
             var expectedAffectedRows = 1;
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
@@ -377,11 +362,11 @@ namespace DevEdu.Business.Tests
         [Test]
         public void DeleteTask_TaskIdByMethodist_DeleteTask()
         {
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Methodist } };
             var expectedAffectedRows = 1;
             var courseDtos = CourseData.GetListCourses();
 
@@ -401,13 +386,13 @@ namespace DevEdu.Business.Tests
         [Test]
         public void DeleteTask_TaskIdByTeacher_DeleteTask()
         {
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
             var expectedAffectedRows = 1;
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
@@ -430,7 +415,7 @@ namespace DevEdu.Business.Tests
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
 
@@ -445,13 +430,13 @@ namespace DevEdu.Business.Tests
         [Test]
         public void DeleteTask_WhenTeacherNotRelatedToTask_ThrownAuthorizationException()
         {
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
-            var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
+            var groupsByUser = new List<GroupDto> { new() { Id = 876 } };
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -470,11 +455,11 @@ namespace DevEdu.Business.Tests
         [Test]
         public void DeleteTask_WhenMethodistNotRelatedToTask_ThrownAuthorizationException()
         {
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Methodist } };
 
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
@@ -492,11 +477,11 @@ namespace DevEdu.Business.Tests
         public void GetTaskById_IntTaskIdByAdmin_ReturnedTaskDto()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Admin } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Admin } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -514,11 +499,11 @@ namespace DevEdu.Business.Tests
         public void GetTaskById_IntTaskIdByMethodist_ReturnedTaskDto()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Methodist } };
             var courseDtos = CourseData.GetListCourses();
 
             _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskIdAsync(taskId)).ReturnsAsync(courseDtos);
@@ -538,13 +523,13 @@ namespace DevEdu.Business.Tests
         public void GetTaskById_IntTaskIdByTeacher_ReturnedTaskDto()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -566,7 +551,7 @@ namespace DevEdu.Business.Tests
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
 
@@ -587,7 +572,7 @@ namespace DevEdu.Business.Tests
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Methodist } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -605,13 +590,13 @@ namespace DevEdu.Business.Tests
         public void GetTaskByIdByTeacher_WhenUserNotRelatedToTask_ThrownAuthorizationException()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
-            var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
+            var groupsByUser = new List<GroupDto> { new() { Id = 876 } };
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -630,13 +615,13 @@ namespace DevEdu.Business.Tests
         public void GetTaskWithCoursesById_IntTaskId_ReturnedTaskDtoWithCourses()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var courseDtos = TaskData.GetListOfCourses();
             var groupDtos = TaskData.GetListOfGroups();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskIdAsync(taskId)).ReturnsAsync(courseDtos);
@@ -660,7 +645,7 @@ namespace DevEdu.Business.Tests
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
 
@@ -676,13 +661,13 @@ namespace DevEdu.Business.Tests
         public void GetTaskWithCoursesById_WhenUserNotRelatedToTask_ThrownAuthorizationException()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
-            var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
+            var groupsByUser = new List<GroupDto> { new() { Id = 876 } };
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -701,14 +686,14 @@ namespace DevEdu.Business.Tests
         public void GetTaskWithAnswersById_IntTaskId_ReturnedTaskDtoWithStudentAnswers()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var studentAnswersDtos = TaskData.GetListOfStudentAnswers();
             var taskId = 1;
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -733,7 +718,7 @@ namespace DevEdu.Business.Tests
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
 
@@ -749,13 +734,13 @@ namespace DevEdu.Business.Tests
         public void GetTaskWithAnswersById_WhenUserNotRelatedToTask_ThrownAuthorizationException()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
-            var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
+            var groupsByUser = new List<GroupDto> { new() { Id = 876 } };
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -774,13 +759,13 @@ namespace DevEdu.Business.Tests
         public void GetTaskWithGroupsById_IntTaskId_ReturnedTaskDtoWithCourses()
         {
             //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var groupDtos = TaskData.GetListOfGroups();
             var groupsByUser = TaskData.GetListOfSameGroups();
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -803,7 +788,7 @@ namespace DevEdu.Business.Tests
             var taskId = 1;
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
 
@@ -820,13 +805,13 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var homeworkList = HomeworkData.GetListOfHomeworkDtoWithGroup();
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
+            var taskDto = TaskData.GetTaskDto();
             var taskId = 1;
             var userId = 10;
             var groupDtos = TaskData.GetListOfGroups();
-            var groupsByUser = new List<GroupDto>() { new GroupDto() { Id = 876 } };
+            var groupsByUser = new List<GroupDto> { new() { Id = 876 } };
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
@@ -848,7 +833,7 @@ namespace DevEdu.Business.Tests
             var taskDtos = TaskData.GetListOfTasks();
             var userId = 10;
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Admin } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Admin } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskDtos[0].Id)).ReturnsAsync(taskDtos[0]);
@@ -873,7 +858,7 @@ namespace DevEdu.Business.Tests
             var groupDtos = TaskData.GetListOfGroups();
             var sameGroupDtos = TaskData.GetListOfSameGroups();
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Methodist } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskDtos[0].Id)).ReturnsAsync(taskDtos[0]);
@@ -899,7 +884,7 @@ namespace DevEdu.Business.Tests
             var groupDtos = TaskData.GetListOfGroups();
             var sameGroupDtos = TaskData.GetListOfSameGroups();
             var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
+            var userIdentityInfo = new UserIdentityInfo { UserId = userId, Roles = new List<Role> { Role.Teacher } };
 
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
             _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(It.IsAny<int>())).ReturnsAsync(groupDtos);
@@ -916,340 +901,6 @@ namespace DevEdu.Business.Tests
             Assert.AreEqual(taskDtos, dtos);
             _taskRepoMock.Verify(x => x.GetTasksAsync(), Times.Once);
             _userRepoMock.Verify(x => x.GetUserByIdAsync(userId), Times.Once);
-        }
-
-        [Test]
-        public async Task AddTagToTaskByAdmin_TaskIdTagId_TagAdded()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
-            var taskId = 1;
-            var userId = 10;
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Admin } };
-            var expectedAffectedRows = 0;
-            var tagId = 1;
-
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            var actualAffectedRows = _sut.AddTagToTaskAsync(taskId, tagId, userIdentityInfo).Result;
-
-            //Than
-            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task AddTagToTaskByMethodist_TaskIdTagId_TagAdded()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithCourse();
-            var taskId = 1;
-            var userId = 10;
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
-            var expectedAffectedRows = 0;
-            var tagId = 1;
-            var courseDtos = CourseData.GetListCourses();
-
-            _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskIdAsync(taskId)).ReturnsAsync(courseDtos);
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            var actualAffectedRows = _sut.AddTagToTaskAsync(taskId, tagId, userIdentityInfo).Result;
-
-            //Than
-            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task AddTagToTaskByTeacher_TaskIdTagId_TagAdded()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
-            var taskId = 1;
-            var userId = 10;
-            var groupDtos = TaskData.GetListOfGroups();
-            var groupsByUser = TaskData.GetListOfSameGroups();
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
-            var expectedAffectedRows = 0;
-            var tagId = 1;
-
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            var actualAffectedRows = _sut.AddTagToTaskAsync(taskId, tagId, userIdentityInfo).Result;
-
-            //Than
-            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task AddTagToTaskByMethodist_WhenUserNotRelatedToTask_ThrownAuthorizationException()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithoutCourse();
-            var taskId = 1;
-            var userId = 1;
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
-            var tagId = 1;
-
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                () => _sut.AddTagToTaskAsync(taskId, tagId, userIdentityInfo));
-
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task AddTagToTaskByTeacher_WhenUserNotRelatedToTask_ThrownAuthorizationException()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithoutCourse();
-            var taskId = 1;
-            var userId = 1;
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
-            var tagId = 1;
-
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                () => _sut.AddTagToTaskAsync(taskId, tagId, userIdentityInfo));
-
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task AddTagsToTaskByAdmin_TaskIdTagIds_TagAdded()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
-            var taskId = 1;
-            var userId = 10;
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Admin } };
-            var tagIds = new List<int>() { 1 };
-
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            _sut.AddTagsToTaskAsync(taskId, tagIds, userIdentityInfo);
-
-            //Than
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task AddTagsToTaskByMethodist_TaskIdTagIds_TagsAdded()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithCourse();
-            var taskId = 1;
-            var userId = 10;
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
-            var courseDtos = CourseData.GetListCourses();
-            var tagIds = new List<int>() { 1 };
-
-            _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskIdAsync(taskId)).ReturnsAsync(courseDtos);
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            _sut.AddTagsToTaskAsync(taskId, tagIds, userIdentityInfo);
-
-            //Than
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task AddTagsToTaskByTeacher_TaskIdTagIds_TagsAdded()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithoutTags();
-            var taskId = 1;
-            var userId = 10;
-            var groupDtos = TaskData.GetListOfGroups();
-            var groupsByUser = TaskData.GetListOfSameGroups();
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
-            var tagIds = new List<int>() { 1 };
-
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
-            _taskRepoMock.Setup(x => x.AddTaskAsync(taskDto)).ReturnsAsync(taskId);
-            _taskRepoMock.Setup(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()));
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            _sut.AddTagsToTaskAsync(taskId, tagIds, userIdentityInfo);
-
-            //Than
-            _taskRepoMock.Verify(x => x.AddTagToTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task DeleteTagFromTaskByAdmin_TaskIdTagId_TagDeleted()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
-            var taskId = 1;
-            var userId = 10;
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Admin } };
-            var expectedAffectedRows = 0;
-            var tagId = 13;
-
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            var actualAffectedRows = _sut.DeleteTagFromTaskAsync(taskId, tagId, userIdentityInfo).Result;
-
-            //Than
-            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
-            _taskRepoMock.Verify(x => x.DeleteTagFromTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task DeleteTagFromTaskByMethodist_TaskIdTagId_TagDeleted()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithCourse();
-            var taskId = 1;
-            var userId = 10;
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
-            var expectedAffectedRows = 0;
-            var tagId = 1;
-            var courseDtos = CourseData.GetListCourses();
-
-            _courseRepoMock.Setup(x => x.GetCoursesToTaskByTaskIdAsync(taskId)).ReturnsAsync(courseDtos);
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            var actualAffectedRows = _sut.DeleteTagFromTaskAsync(taskId, tagId, userIdentityInfo).Result;
-
-            //Than
-            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
-            _taskRepoMock.Verify(x => x.DeleteTagFromTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task DeleteTagFromTaskByTeacher_TaskIdTagId_TagDeleted()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
-            var taskId = 1;
-            var userId = 10;
-            var groupDtos = TaskData.GetListOfGroups();
-            var groupsByUser = TaskData.GetListOfSameGroups();
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
-            var expectedAffectedRows = 0;
-            var tagId = 13;
-
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            var actualAffectedRows = _sut.DeleteTagFromTaskAsync(taskId, tagId, userIdentityInfo).Result;
-
-            //Than
-            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
-            _taskRepoMock.Verify(x => x.DeleteTagFromTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task DeleteTagFromTaskByMethodist_WhenUserNotRelatedToTask_ThrownAuthorizationException()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithCourse();
-            var taskId = 1;
-            var userId = 10;
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Methodist } };
-            var tagId = 1;
- 
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            Assert.ThrowsAsync(Is.TypeOf<AuthorizationException>()
-                .And.Message.EqualTo(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId)),
-                () => _sut.DeleteTagFromTaskAsync(taskId, tagId, userIdentityInfo));
-
-            //Than
-            _taskRepoMock.Verify(x => x.DeleteTagFromTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
-        }
-
-        [Test]
-        public async Task DeleteTagFromTaskByTeacher_WhenUserNotRelatedToTask_ThrownAuthorizationException()
-        {
-            //Given
-            var taskDto = TaskData.GetTaskDtoWithTags();
-            var taskId = 1;
-            var userId = 10;
-            var userDto = UserData.GetUserDto();
-            var userIdentityInfo = new UserIdentityInfo() { UserId = userId, Roles = new List<Role>() { Role.Teacher } };
-            var expectedAffectedRows = 0;
-            var tagId = 13;
-            var groupDtos = TaskData.GetListOfGroups();
-            var groupsByUser = TaskData.GetListOfSameGroups();
-
-            _groupRepoMock.Setup(x => x.GetGroupsByTaskIdAsync(taskId)).ReturnsAsync(groupDtos);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userId)).ReturnsAsync(groupsByUser);
-            _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).ReturnsAsync(userDto);
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(taskDto);
-
-            //When
-            var actualAffectedRows = _sut.DeleteTagFromTaskAsync(taskId, tagId, userIdentityInfo).Result;
-
-            //Than
-            Assert.AreEqual(expectedAffectedRows, actualAffectedRows);
-            _taskRepoMock.Verify(x => x.DeleteTagFromTaskAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-            _taskRepoMock.Verify(x => x.GetTaskByIdAsync(taskId), Times.Once);
         }
     }
 }

@@ -6,6 +6,7 @@ BEGIN
 		G.Name,
 		G.GroupStatusId,
 		G.StartDate,
+		G.EndDate,
 		G.Timetable,
 		G.PaymentPerMonth,
 		C.Id,

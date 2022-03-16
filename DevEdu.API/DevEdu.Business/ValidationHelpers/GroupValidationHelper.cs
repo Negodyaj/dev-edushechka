@@ -4,6 +4,7 @@ using DevEdu.Business.IdentityInfo;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,7 +24,7 @@ namespace DevEdu.Business.ValidationHelpers
             var group = await _groupRepository.GetGroupAsync(groupId);
             if (group == default)
                 throw new EntityNotFoundException(string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), groupId));
-            
+
             return group;
         }
 
@@ -33,6 +34,12 @@ namespace DevEdu.Business.ValidationHelpers
             var result = groupsByUser.FirstOrDefault(gu => gu.Id == groupId);
             if (result == default)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserInGroupNotFoundMessage, userId, groupId));
+        }
+
+        public async Task CompareStartEndDateAsync(DateTime startDate, DateTime endDate)
+        {
+            if (startDate >= endDate)
+                throw new ValidationException(nameof(GroupDto), string.Format(ServiceMessages.EndDateInGroupNotCorrected));
         }
 
         public bool CheckAccessGetGroupMembers(int groupId, UserIdentityInfo userInfo)

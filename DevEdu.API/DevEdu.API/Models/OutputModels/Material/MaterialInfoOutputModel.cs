@@ -9,6 +9,5 @@ namespace DevEdu.API.Models
         public string Content { get; set; }
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }
-        public List<TagOutputModel> Tags { get; set; }
     }
 }
