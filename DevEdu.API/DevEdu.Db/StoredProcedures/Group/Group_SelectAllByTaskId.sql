@@ -6,6 +6,7 @@ BEGIN
 		g.Id,
 		g.Name,
 		g.StartDate,
+		g.EndDate,
 		g.IsDeleted,
 		g.GroupStatusId as id
 	FROM dbo.[Group] g

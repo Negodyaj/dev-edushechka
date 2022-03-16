@@ -15,8 +15,11 @@ namespace DevEdu.API.Models
         [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatGroupStatusId)]
         public GroupStatus? GroupStatusId { get; set; }
         [Required(ErrorMessage = DateRequired)]
-        [CustomDateFormatAttribute(ErrorMessage = WrongFormatStartDate)]
+        [CustomDateFormat(ErrorMessage = WrongFormatStartDate)]
         public string StartDate { get; set; }
+        [Required(ErrorMessage = DateRequired)]
+        [CustomDateFormat(ErrorMessage = WrongFormatStartDate)]
+        public string EndDate { get; set; }
         [Required(ErrorMessage = TimetableRequired)]
         public string Timetable { get; set; }
         [Required(ErrorMessage = PaymentPerMonthRequired)]
