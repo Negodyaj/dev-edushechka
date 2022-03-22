@@ -6,6 +6,7 @@ BEGIN
 		g.Id,
 		g.Name,
 		g.StartDate,
+		g.EndDate,
 		g.IsDeleted,
 		g.GroupStatusId as id,
 		c.Id as id

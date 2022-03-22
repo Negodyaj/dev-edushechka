@@ -11,7 +11,5 @@ namespace DevEdu.Business.Services
         Task<List<TopicDto>> GetAllTopicsAsync();
         Task<TopicDto> GetTopicAsync(int id);
         Task<TopicDto> UpdateTopicAsync(int id, TopicDto topicDto);
-        Task<int> AddTagToTopicAsync(int topicId, int tagId);
-        Task<int> DeleteTagFromTopicAsync(int topicId, int tagId);
     }
 }

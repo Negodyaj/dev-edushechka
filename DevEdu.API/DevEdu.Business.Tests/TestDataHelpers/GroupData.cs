@@ -28,7 +28,33 @@ namespace DevEdu.Business.Tests
                     IsDeleted = false
                 },
                 GroupStatus = GroupStatus.Forming,
+                StartDate = DateTime.MinValue,
+                EndDate = DateTime.MaxValue,
+                Timetable = "Понедельник",
+                PaymentPerMonth = 1.0M,
+                Students = null,
+                Teachers = null,
+                Tutors = null
+            };
+        }
+
+        public static GroupDto GetGroupDtoCompareException()
+        {
+            return new GroupDto
+            {
+                Id = 1,
+                Name = "Котейка",
+                Course = new CourseDto
+                {
+                    Id = 1,
+                    Name = "Ололошки",
+                    Description = "Курс для котиков",
+                    Groups = null,
+                    IsDeleted = false
+                },
+                GroupStatus = GroupStatus.Forming,
                 StartDate = DateTime.MaxValue,
+                EndDate = DateTime.MinValue,
                 Timetable = "Понедельник",
                 PaymentPerMonth = 1.0M,
                 Students = null,
@@ -53,6 +79,7 @@ namespace DevEdu.Business.Tests
                 },
                 GroupStatus = GroupStatus.Forming,
                 StartDate = DateTime.MinValue,
+                EndDate = DateTime.MaxValue,
                 Timetable = "Вторник",
                 PaymentPerMonth = 1.0M,
                 Students = null,
@@ -69,7 +96,8 @@ namespace DevEdu.Business.Tests
                 Name = "Котейка",
                 Course = null,
                 GroupStatus = GroupStatus.Forming,
-                StartDate = DateTime.MaxValue,
+                StartDate = DateTime.MinValue,
+                EndDate = DateTime.MaxValue,
                 Timetable = "Понедельник",
                 PaymentPerMonth = 1.0M,
                 Students = null,
@@ -95,7 +123,8 @@ namespace DevEdu.Business.Tests
                         IsDeleted = false
                     },
                     GroupStatus = GroupStatus.Forming,
-                    StartDate = DateTime.MaxValue,
+                    StartDate = DateTime.MinValue,
+                    EndDate = DateTime.MaxValue,
                     Timetable = "Понедельник 10-20",
                     PaymentPerMonth = 5479.0M,
                     Students = null,
@@ -125,7 +154,8 @@ namespace DevEdu.Business.Tests
                         IsDeleted = false
                     },
                     GroupStatus = GroupStatus.Forming,
-                    StartDate = DateTime.MaxValue,
+                    StartDate = DateTime.MinValue,
+                    EndDate = DateTime.MaxValue,
                     Timetable = "Понедельник 10-20",
                     PaymentPerMonth = 5479.0M,
                     Students = null,
@@ -155,7 +185,8 @@ namespace DevEdu.Business.Tests
                         IsDeleted = false
                     },
                     GroupStatus = GroupStatus.Forming,
-                    StartDate = DateTime.MaxValue,
+                    StartDate = DateTime.MinValue,
+                    EndDate = DateTime.MaxValue,
                     Timetable = "Понедельник 10-20",
                     PaymentPerMonth = 5479.0M,
                     Students = null,
@@ -192,7 +223,8 @@ namespace DevEdu.Business.Tests
                         IsDeleted = false
                     },
                     GroupStatus = GroupStatus.Forming,
-                    StartDate = DateTime.MaxValue,
+                    StartDate = DateTime.MinValue,
+                    EndDate = DateTime.MaxValue,
                     Timetable = "Понедельник 10-20",
                     PaymentPerMonth = 5479.0M,
                     Students = null,
@@ -213,7 +245,8 @@ namespace DevEdu.Business.Tests
                         IsDeleted = false
                     },
                     GroupStatus = GroupStatus.Forming,
-                    StartDate = DateTime.MaxValue,
+                    StartDate = DateTime.MinValue,
+                    EndDate = DateTime.MaxValue,
                     Timetable = "Понедельник 10-20",
                     PaymentPerMonth = 5479.0M,
                     Students = null,
@@ -241,7 +274,8 @@ namespace DevEdu.Business.Tests
                         IsDeleted = false
                     },
                     GroupStatus = GroupStatus.Forming,
-                    StartDate = DateTime.MaxValue,
+                    StartDate = DateTime.MinValue,
+                    EndDate = DateTime.MaxValue,
                     Timetable = "Среда 10-20",
                     PaymentPerMonth = 5789.0M,
                     Students = null,
@@ -262,7 +296,8 @@ namespace DevEdu.Business.Tests
                         IsDeleted = false
                     },
                     GroupStatus = GroupStatus.Forming,
-                    StartDate = DateTime.MaxValue,
+                    StartDate = DateTime.MinValue,
+                    EndDate = DateTime.MaxValue,
                     Timetable = "Понедельник 10-20",
                     PaymentPerMonth = 7894.0M,
                     Students = null,
@@ -288,7 +323,8 @@ namespace DevEdu.Business.Tests
                     IsDeleted = false
                 },
                 GroupStatus = GroupStatus.Forming,
-                StartDate = DateTime.MaxValue,
+                StartDate = DateTime.MinValue,
+                EndDate = DateTime.MaxValue,
                 Timetable = "Понедельник",
                 PaymentPerMonth = 1.0M,
                 Students = null,

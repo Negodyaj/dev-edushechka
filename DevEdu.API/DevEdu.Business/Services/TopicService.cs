@@ -10,31 +10,19 @@ namespace DevEdu.Business.Services
     {
         private readonly ITopicRepository _topicRepository;
         private readonly ITopicValidationHelper _topicValidationHelper;
-        private readonly ITagValidationHelper _tagValidationHelper;
 
         public TopicService(
             ITopicRepository topicRepository,
-            ITagRepository tagRepository,
-            ITopicValidationHelper topicValidationHelper,
-            ITagValidationHelper tagValidationHelper
+            ITopicValidationHelper topicValidationHelper
             )
         {
             _topicRepository = topicRepository;
             _topicValidationHelper = topicValidationHelper;
-            _tagValidationHelper = tagValidationHelper;
         }
 
         public async Task<int> AddTopicAsync(TopicDto topicDto)
         {
-            var topicId = await _topicRepository.AddTopicAsync(topicDto);
-            if (topicDto.Tags == null ||
-                topicDto.Tags.Count == 0)
-                return topicId;
-
-            topicDto.Tags.ForEach(
-                 async tag => await AddTagToTopicAsync(topicId, tag.Id));
-
-            return topicId;
+            return await _topicRepository.AddTopicAsync(topicDto);
         }
 
         public async Task DeleteTopicAsync(int id)
@@ -61,22 +49,6 @@ namespace DevEdu.Business.Services
             await _topicRepository.UpdateTopicAsync(topicDto);
             var result = await _topicRepository.GetTopicAsync(id);
 
-            return result;
-        }
-
-        public async Task<int> AddTagToTopicAsync(int topicId, int tagId)
-        {
-            await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(topicId);
-            await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(tagId);
-            var resilt = await _topicRepository.AddTagToTopicAsync(topicId, tagId);
-            return resilt;
-        }
-
-        public async Task<int> DeleteTagFromTopicAsync(int topicId, int tagId)
-        {
-            await _topicValidationHelper.GetTopicByIdAndThrowIfNotFoundAsync(topicId);
-            await _tagValidationHelper.GetTagByIdAndThrowIfNotFoundAsync(tagId);
-            var result = await _topicRepository.DeleteTagFromTopicAsync(topicId, tagId);
             return result;
         }
     }

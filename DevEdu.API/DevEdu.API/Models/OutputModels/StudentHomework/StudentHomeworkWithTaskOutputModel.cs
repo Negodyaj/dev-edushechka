@@ -9,7 +9,6 @@ namespace DevEdu.API.Models
         public string CompletedDate { get; set; }
         public TaskStatus TaskStatus { get; set; }
         public HomeworkInfoWithTaskOutputModel Homework { get; set; }
-        public TagOutputModel Task { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

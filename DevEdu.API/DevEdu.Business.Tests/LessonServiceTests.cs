@@ -49,7 +49,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var lesson = LessonData.GetSelectedLessonDto();
-            var topic = TopicData.GetTopicDtoWithoutTags();
+            var topic = TopicData.GetTopicDto();
 
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lesson.Id)).ReturnsAsync(lesson);
             _topicRepository.Setup(x => x.GetTopicAsync(topic.Id)).ReturnsAsync(topic);
@@ -108,7 +108,7 @@ namespace DevEdu.Business.Tests
         public void AddTopicToLesson_WhenTopicLessonReferenceAlreadyExists_ValidationExceptionThrown()
         {
             var lesson = LessonData.GetSelectedLessonDto();
-            var topic = TopicData.GetAnotherTopicDtoWithoutTags();
+            var topic = TopicData.GetAnotherTopicDto();
             var expectedMessage = string.Format(string.Format(ServiceMessages.LessonTopicReferenceAlreadyExists, lesson.Id, topic.Id));
 
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lesson.Id)).ReturnsAsync(lesson);
@@ -130,7 +130,7 @@ namespace DevEdu.Business.Tests
         {
             //Given
             var lesson = LessonData.GetSelectedLessonDto();
-            var topic = TopicData.GetAnotherTopicDtoWithoutTags();
+            var topic = TopicData.GetAnotherTopicDto();
 
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lesson.Id)).ReturnsAsync(lesson);
             _topicRepository.Setup(x => x.GetTopicAsync(topic.Id)).ReturnsAsync(topic);
@@ -189,7 +189,7 @@ namespace DevEdu.Business.Tests
         public void DeleteTopicFromLesson_WhenTopicLessonReferenceDoesNotExist_ValidationExceptionThrown()
         {
             var lesson = LessonData.GetSelectedLessonDto();
-            var topic = TopicData.GetAnotherTopicDtoWithoutTags();
+            var topic = TopicData.GetAnotherTopicDto();
             var expectedMessage = string.Format(string.Format(ServiceMessages.LessonTopicReferenceNotFound, lesson.Id, topic.Id));
 
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lesson.Id)).ReturnsAsync(lesson);

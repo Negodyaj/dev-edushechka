@@ -26,9 +26,6 @@ namespace DevEdu.DAL.Repositories
         private const string _courseTopicType = "dbo.Course_TopicType";
         private const string _idType = "dbo.IdType";
 
-        private const string _tagTopicInsertProcedure = "dbo.Tag_Topic_Insert";
-        private const string _tagTopicDeleteProcedure = "dbo.Tag_Topic_Delete";
-
         public TopicRepository(IOptions<DatabaseSettings> options) : base(options) { }
 
         public async Task<int> AddTopicAsync(TopicDto topicDto)
@@ -102,32 +99,6 @@ namespace DevEdu.DAL.Repositories
                  new { courseId, topicId },
                  commandType: CommandType.StoredProcedure
                  );
-        }
-
-        public async Task<int> AddTagToTopicAsync(int topicId, int tagId)
-        {
-            return await _connection.ExecuteAsync(
-                _tagTopicInsertProcedure,
-                new
-                {
-                    topicId,
-                    tagId
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
-
-        public async Task<int> DeleteTagFromTopicAsync(int topicId, int tagId)
-        {
-            return await _connection.ExecuteAsync(
-                _tagTopicDeleteProcedure,
-                new
-                {
-                    topicId,
-                    tagId
-                },
-                commandType: CommandType.StoredProcedure
-            );
         }
 
         public async Task<List<int>> AddTopicsToCourseAsync(List<CourseTopicDto> dto)
