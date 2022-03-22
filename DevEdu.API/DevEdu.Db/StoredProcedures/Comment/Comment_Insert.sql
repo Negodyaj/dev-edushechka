@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE dbo.Comment_Insert
 	@UserId				int,
-	@StudentHomeworkId  int null,
+	@StudentHomeworkId  int,
 	@Text				nvarchar(max)
 AS
 BEGIN

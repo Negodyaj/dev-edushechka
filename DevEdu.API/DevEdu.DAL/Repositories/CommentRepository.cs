@@ -29,7 +29,7 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     userId = dto.User.Id,
-                    studentHomeworkId = dto.StudentHomework == null ? null : (int?)dto.StudentHomework.Id,
+                    studentHomeworkId = dto.StudentHomework,
                     dto.Text
                 },
                 commandType: CommandType.StoredProcedure
