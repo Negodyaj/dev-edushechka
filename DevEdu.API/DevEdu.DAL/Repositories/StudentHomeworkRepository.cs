@@ -34,7 +34,8 @@ namespace DevEdu.DAL.Repositories
                 {
                     HomeworkId = dto.Homework.Id,
                     StudentId = dto.User.Id,
-                    dto.Answer
+                    dto.Answer,
+                    dto.Rating
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -56,13 +57,14 @@ namespace DevEdu.DAL.Repositories
                  new
                  {
                      dto.Id,
-                     dto.Answer
+                     dto.Answer,
+                     dto.Rating
                  },
                  commandType: CommandType.StoredProcedure
              );
         }
 
-        public async Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate)
+        public async Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate,int rating)
         {
             await _connection.ExecuteAsync(
                   _studentHomeworkUpdateStatusIdProcedure,
@@ -70,7 +72,8 @@ namespace DevEdu.DAL.Repositories
                   {
                       id,
                       StatusId = statusId,
-                      CompletedDate = completedDate
+                      CompletedDate = completedDate,
+                      Rating=rating
                   },
                   commandType: CommandType.StoredProcedure
               );

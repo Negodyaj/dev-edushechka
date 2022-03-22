@@ -44,7 +44,8 @@ namespace DevEdu.Business.Services
             taskAnswerDto.User = new UserDto { Id = userInfo.UserId };
             var id = await _studentHomeworkRepository.AddStudentHomeworkAsync(taskAnswerDto);
             var studentHomeworkDto = await _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
-
+            studentHomeworkDto.CompletedDate = DateTime.Now;
+            
             return studentHomeworkDto;
         }
 
@@ -79,7 +80,7 @@ namespace DevEdu.Business.Services
             DateTime completedDate = default;
             if (statusId == (int)StudentHomeworkStatus.Accepted)
                 completedDate = DateTime.Now;
-
+            
             completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day, completedDate.Hour, completedDate.Minute, completedDate.Second);
             var result = await _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, statusId, completedDate);
 
