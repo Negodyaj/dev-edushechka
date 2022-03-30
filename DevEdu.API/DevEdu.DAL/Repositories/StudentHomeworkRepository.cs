@@ -22,7 +22,7 @@ namespace DevEdu.DAL.Repositories
         private const string _studentHomeworkSelectAllAnswersByTaskIdProcedure = "dbo.Student_Homework_SelectAllAnswersByTaskId";
         private const string _studentHomeworkSelectAnswersByUserIdProcedure = "dbo.Student_Homework_SelectAllAnswersByUserId";
 
-        public StudentHomeworkRepository(IOptions<DatabaseSettings> options) : base(options) 
+        public StudentHomeworkRepository(IOptions<DatabaseSettings> options) : base(options)
         {
         }
 
@@ -64,7 +64,7 @@ namespace DevEdu.DAL.Repositories
              );
         }
 
-        public async Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate,int rating)
+        public async Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate, int rating)
         {
             await _connection.ExecuteAsync(
                   _studentHomeworkUpdateStatusIdProcedure,
@@ -73,7 +73,7 @@ namespace DevEdu.DAL.Repositories
                       id,
                       StatusId = statusId,
                       CompletedDate = completedDate,
-                      Rating=rating
+                      Rating = rating
                   },
                   commandType: CommandType.StoredProcedure
               );

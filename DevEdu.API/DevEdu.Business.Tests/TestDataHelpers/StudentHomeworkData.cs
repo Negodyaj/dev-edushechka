@@ -54,7 +54,8 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                     Task = new TaskDto
                     {
                         Id = 1
-                    }
+                    },
+                    EndDate = DateTime.Parse("01.01.2022"),
                 },
                 User = new UserDto
                 {
@@ -65,7 +66,7 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                     Photo = "peter.jpeg"
                 },
                 TaskStatus = StudentHomeworkStatus.Unchecked,
-                CompletedDate = DateTime.Parse("01.01.2021"),
+                CompletedDate = DateTime.Parse("01.01.2020"),
                 IsDeleted = false
             };
         }
@@ -119,7 +120,7 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                     Photo = "peter.jpeg"
                 },
                 TaskStatus = StudentHomeworkStatus.Unchecked,
-                CompletedDate = DateTime.Parse("01.01.2021"),
+                CompletedDate = DateTime.Parse("01.01.202"),
                 IsDeleted = false
             };
         }
