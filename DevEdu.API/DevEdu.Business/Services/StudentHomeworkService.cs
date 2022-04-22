@@ -68,6 +68,8 @@ namespace DevEdu.Business.Services
             if (dto.Status == StudentHomeworkStatus.ToFix)
                 updatedDto.Status = StudentHomeworkStatus.ToVerifyFixes;
 
+            _studentHomeworkValidationHelper.CheckUserCanChangeStatus(userInfo, dto, updatedDto.Status);
+
             await _studentHomeworkRepository.UpdateStudentHomeworkAsync(updatedDto);
             var studentHomeworkDto = await _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
 
