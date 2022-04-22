@@ -45,9 +45,9 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<UserUpdateInfoOutPutModel>> UpdateUserByIdAsync([FromBody] UserUpdateInputModel model)
         {
-            var leadInfo = this.GetUserIdAndRoles();
+            var userInfo = this.GetUserIdAndRoles();
             var dtoEntry = _mapper.Map<UserDto>(model);
-            var dtoResult = await _userService.UpdateUserAsync(dtoEntry, leadInfo);
+            var dtoResult = await _userService.UpdateUserAsync(dtoEntry, userInfo);
             var outPut = _mapper.Map<UserUpdateInfoOutPutModel>(dtoResult);
 
             return Created(new Uri($"api/User/{outPut.Id}", UriKind.Relative), outPut);
@@ -62,10 +62,27 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<UserFullInfoOutPutModel> GetUserByIdAsync(int userId)
         {
-            var leadInfo = this.GetUserIdAndRoles();
-            var dto = await _userService.GetUserByIdAsync(userId, leadInfo);
+            var userInfo = this.GetUserIdAndRoles();
+            var dto = await _userService.GetUserByIdAsync(userId, userInfo);
                 var outPut = _mapper.Map<UserFullInfoOutPutModel>(dto);
             
+            return outPut;
+        }
+
+        // api/users/5
+        [Authorize]
+        [HttpGet("self")]
+        [Description("Return user by token")]
+        [ProducesResponseType(typeof(UserFullInfoOutPutModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public async Task<UserFullInfoOutPutModel> GetUserByTokenAsync()
+        {
+            var userInfo = this.GetUserIdAndRoles();
+            var dto = await _userService.GetUserByTokenAsync(userInfo);
+            var outPut = _mapper.Map<UserFullInfoOutPutModel>(dto.Item1);
+            outPut.Groups = _mapper.Map<List<GroupOutputModel>>(dto.Item2);
+
             return outPut;
         }
 

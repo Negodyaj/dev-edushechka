@@ -10,6 +10,5 @@ namespace DevEdu.DAL.Repositories
         Task DeleteCommentAsync(int id);
         Task<CommentDto> GetCommentAsync(int id);
         Task UpdateCommentAsync(CommentDto commentDto);
-        Task<List<CommentDto>> SelectCommentsFromLessonByLessonIdAsync(int lessonId);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DevEdu.DAL.Enums;
+using System.Collections.Generic;
 
 namespace DevEdu.API.Models
 {
@@ -12,5 +13,6 @@ namespace DevEdu.API.Models
         public string PhoneNumber { get; set; }
         public string ExileDate { get; set; }
         public City City { get; set; }
+        public List<GroupOutputModel> Groups { get; set; }
     }
 }

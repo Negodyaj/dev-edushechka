@@ -29,8 +29,7 @@ namespace DevEdu.DAL.Repositories
                 new
                 {
                     userId = dto.User.Id,
-                    lessonId = dto.Lesson == null ? null : (int?)dto.Lesson.Id,
-                    studentHomeworkId = dto.StudentHomework == null ? null : (int?)dto.StudentHomework.Id,
+                    studentHomeworkId = dto.StudentHomework,
                     dto.Text
                 },
                 commandType: CommandType.StoredProcedure
@@ -60,7 +59,6 @@ namespace DevEdu.DAL.Repositories
                         result = comment;
                         result.User = user;
                         result.User.Roles = new List<Role> { role };
-                        result.Lesson = lesson;
                         result.StudentHomework = studentHomework;
                     }
                     else
@@ -87,27 +85,6 @@ namespace DevEdu.DAL.Repositories
                  },
                  commandType: CommandType.StoredProcedure
              );
-        }
-
-        public async Task<List<CommentDto>> SelectCommentsFromLessonByLessonIdAsync(int lessonId)
-        {
-            CommentDto result = default;
-
-            return (await _connection
-                .QueryAsync<CommentDto, UserDto, CommentDto>(
-                    _commentsToLessonSelectByLessonIdProcedure,
-                    (comment, user) =>
-                    {
-                        result = comment;
-                        result.User = user;
-                        return result;
-                    },
-                    new { lessonId },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure
-                ))
-                .Distinct()
-                .ToList();
         }
     }
 }

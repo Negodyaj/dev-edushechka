@@ -10,7 +10,6 @@ namespace DevEdu.Business.Services
     {
         private readonly ICommentRepository _commentRepository;
         private readonly ICommentValidationHelper _commentValidationHelper;
-        private readonly ILessonValidationHelper _lessonValidationHelper;
         private readonly IStudentHomeworkValidationHelper _studentAnswerValidationHelper;
 
         public CommentService
@@ -23,20 +22,7 @@ namespace DevEdu.Business.Services
         {
             _commentRepository = commentRepository;
             _commentValidationHelper = commentValidationHelper;
-            _lessonValidationHelper = lessonValidationHelper;
             _studentAnswerValidationHelper = studentAnswerValidationHelper;
-        }
-
-        public async Task<CommentDto> AddCommentToLessonAsync(int lessonId, CommentDto dto, UserIdentityInfo userInfo)
-        {
-            await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(lessonId);
-            if (!userInfo.IsAdmin())
-                await _lessonValidationHelper.CheckUserBelongsToLessonAsync(lessonId, userInfo.UserId);
-
-            dto.User = new UserDto { Id = userInfo.UserId };
-            dto.Lesson = new LessonDto { Id = lessonId };
-            var id = await _commentRepository.AddCommentAsync(dto);
-            return await _commentRepository.GetCommentAsync(id);
         }
 
         public async Task<CommentDto> AddCommentToStudentAnswerAsync(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo)

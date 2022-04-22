@@ -1,11 +1,10 @@
 ﻿CREATE PROCEDURE dbo.Comment_Insert
 	@UserId				int,
-	@LessonId			int null,
-	@StudentHomeworkId  int null,
+	@StudentHomeworkId  int,
 	@Text				nvarchar(max)
 AS
 BEGIN
-	INSERT INTO dbo.Comment (UserId, LessonId, StudentHomeworkId, [Text], [Date])
-	VALUES (@UserId, @LessonId, @StudentHomeworkId, @Text, GETDATE())
+	INSERT INTO dbo.Comment (UserId, StudentHomeworkId, [Text], [Date])
+	VALUES (@UserId, @StudentHomeworkId, @Text, GETDATE())
 	SELECT @@IDENTITY
 END
