@@ -63,7 +63,7 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                     Email = "petr@mail.com",
                     Photo = "peter.jpeg"
                 },
-                StudentHomeworkStatus = StudentHomeworkStatus.OnCheck,
+                Status = StudentHomeworkStatus.ToCheck,
                 CompletedDate = DateTime.Parse("01.01.2021"),
                 IsDeleted = false
             };
@@ -90,7 +90,7 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                     Email = "petr@mail.com",
                     Photo = "peter.jpeg"
                 },
-                StudentHomeworkStatus = StudentHomeworkStatus.OnCheck,
+                Status = StudentHomeworkStatus.ToCheck,
                 CompletedDate = new DateTime(_timeNow.Year, _timeNow.Month, _timeNow.Day, _timeNow.Hour, _timeNow.Minute, _timeNow.Second),
                 IsDeleted = false
             };

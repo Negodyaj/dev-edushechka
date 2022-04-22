@@ -4,7 +4,7 @@
 	@Answer nvarchar(500)
 AS
 BEGIN
-	DECLARE @Status_ToReview int = 1
+	DECLARE @Status_ToReview int = 2
 	INSERT INTO dbo.Student_Homework (HomeworkId, StudentId, StatusId, Answer, AnswerDate)
 	VALUES (@HomeworkId, @StudentId, @Status_ToReview, @Answer, GETDATE())
 	SELECT @@IDENTITY

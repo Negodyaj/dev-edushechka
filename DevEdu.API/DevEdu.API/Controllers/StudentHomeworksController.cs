@@ -80,18 +80,34 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<StudentHomeworkWithHomeworkOutputModel>(studentHomeworkDto);
         }
 
-        // api/student-homeworks/{id}/change-status/{statusId} 
-        [HttpPatch("{id}/change-status/{status}")]
-        [Description("Update homework status")]
-        [AuthorizeRoles(Role.Teacher, Role.Tutor, Role.Student)]
+        // api/student-homeworks/{id}/approve
+        [HttpPatch("{id}/approve")]
+        [Description("Approve student homework")]
+        [AuthorizeRoles(Role.Teacher)]
         [ProducesResponseType(typeof(StudentHomeworkWithHomeworkOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status409Conflict)]
-        public async Task<StudentHomeworkWithHomeworkOutputModel> UpdateStatusOfStudentHomeworkAsync(int id, StudentHomeworkStatusInputModel status)
+        public async Task<StudentHomeworkWithHomeworkOutputModel> ApproveStudentHomeworkAsync(int id)
         {
             var userInfo = this.GetUserIdAndRoles();
-            await _studentHomeworkService.UpdateStatusOfStudentHomeworkAsync(id, (StudentHomeworkStatus)status, userInfo);
+            await _studentHomeworkService.ApproveOrDeclineStudentHomework(id, true, userInfo);
+            var dto = await _studentHomeworkService.GetStudentHomeworkByIdAsync(id, userInfo);
+            return _mapper.Map<StudentHomeworkWithHomeworkOutputModel>(dto);
+        }
+
+        // api/student-homeworks/{id}/decline 
+        [HttpPatch("{id}/decline")]
+        [Description("Decline student homework")]
+        [AuthorizeRoles(Role.Teacher)]
+        [ProducesResponseType(typeof(StudentHomeworkWithHomeworkOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status409Conflict)]
+        public async Task<StudentHomeworkWithHomeworkOutputModel> UpdateStatusOfStudentHomeworkAsync(int id)
+        {
+            var userInfo = this.GetUserIdAndRoles();
+            await _studentHomeworkService.ApproveOrDeclineStudentHomework(id, false, userInfo);
             var dto = await _studentHomeworkService.GetStudentHomeworkByIdAsync(id, userInfo);
             return _mapper.Map<StudentHomeworkWithHomeworkOutputModel>(dto);
         }

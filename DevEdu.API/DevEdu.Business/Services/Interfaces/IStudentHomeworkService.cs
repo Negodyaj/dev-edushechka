@@ -12,6 +12,7 @@ namespace DevEdu.Business.Services
         Task DeleteStudentHomeworkAsync(int id, UserIdentityInfo userInfo);
         Task<StudentHomeworkDto> UpdateStudentHomeworkAsync(int id, StudentHomeworkDto updatedDto, UserIdentityInfo userInfo);
         Task<StudentHomeworkStatus> UpdateStatusOfStudentHomeworkAsync(int id, StudentHomeworkStatus status, UserIdentityInfo userInfo);
+        Task<StudentHomeworkStatus> ApproveOrDeclineStudentHomework(int id, bool isApproved, UserIdentityInfo userInfo);
         Task<StudentHomeworkDto> GetStudentHomeworkByIdAsync(int id, UserIdentityInfo userInfo);
         Task<List<StudentHomeworkDto>> GetAllStudentHomeworkOnTaskAsync(int taskId);
         Task<List<StudentHomeworkDto>> GetAllStudentHomeworkByStudentIdAsync(int userId, UserIdentityInfo userInfo);

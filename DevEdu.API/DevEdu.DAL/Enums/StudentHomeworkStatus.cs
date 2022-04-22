@@ -2,11 +2,11 @@
 {
     public enum StudentHomeworkStatus
     {
-        NotDone = 1,
-        OnCheck,
+        Undone = 1,
+        ToCheck,
         ToFix,
-        OnCheckRepeat,
+        ToVerifyFixes,
         Done,
-        DoneWithLate
+        DoneAfterDeadline
     }
 }

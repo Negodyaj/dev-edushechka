@@ -63,6 +63,11 @@ namespace DevEdu.Business.Services
                 await _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomeworkAsync(dto.User.Id, userInfo.UserId);
 
             updatedDto.Id = id;
+            updatedDto.Status = dto.Status;
+
+            if (dto.Status == StudentHomeworkStatus.ToFix)
+                updatedDto.Status = StudentHomeworkStatus.ToVerifyFixes;
+
             await _studentHomeworkRepository.UpdateStudentHomeworkAsync(updatedDto);
             var studentHomeworkDto = await _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
 
@@ -84,10 +89,10 @@ namespace DevEdu.Business.Services
             {
                 completedDate = DateTime.Now;
                 if (studentHomeworkDto.Homework.EndDate < studentHomeworkDto.AnswerDate)
-                    status = StudentHomeworkStatus.DoneWithLate;
+                    status = StudentHomeworkStatus.DoneAfterDeadline;
             }
 
-            if (status == StudentHomeworkStatus.OnCheck || status == StudentHomeworkStatus.OnCheckRepeat)
+            if (status == StudentHomeworkStatus.ToCheck || status == StudentHomeworkStatus.ToVerifyFixes)
                 answerDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
                     DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
@@ -95,8 +100,34 @@ namespace DevEdu.Business.Services
             completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day,
                 completedDate.Hour, completedDate.Minute, completedDate.Second);
 
-            var result = await _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, (int)status, completedDate, answerDate);
+            var result = await _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, (int)status, completedDate);
 
+            return (StudentHomeworkStatus)result;
+        }
+
+        public async Task<StudentHomeworkStatus> ApproveOrDeclineStudentHomework(int id, bool isApproved, UserIdentityInfo userInfo)
+        {
+            var studentHomeworkDto = await _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFoundAsync(id);
+            if (!userInfo.IsAdmin())
+                await _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccessAsync(studentHomeworkDto.User.Id, userInfo.UserId);
+
+            StudentHomeworkStatus newStatus;
+            DateTime completedDate = default;
+            if (isApproved)
+            {
+                newStatus = studentHomeworkDto.AnswerDate < studentHomeworkDto.Homework.EndDate ? 
+                    StudentHomeworkStatus.Done : StudentHomeworkStatus.DoneAfterDeadline;
+                var now = DateTime.Now;
+                completedDate = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+            }
+            else
+            {
+                newStatus = StudentHomeworkStatus.ToFix;
+            }
+
+            _studentHomeworkValidationHelper.CheckUserCanChangeStatus(userInfo, studentHomeworkDto, newStatus);
+
+            var result = await _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, (int)newStatus, completedDate);
             return (StudentHomeworkStatus)result;
         }
 
