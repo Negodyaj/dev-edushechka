@@ -13,9 +13,7 @@ namespace DevEdu.Business.Services
 {
     public class LessonService : ILessonService
     {
-        private readonly IUserRepository _userRepository;
         private readonly ILessonRepository _lessonRepository;
-        private readonly ICommentRepository _commentRepository;
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly ILessonValidationHelper _lessonValidationHelper;
         private readonly ITopicValidationHelper _topicValidationHelper;
@@ -31,9 +29,7 @@ namespace DevEdu.Business.Services
             IGroupValidationHelper groupValidationHelper
         )
         {
-            _userRepository = userRepository;
             _lessonRepository = lessonRepository;
-            _commentRepository = commentRepository;
             _userValidationHelper = userValidationHelper;
             _lessonValidationHelper = lessonValidationHelper;
             _topicValidationHelper = topicValidationHelper;
@@ -100,7 +96,7 @@ namespace DevEdu.Business.Services
             return await _lessonRepository.SelectAllLessonsByTeacherIdAsync(teacherId);
         }
 
-        public async Task<LessonDto> SelectLessonWithCommentsByIdAsync(UserIdentityInfo userIdentity, int id)
+        public async Task<LessonDto> SelectLessonByIdAsync(UserIdentityInfo userIdentity, int id)
         {
             var lesson = await _lessonValidationHelper.GetLessonByIdAndThrowIfNotFoundAsync(id);
             if (!userIdentity.IsAdmin())
@@ -109,14 +105,13 @@ namespace DevEdu.Business.Services
             }
 
             LessonDto result = await _lessonRepository.SelectLessonByIdAsync(id);
-            result.Comments = await _commentRepository.SelectCommentsFromLessonByLessonIdAsync(id);
             return result;
         }
 
-        public async Task<LessonDto> SelectLessonWithCommentsAndStudentsByIdAsync(UserIdentityInfo userIdentity, int id)
+        public async Task<LessonDto> SelectLessonWithStudentsByIdAsync(UserIdentityInfo userIdentity, int id)
         {
-            LessonDto result = await SelectLessonWithCommentsByIdAsync(userIdentity, id);
-            result.Students = await _lessonRepository.SelectStudentsLessonByLessonIdAsync(id);//.Result;
+            LessonDto result = await SelectLessonByIdAsync(userIdentity, id);
+            result.Students = await _lessonRepository.SelectStudentsLessonByLessonIdAsync(id);
             return result;
         }
 

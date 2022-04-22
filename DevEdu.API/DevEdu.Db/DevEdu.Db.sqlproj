@@ -195,7 +195,6 @@
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonId.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByGroupId.sql" />
     <Build Include="StoredProcedures\Lesson\Lesson_SelectAllByTeacherId.sql" />
-    <Build Include="StoredProcedures\Comment\Comment_SelectByLessonId.sql" />
     <Build Include="StoredProcedures\Notification\Notification_SelectAllByRoleId.sql" />
     <Build Include="StoredProcedures\Notification\Notification_SelectAllByGroupId.sql" />
     <Build Include="StoredProcedures\Student_Lesson\Student_Lesson_SelectByLessonId.sql" />

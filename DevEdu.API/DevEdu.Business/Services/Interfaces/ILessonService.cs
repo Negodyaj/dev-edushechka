@@ -16,8 +16,8 @@ namespace DevEdu.Business.Services
         Task<List<StudentLessonDto>> SelectAllFeedbackByLessonIdAsync(int lessonId, UserIdentityInfo userIdentityInfo);
         Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(UserIdentityInfo userIdentity, int groupId);
         Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId);
-        Task<LessonDto> SelectLessonWithCommentsAndStudentsByIdAsync(UserIdentityInfo userIdentity, int id);
-        Task<LessonDto> SelectLessonWithCommentsByIdAsync(UserIdentityInfo userIdentity, int id);
+        Task<LessonDto> SelectLessonWithStudentsByIdAsync(UserIdentityInfo userIdentity, int id);
+        Task<LessonDto> SelectLessonByIdAsync(UserIdentityInfo userIdentity, int id);
         Task<LessonDto> UpdateLessonAsync(UserIdentityInfo userIdentity, LessonDto lessonDto, int lessonId);
         Task<StudentLessonDto> UpdateStudentAbsenceReasonOnLessonAsync(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo);
         Task<StudentLessonDto> UpdateStudentAttendanceOnLessonAsync(int lessonId, int studentId, StudentLessonDto studentLessonDto, UserIdentityInfo userIdentityInfo);

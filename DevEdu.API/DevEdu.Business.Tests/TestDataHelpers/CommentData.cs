@@ -14,10 +14,6 @@ namespace DevEdu.Business.Tests
             return new CommentDto
             {
                 Id = 1,
-                Lesson = new LessonDto
-                {
-                    Id = 1
-                },
                 Text = "comment1",
                 User = new UserDto
                 {
