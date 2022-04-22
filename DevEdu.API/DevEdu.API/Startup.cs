@@ -101,6 +101,10 @@ namespace DevEdu.API
 
             //This middleware is used to route requests.    
             app.UseRouting();
+            app.UseCors(opt =>
+            {
+                opt.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+            });
 
             //This middleware is used to authorizes a user to access secure resources.   
             app.UseAuthentication();

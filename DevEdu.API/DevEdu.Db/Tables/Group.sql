@@ -4,6 +4,7 @@
 	CourseId int NOT NULL,
 	GroupStatusId int NOT NULL,
 	StartDate date NOT NULL,
+	EndDate date NULL,
 	IsDeleted bit NOT NULL DEFAULT '0',
 	Timetable nvarchar(500) NOT NULL,
 	PaymentPerMonth decimal(6,2) NOT NULL,

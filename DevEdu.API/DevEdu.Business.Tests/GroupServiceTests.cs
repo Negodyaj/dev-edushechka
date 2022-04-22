@@ -1,4 +1,6 @@
-﻿using DevEdu.Business.Services;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
+using DevEdu.Business.Services;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Repositories;
@@ -57,6 +59,21 @@ namespace DevEdu.Business.Tests
             //Then
             Assert.AreEqual(groupDto, actualGroupId);
             _groupRepoMock.Verify(x => x.AddGroupAsync(groupDto), Times.Once);
+        }
+
+        [Test]
+        public async Task AddGroup_VakidationException()
+        {
+            //Given
+            var groupDto = GroupData.GetGroupDtoCompareException();
+            var expectedException = string.Format(ServiceMessages.EndDateInGroupNotCorrected);
+
+            //When
+            var ex = Assert.ThrowsAsync<ValidationException>(
+                () => _sut.AddGroup(groupDto));
+            
+            //Then
+            Assert.AreEqual(expectedException, ex.Message);
         }
 
         [Test]
@@ -136,6 +153,28 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.UpdateGroupAsync(groupDto), Times.Once);
         }
 
+        [Test]
+        public async Task AddGroup_GroupIdAndGroupDto_ValidationException()
+        {
+            //Given
+            var groupId = 1;
+            var userInfo = GroupData.GetUserInfo();
+            var groupDto = GroupData.GetGroupDtoCompareException();
+            groupDto.Id = groupId;
+            var updGroupDto = GroupData.GetUpdGroupDto();
+            var expectedException = string.Format(ServiceMessages.EndDateInGroupNotCorrected);
+
+            _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
+            _groupRepoMock.Setup(x => x.UpdateGroupAsync(groupDto)).ReturnsAsync(updGroupDto);
+
+            //When
+            var ex = Assert.ThrowsAsync<ValidationException>(
+                () => _sut.UpdateGroup(groupId, groupDto, userInfo));
+
+            //Then
+            Assert.AreEqual(expectedException, ex.Message);
+        }
+
         [TestCase(GroupStatus.Forming)]
         public async Task ChangeGroupStatus_GroupIdAndStatusId_GroupDtoReturned(GroupStatus status)
         {
@@ -210,7 +249,7 @@ namespace DevEdu.Business.Tests
             var materialId = 2;
             var expectedAffectedRows = 3;
             var groupDto = GroupData.GetGroupDto();
-            var materialDto = MaterialData.GetMaterialDtoWithTags();
+            var materialDto = MaterialData.GetMaterialDto();
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);
@@ -236,7 +275,7 @@ namespace DevEdu.Business.Tests
             var materialId = 2;
             var expectedAffectedRows = 3;
             var groupDto = GroupData.GetGroupDto();
-            var materialDto = MaterialData.GetMaterialDtoWithTags();
+            var materialDto = MaterialData.GetMaterialDto();
             var userInfo = GroupData.GetUserInfo();
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(groupDto);

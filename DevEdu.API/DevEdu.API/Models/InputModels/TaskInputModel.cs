@@ -13,6 +13,5 @@ namespace DevEdu.API.Models
         public string Links { get; set; }
         [Required(ErrorMessage = IsRequiredErrorMessage)]
         public bool IsRequired { get; set; }
-        public List<int> Tags { get; set; }
     }
 }

@@ -13,9 +13,5 @@ namespace DevEdu.API.Models
         [MinLength(8, ErrorMessage = WrongFormatPassword)]
         public string NewPassword { get; set; }
 
-        [Required(ErrorMessage = PasswordRequired)]
-        [Compare(nameof(NewPassword))]
-        public string NewPasswordRepeat { get; set; }
-
     }
 }

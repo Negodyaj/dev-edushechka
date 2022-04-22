@@ -35,7 +35,7 @@ namespace DevEdu.Business.Tests
             _fileSettingsMock = new Mock<IOptions<FilesSettings>>();
             _validationHelper = new UserValidationHelper(_repoMock.Object);
             _workWithFilesMock = new Mock<IFileHelper>();
-            _sut = new UserService(_repoMock.Object, _validationHelper, _fileSettingsMock.Object, _workWithFilesMock.Object);
+            _sut = new UserService(_repoMock.Object, _validationHelper, _fileSettingsMock.Object, _workWithFilesMock.Object, null);
         }
 
         [Test]

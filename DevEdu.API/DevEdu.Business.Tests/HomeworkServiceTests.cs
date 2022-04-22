@@ -51,7 +51,7 @@ namespace DevEdu.Business.Tests
 
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
             _groupRepoMock.Setup(x => x.GetGroupAsync(groupId)).ReturnsAsync(GroupData.GetGroupDto());
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(TaskData.GetTaskDtoWithoutTags());
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(TaskData.GetTaskDto());
 
             _homeworkRepoMock.Setup(x => x.AddHomeworkAsync(homeworkDto)).ReturnsAsync(expectedHomeworkId);
             _homeworkRepoMock.Setup(x => x.GetHomeworkAsync(expectedHomeworkId)).ReturnsAsync(homeworkDto);
@@ -164,7 +164,7 @@ namespace DevEdu.Business.Tests
             var homeworkList = HomeworkData.GetListOfHomeworkDtoWithGroup();
             const int taskId = 1;
 
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(TaskData.GetTaskDtoWithoutTags());
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(taskId)).ReturnsAsync(TaskData.GetTaskDto());
             _homeworkRepoMock.Setup(x => x.GetHomeworkByTaskIdAsync(taskId)).ReturnsAsync(homeworkList);
 
             //When
@@ -183,7 +183,7 @@ namespace DevEdu.Business.Tests
             var homeworkDto = HomeworkData.GetHomeworkDtoWithoutGroupAndTask();
             var group = GroupData.GetGroupDto();
             group.Id = 0;
-            var task = TaskData.GetTaskDtoWithoutTags();
+            var task = TaskData.GetTaskDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(group), group.Id);
 
@@ -201,7 +201,7 @@ namespace DevEdu.Business.Tests
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithoutGroupAndTask();
             var group = GroupData.GetGroupDto();
-            var task = TaskData.GetTaskDtoWithoutTags();
+            var task = TaskData.GetTaskDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), task.Id);
 
@@ -222,12 +222,12 @@ namespace DevEdu.Business.Tests
             //Given
             var homeworkDto = HomeworkData.GetHomeworkDtoWithoutGroupAndTask();
             var group = GroupData.GetAnotherGroupDto();
-            var task = TaskData.GetTaskDtoWithoutTags();
+            var task = TaskData.GetTaskDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithTeacherRole();
             var expectedException = string.Format(ServiceMessages.UserInGroupNotFoundMessage, userInfo.UserId, group.Id);
 
             _groupRepoMock.Setup(x => x.GetGroupAsync(group.Id)).ReturnsAsync(GroupData.GetAnotherGroupDto());
-            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(task.Id)).ReturnsAsync(TaskData.GetTaskDtoWithoutTags());
+            _taskRepoMock.Setup(x => x.GetTaskByIdAsync(task.Id)).ReturnsAsync(TaskData.GetTaskDto());
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(GroupData.GetGroupDtos);
 
             //When
@@ -402,7 +402,7 @@ namespace DevEdu.Business.Tests
         public void GetHomeworkByTaskId_WhenTaskIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             //Given
-            var task = TaskData.GetTaskDtoWithoutTags();
+            var task = TaskData.GetTaskDto();
 
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(task), task.Id);
 

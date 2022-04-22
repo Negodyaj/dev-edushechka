@@ -66,7 +66,7 @@ namespace DevEdu.API.Controllers
         // api/lessons/{id}
         [AuthorizeRoles(Role.Teacher)]
         [HttpPut("{id}")]
-        [Description("Update the lesson's teacher comment and link to record.")]
+        [Description("Update the lesson's  link to record.")]
         [ProducesResponseType(typeof(LessonInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
@@ -120,22 +120,8 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
-        // api/lessons/{id}/with-comments
-        [AuthorizeRoles(Role.Student)]
-        [HttpGet("{id}/with-comments")]
-        [Description("Get the lesson with comments by id.")]
-        [ProducesResponseType(typeof(LessonInfoWithCommentsOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<LessonInfoWithCommentsOutputModel> GetLessonWithCommentsAsync(int id)
-        {
-            var userIdentity = this.GetUserIdAndRoles();
-            var dto = await _lessonService.SelectLessonWithCommentsByIdAsync(userIdentity, id);
-            return _mapper.Map<LessonInfoWithCommentsOutputModel>(dto);
-        }
-
         // api/lessons/{id}/full-info
-        [AuthorizeRolesAttribute(Role.Teacher)]
+        [AuthorizeRoles(Role.Teacher)]
         [HttpGet("{id}/full-info")]
         [Description("Get the lesson with students and comments by id.")]
         [ProducesResponseType(typeof(LessonInfoWithStudentsAndCommentsOutputModel), StatusCodes.Status200OK)]
@@ -144,7 +130,7 @@ namespace DevEdu.API.Controllers
         public async Task<LessonInfoWithStudentsAndCommentsOutputModel> GetLessonWithStudentsAndCommentsAsync(int id)
         {
             var userIdentity = this.GetUserIdAndRoles();
-            var dto = await _lessonService.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, id);
+            var dto = await _lessonService.SelectLessonWithStudentsByIdAsync(userIdentity, id);
             return _mapper.Map<LessonInfoWithStudentsAndCommentsOutputModel>(dto);
         }
 

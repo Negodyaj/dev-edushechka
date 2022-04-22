@@ -122,7 +122,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<StudentHomeworkOutputModel>>(studentAnswersDto);
         }
 
-        // api/student-homeworks/answer/by-user/42 
+        // api/student-homeworks/by-user/42 
         [HttpGet("by-user/{userId}")]
         [Description("Get all answers of student")]
         [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
