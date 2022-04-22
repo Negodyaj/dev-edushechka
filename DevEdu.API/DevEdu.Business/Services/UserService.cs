@@ -20,15 +20,18 @@ namespace DevEdu.Business.Services
         private readonly IUserValidationHelper _userValidationHelper;
         private readonly IOptions<FilesSettings> _fileSettings;
         private readonly IFileHelper _fileHelper;
+        private readonly IGroupRepository _groupRepository;
 
         public UserService(IUserRepository userRepository, IUserValidationHelper helper,
             IOptions<FilesSettings> fileSettings,
-            IFileHelper workWithFiles)
+            IFileHelper workWithFiles,
+            IGroupRepository groupRepository)
         {
             _userRepository = userRepository;
             _userValidationHelper = helper;
             _fileSettings = fileSettings;
             _fileHelper = workWithFiles;
+            _groupRepository = groupRepository;
         }
 
         public async Task<UserDto> AddUserAsync(UserDto dto)
@@ -56,6 +59,17 @@ namespace DevEdu.Business.Services
             var user = await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(getInfoUserid);
 
             return user;
+        }
+
+        public async Task<(UserDto, List<GroupDto>)> GetUserByTokenAsync(UserIdentityInfo userInfo = null)
+        {
+            if (userInfo == null)
+                throw new EntityNotFoundException("херовый токен");
+
+            var user = await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userInfo.UserId);
+            var groups = await _groupRepository.GetGroupsByUserIdAsync(userInfo.UserId);
+
+            return (user, groups);
         }
 
         public async Task<UserDto> GetUserByEmailAsync(string email)
