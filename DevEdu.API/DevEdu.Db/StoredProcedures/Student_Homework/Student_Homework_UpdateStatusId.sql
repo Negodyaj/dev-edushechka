@@ -7,6 +7,6 @@ BEGIN
 	UPDATE Student_Homework
 	SET 
 		StatusId = @StatusId,
-		CompletedDate = @CompletedDate
+		CompletedDate = COALESCE(@CompletedDate, CompletedDate)
 	WHERE Id = @Id
 END

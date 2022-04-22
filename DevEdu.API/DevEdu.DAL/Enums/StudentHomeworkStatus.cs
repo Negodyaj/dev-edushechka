@@ -2,8 +2,11 @@
 {
     public enum StudentHomeworkStatus
     {
-        Unchecked = 1,
-        Accepted,
-        Returned
+        Undone = 1,
+        ToCheck,
+        ToFix,
+        ToVerifyFixes,
+        Done,
+        DoneAfterDeadline
     }
 }

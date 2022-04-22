@@ -25,7 +25,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                 {
                     Id = 1
                 },
-                TaskStatus = StudentHomeworkStatus.Unchecked,
                 CompletedDate = default,
                 IsDeleted = false
             };
@@ -64,7 +63,7 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                     Email = "petr@mail.com",
                     Photo = "peter.jpeg"
                 },
-                TaskStatus = StudentHomeworkStatus.Unchecked,
+                Status = StudentHomeworkStatus.ToCheck,
                 CompletedDate = DateTime.Parse("01.01.2021"),
                 IsDeleted = false
             };
@@ -91,7 +90,7 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                     Email = "petr@mail.com",
                     Photo = "peter.jpeg"
                 },
-                TaskStatus = StudentHomeworkStatus.Accepted,
+                Status = StudentHomeworkStatus.ToCheck,
                 CompletedDate = new DateTime(_timeNow.Year, _timeNow.Month, _timeNow.Day, _timeNow.Hour, _timeNow.Minute, _timeNow.Second),
                 IsDeleted = false
             };
@@ -103,6 +102,7 @@ namespace DevEdu.Business.Tests.TestDataHelpers
             {
                 Id = 1,
                 Answer = "I changed answer for first task. And now answer is good answer and I am User 1.",
+                Status = StudentHomeworkStatus.ToCheck,
                 Homework = new HomeworkDto
                 {
                     Task = new TaskDto
@@ -118,7 +118,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                     Email = "petr@mail.com",
                     Photo = "peter.jpeg"
                 },
-                TaskStatus = StudentHomeworkStatus.Unchecked,
                 CompletedDate = DateTime.Parse("01.01.2021"),
                 IsDeleted = false
             };
@@ -147,7 +146,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -171,7 +169,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "hubeker@uandex.ru",
                         Photo = "beker.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -195,7 +192,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "linkeshot@mail.ru",
                         Photo = "shot.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -225,7 +221,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("01.01.2021"),
                     IsDeleted = false
                 },
@@ -249,7 +244,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("02.01.2021"),
                     IsDeleted = false
                 },
@@ -273,7 +267,6 @@ namespace DevEdu.Business.Tests.TestDataHelpers
                         Email = "petr@mail.com",
                         Photo = "peter.jpeg"
                     },
-                    TaskStatus = StudentHomeworkStatus.Unchecked,
                     CompletedDate = DateTime.Parse("03.01.2021"),
                     IsDeleted = false
                 },

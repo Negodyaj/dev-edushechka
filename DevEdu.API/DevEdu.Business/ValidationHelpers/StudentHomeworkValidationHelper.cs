@@ -1,5 +1,7 @@
 ﻿using DevEdu.Business.Constants;
 using DevEdu.Business.Exceptions;
+using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
 using System.Linq;
@@ -53,6 +55,51 @@ namespace DevEdu.Business.ValidationHelpers
         {
             if (studentId != userId)
                 throw new AuthorizationException(string.Format(ServiceMessages.UserHasNoAccessMessage, userId));
+        }
+
+        public void CheckUserCanChangeStatus(UserIdentityInfo userIdentityInfo, StudentHomeworkDto studentHomeworkDto,
+                                            StudentHomeworkStatus newStatus)
+        {
+            var currentStatus = studentHomeworkDto.Status;
+
+            if (currentStatus == newStatus)
+                return;
+            
+            if (currentStatus == StudentHomeworkStatus.Done || currentStatus == StudentHomeworkStatus.DoneAfterDeadline)
+                throw new ConflictExpection(ServiceMessages.HomeworkStatusCantBeChanged);
+
+            if (currentStatus == StudentHomeworkStatus.Undone && newStatus != StudentHomeworkStatus.ToCheck)
+                throw new ConflictExpection(ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
+
+            if ((currentStatus == StudentHomeworkStatus.ToCheck || currentStatus == StudentHomeworkStatus.ToVerifyFixes)
+                && newStatus != StudentHomeworkStatus.ToFix
+                && newStatus != StudentHomeworkStatus.Done
+                && newStatus != StudentHomeworkStatus.DoneAfterDeadline)
+                throw new ConflictExpection(ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
+
+            if (currentStatus == StudentHomeworkStatus.ToFix
+                && newStatus != StudentHomeworkStatus.ToVerifyFixes)
+                throw new ConflictExpection(ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
+
+            if (userIdentityInfo.IsAdmin())
+                return;
+
+            if (userIdentityInfo.IsStudent())
+            {
+                if (currentStatus == StudentHomeworkStatus.ToCheck || currentStatus == StudentHomeworkStatus.ToVerifyFixes)
+                    throw new AuthorizationException(ServiceMessages.HomeworkStatusCantBeChangedByThisUser);
+                return;
+            }
+
+            if (userIdentityInfo.IsTutor() || userIdentityInfo.IsTeacher())
+            {
+                if (currentStatus != StudentHomeworkStatus.ToCheck && currentStatus != StudentHomeworkStatus.ToVerifyFixes)
+                    throw new AuthorizationException(ServiceMessages.HomeworkStatusCantBeChangedByThisUser);
+                return;
+            }
+
+            throw new AuthorizationException(ServiceMessages.HomeworkStatusCantBeChangedByThisUser);
+
         }
     }
 }

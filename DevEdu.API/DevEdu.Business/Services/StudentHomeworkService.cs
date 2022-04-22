@@ -3,10 +3,9 @@ using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using DevEdu.DAL.Repositories;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using TaskStatus = DevEdu.DAL.Enums.StudentHomeworkStatus;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevEdu.Business.Services
 {
@@ -64,26 +63,74 @@ namespace DevEdu.Business.Services
                 await _studentHomeworkValidationHelper.CheckUserComplianceToStudentHomeworkAsync(dto.User.Id, userInfo.UserId);
 
             updatedDto.Id = id;
+            updatedDto.Status = dto.Status;
+
+            if (dto.Status == StudentHomeworkStatus.ToFix)
+                updatedDto.Status = StudentHomeworkStatus.ToVerifyFixes;
+
+            _studentHomeworkValidationHelper.CheckUserCanChangeStatus(userInfo, dto, updatedDto.Status);
+
             await _studentHomeworkRepository.UpdateStudentHomeworkAsync(updatedDto);
             var studentHomeworkDto = await _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
 
             return studentHomeworkDto;
         }
 
-        public async Task<int> UpdateStatusOfStudentHomeworkAsync(int id, int statusId, UserIdentityInfo userInfo)
+        public async Task<StudentHomeworkStatus> UpdateStatusOfStudentHomeworkAsync(int id, StudentHomeworkStatus status, UserIdentityInfo userInfo)
         {
-            var dto = await _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFoundAsync(id);
+            var studentHomeworkDto = await _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFoundAsync(id);
             if (!userInfo.IsAdmin())
-                await _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccessAsync(dto.User.Id, userInfo.UserId);
+                await _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccessAsync(studentHomeworkDto.User.Id, userInfo.UserId);
+
+            _studentHomeworkValidationHelper.CheckUserCanChangeStatus(userInfo, studentHomeworkDto, status);
 
             DateTime completedDate = default;
-            if (statusId == (int)StudentHomeworkStatus.Accepted)
+            DateTime answerDate = default;
+
+            if (status == StudentHomeworkStatus.Done)
+            {
                 completedDate = DateTime.Now;
+                if (studentHomeworkDto.Homework.EndDate < studentHomeworkDto.AnswerDate)
+                    status = StudentHomeworkStatus.DoneAfterDeadline;
+            }
 
-            completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day, completedDate.Hour, completedDate.Minute, completedDate.Second);
-            var result = await _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, statusId, completedDate);
+            if (status == StudentHomeworkStatus.ToCheck || status == StudentHomeworkStatus.ToVerifyFixes)
+                answerDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                    DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
-            return result;
+
+            completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day,
+                completedDate.Hour, completedDate.Minute, completedDate.Second);
+
+            var result = await _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, (int)status, completedDate);
+
+            return (StudentHomeworkStatus)result;
+        }
+
+        public async Task<StudentHomeworkStatus> ApproveOrDeclineStudentHomework(int id, bool isApproved, UserIdentityInfo userInfo)
+        {
+            var studentHomeworkDto = await _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFoundAsync(id);
+            if (!userInfo.IsAdmin())
+                await _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccessAsync(studentHomeworkDto.User.Id, userInfo.UserId);
+
+            StudentHomeworkStatus newStatus;
+            DateTime completedDate = default;
+            if (isApproved)
+            {
+                newStatus = studentHomeworkDto.AnswerDate < studentHomeworkDto.Homework.EndDate ? 
+                    StudentHomeworkStatus.Done : StudentHomeworkStatus.DoneAfterDeadline;
+                var now = DateTime.Now;
+                completedDate = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+            }
+            else
+            {
+                newStatus = StudentHomeworkStatus.ToFix;
+            }
+
+            _studentHomeworkValidationHelper.CheckUserCanChangeStatus(userInfo, studentHomeworkDto, newStatus);
+
+            var result = await _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, (int)newStatus, completedDate);
+            return (StudentHomeworkStatus)result;
         }
 
         public async Task<StudentHomeworkDto> GetStudentHomeworkByIdAsync(int id, UserIdentityInfo userInfo)

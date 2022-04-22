@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using TaskStatus = DevEdu.DAL.Enums.StudentHomeworkStatus;
 
 namespace DevEdu.DAL.Repositories
 {
@@ -56,13 +55,14 @@ namespace DevEdu.DAL.Repositories
                  new
                  {
                      dto.Id,
-                     dto.Answer
+                     dto.Answer,
+                     dto.Status
                  },
                  commandType: CommandType.StoredProcedure
              );
         }
 
-        public async Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime completedDate)
+        public async Task<int> ChangeStatusOfStudentAnswerOnTaskAsync(int id, int statusId, DateTime? completedDate)
         {
             await _connection.ExecuteAsync(
                   _studentHomeworkUpdateStatusIdProcedure,
@@ -88,7 +88,7 @@ namespace DevEdu.DAL.Repositories
                         studentHomework.Homework = homework;
                         studentHomework.User = user;
                         studentHomework.Homework.Task = task;
-                        studentHomework.StudentHomeworkStatus = studentHomeworkStatus;
+                        studentHomework.Status = studentHomeworkStatus;
 
                         return studentHomework;
                     },
@@ -107,7 +107,7 @@ namespace DevEdu.DAL.Repositories
                 _studentHomeworkSelectAllAnswersByTaskIdProcedure,
                 (studentAnswer, studentHomeworkStatus, user) =>
                 {
-                    studentAnswer.StudentHomeworkStatus = studentHomeworkStatus;
+                    studentAnswer.Status = studentHomeworkStatus;
                     studentAnswer.User = user;
 
                     return studentAnswer;
@@ -129,7 +129,7 @@ namespace DevEdu.DAL.Repositories
                     _studentHomeworkSelectAnswersByUserIdProcedure,
                     (answerDto, studentHomeworkStatus, homework, task) =>
                     {
-                        answerDto.StudentHomeworkStatus = studentHomeworkStatus;
+                        answerDto.Status = studentHomeworkStatus;
                         answerDto.Homework = homework;
                         answerDto.Homework.Task = task;
                         return answerDto;

@@ -25,6 +25,9 @@
         public const string AccessToNotificationDenied = "User with id = {0} doesn't have access to this notification ";
         public const string MoreOnePropertyHaveAValueMessage = "Only one property ({0}, {1} or {2}) should have a value";
         public const string EndDateInGroupNotCorrected = "Start date later than End date";
-        public const string WrongPassword = "WrongPassword";
+        public const string WrongPassword = "Wrong password";
+        public const string HomeworkStatusCantBeChanged = "Homework status can't be changed";
+        public const string HomeworkStatusCantBeChangedByThisUser = "Homework status can't be changed by user with this role";
+        public const string HomeworkStatusCantBeChangedOnThisStatus = "Current homework status can't be changed on this status";
     }
 }

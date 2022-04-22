@@ -9,7 +9,7 @@ using NUnit.Framework;
 using System;
 using DevEdu.Business.Tests.TestDataHelpers;
 using System.Threading.Tasks;
-using TaskStatus = DevEdu.DAL.Enums.StudentHomeworkStatus;
+using DevEdu.Business.Tests.TestCaseSources;
 
 namespace DevEdu.Business.Tests
 {
@@ -110,61 +110,113 @@ namespace DevEdu.Business.Tests
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentAnswerDto.User.Id), Times.Exactly(2));
         }
 
-        [TestCase(Role.Teacher)]
-        [TestCase(Role.Tutor)]
-        public async Task ChangeStatusOfStudentHomework_ExistingStudentHomeworkIdPassed_StatusChangededAsync(Enum role)
+        [TestCase(Role.Student, StudentHomeworkStatus.Undone, StudentHomeworkStatus.ToCheck)]
+        [TestCase(Role.Tutor, StudentHomeworkStatus.ToCheck, StudentHomeworkStatus.ToFix)]
+        [TestCase(Role.Tutor, StudentHomeworkStatus.ToCheck, StudentHomeworkStatus.Done)]
+        [TestCase(Role.Tutor, StudentHomeworkStatus.ToCheck, StudentHomeworkStatus.DoneAfterDeadline)]
+        [TestCase(Role.Teacher, StudentHomeworkStatus.ToCheck, StudentHomeworkStatus.ToFix)]
+        [TestCase(Role.Teacher, StudentHomeworkStatus.ToCheck, StudentHomeworkStatus.Done)]
+        [TestCase(Role.Teacher, StudentHomeworkStatus.ToCheck, StudentHomeworkStatus.DoneAfterDeadline)]
+        [TestCase(Role.Student, StudentHomeworkStatus.ToFix, StudentHomeworkStatus.ToVerifyFixes)]
+        [TestCase(Role.Tutor, StudentHomeworkStatus.ToVerifyFixes, StudentHomeworkStatus.ToFix)]
+        [TestCase(Role.Tutor, StudentHomeworkStatus.ToVerifyFixes, StudentHomeworkStatus.Done)]
+        [TestCase(Role.Tutor, StudentHomeworkStatus.ToVerifyFixes, StudentHomeworkStatus.DoneAfterDeadline)]
+        [TestCase(Role.Teacher, StudentHomeworkStatus.ToVerifyFixes, StudentHomeworkStatus.ToFix)]
+        [TestCase(Role.Teacher, StudentHomeworkStatus.ToVerifyFixes, StudentHomeworkStatus.Done)]
+        [TestCase(Role.Teacher, StudentHomeworkStatus.ToVerifyFixes, StudentHomeworkStatus.DoneAfterDeadline)]
+        public async Task ChangeStatusOfStudentHomework_ExistingStudentHomeworkIdPassed_StatusChangededAsync(Role role, 
+            StudentHomeworkStatus currentStatus, StudentHomeworkStatus statusToChange)
         {
             // Given
-            var studentAnswerDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            var studentHomeworkDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            studentHomeworkDto.Status = currentStatus;
             const int homeworkId = 1;
-            const int statusId = (int)StudentHomeworkStatus.Returned;
-            DateTime completedDate = default;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
-            var exactlyCount = 2;
 
-            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentAnswerDto);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentAnswerDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentHomeworkDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
             _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
-            _studentHomeworkRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, statusId, completedDate)).ReturnsAsync(statusId);
+            _studentHomeworkRepoMock
+                .Setup(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)statusToChange, It.IsAny<DateTime>()))
+                .ReturnsAsync((int)statusToChange);
 
             // When
-            var actualStatusId = await _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, statusId, userInfo);
+            var actualStatusId = await _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, statusToChange, userInfo);
 
             // Then
-            Assert.AreEqual(statusId, actualStatusId);
-            _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, statusId, completedDate), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentAnswerDto.User.Id), Times.Exactly(2));
+            Assert.AreEqual(statusToChange, (StudentHomeworkStatus)actualStatusId);
+            _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)statusToChange, It.IsAny<DateTime>()), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id), Times.Exactly(2));
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Once);
         }
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public async Task ChangeStatusOfStudentHomework_ExistingStudentHomeworkIdPassed_CompletedDateChangedAsync(Enum role)
+        public async Task ChangeStatusOfStudentHomework_ExistingStudentHomeworkIdPassed_CompletedDateChangedAsync(Role role)
         {
             // Given
-            var acceptedStatusDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskWithAcceptedTaskStatusDto();
+            var studentHomeworkDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskWithAcceptedTaskStatusDto();
             const int homeworkId = 1;
-            const int acceptedStatusId = (int)StudentHomeworkStatus.Accepted;
+            var acceptedStatus = StudentHomeworkStatus.Done;
             DateTime dateTime = DateTime.Now;
             dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
 
-            int countEntry = 2;
+            var groupsDto = CommentData.GetGroupsDto();
+            int countGetGroupIsInvokedByMethod = 2;
+            int countMethodsIsInvoked = 2;
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
 
-            _studentHomeworkRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, acceptedStatusId, dateTime)).ReturnsAsync(acceptedStatusId);
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(acceptedStatusDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
-            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
-            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(acceptedStatusDto);
+            _studentHomeworkRepoMock.Setup(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)acceptedStatus, dateTime)).ReturnsAsync((int)acceptedStatus);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id)).ReturnsAsync(groupsDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(groupsDto);
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentHomeworkDto);
 
             // When
-            var actualStatusId = await _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, acceptedStatusId, userInfo);
+            var actualStatusId = await _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, acceptedStatus, userInfo);
             var dto = await _sut.GetStudentHomeworkByIdAsync(homeworkId, userInfo);
 
             // Then
             Assert.AreEqual(dateTime, dto.CompletedDate);
-            _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, acceptedStatusId, dateTime), Times.Once);
-            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(acceptedStatusDto.User.Id), Times.Exactly(4));
-            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Exactly(countEntry));
+            _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)acceptedStatus, dateTime), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id), Times.Exactly(countGetGroupIsInvokedByMethod * countMethodsIsInvoked));
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Exactly(countMethodsIsInvoked));
+        }
+
+        [TestCase(Role.Teacher)]
+        [TestCase(Role.Tutor)]
+        public async Task ChangeStatusOfStudentHomework_ExistingStudentHomeworkIdPassed_StatusMarkDoneWithLateAsync(Role role)
+        {
+            // Given
+            var studentHomeworkDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskWithAcceptedTaskStatusDto();
+            var groupsDto = CommentData.GetGroupsDto();
+            studentHomeworkDto.Homework.EndDate = DateTime.Now.AddDays(-1);
+            const int homeworkId = 1;
+            var acceptedStatus = StudentHomeworkStatus.DoneAfterDeadline;
+            var sendedStatusToMethod = StudentHomeworkStatus.Done;
+            DateTime dateTime = DateTime.Now;
+            dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
+            studentHomeworkDto.AnswerDate = dateTime;
+
+            int countGetGroupIsInvokedByMethod = 2;
+            int countMethodsIsInvoked = 2;
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+
+            _studentHomeworkRepoMock
+                .Setup(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)acceptedStatus, It.IsAny<DateTime>()))
+                .ReturnsAsync((int)acceptedStatus);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id)).ReturnsAsync(groupsDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(groupsDto);
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentHomeworkDto);
+
+            // When
+            var actualStatusId = await _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, sendedStatusToMethod, userInfo);
+            var dto = await _sut.GetStudentHomeworkByIdAsync(homeworkId, userInfo);
+
+            // Then
+            Assert.AreEqual(dateTime, dto.CompletedDate);
+            _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)acceptedStatus, It.IsAny<DateTime>()), Times.Once);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id), Times.Exactly(countGetGroupIsInvokedByMethod * countMethodsIsInvoked));
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Exactly(countMethodsIsInvoked));
         }
 
         [TestCase(Role.Teacher)]
@@ -233,7 +285,7 @@ namespace DevEdu.Business.Tests
 
 
         [TestCase(Role.Student)]
-        public async Task AddStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
+        public void AddStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             // Given
             var studentHomework = CommentData.GetStudentHomeworkDto();
@@ -263,7 +315,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student)]
-        public async Task AddStudentHomeworkAsync_UserInGroupNotFoundMessage_AuthorizationExceptionThrown(Enum role)
+        public void AddStudentHomeworkAsync_UserInGroupNotFoundMessage_AuthorizationExceptionThrown(Enum role)
         {
             // Given
             var studentHomework = CommentData.GetStudentHomeworkDto();
@@ -294,7 +346,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student)]
-        public async Task AddStudentHomeworkAsync_WhenHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void AddStudentHomeworkAsync_WhenHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             var homework = HomeworkData.GetHomeworkDtoWithGroupAndTask();
@@ -314,7 +366,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student)]
-        public async Task DeleteStudentHomeworkAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void DeleteStudentHomeworkAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
@@ -334,7 +386,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student, 2)]
-        public async Task DeleteStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        public void DeleteStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
         {
             // Given
             var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
@@ -357,7 +409,7 @@ namespace DevEdu.Business.Tests
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public async Task GetStudentHomeworkByIdAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void GetStudentHomeworkByIdAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             const int homeworkId = 1;
@@ -375,7 +427,7 @@ namespace DevEdu.Business.Tests
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public async Task GetStudentHomeworkByIdAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
+        public void GetStudentHomeworkByIdAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             //Given
             var studentHomework = CommentData.GetStudentHomeworkDto();
@@ -398,7 +450,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student)]
-        public async Task UpdateStudentHomeworkAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void UpdateStudentHomeworkAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
@@ -417,7 +469,7 @@ namespace DevEdu.Business.Tests
         }
 
         [TestCase(Role.Student, 2)]
-        public async Task UpdateStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
+        public void UpdateStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role, int userId)
         {
             //Given
             var studentHomework = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
@@ -440,7 +492,7 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task GetAllStudentHomeworkOnTaskAsync_WhenTaskIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
+        public void GetAllStudentHomeworkOnTaskAsync_WhenTaskIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown()
         {
             // Given
             const int task = 1;
@@ -459,7 +511,7 @@ namespace DevEdu.Business.Tests
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
         [TestCase(Role.Methodist)]
-        public async Task GetAllStudentHomeworkByStudentIdAsync_WhenStudentIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void GetAllStudentHomeworkByStudentIdAsync_WhenStudentIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             const int user = 0;
@@ -475,15 +527,18 @@ namespace DevEdu.Business.Tests
             _studentHomeworkRepoMock.Verify(x => x.GetAllStudentHomeworkByStudentIdAsync(user), Times.Never);
         }
 
+        [TestCase(Role.Student)]
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public async Task UpdateStatusOfStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
+        [TestCase(Role.Methodist)]
+        [TestCase(Role.Manager)]
+        public void UpdateStatusOfStudentHomeworkAsync_WhenUserDoNotHaveAccess_AuthorizationExceptionThrown(Enum role)
         {
             // Given
             var studentHomework = CommentData.GetStudentHomeworkDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             const int homeworkId = 1;
-            const int statusId = (int)TaskStatus.Returned;
+            var status = StudentHomeworkStatus.ToFix;
             var expectedException = string.Format(ServiceMessages.UserHasNoAccessMessage, userInfo.UserId);
 
             _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentHomework);
@@ -492,10 +547,10 @@ namespace DevEdu.Business.Tests
 
             //When
             var actualException = Assert.ThrowsAsync<AuthorizationException>(
-                    () => _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, statusId, userInfo));
+                    () => _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, status, userInfo));
 
             //Than
-            Assert.That(actualException.Message, Is.EqualTo(expectedException));
+            Assert.AreEqual(expectedException, actualException.Message);
             _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(userInfo.UserId), Times.Once);
             _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomework.User.Id), Times.Once);
@@ -503,21 +558,80 @@ namespace DevEdu.Business.Tests
 
         [TestCase(Role.Teacher)]
         [TestCase(Role.Tutor)]
-        public async Task UpdateStatusOfStudentHomeworkAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
+        public void UpdateStatusOfStudentHomeworkAsync_WhenStudentHomeworkIdDoNotHaveMatchesInDataBase_EntityNotFoundAndExceptionThrown(Enum role)
         {
             // Given
             var studentHomework = CommentData.GetStudentHomeworkDto();
             var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
             const int homeworkId = 10;
-            const int statusId = (int)TaskStatus.Returned;
+            var status = StudentHomeworkStatus.ToFix;
             var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, nameof(studentHomework), studentHomework.User.Id);
 
             // When
             var actualException = Assert.ThrowsAsync<EntityNotFoundException>(
-                () => _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, statusId, userInfo));
+                () => _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, status, userInfo));
 
             // Than
-            Assert.That(actualException.Message, Is.EqualTo(expectedException));
+            Assert.AreEqual(expectedException, actualException.Message);
+        }
+
+        [TestCaseSource(typeof(StudentHomewokServiceTestCaseSources),
+            nameof(StudentHomewokServiceTestCaseSources.GetTestCaseDataForWrongStatusPassedConflictException))]
+        public void ChangeStatusOfStudentHomework_WrongStatusPassed_ConflictExceptionThrows(        
+            StudentHomeworkStatus currentStatus, StudentHomeworkStatus statusToChange, string expectedErrorMessage)
+        {
+            // Given
+            var role = Role.Teacher;
+            var studentHomeworkDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            studentHomeworkDto.Status = currentStatus;
+            const int homeworkId = 1;
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentHomeworkDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
+            _studentHomeworkRepoMock
+                .Setup(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)statusToChange, It.IsAny<DateTime>()))
+                .ReturnsAsync((int)statusToChange);
+
+            // When
+            var actualException = Assert.ThrowsAsync<ConflictExpection>(
+                () => _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, statusToChange, userInfo));
+
+            // Then
+            Assert.AreEqual(expectedErrorMessage, actualException.Message);
+            _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)statusToChange, It.IsAny<DateTime>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id), Times.Exactly(2));
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Once);
+        }
+        
+        [TestCaseSource(typeof(StudentHomewokServiceTestCaseSources),
+            nameof(StudentHomewokServiceTestCaseSources.GetTestCaseDataForWrongStatusPassedAuthorizationException))]
+        public void ChangeStatusOfStudentHomework_WrongStatusPassed_AuthorizationExceptionThrows(Role role,
+            StudentHomeworkStatus currentStatus, StudentHomeworkStatus statusToChange, string expectedErrorMessage)
+        {
+            // Given
+            var studentHomeworkDto = StudentAnswerOnTaskData.GetStudentAnswerOnTaskDto();
+            studentHomeworkDto.Status = currentStatus;
+            const int homeworkId = 1;
+            var userInfo = UserIdentityInfoData.GetUserIdentityWithRole(role);
+
+            _studentHomeworkRepoMock.Setup(x => x.GetStudentHomeworkByIdAsync(homeworkId)).ReturnsAsync(studentHomeworkDto);
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id)).ReturnsAsync(CommentData.GetGroupsDto());
+            _groupRepoMock.Setup(x => x.GetGroupsByUserIdAsync(userInfo.UserId)).ReturnsAsync(CommentData.GetGroupsDto());
+            _studentHomeworkRepoMock
+                .Setup(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)statusToChange, It.IsAny<DateTime>()))
+                .ReturnsAsync((int)statusToChange);
+
+            // When
+            var actualException = Assert.ThrowsAsync<AuthorizationException>(
+                () => _sut.UpdateStatusOfStudentHomeworkAsync(homeworkId, statusToChange, userInfo));
+
+            // Then
+            Assert.AreEqual(expectedErrorMessage, actualException.Message);
+            _studentHomeworkRepoMock.Verify(x => x.ChangeStatusOfStudentAnswerOnTaskAsync(homeworkId, (int)statusToChange, It.IsAny<DateTime>()), Times.Never);
+            _groupRepoMock.Verify(x => x.GetGroupsByUserIdAsync(studentHomeworkDto.User.Id), Times.Exactly(2));
+            _studentHomeworkRepoMock.Verify(x => x.GetStudentHomeworkByIdAsync(homeworkId), Times.Once);
         }
     }
 }
