@@ -5,6 +5,7 @@
 	StatusId int NOT NULL,
 	Answer nvarchar(500),
 	CompletedDate datetime NULL,
+	Rating int NULL,
 	IsDeleted bit NOT NULL DEFAULT '0',
   CONSTRAINT [PK_TASK_STUDENT] PRIMARY KEY CLUSTERED
   (

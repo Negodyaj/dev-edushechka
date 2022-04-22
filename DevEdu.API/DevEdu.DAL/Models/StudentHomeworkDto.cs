@@ -13,5 +13,6 @@ namespace DevEdu.DAL.Models
         public DateTime? CompletedDate { get; set; }
         public bool IsDeleted { get; set; }
         public StudentHomeworkStatus TaskStatus { get; set; }
+        public int Rating { get; set; }
     }
 }

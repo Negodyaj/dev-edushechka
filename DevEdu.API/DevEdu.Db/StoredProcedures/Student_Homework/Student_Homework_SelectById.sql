@@ -6,6 +6,7 @@ BEGIN
 		sh.Id,
 		sh.Answer,
 		sh.CompletedDate,
+		sh.Rating,
 		h.Id,
 		h.StartDate,
 		h.EndDate,

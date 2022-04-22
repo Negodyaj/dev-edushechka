@@ -4,6 +4,8 @@
     {
         Unchecked = 1,
         Accepted,
-        Returned
+        Returned,
+        AcceptedOutOfDate,
+        ReturnedOutOfDate
     }
 }

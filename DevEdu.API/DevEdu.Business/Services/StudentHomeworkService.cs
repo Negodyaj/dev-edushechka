@@ -42,8 +42,10 @@ namespace DevEdu.Business.Services
 
             taskAnswerDto.Homework = new HomeworkDto { Id = homeworkId };
             taskAnswerDto.User = new UserDto { Id = userInfo.UserId };
+            taskAnswerDto.StudentHomeworkStatus = StudentHomeworkStatus.Unchecked;
             var id = await _studentHomeworkRepository.AddStudentHomeworkAsync(taskAnswerDto);
             var studentHomeworkDto = await _studentHomeworkRepository.GetStudentHomeworkByIdAsync(id);
+            studentHomeworkDto.CompletedDate = DateTime.Now;
 
             return studentHomeworkDto;
         }
@@ -72,16 +74,24 @@ namespace DevEdu.Business.Services
 
         public async Task<int> UpdateStatusOfStudentHomeworkAsync(int id, int statusId, UserIdentityInfo userInfo)
         {
+            int rating;
             var dto = await _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFoundAsync(id);
             if (!userInfo.IsAdmin())
                 await _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccessAsync(dto.User.Id, userInfo.UserId);
+            DateTime completedDate = dto.CompletedDate.Value;
 
-            DateTime completedDate = default;
+            if (statusId < 4 || dto.CompletedDate <= dto.Homework.EndDate)
+            {
+                rating = statusId == (int)StudentHomeworkStatus.Accepted ? 100 : 75;
+            }
+            else
+                rating = statusId == (int)StudentHomeworkStatus.AcceptedOutOfDate ? 75 : 50;
+
             if (statusId == (int)StudentHomeworkStatus.Accepted)
                 completedDate = DateTime.Now;
 
             completedDate = new DateTime(completedDate.Year, completedDate.Month, completedDate.Day, completedDate.Hour, completedDate.Minute, completedDate.Second);
-            var result = await _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, statusId, completedDate);
+            var result = await _studentHomeworkRepository.ChangeStatusOfStudentAnswerOnTaskAsync(id, statusId, completedDate, rating);
 
             return result;
         }
@@ -91,6 +101,9 @@ namespace DevEdu.Business.Services
             var dto = await _studentHomeworkValidationHelper.GetStudentHomeworkByIdAndThrowIfNotFoundAsync(id);
             if (!userInfo.IsAdmin())
                 await _studentHomeworkValidationHelper.CheckUserInStudentHomeworkAccessAsync(dto.User.Id, userInfo.UserId);
+
+            if (userInfo.Roles.Contains(Role.Student))
+                dto.Rating = default;
 
             return dto;
         }

@@ -9,6 +9,7 @@ namespace DevEdu.API.Models
         public StudentHomeworkStatus StudentHomeworkStatus { get; set; }
         public string CompletedDate { get; set; }
         public UserInfoShortOutputModel User { get; set; }
+        public int Rating { get; set; } 
         public bool IsDeleted { get; set; }
     }
 }
