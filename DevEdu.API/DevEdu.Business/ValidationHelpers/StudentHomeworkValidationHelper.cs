@@ -61,12 +61,12 @@ namespace DevEdu.Business.ValidationHelpers
                                             StudentHomeworkStatus newStatus)
         {
             var currentStatus = studentHomeworkDto.Status;
+
+            if (currentStatus == newStatus)
+                return;
             
             if (currentStatus == StudentHomeworkStatus.Done || currentStatus == StudentHomeworkStatus.DoneAfterDeadline)
                 throw new ConflictExpection(ServiceMessages.HomeworkStatusCantBeChanged);
-
-            if (currentStatus == newStatus)
-                throw new ConflictExpection(ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
 
             if (currentStatus == StudentHomeworkStatus.Undone && newStatus != StudentHomeworkStatus.ToCheck)
                 throw new ConflictExpection(ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);

@@ -102,6 +102,7 @@ namespace DevEdu.Business.Tests.TestDataHelpers
             {
                 Id = 1,
                 Answer = "I changed answer for first task. And now answer is good answer and I am User 1.",
+                Status = StudentHomeworkStatus.ToCheck,
                 Homework = new HomeworkDto
                 {
                     Task = new TaskDto

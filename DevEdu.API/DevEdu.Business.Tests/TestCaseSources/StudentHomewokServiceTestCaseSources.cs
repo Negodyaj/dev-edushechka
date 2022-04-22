@@ -9,34 +9,28 @@ namespace DevEdu.Business.Tests.TestCaseSources
     {
         public static IEnumerable<TestCaseData> GetTestCaseDataForWrongStatusPassedConflictException()
         {
-            yield return new TestCaseData(StudentHomeworkStatus.Undone, StudentHomeworkStatus.Undone, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.Undone, StudentHomeworkStatus.ToFix, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.Undone, StudentHomeworkStatus.ToVerifyFixes, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.Undone, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
-            yield return new TestCaseData(StudentHomeworkStatus.Undone, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
-            yield return new TestCaseData(StudentHomeworkStatus.ToCheck, StudentHomeworkStatus.ToCheck, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
+            yield return new TestCaseData(StudentHomeworkStatus.Undone, StudentHomeworkStatus.DoneAfterDeadline, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.ToCheck, StudentHomeworkStatus.Undone, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.ToCheck, StudentHomeworkStatus.ToVerifyFixes, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
-            yield return new TestCaseData(StudentHomeworkStatus.ToFix, StudentHomeworkStatus.ToFix, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.ToFix, StudentHomeworkStatus.Undone, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.ToFix, StudentHomeworkStatus.ToCheck, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.ToFix, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.ToFix, StudentHomeworkStatus.DoneAfterDeadline, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
-            yield return new TestCaseData(StudentHomeworkStatus.ToVerifyFixes, StudentHomeworkStatus.ToVerifyFixes, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.ToVerifyFixes, StudentHomeworkStatus.Undone, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.ToVerifyFixes, StudentHomeworkStatus.ToCheck, ServiceMessages.HomeworkStatusCantBeChangedOnThisStatus);
             yield return new TestCaseData(StudentHomeworkStatus.Done, StudentHomeworkStatus.Undone, ServiceMessages.HomeworkStatusCantBeChanged);
             yield return new TestCaseData(StudentHomeworkStatus.Done, StudentHomeworkStatus.ToCheck, ServiceMessages.HomeworkStatusCantBeChanged);
             yield return new TestCaseData(StudentHomeworkStatus.Done, StudentHomeworkStatus.ToFix, ServiceMessages.HomeworkStatusCantBeChanged);
             yield return new TestCaseData(StudentHomeworkStatus.Done, StudentHomeworkStatus.ToVerifyFixes, ServiceMessages.HomeworkStatusCantBeChanged);
-            yield return new TestCaseData(StudentHomeworkStatus.Done, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChanged);
             yield return new TestCaseData(StudentHomeworkStatus.Done, StudentHomeworkStatus.DoneAfterDeadline, ServiceMessages.HomeworkStatusCantBeChanged);
             yield return new TestCaseData(StudentHomeworkStatus.DoneAfterDeadline, StudentHomeworkStatus.Undone, ServiceMessages.HomeworkStatusCantBeChanged);
             yield return new TestCaseData(StudentHomeworkStatus.DoneAfterDeadline, StudentHomeworkStatus.ToCheck, ServiceMessages.HomeworkStatusCantBeChanged);
             yield return new TestCaseData(StudentHomeworkStatus.DoneAfterDeadline, StudentHomeworkStatus.ToFix, ServiceMessages.HomeworkStatusCantBeChanged);
             yield return new TestCaseData(StudentHomeworkStatus.DoneAfterDeadline, StudentHomeworkStatus.ToVerifyFixes, ServiceMessages.HomeworkStatusCantBeChanged);
             yield return new TestCaseData(StudentHomeworkStatus.DoneAfterDeadline, StudentHomeworkStatus.Done, ServiceMessages.HomeworkStatusCantBeChanged);
-            yield return new TestCaseData(StudentHomeworkStatus.DoneAfterDeadline, StudentHomeworkStatus.DoneAfterDeadline, ServiceMessages.HomeworkStatusCantBeChanged);
         }
 
         public static IEnumerable<TestCaseData> GetTestCaseDataForWrongStatusPassedAuthorizationException()
