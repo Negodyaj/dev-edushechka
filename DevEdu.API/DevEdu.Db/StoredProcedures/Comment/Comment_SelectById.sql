@@ -22,7 +22,6 @@ BEGIN
 	FROM dbo.Comment c
 		inner join [User] u on u.Id=c.UserId
 		inner join User_Role ur on ur.UserId=u.Id
-		left join Lesson l on l.Id=c.LessonId
 		left join Student_Homework sh on sh.Id=c.StudentHomeworkId
 	WHERE (c.Id = @Id)
 END

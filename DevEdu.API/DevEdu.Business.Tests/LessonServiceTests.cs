@@ -429,107 +429,33 @@ namespace DevEdu.Business.Tests
         }
 
         [Test]
-        public async Task SelectLessonWithCommentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsReturnedAsync()
-        {
-            //Given
-            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
-            var lessonId = LessonData.LessonId;
-            var lesson = LessonData.GetSelectedLessonDto();
-            var comments = CommentData.GetListCommentsDto();
-
-            var expected = lesson;
-            expected.Comments = comments;
-
-            _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(lesson);
-            _commentRepository.Setup(x => x.SelectCommentsFromLessonByLessonIdAsync(lessonId)).ReturnsAsync(comments);
-
-            //When
-            var actual = await _sut.SelectLessonWithCommentsByIdAsync(userIdentity, lessonId);
-
-            //Then
-            Assert.AreEqual(expected, actual);
-            _lessonRepository.Verify(x => x.SelectLessonByIdAsync(lessonId), Times.Exactly(2));
-            _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentity.UserId), Times.Never);
-            _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonIdAsync(lessonId), Times.Once);
-            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lessonId), Times.Never);
-        }
-
-        [Test]
-        public void SelectLessonWithCommentsById_LessonDoesntExist_EntityNotFoundExciptionReturned()
-        {
-            //Given
-            var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
-            var lessonId = LessonData.LessonId;
-            var expectedException = string.Format(ServiceMessages.EntityNotFoundMessage, "lesson", lessonId);
-
-            _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(It.IsAny<LessonDto>());
-
-            //When
-            var ex = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.SelectLessonWithCommentsByIdAsync(userIdentity, lessonId));
-
-            //Then
-            Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _lessonRepository.Verify(x => x.SelectLessonByIdAsync(lessonId), Times.Once);
-            _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentity.UserId), Times.Never);
-            _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonIdAsync(lessonId), Times.Never);
-            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lessonId), Times.Never);
-        }
-
-        [Test]
-        public void SelectLessonWithCommentsById_UserDoesntBelongToLesson_AuthorizationExceptionReturned()
-        {
-            //Given
-            var userIdentity = UserIdentityInfoData.GetUserIdentityWithStudentRole();
-            var lesson = LessonData.GetLessonDto();
-            var groups = new List<GroupDto> { };
-            var expectedException = string.Format(ServiceMessages.UserDoesntBelongToLesson, userIdentity.UserId, lesson.Id);
-
-            _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lesson.Id)).ReturnsAsync(lesson);
-            _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentity.UserId)).ReturnsAsync(groups);
-
-            //When
-            var ex = Assert.ThrowsAsync<AuthorizationException>(() => _sut.SelectLessonWithCommentsByIdAsync(userIdentity, lesson.Id));
-
-            //Then
-            Assert.That(ex.Message, Is.EqualTo(expectedException));
-            _lessonRepository.Verify(x => x.SelectLessonByIdAsync(lesson.Id), Times.Once);
-            _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentity.UserId), Times.Once);
-            _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonIdAsync(lesson.Id), Times.Never);
-            _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lesson.Id), Times.Never);
-        }
-
-        [Test]
-        public async Task SelectLessonWithCommentsAndStudentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsAndAttendancesReturnedAsync()
+        public async Task SelectLessonWithStudentsById_UserDtoAndExistingLessonIdPassed_LessonWithCommentsAndAttendancesReturnedAsync()
         {
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
             var lesson = LessonData.GetSelectedLessonDto();
-            var comments = CommentData.GetListCommentsDto();
             var students = LessonData.GetAttendances();
 
             var expectedLesson = lesson;
-            expectedLesson.Comments = comments;
             expectedLesson.Students = students;
 
             var lessonId = LessonData.LessonId;
 
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(lesson);
-            _commentRepository.Setup(x => x.SelectCommentsFromLessonByLessonIdAsync(lessonId)).ReturnsAsync(comments);
             _lessonRepository.Setup(x => x.SelectStudentsLessonByLessonIdAsync(lessonId)).ReturnsAsync(students);
 
             //When
-            var actual = await _sut.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, lessonId);
+            var actual = await _sut.SelectLessonWithStudentsByIdAsync(userIdentity, lessonId);
 
             //Then
             Assert.AreEqual(expectedLesson, actual);
             _lessonRepository.Verify(x => x.SelectLessonByIdAsync(lessonId), Times.Exactly(2));
             _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentity.UserId), Times.Never);
-            _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonIdAsync(lessonId), Times.Once);
             _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lessonId), Times.Once);
         }
 
         [Test]
-        public void SelectLessonWithCommentsAndStudentsById_LessonDoesntExist_EntityNotFoundExciptionReturned()
+        public void SelectLessonWithStudentsById_LessonDoesntExist_EntityNotFoundExciptionReturned()
         {
             //Given
             var userIdentity = UserIdentityInfoData.GetUserIdentityWithAdminRole();
@@ -539,13 +465,12 @@ namespace DevEdu.Business.Tests
             _lessonRepository.Setup(x => x.SelectLessonByIdAsync(lessonId)).ReturnsAsync(It.IsAny<LessonDto>());
 
             //When
-            var ex = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, lessonId));
+            var ex = Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.SelectLessonWithStudentsByIdAsync(userIdentity, lessonId));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _lessonRepository.Verify(x => x.SelectLessonByIdAsync(lessonId), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentity.UserId), Times.Never);
-            _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonIdAsync(lessonId), Times.Never);
             _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lessonId), Times.Never);
         }
 
@@ -562,13 +487,12 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentity.UserId)).ReturnsAsync(groups);
 
             //When
-            var ex = Assert.ThrowsAsync<AuthorizationException>(() => _sut.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, lesson.Id));
+            var ex = Assert.ThrowsAsync<AuthorizationException>(() => _sut.SelectLessonWithStudentsByIdAsync(userIdentity, lesson.Id));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));
             _lessonRepository.Verify(x => x.SelectLessonByIdAsync(lesson.Id), Times.Once);
             _groupRepository.Verify(x => x.GetGroupsByUserIdAsync(userIdentity.UserId), Times.Never);
-            _commentRepository.Verify(x => x.SelectCommentsFromLessonByLessonIdAsync(lesson.Id), Times.Never);
             _lessonRepository.Verify(x => x.SelectStudentsLessonByLessonIdAsync(lesson.Id), Times.Never);
         }
 
@@ -649,7 +573,7 @@ namespace DevEdu.Business.Tests
             _groupRepository.Setup(x => x.GetGroupsByUserIdAsync(userIdentity.UserId)).ReturnsAsync(groups);
 
             //When
-            var ex = Assert.ThrowsAsync<AuthorizationException>(() => _sut.SelectLessonWithCommentsAndStudentsByIdAsync(userIdentity, lesson.Id));
+            var ex = Assert.ThrowsAsync<AuthorizationException>(() => _sut.SelectLessonWithStudentsByIdAsync(userIdentity, lesson.Id));
 
             //Then
             Assert.That(ex.Message, Is.EqualTo(expectedException));

@@ -6,10 +6,9 @@ namespace DevEdu.Business.Services
 {
     public interface ICommentService
     {
-        Task<CommentDto> AddCommentToLessonAsync(int lessonId, CommentDto dto, UserIdentityInfo userIdentityInfo);
-        Task<CommentDto> AddCommentToStudentAnswerAsync(int studentHomeworkId, CommentDto dto, UserIdentityInfo userIdentityInfo);
-        Task<CommentDto> GetCommentAsync(int id, UserIdentityInfo userIdentityInfo);
-        Task DeleteCommentAsync(int id, UserIdentityInfo userIdentityInfo);
-        Task<CommentDto> UpdateCommentAsync(int id, CommentDto dto, UserIdentityInfo userInfo);
+        Task<CommentDto> AddCommentToStudentAnswerAsync(int studentHomeworkId, CommentDto dto, UserIdentityInfo userInfo);
+        Task DeleteCommentAsync(int commentId, UserIdentityInfo userInfo);
+        Task<CommentDto> GetCommentAsync(int commentId, UserIdentityInfo userInfo);
+        Task<CommentDto> UpdateCommentAsync(int commentId, CommentDto dto, UserIdentityInfo userInfo);
     }
 }
