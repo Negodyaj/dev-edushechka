@@ -79,7 +79,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<LessonInfoOutputModel>(output);
         }
 
-        // api/lessons/groupId/{id}
+        // api/lessons/by-groupId/{id}
         [AuthorizeRoles(Role.Teacher, Role.Student)]
         [HttpGet("/by-groupId/{id}")]
         [Description("Get all lessons by groupId.")]
@@ -93,7 +93,7 @@ namespace DevEdu.API.Controllers
             return _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
-        // api/lessons/teacherId/{id}
+        // api/lessons/by-teacherId/{id}
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
         [HttpGet("/by-teacherId/{id}")]
         [Description("Get all lessons by teacherId.")]
@@ -104,6 +104,20 @@ namespace DevEdu.API.Controllers
         {
             var dto = await _lessonService.SelectAllLessonsByTeacherIdAsync(id);
             return _mapper.Map<List<LessonInfoWithCourseOutputModel>>(dto);
+        }
+
+        // api/lessons/unpublished/by-groupId/{id}
+        [AuthorizeRoles(Role.Teacher)]
+        [HttpGet("/unpublished/by-groupId/{id}")]
+        [Description("Get all lessons by groupId.")]
+        [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public async Task<List<LessonInfoOutputModel>> GetAllUnpublishedLessonsByGroupIdAsync(int id)
+        {
+            var userIdentity = this.GetUserIdAndRoles();
+            var dto = await _lessonService.SelectAllLessonsByGroupIdAsync(userIdentity, id, false);
+            return _mapper.Map<List<LessonInfoOutputModel>>(dto);
         }
 
         // api/lessons/{id}/full-info

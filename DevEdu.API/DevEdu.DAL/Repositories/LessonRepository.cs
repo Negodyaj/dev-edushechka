@@ -84,7 +84,7 @@ namespace DevEdu.DAL.Repositories
             );
         }
 
-        public async Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(int groupId)
+        public async Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(int groupId, bool isPublished = true)
         {
             var lessonDictionary = new Dictionary<int, LessonDto>();
 
@@ -103,7 +103,7 @@ namespace DevEdu.DAL.Repositories
                                lessonEntry.Topics.Add(topic);
                                return lessonEntry;
                            },
-                           new { groupId },
+                           new { groupId, isPublished },
                            splitOn: "Id",
                            commandType: CommandType.StoredProcedure
                        ))
@@ -113,7 +113,7 @@ namespace DevEdu.DAL.Repositories
             return list;
         }
 
-        public async Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId)
+        public async Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId, bool isPublished = true)
         {
             var lessonDictionary = new Dictionary<int, LessonDto>();
 
@@ -133,7 +133,7 @@ namespace DevEdu.DAL.Repositories
                                lessonEntry.Topics.Add(topic);
                                return lessonEntry;
                            },
-                           new { teacherId },
+                           new { teacherId , isPublished },
                            splitOn: "Id",
                            commandType: CommandType.StoredProcedure
                        ))

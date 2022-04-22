@@ -8,8 +8,8 @@ namespace DevEdu.DAL.Repositories
     {
         Task<int> AddLessonAsync(LessonDto lessonDto);
         Task DeleteLessonAsync(int id);
-        Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(int groupId);
-        Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId);
+        Task<List<LessonDto>> SelectAllLessonsByGroupIdAsync(int groupId, bool isPublished = true);
+        Task<List<LessonDto>> SelectAllLessonsByTeacherIdAsync(int teacherId, bool isPublished = true);
         Task<LessonDto> SelectLessonByIdAsync(int id);
         Task<List<StudentLessonDto>> SelectStudentsLessonByLessonIdAsync(int lessonId);
         Task UpdateLessonAsync(LessonDto lessonDto);
