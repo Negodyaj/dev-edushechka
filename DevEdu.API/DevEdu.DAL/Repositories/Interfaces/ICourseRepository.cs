@@ -17,8 +17,5 @@ namespace DevEdu.DAL.Repositories
         Task DeleteAllTopicsByCourseIdAsync(int courseId);
         Task UpdateCourseTopicsByCourseId(List<CourseTopicDto> topics);
         Task<List<CourseDto>> GetCoursesToTaskByTaskIdAsync(int id);
-        Task<List<CourseDto>> GetCoursesByMaterialIdAsync(int id);
-        Task<int> AddCourseMaterialReferenceAsync(int courseId, int materialId);
-        Task RemoveCourseMaterialReferenceAsync(int courseId, int materialId);
     }
 }

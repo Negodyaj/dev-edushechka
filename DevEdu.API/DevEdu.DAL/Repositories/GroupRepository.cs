@@ -18,7 +18,6 @@ namespace DevEdu.DAL.Repositories
         private const string _groupSelectAllProcedure = "dbo.Group_SelectAll";
         private const string _groupUpdateByIdProcedure = "dbo.Group_UpdateById";
         private const string _groupUpdateGroupStatusProcedure = "dbo.Group_UpdateGroupStatus";
-        private const string _groupSelectAllByMaterialIdProcedure = "dbo.Group_SelectByMaterialId";
         private const string _groupSelectByCourseProcedure = "dbo.Group_SelectByCourseId";
         private const string _groupSelectAllByTaskIdProcedure = "dbo.Group_SelectAllByTaskId";
         private const string _groupSelectGroupsByUserIdProcedure = "dbo.Group_SelectAllByUserId";
@@ -27,9 +26,6 @@ namespace DevEdu.DAL.Repositories
 
         private const string _groupLessonInsertProcedure = "dbo.Group_Lesson_Insert";
         private const string _groupLessonDeleteProcedure = "dbo.Group_Lesson_Delete";
-
-        private const string _groupMaterialInsertProcedure = "dbo.Group_Material_Insert";
-        private const string _groupMaterialDeleteProcedure = "dbo.Group_Material_Delete";
 
         private const string _groupTaskDeleteProcedure = "dbo.Group_Task_Delete";
 
@@ -172,34 +168,6 @@ namespace DevEdu.DAL.Repositories
              );
         }
 
-        public async Task<int> AddGroupMaterialReferenceAsync(int groupId, int materialId)
-        {
-            return await _connection.ExecuteAsync
-            (
-                _groupMaterialInsertProcedure,
-                new
-                {
-                    groupId,
-                    materialId
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
-
-        public async Task<int> RemoveGroupMaterialReferenceAsync(int groupId, int materialId)
-        {
-            return await _connection.ExecuteAsync
-            (
-                _groupMaterialDeleteProcedure,
-                new
-                {
-                    groupId,
-                    materialId
-                },
-                commandType: CommandType.StoredProcedure
-            );
-        }
-
         public async Task<int> AddUserToGroupAsync(int groupId, int userId, int roleId)
         {
             return await _connection.ExecuteAsync
@@ -241,16 +209,6 @@ namespace DevEdu.DAL.Repositories
                 },
                 commandType: CommandType.StoredProcedure
             );
-        }
-
-        public async Task<List<GroupDto>> GetGroupsByMaterialIdAsync(int id)
-        {
-            return (await _connection.QueryAsync<GroupDto>
-                (
-                _groupSelectAllByMaterialIdProcedure,
-                new { id },
-                commandType: CommandType.StoredProcedure
-            )).ToList();
         }
 
         public async Task<int> GetPresentGroupForStudentByUserIdAsync(int userId)

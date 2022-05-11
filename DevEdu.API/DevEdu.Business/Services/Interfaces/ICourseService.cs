@@ -20,8 +20,6 @@ namespace DevEdu.Business.Services
         Task<List<CourseTopicDto>> SelectAllTopicsByCourseIdAsync(int courseId);
         Task DeleteTaskFromCourseAsync(int courseId, int taskId);
         Task AddTaskToCourseAsync(int courseId, int taskId);
-        Task<int> AddCourseMaterialReferenceAsync(int courseId, int materialId);
-        Task RemoveCourseMaterialReferenceAsync(int courseId, int materialId);
         Task<CourseTopicDto> GetCourseTopicByIdAsync(int id);
         Task<List<CourseTopicDto>> GetCourseTopicBySeveralIdAsync(List<int> ids);
     }

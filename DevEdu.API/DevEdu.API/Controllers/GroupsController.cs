@@ -145,36 +145,6 @@ namespace DevEdu.API.Controllers
             return NoContent();
         }
 
-        // api/groups/{groupId}/material/{materialId}
-        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
-        [HttpPost("{groupId}/material/{materialId}")]
-        [Description("Add material to group")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> AddGroupMaterialReference(int groupId, int materialId)
-        {
-            var userInfo = this.GetUserIdAndRoles();
-
-            await _groupService.AddGroupMaterialReference(groupId, materialId, userInfo);
-            return NoContent();
-        }
-
-        // api/groups/{groupId}/material/{materialId}
-        [AuthorizeRoles(Role.Manager, Role.Teacher, Role.Tutor)]
-        [HttpDelete("{groupId}/material/{materialId}")]
-        [Description("Remove material from group")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RemoveGroupMaterialReference(int groupId, int materialId)
-        {
-            var userInfo = this.GetUserIdAndRoles();
-
-            await _groupService.RemoveGroupMaterialReference(groupId, materialId, userInfo);
-            return NoContent();
-        }
-
         //  api/groups/1/user/2/role/1
         [AuthorizeRoles(Role.Manager)]
         [HttpPost("{groupId}/user/{userId}/role/{roleId}")]

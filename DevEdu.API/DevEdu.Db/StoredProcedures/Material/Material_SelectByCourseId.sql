@@ -1,11 +1,11 @@
-﻿CREATE PROCEDURE [dbo].[Material_SelectByCourseId]
-	@CourseId int
+﻿CREATE PROCEDURE [dbo].[Material_SelectByCourseId] 
+    @CourseId int
 AS
 BEGIN
-	SELECT 
-	 M.Id,
-	 M.Content
-	FROM dbo.Material M WITH (NOLOCK)
-	LEFT JOIN dbo.Course_Material C WITH (NOLOCK) ON M.Id = C.MaterialId
-	WHERE (C.CourseId = @CourseId AND M.IsDeleted=0)
+    SELECT m.Id,
+           m.Content,
+           m.Link
+    FROM dbo.Material m WITH (NOLOCK)
+             LEFT JOIN dbo.Course c WITH (NOLOCK) ON m.CourseId = c.Id
+    WHERE (c.Id = @CourseId AND m.IsDeleted = 0)
 END
