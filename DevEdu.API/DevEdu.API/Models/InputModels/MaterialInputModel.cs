@@ -7,5 +7,8 @@ namespace DevEdu.API.Models
     {
         [Required(ErrorMessage = ContentRequired)]
         public string Content { get; set; }
+
+        [MaxLength(200, ErrorMessage = LinkRequired)]
+        public string Link { get; set; }
     }
 }

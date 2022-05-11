@@ -28,17 +28,16 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.EndDate, _dateFormat, CultureInfo.InvariantCulture)))
                 .ForMember(dest => dest.Course, opt => opt.MapFrom(src => new CourseDto { Id = src.CourseId }))
-                .ForMember(dest => dest.GroupStatus, opt => opt.MapFrom(src => src.GroupStatusId != null ? src.GroupStatusId : null));
+                .ForMember(dest => dest.GroupStatus,
+                    opt => opt.MapFrom(src => src.GroupStatusId));
             CreateMap<HomeworkInputModel, HomeworkDto>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.StartDate, _dateFormat, CultureInfo.InvariantCulture)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.EndDate, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<MaterialInputModel, MaterialDto>();
-            CreateMap<MaterialWithCoursesInputModel, MaterialDto>();
-            CreateMap<MaterialWithGroupsInputModel, MaterialDto>();
             CreateMap<NotificationAddInputModel, NotificationDto>()
                 .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.GroupId != null ? new GroupDto { Id = (int)src.GroupId } : null))
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserId != null ? new UserDto { Id = (int)src.UserId } : null))
-                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.RoleId != null ? src.RoleId : null));
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.RoleId));
             CreateMap<NotificationUpdateInputModel, NotificationDto>();
             CreateMap<StudentHomeworkInputModel, StudentHomeworkDto>();
             CreateMap<LessonInputModel, LessonDto>()
@@ -91,10 +90,7 @@ namespace DevEdu.API.Configuration
             CreateMap<CourseDto, CourseInfoFullOutputModel>();
             CreateMap<CourseDto, CourseInfoShortOutputModel>();
             CreateMap<CourseDto, CourseInfoBaseOutputModel>();
-            CreateMap<MaterialDto, MaterialInfoOutputModel>();
-            CreateMap<MaterialDto, MaterialInfoFullOutputModel>();
-            CreateMap<MaterialDto, MaterialInfoWithGroupsOutputModel>();
-            CreateMap<MaterialDto, MaterialInfoWithCoursesOutputModel>();
+            CreateMap<MaterialDto, MaterialOutputModel>();
             CreateMap<UserDto, UserInfoOutPutModel>();
             CreateMap<UserDto, UserFullInfoOutPutModel>()
                 .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src => src.RegistrationDate.ToString(_dateFormat)))
@@ -108,7 +104,8 @@ namespace DevEdu.API.Configuration
             CreateMap<TaskDto, TaskInfoWithGroupsOutputModel>();
             CreateMap<TaskDto, TaskInfoWithAnswersOutputModel>();
             CreateMap<StudentHomeworkDto, StudentHomeworkWithHomeworkOutputModel>()
-                .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
+                .ForMember(dest => dest.CompletedDate,
+                    opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
             CreateMap<StudentHomeworkDto, StudentHomeworkShortOutputModel>()
                 .ForMember(dest => dest.CompletedDate, opt => opt.MapFrom(src => src.CompletedDate != null ? ((DateTime)src.CompletedDate).ToString(_dateFormat) : null));
             CreateMap<StudentHomeworkDto, StudentHomeworkOutputModel>()
@@ -147,19 +144,20 @@ namespace DevEdu.API.Configuration
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<TaskDto, TaskInfoOutputMiniModel>();
             CreateMap<NotificationDto, NotificationInfoOutputModel>()
-                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.Role != null ? src.Role : null))
+                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.Role))
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<PaymentDto, PaymentOutputModel>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString(_dateFormat)))
-                .ForMember(dest => dest.User, opt => opt.MapFrom(src =>
-               new UserInfoShortOutputModel
-               {
-                   Id = src.User.Id,
-                   FirstName = src.User.FirstName,
-                   LastName = src.User.LastName,
-                   Email = src.User.Email,
-                   Photo = src.User.Photo
-               }));
+                .ForMember(dest => dest.User,
+                    opt => opt.MapFrom(src =>
+                        new UserInfoShortOutputModel
+                        {
+                            Id = src.User.Id,
+                            FirstName = src.User.FirstName,
+                            LastName = src.User.LastName,
+                            Email = src.User.Email,
+                            Photo = src.User.Photo
+                        }));
             CreateMap<StudentLessonDto, FeedbackOutputModel>();
             CreateMap<StudentRatingDto, StudentRatingOutputModel>();
             CreateMap<RatingTypeDto, RatingTypeOutputModel>();

@@ -14,14 +14,13 @@ namespace DevEdu.Business.Services
     public class CourseService : ICourseService
     {
         private readonly ICourseRepository _courseRepository;
-        private readonly ITopicRepository _topicRepository;
-        private readonly ITaskRepository _taskRepository;
-        private readonly IMaterialRepository _materialRepository;
-        private readonly IGroupRepository _groupRepository;
         private readonly ICourseValidationHelper _courseValidationHelper;
-        private readonly ITopicValidationHelper _topicValidationHelper;
+        private readonly IGroupRepository _groupRepository;
+        private readonly IMaterialRepository _materialRepository;
+        private readonly ITaskRepository _taskRepository;
         private readonly ITaskValidationHelper _taskValidationHelper;
-        private readonly IMaterialValidationHelper _materialValidationHelper;
+        private readonly ITopicRepository _topicRepository;
+        private readonly ITopicValidationHelper _topicValidationHelper;
 
         public CourseService
         (
@@ -32,7 +31,6 @@ namespace DevEdu.Business.Services
             IGroupRepository groupRepository,
             ICourseValidationHelper courseValidationHelper,
             ITopicValidationHelper topicValidationHelper,
-            IMaterialValidationHelper materialValidationHelper,
             ITaskValidationHelper taskValidationHelper
         )
         {
@@ -43,7 +41,6 @@ namespace DevEdu.Business.Services
             _groupRepository = groupRepository;
             _courseValidationHelper = courseValidationHelper;
             _topicValidationHelper = topicValidationHelper;
-            _materialValidationHelper = materialValidationHelper;
             _taskValidationHelper = taskValidationHelper;
         }
 
@@ -135,20 +132,6 @@ namespace DevEdu.Business.Services
             await _courseRepository.AddTaskToCourseAsync(courseId, taskId);
         }
 
-        public async Task<int> AddCourseMaterialReferenceAsync(int courseId, int materialId)
-        {
-            await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(courseId);
-            await _materialValidationHelper.GetMaterialByIdAndThrowIfNotFoundAsync(materialId);
-            return await _courseRepository.AddCourseMaterialReferenceAsync(courseId, materialId);
-        }
-
-        public async Task RemoveCourseMaterialReferenceAsync(int courseId, int materialId)
-        {
-            await _courseValidationHelper.GetCourseByIdAndThrowIfNotFoundAsync(courseId);
-            await _materialValidationHelper.GetMaterialByIdAndThrowIfNotFoundAsync(materialId);
-            await _courseRepository.RemoveCourseMaterialReferenceAsync(courseId, materialId);
-        }
-
         public async Task<List<int>> UpdateCourseTopicsByCourseIdAsync(int courseId, List<CourseTopicDto> topics)
         {
             List<int> response = new List<int>(); 
@@ -171,7 +154,7 @@ namespace DevEdu.Business.Services
             {
                 response = await AddTopicsToCourseAsync(courseId, topics);
             }
-                await _courseRepository.UpdateCourseTopicsByCourseId(topics);
+            await _courseRepository.UpdateCourseTopicsByCourseId(topics);
             return response;
         }
 
