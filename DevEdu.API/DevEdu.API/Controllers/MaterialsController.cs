@@ -57,7 +57,7 @@ namespace DevEdu.API.Controllers
 
         // api/materials/5
         [AuthorizeRoles(Role.Methodist)]
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}/restore")]
         [Description("Restore material by id")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
