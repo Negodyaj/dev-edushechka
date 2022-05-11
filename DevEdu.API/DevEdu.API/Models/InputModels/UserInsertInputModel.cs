@@ -33,7 +33,7 @@ namespace DevEdu.API.Models
         public City City { get; set; }
 
         [Required(ErrorMessage = BirthDateRequired)]
-        [CustomDateFormatAttribute(ErrorMessage = WrongFormatBirthDate)]
+        [CustomDateFormat(ErrorMessage = WrongFormatBirthDate)]
         public string BirthDate { get; set; }
 
         public string GitHubAccount { get; set; }

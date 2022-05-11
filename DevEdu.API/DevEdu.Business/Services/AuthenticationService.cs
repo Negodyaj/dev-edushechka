@@ -75,7 +75,7 @@ namespace DevEdu.Business.Services
         private async Task<ClaimsIdentity> GetIdentityAsync(string username, string password)
         {
             var user = await _userRepository.GetUserByEmailAsync(username);
-            if (user == null)
+            if (user == null || user.IsDeleted)
                 throw new AuthorizationException(ServiceMessages.EntityNotFound);
 
             var claims = new List<Claim>();

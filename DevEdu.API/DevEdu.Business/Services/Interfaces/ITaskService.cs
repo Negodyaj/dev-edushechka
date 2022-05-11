@@ -16,5 +16,6 @@ namespace DevEdu.Business.Services
         Task<TaskDto> GetTaskWithCoursesByIdAsync(int taskId, UserIdentityInfo userIdentityInfo);
         Task<TaskDto> GetTaskWithGroupsByIdAsync(int taskId, UserIdentityInfo userIdentityInfo);
         Task<TaskDto> UpdateTaskAsync(TaskDto taskDto, int taskId, UserIdentityInfo userIdentityInfo);
+        Task<StudentHomeworkDto> GetStudentAnswerOnTaskAsync(int taskId, UserIdentityInfo userIdentityInfo);
     }
 }

@@ -15,6 +15,8 @@ namespace DevEdu.API.Models
         [Required(ErrorMessage = TeacherIdRequired)]
         public int TeacherId { get; set; }
 
+        public string Name { get; set; }
+
         [Url] public string LinkToRecord { get; set; }
 
         public List<int> TopicIds { get; set; }

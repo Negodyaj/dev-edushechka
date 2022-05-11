@@ -8,6 +8,7 @@ BEGIN
            l.LinkToRecord,
            l.IsPublished,
            l.IsDeleted,
+           l.Name,
            u.Id,
            u.FirstName,
            u.LastName,

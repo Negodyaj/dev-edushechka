@@ -7,6 +7,7 @@ namespace DevEdu.DAL.Models
     {
         public DateTime Date { get; set; }
         public string AdditionalMaterials { get; set; }
+        public string Name { get; set; }
         public UserDto Teacher { get; set; }
         public string LinkToRecord { get; set; }
         public List<TopicDto> Topics { get; set; }

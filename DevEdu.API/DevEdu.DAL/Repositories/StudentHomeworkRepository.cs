@@ -20,6 +20,7 @@ namespace DevEdu.DAL.Repositories
         private const string _studentHomeworkSelectByIdProcedure = "dbo.Student_Homework_SelectById";
         private const string _studentHomeworkSelectAllAnswersByTaskIdProcedure = "dbo.Student_Homework_SelectAllAnswersByTaskId";
         private const string _studentHomeworkSelectAnswersByUserIdProcedure = "dbo.Student_Homework_SelectAllAnswersByUserId";
+        private const string _studentHomeworkSelectAnswerByTaskIdAndUserIdProcedure = "Student_Homework_SelectAnswerByTaskIdAndUserId";
 
         public StudentHomeworkRepository(IOptions<DatabaseSettings> options) : base(options) 
         {
@@ -93,6 +94,27 @@ namespace DevEdu.DAL.Repositories
                         return studentHomework;
                     },
                     new { id },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                ))
+                .FirstOrDefault();
+            return result;
+        }
+
+        public async Task<StudentHomeworkDto> GetStudentHomeworkByTaskIdAndUserId(int taskId, int userId)
+        {
+            var result = (await _connection
+                .QueryAsync<StudentHomeworkDto, HomeworkDto, TaskDto, StudentHomeworkStatus, StudentHomeworkDto>(
+                    _studentHomeworkSelectAnswerByTaskIdAndUserIdProcedure,
+                    (studentHomework, homework, task, studentHomeworkStatus) =>
+                    {
+                        studentHomework.Homework = homework;
+                        studentHomework.Homework.Task = task;
+                        studentHomework.Status = studentHomeworkStatus;
+
+                        return studentHomework;
+                    },
+                    new { taskId, userId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 ))

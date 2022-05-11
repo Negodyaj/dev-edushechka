@@ -43,7 +43,8 @@ namespace DevEdu.DAL.Repositories
                     lessonDto.Date,
                     lessonDto.AdditionalMaterials,
                     TeacherId = lessonDto.Teacher.Id,
-                    lessonDto.LinkToRecord
+                    lessonDto.LinkToRecord,
+                    lessonDto.Name
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -196,7 +197,8 @@ namespace DevEdu.DAL.Repositories
                     lessonDto.Id,
                     lessonDto.AdditionalMaterials,
                     lessonDto.LinkToRecord,
-                    lessonDto.Date
+                    lessonDto.Date,
+                    lessonDto.Name
                 },
                 commandType: CommandType.StoredProcedure
             );

@@ -6,7 +6,7 @@ namespace DevEdu.API.Models
     {
         public int Id { get; set; }
         public string Answer { get; set; }
-        public StudentHomeworkStatus StudentHomeworkStatus { get; set; }
+        public StudentHomeworkStatus Status { get; set; }
         public string CompletedDate { get; set; }
         public UserInfoShortOutputModel User { get; set; }
         public bool IsDeleted { get; set; }

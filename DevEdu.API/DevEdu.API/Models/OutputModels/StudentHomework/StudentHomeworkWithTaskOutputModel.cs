@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using DevEdu.DAL.Enums;
+using System.Threading.Tasks;
 
 namespace DevEdu.API.Models
 {
@@ -7,7 +8,7 @@ namespace DevEdu.API.Models
         public int Id { get; set; }
         public string Answer { get; set; }
         public string CompletedDate { get; set; }
-        public TaskStatus TaskStatus { get; set; }
+        public StudentHomeworkStatus Status { get; set; }
         public HomeworkInfoWithTaskOutputModel Homework { get; set; }
         public bool IsDeleted { get; set; }
     }

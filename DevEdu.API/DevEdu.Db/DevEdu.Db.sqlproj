@@ -238,6 +238,7 @@
     <Build Include="StoredProcedures\Student_Homework\Student_Homework_SelectById.sql" />
     <Build Include="StoredProcedures\User\User_UpdatePassword.sql" />
     <Build Include="StoredProcedures\User\User_UpdatePhoto.sql" />
+    <Build Include="StoredProcedures\Student_Homework\Student_Homework_SelectAnswerByTaskIdAndUserId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Material\Course_Material_Delete.sql" />
@@ -245,6 +246,8 @@
     <None Include="StoredProcedures\Course_Task\Course_Task_Delete.sql" />
     <None Include="StoredProcedures\Course_Task\Course_Task_Insert.sql" />
     <None Include="DevEdu.Db.publish.xml" />
+    <None Include="DevEdu.Test.Db.publish.publish.xml" />
+    <None Include="DevEduTest.Db" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

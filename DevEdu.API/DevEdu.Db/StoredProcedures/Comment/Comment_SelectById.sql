@@ -13,9 +13,6 @@ BEGIN
         u.Email,
         u.Photo,
         ur.RoleId as Id,
-        l.Id      as Id,
-        l.Date,
-        l.AdditionalMaterials,
         sh.Id     as Id,
         sh.Answer,
         sh.CompletedDate

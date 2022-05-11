@@ -7,6 +7,7 @@
     LinkToRecord        nvarchar(150),
     IsPublished         bit      NOT NULL DEFAULT '0',
     IsDeleted           bit      NOT NULL DEFAULT '0',
+    [Name] NVARCHAR(150) NULL, 
     CONSTRAINT [PK_LESSON] PRIMARY KEY CLUSTERED
         (
          [Id] ASC

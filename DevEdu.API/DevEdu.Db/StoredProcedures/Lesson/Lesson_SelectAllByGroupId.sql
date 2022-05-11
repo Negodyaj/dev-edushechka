@@ -7,6 +7,7 @@ BEGIN
            l.Date,
            l.AdditionalMaterials,
            l.IsPublished,
+           l.Name,
            u.Id,
            u.FirstName,
            u.LastName,

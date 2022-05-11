@@ -53,7 +53,8 @@ namespace DevEdu.API.Configuration
             CreateMap<TaskByMethodistInputModel, TaskDto>()
                 .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.CourseIds.Select(courseId => new CourseDto { Id = courseId })));
             CreateMap<TopicInputModel, TopicDto>();
-            CreateMap<UserInsertInputModel, UserDto>();
+            CreateMap<UserInsertInputModel, UserDto>()
+                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.BirthDate, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<UserUpdateInputModel, UserDto>();
             CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
             CreateMap<FeedbackInputModel, StudentLessonDto>();

@@ -14,5 +14,6 @@ namespace DevEdu.DAL.Repositories
         Task UpdateStudentHomeworkAsync(StudentHomeworkDto dto);
         Task<List<StudentHomeworkDto>> GetAllStudentHomeworkByStudentIdAsync(int userId);
         Task<StudentHomeworkDto> GetStudentHomeworkByIdAsync(int id);
+        Task<StudentHomeworkDto> GetStudentHomeworkByTaskIdAndUserId(int taskId, int userId);
     }
 }

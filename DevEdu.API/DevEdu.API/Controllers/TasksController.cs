@@ -177,5 +177,19 @@ namespace DevEdu.API.Controllers
             var list = await _taskService.GetTasksAsync(userIdentityInfo);
             return _mapper.Map<List<TaskInfoOutputModel>>(list);
         }
+
+        //  api/tasks/1/answer 
+        [AuthorizeRoles(Role.Student)]
+        [HttpGet("{taskId}/answer")]
+        [Description("Get student answer on task (for student)")]
+        [ProducesResponseType(typeof(StudentHomeworkWithTaskOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public async Task<StudentHomeworkWithTaskOutputModel> GetStudentAnswerOnTaskAsync(int taskId)
+        {
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            var answer = await _taskService.GetStudentAnswerOnTaskAsync(taskId, userIdentityInfo);
+            return _mapper.Map<StudentHomeworkWithTaskOutputModel>(answer);
+        }
     }
 }
