@@ -1,4 +1,5 @@
-﻿using DevEdu.Business.Exceptions;
+﻿using DevEdu.Business.Constants;
+using DevEdu.Business.Exceptions;
 using DevEdu.Business.IdentityInfo;
 using DevEdu.Business.ValidationHelpers;
 using DevEdu.DAL.Enums;
@@ -14,28 +15,25 @@ namespace DevEdu.Business.Services
         private readonly ITaskRepository _taskRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IStudentHomeworkRepository _studentHomeworkRepository;
-        private readonly IGroupRepository _groupRepository;
-        private readonly IHomeworkRepository _homeworkRepository;
         private readonly ITaskValidationHelper _taskValidationHelper;
         private readonly IUserValidationHelper _userValidationHelper;
+        private readonly IGroupValidationHelper _groupValidationHelper;
 
         public TaskService(
             ITaskRepository taskRepository,
             ICourseRepository courseRepository,
             IStudentHomeworkRepository studentHomeworkRepository,
-            IGroupRepository groupRepository,
-            IHomeworkRepository homeworkRepository,
             ITaskValidationHelper taskValidationHelper,
-            IUserValidationHelper userValidationHelper
+            IUserValidationHelper userValidationHelper,
+            IGroupValidationHelper groupValidationHelper
         )
         {
             _taskRepository = taskRepository;
             _courseRepository = courseRepository;
             _studentHomeworkRepository = studentHomeworkRepository;
-            _groupRepository = groupRepository;
-            _homeworkRepository = homeworkRepository;
             _taskValidationHelper = taskValidationHelper;
             _userValidationHelper = userValidationHelper;
+            _groupValidationHelper = groupValidationHelper;
         }
 
         public async Task<TaskDto> AddTaskByMethodistAsync(TaskDto taskDto, List<int> coursesIds, UserIdentityInfo userIdentityInfo)
@@ -49,19 +47,11 @@ namespace DevEdu.Business.Services
             return task;
         }
 
-        public async Task<TaskDto> AddTaskByTeacherAsync(TaskDto taskDto, HomeworkDto homework, int groupId, UserIdentityInfo userIdentityInfo)
+        public async Task<TaskDto> AddTaskByTeacherAsync(TaskDto taskDto, int groupId, UserIdentityInfo userIdentityInfo)
         {
-            var taskId = await _taskRepository.AddTaskAsync(taskDto);
+            var taskId = await _taskRepository.AddTaskAsync(taskDto, groupId);
 
-            var task = await _taskRepository.GetTaskByIdAsync(taskId);
-            if (homework != null)
-            {
-                homework.Group = await _groupRepository.GetGroupAsync(groupId);
-                homework.Task = task;
-                await _homeworkRepository.AddHomeworkAsync(homework);
-            }
-
-            return task;
+            return await _taskRepository.GetTaskByIdAsync(taskId);
         }
 
         public async Task<TaskDto> UpdateTaskAsync(TaskDto taskDto, int taskId, UserIdentityInfo userIdentityInfo)
@@ -160,26 +150,19 @@ namespace DevEdu.Business.Services
             if (userIdentityInfo.Roles.Contains(Role.Methodist) &&
                 !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var mException = await _taskValidationHelper.CheckMethodistAccessToTaskAsync(task, userIdentityInfo.UserId);
-                if (mException != default)
+                if (task.Group != default)
                 {
-                    exception = mException;
+                    exception = new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userIdentityInfo.UserId, "task", task.Id));
                     authorized = false;
                 }
                 else
                     return task;
             }
-            if (!userIdentityInfo.Roles.Contains(Role.Admin) &&
-                !userIdentityInfo.Roles.Contains(Role.Methodist))
+
+            if (userIdentityInfo.Roles.Contains(Role.Teacher) &&
+                !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var uException = await _taskValidationHelper.CheckUserAccessToTaskAsync(taskId, userIdentityInfo.UserId);
-                if (uException != default)
-                {
-                    exception = uException;
-                    authorized = false;
-                }
-                else
-                    return task;
+                // get courses by task and compare with courses by teacher
             }
 
             if (!authorized)
@@ -202,16 +185,21 @@ namespace DevEdu.Business.Services
             return taskDto;
         }
 
+        public async Task<List<TaskDto>> GetTasksByCourseIdAsync(int courseId)
+        {
+            var tasks = await _taskRepository.GetTasksByCourseIdAsync(courseId);
+            return tasks;
+        }
+
+        public async Task<List<TaskDto>> GetTasksByGroupIdAsync(int groupId, UserIdentityInfo userIdentityInfo)
+        {
+            await _groupValidationHelper.CheckUserInGroupExistenceAsync(groupId, userIdentityInfo.UserId);
+            var tasks = await _taskRepository.GetTasksByGroupIdAsync(groupId);
+            return tasks;
+        }
+
         public async Task<StudentHomeworkDto> GetStudentAnswerOnTaskAsync(int taskId, UserIdentityInfo userIdentityInfo) =>
             await _studentHomeworkRepository.GetStudentHomeworkByTaskIdAndUserId(taskId, userIdentityInfo.UserId);
-        
-
-        public async Task<TaskDto> GetTaskWithGroupsByIdAsync(int taskId, UserIdentityInfo userIdentityInfo)
-        {
-            var taskDto = await GetTaskByIdAsync(taskId, userIdentityInfo);
-            taskDto.Groups = await _groupRepository.GetGroupsByTaskIdAsync(taskId);
-            return taskDto;
-        }
 
         public async Task<List<TaskDto>> GetTasksAsync(UserIdentityInfo userIdentityInfo)
         {

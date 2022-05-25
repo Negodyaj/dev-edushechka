@@ -15,6 +15,7 @@ namespace DevEdu.DAL.Repositories
         private const string _taskDeleteProcedure = "dbo.Task_Delete";
         private const string _taskSelectByIdProcedure = "dbo.Task_SelectById";
         private const string _taskSelectByCourseIdProcedure = "dbo.Task_SelectByCourseId";
+        private const string _taskSelectByGroupIdProcedure = "dbo.Task_SelectByGroupId";
         private const string _taskSelectAllProcedure = "dbo.Task_SelectAll";
         private const string _taskUpdateProcedure = "dbo.Task_Update";
 
@@ -22,7 +23,7 @@ namespace DevEdu.DAL.Repositories
         {
         }
 
-        public async Task<int> AddTaskAsync(TaskDto taskDto)
+        public async Task<int> AddTaskAsync(TaskDto taskDto, int groupId = -1)
         {
             int taskId = await _connection.QuerySingleAsync<int>(
                 _taskInsertProcedure,
@@ -31,7 +32,8 @@ namespace DevEdu.DAL.Repositories
                     taskDto.Name,
                     taskDto.Description,
                     taskDto.Links,
-                    taskDto.IsRequired
+                    taskDto.IsRequired,
+                    groupId
                 },
                 commandType: CommandType.StoredProcedure
                 );
@@ -66,11 +68,29 @@ namespace DevEdu.DAL.Repositories
 
         public async Task<TaskDto> GetTaskByIdAsync(int id)
         {
+            TaskDto result = default;
             return (await _connection
-                .QueryFirstOrDefaultAsync<TaskDto>(
+                .QueryAsync<TaskDto, CourseDto, TaskDto>(
                     _taskSelectByIdProcedure,
+                    (task, course) =>
+                    {
+                        if (course == null)
+                            return task;
+
+                        if (result == null)
+                        {
+                            result = task;
+                            result.Courses = new List<CourseDto> { new CourseDto { Id = course.Id } };
+                        }
+                        else
+                        {
+                            result.Courses.Add(new CourseDto { Id = course.Id });
+                        }
+                        return result;
+                    },
                     new { id },
-                    commandType: CommandType.StoredProcedure));
+                    commandType: CommandType.StoredProcedure))
+                .FirstOrDefault();
         }
 
         public async Task<List<TaskDto>> GetTasksByCourseIdAsync(int courseId)
@@ -78,6 +98,15 @@ namespace DevEdu.DAL.Repositories
             return (await _connection.QueryAsync<TaskDto>(
                     _taskSelectByCourseIdProcedure,
                     new { courseId },
+                    commandType: CommandType.StoredProcedure))
+                .ToList();
+        }
+
+        public async Task<List<TaskDto>> GetTasksByGroupIdAsync(int groupId)
+        {
+            return (await _connection.QueryAsync<TaskDto>(
+                    _taskSelectByGroupIdProcedure,
+                    new { groupId },
                     commandType: CommandType.StoredProcedure))
                 .ToList();
         }

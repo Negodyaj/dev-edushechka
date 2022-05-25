@@ -13,6 +13,7 @@ namespace DevEdu.DAL.Models
         public DateTime EndDate { get; set; }
         public string Timetable { get; set; }
         public decimal PaymentPerMonth { get; set; }
+        public int PaymentsCount { get; set; }
         public List<UserDto> Students { get; set; }
         public List<UserDto> Tutors { get; set; }
         public List<UserDto> Teachers { get; set; }

@@ -6,5 +6,7 @@
         public string Date { get; set; }
         public string Name { get; set; }
         public string AdditionalMaterials { get; set; }
+        public string LinkToRecord { get; set; }
+        public int Number { get; set; }
     }
 }

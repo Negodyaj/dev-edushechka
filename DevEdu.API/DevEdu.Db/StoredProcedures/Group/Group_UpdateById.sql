@@ -6,7 +6,8 @@
 	@StartDate date,
 	@EndDate date,
 	@Timetable nvarchar(500),
-	@PaymentPerMonth decimal(6,2) 
+	@PaymentPerMonth decimal(6,2),
+	@PaymentsCount int
 AS
 BEGIN
 	UPDATE dbo.[Group]
@@ -17,13 +18,15 @@ BEGIN
 		StartDate = @StartDate,
 		EndDate=@EndDate,
 		Timetable = @Timetable,
-		PaymentPerMonth = @PaymentPerMonth
+		PaymentPerMonth = @PaymentPerMonth,
+		PaymentsCount = @PaymentsCount
 	OUTPUT INSERTED.id,
 		   INSERTED.Name,
 		   INSERTED.CourseId,
 		   INSERTED.GroupStatusId,
 		   INSERTED.StartDate,
 		   INSERTED.Timetable,
-		   INSERTED.PaymentPerMonth
+		   INSERTED.PaymentPerMonth,
+		   inserted.PaymentsCount
 	WHERE Id = @Id
 END

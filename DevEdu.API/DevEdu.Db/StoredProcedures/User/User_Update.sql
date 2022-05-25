@@ -6,7 +6,8 @@
 	@Username		nvarchar(50)	NULL,
 	@CityId			int				NULL,
 	@GitHubAccount	nvarchar(50)	NULL,
-	@PhoneNumber	nvarchar(12)	NULL
+	@PhoneNumber	nvarchar(12)	NULL,
+	@BirthDate			date
 AS
 BEGIN
 	UPDATE dbo.[User]
@@ -17,6 +18,7 @@ BEGIN
 		Username		= @Username,
 		CityId			= @CityId,
 		GitHubAccount	= @GitHubAccount,
-		PhoneNumber		= @PhoneNumber
+		PhoneNumber		= @PhoneNumber,
+		BirthDate		= @BirthDate
     WHERE Id = @Id
 END

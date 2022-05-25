@@ -81,7 +81,7 @@ namespace DevEdu.API.Controllers
 
         // api/lessons/by-groupId/{id}
         [AuthorizeRoles(Role.Teacher, Role.Student)]
-        [HttpGet("/by-groupId/{id}")]
+        [HttpGet("by-groupId/{id}")]
         [Description("Get all lessons by groupId.")]
         [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -90,12 +90,17 @@ namespace DevEdu.API.Controllers
         {
             var userIdentity = this.GetUserIdAndRoles();
             var dto = await _lessonService.SelectAllLessonsByGroupIdAsync(userIdentity, id);
-            return _mapper.Map<List<LessonInfoOutputModel>>(dto);
+            var lessons = _mapper.Map<List<LessonInfoOutputModel>>(dto);
+            for (int i = lessons.Count - 1; i >=0 ; i--)
+            {
+                lessons[i].Number = lessons.Count - i;
+            }
+            return lessons;
         }
 
         // api/lessons/by-teacherId/{id}
         [AuthorizeRoles(Role.Manager, Role.Methodist)]
-        [HttpGet("/by-teacherId/{id}")]
+        [HttpGet("by-teacherId/{id}")]
         [Description("Get all lessons by teacherId.")]
         [ProducesResponseType(typeof(List<LessonInfoWithCourseOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
@@ -108,7 +113,7 @@ namespace DevEdu.API.Controllers
 
         // api/lessons/unpublished/by-groupId/{id}
         [AuthorizeRoles(Role.Teacher)]
-        [HttpGet("/unpublished/by-groupId/{id}")]
+        [HttpGet("unpublished/by-groupId/{id}")]
         [Description("Get all lessons by groupId.")]
         [ProducesResponseType(typeof(List<LessonInfoOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]

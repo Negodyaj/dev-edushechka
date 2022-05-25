@@ -8,6 +8,7 @@ BEGIN
            l.AdditionalMaterials,
            l.IsPublished,
            l.Name,
+           l.LinkToRecord,
            u.Id,
            u.FirstName,
            u.LastName,
@@ -23,4 +24,5 @@ BEGIN
 		
 		inner join dbo.Group_Lesson gl on gl.LessonId = l.Id
     WHERE gl.GroupId = @GroupId and l.IsDeleted = 0 and l.IsPublished = @IsPublished
+    order by l.Date desc
 END

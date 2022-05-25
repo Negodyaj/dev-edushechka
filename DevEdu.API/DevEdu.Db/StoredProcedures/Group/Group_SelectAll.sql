@@ -9,6 +9,7 @@ BEGIN
 		G.EndDate,
 		G.Timetable,
 		G.PaymentPerMonth,
+		g.PaymentsCount,
 		C.Id,
 		C.Name,
 		C.[Description]		

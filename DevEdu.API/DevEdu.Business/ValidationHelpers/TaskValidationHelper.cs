@@ -32,6 +32,7 @@ namespace DevEdu.Business.ValidationHelpers
 
         public async Task<AuthorizationException> CheckUserAccessToTaskAsync(int taskId, int userId)
         {
+            //var task = await _taskRepository.GetTaskByIdAsync(taskId);
             var groupsByTask = await _groupRepository.GetGroupsByTaskIdAsync(taskId);
             var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
 

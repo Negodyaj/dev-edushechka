@@ -41,20 +41,21 @@ namespace DevEdu.API.Configuration
             CreateMap<NotificationUpdateInputModel, NotificationDto>();
             CreateMap<StudentHomeworkInputModel, StudentHomeworkDto>();
             CreateMap<LessonInputModel, LessonDto>()
-                .ForMember(dest => dest.Teacher, opt => opt.MapFrom(src => new UserDto { Id = src.TeacherId }))
+                .ForMember(dest => dest.Groups, opt => opt.MapFrom(src => new List<GroupDto> { new GroupDto { Id = src.GroupId } }))
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<LessonUpdateInputModel, LessonDto>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.ParseExact(src.Date, _dateFormat, CultureInfo.InvariantCulture)))
                 .ForMember(dest => dest.Topics, opt => opt.MapFrom(src => new List<TopicDto>(src.TopicIds.Select(id => new TopicDto { Id = id }))));
             CreateMap<TaskInputModel, TaskDto>();
             CreateMap<TaskByTeacherInputModel, TaskDto>()
-                .ForMember(dest => dest.Groups, opt => opt.MapFrom(src => new List<GroupDto> { new GroupDto { Id = src.GroupId } }));
+                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => new GroupDto { Id = src.GroupId } ));
             CreateMap<TaskByMethodistInputModel, TaskDto>()
                 .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.CourseIds.Select(courseId => new CourseDto { Id = courseId })));
             CreateMap<TopicInputModel, TopicDto>();
             CreateMap<UserInsertInputModel, UserDto>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.BirthDate, _dateFormat, CultureInfo.InvariantCulture)));
-            CreateMap<UserUpdateInputModel, UserDto>();
+            CreateMap<UserUpdateInputModel, UserDto>()
+                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateTime.ParseExact(src.BirthDate, _dateFormat, CultureInfo.InvariantCulture)));
             CreateMap<AbsenceReasonInputModel, StudentLessonDto>();
             CreateMap<FeedbackInputModel, StudentLessonDto>();
             CreateMap<PaymentInputModel, PaymentDto>()
@@ -163,6 +164,8 @@ namespace DevEdu.API.Configuration
             CreateMap<StudentRatingDto, StudentRatingOutputModel>();
             CreateMap<RatingTypeDto, RatingTypeOutputModel>();
             CreateMap<CourseDto, CourseInfoFullOutputModel>();
+            CreateMap<UserDto, UserInfoWithGroupsResponse>()
+                .ForMember(dest => dest.GroupIds, opt => opt.MapFrom(src => src.Groups.Select(t => t.Id).ToList()));
         }
     }
 }

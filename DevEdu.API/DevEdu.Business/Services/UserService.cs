@@ -116,16 +116,16 @@ namespace DevEdu.Business.Services
             else
                 staticFolderPath = string.Empty;
 
-            var pathToSavePhoto = PathHelper.GetPathToSavePhoto(staticFolderPath, _fileHelper, photo);
+            var pathToSavePhoto = PathHelper.GetPathToSavePhoto(_fileHelper, photo);
 
-            await _fileHelper.CreateFile(pathToSavePhoto, photo);
+            await _fileHelper.CreateFile($"{staticFolderPath}{pathToSavePhoto}", photo);
 
             await _userRepository.UpdateUserPhotoAsync(userId, pathToSavePhoto);
 
             _fileHelper.TryDeleteFile(user.Photo);
 
-            var pathToReturn = pathToSavePhoto.TrimStart('.');
-            return pathToReturn;
+            //var pathToReturn = pathToSavePhoto.TrimStart('.');
+            return pathToSavePhoto;
         }
 
         public async Task DeleteUserAsync(int id)
@@ -144,6 +144,11 @@ namespace DevEdu.Business.Services
         {
             await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(userId);
             await _userRepository.DeleteUserRoleAsync(userId, roleId);
+        }
+
+        public async Task<List<UserDto>> GetUserInfoWithGroupsByRoleInGroup(Role role, int? groupId = null)
+        {
+            return await _userRepository.GetUsersByGroupIdAndRoleAsync((int)role, groupId);
         }
     }
 }

@@ -59,8 +59,8 @@ namespace DevEdu.Business.Services
 
             dto.Group = new GroupDto { Id = groupId };
             dto.Task = new TaskDto { Id = taskId };
-            var id = await _homeworkRepository.AddHomeworkAsync(dto);
-            return await _homeworkRepository.GetHomeworkAsync(id);
+            var ingeborga = await _homeworkRepository.AddHomeworkAsync(dto);
+            return await _homeworkRepository.GetHomeworkAsync(ingeborga);
         }
 
         public async Task DeleteHomeworkAsync(int homeworkId, UserIdentityInfo userInfo)

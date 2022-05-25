@@ -5,9 +5,11 @@
 	Links nvarchar(500),
 	IsRequired bit NOT NULL DEFAULT '0',
 	IsDeleted bit NOT NULL DEFAULT '0',
-  CONSTRAINT [PK_TASK] PRIMARY KEY CLUSTERED
+  [GroupId] INT NULL, 
+    CONSTRAINT [PK_TASK] PRIMARY KEY CLUSTERED
   (
   [Id] ASC
-  ) WITH (IGNORE_DUP_KEY = OFF)
+  ) WITH (IGNORE_DUP_KEY = OFF), 
+    CONSTRAINT [FK_Task_ToTable] FOREIGN KEY (GroupId) REFERENCES dbo.[Group](Id)
 
 )

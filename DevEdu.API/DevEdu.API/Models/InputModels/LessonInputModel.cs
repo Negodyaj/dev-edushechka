@@ -12,13 +12,14 @@ namespace DevEdu.API.Models
         [Required(ErrorMessage = AdditionalMaterialsRequired)]
         public string AdditionalMaterials { get; set; }
 
-        [Required(ErrorMessage = TeacherIdRequired)]
-        public int TeacherId { get; set; }
+        [Required(ErrorMessage = GroupIdRequired)]
+        public int GroupId { get; set; }
 
         public string Name { get; set; }
 
         [Url] public string LinkToRecord { get; set; }
 
         public List<int> TopicIds { get; set; }
+        public bool IsPublished { get; set; }
     }
 }

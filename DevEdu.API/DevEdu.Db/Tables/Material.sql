@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [Material]
 (
     Id        int           NOT NULL IDENTITY (1,1),
-    CourseId  int           NOT NULL,
+    CourseId  int           NULL,
     Content   nvarchar(max) NOT NULL,
     Link      nvarchar(200),
     IsDeleted bit           NOT NULL DEFAULT '0',

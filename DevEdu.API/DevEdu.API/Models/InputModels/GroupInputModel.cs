@@ -24,5 +24,7 @@ namespace DevEdu.API.Models
         public string Timetable { get; set; }
         [Required(ErrorMessage = PaymentPerMonthRequired)]
         public decimal PaymentPerMonth { get; set; }
+        [Range(minimum: 1, maximum: 20, ErrorMessage = WrongValueOfPaymentsCount)]
+        public int PaymentsCount { get; set; }
     }
 }

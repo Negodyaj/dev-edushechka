@@ -100,6 +100,20 @@ namespace DevEdu.API.Controllers
             return list;
         }
 
+        // api/users/students
+        [AuthorizeRoles(Role.Manager)]
+        [HttpGet("students")]
+        [Description("Return list of students with groupIds")]
+        [ProducesResponseType(typeof(List<UserInfoWithGroupsResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        public async Task<List<UserInfoWithGroupsResponse>> GetAllStudentsAsync()
+        {
+            var listDto = await _userService.GetUserInfoWithGroupsByRoleInGroup(Role.Student);
+            var list = _mapper.Map<List<UserInfoWithGroupsResponse>>(listDto);
+
+            return list;
+        }
+
         // api/users/password 
         [Authorize]
         [HttpPut("password")]

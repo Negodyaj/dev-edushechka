@@ -38,7 +38,6 @@ namespace DevEdu.API.Models
 
         public string GitHubAccount { get; set; }
 
-        [Required(ErrorMessage = PhoneNumberRequired)]
         public string PhoneNumber { get; set; }
     }
 }

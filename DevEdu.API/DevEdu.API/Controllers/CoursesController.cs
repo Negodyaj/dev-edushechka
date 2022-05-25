@@ -118,14 +118,14 @@ namespace DevEdu.API.Controllers
         [AuthorizeRoles(Role.Methodist)]
         [HttpPost("{courseId}/material")]
         [Description("Add material to course")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult> AddCourseMaterialReferenceAsync(int courseId, [FromBody] MaterialInputModel materialModel)
         {
             var dto = _mapper.Map<MaterialDto>(materialModel);
-            await _materialService.AddMaterialAsync(dto, courseId);
-            return NoContent();
+            var materialId = await _materialService.AddMaterialAsync(dto, courseId);
+            return Created(new Uri($"api/Materials/{materialId}", UriKind.Relative), materialId);
         }
 
         //  api/courses/{courseId}/task/{taskId}

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DevEdu.API.Common;
+using System.ComponentModel.DataAnnotations;
 using static DevEdu.API.Common.ValidationMessage;
 
 namespace DevEdu.API.Models
@@ -28,7 +29,10 @@ namespace DevEdu.API.Models
         [Required(ErrorMessage = GitHubAccountRequired)]
         public string GitHubAccount { get; set; }
 
-        [Required(ErrorMessage = PhoneNumberRequired)]
         public string PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = BirthDateRequired)]
+        [CustomDateFormat(ErrorMessage = WrongFormatBirthDate)]
+        public string BirthDate { get; set; }
     }
 }

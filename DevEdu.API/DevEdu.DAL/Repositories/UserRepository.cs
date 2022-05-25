@@ -138,7 +138,8 @@ namespace DevEdu.DAL.Repositories
                      user.Username,
                      CityId = (int)user.City,
                      user.GitHubAccount,
-                     user.PhoneNumber
+                     user.PhoneNumber,
+                     user.BirthDate,
                  },
                  commandType: CommandType.StoredProcedure);
         }
@@ -199,16 +200,31 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role)
+        public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int role, int? groupId = null)
         {
-            return (await _connection.QueryAsync<UserDto>
+            var userDictionary = new Dictionary<int, UserDto>();
+            return (await _connection.QueryAsync<UserDto, GroupDto, UserDto>
             (
                 _userSelectByGroupIdAndRole,
+                (user, group) =>
+                {
+                    if (!userDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                    {
+                        userEntry = user;
+                        userEntry.Groups = new List<GroupDto>();
+                        userDictionary.Add(user.Id, userEntry);
+                    }
+                    
+                    userEntry.Groups.Add(group);
+
+                    return userEntry;
+                },
                 new
                 {
                     groupId,
                     roleId = role
                 },
+                splitOn: "Id",
                 commandType: CommandType.StoredProcedure
             )).ToList();
         }

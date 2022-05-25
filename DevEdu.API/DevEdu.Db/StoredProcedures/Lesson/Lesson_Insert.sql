@@ -3,10 +3,11 @@
     @AdditionalMaterials nvarchar(500),
     @TeacherId int,
     @LinkToRecord nvarchar(150),
-    @Name nvarchar(150)
+    @Name nvarchar(150),
+    @IsPublished bit
 AS
 BEGIN
-    INSERT INTO dbo.Lesson (Date, AdditionalMaterials, TeacherId, LinkToRecord, Name)
-    VALUES (@Date, @AdditionalMaterials, @TeacherId, @LinkToRecord, @Name)
+    INSERT INTO dbo.Lesson (Date, AdditionalMaterials, TeacherId, LinkToRecord, Name, IsPublished)
+    VALUES (@Date, @AdditionalMaterials, @TeacherId, @LinkToRecord, @Name, @IsPublished)
     SELECT @@IDENTITY
 END

@@ -10,6 +10,6 @@ namespace DevEdu.DAL.Models
         public bool IsRequired { get; set; }
         public List<StudentHomeworkDto> StudentAnswers { get; set; }
         public List<CourseDto> Courses { get; set; }
-        public List<GroupDto> Groups { get; set; }
+        public GroupDto Group { get; set; }
     }
 }

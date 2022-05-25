@@ -44,7 +44,8 @@ namespace DevEdu.DAL.Repositories
                     lessonDto.AdditionalMaterials,
                     TeacherId = lessonDto.Teacher.Id,
                     lessonDto.LinkToRecord,
-                    lessonDto.Name
+                    lessonDto.Name,
+                    lessonDto.IsPublished
                 },
                 commandType: CommandType.StoredProcedure
             );

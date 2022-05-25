@@ -18,14 +18,15 @@ namespace DevEdu.Business.Services
         private readonly ILessonValidationHelper _lessonValidationHelper;
         private readonly ITopicValidationHelper _topicValidationHelper;
         private readonly IGroupValidationHelper _groupValidationHelper;
+        private readonly IGroupRepository _groupRepository;
 
         public LessonService(
             ILessonRepository lessonRepository,
-            ICommentRepository commentRepository,
             IUserValidationHelper userValidationHelper,
             ILessonValidationHelper lessonValidationHelper,
             ITopicValidationHelper topicValidationHelper,
-            IGroupValidationHelper groupValidationHelper
+            IGroupValidationHelper groupValidationHelper,
+            IGroupRepository groupRepository
         )
         {
             _lessonRepository = lessonRepository;
@@ -33,26 +34,17 @@ namespace DevEdu.Business.Services
             _lessonValidationHelper = lessonValidationHelper;
             _topicValidationHelper = topicValidationHelper;
             _groupValidationHelper = groupValidationHelper;
+            _groupRepository = groupRepository;
         }
 
         public async Task<LessonDto> AddLessonAsync(UserIdentityInfo userIdentity, LessonDto lessonDto, List<int> topicIds)
         {
-            if (!userIdentity.IsAdmin())
-            {
-                _lessonValidationHelper.CheckUserAndTeacherAreSame(userIdentity, lessonDto.Teacher.Id);
-            }
-
+            var groupId = lessonDto.Groups[0].Id;
+            lessonDto.Teacher = new UserDto { Id = userIdentity.UserId };
             int lessonId = await _lessonRepository.AddLessonAsync(lessonDto);
-
-            foreach (GroupDto group in lessonDto.Groups)
-            {
-                await _groupValidationHelper.CheckGroupExistenceAsync(group.Id);
-                foreach (UserDto user in group.Students)
-                {
-                    await _userValidationHelper.GetUserByIdAndThrowIfNotFoundAsync(user.Id);
-                    await _lessonRepository.AddStudentToLessonAsync(lessonId, user.Id);
-                }
-            }
+            
+            await _groupValidationHelper.CheckGroupExistenceAsync(groupId);
+            await _groupRepository.AddGroupToLessonAsync(groupId, lessonId);            
 
             if (topicIds != null)
             {

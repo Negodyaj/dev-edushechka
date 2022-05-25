@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE dbo.User_SelectByGroupIdAndRole
-	@GroupId int,
+	@GroupId int = NULL,
 	@RoleId int
 AS
 BEGIN
@@ -8,8 +8,10 @@ BEGIN
 		U.FirstName,
 		U.LastName,
 		U.Email,
-		U.Photo
+		U.Photo,
+		u.Id as Id
 	FROM dbo.[User] U
 	inner join dbo.[User_Group] UG on UG.[UserId] = U.Id
-	WHERE (UG.GroupId = @GroupId AND UG.RoleId = @RoleId)
+	WHERE ((@GroupId is not null and UG.GroupId = @GroupId or @GroupId is null) AND UG.RoleId = @RoleId)
+	order by u.LastName asc, u.id desc
 END

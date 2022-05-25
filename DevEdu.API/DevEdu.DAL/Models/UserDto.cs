@@ -20,5 +20,6 @@ namespace DevEdu.DAL.Models
         public DateTime ExileDate { get; set; }
         public City City { get; set; }
         public List<Role> Roles { get; set; }
+        public List<GroupDto> Groups { get; set; }
     }
 }

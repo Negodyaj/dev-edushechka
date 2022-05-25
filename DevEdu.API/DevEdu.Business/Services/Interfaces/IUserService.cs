@@ -1,4 +1,5 @@
 ﻿using DevEdu.Business.IdentityInfo;
+using DevEdu.DAL.Enums;
 using DevEdu.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -19,5 +20,6 @@ namespace DevEdu.Business.Services
         Task<UserDto> GetUserByIdAsync(int id, UserIdentityInfo userInfo=null);
         Task<(UserDto, List<GroupDto>)> GetUserByTokenAsync(UserIdentityInfo userInfo = null);
         Task<UserDto> UpdateUserAsync(UserDto dto, UserIdentityInfo userInfo);
+        Task<List<UserDto>> GetUserInfoWithGroupsByRoleInGroup(Role role, int? groupId = null);
     }
 }

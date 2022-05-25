@@ -8,7 +8,8 @@
 	IsDeleted bit NOT NULL DEFAULT '0',
 	Timetable nvarchar(500) NOT NULL,
 	PaymentPerMonth decimal(6,2) NOT NULL,
-  CONSTRAINT [PK_GROUP] PRIMARY KEY CLUSTERED
+  [PaymentsCount] INT NULL, 
+    CONSTRAINT [PK_GROUP] PRIMARY KEY CLUSTERED
   (
   [Id] ASC
   ) WITH (IGNORE_DUP_KEY = OFF)

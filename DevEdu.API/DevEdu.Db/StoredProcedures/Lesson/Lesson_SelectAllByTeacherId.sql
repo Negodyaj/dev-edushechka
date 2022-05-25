@@ -6,6 +6,7 @@ BEGIN
     SELECT l.Id,
            l.Date,
            l.AdditionalMaterials,
+           l.LinkToRecord,
            l.IsPublished,
            l.Name,
            u.Id,

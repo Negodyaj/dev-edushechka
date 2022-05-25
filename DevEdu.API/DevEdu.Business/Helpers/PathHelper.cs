@@ -9,10 +9,9 @@ namespace DevEdu.Business.Helpers
     {
         private const string _folderUserPhotoPath = "/media/userPhoto/";
 
-        public static string GetPathToSavePhoto(string staticFolderPath, IFileHelper fileHelper, IFormFile photo)
+        public static string GetPathToSavePhoto(IFileHelper fileHelper, IFormFile photo)
         {
             var sbPathToSavePhoto = new StringBuilder();
-            sbPathToSavePhoto.Append(staticFolderPath);
             sbPathToSavePhoto.Append(_folderUserPhotoPath);
             sbPathToSavePhoto.Append(fileHelper.ComputeFileHash(photo));
             sbPathToSavePhoto.Append(DateTime.Now.ToString("yyyyMMddhhmmss"));

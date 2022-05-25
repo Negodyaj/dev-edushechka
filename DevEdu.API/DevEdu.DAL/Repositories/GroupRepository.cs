@@ -48,6 +48,7 @@ namespace DevEdu.DAL.Repositories
                     groupDto.EndDate,
                     groupDto.Timetable,
                     groupDto.PaymentPerMonth,
+                    groupDto.PaymentsCount
                 },
                 commandType: CommandType.StoredProcedure
             );
@@ -119,7 +120,8 @@ namespace DevEdu.DAL.Repositories
                     groupDto.StartDate,
                     groupDto.EndDate,
                     groupDto.Timetable,
-                    groupDto.PaymentPerMonth
+                    groupDto.PaymentPerMonth,
+                    groupDto.PaymentsCount
                 },
                 commandType: CommandType.StoredProcedure
             );

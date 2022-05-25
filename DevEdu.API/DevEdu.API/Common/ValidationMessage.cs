@@ -41,7 +41,6 @@
         public const string ReportingPeriodNumberRequired = "ReportingPeriodNumber must be provided";
         public const string DateRequired = "Date must be provided";
         public const string AdditionalMaterialsRequired = "AdditionalMaterials must be provided";
-        public const string TeacherIdRequired = "TeacherId must be provided";
         public const string LinkToRecordIdRequired = "LinkToRecord must be provided";
         public const string SumRequired = "Sum must be provided";
         public const string IsPaidRequired = "IsPaid cannot be empty";
@@ -56,5 +55,6 @@
         public const string WrongFormatGroupStatusId = "GroupStatusId must be integer from 1 to int.MaxValue";
         public const string WrongFormatStartDate = "StartDate must be format 'dd.MM.yyyy'";
         public const string WrongValueOfRating = "Value of rating must be from 1 to 100";
+        public const string WrongValueOfPaymentsCount = "Value of PaymentsCount must be from 1 to 20";
     }
 }

@@ -21,13 +21,16 @@ namespace DevEdu.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ITaskService _taskService;
+        private readonly IHomeworkService _homeworkService;
 
         public TasksController(
             IMapper mapper,
-            ITaskService taskService)
+            ITaskService taskService,
+            IHomeworkService homeworkService)
         {
             _taskService = taskService;
             _mapper = mapper;
+            _homeworkService = homeworkService;
         }
 
         // api/tasks/teacher
@@ -41,10 +44,27 @@ namespace DevEdu.API.Controllers
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = _mapper.Map<TaskDto>(model);
-            var homeworkDto = _mapper.Map<HomeworkDto>(model.Homework);
-            var task = await _taskService.AddTaskByTeacherAsync(taskDto, homeworkDto, model.GroupId, userIdentityInfo);
+            var task = await _taskService.AddTaskByTeacherAsync(taskDto, model.GroupId, userIdentityInfo);
             var output = _mapper.Map<TaskInfoOutputModel>(task);
-            return Created(new Uri($"api/Task/{output.Id}", UriKind.Relative), output);
+            return Created(new Uri($"api/Tasks/{output.Id}", UriKind.Relative), output);
+        }
+
+        // api/tasks/teacher
+        [AuthorizeRoles(Role.Teacher)]
+        [HttpPost("publish-homework")]
+        [Description("Add new task by teacher and publish a homework")]
+        [ProducesResponseType(typeof(HomeworkInfoOutputModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+        public async Task<ActionResult<HomeworkInfoOutputModel>> AddTaskByTeacherAndPublishAsync([FromBody] TaskByTeacherWithDatesRequest model)
+        {
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            var taskDto = _mapper.Map<TaskDto>(model);
+            var task = await _taskService.AddTaskByTeacherAsync(taskDto, model.GroupId, userIdentityInfo);
+            var hw = new HomeworkInputModel { StartDate = model.StartDate, EndDate = model.EndDate };
+            var hwDto = await _homeworkService.AddHomeworkAsync(model.GroupId, task.Id, _mapper.Map<HomeworkDto>(hw), userIdentityInfo);
+            var output = _mapper.Map<HomeworkInfoOutputModel>(hwDto);
+            return Created(new Uri($"api/Homeworks/{output.Id}", UriKind.Relative), output);
         }
 
         // api/tasks/methodist
@@ -60,34 +80,18 @@ namespace DevEdu.API.Controllers
             var taskDto = _mapper.Map<TaskDto>(model);
             var task = await _taskService.AddTaskByMethodistAsync(taskDto, model.CourseIds, userIdentityInfo);
             var output = _mapper.Map<TaskInfoOutputModel>(task);
-            return Created(new Uri($"api/Task/{output.Id}", UriKind.Relative), output);
+            return Created(new Uri($"api/Tasks/{output.Id}", UriKind.Relative), output);
         }
 
         // api/tasks/{taskId}
         [AuthorizeRoles(Role.Teacher)]
-        [HttpPut("teacher/{taskId}")]
-        [Description("Update task for Teacher")]
+        [HttpPut("{taskId}")]
+        [Description("Update an existing task")]
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<TaskInfoOutputModel> UpdateTaskByTeacherAsync(int taskId, [FromBody] TaskInputModel model)
-        {
-            var userIdentityInfo = this.GetUserIdAndRoles();
-            var taskDto = _mapper.Map<TaskDto>(model);
-            var taskUpdate = await _taskService.UpdateTaskAsync(taskDto, taskId, userIdentityInfo);
-            return _mapper.Map<TaskInfoOutputModel>(taskUpdate);
-        }
-
-        // api/tasks/{taskId}
-        [AuthorizeRoles(Role.Methodist)]
-        [HttpPut("methodist/{taskId}")]
-        [Description("Update task for Methodist")]
-        [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<TaskInfoOutputModel> UpdateTaskByMethodistAsync(int taskId, [FromBody] TaskInputModel model)
+        public async Task<TaskInfoOutputModel> UpdateTaskAsync(int taskId, [FromBody] TaskInputModel model)
         {
             var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = _mapper.Map<TaskDto>(model);
@@ -110,7 +114,7 @@ namespace DevEdu.API.Controllers
         }
 
         //  api/tasks/{Id}
-        [AuthorizeRoles(Role.Methodist, Role.Teacher, Role.Tutor, Role.Student)]
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpGet("{id}")]
         [Description("Get task by Id")]
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]
@@ -121,6 +125,33 @@ namespace DevEdu.API.Controllers
             var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = await _taskService.GetTaskByIdAsync(id, userIdentityInfo);
             return _mapper.Map<TaskInfoOutputModel>(taskDto);
+        }
+
+        //  api/tasks/by-course/{courseId}
+        [AuthorizeRoles(Role.Methodist)]
+        [HttpGet("by-course/{courseId}")]
+        [Description("Get task by CourseId (for methodist)")]
+        [ProducesResponseType(typeof(List<TaskInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public async Task<List<TaskInfoOutputModel>> GetTasksByCourseIdAsync(int courseId)
+        {
+            var taskDto = await _taskService.GetTasksByCourseIdAsync(courseId);
+            return _mapper.Map<List<TaskInfoOutputModel>>(taskDto);
+        }
+
+        //  api/tasks/by-group/{groupId}
+        [AuthorizeRoles(Role.Teacher)]
+        [HttpGet("by-group/{groupId}")]
+        [Description("Get task by GroupId (for teacher)")]
+        [ProducesResponseType(typeof(List<TaskInfoOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
+        public async Task<List<TaskInfoOutputModel>> GetTasksByGroupIdAsync(int groupId)
+        {
+            var userIdentityInfo = this.GetUserIdAndRoles();
+            var taskDto = await _taskService.GetTasksByGroupIdAsync(groupId, userIdentityInfo);
+            return _mapper.Map<List<TaskInfoOutputModel>>(taskDto);
         }
 
         //  api/tasks/1/with-courses 
@@ -149,20 +180,6 @@ namespace DevEdu.API.Controllers
             var userIdentityInfo = this.GetUserIdAndRoles();
             var taskDto = await _taskService.GetTaskWithAnswersByIdAsync(taskId, userIdentityInfo);
             return _mapper.Map<TaskInfoWithAnswersOutputModel>(taskDto);
-        }
-
-        //  api/tasks/1/with-courses 
-        [AuthorizeRoles(Role.Teacher)]
-        [HttpGet("{taskId}/with-groups")]
-        [Description("Get task by Id with groups")]
-        [ProducesResponseType(typeof(TaskInfoWithGroupsOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status404NotFound)]
-        public async Task<TaskInfoWithGroupsOutputModel> GetTaskWithGroupsAsync(int taskId)
-        {
-            var userIdentityInfo = this.GetUserIdAndRoles();
-            var taskDto = await _taskService.GetTaskWithGroupsByIdAsync(taskId, userIdentityInfo);
-            return _mapper.Map<TaskInfoWithGroupsOutputModel>(taskDto);
         }
 
         //  api/tasks 
