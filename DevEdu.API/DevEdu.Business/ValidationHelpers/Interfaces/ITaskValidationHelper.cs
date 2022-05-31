@@ -8,7 +8,7 @@ namespace DevEdu.Business.ValidationHelpers
     public interface ITaskValidationHelper
     {
         Task<TaskDto> GetTaskByIdAndThrowIfNotFoundAsync(int taskId);
-        Task<AuthorizationException> CheckUserAccessToTaskAsync(int taskId, int userId);
+        Task<AuthorizationException> CheckUserAccessToTaskAsync(TaskDto taskDto, int userId);
         Task<AuthorizationException> CheckMethodistAccessToTaskAsync(TaskDto taskDto, int userId);
         Task<TaskDto> GetTaskAllowedToUserAsync(int taskId, int userId);
         List<TaskDto> GetTasksAllowedToMethodist(List<TaskDto> taskDtos);

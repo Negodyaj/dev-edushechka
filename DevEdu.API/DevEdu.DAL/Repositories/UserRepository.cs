@@ -17,6 +17,7 @@ namespace DevEdu.DAL.Repositories
         private const string _userSelectByEmailProcedure = "dbo.User_SelectByEmail";
         private const string _userSelectAllProcedure = "dbo.User_SelectAll";
         private const string _userSelectByGroupIdAndRole = "dbo.User_SelectByGroupIdAndRole";
+        private const string _userSelectRole = "dbo.User_SelectByRole";
         private const string _userUpdateProcedure = "dbo.User_Update";
         private const string _userUpdatePasswordProcedure = "dbo.User_UpdatePassword";
         private const string _userUpdatePhotoProcedure = "dbo.User_UpdatePhoto";
@@ -200,7 +201,7 @@ namespace DevEdu.DAL.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int role, int? groupId = null)
+        public async Task<List<UserDto>> GetUsersByGroupIdAndRoleAsync(int groupId, int role)
         {
             var userDictionary = new Dictionary<int, UserDto>();
             return (await _connection.QueryAsync<UserDto, GroupDto, UserDto>
@@ -227,6 +228,34 @@ namespace DevEdu.DAL.Repositories
                 splitOn: "Id",
                 commandType: CommandType.StoredProcedure
             )).ToList();
+        }
+
+        public async Task<List<UserDto>> GetUsersByRoleAsync(int role)
+        {
+            var userDictionary = new Dictionary<int, UserDto>();
+            return (await _connection.QueryAsync<UserDto, GroupDto, UserDto>
+            (
+                _userSelectRole,
+                (user, group) =>
+                {
+                    if (!userDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                    {
+                        userEntry = user;
+                        userEntry.Groups = new List<GroupDto>();
+                        userDictionary.Add(user.Id, userEntry);
+                    }
+
+                    userEntry.Groups.Add(group);
+
+                    return userEntry;
+                },
+                new
+                {
+                    roleId = role
+                },
+                splitOn: "Id",
+                commandType: CommandType.StoredProcedure
+            )).Distinct().ToList();
         }
     }
 }

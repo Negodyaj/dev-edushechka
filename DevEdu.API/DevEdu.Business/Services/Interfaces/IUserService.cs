@@ -20,6 +20,6 @@ namespace DevEdu.Business.Services
         Task<UserDto> GetUserByIdAsync(int id, UserIdentityInfo userInfo=null);
         Task<(UserDto, List<GroupDto>)> GetUserByTokenAsync(UserIdentityInfo userInfo = null);
         Task<UserDto> UpdateUserAsync(UserDto dto, UserIdentityInfo userInfo);
-        Task<List<UserDto>> GetUserInfoWithGroupsByRoleInGroup(Role role, int? groupId = null);
+        Task<List<UserDto>> GetUserInfoWithGroupsByRole(Role role);
     }
 }

@@ -38,6 +38,7 @@ namespace DevEdu.Business.Services
         public async Task<GroupDto> AddGroup(GroupDto groupDto)
         {
             await _groupHelper.CompareStartEndDateAsync(groupDto.StartDate, groupDto.EndDate);
+            groupDto.GroupStatus = GroupStatus.Forming;
 
             groupDto.Id = await _groupRepository.AddGroupAsync(groupDto);
             return groupDto;

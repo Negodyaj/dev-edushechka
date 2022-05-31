@@ -80,7 +80,7 @@ namespace DevEdu.Business.Services
             if (userIdentityInfo.Roles.Contains(Role.Teacher) &&
                 !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var uException = await _taskValidationHelper.CheckUserAccessToTaskAsync(taskId, userIdentityInfo.UserId);
+                var uException = await _taskValidationHelper.CheckUserAccessToTaskAsync(task, userIdentityInfo.UserId);
                 if (uException != default)
                 {
                     exception = uException;
@@ -124,7 +124,7 @@ namespace DevEdu.Business.Services
             if (userIdentityInfo.Roles.Contains(Role.Teacher) &&
                 !userIdentityInfo.Roles.Contains(Role.Admin))
             {
-                var uException = await _taskValidationHelper.CheckUserAccessToTaskAsync(taskId, userIdentityInfo.UserId);
+                var uException = await _taskValidationHelper.CheckUserAccessToTaskAsync(task, userIdentityInfo.UserId);
                 if (uException != default)
                 {
                     exception = uException;

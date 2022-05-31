@@ -8,7 +8,7 @@ BEGIN
 		t.Description,
 		t.Links,
 		t.IsRequired,
-		t.GroupId
+		t.GroupId as Id
 	FROM dbo.Task T WITH (NOLOCK)
 	WHERE (t.GroupId = @GroupId AND T.IsDeleted=0)
 END

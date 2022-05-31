@@ -39,7 +39,7 @@ namespace DevEdu.Business.ValidationHelpers
         public async Task CompareStartEndDateAsync(DateTime startDate, DateTime endDate)
         {
             if (startDate >= endDate)
-                throw new ValidationException(nameof(GroupDto), string.Format(ServiceMessages.EndDateInGroupNotCorrected));
+                throw new ValidationException(nameof(GroupDto), ServiceMessages.EndDateInGroupNotCorrected);
         }
 
         public bool CheckAccessGetGroupMembers(int groupId, UserIdentityInfo userInfo)

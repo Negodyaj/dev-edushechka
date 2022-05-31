@@ -30,15 +30,12 @@ namespace DevEdu.Business.ValidationHelpers
             return task;
         }
 
-        public async Task<AuthorizationException> CheckUserAccessToTaskAsync(int taskId, int userId)
+        public async Task<AuthorizationException> CheckUserAccessToTaskAsync(TaskDto taskDto, int userId)
         {
-            //var task = await _taskRepository.GetTaskByIdAsync(taskId);
-            var groupsByTask = await _groupRepository.GetGroupsByTaskIdAsync(taskId);
             var groupsByUser = await _groupRepository.GetGroupsByUserIdAsync(userId);
 
-            var result = groupsByTask.FirstOrDefault(gt => groupsByUser.Any(gu => gu.Id == gt.Id));
-            if (result == default)
-                return new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskId));
+            if (taskDto.Group == default || !groupsByUser.Select(t => t.Id).ToList().Contains(taskDto.Group.Id))
+                return new AuthorizationException(string.Format(ServiceMessages.EntityDoesntHaveAcessMessage, "user", userId, "task", taskDto.Id));
             
             return default;
         }

@@ -70,10 +70,15 @@ namespace DevEdu.DAL.Repositories
         {
             TaskDto result = default;
             return (await _connection
-                .QueryAsync<TaskDto, CourseDto, TaskDto>(
+                .QueryAsync<TaskDto, GroupDto, CourseDto, TaskDto>(
                     _taskSelectByIdProcedure,
-                    (task, course) =>
+                    (task, group, course) =>
                     {
+                        if (group != default)
+                        {
+                            task.Group = group;
+                        }
+
                         if (course == null)
                             return task;
 
@@ -95,8 +100,17 @@ namespace DevEdu.DAL.Repositories
 
         public async Task<List<TaskDto>> GetTasksByCourseIdAsync(int courseId)
         {
-            return (await _connection.QueryAsync<TaskDto>(
+            return (await _connection.QueryAsync<TaskDto, GroupDto, TaskDto>(
                     _taskSelectByCourseIdProcedure,
+                    (task, group) =>
+                    {
+                        if (group != default)
+                        {
+                            task.Group = group;
+                        }
+
+                        return task;
+                    },
                     new { courseId },
                     commandType: CommandType.StoredProcedure))
                 .ToList();
@@ -104,8 +118,17 @@ namespace DevEdu.DAL.Repositories
 
         public async Task<List<TaskDto>> GetTasksByGroupIdAsync(int groupId)
         {
-            return (await _connection.QueryAsync<TaskDto>(
+            return (await _connection.QueryAsync<TaskDto, GroupDto, TaskDto>(
                     _taskSelectByGroupIdProcedure,
+                    (task, group) =>
+                    {
+                        if (group != default)
+                        {
+                            task.Group = group;
+                        }
+
+                        return task;
+                    },
                     new { groupId },
                     commandType: CommandType.StoredProcedure))
                 .ToList();

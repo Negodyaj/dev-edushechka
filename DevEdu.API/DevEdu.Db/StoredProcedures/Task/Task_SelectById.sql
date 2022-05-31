@@ -8,7 +8,7 @@ BEGIN
 		t.Description,
 		t.Links,
 		t.IsRequired,
-		t.GroupId,
+		t.GroupId as Id,
 		c.CourseId as Id
 	From dbo.Task t LEFT JOIN dbo.Course_Task C WITH (NOLOCK) ON T.Id = C.TaskId
 	WHERE t.Id = @Id

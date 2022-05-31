@@ -146,9 +146,9 @@ namespace DevEdu.Business.Services
             await _userRepository.DeleteUserRoleAsync(userId, roleId);
         }
 
-        public async Task<List<UserDto>> GetUserInfoWithGroupsByRoleInGroup(Role role, int? groupId = null)
+        public async Task<List<UserDto>> GetUserInfoWithGroupsByRole(Role role)
         {
-            return await _userRepository.GetUsersByGroupIdAndRoleAsync((int)role, groupId);
+            return await _userRepository.GetUsersByRoleAsync((int)role);
         }
     }
 }

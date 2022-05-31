@@ -84,7 +84,7 @@ namespace DevEdu.API.Controllers
         }
 
         // api/tasks/{taskId}
-        [AuthorizeRoles(Role.Teacher)]
+        [AuthorizeRoles(Role.Methodist, Role.Teacher)]
         [HttpPut("{taskId}")]
         [Description("Update an existing task")]
         [ProducesResponseType(typeof(TaskInfoOutputModel), StatusCodes.Status200OK)]

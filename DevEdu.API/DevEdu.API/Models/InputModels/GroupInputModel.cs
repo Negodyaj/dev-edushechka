@@ -10,9 +10,7 @@ namespace DevEdu.API.Models
         [Required(ErrorMessage = NameRequired)]
         public string Name { get; set; }
         [Required]
-        public int CourseId { get; set; }
-        [Required(ErrorMessage = GroupStatusIdRequired)]
-        [Range(minimum: 1, maximum: int.MaxValue, ErrorMessage = WrongFormatGroupStatusId)]
+        public int CourseId { get; set; }        
         public GroupStatus? GroupStatusId { get; set; }
         [Required(ErrorMessage = DateRequired)]
         [CustomDateFormat(ErrorMessage = WrongFormatStartDate)]

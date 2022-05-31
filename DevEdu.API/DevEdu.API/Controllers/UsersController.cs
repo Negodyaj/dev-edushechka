@@ -108,7 +108,7 @@ namespace DevEdu.API.Controllers
         [ProducesResponseType(typeof(ExceptionResponse), StatusCodes.Status403Forbidden)]
         public async Task<List<UserInfoWithGroupsResponse>> GetAllStudentsAsync()
         {
-            var listDto = await _userService.GetUserInfoWithGroupsByRoleInGroup(Role.Student);
+            var listDto = await _userService.GetUserInfoWithGroupsByRole(Role.Student);
             var list = _mapper.Map<List<UserInfoWithGroupsResponse>>(listDto);
 
             return list;

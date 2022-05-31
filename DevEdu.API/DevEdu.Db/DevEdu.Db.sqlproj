@@ -231,6 +231,7 @@
     <Build Include="StoredProcedures\User\User_UpdatePhoto.sql" />
     <Build Include="StoredProcedures\Student_Homework\Student_Homework_SelectAnswerByTaskIdAndUserId.sql" />
     <Build Include="StoredProcedures\Task\Task_SelectByGroupId.sql" />
+    <Build Include="StoredProcedures\User\User_SelectByRole.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Course_Task\Course_Task_Delete.sql" />
